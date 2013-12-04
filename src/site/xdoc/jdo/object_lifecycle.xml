@@ -1,0 +1,378 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<document xmlns="http://maven.apache.org/XDOC/2.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+    <properties>
+        <title>Object Lifecycle</title>
+    </properties>
+
+    <body>
+        <section name="JDO : Object Lifecycle">
+            <p>
+                During the persistence process, an object goes through lifecycle changes. 
+                Below we demonstrate the primary object lifecycle changes for JDO
+            </p>
+
+            <p>
+                JDO has a very high degree of flexibility and so can be configured to operate in
+                different modes. The mode most consistent with JPA is shown below (this has the
+                PMF property <i>DetachAllOnCommit</i> set to true)
+            </p>
+            <img src="../images/jdo_object_lifecycle.jpg" border="0" alt=""/>
+            <p>
+                So a newly created object is <b>transient</b>. You then persist it and it becomes 
+                <b>persistent</b>. You then commit the transaction and it is detached for use elsewhere
+                in the application. You then attach any changes back to persistence and it becomes 
+                <b>persistent</b> again. Finally when you delete the object from persistence and commit
+                that transaction it is in <b>transient</b> state.
+            </p>
+            <p>
+                An alternative JDO lifecycle occurs when you have <i>DetachAllOnCommit</i> as false. 
+                Now at commit the object moves into <b>hollow</b> state (still has its identity, but its
+                field values are optionally unloaded). Set the persistence property <b>datanucleus.RetainValues</b>
+                to not unset the values of any non-primary-key fields when migrating to <b>hollow</b> state.
+            </p>
+            <img src="../images/jdo_object_lifecycle_2.jpg" border="0" alt=""/>
+            <p>
+                With JDO there are actually some additional lifecycle states, notably when an
+                object has a field changed, becoming <i>dirty</i>, so you get an object in
+                "persistent-dirty", "detached-dirty" states for example. The average user doesn't need
+                to know about these so we don't cover them here. To inspect the lifecycle state of an
+                object, simply call
+            </p>
+            <source><![CDATA[JDOHelper.getObjectState(obj);]]></source>
+            <p>See also :-</p>
+            <ul>
+                <li><a href="attach_detach.html#class">Attach/Detach of objects</a></li>
+            </ul>
+            <br/>
+
+            <subsection name="Helper Methods">
+                <p>
+                    In addition to the JDOHelper method above, JDO provides a series of other helper methods for 
+                    lifecycle operations.
+                    These are documented on the <a href="http://db.apache.org/jdo/jdohelper.html">Apache JDO site</a>.
+                </p>
+                <p>
+                    Further to this DataNucleus provides yet more helper methods
+                </p>
+                <source>
+String[] fieldNames = NucleusJDOHelper.getDirtyFields(pc, pm);
+String[] fieldNames = NucleusJDOHelper.getLoadedFields(pc, pm);</source>
+                <p>
+                    These methods returns the names of the dirty/loaded fields in the supplied object.
+                    The <i>pm</i> argument is only required if the object is detached
+                </p>
+                <br/>
+                <source>
+Boolean dirty = NucleusJDOHelper.isDirty(pc, "fieldName", pm);
+Boolean loaded = NucleusJDOHelper.isLoaded(pc, "fieldName", pm);</source>
+                <p>
+                    These methods returns whether the specified field in the supplied object is dirty/loaded.
+                    The <i>pm</i> argument is only required if the object is detached
+                </p>
+                <br/>
+            </subsection>
+
+            <subsection name="State Transition Lookup">
+                <p>
+                    The JDO spec defines all lifecycles transitions. This table provides a summary of some of the
+                    common ones. Please refer to the JDO spec for details.
+                    Key : T-Clean = Transient Clean, T-Dirty = Transient Dirty, P-New = Persistent New,
+                    P-Clean = Persistent Clean, P-Dirty = Persistent-Dirty, P-New-Deleted = Persistent New Deleted,
+                    P-Deleted = Persistent Deleted, P-Nontrans = Persistent Nontransactional
+                </p>
+                <table>
+                    <tr>
+                        <th>Method / Current State</th>
+                        <th>T-Clean</th>
+                        <th>T-Dirty</th>
+                        <th>P-New</th>
+                        <th>P-Clean</th>
+                        <th>P-Dirty</th>
+                        <th>Hollow</th>
+                        <th>P-New-Deleted</th>
+                        <th>P-Deleted</th>
+                        <th>P-Nontrans</th>
+                    </tr>
+                    <tr>
+                        <td>pm.makePersistent</td>
+                        <td>P-New</td>
+                        <td>P-New</td>
+                        <td>no change</td>
+                        <td>no change</td>
+                        <td>no change</td>
+                        <td>no change</td>
+                        <td>no change</td>
+                        <td>no change</td>
+                        <td>no change</td>
+                    </tr>
+                    <tr>
+                        <td>pm.deletePersistent</td>
+                        <td>error</td>
+                        <td>error</td>
+                        <td>P-New-Deleted</td>
+                        <td>P-Deleted</td>
+                        <td>P-Deleted</td>
+                        <td>P-Deleted</td>
+                        <td>no change</td>
+                        <td>no change</td>
+                        <td>P-Deleted</td>
+                    </tr>
+                    <tr>
+                        <td>pm.makeTransactional</td>
+                        <td>no change</td>
+                        <td>no change</td>
+                        <td>no change</td>
+                        <td>no change</td>
+                        <td>no change</td>
+                        <td>P-Clean</td>
+                        <td>no change</td>
+                        <td>no change</td>
+                        <td>P-Clean</td>
+                    </tr>
+                    <tr>
+                        <td>pm.makeNontransactional</td>
+                        <td>no change</td>
+                        <td>error</td>
+                        <td>error</td>
+                        <td>P-Nontrans</td>
+                        <td>error</td>
+                        <td>no change</td>
+                        <td>error</td>
+                        <td>error</td>
+                        <td>no change</td>
+                    </tr>
+                    <tr>
+                        <td>pm.makeTransient</td>
+                        <td>no change</td>
+                        <td>no change</td>
+                        <td>error</td>
+                        <td>T-Clean</td>
+                        <td>error</td>
+                        <td>T-Clean</td>
+                        <td>error</td>
+                        <td>error</td>
+                        <td>T-Clean</td>
+                    </tr>
+                    <tr>
+                        <td>tx.commit<br/>retainValues=false</td>
+                        <td>no change</td>
+                        <td>T-Clean</td>
+                        <td>Hollow</td>
+                        <td>Hollow</td>
+                        <td>Hollow</td>
+                        <td>no change</td>
+                        <td>T-Clean</td>
+                        <td>T-Clean</td>
+                        <td>no change</td>
+                    </tr>
+                    <tr>
+                        <td>tx.commit<br/>retainValues=true</td>
+                        <td>no change</td>
+                        <td>T-Clean</td>
+                        <td>P-Nontrans</td>
+                        <td>P-Nontrans</td>
+                        <td>P-Nontrans</td>
+                        <td>no change</td>
+                        <td>T-Clean</td>
+                        <td>T-Clean</td>
+                        <td>no change</td>
+                    </tr>
+                    <tr>
+                        <td>tx.commit<br/>DetachAllOnCommit=true</td>
+                        <td>no change</td>
+                        <td>T-Clean</td>
+                        <td>Detached-Clean</td>
+                        <td>Detached-Clean</td>
+                        <td>Detached-Clean</td>
+                        <td>Detached-Clean</td>
+                        <td>T-Clean</td>
+                        <td>T-Clean</td>
+                        <td>Detached-Clean</td>
+                    </tr>
+                    <tr>
+                        <td>tx.rollback<br/>restoreValues=false</td>
+                        <td>no change</td>
+                        <td>T-Clean</td>
+                        <td>T-Clean</td>
+                        <td>Hollow</td>
+                        <td>Hollow</td>
+                        <td>no change</td>
+                        <td>T-Clean</td>
+                        <td>Hollow</td>
+                        <td>no change</td>
+                    </tr>
+                    <tr>
+                        <td>tx.rollback<br/>restoreValues=true</td>
+                        <td>no change</td>
+                        <td>T-Clean</td>
+                        <td>Transient</td>
+                        <td>P-Nontrans</td>
+                        <td>P-Nontrans</td>
+                        <td>no change</td>
+                        <td>Transient</td>
+                        <td>P-Nontrans</td>
+                        <td>no change</td>
+                    </tr>
+                    <tr>
+                        <td>pm.refresh<br/>active Datastore txn</td>
+                        <td>no change</td>
+                        <td>no change</td>
+                        <td>no change</td>
+                        <td>no change</td>
+                        <td>P-Clean</td>
+                        <td>no change</td>
+                        <td>no change</td>
+                        <td>no change</td>
+                        <td>no change</td>
+                    </tr>
+                    <tr>
+                        <td>pm.refresh<br/>active Optimistic txn</td>
+                        <td>no change</td>
+                        <td>no change</td>
+                        <td>no change</td>
+                        <td>no change</td>
+                        <td>P-Nontrans</td>
+                        <td>no change</td>
+                        <td>no change</td>
+                        <td>no change</td>
+                        <td>no change</td>
+                    </tr>
+                    <tr>
+                        <td>pm.evict</td>
+                        <td>no change</td>
+                        <td>no change</td>
+                        <td>no change</td>
+                        <td>Hollow</td>
+                        <td>no change</td>
+                        <td>no change</td>
+                        <td>no change</td>
+                        <td>no change</td>
+                        <td>Hollow</td>
+                    </tr>
+                    <tr>
+                        <td>read field<br/>outside txn</td>
+                        <td>no change</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td>P-Nontrans</td>
+                        <td></td>
+                        <td></td>
+                        <td>no change</td>
+                    </tr>
+                    <tr>
+                        <td>read field<br/>active Datastore txn</td>
+                        <td>no change</td>
+                        <td>no change</td>
+                        <td>no change</td>
+                        <td>no change</td>
+                        <td>no change</td>
+                        <td>P-Clean</td>
+                        <td>error</td>
+                        <td>error</td>
+                        <td>P-Clean</td>
+                    </tr>
+                    <tr>
+                        <td>read field<br/>active Optimistic txn</td>
+                        <td>no change</td>
+                        <td>no change</td>
+                        <td>no change</td>
+                        <td>no change</td>
+                        <td>no change</td>
+                        <td>P-Nontrans</td>
+                        <td>error</td>
+                        <td>error</td>
+                        <td>no change</td>
+                    </tr>
+                    <tr>
+                        <td>write field/makeDirty<br/>outside txn</td>
+                        <td>no change</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td>P-Nontrans</td>
+                        <td></td>
+                        <td></td>
+                        <td>P-Nontrans-Dirty</td>
+                    </tr>
+                    <tr>
+                        <td>write field/makeDirty<br/>active txn</td>
+                        <td>T-Dirty</td>
+                        <td>no change</td>
+                        <td>no change</td>
+                        <td>P-Dirty</td>
+                        <td>no change</td>
+                        <td>P-Dirty</td>
+                        <td>error</td>
+                        <td>error</td>
+                        <td>P-Dirty</td>
+                    </tr>
+                    <tr>
+                        <td>retrieve()<br/>outside txn or with active Optimistic txn</td>
+                        <td>no change</td>
+                        <td>no change</td>
+                        <td>no change</td>
+                        <td>no change</td>
+                        <td>no change</td>
+                        <td>P-Nontrans</td>
+                        <td>no change</td>
+                        <td>no change</td>
+                        <td>no change</td>
+                    </tr>
+                    <tr>
+                        <td>pm.retrieve()<br/>with active Datastore txn</td>
+                        <td>no change</td>
+                        <td>no change</td>
+                        <td>no change</td>
+                        <td>no change</td>
+                        <td>no change</td>
+                        <td>P-Clean</td>
+                        <td>no change</td>
+                        <td>no change</td>
+                        <td>P-Clean</td>
+                    </tr>
+                    <tr>
+                        <td>pm.detachCopy()<br/>outside txn, Nontx-read=true</td>
+                        <td>error</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td>Detached-Clean</td>
+                        <td></td>
+                        <td></td>
+                        <td>Detached-Clean</td>
+                    </tr>
+                    <tr>
+                        <td>pm.detachCopy()<br/>outside txn, Nontx-read=false</td>
+                        <td>error</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td>error</td>
+                        <td></td>
+                        <td></td>
+                        <td>Detached-Clean</td>
+                    </tr>
+                    <tr>
+                        <td>pm.detachCopy()<br/>active txn</td>
+                        <td>Detached-Clean</td>
+                        <td>Detached-Clean</td>
+                        <td>Detached-Clean</td>
+                        <td>Detached-Clean</td>
+                        <td>Detached-Clean</td>
+                        <td>Detached-Clean</td>
+                        <td>error</td>
+                        <td>error</td>
+                        <td>Detached-Clean</td>
+                    </tr>
+                </table>
+            </subsection>
+        </section>
+    </body>
+</document>

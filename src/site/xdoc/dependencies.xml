@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<document xmlns="http://maven.apache.org/XDOC/2.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+    <properties>
+        <title>AccessPlatform : Dependencies</title>
+    </properties>
+
+    <body>
+        <section name="AccessPlatform : Dependencies">
+            <p>
+                <b>DataNucleus AccessPlatform</b> utilises some third party software to provide some of its
+                functionality. Dependent on how you intend to use this product you may have to also download
+                some of these third party software packages. You can see below the dependencies and when they
+                are required.
+            </p>
+            <table>
+                <tr>
+                    <th>Software</th>
+                    <th>Description</th>
+                    <th>Version</th>
+                    <th>Requirement</th>
+                </tr>
+                <tr>
+                    <td colspan="4"><b>Essential Dependencies</b></td>
+                </tr>
+                <tr>
+                    <td><a href="http://db.apache.org/jdo/downloads.html" target="_blank">JDO API</a></td>
+                    <td>JDO API definition, developed by Apache JDO.</td>
+                    <td>3.0 or later</td>
+                    <td>Required. Use v3.1-rc1 or 3.0.1 depending on whether you require JDO 3.1 or 3.0</td>
+                </tr>
+                <tr>
+                    <td><a href="http://repo1.maven.org/maven2/org/eclipse/persistence/javax.persistence/2.1.0/" target="_blank">JPA API</a></td>
+                    <td>JPA API definition</td>
+                    <td>2.1</td>
+                    <td>Required if you are using the JPA API or JPA annotations. 
+                        Note that the JPA "Expert Group" are seemingly too lazy to upload this into a freely downloadable
+                        location so you have to find one provided by other groups.
+                        Sadly there doesn't seem to be an Apache-licensed one currently, so you'll have to use the one
+                        under "org.eclipse.persistence"</td>
+                </tr>
+                <tr>
+                    <td colspan="4"><b>Datastore Dependencies (choose your datastore driver)</b></td>
+                </tr>
+                <tr>
+                    <td><a href="http://www.neodatis.org" target="_blank">NeoDatis</a></td>
+                    <td>NeoDatis object database</td>
+                    <td>1.9.30</td>
+                    <td>Required if you are using a NeoDatis datastore</td>
+                </tr>
+                <tr>
+                    <td><a href="http://repo1.maven.org/maven2/javax/xml/bind/jaxb-api/2.1/" target="_blank">jaxb-api</a></td>
+                    <td>JAXB API</td>
+                    <td>2.1</td>
+                    <td>Required is you are using an XML datastore</td>
+                </tr>
+                <tr>
+                    <td><a href="http://repo1.maven.org/maven2/javax/xml/jaxb-impl/" target="_blank">jaxb-impl</a></td>
+                    <td>JAXB Reference Implementation</td>
+                    <td>2.x</td>
+                    <td>Required if you are using an XML datastore</td>
+                </tr>
+                <tr>
+                    <td>JDBC Driver</td>
+                    <td>JDBC Driver for your chosen RDBMS</td>
+                    <td></td>
+                    <td>Required if you want to use an RDBMS datastore. Obtain from your RDBMS vendor</td>
+                </tr>
+                <tr>
+                    <td><a href="http://poi.apache.org//" target="_blank">Apache POI</a></td>
+                    <td>Apache library for writing to Microsoft documents</td>
+                    <td>3.5+</td>
+                    <td>Required if you want to use Excel (XLS/OOXML) documents</td>
+                </tr>
+                <tr>
+                    <td><a href="http://odftoolkit.org" target="_blank">ODFDOM</a></td>
+                    <td>ODF Toolkit for Java</td>
+                    <td>0.6</td>
+                    <td>Required if you want to use an ODF document for persistence.</td>
+                </tr>
+                <tr>
+                    <td><a href="http://xerces.apache.org/" target="_blank">Xerces</a></td>
+                    <td>Xerces XML parser</td>
+                    <td>2.8+</td>
+                    <td>Required if you want to use an ODF document for persistence. Required by ODFDOM</td>
+                </tr>
+                <tr>
+                    <td><a href="http://hadoop.apache.org/" target="_blank">HADOOP HBase</a></td>
+                    <td>HBase</td>
+                    <td>0.94+</td>
+                    <td>Required if you want to persist to HBase datastores</td>
+                </tr>
+                <tr>
+                    <td><a href="http://hadoop.apache.org/" target="_blank">HADOOP Core</a></td>
+                    <td>HADOOP Core</td>
+                    <td>1.0+</td>
+                    <td>Required if you want to persist to HBase datastores</td>
+                </tr>
+                <tr>
+                    <td><a href="http://hadoop.apache.org/" target="_blank">HADOOP ZooKeeper</a></td>
+                    <td>HADOOP Zookeeper</td>
+                    <td>3.4+</td>
+                    <td>Required if you want to persist to HBase datastores</td>
+                </tr>
+                <tr>
+                    <td><a href="http://www.mongodb.org/" target="_blank">MongoDB Java driver</a></td>
+                    <td>MongoDB Java driver</td>
+                    <td>2.4+</td>
+                    <td>Required if you want to persist to MongoDB datastores</td>
+                </tr>
+                <tr>
+                    <td><a href="http://www.neo4j.org/" target="_blank">Neo4j driver</a></td>
+                    <td>Neo4j driver</td>
+                    <td>1.7</td>
+                    <td>Required if you want to persist to Neo4j datastores</td>
+                </tr>
+                <tr>
+                    <td colspan="4"><b>Feature Dependencies (optional depending on what you want to use)</b></td>
+                </tr>
+                <tr>
+                    <td><a href="http://jakarta.apache.org/log4j/" target="_blank">Log4j</a></td>
+                    <td>Log4J logging library.</td>
+                    <td>1.2+</td>
+                    <td>Required if you wish to log using Log4J. DataNucleus supports Log4J or JDK1.4 logging</td>
+                </tr>
+                <tr>
+                    <td><a href="http://www.mx4j.org" target="_blank">mx4j</a></td>
+                    <td>MX4J management library</td>
+                    <td>3.0+</td>
+                    <td>Required if you want to use JMX with DataNucleus via MX4J</td>
+                </tr>
+                <tr>
+                    <td><a href="http://www.mx4j.org" target="_blank">mx4j-tools</a></td>
+                    <td>MX4J tools</td>
+                    <td>1.2+</td>
+                    <td>Required if you want to use JMX with DataNucleus via MX4J</td>
+                </tr>
+                <tr>
+                    <td><a href="http://www.sf.net/projects/joda-time/" target="_blank">JodaTime</a></td>
+                    <td>JodaTime</td>
+                    <td>1.6+</td>
+                    <td>Required if you want to persist JodaTime java types</td>
+                </tr>
+                <tr>
+                    <td>javax.time</td>
+                    <td>JSR Time Library</td>
+                    <td>0.6+</td>
+                    <td>Required if you want to persist javax.time types</td>
+                </tr>
+                <tr>
+                    <td><a href="http://code.google.com/p/google-collections/" target="_blank">GoogleCollections</a></td>
+                    <td>GoogleCollections</td>
+                    <td>1.0</td>
+                    <td>Required if you want to persist Google Collections java types, 
+                        or are using BoneCP connection pool for RDBMS</td>
+                </tr>
+                <tr>
+                    <td><a href="http://repo1.maven.org/maven2/ehcache/jars/" target="_blank">EHCache</a></td>
+                    <td>EHCache caching product</td>
+                    <td>1.0+</td>
+                    <td>Required if you want to use EHCache for level 2 caching</td>
+                </tr>
+                <tr>
+                    <td><a href="http://repo1.maven.org/maven2/opensymphony/oscache/jars/" target="_blank">OSCache</a></td>
+                    <td>OSCache caching product</td>
+                    <td>2.1</td>
+                    <td>Required if you want to use OSCache for level 2 caching</td>
+                </tr>
+                <tr>
+                    <td><a href="http://repo1.maven.org/maven2/swarmcache/jars/" target="_blank">SwarmCache</a></td>
+                    <td>SwarmCache caching product</td>
+                    <td>1.0RC2</td>
+                    <td>Required if you want to use SwarmCache for level 2 caching</td>
+                </tr>
+                <tr>
+                    <td><a href="http://repo1.maven.org/maven2/c3p0/jars/" target="_blank">C3P0</a></td>
+                    <td>C3P0 RDBMS connection pooling library</td>
+                    <td>0.9.0+</td>
+                    <td>Required if you are using an RDBMS datastore and want to use C3P0 for connection pooling</td>
+                </tr>
+                <tr>
+                    <td><a href="http://repo1.maven.org/maven2/proxool/jars/" target="_blank">proxool</a></td>
+                    <td>Proxool RDBMS connection pooling library</td>
+                    <td>0.9.0RC3</td>
+                    <td>Required if you are using an RDBMS datastore and want to use Proxool for connection pooling</td>
+                </tr>
+                <tr>
+                    <td><a href="http://repo1.maven.org/maven2/commons-logging/jars/" target="_blank">commons-logging</a></td>
+                    <td>Apache commons logging library</td>
+                    <td>1.0+</td>
+                    <td>Required if you are using an RDBMS datastore and want to use Proxool for connection pooling</td>
+                </tr>
+                <tr>
+                    <td><a href="http://jolbox.com/bonecp/downloads/maven/com/jolbox/bonecp/" target="_blank">bonecp</a></td>
+                    <td>BoneCP RDBMS connection pooling library</td>
+                    <td>0.6.5</td>
+                    <td>Required if you are using an RDBMS datastore and want to use BoneCP for connection pooling</td>
+                </tr>
+                <tr>
+                    <td><a href="http://www.slf4j.org" target="_blank">SLF4J</a></td>
+                    <td>SLF4J logging library</td>
+                    <td>1.5.6</td>
+                    <td>Required if you are using BoneCP for connection pooling</td>
+                </tr>
+                <tr>
+                    <td><a href="http://www.oracle.com/technology/software/products/spatial/index.html" target="_blank">sdoapi</a></td>
+                    <td>Oracle Spatial library</td>
+                    <td>1.2+</td>
+                    <td>Required if you want to persist Oracle spatial types</td>
+                </tr>
+                <tr>
+                    <td>jta</td>
+                    <td>JTA transaction API</td>
+                    <td>1.0+</td>
+                    <td>Required if you want to use JTA transactions</td>
+                </tr>
+                <tr>
+                    <td>cache-api</td>
+                    <td>Cache API</td>
+                    <td>0.61+</td>
+                    <td>Required if you want to use javax.cache L2 caching</td>
+                </tr>
+                <tr>
+                    <td>validation-api</td>
+                    <td>Bean validation API</td>
+                    <td>1.0+</td>
+                    <td>Required if you want to use bean validation (you also require a bean validation implementation)</td>
+                </tr>
+            </table>
+        </section>
+    </body>
+</document>

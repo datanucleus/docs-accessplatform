@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<document xmlns="http://maven.apache.org/XDOC/2.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+    <properties>
+        <title>Queries</title>
+    </properties>
+
+    <body>
+        <section name="RDBMS : Queries">
+            <p>
+                Using an RDBMS datastore DataNucleus allows you to query the objects in the datastore using the 
+                following
+            </p>
+            <ul>
+                <li><a href="../jdo/jdoql.html">JDOQL</a> - language based around the objects that are persisted
+                    and using Java-type syntax</li>
+                <li><a href="../jdo/sql.html">SQL</a> - language found on alomst all RDBMS.</li>
+                <li><a href="../jpa/jpql.html">JPQL</a> - language defined in the JPA1 specification for JPA 
+                    persistence which closely mirrors SQL.</li>
+            </ul>
+            <p>
+                When using queries with RDBMS there are some specific situations where it can be useful to 
+                benefit from special treatment. These are listed here.
+            </p>
+
+            <a name="resultSetType"/>
+            <subsection name="Result Set : Type">
+                <img src="../images/nucleus_extension.gif" border="0" alt=""/>
+                <p>
+                    <i>java.sql.ResultSet</i> defines three possible result set types.
+                </p>
+                <ul>
+                    <li><i>forward-only</i> : the result set is navegable forwards only</li>
+                    <li><i>scroll-sensitive</i> : the result set is scrollable in both directions and is
+                        sensitive to changes in the datastore</li>
+                    <li><i>scroll-insensitive</i> : the result set is scrollable in both directions and is
+                        insensitive to changes in the datastore</li>
+                </ul>
+                <p>
+                    DataNucleus allows specification of this type as a query extension
+                    <b>datanucleus.rdbms.query.resultSetType</b>.
+                </p>
+                <p>
+                    To do this on a per query basis for JDO you would do
+                </p>
+                <source>
+query.addExtension("datanucleus.rdbms.query.resultSetType", "scroll-insensitive");</source>
+                <p>
+                    To do this on a per query basis for JPA you would do
+                </p>
+                <source>
+query.setHint("datanucleus.rdbms.query.resultSetType", "scroll-insensitive");</source>
+                <p>
+                    The default is <i>forward-only</i>. The benefit of the other two is that the result set will
+                    be scrollable and hence objects will only be read in to memory when accessed. So if you
+                    have a large result set you should set this to one of the scrollable values.
+                </p>
+                <br/>
+            </subsection>
+
+            <a name="resultCacheType"/>
+            <subsection name="Result Set : Caching of Results">
+                <img src="../images/nucleus_extension.gif" border="0" alt=""/>
+                <p>
+                    When using a "scrollable" result set (see above for <b>datanucleus.rdbms.query.resultSetType</b>)
+                    by default the query result will cache the rows that have been read. You can control this
+                    caching to optimise it for your memory requirements. You can set the query extension
+                    <b>datanucleus.query.resultCacheType</b> and it has the following possible values
+                </p>
+                <ul>
+                    <li><i>weak</i> : use a weak hashmap for caching (default)</li>
+                    <li><i>soft</i> : use a soft reference map for caching</li>
+                    <li><i>hard</i> : use a HashMap for caching (objects not garbage collected)</li>
+                    <li><i>none</i> : no caching (hence uses least memory)</li>
+                </ul>
+                <p>
+                    To set this on a per query basis for JDO you would do
+                </p>
+                <source>
+query.addExtension("datanucleus.query.resultCacheType", "weak");</source>
+                <p>
+                    To do this on a per query basis for JPA you would do
+                </p>
+                <source>
+query.setHint("datanucleus.query.resultCacheType", "weak");</source>
+                <br/>
+            </subsection>
+
+            <a name="resultSizeMethod"/>
+            <subsection name="Large Result Sets : Size">
+                <img src="../images/nucleus_extension.gif" border="0" alt=""/>
+                <p>
+                    If you have a large result set you clearly don't want to instantiate all objects
+                    since this would hit the memory footprint of your application. To get the number of
+                    results many JDBC drivers will load all rows of the result set. This is to be avoided
+                    so DataNucleus provides control over the mechanism for getting the size of results.
+                    The persistence property <b>datanucleus.query.resultSizeMethod</b> has a default of
+                    <i>last</i> (which means navigate to the last object - hence hitting the JDBC driver problem).
+                    If you set this to <i>count</i> then it will use a simple "count()" query to get the size.
+                </p>
+                <p>
+                    To do this on a per query basis for JDO you would do
+                </p>
+                <source>
+query.addExtension("datanucleus.query.resultSizeMethod", "count");</source>
+                <p>
+                    To do this on a per query basis for JPA you would do
+                </p>
+                <source>
+query.setHint("datanucleus.query.resultSizeMethod", "count");</source>
+                <br/>
+            </subsection>
+
+            <a name="loadResultsAtCommit"/>
+            <subsection name="Large Result Sets : Loading Results at Commit()">
+                <img src="../images/nucleus_extension.gif" border="0" alt=""/>
+                <p>
+                    When a transaction is committed by default all remaining results for a query are loaded
+                    so that the query is usable thereafter. With a large result set you clearly don't want this to
+                    happen. So in this case you should set the extension <b>datanucleus.query.loadResultsAtCommit</b>
+                    to false.
+                </p>
+                <p>
+                    To do this on a per query basis for JDO you would do
+                </p>
+                <source>
+query.addExtension("datanucleus.query.loadResultsAtCommit", "false");</source>
+                <p>
+                    To do this on a per query basis for JPA you would do
+                </p>
+                <source>
+query.setHint("datanucleus.query.loadResultsAtCommit", "false");</source>
+                <br/>
+            </subsection>
+
+            <a name="resultSetControl"/>
+            <subsection name="Result Set : Control">
+                <img src="../images/nucleus_extension.gif" border="0" alt=""/>
+                <p>
+                    DataNucleus provides a useful extension allowing control over the ResultSet's that are 
+                    created by queries. You have at your convenience some properties that give you the power to 
+                    control whether the result set is read only, whether it can be read forward only, the 
+                    direction of fetching etc. 
+                </p>
+                <p>
+                    To do this on a per query basis for JDO you would do
+                </p>
+                <source>
+query.addExtension("datanucleus.rdbms.query.fetchDirection", "forward");
+query.addExtension("datanucleus.rdbms.query.resultSetConcurrency", "read-only");</source>
+                <p>
+                    To do this on a per query basis for JPA you would do
+                </p>
+                <source>
+query.setHint("datanucleus.rdbms.query.fetchDirection", "forward");
+query.setHint("datanucleus.rdbms.query.resultSetConcurrency", "read-only");</source>
+                <p>
+                    Alternatively you can specify these as persistence properties so that they apply to all
+                    queries for that PMF/EMF. Again, the properties are
+                </p>
+                <ul>
+                    <li><b>datanucleus.rdbms.query.fetchDirection</b> - controls the direction that the 
+                        ResultSet is navigated. By default this is forwards only. Use this property to change 
+                        that.</li>
+                    <li><b>datanucleus.rdbms.query.resultSetConcurrency</b> - controls whether the ResultSet is
+                        read only or updateable.</li>
+                </ul>
+                <p>
+                    Bear in mind that not all RDBMS support all of the possible values for these options. That
+                    said, they do add a degree of control that is often useful.
+                </p>
+                <br/>
+            </subsection>
+
+            <subsection name="JDOQL : SQL Generation">
+                <p>
+                    When using the method <i>contains</i> on a collection (or <i>containsKey</i>, <i>containsValue</i>
+                    on a map) this will either add an EXISTS subquery (if there is a NOT or OR present in the query)
+                    or will add an INNER JOIN across to the element table. Let's take an example
+                </p>
+                <source><![CDATA[
+SELECT FROM org.datanucleus.samples.A
+WHERE (elements.contains(b1) && b1.name == 'Jones')
+VARIABLES org.datanucleus.samples.B b1]]></source>
+                <p>
+                    Note that we add the <i>contains</i> first that binds the variable "b1" to the element table,
+                    and then add the condition on the variable. The order is important here. If we instead had put
+                    the condition on the variable first we would have had to do a CROSS JOIN to the variable table
+                    and then try to repair the situation and change it to INNER JOIN if possible. In this case the
+                    generated SQL will be like
+                </p>
+                <source><![CDATA[
+SELECT `A0`.`ID`
+FROM `A` `A0`
+INNER JOIN `B` `B0` ON `A0`.ID = `B`.ELEMENT
+WHERE `B0`.NAME = 'Jones']]></source>
+                <br/>
+            </subsection>
+
+            <subsection name="JDOQL : Use of variables and joining">
+                <p>
+                    In all situations we aim for DataNucleus JDOQL implementation to work out the right way of
+                    linking a variable into the query, whether this is via a join (INNER, LEFT OUTER), or via a
+                    subquery. As you can imagine this can be complicated to work out the optimum for all situations
+                    so with that in mine we allow (for a limited number of situations) the option of specifying
+                    the join type. This is achieved by setting the query extension 
+                    <b>datanucleus.query.jdoql.{varName}.join</b> to the required type. For 1-1 relations this would
+                    be either "INNERJOIN" or "LEFTOUTERJOIN", and for 1-N relations this would be either
+                    "INNERJOIN" or "SUBQUERY".
+                </p>
+                <p>
+                    <b>Please, if you find a situation where the optimum join type is not chosen then report it
+                    in JIRA for project "NUCRDBMS" as priority "Minor" so it can be registered for future work</b>
+                </p>
+                <br/>
+            </subsection>
+
+            <subsection name="JPQL : SQL Generation">
+                <p>
+                    With a JPQL query running on an RDBMS the query is compiled into SQL. Here we give a 
+                    few examples of what SQL is generated. You can of course try this for yourself observing 
+                    the content of the DataNucleus log.
+                </p>
+                <p>
+                    In JPQL you specify a candidate class and its alias (identifier). In addition you can 
+                    specify joins with their respective alias. The DataNucleus implementation of JPQL will 
+                    preserve these aliases in the generated SQL.
+                </p>
+                <source><![CDATA[
+JPQL:
+SELECT Object(P) FROM mydomain.Person P INNER JOIN P.bestFriend AS B
+
+SQL:
+SELECT P.ID
+FROM PERSON P INNER JOIN PERSON B ON B.ID = P.BESTFRIEND_ID]]></source>
+                <p>
+                    With the JPQL <i>MEMBER OF</i> syntax this is typically converted into an EXISTS query.
+                </p>
+                <source><![CDATA[
+JPQL:
+SELECT DISTINCT Object(p) FROM mydomain.Person p WHERE :param MEMBER OF p.friends
+
+SQL:
+SELECT DISTINCT P.ID FROM PERSON P
+WHERE EXISTS (
+    SELECT 1 FROM PERSON_FRIENDS P_FRIENDS, PERSON P_FRIENDS_1 
+    WHERE P_FRIENDS.PERSON_ID = P.ID
+    AND P_FRIENDS_1.GLOBAL_ID = P_FRIENDS.FRIEND_ID 
+    AND 101 = P_FRIENDS_1.ID)]]></source>
+                <br/>
+            </subsection>
+        </section>
+    </body>
+</document>

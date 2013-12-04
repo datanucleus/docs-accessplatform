@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<document xmlns="http://maven.apache.org/XDOC/2.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+    <properties>
+        <title>Relationship Mapping by Hierarchy</title>
+    </properties>
+    <body>
+        <section name="LDAP : Relationship Mapping by Hierarchy">
+            <p> 
+                As LDAP is a hierarchical data store it is possible to model relationships between LDAP entries using
+                hierarchies. For example organisational structures like departments and their employees are often modeled
+                hierarchical in LDAP. It is possible to map 1-1 and N-1/1-N relationships using LDAP hierarchies.
+            </p>
+            <p>
+                The main challenge with hierarchical mapping is that the distinguished name (DN) of children depends 
+                on the DN of their parent. Therefore each child class needs a reference to the parent class. 
+                The parent class metadata defines a (fixed) LDAP DN that is used as container for all objects of the parent type.
+                The child class metadata contains a dynamic part in its DN definition. This dynamic part contains the name of 
+                the field holding the reference to the parent object, the name is surrounded by curly braces.
+                This dynamic DN is the indicator for DataNucleus to use hierarchical mapping.
+                The reference field itself won't be persisted as attribute because it is used as dynamic parameter.
+                If you query for child objects DataNucleus starts a larger LDAP search to find the objects 
+                (the container DN of the parent class as search base and subtree scope).
+            </p>
+            <p>
+                <b>Note:</b> Child objects are automatically dependent. If you delete the parent object all child objects are 
+                automatically deleted. If you null out the child object reference in the parent object or if you 
+                remove the child object from the parents collection, the child object is automatically deleted.
+            </p>
+        </section>
+            
+            <section name="N-1 Unidirectional">
+                <p>
+                    This kind of mapping could be used if your LDAP tree has a huge number of child objects and you only work 
+                    with these child objects. 
+                </p>
+                <p>
+                    We use the following example LDAP tree and Java classes:
+                </p>
+                <source><![CDATA[
+dc=example,dc=com                                       public class Department {
+|                                                           String name;
+|-- ou=Sales                                            }
+|   |-- cn=Bugs Bunny                                   
+|   |-- cn=Daffy Duck                                   public class Employee {
+|   |-- ...                                                 String firstName;
+|                                                           String lastName;
+|-- ou=Engineering                                          String fullName;
+|   |-- cn=Speedy Gonzales                                  Department department;
+|   |-- ...                                             }
+|                                                       
+|-- ...                                                 ]]></source>
+                <p>
+                     In the LDAP tree we have departments (Sales and Engineering) and each department holds 
+                     some associated employees. In our Java classes each <b>Employee</b> object knows its 
+                     <b>Department</b> but not vice-versa.
+                </p>
+                <p>
+                    The JDO metadata looks like this:
+                </p>
+                <source><![CDATA[
+<jdo>
+    <package name="com.example">
+        <class name="Department" table="dc=example,dc=com" schema="top,organizationalUnit">
+            <field name="name" primary-key="true" column="ou" />
+        </class>
+
+        <class name="Employee" table="{department}" schema="top,person,organizationalPerson,inetOrgPerson">
+            <field name="fullName" primary-key="true column="cn" />
+            <field name="firstName" column="givenName" />
+            <field name="lastName" column="sn" />
+            <field name="department"/>
+        </class>
+    </package>
+</jdo>]]></source>
+                <p>
+                    The <b>Department</b> objects are persisted directly under <i>dc=example,dc=com</i>.
+                    The <b>Employee</b> class has a dynamic DN definition <i>{department}</i>. So the DN of the 
+                    Department instance is used as container for Employee objects.
+                </p>
+            </section>
+            
+            
+            <section name="N-1 (1-N) Bidirectional">
+                <p>
+                    If you need a reference from the parent object to the child objects you need to define a bidirectional relationship.
+                </p>
+                <p>
+                    The example LDAP tree and Java classes looks like this:
+                </p>
+                <source><![CDATA[
+dc=example,dc=com                                       public class Department {
+|                                                           String name;
+|-- ou=Sales                                                Set<Employee> employees;
+|   |-- cn=Bugs Bunny                                   }
+|   |-- cn=Daffy Duck                                   
+|   |-- ...                                             public class Employee {
+|                                                           String firstName;
+|-- ou=Engineering                                          String lastName;
+|   |-- cn=Speedy Gonzales                                  String fullName;
+|   |-- ...                                                 Department department;
+|                                                       }
+|-- ...                                                 ]]></source>
+                <p>
+                    Now the <b>Department</b> class has a Collection containing references to its <b>Employee</b>s.
+                </p>
+                <p>
+                    The JDO metadata looks like this:
+                </p>
+                <source><![CDATA[
+<jdo>
+    <package name="com.example">
+        <class name="Department" table="dc=example,dc=com" schema="top,organizationalUnit">
+            <field name="name" primary-key="true" column="ou" />
+            <field name="employees" mapped-by="department"/>
+        </class>
+
+        <class name="Employee" table="{department}" schema="top,person,organizationalPerson,inetOrgPerson">
+            <field name="fullName" primary-key="true column="cn" />
+            <field name="firstName" column="givenName" />
+            <field name="lastName" column="sn" />
+            <field name="department"/>
+        </class>
+    </package>
+</jdo>]]></source>
+                <p>
+                    We added a new <i>employees</i> field to the Department class that is <i>mapped-by</i> the department field 
+                    of the Employee class. 
+                </p>
+                <p>
+                    Please note: When loading the parent object all child object are loaded immediately. 
+                    For a large number of child entries this may lead to performance and/or memory problems.
+                </p>
+            </section>
+            
+            
+            <section name="1-1 Unidirectional">
+                <p>
+                    1-1 unidirectional mapping is very similar to N-1 unidirectional mapping. 
+                </p>
+                <p>
+                    We use the following example LDAP tree and Java classes:
+                </p>
+                <source><![CDATA[
+dc=example,dc=com                                       public class Person {
+|                                                           String firstName;
+|-- ou=People                                               String lastName;
+|   |-- cn=Bugs Bunny                                       String fullName;
+|   |   |-- uid=bbunny                                  }
+|   |                                                   
+|   |-- cn=Daffy Duck                                   public class Account {
+|   |   |-- uid=dduck                                       String uid;
+|   |                                                       String password;
+|   |-- ...                                                 Person person;
+                                                        }]]></source>
+                <p>
+                     In the LDAP tree we have persons and each person has one account.
+                     Each <b>Account</b> object knows to which <b>Person</b> it belongs to, but not vice-versa.
+                </p>
+                <p>
+                    The JDO metadata looks like this:
+                </p>
+                <source><![CDATA[
+<jdo>
+    <package name="com.example">
+        <class name="Person" table="ou=People,dc=example,dc=com" schema="top,person,organizationalPerson,inetOrgPerson">
+            <field name="fullName" primary-key="true column="cn" />
+            <field name="firstName" column="givenName" />
+            <field name="lastName" column="sn" />
+        </class>
+        
+        <class name="Account" table="{person}" schema="top,account,simpleSecurityObject">
+            <field name="uid" primary-key="true column="uid" />
+            <field name="password" column="userPasword" />
+            <field name="person" />
+        </class>
+    </package>
+</jdo>]]></source>
+                <p>
+                    The <b>Person</b> objects are persisted directly under <i>ou=People,dc=example,dc=com</i>.
+                    The <b>Account</b> class has a dynamic DN definition <i>{person}</i>. So the DN of the 
+                    Person instance is used as container for the Account object.
+                </p>
+            </section>
+                
+                
+            <section name="1-1 Bidirectional">
+                <p>
+                    If you need a reference from the parent class to the child class you need to define a bidirectional relationship.
+                </p>
+                <p>
+                    The example LDAP tree and Java classes looks like this:
+                </p>
+                <source><![CDATA[
+dc=example,dc=com                                       public class Person {
+|                                                           String firstName;
+|-- ou=People                                               String lastName;
+|   |                                                       String fullName;
+|   |-- cn=Bugs Bunny                                       Account account;
+|   |   |-- uid=bbunny                                  }
+|   |                                                   
+|   |-- cn=Daffy Duck                                   public class Account {
+|   |   |-- uid=dduck                                       String uid;
+|   |                                                       String password;
+|   |-- ...                                                 Person person;
+                                                        }]]></source>
+                <p>
+                    Now the <b>Person</b> class has a reference to its <b>Account</b>.
+                </p>
+                <p>
+                    The JDO metadata looks like this:
+                </p>
+                <source><![CDATA[
+<jdo>
+    <package name="com.example">
+        <class name="Person" table="ou=People,dc=example,dc=com" schema="top,person,organizationalPerson,inetOrgPerson">
+            <field name="fullName" primary-key="true column="cn" />
+            <field name="firstName" column="givenName" />
+            <field name="lastName" column="sn" />
+            <field name="account" mapped-by="person" />
+        </class>
+        
+        <class name="Account" table="{person}" schema="top,account,simpleSecurityObject">
+            <field name="uid" primary-key="true column="uid" />
+            <field name="password" column="userPasword" />
+            <field name="person" />
+        </class>
+    </package>
+</jdo>]]></source>
+                 <p>
+                    We added a new <i>account</i> field to the Person class that is <i>mapped-by</i> the person field 
+                    of the Account class. 
+                </p>
+            </section>
+            
+    </body>
+</document>

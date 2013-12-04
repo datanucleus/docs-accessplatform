@@ -1,0 +1,283 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<document xmlns="http://maven.apache.org/XDOC/2.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+    <properties>
+        <title>JDO Cascading</title>
+    </properties>
+
+    <body>
+        <section name="JDO : Cascading Operations">
+            <p> 
+                When defining your objects to be persisted and the relationships between them, it is often required 
+                to define dependencies between these related objects. What should happen when persisting an object
+                and it relates to another object? What should happen to a related object when an object is deleted?
+                You can define what happens with JDO and with DataNucleus. Let's take an example
+            </p>
+            <source>
+public class Owner
+{
+    private DrivingLicense license;
+    private Collection cars;
+    
+    ...
+}
+
+public class DrivingLicense
+{
+    private String serialNumber;
+    
+    ...
+}
+
+public class Car
+{
+    private String registrationNumber;
+    private Owner owner;
+    
+    ...
+}</source>
+            <p>
+                So we have an <i>Owner</i> of a collection of vintage <i>Car</i>'s (1-N), and the <i>Owner</i> has a 
+                <i>DrivingLicense</i> (1-1). We want to define lifecycle dependencies to match the relationships 
+                that we have between these objects. Firstly lets look at the basic Meta-Data for the objects.
+            </p>
+            <source><![CDATA[
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE jdo SYSTEM "file:/javax/jdo/jdo.dtd">
+<jdo>
+    <package name="com.mydomain.samples.cars">
+        <class name="Owner">
+            <field name="license" persistence-modifier="persistent"/>
+            <field name="cars">
+                <collection element-type="com.mydomain.samples.cars.Car" mapped-by="owner"/>
+            </field>
+        </class>
+        
+        <class name="DrivingLicense">
+        	<field name="serialNumber"/>
+        </class>
+        
+        <class name="Car">
+            <field name="registrationNumber"/>
+            <field name="owner" persistence-modifier="persistent"/>
+        </class>
+    </package>
+</jdo>]]></source>
+            <br/>
+
+            <a name="persistence"/>
+            <subsection name="Persistence">
+                <p>
+                    JDO2 defines a concept called <b>persistence-by-reachability</b>. This means that when you
+                    persist an object and it has a related persistable object then this other object is also
+                    persisted. So using our example if we do
+                </p>
+                <source><![CDATA[
+Owner bob = new Owner("Bob Smith");
+DrivingLicense license = new DrivingLicense("011234BX4J");
+bob.setLicense(license);
+pm.makePersistent(bob); // "bob" knows about "license"
+]]></source>
+                <p>
+                    This results in both the <i>Owner</i> and the <i>DrivingLicense</i> objects being made 
+                    persistent since the <i>Owner</i> is passed to the PM operation and it has a field referring
+                    to the unpersisted <i>DrivingLicense</i> object. So "reachability" will persist the
+                    license.
+                </p>
+                <br/>
+                <img src="../../images/nucleus_extension.gif" alt="extension"/>
+                <p>
+                    With DataNucleus you can actually turn off <i>persistence-by-reachability</i> for particular 
+                    fields, by specifying in the MetaData a DataNucleus extension tag, as follows
+                </p>
+                <source><![CDATA[
+<class name="Owner">
+    <field name="license" persistence-modifier="persistent">
+        <extension vendor-name="datanucleus" key="cascade-persist" value="false"/>
+    </field>
+    ...
+</class>]]></source>
+                <p>
+                    So with this specification when we call <i>makePersistent()</i> with an object of type 
+                    <i>Owner</i> then the field "license" will not be persisted at that time.
+                </p>
+                <br/>
+            </subsection>
+
+            <a name="update"/>
+            <subsection name="Update">
+                <p>
+                    As mentioned above JDO2 defines a concept called <b>persistence-by-reachability</b>. This 
+                    applies not just to persist but also to update of objects, so when you update an object and 
+                    its updated field has a persistable object then that will be persisted. 
+                    So using our example if we do
+                </p>
+                <source><![CDATA[
+Owner bob = (Owner)pm.getObjectById(id);
+DrivingLicense license2 = new DrivingLicense("233424BX4J");
+bob.setLicense(license2); // "bob" knows about "license2"
+]]></source>
+                <p>
+                    So when this field is updated the new <i>DrivingLicense</i> object will be made persistent
+                    since it is reachable from the persistent <i>Owner</i> object.
+                </p>
+                <br/>
+
+                <img src="../../images/nucleus_extension.gif" alt="extension"/>
+                <p>
+                    With DataNucleus you can actually turn off <i>update-by-reachability</i> for particular fields, 
+                    by specifying in the MetaData a DataNucleus extension tag, as follows
+                </p>
+                <source><![CDATA[
+<class name="Owner">
+    <field name="license" persistence-modifier="persistent">
+        <extension vendor-name="datanucleus" key="cascade-update" value="false"/>
+    </field>
+    ...
+</class>]]></source>
+                <p>
+                    So with this specification when we call <i>makePersistent()</i> to update an object of type 
+                    Owner then the field "license" will not be updated at that time.
+                </p>
+                <br/>
+            </subsection>
+
+            <a name="deletion_dependent"/>
+            <subsection name="Deletion, using Dependent Field">
+                <p>
+                    So we have an inverse 1-N relationship (no join table) between our <i>Owner</i> and his 
+                    precious <i>Car</i>'s, and a 1-1 relationship between the <i>Owner</i> and his 
+                    <i>DrivingLicense</i>, because without his license he wouldn't be able to drive the cars :-0. 
+                    What will happen to the <i>license</i> and the <i>cars</i> when the <i>owner</i> dies ? Well 
+                    in this particular case we want to define that the when the <i>owner</i> is deleted, then 
+                    his <i>license</i> will also be deleted (since it is for him only), but that his <i>cars</i> 
+                    will continue to exist, because his daughter will inherit them. 
+                    In JDO2 this is called <b>Dependent Fields</b>.
+                    To utilise this concept to achieve our end goal we change the Meta-Data to be
+                </p>
+                <source><![CDATA[
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE jdo SYSTEM "file:/javax/jdo/jdo.dtd">
+<jdo>
+    <package name="com.mydomain.samples.cars">
+        <class name="Owner">
+            <field name="license" persistence-modifier="persistent" dependent="true"/>
+            <field name="cars">
+                <collection element-type="com.mydomain.samples.cars.Car" mapped-by="owner" 
+                    dependent-element="false"/>
+            </field>
+        </class>
+        
+        <class name="DrivingLicense">
+            <field name="serialNumber"/>
+        </class>
+        
+        <class name="Car">
+            <field name="registrationNumber"/>
+            <field name="owner" persistence-modifier="persistent" dependent="false"/>
+        </class>
+    </package>
+</jdo>]]></source>
+                <p>
+                    So it was as simple as just adding <b>dependent</b> and <b>dependent-element</b> attributes to 
+                    our related fields. Notice that we also added one to the other end of the Owner-Car relationship, 
+                    so that when a <i>Car</i> comes to the end of its life, the <i>Owner</i> will not die with it. 
+                    It may be the case that the owner dies driving the car and they both die at the same time, 
+                    but their deaths are independent!!
+                </p>
+                <p>
+                    Just as we made use of <b>dependent-element</b> for collection fields, we also can make
+                    use of <b>dependent-key</b> and <b>dependent-value</b> for map fields, and
+                    <b>dependent-element</b> for array fields.
+                </p>
+                <p>
+                    <b>Dependent Field</b>s is utilised in the following situations
+                </p>
+                <ul>
+                    <li>An object is deleted (using <i>deletePersistent()</i>) and that object has relations to 
+                        other objects. If the other objects (either 1-1, 1-N, or M-N) are dependent then they are 
+                        also deleted.</li>
+                    <li>An object has a 1-1 relation with another object, but the other object relation is nulled 
+                        out. If the other object is dependent then it is deleted when the relation is nulled.</li>
+                    <li>An object has a 1-N collection relation with other objects and the element is removed from 
+                        the collection. If the element is dependent then it will be deleted when removed from the 
+                        collection. The same happens when the collections is cleared.</li>
+                    <li>An object has a 1-N map relation with other objects and the key is removed from the map. 
+                        If the key or value are dependent and they are not present in the map more than once they 
+                        will be deleted when they are removed. The same happens when the map is cleared.</li>
+                </ul>
+                <br/>
+            </subsection>
+
+            <a name="deletion_fk"/>
+            <subsection name="Deletion, using Foreign Keys (RDBMS)">
+                <p>
+                    With JDO2 you can use "dependent-field" as shown above. As an alternative, when using RDBMS,
+                    you can use the datastore-defined foreign keys and let the datastore built-in 
+                    "referential integrity" look after such deletions. DataNucleus provides a PMF property 
+                    <i>datanucleus.deletionPolicy</i> allowing enabling of this mode of operation.
+                </p>
+                <p>
+                    The default setting of <i>datanucleus.deletionPolicy</i> is "JDO2" which performs deletion of 
+                    related objects as follows
+                </p>
+                <ol>
+                    <li>If <i>dependent-field</i> is true then use that to define the related objects to be 
+                        deleted.</li>
+                    <li>Else, if the column of the foreign-key field is NULLable then NULL it and leave the 
+                        related object alone</li>
+                    <li>Else deleted the related object (and throw exceptions if this fails for whatever 
+                        datastore-related reason)</li>
+                </ol>
+                <p>
+                    The other setting of <i>datanucleus.deletionPolicy</i> is "DataNucleus" which performs 
+                    deletion of related objects as follows
+                </p>
+                <ol>
+                    <li>If <i>dependent-field</i> is true then use that to define the related objects to be 
+                        deleted.</li>
+                    <li>If a <i>foreign-key</i> is specified (in MetaData) for the relation field then leave any 
+                        deletion to the datastore to perform (or throw exceptions as necessary)</li>
+                    <li>Else, if the column of the foreign-key field is NULLable then NULL it and leave the 
+                        related object alone</li>
+                    <li>Else deleted the related object (and throw exceptions if this fails for whatever 
+                        datastore-related reason)</li>
+                </ol>
+                <p>
+                    So, as you can see, with the second option you have the ability to utilise datastore "referential integrity"
+                    checking using your MetaData-specified &lt;foreign-key&gt; elements.
+                </p>
+                <br/>
+            </subsection>
+
+            <subsection name="Persisting Relationships - Reachability At Commit">
+                <p>
+                    One further complication is that with JDO there is also a process called 
+                    <b>persistence-by-reachability at commit</b>. When objects are persisted, other objects are 
+                    persisted with them. If some relations are changed <i>before</i> commit and some of these 
+                    related objects are no longer required to be persistent then they will not be persisted.
+                    For example, using our classes above
+                </p>
+                <source><![CDATA[
+Owner bob = new Owner("Bob Smith");
+DrivingLicense license = new DrivingLicense("233424BX4J");
+bob.setLicense(license); // "bob" knows about "license"
+pm.makePersistent(bob);
+
+DrivingLicense license2 = new DrivingLicense("344566A99XH");
+bob.setLicense(license2); // "bob" doesnt know about "license" now. It knows about "license2" now.
+
+// "bob" and "license2" will be persisted but "license" wont be since not persisted explicitly
+// and at commit it is no longer reachable from a persisted object
+tx.commit();]]></source>
+                <p>
+                    With DataNucleus you can turn off <b>persistence-by-reachability at commit</b> by setting the 
+                    <i>PersistenceManagerFactory</i> property <i>datanucleus.persistenceByReachabilityAtCommit</i> 
+                    to false.
+                </p>
+            </subsection>
+
+        </section>
+    </body>
+</document>

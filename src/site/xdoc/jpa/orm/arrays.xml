@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<document xmlns="http://maven.apache.org/XDOC/2.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+    <properties>
+        <title>JPA Arrays</title>
+    </properties>
+
+    <body>
+        <section name="JPA : Array Fields">
+            <p>
+                JPA defines support the persistence of arrays but only arrays of byte[], Byte[], char[], Character[].
+                Moreover it only defines support for persisting these arrays into CLOB columns, hence they have 
+                to be byte-streamed. Namely
+            </p>
+            <ul>
+                <li><a href="#singlecolumn">Single Column</a> - the array is byte-streamed into a single column in 
+                    the table of the containing object.</li>
+            </ul>
+            <br/>
+
+            <a name="singlecolumn"/>
+            <subsection name="Single Column Arrays">
+                <p>
+                    Let's suppose you have a class something like this
+                </p>
+                <img src="../../images/orm/array_serialised_class.gif" border="0" alt=""/>
+                <p>
+                    So we have an <b>Account</b> and it has a number of permissions, each expressed as a byte. We want to persist the
+                    permissions in a single-column into the table of the account (but we don't want them serialised). We then define 
+                    MetaData something like this
+                </p>
+                <source><![CDATA[
+<entity class="Account">
+    <table name="ACCOUNT"/>
+    <attributes>
+        ...
+        <basic name="permissions">
+            <column name="PERMISSIONS"/>
+            <lob/>
+        </basic>
+        ...
+    </attributes>
+</entity>]]></source>
+                <p>
+                    This results in a datastore schema as follows
+                </p>
+                <img src="../../images/orm/array_serialised_db.gif" border="0" alt=""/>
+                <p>See also :-</p>
+                <ul>
+                    <li><a href="../metadata_xml.html#basic">MetaData reference for &lt;basic&gt; element</a></li>
+                    <li><a href="../annotations.html#Basic">Annotations reference for @Basic</a></li>
+                </ul>
+                <br/>
+            </subsection>
+
+        </section>
+
+    </body>
+</document>

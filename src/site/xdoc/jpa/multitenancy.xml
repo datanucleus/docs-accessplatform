@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<document xmlns="http://maven.apache.org/XDOC/2.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+    <properties>
+        <title>JPA Multitenancy</title>
+    </properties>
+
+    <body>
+        <section name="JPA : Multitenancy">
+            <p>
+                On occasion you need to share a data model with other user-groups or other applications and 
+                where the model is persisted to the same structure of datastore. There are three ways of 
+                handling this with DataNucleus.
+            </p>
+            <ul>
+                <li><b>Separate Database per Tenant</b> - have a different database per user-group/application.</li>
+                <li><b>Separate Schema per Tenant</b> - as the first option, except use different schemas.</li>
+                <li><b>Same Database/Schema but with a Discriminator</b> - this is described below.</li>
+            </ul>
+
+            <subsection name="Multitenancy via Discriminator">
+                <p>
+                    If you specify the persistence property <i>datanucleus.tenantId</i> as an identifier
+                    for your user-group/application then DataNucleus will know that it needs to provide
+                    a tenancy discriminator to all primary tables of persisted classes. This discriminator
+                    is then used to separate the data of the different user-groups.
+                </p>
+                <p>
+                    By default this will add a column <b>TENANT_ID</b> to each primary table, of String-based type.
+                    You can control this by specifying extension metadata for each persistable class
+                </p>
+                <source><![CDATA[
+<class name="MyClass">
+     <extension vendor-name="datanucleus" key="multitenancy-column-name" value="TENANT"/>
+     <extension vendor-name="datanucleus" key="multitenancy-column-length" value="24"/>
+     ...
+</class>]]></source>
+                <p>
+                    In all subsequent use of DataNucleus, any "insert" to the primary "table"(s) will also include
+                    the TENANT column value. Additionally any query will apply a WHERE clause restricting to a particular
+                    value of TENANT column.
+                </p>
+                <p>
+                    If you want to disable multitenancy on a class, just specify the following metadata
+                </p>
+                <source><![CDATA[
+<class name="MyClass">
+     <extension vendor-name="datanucleus" key="multitenancy-disable" value="true"/>
+     ...
+</class>]]></source>
+            </subsection>
+
+        </section>
+    </body>
+</document>

@@ -1,0 +1,2171 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<document xmlns="http://maven.apache.org/XDOC/2.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+    <properties>
+        <title>JPA XML Meta-Data</title>
+    </properties>
+    <body>
+        <section name="JPA : XML Metadata Reference">
+            <p>
+                JPA XML MetaData allows you to define mapping information but in a separate file (<i>orm.xml</i>) 
+                separating persistence mapping from your model. What follows provides a reference guide to MetaData 
+                elements. Here is an example header for <b>orm.xml</b> files with 
+                <a href="http://xmlns.jcp.org/xml/ns/persistence/orm_2_1.xsd" target="_blank">XSD</a> specification
+            </p>
+<source><![CDATA[
+<?xml version="1.0" encoding="UTF-8" ?>
+<entity-mappings xmlns="http://xmlns.jcp.org/xml/ns/persistence/orm"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence/orm
+        http://xmlns.jcp.org/xml/ns/persistence/orm_2_1.xsd" version="2.1">
+    ...
+</entity-mappings>]]></source>
+            <p>
+                If using any of the DataNucleus extensions, then the XSD is
+                <a href="http://www.datanucleus.org/xsd/jpa/orm_2_1.xsd" target="_blank">defined here</a>,
+                in which case you would define your header as :-
+            </p>
+<source><![CDATA[
+<?xml version="1.0" encoding="UTF-8" ?>
+<entity-mappings xmlns="http://www.datanucleus.org/xsd/jpa/orm"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.datanucleus.org/xsd/jpa/orm
+        http://www.datanucleus.org/xsd/jpa/orm_2_1.xsd" version="2.1">
+    ...
+</entity-mappings>]]></source>
+
+            <ul>
+                <li>entity-mappings
+                <ul>
+                    <li><a href="#description">description</a></li>
+                    <li>persistence-unit-metadata
+                    <ul>
+                        <li><a href="#xml-mapping-metadata-complete">xml-mapping-metadata-complete</a></li>
+                    </ul></li>
+                    <li><a href="#package">package</a></li>
+                    <li><a href="#schema">schema</a></li>
+                    <li><a href="#catalog">catalog</a></li>
+                    <li><a href="#access">access</a></li>
+                    <li><a href="#sequence-generator">sequence-generator</a></li>
+                    <li><a href="#table-generator">table-generator</a></li>
+                    <li><a href="#named-query">named-query</a>
+                    <ul>
+                        <li>query</li>
+                    </ul></li>
+                    <li><a href="#named-native-query">named-native-query</a>
+                    <ul>
+                        <li>query</li>
+                    </ul></li>
+                    <li><a href="#sql-result-set-mapping">sql-result-set-mapping</a>
+                    <ul>
+                        <li><a href="#entity-result">entity-result</a>
+                        <ul>
+                            <li><a href="#field-result">field-result</a></li>
+                        </ul></li>
+                        <li><a href="#column-result">column-result</a></li>
+                    </ul></li>
+
+                    <li><a href="#mapped-superclass">mapped-superclass</a>
+                    <ul>
+                        <li><a href="#entity-description">description</a></li>
+                        <li><a href="#id-class">id-class</a></li>
+                        <li><a href="#exclude-default-listeners">exclude-default-listeners</a></li>
+                        <li><a href="#exclude-superclass-listeners">exclude-superclass-listeners</a></li>
+                        <li>entity-listeners
+                        <ul>
+                            <li><a href="#entity-listener">entity-listener</a>
+                            <ul>
+                                <li><a href="#pre-persist">pre-persist</a></li>
+                                <li><a href="#post-persist">post-persist</a></li>
+                                <li><a href="#pre-remove">pre-remove</a></li>
+                                <li><a href="#post-remove">post-remove</a></li>
+                                <li><a href="#pre-update">pre-update</a></li>
+                                <li><a href="#post-update">post-update</a></li>
+                                <li><a href="#post-load">post-load</a></li>
+                            </ul></li>
+                        </ul></li>
+                        <li><a href="#pre-persist">pre-persist</a></li>
+                        <li><a href="#post-persist">post-persist</a></li>
+                        <li><a href="#pre-remove">pre-remove</a></li>
+                        <li><a href="#post-remove">post-remove</a></li>
+                        <li><a href="#pre-update">pre-update</a></li>
+                        <li><a href="#post-update">post-update</a></li>
+                        <li><a href="#post-load">post-load</a></li>
+                        <li>attributes
+                        <ul>
+                            <li>Same elements as under &lt;entity&gt;-&gt;&lt;attributes&gt;</li>
+                        </ul></li>
+                    </ul></li>
+
+                    <li><a href="#entity">entity</a>
+                    <ul>
+                        <li><a href="#entity-description">description</a></li>
+                        <li><a href="#table">table</a>
+                        <ul>
+                            <li><a href="#unique-constraint">unique-constraint</a>
+                            <ul>
+                                <li>column-name</li>
+                            </ul></li>
+                            <li><a href="#index">index</a></li>
+                        </ul></li>
+                        <li><a href="#secondary-table">secondary-table</a>
+                        <ul>
+                            <li><a href="#primary-key-join-column">primary-key-join-column</a></li>
+                            <li><a href="#foreign-key">primary-key-foreign-key</a></li>
+                            <li><a href="#unique-constraint">unique-constraint</a>
+                            <ul>
+                                <li>column-name</li>
+                            </ul></li>
+                            <li><a href="#index">index</a></li>
+                        </ul></li>
+                        <li><a href="#primary-key-join-column">primary-key-join-column</a></li>
+                        <li><a href="#foreign-key">primary-key-foreign-key</a></li>
+                        <li><a href="#id-class">id-class</a></li>
+                        <li><a href="#inheritance">inheritance</a></li>
+                        <li><a href="#discriminator-value">discriminator-value</a></li>
+                        <li><a href="#discriminator-column">discriminator-column</a></li>
+                        <li><a href="#sequence-generator">sequence-generator</a></li>
+                        <li><a href="#table-generator">table-generator</a>
+                        <ul>
+                            <li><a href="#index">index</a></li>
+                        </ul></li>
+                        <li><a href="#named-query">named-query</a>
+                        <ul>
+                            <li>query</li>
+                        </ul></li>
+                        <li><a href="#named-native-query">named-native-query</a>
+                        <ul>
+                            <li>query</li>
+                        </ul></li>
+                        <li><a href="#sql-result-set-mapping">sql-result-set-mapping</a>
+                        <ul>
+                            <li><a href="#entity-result">entity-result</a>
+                            <ul>
+                                <li><a href="#field-result">field-result</a></li>
+                            </ul></li>
+                            <li><a href="#column-result">column-result</a></li>
+                        </ul></li>
+                        <li><a href="#named-entity-graph">named-entity-graph</a>
+                        <ul>
+                            <li><a href="#named-attribute-node">named-attribute-node</a></li>
+                            <li><a href="#named-subgraph">subgraph</a>
+                            <ul>
+                                <li><a href="#named-attribute-node">named-attribute-node</a></li>
+                            </ul></li>
+                            <li><a href="#named-subgraph">subclass-subgraph</a>
+                            <ul>
+                                <li><a href="#named-attribute-node">named-attribute-node</a></li>
+                            </ul></li>
+                        </ul></li>
+                        <li><a href="#exclude-default-listeners">exclude-default-listeners</a></li>
+                        <li><a href="#exclude-superclass-listeners">exclude-superclass-listeners</a></li>
+                        <li>entity-listeners
+                        <ul>
+                            <li><a href="#entity-listener">entity-listener</a>
+                            <ul>
+                                <li><a href="#pre-persist">pre-persist</a></li>
+                                <li><a href="#post-persist">post-persist</a></li>
+                                <li><a href="#pre-remove">pre-remove</a></li>
+                                <li><a href="#post-remove">post-remove</a></li>
+                                <li><a href="#pre-update">pre-update</a></li>
+                                <li><a href="#post-update">post-update</a></li>
+                                <li><a href="#post-load">post-load</a></li>
+                            </ul></li>
+                        </ul></li>
+                        <li><a href="#pre-persist">pre-persist</a></li>
+                        <li><a href="#post-persist">post-persist</a></li>
+                        <li><a href="#pre-remove">pre-remove</a></li>
+                        <li><a href="#post-remove">post-remove</a></li>
+                        <li><a href="#pre-update">pre-update</a></li>
+                        <li><a href="#post-update">post-update</a></li>
+                        <li><a href="#post-load">post-load</a></li>
+                        <li><a href="#attribute-override">attribute-override</a>
+                        <ul>
+                            <li><a href="#column">column</a></li>
+                        </ul></li>
+                        <li><a href="#association-override">association-override</a>
+                        <ul>
+                            <li><a href="#join-column">join-column</a></li>
+                        </ul></li>
+                        <li>attributes
+                        <ul>
+                            <li><a href="#id">id</a>
+                            <ul>
+                                <li><a href="#column">column</a></li>
+                                <li><a href="#generated-value">generated-value</a></li>
+                                <li><a href="#sequence-generator">sequence-generator</a></li>
+                                <li><a href="#table-generator">table-generator</a></li>
+                            </ul></li>
+                            <li><a href="#embedded-id">embedded-id</a></li>
+                            <li><a href="#basic">basic</a>
+                            <ul>
+                                <li><a href="#column">column</a></li>
+                                <li>lob</li>
+                                <li><a href="#temporal">temporal</a></li>
+                                <li><a href="#enumerated">enumerated</a></li>
+                                <li><a href="#convert">convert</a></li>
+                            </ul></li>
+                            <li><a href="#version">version</a>
+                            <ul>
+                                <li><a href="#column">column</a></li>
+                            </ul></li>
+                            <li><a href="#many-to-one">many-to-one</a>
+                            <ul>
+                                <li><a href="#join-column">join-column</a></li>
+                                <li><a href="#join-table">join-table</a>
+                                <ul>
+                                    <li><a href="#join-column">join-column</a></li>
+                                    <li><a href="#inverse-join-column">inverse-join-column</a></li>
+                                    <li><a href="#unique-constraint">unique-constraint</a>
+                                    <ul>
+                                        <li>column-name</li>
+                                    </ul></li>
+                                </ul></li>
+                                <li>cascade
+                                <ul>
+                                    <li>cascade-all</li>
+                                    <li>cascade-persist</li>
+                                    <li>cascade-merge</li>
+                                    <li>cascade-remove</li>
+                                    <li>cascade-refresh</li>
+                                </ul></li>
+                            </ul></li>
+                            <li><a href="#element-collection">element-collection</a>
+                            <ul>
+                                <li><a href="#collection-table">collection-table</a>
+                                <ul>
+                                    <li><a href="#join-column">join-column</a></li>
+                                    <li><a href="#index">index</a></li>
+                                    <li><a href="#foreign-key">foreign-key</a></li>
+                                </ul></li>
+                                <li><a href="#order-by">order-by</a></li>
+                                <li><a href="#order-column">order-column</a></li>
+                                <li><a href="#map-key">map-key</a></li>
+                                <li><a href="#map-key-temporal">map-key-temporal</a></li>
+                                <li><a href="#map-key-enumerated">map-key-enumerated</a></li>
+                                <li><a href="#join-table">join-table</a>
+                                <ul>
+                                    <li><a href="#join-column">join-column</a></li>
+                                    <li><a href="#foreign-key">foreign-key</a></li>
+                                    <li><a href="#inverse-join-column">inverse-join-column</a></li>
+                                    <li><a href="#foreign-key">inverse-foreign-key</a></li>
+                                    <li><a href="#unique-constraint">unique-constraint</a>
+                                    <ul>
+                                        <li>column-name</li>
+                                    </ul></li>
+                                </ul></li>
+                                <li><a href="#join-column">join-column</a></li>
+                            </ul></li>
+                            <li><a href="#one-to-many">one-to-many</a>
+                            <ul>
+                                <li><a href="#order-by">order-by</a></li>
+                                <li><a href="#order-column">order-column</a></li>
+                                <li><a href="#map-key">map-key</a></li>
+                                <li><a href="#map-key-temporal">map-key-temporal</a></li>
+                                <li><a href="#map-key-enumerated">map-key-enumerated</a></li>
+                                <li><a href="#join-table">join-table</a>
+                                <ul>
+                                    <li><a href="#join-column">join-column</a></li>
+                                    <li><a href="#inverse-join-column">inverse-join-column</a></li>
+                                    <li><a href="#unique-constraint">unique-constraint</a>
+                                    <ul>
+                                        <li>column-name</li>
+                                    </ul></li>
+                                </ul></li>
+                                <li><a href="#join-column">join-column</a></li>
+                                <li>cascade
+                                <ul>
+                                    <li>cascade-all</li>
+                                    <li>cascade-persist</li>
+                                    <li>cascade-merge</li>
+                                    <li>cascade-remove</li>
+                                    <li>cascade-refresh</li>
+                                </ul></li>
+                            </ul></li>
+                            <li><a href="#one-to-one">one-to-one</a>
+                            <ul>
+                                <li><a href="#join-column">join-column</a></li>
+                                <li><a href="#foreign-key">foreign-key</a></li>
+                                <li><a href="#join-table">join-table</a>
+                                <ul>
+                                    <li><a href="#join-column">join-column</a></li>
+                                    <li><a href="#inverse-join-column">inverse-join-column</a></li>
+                                    <li><a href="#unique-constraint">unique-constraint</a>
+                                    <ul>
+                                        <li>column-name</li>
+                                    </ul></li>
+                                </ul></li>
+                                <li>cascade
+                                <ul>
+                                    <li>cascade-all</li>
+                                    <li>cascade-persist</li>
+                                    <li>cascade-merge</li>
+                                    <li>cascade-remove</li>
+                                    <li>cascade-refresh</li>
+                                </ul></li>
+                            </ul></li>
+                            <li><a href="#many-to-many">many-to-many</a>
+                            <ul>
+                                <li><a href="#order-by">order-by</a></li>
+                                <li><a href="#order-column">order-column</a></li>
+                                <li><a href="#map-key">map-key</a></li>
+                                <li><a href="#map-key-temporal">map-key-temporal</a></li>
+                                <li><a href="#map-key-enumerated">map-key-enumerated</a></li>
+                                <li><a href="#join-table">join-table</a>
+                                <ul>
+                                    <li><a href="#join-column">join-column</a></li>
+                                    <li><a href="#inverse-join-column">inverse-join-column</a></li>
+                                    <li><a href="#unique-constraint">unique-constraint</a>
+                                    <ul>
+                                        <li>column-name</li>
+                                    </ul></li>
+                                </ul></li>
+                                <li>cascade
+                                <ul>
+                                    <li>cascade-all</li>
+                                    <li>cascade-persist</li>
+                                    <li>cascade-merge</li>
+                                    <li>cascade-remove</li>
+                                    <li>cascade-refresh</li>
+                                </ul></li>
+                            </ul></li>
+                            <li><a href="#embedded">embedded</a>
+                            <ul>
+                                <li><a href="#attribute-override">attribute-override</a></li>
+                            </ul></li>
+                            <li><a href="#transient">transient</a></li>
+                        </ul></li>
+                    </ul></li>
+
+                    <li><a href="#embeddable">embeddable</a>
+                    <ul>
+                        <li>embeddable-attributes
+                        <ul>
+                            <li><a href="#basic">basic</a></li>
+                            <li><a href="#transient">transient</a></li>
+                        </ul></li>
+                    </ul></li>
+                </ul></li>
+            </ul>
+            <br/>
+
+            <!-- DESCRIPTION ELEMENT -->
+            <a name="description"/>
+            <subsection name="Metadata for description tag">
+                <p>
+                    The <b>&lt;description&gt;</b> element (&lt;entity-mappings&gt;) contains the text describing all 
+                    classes (and hence entities) defined in this file. It serves no useful purpose other than descriptive.
+                </p>
+                <br/>
+                <br/>
+            </subsection>
+
+            <!-- XML-MAPPING-METADATA-COMPLETE ELEMENT -->
+            <a name="xml-mapping-metadata-complete"/>
+            <subsection name="Metadata for xml-mapping-metadata-complete tag">
+                <p>
+                    The <b>&lt;xml-mapping-metadata-complete&gt;</b> element (under &lt;persistence-unit-metadata&gt;)
+                    when specified defines that the classes in this file are fully specified with just their metadata and 
+                    that any annotations should be ignored.
+                </p>
+                <br/>
+                <br/>
+            </subsection>
+
+            <!-- PACKAGE ELEMENT -->
+            <a name="package"/>
+            <subsection name="Metadata for package tag">
+                <p>
+                    The <b>&lt;package&gt;</b> element (under &lt;entity-mappings&gt;) contains the text defining the 
+                    package into which all classes in this file belong.
+                </p>
+                <br/>
+                <br/>
+            </subsection>
+
+            <!-- SCHEMA ELEMENT -->
+            <a name="schema"/>
+            <subsection name="Metadata for schema tag">
+                <p>
+                    The <b>&lt;schema&gt;</b> element (under &lt;entity-mappings&gt;) contains the default schema for all 
+                    classes in this file.
+                </p>
+                <br/>
+                <br/>
+            </subsection>
+
+            <!-- CATALOG ELEMENT -->
+            <a name="catalog"/>
+            <subsection name="Metadata for catalog tag">
+                <p>
+                    The <b>&lt;catalog&gt;</b> element (under &lt;entity-mappings&gt;) contains the default catalog for all
+                    classes in this file.
+                </p>
+                <br/>
+                <br/>
+            </subsection>
+
+            <!-- ACCESS ELEMENT -->
+            <a name="access"/>
+            <subsection name="Metadata for access tag">
+                <p>
+                    The <b>&lt;access&gt;</b> element (under &lt;entity-mappings&gt;) contains the setting for how to access
+                    the persistent fields/properties. This can be set to either "FIELD" or "PROPERTY".
+                </p>
+                <br/>
+                <br/>
+            </subsection>
+
+            <!-- SEQUENCE-GENERATOR ELEMENT -->
+            <a name="sequence-generator"/>
+            <subsection name="Metadata for sequence-generator tag">
+                <p>
+                    The <b>&lt;sequence-generator&gt;</b> element (under &lt;entity-mappings&gt;, or &lt;entity&gt; or
+                    &lt;id&gt;) defines a generator of sequence values, for use elsewhere in this persistence-unit.
+                </p>
+                <table>
+                    <tr>
+                        <th>Attribute</th>
+                        <th>Description</th>
+                        <th>Values</th>
+                    </tr>
+                    <tr>
+                        <td>name</td>
+                        <td>Name of the generator (required)</td>
+                        <td/>
+                    </tr>
+                    <tr>
+                        <td>sequence-name</td>
+                        <td>Name of the sequence</td>
+                        <td/>
+                    </tr>
+                    <tr>
+                        <td>initial-value</td>
+                        <td>Initial value for the sequence</td>
+                        <td>1</td>
+                    </tr>
+                    <tr>
+                        <td>allocation-size</td>
+                        <td>Number of values that the sequence allocates when needed</td>
+                        <td>50</td>
+                    </tr>
+                </table>
+                <br/>
+                <br/>
+            </subsection>
+
+            <!-- TABLE-GENERATOR ELEMENT -->
+            <a name="table-generator"/>
+            <subsection name="Metadata for table-generator tag">
+                <p>
+                    The <b>&lt;table-generator&gt;</b> element (under &lt;entity-mappings&gt;, or &lt;entity&gt; or
+                    &lt;id&gt;) defines a generator of sequence values using a datastore table, for use elsewhere in 
+                    this persistence-unit.
+                </p>
+                <table>
+                    <tr>
+                        <th>Attribute</th>
+                        <th>Description</th>
+                        <th>Values</th>
+                    </tr>
+                    <tr>
+                        <td>name</td>
+                        <td>Name of the generator (required)</td>
+                        <td/>
+                    </tr>
+                    <tr class="c">
+                        <td>table</td>
+                        <td>name of the table to use for sequences</td>
+                        <td>SEQUENCE_TABLE</td>
+                    </tr>
+                    <tr class="c">
+                        <td>catalog</td>
+                        <td>Catalog to store the sequence table</td>
+                        <td/>
+                    </tr>
+                    <tr class="c">
+                        <td>schema</td>
+                        <td>Schema to store the sequence table</td>
+                        <td/>
+                    </tr>
+                    <tr class="c">
+                        <td>pk-column-name</td>
+                        <td>Name of the primary-key column in the table</td>
+                        <td>SEQUENCE_NAME</td>
+                    </tr>
+                    <tr class="c">
+                        <td>value-column-name</td>
+                        <td>Name of the value column in the table</td>
+                        <td>NEXT_VAL</td>
+                    </tr>
+                    <tr class="c">
+                        <td>pk-column-value</td>
+                        <td>Name of the value to use in the primary key column (for this row)</td>
+                        <td>{name of the class}</td>
+                    </tr>
+                    <tr class="c">
+                        <td>initial-value</td>
+                        <td>Initial value to use in the table</td>
+                        <td>0</td>
+                    </tr>
+                    <tr class="c">
+                        <td>allocation-size</td>
+                        <td>Number of values to allocate when needed</td>
+                        <td>50</td>
+                    </tr>
+                </table>
+                <br/>
+                <br/>
+            </subsection>
+
+            <!-- NAMED-QUERY ELEMENT -->
+            <a name="named-query"/>
+            <subsection name="Metadata for named-query tag">
+                <p>
+                    The <b>&lt;named-query&gt;</b> element (under &lt;entity-mappings&gt; or under &lt;entity&gt;) defines 
+                    a JPQL query that will be accessible at runtime via the name. The element itself will contain the text 
+                    of the query. It has the following attributes
+                </p>
+                <table>
+                    <tr>
+                        <th>Attribute</th>
+                        <th>Description</th>
+                        <th>Values</th>
+                    </tr>
+                    <tr>
+                        <td>name</td>
+                        <td>Name of the query</td>
+                        <td/>
+                    </tr>
+                </table>
+                <br/>
+                <br/>
+            </subsection>
+
+            <!-- NAMED-NATIVE-QUERY ELEMENT -->
+            <a name="named-native-query"/>
+            <subsection name="Metadata for named-native-query tag">
+                <p>
+                    The <b>&lt;named-native-query&gt;</b> element (under &lt;entity-mappings&gt; or under &lt;entity&gt;) 
+                    defines an SQL query that will be accessible at runtime via the name. The element itself will contain 
+                    the text of the query. It has the following attributes
+                </p>
+                <table>
+                    <tr>
+                        <th>Attribute</th>
+                        <th>Description</th>
+                        <th>Values</th>
+                    </tr>
+                    <tr>
+                        <td>name</td>
+                        <td>Name of the query</td>
+                        <td/>
+                    </tr>
+                </table>
+                <br/>
+                <br/>
+            </subsection>
+
+            <!-- SQL-RESULT-SET-MAPPING ELEMENT -->
+            <a name="sql-result-set-mapping"/>
+            <subsection name="Metadata for sql-result-set-mapping tag">
+                <p>
+                    The <b>&lt;sql-result-set-mapping&gt;</b> element (under &lt;entity-mappings&gt; or under &lt;entity&gt;) 
+                    defines how the results of the SQL query are output to the user per row of the result set. 
+                    It will contain sub-elements. It has the following attributes
+                </p>
+                <table>
+                    <tr>
+                        <th>Attribute</th>
+                        <th>Description</th>
+                        <th>Values</th>
+                    </tr>
+                    <tr>
+                        <td>name</td>
+                        <td>Name of the SQL result-set mapping (referenced by native queries)</td>
+                        <td/>
+                    </tr>
+                </table>
+                <br/>
+                <br/>
+            </subsection>
+
+            <!-- NAMED-ENTITY-GRAPH ELEMENT -->
+            <a name="named-entity-graph"/>
+            <subsection name="Metadata for named-entity-graph tag">
+                <p>
+                    The <b>&lt;named-entity-graph&gt;</b> element (under &lt;entity&gt;) 
+                    defines an entity graph with root as that entity, accessible at runtime via the name. 
+                    It has the following attributes
+                </p>
+                <table>
+                    <tr>
+                        <th>Attribute</th>
+                        <th>Description</th>
+                        <th>Values</th>
+                    </tr>
+                    <tr>
+                        <td>name</td>
+                        <td>Name of the entity graph</td>
+                        <td/>
+                    </tr>
+                </table>
+                <br/>
+                <br/>
+            </subsection>
+
+            <!-- NAMED-ATTRIBUTE-NODE ELEMENT -->
+            <a name="named-attribute-node"/>
+            <subsection name="Metadata for named-attribute-node tag">
+                <p>
+                    The <b>&lt;named-attribute-node&gt;</b> element (under &lt;named-entity-graph&gt;) 
+                    defines a node in the entity graph.
+                    It has the following attributes
+                </p>
+                <table>
+                    <tr>
+                        <th>Attribute</th>
+                        <th>Description</th>
+                        <th>Values</th>
+                    </tr>
+                    <tr>
+                        <td>name</td>
+                        <td>Name of the node (field/property)</td>
+                        <td/>
+                    </tr>
+                    <tr>
+                        <td>subgraph</td>
+                        <td>Name of a subgraph that maps this attribute fully (optional)</td>
+                        <td/>
+                    </tr>
+                </table>
+                <br/>
+                <br/>
+            </subsection>
+
+            <!-- NAMED-SUBGRAPH ELEMENT -->
+            <a name="named-subgraph"/>
+            <subsection name="Metadata for subgraph/subclass-subgraph tag">
+                <p>
+                    The <b>&lt;subgraph&gt;</b>/<b>subclass-subgraph</b> element (under &lt;named-entity-graph&gt;) 
+                    defines a subgraph in the entity graph.
+                    It has the following attributes
+                </p>
+                <table>
+                    <tr>
+                        <th>Attribute</th>
+                        <th>Description</th>
+                        <th>Values</th>
+                    </tr>
+                    <tr>
+                        <td>name</td>
+                        <td>Name of the subgraph (referenced in the named-attribute-node)</td>
+                        <td/>
+                    </tr>
+                    <tr>
+                        <td>class</td>
+                        <td>Type of the subgraph attribute</td>
+                        <td/>
+                    </tr>
+                </table>
+                <br/>
+                <br/>
+            </subsection>
+
+            <!-- ENTITY-RESULT ELEMENT -->
+            <a name="entity-result"/>
+            <subsection name="Metadata for entity-result tag">
+                <p>
+                    The <b>&lt;entity-result&gt;</b> element (under &lt;sql-result-set-mapping&gt;) 
+                    defines an entity that is output from an SQL query per row of the result set. 
+                    It can contain sub-elements of type &lt;field-result&gt;. It has the following attributes
+                </p>
+                <table>
+                    <tr>
+                        <th>Attribute</th>
+                        <th>Description</th>
+                        <th>Values</th>
+                    </tr>
+                    <tr>
+                        <td>entity-class</td>
+                        <td>Class of the entity</td>
+                        <td/>
+                    </tr>
+                    <tr>
+                        <td>discriminator-column</td>
+                        <td>Column containing any discriminator (so subclasses of the entity type can be distinguished)</td>
+                        <td/>
+                    </tr>
+                </table>
+                <br/>
+                <br/>
+            </subsection>
+
+            <!-- FIELD-RESULT ELEMENT -->
+            <a name="field-result"/>
+            <subsection name="Metadata for field-result tag">
+                <p>
+                    The <b>&lt;field-result&gt;</b> element (under &lt;entity-result&gt;) 
+                    defines a field of an entity and the column representing it in an SQL query. 
+                    It has the following attributes
+                </p>
+                <table>
+                    <tr>
+                        <th>Attribute</th>
+                        <th>Description</th>
+                        <th>Values</th>
+                    </tr>
+                    <tr>
+                        <td>name</td>
+                        <td>Name of the entity field</td>
+                        <td/>
+                    </tr>
+                    <tr>
+                        <td>column</td>
+                        <td>Name of the SQL column</td>
+                        <td/>
+                    </tr>
+                </table>
+                <br/>
+                <br/>
+            </subsection>
+
+            <!-- COLUMN-RESULT ELEMENT -->
+            <a name="column-result"/>
+            <subsection name="Metadata for column-result tag">
+                <p>
+                    The <b>&lt;column-result&gt;</b> element (under &lt;sql-result-set-mapping&gt;) 
+                    defines a column that is output directly from an SQL query per row of the result set. 
+                    It has the following attributes
+                </p>
+                <table>
+                    <tr>
+                        <th>Attribute</th>
+                        <th>Description</th>
+                        <th>Values</th>
+                    </tr>
+                    <tr>
+                        <td>name</td>
+                        <td>Name of the SQL column</td>
+                        <td/>
+                    </tr>
+                </table>
+                <br/>
+                <br/>
+            </subsection>
+
+            <!-- MAPPED-SUPERCLASS ELEMENT -->
+            <a name="mapped-superclass"/>
+            <subsection name="Metadata for mapped-superclass tag">
+                <p>
+                    These are attributes within the <b>&lt;mapped-superclass&gt;</b> tag (under &lt;entity-mappings&gt;). 
+                    This is used to define the persistence definition for a class that has no table but is mapped.
+                </p>
+                <table>
+                    <tr>
+                        <th>Attribute</th>
+                        <th>Description</th>
+                        <th>Values</th>
+                    </tr>
+                    <tr>
+                        <td>class</td>
+                        <td>Name of the class (required)</td>
+                        <td/>
+                    </tr>
+                    <tr>
+                        <td>metadata-complete</td>
+                        <td>Whether the definition of persistence of this class is complete with this MetaData definition.
+                            That is, should any annotations be ignored.</td>
+                        <td>true | <b>false</b></td>
+                    </tr>
+                </table>
+                <br/>
+                <br/>
+            </subsection>
+
+            <!-- ENTITY ELEMENT -->
+            <a name="entity"/>
+            <subsection name="Metadata for entity tag">
+                <p>
+                    These are attributes within the <b>&lt;entity&gt;</b> tag (under &lt;entity-mappings&gt;). 
+                    This is used to define the persistence definition for this class.
+                </p>
+                <table>
+                    <tr>
+                        <th>Attribute</th>
+                        <th>Description</th>
+                        <th>Values</th>
+                    </tr>
+                    <tr>
+                        <td>class</td>
+                        <td>Name of the class (required)</td>
+                        <td/>
+                    </tr>
+                    <tr>
+                        <td>name</td>
+                        <td>Name of the entity. Used by JPQL queries</td>
+                        <td/>
+                    </tr>
+                    <tr>
+                        <td>metadata-complete</td>
+                        <td>Whether the definition of persistence of this class is complete with this MetaData definition.
+                            That is, should any annotations be ignored.</td>
+                        <td>true | <b>false</b></td>
+                    </tr>
+                    <tr>
+                        <td>cacheable</td>
+                        <td>Whether instances of this class should be cached in the L2 cache. New in JPA2</td>
+                        <td><b>true</b> | false</td>
+                    </tr>
+                </table>
+                <br/>
+                <br/>
+            </subsection>
+
+            <!-- ENTITY/DESCRIPTION ELEMENT -->
+            <a name="entity-description"/>
+            <subsection name="Metadata for description tag">
+                <p>
+                    The <b>&lt;description&gt;</b> element (under &lt;entity&gt;) contains the text describing
+                    the class being persisted. It serves no useful purpose other than descriptive.
+                </p>
+                <br/>
+                <br/>
+            </subsection>
+
+            <!-- TABLE ELEMENT -->
+            <a name="table"/>
+            <subsection name="Metadata for table tag">
+                <p>
+                    These are attributes within the <b>&lt;table&gt;</b> tag (under &lt;entity&gt;). 
+                    This is used to define the table where this class will be persisted.
+                </p>
+                <table>
+                    <tr>
+                        <th>Attribute</th>
+                        <th>Description</th>
+                        <th>Values</th>
+                    </tr>
+                    <tr class="c">
+                        <td>name</td>
+                        <td>Name of the table</td>
+                        <td/>
+                    </tr>
+                    <tr class="c">
+                        <td>catalog</td>
+                        <td>Catalog where the table is stored</td>
+                        <td/>
+                    </tr>
+                    <tr class="c">
+                        <td>schema</td>
+                        <td>Schema where the table is stored</td>
+                        <td/>
+                    </tr>
+                </table>
+                <br/>
+                <br/>
+            </subsection>
+
+            <!-- SECONDARY-TABLE ELEMENT -->
+            <a name="secondary-table"/>
+            <subsection name="Metadata for secondary-table tag">
+                <p>
+                    These are attributes within the <b>&lt;secondary-table&gt;</b> tag (under &lt;entity&gt;). 
+                    This is used to define the join of a secondary table back to the primary table where this class will be 
+                    persisted.
+                </p>
+                <table>
+                    <tr>
+                        <th>Attribute</th>
+                        <th>Description</th>
+                        <th>Values</th>
+                    </tr>
+                    <tr class="c">
+                        <td>name</td>
+                        <td>Name of the table</td>
+                        <td/>
+                    </tr>
+                    <tr class="c">
+                        <td>catalog</td>
+                        <td>Catalog where the table is stored</td>
+                        <td/>
+                    </tr>
+                    <tr class="c">
+                        <td>schema</td>
+                        <td>Schema where the table is stored</td>
+                        <td/>
+                    </tr>
+                </table>
+                <br/>
+                <br/>
+            </subsection>
+
+            <!-- JOIN-TABLE ELEMENT -->
+            <a name="join-table"/>
+            <subsection name="Metadata for join-table tag">
+                <p>
+                    These are attributes within the <b>&lt;join-table&gt;</b> tag 
+                    (under &lt;one-to-one&gt;, &lt;one-to-many&gt;, &lt;many-to-many&gt;). 
+                    This is used to define the join table where a collection/maps relationship will be persisted.
+                </p>
+                <table>
+                    <tr>
+                        <th>Attribute</th>
+                        <th>Description</th>
+                        <th>Values</th>
+                    </tr>
+                    <tr class="c">
+                        <td>name</td>
+                        <td>Name of the join table</td>
+                        <td/>
+                    </tr>
+                    <tr class="c">
+                        <td>catalog</td>
+                        <td>Catalog where the join table is stored</td>
+                        <td/>
+                    </tr>
+                    <tr class="c">
+                        <td>schema</td>
+                        <td>Schema where the join table is stored</td>
+                        <td/>
+                    </tr>
+                    <tr>
+                        <td>orphan-removal</td>
+                        <td>Whether to remove orphans when either removng the owner or nulling the relation</td>
+                        <td>false</td>
+                    </tr>
+                </table>
+                <br/>
+                <br/>
+            </subsection>
+
+            <!-- COLLECTION-TABLE ELEMENT -->
+            <a name="collection-table"/>
+            <subsection name="Metadata for collection-table tag">
+                <p>
+                    These are attributes within the <b>&lt;collection-table&gt;</b> tag 
+                    (under &lt;element-collection&gt;). 
+                    This is used to define the join table where a collections relationship will be persisted.
+                </p>
+                <table>
+                    <tr>
+                        <th>Attribute</th>
+                        <th>Description</th>
+                        <th>Values</th>
+                    </tr>
+                    <tr class="c">
+                        <td>name</td>
+                        <td>Name of the join table</td>
+                        <td/>
+                    </tr>
+                    <tr class="c">
+                        <td>catalog</td>
+                        <td>Catalog where the join table is stored</td>
+                        <td/>
+                    </tr>
+                    <tr class="c">
+                        <td>schema</td>
+                        <td>Schema where the join table is stored</td>
+                        <td/>
+                    </tr>
+                </table>
+                <br/>
+                <br/>
+            </subsection>
+
+            <!-- UNIQUE-CONSTRAINT ELEMENT -->
+            <a name="unique-constraint"/>
+            <subsection name="Metadata for unique-constraint tag">
+                <p>
+                    This element is specified under the &lt;table&gt;, &lt;secondary-table&gt; or
+                    &lt;join-table&gt; tags. This is used to define a unique constraint on the table.
+                    No attributes are provided, just sub-element(s) "column-name"
+                </p>
+                <br/>
+                <br/>
+            </subsection>
+
+            <!-- COLUMN ELEMENT -->
+            <a name="column"/>
+            <subsection name="Metadata for column tag">
+                <p>
+                    These are attributes within the <b>&lt;column&gt;</b> tag (under &lt;basic&gt;).
+                    This is used to define the column where the data will be stored.
+                </p>
+                <table>
+                    <tr>
+                        <th>Attribute</th>
+                        <th>Description</th>
+                        <th>Values</th>
+                    </tr>
+                    <tr class="c">
+                        <td>name</td>
+                        <td>Name of the column</td>
+                        <td/>
+                    </tr>
+                    <tr class="c">
+                        <td>unique</td>
+                        <td>Whether the column is unique</td>
+                        <td>true | <b>false</b></td>
+                    </tr>
+                    <tr class="c">
+                        <td>nullable</td>
+                        <td>Whether the column is nullable</td>
+                        <td><b>true</b> | false</td>
+                    </tr>
+                    <tr class="c">
+                        <td>insertable</td>
+                        <td>Whether the column is insertable</td>
+                        <td><b>true</b> | false</td>
+                    </tr>
+                    <tr class="c">
+                        <td>updatable</td>
+                        <td>Whether the column is updatable</td>
+                        <td><b>true</b> | false</td>
+                    </tr>
+                    <tr class="c">
+                        <td>column-definition</td>
+                        <td>Some vague JPA term that you put anything in and get any unexpected results from</td>
+                        <td></td>
+                    </tr>
+                    <tr class="c">
+                        <td>table</td>
+                        <td>Table for the column ?</td>
+                        <td></td>
+                    </tr>
+                    <tr class="c">
+                        <td>length</td>
+                        <td>Length for the column (when string type)</td>
+                        <td>255</td>
+                    </tr>
+                    <tr class="c">
+                        <td>precision</td>
+                        <td>Precision for the column (when numeric type)</td>
+                        <td>0</td>
+                    </tr>
+                    <tr class="c">
+                        <td>scale</td>
+                        <td>Scale for the column (when numeric type)</td>
+                        <td>0</td>
+                    </tr>
+                    <tr class="c">
+                        <td>jdbc-type</td>
+                        <td>The JDBC Type to use for this column (<b>DataNucleus extension</b>)</td>
+                        <td></td>
+                    </tr>
+                    <tr class="c">
+                        <td>position</td>
+                        <td>The position to use for this column (first=0) (<b>DataNucleus extension</b>)</td>
+                        <td></td>
+                    </tr>
+                </table>
+                <br/>
+                <br/>
+            </subsection>
+
+            <!-- PRIMARY-KEY-JOIN-COLUMN ELEMENT -->
+            <a name="primary-key-join-column"/>
+            <subsection name="Metadata for primary-key-join-column tag">
+                <p>
+                    These are attributes within the <b>&lt;primary-join-key-column&gt;</b> tag 
+                    (under &lt;secondary-table&gt; or &lt;entity&gt;).
+                    This is used to define the join of PK columns between secondary and primary tables, or
+                    between table of subclass and table of base class.
+                </p>
+                <table>
+                    <tr>
+                        <th>Attribute</th>
+                        <th>Description</th>
+                        <th>Values</th>
+                    </tr>
+                    <tr class="c">
+                        <td>name</td>
+                        <td>Name of the column</td>
+                        <td/>
+                    </tr>
+                    <tr class="c">
+                        <td>referenced-column-name</td>
+                        <td>Name of column in primary table</td>
+                        <td/>
+                    </tr>
+                </table>
+                <br/>
+                <br/>
+            </subsection>
+
+            <!-- JOIN-COLUMN ELEMENT -->
+            <a name="join-column"/>
+            <subsection name="Metadata for join-column tag">
+                <p>
+                    These are attributes within the <b>&lt;join-column&gt;</b> tag (under &lt;join-table&gt;). 
+                    This is used to define the join column.
+                </p>
+                <table>
+                    <tr>
+                        <th>Attribute</th>
+                        <th>Description</th>
+                        <th>Values</th>
+                    </tr>
+                    <tr class="c">
+                        <td>name</td>
+                        <td>Name of the column</td>
+                        <td/>
+                    </tr>
+                    <tr class="c">
+                        <td>referenced-column-name</td>
+                        <td>Name of the column at the other side of the relation that this is a FK to</td>
+                        <td/>
+                    </tr>
+                    <tr class="c">
+                        <td>unique</td>
+                        <td>Whether the column is unique</td>
+                        <td>true | <b>false</b></td>
+                    </tr>
+                    <tr class="c">
+                        <td>nullable</td>
+                        <td>Whether the column is nullable</td>
+                        <td><b>true</b> | false</td>
+                    </tr>
+                    <tr class="c">
+                        <td>insertable</td>
+                        <td>Whether the column is insertable</td>
+                        <td><b>true</b> | false</td>
+                    </tr>
+                    <tr class="c">
+                        <td>updatable</td>
+                        <td>Whether the column is updatable</td>
+                        <td><b>true</b> | false</td>
+                    </tr>
+                    <tr class="c">
+                        <td>column-definition</td>
+                        <td>Some vague JPA term that you put anything in and get any unexpected results from.
+						    Not supported by DataNucleus.</td>
+                        <td></td>
+                    </tr>
+                    <tr class="c">
+                        <td>table</td>
+                        <td>Table for the column ?</td>
+                        <td></td>
+                    </tr>
+                </table>
+                <br/>
+                <br/>
+            </subsection>
+
+            <!-- INVERSE-JOIN-COLUMN ELEMENT -->
+            <a name="inverse-join-column"/>
+            <subsection name="Metadata for inverse-join-column tag">
+                <p>
+                    These are attributes within the <b>&lt;inverse-join-column&gt;</b> tag (under &lt;join-table&gt;).
+                    This is used to define the join column to the element.
+                </p>
+                <table>
+                    <tr>
+                        <th>Attribute</th>
+                        <th>Description</th>
+                        <th>Values</th>
+                    </tr>
+                    <tr class="c">
+                        <td>name</td>
+                        <td>Name of the column</td>
+                        <td/>
+                    </tr>
+                    <tr class="c">
+                        <td>referenced-column-name</td>
+                        <td>Name of the column at the other side of the relation that this is a FK to</td>
+                        <td/>
+                    </tr>
+                    <tr class="c">
+                        <td>unique</td>
+                        <td>Whether the column is unique</td>
+                        <td>true | <b>false</b></td>
+                    </tr>
+                    <tr class="c">
+                        <td>nullable</td>
+                        <td>Whether the column is nullable</td>
+                        <td><b>true</b> | false</td>
+                    </tr>
+                    <tr class="c">
+                        <td>insertable</td>
+                        <td>Whether the column is insertable</td>
+                        <td><b>true</b> | false</td>
+                    </tr>
+                    <tr class="c">
+                        <td>updatable</td>
+                        <td>Whether the column is updatable</td>
+                        <td><b>true</b> | false</td>
+                    </tr>
+                    <tr class="c">
+                        <td>column-definition</td>
+                        <td>Some vague JPA term that you put anything in and get any unexpected results from.
+						    Not supported by DataNucleus.</td>
+                        <td></td>
+                    </tr>
+                    <tr class="c">
+                        <td>table</td>
+                        <td>Table for the column ?</td>
+                        <td></td>
+                    </tr>
+                </table>
+                <br/>
+                <br/>
+            </subsection>
+
+            <!-- ID-CLASS ELEMENT -->
+            <a name="id-class"/>
+            <subsection name="Metadata for id-class tag">
+                <p>
+                    These are attributes within the <b>&lt;id-class&gt;</b> tag (under &lt;entity&gt;).
+                    This defines a identity class to be used for this entity.
+                </p>
+                <table>
+                    <tr>
+                        <th>Attribute</th>
+                        <th>Description</th>
+                        <th>Values</th>
+                    </tr>
+                    <tr>
+                        <td>class</td>
+                        <td>Name of the identity class (required)</td>
+                        <td/>
+                    </tr>
+                </table>
+                <br/>
+                <br/>
+            </subsection>
+
+            <!-- INHERITANCE ELEMENT -->
+            <a name="inheritance"/>
+            <subsection name="Metadata for inheritance tag">
+                <p>
+                    These are attributes within the <b>&lt;inheritance&gt;</b> tag (under &lt;entity&gt;).
+                    This defines the inheritance of the class.
+                </p>
+                <table>
+                    <tr>
+                        <th>Attribute</th>
+                        <th>Description</th>
+                        <th>Values</th>
+                    </tr>
+                    <tr>
+                        <td>strategy</td>
+                        <td>Strategy for inheritance in terms of storing this class</td>
+                        <td>SINGLE_TABLE | JOINED | TABLE_PER_CLASS</td>
+                    </tr>
+                </table>
+                <br/>
+                <br/>
+            </subsection>
+
+            <!-- DISCRIMINATOR-VALUE ELEMENT -->
+            <a name="discriminator-value"/>
+            <subsection name="Metadata for discriminator-value tag">
+                <p>
+                    These are attributes within the <b>&lt;discriminator-value&gt;</b> tag (under &lt;entity&gt;).
+                    This defines the value used in a discriminator. The value is contained in the element.
+                    Specification of the value will result in a "value-map" discriminator strategy being adopted.
+                    If no discriminator-value is present, but discriminator-column is then "class-name" discriminator 
+                    strategy is used.
+                </p>
+                <br/>
+                <br/>
+            </subsection>
+
+            <!-- DISCRIMINATOR-COLUMN ELEMENT -->
+            <a name="discriminator-column"/>
+            <subsection name="Metadata for discriminator-column tag">
+                <p>
+                    These are attributes within the <b>&lt;discriminator-column&gt;</b> tag (under &lt;entity&gt;).
+                    This defines the column used for a discriminator.
+                </p>
+                <table>
+                    <tr>
+                        <th>Attribute</th>
+                        <th>Description</th>
+                        <th>Values</th>
+                    </tr>
+                    <tr class="c">
+                        <td>name</td>
+                        <td>Name of the discriminator column</td>
+                        <td>DTYPE</td>
+                    </tr>
+                    <tr class="c">
+                        <td>discriminator-type</td>
+                        <td>Type of data stored in the discriminator column</td>
+                        <td>STRING | CHAR | INTEGER</td>
+                    </tr>
+                    <tr class="c">
+                        <td>length</td>
+                        <td>Length of the discriminator column</td>
+                        <td></td>
+                    </tr>
+                </table>
+                <br/>
+                <br/>
+            </subsection>
+
+            <!-- ID ELEMENT -->
+            <a name="id"/>
+            <subsection name="Metadata for id tag">
+                <p>
+                    These are attributes within the <b>&lt;id&gt;</b> tag (under &lt;attributes&gt;).
+                    This is used to define the field used to be the identity of the class.
+                </p>
+                <table>
+                    <tr>
+                        <th>Attribute</th>
+                        <th>Description</th>
+                        <th>Values</th>
+                    </tr>
+                    <tr>
+                        <td>name</td>
+                        <td>Name of the field (required)</td>
+                        <td/>
+                    </tr>
+                </table>
+                <br/>
+                <br/>
+            </subsection>
+
+            <!-- GENERATED-VALUE ELEMENT -->
+            <a name="generated-value"/>
+            <subsection name="Metadata for generated-value tag">
+                <p>
+                    These are attributes within the <b>&lt;generated-value&gt;</b> tag (under &lt;id&gt;).
+                    This is used to define how to generate the value for the identity field.
+                </p>
+                <table>
+                    <tr>
+                        <th>Attribute</th>
+                        <th>Description</th>
+                        <th>Values</th>
+                    </tr>
+                    <tr>
+                        <td>strategy</td>
+                        <td>Generation strategy. 
+                            Please refer to the <a href="value_generation.html">Identity Generation Guide</a></td>
+                        <td><b>auto</b> | identity | sequence | table</td>
+                    </tr>
+                    <tr>
+                        <td>generator</td>
+                        <td>Name of the generator to use if wanting to override the default DataNucleus generator for the specified
+                            strategy. 
+                            Please refer to the <a href="#sequence-generator">&lt;sequence-generator&gt;</a> and
+                            <a href="#table-generator">&lt;table-generator&gt;</a></td>
+                        <td></td>
+                    </tr>
+                </table>
+                <br/>
+                <br/>
+            </subsection>
+
+            <!-- EMBEDDED-ID ELEMENT -->
+            <a name="embedded-id"/>
+            <subsection name="Metadata for embedded-id tag">
+                <p>
+                    These are attributes within the <b>&lt;embedded-id&gt;</b> tag (under &lt;attributes&gt;). 
+                    This is used to define the field used to be the (embedded) identity of the class.
+                    <b>Note that this is not yet fully supported - specify the fields in the class</b>
+                </p>
+                <table>
+                    <tr>
+                        <th>Attribute</th>
+                        <th>Description</th>
+                        <th>Values</th>
+                    </tr>
+                    <tr>
+                        <td>name</td>
+                        <td>Name of the field (required)</td>
+                        <td/>
+                    </tr>
+                </table>
+                <br/>
+                <br/>
+            </subsection>
+
+            <!-- VERSION ELEMENT -->
+            <a name="version"/>
+            <subsection name="Metadata for version tag">
+                <p>
+                    These are attributes within the <b>&lt;version&gt;</b> tag (under &lt;attributes&gt;). 
+                    This is used to define the field used to be hold the version of the class.
+                </p>
+                <table>
+                    <tr>
+                        <th>Attribute</th>
+                        <th>Description</th>
+                        <th>Values</th>
+                    </tr>
+                    <tr>
+                        <td>name</td>
+                        <td>Name of the field (required)</td>
+                        <td/>
+                    </tr>
+                </table>
+                <br/>
+                <br/>
+            </subsection>
+
+            <!-- BASIC ELEMENT -->
+            <a name="basic"/>
+            <subsection name="Metadata for basic tag">
+                <p>
+                    These are attributes within the <b>&lt;basic&gt;</b> tag (under &lt;attributes&gt;). 
+                    This is used to define the persistence information for the field.
+                </p>
+                <table>
+                    <tr>
+                        <th>Attribute</th>
+                        <th>Description</th>
+                        <th>Values</th>
+                    </tr>
+                    <tr>
+                        <td>name</td>
+                        <td>Name of the field (required)</td>
+                        <td/>
+                    </tr>
+                    <tr>
+                        <td>fetch</td>
+                        <td>Fetch type for this field</td>
+                        <td>LAZY | EAGER</td>
+                    </tr>
+                    <tr>
+                        <td>optional</td>
+                        <td>Whether this field may be null and may be used in schema generation</td>
+                        <td>true | false</td>
+                    </tr>
+                </table>
+                <br/>
+                <br/>
+            </subsection>
+
+            <!-- TEMPORAL ELEMENT -->
+            <a name="temporal"/>
+            <subsection name="Metadata for temporal tag">
+                <p>
+                    These are attributes within the <b>&lt;temporal&gt;</b> tag (under &lt;basic&gt;). 
+                    This is used to define the details of persistence as a temporal type. The contents of the element
+                    can be one of DATE, TIME, TIMESTAMP.
+                </p>
+                <br/>
+                <br/>
+            </subsection>
+
+            <!-- ENUMERATED ELEMENT -->
+            <a name="enumerated"/>
+            <subsection name="Metadata for enumerated tag">
+                <p>
+                    These are attributes within the <b>&lt;enumerated&gt;</b> tag (under &lt;basic&gt;). 
+                    This is used to define the details of persistence as an enum type. The contents of the element
+                    can be one of <b>ORDINAL</b> or STRING to represent whether the enum is persisted as an integer-based or 
+                    the actual string.
+                </p>
+                <br/>
+                <br/>
+            </subsection>
+
+            <!-- ONE-TO-ONE ELEMENT -->
+            <a name="one-to-one"/>
+            <subsection name="Metadata for one-to-one tag">
+                <p>
+                    These are attributes within the <b>&lt;one-to-one&gt;</b> tag (under &lt;attributes&gt;). 
+                    This is used to define that the field is part of a 1-1 relation.
+                </p>
+                <table>
+                    <tr>
+                        <th>Attribute</th>
+                        <th>Description</th>
+                        <th>Values</th>
+                    </tr>
+                    <tr>
+                        <td>name</td>
+                        <td>Name of the field (required)</td>
+                        <td/>
+                    </tr>
+                    <tr>
+                        <td>target-entity</td>
+                        <td>Class name of the related entity</td>
+                        <td/>
+                    </tr>
+                    <tr>
+                        <td>fetch</td>
+                        <td>Whether the field should be fetched immediately</td>
+                        <td><b>EAGER</b> | LAZY</td>
+                    </tr>
+                    <tr>
+                        <td>optional</td>
+                        <td>Whether the field can store nulls.</td>
+                        <td><b>true</b> | false</td>
+                    </tr>
+                    <tr>
+                        <td>mapped-by</td>
+                        <td>Name of the field that owns the relation (specified on the inverse side)</td>
+                        <td></td>
+                    </tr>
+                </table>
+                <br/>
+                <br/>
+            </subsection>
+
+            <!-- MANY-TO-ONE ELEMENT -->
+            <a name="many-to-one"/>
+            <subsection name="Metadata for many-to-one tag">
+                <p>
+                    These are attributes within the <b>&lt;many-to-one&gt;</b> tag (under &lt;attributes&gt;). 
+                    This is used to define that the field is part of a N-1 relation.
+                </p>
+                <table>
+                    <tr>
+                        <th>Attribute</th>
+                        <th>Description</th>
+                        <th>Values</th>
+                    </tr>
+                    <tr>
+                        <td>name</td>
+                        <td>Name of the field (required)</td>
+                        <td/>
+                    </tr>
+                    <tr>
+                        <td>target-entity</td>
+                        <td>Class name of the related entity</td>
+                        <td/>
+                    </tr>
+                    <tr>
+                        <td>fetch</td>
+                        <td>Whether the field should be fetched immediately</td>
+                        <td><b>EAGER</b> | LAZY</td>
+                    </tr>
+                    <tr>
+                        <td>optional</td>
+                        <td>Whether the field can store nulls.</td>
+                        <td><b>true</b> | false</td>
+                    </tr>
+                </table>
+                <br/>
+                <br/>
+            </subsection>
+
+            <!-- ELEMENT-COLLECTION ELEMENT -->
+            <a name="element-collection"/>
+            <subsection name="Metadata for element-collection tag">
+                <p>
+                    These are attributes within the <b>&lt;element-collection&gt;</b> tag (under &lt;attributes&gt;). 
+                    This is used to define that the field is part of a 1-N non-PC relation.
+                </p>
+                <table>
+                    <tr>
+                        <th>Attribute</th>
+                        <th>Description</th>
+                        <th>Values</th>
+                    </tr>
+                    <tr>
+                        <td>name</td>
+                        <td>Name of the field (required)</td>
+                        <td/>
+                    </tr>
+                    <tr>
+                        <td>target-class</td>
+                        <td>Class name of the related object</td>
+                        <td/>
+                    </tr>
+                    <tr>
+                        <td>fetch</td>
+                        <td>Whether the field should be fetched immediately</td>
+                        <td>EAGER | <b>LAZY</b></td>
+                    </tr>
+                </table>
+                <br/>
+                <br/>
+            </subsection>
+
+            <!-- ONE-TO-MANY ELEMENT -->
+            <a name="one-to-many"/>
+            <subsection name="Metadata for one-to-many tag">
+                <p>
+                    These are attributes within the <b>&lt;one-to-many&gt;</b> tag (under &lt;attributes&gt;). 
+                    This is used to define that the field is part of a 1-N relation.
+                </p>
+                <table>
+                    <tr>
+                        <th>Attribute</th>
+                        <th>Description</th>
+                        <th>Values</th>
+                    </tr>
+                    <tr>
+                        <td>name</td>
+                        <td>Name of the field (required)</td>
+                        <td/>
+                    </tr>
+                    <tr>
+                        <td>target-entity</td>
+                        <td>Class name of the related entity</td>
+                        <td/>
+                    </tr>
+                    <tr>
+                        <td>fetch</td>
+                        <td>Whether the field should be fetched immediately</td>
+                        <td>EAGER | <b>LAZY</b></td>
+                    </tr>
+                    <tr>
+                        <td>mapped-by</td>
+                        <td>Name of the field that owns the relation (specified on the inverse side)</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>orphan-removal</td>
+                        <td>Whether to remove orphans when either removng the owner or removing the element</td>
+                        <td>false</td>
+                    </tr>
+                </table>
+                <br/>
+                <br/>
+            </subsection>
+
+            <!-- MANY-TO-MANY ELEMENT -->
+            <a name="many-to-many"/>
+            <subsection name="Metadata for many-to-many tag">
+                <p>
+                    These are attributes within the <b>&lt;many-to-many&gt;</b> tag (under &lt;attributes&gt;). 
+                    This is used to define that the field is part of a M-N relation.
+                </p>
+                <table>
+                    <tr>
+                        <th>Attribute</th>
+                        <th>Description</th>
+                        <th>Values</th>
+                    </tr>
+                    <tr>
+                        <td>name</td>
+                        <td>Name of the field (required)</td>
+                        <td/>
+                    </tr>
+                    <tr>
+                        <td>target-entity</td>
+                        <td>Class name of the related entity</td>
+                        <td/>
+                    </tr>
+                    <tr>
+                        <td>fetch</td>
+                        <td>Whether the field should be fetched immediately</td>
+                        <td>EAGER | <b>LAZY</b></td>
+                    </tr>
+                    <tr>
+                        <td>mapped-by</td>
+                        <td>Name of the field on the non-owning side that completes the relation.
+                            Specified on the owner side</td>
+                        <td></td>
+                    </tr>
+                </table>
+                <br/>
+                <br/>
+            </subsection>
+
+            <!-- EMBEDDED ELEMENT -->
+            <a name="embedded"/>
+            <subsection name="Metadata for embedded tag">
+                <p>
+                    These are attributes within the <b>&lt;embedded&gt;</b> tag (under &lt;attributes&gt;). 
+                    This is used to define that the field is part of an embedded relation.
+                </p>
+                <table>
+                    <tr>
+                        <th>Attribute</th>
+                        <th>Description</th>
+                        <th>Values</th>
+                    </tr>
+                    <tr>
+                        <td>name</td>
+                        <td>Name of the field (required)</td>
+                        <td/>
+                    </tr>
+                </table>
+                <br/>
+                <br/>
+            </subsection>
+
+            <!-- ORDER-BY ELEMENT -->
+            <a name="order-by"/>
+            <subsection name="Metadata for order-by tag">
+                <p>
+                    This element is specified under &lt;one-to-many&gt; or &lt;many-to-many&gt;. 
+                    It is used to define the field(s) of the element class that is used for ordering the elements when
+                    they are retrieved from the datastore. It has no attributes and the ordering is specified within
+                    the element itself. It should be a comma-separated list of field names (of the element) with
+                    optional "ASC" or "DESC" to signify ascending or descending
+                </p>
+                <br/>
+                <br/>
+            </subsection>
+
+            <!-- ORDER-COLUMN ELEMENT -->
+            <a name="order-column"/>
+            <subsection name="Metadata for order-column tag">
+                <p>
+                    This element is specified under &lt;one-to-many&gt; or &lt;many-to-many&gt;. 
+                    It is used to define that the List will be ordered with the ordering stored in
+                    a surrogate column in the other table.
+                </p>
+                <table>
+                    <tr>
+                        <th>Attribute</th>
+                        <th>Description</th>
+                        <th>Values</th>
+                    </tr>
+                    <tr class="c">
+                        <td>name</td>
+                        <td>Name of the column</td>
+                        <td>{fieldName}_ORDER</td>
+                    </tr>
+                    <tr class="c">
+                        <td>nullable</td>
+                        <td>Whether the column is nullable</td>
+                        <td><b>true</b> | false</td>
+                    </tr>
+                    <tr class="c">
+                        <td>insertable</td>
+                        <td>Whether the column is insertable</td>
+                        <td><b>true</b> | false</td>
+                    </tr>
+                    <tr class="c">
+                        <td>updatable</td>
+                        <td>Whether the column is updatable</td>
+                        <td><b>true</b> | false</td>
+                    </tr>
+                    <tr class="c">
+                        <td>column-definition</td>
+                        <td>Some vague JPA term that you put anything in and get any unexpected results from</td>
+                        <td></td>
+                    </tr>
+                    <tr class="c">
+                        <td>base</td>
+                        <td>Origin of the ordering (value for the first element)</td>
+                        <td>0</td>
+                    </tr>
+                </table>
+                <br/>
+                <br/>
+            </subsection>
+
+            <!-- MAP-KEY ELEMENT -->
+            <a name="map-key"/>
+            <subsection name="Metadata for map-key tag">
+                <p>
+                    These are attributes within the <b>&lt;map-key&gt;</b> tag (under &lt;one-to-many&gt; or 
+                    &lt;many-to-many&gt;). This is used to define the field of the value class that is the key of a Map.
+                </p>
+                <table>
+                    <tr>
+                        <th>Attribute</th>
+                        <th>Description</th>
+                        <th>Values</th>
+                    </tr>
+                    <tr>
+                        <td>name</td>
+                        <td>Name of the field (required)</td>
+                        <td/>
+                    </tr>
+                </table>
+                <br/>
+                <br/>
+            </subsection>
+
+            <!-- MAP-KEY-TEMPORAL ELEMENT -->
+            <a name="map-key-temporal"/>
+            <subsection name="Metadata for map-key-temporal tag">
+                <p>
+                    Within the <b>&lt;map-key-temporal&gt;</b> tag (under &lt;element-collection&gt;, &lt;one-to-many&gt; or 
+                    &lt;many-to-many&gt;) you put the TemporalType value.
+                </p>
+                <br/>
+                <br/>
+            </subsection>
+
+            <!-- MAP-KEY-ENUMERATED ELEMENT -->
+            <a name="map-key-enumerated"/>
+            <subsection name="Metadata for map-key-enumerated tag">
+                <p>
+                    Within the <b>&lt;map-key-enumerated&gt;</b> tag (under &lt;element-collection&gt;, &lt;one-to-many&gt; or 
+                    &lt;many-to-many&gt;) you put the EnumType value.
+                </p>
+                <br/>
+                <br/>
+            </subsection>
+
+            <!-- TRANSIENT ELEMENT -->
+            <a name="transient"/>
+            <subsection name="Metadata for transient tag">
+                <p>
+                    These are attributes within the <b>&lt;transient&gt;</b> tag (under &lt;attributes&gt;). 
+                    This is used to define that the field is not to be persisted.
+                </p>
+                <table>
+                    <tr>
+                        <th>Attribute</th>
+                        <th>Description</th>
+                        <th>Values</th>
+                    </tr>
+                    <tr>
+                        <td>name</td>
+                        <td>Name of the field (required)</td>
+                        <td/>
+                    </tr>
+                </table>
+                <br/>
+                <br/>
+            </subsection>
+
+            <!-- INDEX ELEMENT -->
+            <a name="index"/>
+            <subsection name="Metadata for index tag">
+                <p>
+                    These are attributes within the <b>&lt;index&gt;</b> element. 
+                    This is used to define the details of an index when overriding the provider default.
+                </p>
+                <table>
+                    <tr>
+                        <th>Attribute</th>
+                        <th>Description</th>
+                        <th>Values</th>
+                    </tr>
+                    <tr>
+                        <td>name</td>
+                        <td>Name of the index</td>
+                        <td/>
+                    </tr>
+                    <tr>
+                        <td>unique</td>
+                        <td>Whether the index is unique</td>
+                        <td/>
+                    </tr>
+                    <tr>
+                        <td>column-list</td>
+                        <td>List of columns (including any ASC, DESC specifications for each column)</td>
+                        <td/>
+                    </tr>
+                </table>
+                <br/>
+                <br/>
+            </subsection>
+
+            <!-- FOREIGNKEY ELEMENT -->
+            <a name="foreign-key"/>
+            <subsection name="Metadata for foreign-key tag">
+                <p>
+                    These are attributes within the <b>&lt;foreign-key&gt;</b> element. 
+                    This is used to define the details of a foreign-key when overriding the provider default.
+                </p>
+                <table>
+                    <tr>
+                        <th>Attribute</th>
+                        <th>Description</th>
+                        <th>Values</th>
+                    </tr>
+                    <tr>
+                        <td>name</td>
+                        <td>Name of the foreign-key</td>
+                        <td/>
+                    </tr>
+                    <tr>
+                        <td>value</td>
+                        <td>Constraint mode</td>
+                        <td/>
+                    </tr>
+                    <tr>
+                        <td>foreignKeyDefinition</td>
+                        <td>The DDL for the foreign key</td>
+                        <td/>
+                    </tr>
+                </table>
+                <br/>
+                <br/>
+            </subsection>
+
+            <!-- CONVERT ELEMENT -->
+            <a name="convert"/>
+            <subsection name="Metadata for convert tag">
+                <p>
+                    These are attributes within the <b>&lt;convert&gt;</b> element, under <b>&lt;basic&gt;</b>. 
+                    This is used to define the use of type conversion on this field.
+                </p>
+                <table>
+                    <tr>
+                        <th>Attribute</th>
+                        <th>Description</th>
+                        <th>Values</th>
+                    </tr>
+                    <tr>
+                        <td>converter</td>
+                        <td>Class name of the converter</td>
+                        <td/>
+                    </tr>
+                    <tr>
+                        <td>attribute-name</td>
+                        <td>Name of the embedded field to convert (optional). <b>Not yet supported</b></td>
+                        <td/>
+                    </tr>
+                    <tr>
+                        <td>disable-conversion</td>
+                        <td>Whether to disable any auto-apply converters for this field</td>
+                        <td>true | <b>false</b></td>
+                    </tr>
+                </table>
+                <br/>
+                <br/>
+            </subsection>
+
+            <!-- EXCLUDE-DEFAULT-LISTENERS ELEMENT -->
+            <a name="exclude-default-listeners"/>
+            <subsection name="Metadata for exclude-default-listeners tag">
+                <p>
+                    This element is specified under &lt;mapped-superclass&gt; or &lt;entity&gt; and is used to denote
+                    that any default listeners defined in this file will be ignored.
+                </p>
+                <br/>
+                <br/>
+            </subsection>
+
+            <!-- EXCLUDE-SUPERCLASS-LISTENERS ELEMENT -->
+            <a name="exclude-superclass-listeners"/>
+            <subsection name="Metadata for exclude-superclass-listeners tag">
+                <p>
+                    This element is specified under &lt;mapped-superclass&gt; or &lt;entity&gt; and is used to denote
+                    that any listeners of superclasses will be ignored.
+                </p>
+                <br/>
+                <br/>
+            </subsection>
+
+            <!-- ENTITY-LISTENER ELEMENT -->
+            <a name="entity-listener"/>
+            <subsection name="Metadata for entity-listener tag">
+                <p>
+                    These are attributes within the <b>&lt;entity-listener&gt;</b> tag (under &lt;entity-listeners&gt;).
+                    This is used to an EntityListener class and the methods it uses
+                </p>
+                <table>
+                    <tr>
+                        <th>Attribute</th>
+                        <th>Description</th>
+                        <th>Values</th>
+                    </tr>
+                    <tr>
+                        <td>class</td>
+                        <td>Name of the EntityListener class that receives the callbacks for this Entity</td>
+                        <td/>
+                    </tr>
+                </table>
+                <br/>
+                <br/>
+            </subsection>
+
+            <!-- PRE-PERSIST ELEMENT -->
+            <a name="pre-persist"/>
+            <subsection name="Metadata for pre-persist tag">
+                <p>
+                    These are attributes within the <b>&lt;pre-persist&gt;</b> tag (under &lt;entity&gt;).
+                    This is used to define any "PrePersist" method callback.
+                </p>
+                <table>
+                    <tr>
+                        <th>Attribute</th>
+                        <th>Description</th>
+                        <th>Values</th>
+                    </tr>
+                    <tr>
+                        <td>method-name</td>
+                        <td>Name of the method (required)</td>
+                        <td/>
+                    </tr>
+                </table>
+                <br/>
+                <br/>
+            </subsection>
+
+            <!-- POST-PERSIST ELEMENT -->
+            <a name="post-persist"/>
+            <subsection name="Metadata for post-persist tag">
+                <p>
+                    These are attributes within the <b>&lt;post-persist&gt;</b> tag (under &lt;entity&gt;).
+                    This is used to define any "PostPersist" method callback.
+                </p>
+                <table>
+                    <tr>
+                        <th>Attribute</th>
+                        <th>Description</th>
+                        <th>Values</th>
+                    </tr>
+                    <tr>
+                        <td>method-name</td>
+                        <td>Name of the method (required)</td>
+                        <td/>
+                    </tr>
+                </table>
+                <br/>
+                <br/>
+            </subsection>
+
+            <!-- PRE-REMOVE ELEMENT -->
+            <a name="pre-remove"/>
+            <subsection name="Metadata for pre-remove tag">
+                <p>
+                    These are attributes within the <b>&lt;pre-remove&gt;</b> tag (under &lt;entity&gt;).
+                    This is used to define any "PreRemove" method callback.
+                </p>
+                <table>
+                    <tr>
+                        <th>Attribute</th>
+                        <th>Description</th>
+                        <th>Values</th>
+                    </tr>
+                    <tr>
+                        <td>method-name</td>
+                        <td>Name of the method (required)</td>
+                        <td/>
+                    </tr>
+                </table>
+                <br/>
+                <br/>
+            </subsection>
+
+            <!-- POST-REMOVE ELEMENT -->
+            <a name="post-remove"/>
+            <subsection name="Metadata for post-remove tag">
+                <p>
+                    These are attributes within the <b>&lt;post-remove&gt;</b> tag (under &lt;entity&gt;).
+                    This is used to define any "PostRemove" method callback.
+                </p>
+                <table>
+                    <tr>
+                        <th>Attribute</th>
+                        <th>Description</th>
+                        <th>Values</th>
+                    </tr>
+                    <tr>
+                        <td>method-name</td>
+                        <td>Name of the method (required)</td>
+                        <td/>
+                    </tr>
+                </table>
+                <br/>
+                <br/>
+            </subsection>
+
+            <!-- PRE-UPDATE ELEMENT -->
+            <a name="pre-update"/>
+            <subsection name="Metadata for pre-update tag">
+                <p>
+                    These are attributes within the <b>&lt;pre-remove&gt;</b> tag (under &lt;entity&gt;).
+                    This is used to define any "PreUpdate" method callback.
+                </p>
+                <table>
+                    <tr>
+                        <th>Attribute</th>
+                        <th>Description</th>
+                        <th>Values</th>
+                    </tr>
+                    <tr>
+                        <td>method-name</td>
+                        <td>Name of the method (required)</td>
+                        <td/>
+                    </tr>
+                </table>
+                <br/>
+                <br/>
+            </subsection>
+
+            <!-- POST-UPDATE ELEMENT -->
+            <a name="post-update"/>
+            <subsection name="Metadata for post-update tag">
+                <p>
+                    These are attributes within the <b>&lt;post-update&gt;</b> tag (under &lt;entity&gt;).
+                    This is used to define any "PostUpdate" method callback.
+                </p>
+                <table>
+                    <tr>
+                        <th>Attribute</th>
+                        <th>Description</th>
+                        <th>Values</th>
+                    </tr>
+                    <tr>
+                        <td>method-name</td>
+                        <td>Name of the method (required)</td>
+                        <td/>
+                    </tr>
+                </table>
+                <br/>
+                <br/>
+            </subsection>
+
+            <!-- POST-LOAD ELEMENT -->
+            <a name="post-load"/>
+            <subsection name="Metadata for post-load tag">
+                <p>
+                    These are attributes within the <b>&lt;post-load&gt;</b> tag (under &lt;entity&gt;).
+                    This is used to define any "PostLoad" method callback.
+                </p>
+                <table>
+                    <tr>
+                        <th>Attribute</th>
+                        <th>Description</th>
+                        <th>Values</th>
+                    </tr>
+                    <tr>
+                        <td>method-name</td>
+                        <td>Name of the method (required)</td>
+                        <td/>
+                    </tr>
+                </table>
+                <br/>
+                <br/>
+            </subsection>
+
+            <!-- ATTRIBUTE-OVERRIDE ELEMENT -->
+            <a name="attribute-override"/>
+            <subsection name="Metadata for attribute-override tag">
+                <p>
+                    These are attributes within the <b>&lt;attribute-override&gt;</b> tag (under &lt;entity&gt;).
+                    This is used to override the columns for any fields in superclasses
+                </p>
+                <table>
+                    <tr>
+                        <th>Attribute</th>
+                        <th>Description</th>
+                        <th>Values</th>
+                    </tr>
+                    <tr>
+                        <td>name</td>
+                        <td>Name of the field/property (required)</td>
+                        <td/>
+                    </tr>
+                </table>
+                <br/>
+                <br/>
+            </subsection>
+
+            <!-- ASSOCIATION-OVERRIDE ELEMENT -->
+            <a name="association-override"/>
+            <subsection name="Metadata for association-override tag">
+                <p>
+                    These are attributes within the <b>&lt;association-override&gt;</b> tag (under &lt;entity&gt;).
+                    This is used to override the columns for any N-1/1-1 fields in superclasses
+                </p>
+                <table>
+                    <tr>
+                        <th>Attribute</th>
+                        <th>Description</th>
+                        <th>Values</th>
+                    </tr>
+                    <tr>
+                        <td>name</td>
+                        <td>Name of the field/property (required)</td>
+                        <td/>
+                    </tr>
+                </table>
+                <br/>
+                <br/>
+            </subsection>
+
+        </section>
+    </body>
+</document>

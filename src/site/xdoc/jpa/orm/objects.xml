@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<document xmlns="http://maven.apache.org/XDOC/2.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+    <properties>
+        <title>JPA Objects</title>
+    </properties>
+
+    <body>
+        <section name="JPA : Fields of type java.lang.Object">
+            <img src="../../images/nucleus_extension.gif" alt=""/>
+            <p>
+                JPA doesn't specify support for persisting fields of type java.lang.Object, however DataNucleus
+                does support this where the values of that field are persistable objects themselves. 
+                This follows the same general process as for <a href="interfaces.html">Interfaces</a> since both 
+                interfaces and java.lang.Object are basically <i>references</i> to some persistable object.
+            </p>
+            <p><b>java.lang.Object cannot be used to persist non-persistable types with fixed schema datastore (e.g RDBMS). 
+                Think of how you would expect it to be stored if you think it ought to</b></p>
+            <p>
+                DataNucleus allows the following ways of persisting Object fields :-
+            </p>
+            <ul>
+                <li><b>per-implementation</b> : a FK is created for each "implementation" so that the datastore
+                    can provide referential integrity. The other advantage is that since there are FKs then
+                    querying can be performed. The disadvantage is that if there are many
+                    implementations then the table can become large with many columns not used</li>
+                <li><b>identity</b> : a single column is added and this stores the class name of the
+                    "implementation" stored, as well as the identity of the object. The disadvantages are that
+                    no querying can be performed, and that there is no referential integrity.</li>
+                <li><b>xcalia</b> : a slight variation on "identity" whereby there is a single column
+                    yet the contents of that column are consistent with what Xcalia XIC JDO implementation
+                    stored there.</li>
+            </ul>
+            <p>
+                The user controls which one of these is to be used by specifying the <i>extension</i>
+                <b>mapping-strategy</b> on the field containing the interface. 
+                The default is "per-implementation"
+            </p>
+            <br/>
+
+            <subsection name="1-1/N-1 relation">
+                <p>
+                    Let's suppose you have a field in a class and you have a selection of possible persistable class that 
+                    could be stored there, so you decide to make the field a <i>java.lang.Object</i>. 
+                    So let's take an example. We have the following class
+                </p>
+                <source><![CDATA[
+public class ParkingSpace
+{
+    String location;
+    Object occupier;
+}]]></source>
+                <p>
+                    So we have a space in a car park, and in that space we have an occupier of the space. We have some 
+                    legacy data and so can't make the type of this "occupier" an interface type, so we just use 
+                    <i>java.lang.Object</i>. Now we know that we can only have particular types of objects stored there 
+                    (since there are only a few types of vehicle that can enter the car park).
+                    So we define our MetaData like this
+                </p>
+                <source><![CDATA[
+public class ParkingSpace
+{
+    String location;
+
+    @OneToOne
+    @Extension(key="implementation-classes", 
+        value="mydomain.samples.vehicles.Car,mydomain.samples.vehicles.Motorbike")
+    Object occupier;
+}]]></source>
+                <p>
+                    This will result in the following database schema.
+                </p>
+                <br/>
+                <img src="../../images/orm/objects_db.gif" border="0" alt=""/>
+                <br/>
+                <p>
+                    So DataNucleus adds foreign keys from the ParkingSpace table to all of the possible implementation 
+                    tables for the <i>occupier</i> field.
+                </p>
+                <p>
+                    In conclusion, when using "per-implementation" mapping for any java.lang.Object field in a 
+                    class to be persisted (as non-serialised), you <u>must</u> define the possible 
+                    "implementation" classes that can be stored there.
+                </p>
+                <br/>
+                <p>
+                    If we use <b>mapping-strategy</b> of "identity" then we get a different datastore schema.
+                </p>
+                <source><![CDATA[
+public class ParkingSpace
+{
+    String location;
+
+    @OneToOne
+    @Extensions({
+        @Extension(key="implementation-classes", 
+            value="mydomain.samples.vehicles.Car,mydomain.samples.vehicles.Motorbike"),
+        @Extension(key="mapping-strategy", value="identity")})
+    Object occupier;
+}]]></source>
+                <p>
+                    and the datastore schema becomes
+                </p>
+                <img src="../../images/orm/objects_identity_1_1_db.gif" border="0" alt=""/>
+                <p>
+                    and the column "OCCUPIER" will contain strings such as 
+                    <i>com.mydomain.samples.object.Car:1</i> allowing retrieval of the related implementation 
+                    object.
+                </p>
+            </subsection>
+
+            <subsection name="Collections of Objects">
+                <p>
+                    You can have a Collection/Map containing elements of java.lang.Object. You specify this in the same 
+                    way as you would any Collection/Map. DataNucleus supports having a Collection of references with 
+                    multiple implementation types as long as you use a join table relation.
+                </p>
+            </subsection>
+
+            <subsection name="Serialised Objects">
+                <p>
+                    By default a field of type <i>java.lang.Object</i> is stored as an instance of the underlying 
+                    PersistenceCapable in the table of that object. If either your Object field represents 
+                    non-PersistenceCapable objects or you simply wish to serialise the Object into the same table as 
+                    the owning object, you need to specify the "serialized" attribute, like this
+                </p>
+                <source><![CDATA[
+public class MyClass
+{
+    @Lob
+    Object myObject;
+}]]></source>
+                <p>
+                    Please refer to the <a href="serialised.html#Reference">serialised fields guide</a> for more details 
+                    of storing objects in this way.
+                </p>
+            </subsection>
+        </section>
+
+    </body>
+</document>

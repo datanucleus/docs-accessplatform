@@ -1,0 +1,535 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<document xmlns="http://maven.apache.org/XDOC/2.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+    <properties>
+        <title>Compound Identity Relationships</title>
+    </properties>
+
+    <body>
+        <section name="JPA : Compound Identity Relationships">
+            <p>
+                An identifying relationship (or "compound identity relationship") is a relationship between two 
+                objects of two classes in which the child object must coexist with the parent object and where the primary 
+                key of the child includes the Entity object of the parent. So effectively the key aspect of this
+                type of relationship is that the primary key of one of the classes includes a Entity field 
+                (hence why is is referred to as <i>Compound Identity</i>).
+                This type of relation is available in the following forms
+            </p>
+            <ul>
+                <li><a href="#1_1_uni">1-1 unidirectional</a></li>
+                <li><a href="#1_N_coll_bi">1-N collection bidirectional using ForeignKey</a></li>
+                <li><a href="#1_N_map_bi">1-N map bidirectional using ForeignKey (key stored in value)</a></li>
+            </ul>
+            <br/>
+
+            <a name="1_1_uni"/>
+            <subsection name="1-1 Relationship">
+                <p>
+                    Lets take the same classes as we have in the <a href="one_to_one.html">1-1 Relationships</a>.
+                    In the 1-1 relationships guide we note that in the datastore representation of the <b>User</b> and 
+                    <b>Account</b> the <b>ACCOUNT</b> table has a primary key as well as a foreign-key to <b>USER</b>. 
+                    In our example here we want to just have a primary key that is also a foreign-key to <b>USER</b>. 
+                    To do this we need to modify the classes slightly and add primary-key fields and use 
+                    "application-identity".
+                </p>
+                <br/>
+                <img src="../../images/orm/relationship_1_1_compound_class.jpg" border="0" alt=""/>
+                <br/>
+                <p>
+                    In addition we need to define primary key classes for our <b>User</b> and <b>Account</b> classes
+                </p>
+                <source><![CDATA[
+public class User
+{
+    long id;
+
+    ... (remainder of User class)
+
+    /**
+     * Inner class representing Primary Key
+     */
+    public static class PK implements Serializable
+    {
+        public long id;
+
+        public PK()
+        {
+        }
+
+        public PK(String s)
+        {
+            this.id = Long.valueOf(s).longValue();
+        }
+
+        public String toString()
+        {
+            return "" + id;
+        }
+
+        public int hashCode()
+        {
+            return (int)id;
+        }
+
+        public boolean equals(Object other)
+        {
+            if (other != null && (other instanceof PK))
+            {
+                PK otherPK = (PK)other;
+                return otherPK.id == this.id;
+            }
+            return false;
+        }
+    }
+}
+
+public class Account
+{
+    User user;
+                
+    ... (remainder of Account class)
+
+    /**
+     * Inner class representing Primary Key
+     */
+    public static class PK implements Serializable
+    {
+        public User.PK user; // Use same name as the real field above
+
+        public PK()
+        {
+        }
+
+        public PK(String s)
+        {
+            StringTokenizer token = new StringTokenizer(s,"::");
+
+            this.user = new User.PK(token.nextToken());
+        }
+
+        public String toString()
+        {
+            return "" + this.user.toString();
+        }
+
+        public int hashCode()
+        {
+            return user.hashCode();
+        }
+
+        public boolean equals(Object other)
+        {
+            if (other != null && (other instanceof PK))
+            {
+                PK otherPK = (PK)other;
+                return this.user.equals(otherPK.user);
+            }
+            return false;
+        }
+    }
+}]]></source>
+                <p>
+                    To achieve what we want with the datastore schema we define the MetaData like this
+                </p>
+                <source><![CDATA[
+<entity-mappings>
+    <entity class="mydomain.User">
+        <table name="USER"/>
+        <id-class class="mydomain.User.PK"/>
+        <attributes>
+            <id name="id">
+                <column name="USER_ID"/>
+            </id>
+            <basic name="login">
+                <column name="LOGIN" length="20"/>
+            </basic>
+    </entity>
+
+    <entity class="mydomain.Account">
+        <table name="ACCOUNT"/>
+        <id-class class="mydomain.Account.PK"/>
+        <attributes>
+            <id name="user">
+                <column name="USER_ID"/>
+            </id>
+            <basic name="firstName">
+                <column name="FIRSTNAME" length="50"/>
+            </basic>
+            <basic name="secondName">
+                <column name="LASTNAME" length="50"/>
+            </basic>
+            <one-to-one name="user"/>
+        </attributes>
+    </entity>
+</entity-mappings>]]></source>
+                <p>
+                    So now we have the following datastore schema
+                </p>
+                <br/>
+                <img src="../../images/orm/relationship_1_1_compound_db.jpg" border="0" alt=""/>
+                <br/>
+                <p>
+                    Things to note :-
+                </p>
+                <ul>
+                    <li>In the child Primary Key class, you must have a field with the same name as the relationship in the 
+                        child class, and the field in the child Primary Key class must be the same type as the Primary Key 
+                        class of the parent</li>
+                    <li>See also the <a href="../application_identity.html#primarykey">general instructions for Primary Key classes</a></li>
+                    <li>You can only have one "Account" object linked to a particular "User" object since the FK to the "User"
+                        is now the primary key of "Account". To remove this restriction you could also add a "long id" to 
+                        "Account" and make the "Account.PK" a composite primary-key</li>
+                </ul>
+                <br/>
+            </subsection>
+
+            <a name="1_N_coll_bi"/>
+            <subsection name="1-N Collection Relationship">
+                <p>
+                    Lets take the same classes as we have in the <a href="one_to_many_collection.html#fk_bi">1-N Relationships
+                    (FK)</a>. In the 1-N relationships guide we note that in the datastore representation of the
+                    <b>Account</b> and <b>Address</b> classes the <b>ADDRESS</b> table has a primary key as well as a 
+                    foreign-key to <b>ACCOUNT</b>. In our example here we want to have the primary-key to <b>ACCOUNT</b> to 
+                    <i>include</i> the foreign-key. To do this we need to modify the classes slightly, adding primary-key 
+                    fields to both classes, and use "application-identity" for both.
+                </p>
+                <br/>
+                <img src="../../images/orm/relationship_1_N_compound_class.jpg" border="0" alt=""/>
+                <br/>
+                <p>
+                    In addition we need to define primary key classes for our <b>Account</b> and <b>Address</b> classes
+                </p>
+                <source><![CDATA[
+public class Account
+{
+    long id; // PK field
+
+    Set addresses = new HashSet();
+
+    ... (remainder of Account class)
+
+    /**
+     * Inner class representing Primary Key
+     */
+    public static class PK implements Serializable
+    {
+        public long id;
+
+        public PK()
+        {
+        }
+
+        public PK(String s)
+        {
+            this.id = Long.valueOf(s).longValue();
+        }
+
+        public String toString()
+        {
+            return "" + id;
+        }
+
+        public int hashCode()
+        {
+            return (int)id;
+        }
+
+        public boolean equals(Object other)
+        {
+            if (other != null && (other instanceof PK))
+            {
+                PK otherPK = (PK)other;
+                return otherPK.id == this.id;
+            }
+            return false;
+        }
+    }
+}
+
+public class Address
+{
+    long id;
+    Account account;
+
+    .. (remainder of Address class)
+
+    /**
+     * Inner class representing Primary Key
+     */
+    public static class PK implements Serializable
+    {
+        public long id; // Same name as real field above
+        public Account.PK account; // Same name as the real field above
+
+        public PK()
+        {
+        }
+
+        public PK(String s)
+        {
+            StringTokenizer token = new StringTokenizer(s,"::");
+            this.id = Long.valueOf(token.nextToken()).longValue();
+            this.account = new Account.PK(token.nextToken());
+        }
+
+        public String toString()
+        {
+            return "" + id + "::" + this.account.toString();
+        }
+
+        public int hashCode()
+        {
+            return (int)id ^ account.hashCode();
+        }
+
+        public boolean equals(Object other)
+        {
+            if (other != null && (other instanceof PK))
+            {
+                PK otherPK = (PK)other;
+                return otherPK.id == this.id && this.account.equals(otherPK.account);
+            }
+            return false;
+        }
+    }
+}]]></source>
+                <p>
+                    To achieve what we want with the datastore schema we define the MetaData like this
+                </p>
+                <source><![CDATA[
+<entity-mappings>
+    <entity class="mydomain.Account">
+        <table name="ACCOUNT"/>
+        <id-class class="mydomain.Account.PK"/>
+        <attributes>
+            <id name="id">
+                <column name="ACCOUNT_ID"/>
+            </id>
+            <basic name="firstName">
+                <column name="FIRSTNAME" length="50"/>
+            </basic>
+            <basic name="secondName">
+                <column name="LASTNAME" length="50"/>
+            </basic>
+            <one-to-many name="addresses" mapped-by="account"/>
+    </entity>
+
+    <entity class="mydomain.Address">
+        <table name="ADDRESS"/>
+        <id-class class="mydomain.Address.PK"/>
+        <attributes>
+            <id name="id">
+                <column name="ID"/>
+            </id>
+            <id name="account">
+                <column name="ACCOUNT_ID"/>
+            </id>
+            <basic name="city">
+                <column name="CITY"/>
+            </basic>
+            <basic name="street">
+                <column name="STREET"/>
+            </basic>
+            <many-to-one name="account"/>
+        </attributes>
+    </entity>
+</entity-mappings>]]></source>
+                <p>
+                    So now we have the following datastore schema
+                </p>
+                <br/>
+                <img src="../../images/orm/relationship_1_N_compound_db.jpg" border="0" alt=""/>
+                <br/>
+                <p>
+                    Things to note :-
+                </p>
+                <ul>
+                    <li>In the child Primary Key class, you must have a field with the same name as the relationship in the 
+                        child class, and the field in the child Primary Key class must be the same type as the Primary Key
+                        class of the parent</li>
+                    <li>See also the <a href="../application_identity.html#primarykey">general instructions for Primary Key classes</a></li>
+                    <li>If we had omitted the "id" field from "Address" it would have only been possible to have one "Address"
+                        in the "Account" "addresses" collection due to PK constraints. For that reason we have the "id" field 
+                        too.</li>
+                </ul>
+                <br/>
+            </subsection>
+            
+            <a name="1_N_map_bi"/>
+            <subsection name="1-N Map Relationship">
+                <p>
+                    Lets take the same classes as we have in the <a href="one_to_many_map.html#fk_bi_key">1-N Relationships 
+                    (FK)</a>. In this guide we note that in the datastore representation of the <b>Account</b> and 
+                    <b>Address</b> classes the <b>ADDRESS</b> table has a primary key as well as a foreign-key to 
+                    <b>ACCOUNT</b>. In our example here we want to have the primary-key to <b>ACCOUNT</b> to 
+                    <i>include</i> the foreign-key. To do this we need to modify the classes slightly, adding primary-key 
+                    fields to both classes, and use "application-identity" for both.
+                </p>
+                <br/>
+                <img src="../../images/orm/relationship_1_N_bi_map_fk_simple_pc_class.jpg" border="0" alt=""/>
+                <br/>
+                <p>
+                    In addition we need to define primary key classes for our <b>Account</b> and <b>Address</b> classes
+                </p>
+                <source><![CDATA[
+public class Account
+{
+    long id; // PK field
+
+    Set addresses = new HashSet();
+
+    ... (remainder of Account class)
+
+    /**
+     * Inner class representing Primary Key
+     */
+    public static class PK implements Serializable
+    {
+        public long id;
+
+        public PK()
+        {
+        }
+
+        public PK(String s)
+        {
+            this.id = Long.valueOf(s).longValue();
+        }
+
+        public String toString()
+        {
+            return "" + id;
+        }
+
+        public int hashCode()
+        {
+            return (int)id;
+        }
+
+        public boolean equals(Object other)
+        {
+            if (other != null && (other instanceof PK))
+            {
+                PK otherPK = (PK)other;
+                return otherPK.id == this.id;
+            }
+            return false;
+        }
+    }
+}
+
+public class Address
+{
+    String alias;
+    Account account;
+
+    .. (remainder of Address class)
+
+    /**
+     * Inner class representing Primary Key
+     */
+    public static class PK implements Serializable
+    {
+        public String alias; // Same name as real field above
+        public Account.PK account; // Same name as the real field above
+
+        public PK()
+        {
+        }
+
+        public PK(String s)
+        {
+            StringTokenizer token = new StringTokenizer(s,"::");
+            this.alias = Long.valueOf(token.nextToken()).longValue();
+            this.account = new Account.PK(token.nextToken());
+        }
+
+        public String toString()
+        {
+            return alias + "::" + this.account.toString();
+        }
+
+        public int hashCode()
+        {
+            return alias.hashCode() ^ account.hashCode();
+        }
+
+        public boolean equals(Object other)
+        {
+            if (other != null && (other instanceof PK))
+            {
+                PK otherPK = (PK)other;
+                return otherPK.alias.equals(this.alias) && this.account.equals(otherPK.account);
+            }
+            return false;
+        }
+    }
+}]]></source>
+                <p>
+                    To achieve what we want with the datastore schema we define the MetaData like this
+                </p>
+                <source><![CDATA[
+<entity-mappings>
+    <entity class="mydomain.Account">
+        <table name="ACCOUNT"/>
+        <id-class class="mydomain.Account.PK"/>
+        <attributes>
+            <id name="id">
+                <column name="ACCOUNT_ID"/>
+            </id>
+            <basic name="firstName">
+                <column name="FIRSTNAME" length="50"/>
+            </basic>
+            <basic name="secondName">
+                <column name="LASTNAME" length="50"/>
+            </basic>
+            <one-to-many name="addresses" mapped-by="account">
+                <map-key name="alias"/>
+            </one-to-many>
+    </entity>
+
+    <entity class="mydomain.Address">
+        <table name="ADDRESS"/>
+        <id-class class="mydomain.Address.PK"/>
+        <attributes>
+            <id name="account">
+                <column name="ACCOUNT_ID"/>
+            </id>
+            <id name="alias">
+                <column name="KEY"/>
+            </id>
+            <basic name="city">
+                <column name="CITY"/>
+            </basic>
+            <basic name="street">
+                <column name="STREET"/>
+            </basic>
+            <many-to-one name="account"/>
+        </attributes>
+    </entity>
+</entity-mappings>]]></source>
+                <p>
+                    So now we have the following datastore schema
+                </p>
+                <br/>
+                <img src="../../images/orm/relationship_1_N_compound_map_db.jpg" border="0" alt=""/>
+                <br/>
+                <p>
+                    Things to note :-
+                </p>
+                <ul>
+                    <li>In the child Primary Key class, you must have a field with the same name as the relationship in the 
+                        child class, and the field in the child Primary Key class must be the same type as the Primary Key
+                        class of the parent</li>
+                    <li>See also the <a href="../application_identity.html#primarykey">general instructions for Primary Key classes</a></li>
+                    <li>If we had omitted the "alias" field from "Address" it would have only been possible to have one 
+                        "Address" in the "Account" "addresses" collection due to PK constraints. For that reason we have the
+                        "alias" field too as part of the PK.</li>
+                </ul>
+                <br/>
+            </subsection>
+        </section>
+
+    </body>
+</document>

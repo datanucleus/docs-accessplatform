@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<document xmlns="http://maven.apache.org/XDOC/2.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+    <properties>
+        <title>OSGi Deployment for JDO</title>
+    </properties>
+
+    <body>
+        <section name="JDO : Usage of DataNucleus within an OSGi environment">
+            <p>
+                DataNucleus jars are OSGi bundles, and as such, can be deployed in an OSGi environment.
+                Being an OSGi environment care must be taken with respect to class-loading. In particular
+                the persistence property <b>datanucleus.primaryClassLoader</b> will need setting.
+                Please refer to the following guide(s) for assistance until a definitive guide can be
+                provided
+            </p>
+            <ul>
+                <li><a href="http://www.datanucleus.org/servlet/wiki/display/USERS/HOWTO+Use+Datanucleus+with+OSGi+and+Spring+DM">Guide to use of DataNucleus with OSGi and Spring dmServer</a></li>
+                <li><a href="http://www.datanucleus.org/servlet/wiki/pages/viewpage.action?pageId=1179712">Guide to JPOX inside Eclipse RCP</a></li>
+                <li><a href="http://www.datanucleus.org/servlet/wiki/pages/viewpage.action?pageId=1179721">Guide to JPOX with Spring and Eclipse RCP</a></li>
+                <li><a href="http://www.datanucleus.org/servlet/wiki/pages/viewpage.action?pageId=16842780">Guide to using Log4J with DataNucleus under OSGi</a></li>
+            </ul>
+            <p>
+                Some key points around integration with OSGi are as follows :-
+            </p>
+            <ul>
+                <li>Any dependent jar that is required by DataNucleus needs to be OSGi enabled.
+                    By this we mean the jar needs to have the MANIFEST.MF file including <i>ExportPackage</i> for
+                    the packages required by DataNucleus. Failure to have this will result in <i>ClassNotFoundException</i>
+                    when trying to load its classes.</li>
+                <li>Use <i>jdo-api.jar</i> v3.0.1 or later since those are OSGi-enabled</li>
+                <li>The Geronimo "jpa" jar that is included in the DataNucleus distribution is OSGi enabled.</li>
+                <li>When using DataNucleus in an Eclipse Equinox OSGi environment set the persistence property
+                    <b>datanucleus.plugin.pluginRegistryClassName</b> as <i>org.datanucleus.plugin.EclipsePluginRegistry</i></li>
+                <li>When using DataNucleus in other OSGi environments set the persistence property
+                    <b>datanucleus.plugin.pluginRegistryClassName</b> to <i>org.datanucleus.plugin.OSGiPluginRegistry</i></li>
+                <li>If you redeploy a JDO-enabled OSGi application, likely you will need to <i>refresh</i> the javax.jdo and maybe
+                    other bundles.</li>
+            </ul>
+        </section>
+    </body>
+</document>

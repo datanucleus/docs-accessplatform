@@ -1,0 +1,349 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<document xmlns="http://maven.apache.org/XDOC/2.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+    <properties>
+        <title>JDO Queries</title>
+    </properties>
+
+    <body>
+        <section name="JDO : Query API">
+            <p>
+                Once you have persisted objects you need to query them. For example if you have a web application 
+                representing an online store, the user asks to see all products of a particular type, ordered by the 
+                price. This requires you to query the datastore for these products. JDO allows support for several
+                query languages using its API. DataNucleus provides querying using
+            </p>
+            <ul>
+                <li><a href="jdoql.html">an object-oriented query language (JDOQL)</a></li>
+                <li><a href="sql.html">a relational query language (SQL)</a> for RDBMS datastores</li>
+                <li><a href="jpql.html">the pseudo-OO query language for JPA (JPQL)</a></li>
+                <li><a href="stored_procedures.html">Stored Procedures</a> for RDBMS datastores</li>
+            </ul>
+            <p>
+                Note that for some datastores additional query languages may be available specific to that
+                datastore - please check the <a href="../datastores/index.html">datastores documentation</a>.
+                The query language you choose is your choice, typically dependent on the skillset of the 
+                developers of your application.
+            </p>
+            <table>
+                <tr>
+                    <td>We recommend using JDOQL for queries wherever possible since it is object-based
+                    and datastore agnostic, giving you extra flexibility in the future. If not possible
+                    using JDOQL, only then use a language appropriate to the datastore in question</td>
+                </tr>
+            </table>
+
+            <subsection name="Creating a query">
+                <p>
+                    The principal ways of creating a query are
+                </p>
+                <ul>
+                    <li>Specifying the query language, and using a single-string form of the query
+<source><![CDATA[
+Query q = pm.newQuery("javax.jdo.query.JDOQL", 
+    "SELECT FROM mydomain.MyClass WHERE field2 < threshold " +
+    "PARAMETERS java.util.Date threshold");]]></source>
+                    or alternatively
+<source><![CDATA[
+Query q = pm.newQuery("SQL", "SELECT * FROM MYTABLE WHERE COL1 == 25);]]></source>
+                    </li>
+                    <li>A <a href="#named">"named" query</a>, (pre-)defined in metadata (refer to metadata docs).
+<source><![CDATA[
+Query q = pm.newNamedQuery(MyClass.class, "MyQuery1");]]></source>
+                    </li>
+                    <li>JDOQL : Use the <a href="jdoql.html#singlestring">single-string</a> form of the query
+<source><![CDATA[
+Query q = pm.newQuery("SELECT FROM mydomain.MyClass WHERE field2 < threshold " +
+    "PARAMETERS java.util.Date threshold");]]></source>
+                    </li>
+                    <li>JDOQL : Use the <a href="jdoql_declarative.html">declarative API</a> to define the query
+                <source><![CDATA[
+Query q = pm.newQuery(MyClass.class);
+q.setFilter("field2 < threshold");
+q.declareParameters("java.util.Date threshold");]]></source>
+                    </li>
+                    <li>JDOQL : Use the <a href="jdoql_typesafe.html">typesafe API</a> to define the query
+                <source><![CDATA[
+TypesafeQuery<MyClass> q = pm.newTypesafeQuery(MyClass.class);
+QMyClass cand = QMyClass.candidate();
+List<Product> results = 
+    q.filter(cand.field2.lt(q.doubleParameter("threshold"))).executeList();]]></source>
+                    </li>
+                </ul>
+                <p>
+                    Please note that with the query API you can also specify execution time information for the query, 
+                    such as whether it executes in memory, or whether to apply a datastore timeout etc.
+                </p>
+                <br/>
+            </subsection>
+
+            <subsection name="Compiling a query">
+                <p>
+                    An intermediate step once you have your query defined, if you want to check its validity
+                    is to <i>compile</i> it. You do this as follows
+                </p>
+                <source><![CDATA[
+q.compile();]]></source>
+                <p>
+                    If the query is invalid, then a JDO exception will be thrown.
+                </p>
+                <br/>
+            </subsection>
+
+            <subsection name="Executing a query">
+                <p>
+                    So we have set up our query. We now execute it
+                </p>
+                <source><![CDATA[
+Object result = q.execute();
+]]></source>
+                <p>
+                    If we have parameters to pass in we can also do any of
+                </p>
+                <source><![CDATA[
+Object result = q.execute(paramVal1);
+
+
+Object result = q.execute(paramVal1, paramVal2);
+
+
+Object result = q.executeWithArray(new Object[]{paramVal1, paramVal2});
+
+
+Map paramMap = new HashMap();
+paramMap("param1", paramVal1);
+paramMap("param2", paramVal2);
+Object result = q.executeWithMap(paramMap);
+]]></source>
+                <p>
+                    By default, when a query is executed, it will execute in the datastore with what is present
+                    in the datastore at that time. If there are outstanding changes waiting to be flushed then these
+                    will not feature in the results. To flush these changes before execution, set the following
+                    query "extension" before calling <i>execute</i>
+                </p>
+                <source><![CDATA[
+q.addExtension("datanucleus.query.flushBeforeExecution","true");]]></source>
+                <br/>
+            </subsection>
+
+            <a name="Extensions"/>
+            <subsection name="Controlling the execution : Vendor extensions">
+                <p>
+                    JDO's query API allows implementations to support extensions and provides a simple interface
+                    for enabling the use of such extensions on queries.
+                </p>
+                <source>q.addExtension("extension_name", "value");</source>
+                <source><![CDATA[
+HashMap exts = new HashMap();
+exts.put("extension1", value1);
+exts.put("extension2", value2);
+q.setExtensions(exts);]]></source>
+                <br/>
+            </subsection>
+
+            <a name="named"/>
+            <subsection name="Named Query">
+                <p>
+                    With the JDO API you can either define a query at runtime, or define it in the MetaData/annotations
+                    for a class and refer to it at runtime using a symbolic name. This second option means that the 
+                    method of invoking the query at runtime is much simplified. To demonstrate the process, lets say 
+                    we have a class called <i>Product</i> (something to sell in a store). We define the JDO Meta-Data 
+                    for the class in the normal way, but we also have some query that we know we will require, 
+                    so we define the following in the Meta-Data.
+                </p>
+                <source>
+&lt;jdo&gt;
+    &lt;package name="mydomain"&gt;
+        &lt;class name="Product"&gt;
+            ...
+            &lt;query name="SoldOut" language="javax.jdo.query.JDOQL"&gt;&lt;![CDATA[
+            SELECT FROM mydomain.Product WHERE status == "Sold Out"
+            ]]&gt;&lt;/query&gt;
+        &lt;/class&gt;
+    &lt;/package&gt;
+&lt;/jdo&gt;</source>
+                <p>
+                    So we have a JDOQL query called "SoldOut" defined for the class <i>Product</i> that returns all 
+                    Products (and subclasses) that have a <i>status</i> of "Sold Out". Out of interest, what we would 
+                    then do in our application to execute this query woule be
+                </p>
+                <source>
+Query q = pm.newNamedQuery(mydomain.Product.class,"SoldOut");
+Collection results = (Collection)q.execute();</source>
+                <p>
+                    The above example was for the JDOQL object-based query language. We can do a similar thing using 
+                    SQL, so we define the following in our MetaData for our <i>Product</i> class
+                </p>
+                <source>
+&lt;jdo&gt;
+    &lt;package name="mydomain"&gt;
+        &lt;class name="Product"&gt;
+            ...
+            &lt;query name="PriceBelowValue" language="javax.jdo.query.SQL"&gt;&lt;![CDATA[
+            SELECT NAME FROM PRODUCT WHERE PRICE &lt; ?
+            ]]&gt;&lt;/query&gt;
+        &lt;/class&gt;
+    &lt;/package&gt;
+&lt;/jdo&gt;</source>
+                <p>
+                    So here we have an SQL query that will return the names of all Products that have a price less 
+                    than a specified value. This leaves us the flexibility to specify the value at runtime. So here we 
+                    run our named query, asking for the names of all Products with price below 20 euros.
+                </p>
+                <source>
+Query q = pm.newNamedQuery(mydomain.Product.class,"PriceBelowValue");
+Collection results = (Collection)q.execute(20.0);</source>
+                <br/>
+                <p>
+                    All of the examples above have been specifed within the &lt;class&gt; element of the MetaData. 
+                    You can, however, specify queries below &lt;jdo&gt; in which case the query is not scoped by a 
+                    particular candidate class. In this case you must put your queries in any of the following 
+                    MetaData files
+                </p>
+                <source>
+/META-INF/package.jdo
+/WEB-INF/package.jdo
+/package.jdo
+/META-INF/package-{mapping}.orm
+/WEB-INF/package-{mapping}.orm
+/package-{mapping}.orm
+/META-INF/package.jdoquery
+/WEB-INF/package.jdoquery
+/package.jdoquery</source>
+                <br/>
+            </subsection>
+
+            <a name="FetchPlan"/>
+            <subsection name="Controlling the execution : FetchPlan">
+                <p>
+                    When a Query is executed it executes in the datastore, which returns a set of results. 
+                    DataNucleus could clearly read all results from this ResultSet in one go and return them all to 
+                    the user, or could allow control over this fetching process. JDO provides a <i>fetch size</i> 
+                    on the <a href="fetchgroup.html">Fetch Plan</a> to allow this control. You would set this as follows
+                </p>
+                <source>
+Query q = pm.newQuery(...);
+q.getFetchPlan().setFetchSize(FetchPlan.FETCH_SIZE_OPTIMAL);</source>
+                <p>
+                    <i>fetch size</i> has 3 possible values. 
+                </p>
+                <ul>
+                    <li>
+                        <b>FETCH_SIZE_OPTIMAL</b> - allows DataNucleus full control over the fetching. 
+                        In this case DataNucleus will fetch each object when they are requested, and then when 
+                        the owning transaction is committed will retrieve all remaining rows (so that the Query 
+                        is still usable after the close of the transaction).
+                    </li>
+                    <li>
+                        <b>FETCH_SIZE_GREEDY</b> - DataNucleus will read all objects in at query execution.
+                        This can be efficient for queries with few results, and very inefficient for queries
+                        returning large result sets.
+                    </li>
+                    <li>
+                        <b>A positive value</b> - DataNucleus will read this number of objects at query execution.
+                        Thereafter it will read the objects when requested.
+                    </li>
+                </ul>
+                <p>
+                    In addition to the number of objects fetched, you can also control which fields are fetched for 
+                    each object of the candidate type. This is controlled via the <i>FetchPlan</i>.
+                    For RDBMS any single-valued member will be fetched in the original SQL query, but with multiple-valued
+                    members this is not supported. However what will happen is that any collection field will be retrieved
+                    in a single SQL query for all candidate objects; this avoids the "N+1" problem, resulting in 1 original 
+                    SQL query plus 1 SQL query per collection member.
+                    For non-RDBMS datastores the collection/map is stored by way of a Collection of ids of the related objects 
+                    in a single "column" of the object and so is retrievable in the same query.
+                    See also <a href="fetchgroup.html">Fetch Groups</a>.
+                </p>
+                <br/>
+                <img src="../images/nucleus_extension.gif" border="0" alt=""/>
+                <p>
+                    DataNucleus also allows an extension to give further control. As mentioned above, when the 
+                    transaction containing the Query is committed, all remaining results are read so that they can 
+                    then be accessed later (meaning that the query is still usable). Where you have a large result 
+                    set and you don't want this behaviour you can turn it off by specifying a Query extension
+                </p>
+                <source>q.addExtension("datanucleus.query.loadResultsAtCommit", "false");</source>
+                <p>
+                    so when the transaction is committed, no more results will be available from the query.
+                </p>
+                <br/>
+                <img src="../images/nucleus_extension.gif" border="0" alt=""/>
+                <p>
+                    In some situations you don't want all <i>FetchPlan</i> fields retrieving, and DataNucleus provides 
+                    an extension to turn this off, like this
+                </p>
+                <source>q.addExtension("datanucleus.query.useFetchPlan", "false");</source>
+                <br/>
+            </subsection>
+
+            <a name="locking"/>
+            <subsection name="Control over locking of fetched objects">
+                <p>
+                    JDO allows control over whether objects found by a query are locked during that transaction 
+                    so that other transactions can't update them in the meantime. To do this you would do
+                </p>
+                <source><![CDATA[
+Query q = pm.newQuery(...);
+q.setSerializeRead(true);]]></source>
+                <p> 
+                    You can also specify this for all queries for all PMs using a PMF property 
+                    <b>datanucleus.SerializeRead</b>.
+                    In addition you can perform this on a per-transaction basis by doing
+                </p>
+                <source>tx.setSerializeRead(true);</source>
+                <p>
+                    <b>If the datastore in use doesn't support locking of objects then this will do nothing</b>
+                </p>
+                <br/>
+            </subsection>
+
+            <a name="flushBeforeExecution"/>
+            <subsection name="Flush changes before execution">
+                <img src="../images/nucleus_extension.gif" border="0" alt=""/>
+                <p>
+                    When using optimistic transactions all updates to data are held until flush()/commit(). 
+                    This means that executing a query may not take into account changes made during that 
+                    transaction in some objects. DataNucleus allows a convenience of calling flush() just 
+                    before execution of queries so that all updates are taken into account.
+                    The property name is <b>datanucleus.query.flushBeforeExecution</b> and defaults to "false".
+                </p>
+                <p>
+                    To do this on a per query basis for JDO you would do
+                </p>
+                <source>query.addExtension("datanucleus.query.flushBeforeExecution","true");</source>
+                <p>
+                    You can also specify this for all queries using a persistence property 
+                    <b>datanucleus.query.flushBeforeExecution</b> which would then apply to ALL queries for 
+                    that PMF.
+                </p>
+                <br/>
+            </subsection>
+
+            <a name="Timeout"/>
+            <subsection name="Controlling the execution : timeout on datastore reads">
+                <source><![CDATA[
+q.setDatastoreReadTimeout(1000);]]></source>
+                <p>
+                    <i>Sets the timeout for this query (in milliseconds).</i> 
+                    Will throw a JDOUnsupportedOperationException if the query implementation doesn't support
+                    timeouts.
+                </p>
+                <br/>
+            </subsection>
+
+            <a name="WriteTimeout"/>
+            <subsection name="Controlling the execution : timeout on datastore writes">
+                <source><![CDATA[
+q.setDatastoreWriteTimeout(1000);]]></source>
+                <p>
+                    <i>Sets the timeout for this query (in milliseconds) when it is a delete/update.</i> 
+                    Will throw a JDOUnsupportedOperationException if the query implementation doesn't support
+                    timeouts.
+                </p>
+                <br/>
+            </subsection>
+        </section>
+    </body>
+</document>

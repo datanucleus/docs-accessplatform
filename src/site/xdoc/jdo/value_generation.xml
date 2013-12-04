@@ -1,0 +1,714 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<document xmlns="http://maven.apache.org/XDOC/2.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+    <properties>
+        <title>Value Generators</title>
+    </properties>
+
+    <body>
+        <section name="JDO : Value generation">
+            <p>
+                Fields of a class can either have the values set by you the user, or you can set DataNucleus to 
+                generate them for you. This is of particular importance with identity fields where you want unique 
+                identities. You can use this value generation process with any field in JDO. 
+                There are many different "strategies" for generating values, as defined by the JDO
+                specifications, and also some DataNucleus extensions. Some strategies are specific to a particular 
+                datastore, and some are generic. You should choose the strategy that best suits your target datastore. 
+                The available strategies for JDO are :-
+            </p>
+            <ul>
+                <li><a href="#native"><b>native</b></a> - this is the default and allows DataNucleus
+                    to choose the most suitable for the datastore.</li>
+                <li><a href="#sequence"><b>sequence</b></a> - this uses a datastore sequence (if supported
+                    by the datastore)</li>
+                <li><a href="#identity"><b>identity</b></a> - these use autoincrement/identity/serial features in 
+                    the datastore (if supported by the datastore)</li>
+                <li><a href="#increment"><b>increment</b></a> - this is datastore neutral and increments
+                    a sequence value using a table.</li>
+                <li><a href="#uuidstring"><b>uuid-string</b></a> - this is a UUID in string form</li>
+                <li><a href="#uuidhex"><b>uuid-hex</b></a> - this is a UUID in hexadecimal form</li>
+                <li><a href="#uuid"><b>uuid</b></a> - provides a pure UUID utilising the JDK1.5 UUID class
+                    <img src="../images/nucleus_extension.gif" border="0" alt=""/></li>
+                <li><a href="#auid"><b>auid</b></a> - provides a pure UUID following the 
+                    OpenGroup standard <img src="../images/nucleus_extension.gif" border="0" alt=""/></li>
+                <li><a href="#timestamp"><b>timestamp</b></a> - creates a java.sql.Timestamp of the current time
+                    <img src="../images/nucleus_extension.gif" border="0" alt=""/></li>
+                <li><a href="#timestamp-value"><b>timestamp-value</b></a> - creates a long (millisecs) of the 
+                    current time <img src="../images/nucleus_extension.gif" border="0" alt=""/></li>
+                <li><a href="#max"><b>max</b></a> - uses a max(column)+1 method (only in RDBMS)
+                    <img src="../images/nucleus_extension.gif" border="0" alt=""/></li>
+                <li><a href="#datastoreuuidhex"><b>datastore-uuid-hex</b></a> - UUID in hexadecimal form using 
+                    datastore capabilities (only in RDBMS) <img src="../images/nucleus_extension.gif" border="0" alt=""/></li>
+                <li><a href="http://www.datanucleus.org/extensions/value_generator.html">user-supplied value generators</a>
+                    - allows you to hook in your own identity generator 
+                    <img src="../images/nucleus_extension.gif" border="0" alt=""/></li>
+            </ul>
+            <p>See also :-</p>
+            <ul>
+                <li><a href="metadata_xml.html#class">JDO MetaData reference for &lt;class&gt;</a></li>
+                <li><a href="metadata_xml.html#datastore-identity">JDO MetaData reference for &lt;datastore-identity&gt;</a></li>
+                <li><a href="metadata_xml.html#field">JDO MetaData reference for &lt;field&gt;</a></li>
+                <li><a href="annotations.html#DatastoreIdentity">JDO Annotation reference for @DatastoreIdentity</a></li>
+                <li><a href="annotations.html#Persistent">JDO Annotation reference for @Persistent</a></li>
+            </ul>
+            <br/>
+            <table>
+                <tr>
+                    <th>
+                        Please note that by defining a value-strategy for a field then it will, by default, 
+                        always generate a value for that field on persist. If the field can store nulls and 
+                        you only want it to generate the value at persist when it is null (i.e you haven't 
+                        assigned a value yourself) then you can add the extension <i>"strategy-when-notnull"</i> 
+                        as <i>false</i>
+                    </th>
+                </tr>
+            </table>
+            <br/>
+
+            <a name="native"/>
+            <subsection name="native">
+                <p>
+                    With this strategy DataNucleus will choose the most appropriate strategy for the datastore being used.
+                    If you define the field as String-based then it will choose <a href="#uuidhex">uuid-hex</a>. Otherwise
+                    the field is numeric in which case it chooses <a href="#identity">identity</a> if supported, otherwise
+                    <a href="#sequence">sequence</a> if supported, otherwise <a href="#increment">increment</a> if supported
+                    otherwise throws an exception. On RDBMS you can get the behaviour used up until DN v3.0 by specifying
+                    the persistence property <b>datanucleus.rdbms.useLegacyNativeValueStrategy</b> as <i>true</i>
+                </p>
+            </subsection>
+
+            <a name="sequence"/>
+            <subsection name="sequence">
+                <p>
+                    A sequence is a user-defined database function that generates a sequence of unique numeric ids. 
+                    The unique identifier value returned from the database is translated to a java type: java.lang.Long. 
+                    DataNucleus supports sequences for the following datastores:
+                </p>
+                <ul>
+                    <li>Oracle</li>
+                    <li>PostgreSQL</li>
+                    <li>SAP DB</li>
+                    <li>DB2</li>
+                    <li>Firebird</li>
+                    <li>HSQLDB</li>
+                    <li>H2</li>
+                    <li>Derby (from v10.6)</li>
+                </ul>
+                <p>
+                    To configure a class to use either of these generation methods with <u>datastore identity</u> you simply
+                    add this to the class' Meta-Data
+	            </p>
+                <source><![CDATA[
+<sequence name="yourseq" datastore-sequence="YOUR_SEQUENCE_NAME" strategy="noncontiguous"/>
+<class name="myclass" ... >
+    <datastore-identity strategy="sequence" sequence="yourseq"/>
+    ...
+</class>]]></source>
+                <p>or using annotations</p>
+                <source><![CDATA[
+@PersistenceCapable
+@DatastoreIdentity(strategy="sequence", sequence="yourseq"/>
+@Sequence(name="yourseq", datastore-sequence="YOUR_SEQUENCE_NAME", strategy=NONCONTIGUOUS/>
+public class MyClass]]></source>
+                <p>
+                    You replace "YOUR_SEQUENCE_NAME" with your sequence name. To configure a class to use either of these 
+                    generation methods using <u>application identity</u> you would add the following to the class' Meta-Data
+                </p>
+                <source><![CDATA[
+<sequence name="yourseq" datastore-sequence="YOUR_SEQUENCE_NAME" strategy="noncontiguous"/>
+<class name="myclass" ... >
+    <field name="myfield" primary-key="true" value-strategy="sequence" sequence="yourseq"/>
+    ...
+</class>]]></source>
+                <p>or using annotations</p>
+                <source><![CDATA[
+@PersistenceCapable
+@Sequence(name="yourseq", datastore-sequence="YOUR_SEQUENCE_NAME" strategy=NONCONTIGUOUS/>
+public class MyClass
+{
+    @Persistent(valueStrategy="sequence", sequence="yourseq"/>
+    private long myfield;
+    ...
+}]]></source>
+                <p>
+                    If the sequence does not yet exist in the database at the time DataNucleus needs a new unique identifier, a new 
+                    sequence is created in the database based on the JDO Meta-Data configuration. Additional properties for 
+                    configuring sequences are set in the JDO Meta-Data, see the available properties below. Unsupported 
+                    properties by a database are silently ignored by DataNucleus.
+                </p>
+                <table>
+                    <tr>
+                        <th>Property</th>
+                        <th>Description</th>
+                        <th>Required</th>
+                    </tr>
+                    <tr>
+                        <td>key-initial-value</td>
+                        <td>the initial value for the sequence.
+                            In JDO3.1 this is specified in the standard metadata (<i>initialValue</i>)</td>
+                        <td>No</td>
+                    </tr>
+                    <tr>
+                        <td>key-cache-size</td>
+                        <td>number of unique identifiers to cache in the PersistenceManagerFactory instance. Notes: 
+                            <ol>
+                                <li>The keys are pre-allocated, cached and used on demand. If <i>key-cache-size</i> is greater
+                                    than 1, it may generate holes in the object keys in the database, if not all keys are 
+                                    used.</li>
+                            </ol>
+                            In JDO3.1 this is specified in the standard metadata (<i>allocationSize</i>)</td>
+                        <td>No.</td>
+                    </tr>
+                    <tr>
+                        <td>key-min-value</td>
+                        <td>determines the minimum value a sequence can generate</td>
+                        <td>No</td>
+                    </tr>
+                    <tr>
+                        <td>key-max-value</td>
+                        <td>determines the maximum value a sequence can generate</td>
+                        <td>No</td>
+                    </tr>
+                    <tr>
+                        <td>key-database-cache-size</td>
+                        <td>specifies how many sequence numbers are to be preallocated and stored in memory for faster access. 
+                            This is an optimization feature provided by the database</td>
+                        <td>No</td>
+                    </tr>
+                    <tr>
+                        <td>sequence-catalog-name</td>
+                        <td>Name of the catalog where the sequence is.</td>
+                        <td>No.</td>
+                    </tr>
+                    <tr>
+                        <td>sequence-schema-name</td>
+                        <td>Name of the schema where the sequence is.</td>
+                        <td>No.</td>
+                    </tr>
+				</table>
+                <p>
+                    This value generator will generate values unique across different JVMs
+                </p>
+                <br/>
+            </subsection>
+
+            <a name="identity"/>
+            <subsection name="identity">
+                <p>
+                    Auto-increment/identity/serial are primary key columns that are populated when a row is inserted in the
+                    table. These use the databases own keywords on table creation and so rely on having the table structure 
+                    either created by DataNucleus or having the column with the necessary keyword.
+                </p>
+                <p>
+                	DataNucleus supports auto-increment/identity/serial keys for many databases including :
+                </p>
+                <ul>
+                    <li>DB2 (IDENTITY)</li>
+                    <li>MySQL (AUTOINCREMENT)</li>
+                    <li>MSSQL (IDENTITY)</li>
+                    <li>Sybase (IDENTITY)</li>
+                    <li>HSQLDB (IDENTITY)</li>
+                    <li>H2 (IDENTITY)</li>
+                    <li>PostgreSQL (SERIAL)</li>
+                    <li>Derby (IDENTITY)</li>
+                    <li>MongoDB - String based</li>
+                    <li>Neo4j - long based</li>
+                </ul>
+                <p>
+                    <b>This generation strategy should only be used if there is a single "root" table for 
+                    the inheritance tree. If you have more than 1 root table (e.g using subclass-table inheritance)
+                    then you should choose a different generation strategy</b>
+                </p>
+                <p>
+                    For a class using <u>datastore identity</u> you need to set the <i>strategy</i> attribute. You can 
+                    configure the Meta-Data for the class something like this (replacing 'myclass' with your class name) :
+                </p>
+                <source><![CDATA[
+<class name="myclass">
+    <datastore-identity strategy="identity"/>
+    ...
+</class>]]></source>
+                <p>
+                    For a class using <u>application identity</u> you need to set the <i>value-strategy</i> attribute on the 
+                    primary key field. You can configure the Meta-Data for the class something like this (replacing 'myclass' 
+                    and 'myfield' with your class and field names) :
+                </p>
+                <source><![CDATA[
+<class name="myclass" identity-type="application" objectid-class="myprimarykeyclass">
+    <field name="myfield" primary-key="true" value-strategy="identity"/<
+    ...
+</class>]]></source>
+                <p>
+                    Please be aware that if you have an inheritance tree with the base class defined as using "identity" then
+                    the column definition for the PK of the base table will be defined as "AUTO_INCREMENT" or "IDENTITY" or 
+                    "SERIAL" (dependent on the RDBMS) and all subtables will NOT have this identifier added to their PK column
+                    definitions. This is because the identities are assigned in the base table (since all objects will have 
+                    an entry in the base table).
+                </p>
+                <p>
+                    <b>Please note that if using optimistic transactions, this strategy will mean that the value
+                    is only set when the object is actually persisted (i.e at flush() or commit())</b>
+                </p>
+                <p>
+                    This value generator will generate values unique across different JVMs
+                </p>
+                <br/>
+            </subsection>
+
+            <a name="increment"/>
+            <subsection name="increment">
+                <p>
+                    This method is database neutral and uses a sequence table that holds an incrementing sequence value. The 
+                    unique identifier value returned from the database is translated to a java type: java.lang.Long. This 
+                    strategy will work with any datastore. This method require a sequence table in the database and creates 
+                    one if doesn't exist.
+                </p>
+                <p>
+                    To configure a <u>datastore identity</u> class to use this generation method you simply add this to the 
+                    classes Meta-Data.
+                </p>
+                <source><![CDATA[
+<class name="myclass" ... >
+    <datastore-identity strategy="increment"/>
+    ...
+</class>]]></source>
+                <p>
+                    To configure an <u>application identity</u> class to use this generation method you simply add this to the
+                    class' Meta-Data. If your class is in an inheritance tree you should define this for the base class only.
+                </p>
+                <source><![CDATA[
+<class name="myclass" ... >
+    <field name="myfield" primary-key="true" value-strategy="increment"/>
+    ...
+</class>>]]></source>
+                <p>
+					Additional properties for configuring this generator are set in the JDO Meta-Data, see the available
+                    properties below. Unsupported properties are silently ignored by DataNucleus.
+                </p>
+				<table>
+                    <tr>
+                        <th>Property</th>
+                        <th>Description</th>
+                        <th>Required</th>
+                    </tr>
+                    <tr>
+                        <td>key-initial-value</td>
+                        <td>First value to be allocated.</td>
+                        <td>No. Defaults to 1</td>
+                    </tr>
+                    <tr>
+                        <td>key-cache-size</td>
+                        <td>number of unique identifiers to cache. The keys are pre-allocated, cached 
+                            and used on demand. If <i>key-cache-size</i> is greater than 1, it may generate holes in the 
+                            object keys in the database, if not all keys are used.
+                            Refer to persistence property <b>datanucleus.valuegeneration.increment.allocationSize</b></td>
+                        <td>No. Defaults to 10</td>
+                    </tr>
+                    <tr>
+                        <td>sequence-table-basis</td>
+                        <td>Whether to define uniqueness on the base class name or the base table name.
+                            Since there is no "base table name" when the root class has "subclass-table"
+                            this should be set to "class" when the root class has "subclass-table" inheritance</td>
+                        <td>No. Defaults to <i>class</i>, but the other option is <i>table</i></td>
+                    </tr>
+                    <tr>
+                        <td>sequence-name</td>
+                        <td>name for the sequence (overriding the "sequence-table-basis" above).
+                            The row in the table will use this in the PK column</td>
+                        <td>No</td>
+                    </tr>
+                    <tr>
+                        <td>sequence-table-name</td>
+                        <td>Table name for storing the sequence.</td>
+                        <td>No. Defaults to <i>SEQUENCE_TABLE</i></td>
+                    </tr>
+                    <tr>
+                        <td>sequence-catalog-name</td>
+                        <td>Name of the catalog where the table is.</td>
+                        <td>No.</td>
+                    </tr>
+                    <tr>
+                        <td>sequence-schema-name</td>
+                        <td>Name of the schema where the table is.</td>
+                        <td>No.</td>
+                    </tr>
+                    <tr>
+                        <td>sequence-name-column-name</td>
+                        <td>Name for the column that represent sequence names.</td>
+                        <td>No. Defaults to <i>SEQUENCE_NAME</i></td>
+                    </tr>
+                    <tr>
+                        <td>sequence-nextval-column-name</td>
+                        <td>Name for the column that represent incremeting sequence values.</td>
+                        <td>No. Defaults to <i>NEXT_VAL</i></td>
+                    </tr>
+                    <tr>
+                        <td>table-name</td>
+                        <td>Name of the table whose column we are generating the value for (used when we have
+                            no previous sequence value and want a start point.</td>
+                        <td>No.</td>
+                    </tr>
+                    <tr>
+                        <td>column-name</td>
+                        <td>Name of the column we are generating the value for (used when we have
+                            no previous sequence value and want a start point.</td>
+                        <td>No.</td>
+                    </tr>
+                </table>
+                <p>
+                    This value generator will generate values unique across different JVMs (from DataNucleus 1.1.3)
+                </p>
+                <br/>
+            </subsection>
+
+            <a name="uuidstring"/>
+            <subsection name="uuid-string">
+                <p>
+                    This generator creates identities with 16 characters in string format. The identity contains the IP 
+                    address of the local machine where DataNucleus is running, as well as other necessary components to provide 
+                    uniqueness across time.
+                </p>
+                <p>
+                    This generator can be used in concurrent applications. It is especially useful in situations where large 
+                    numbers of transactions within a certain amount of time have to be made, and the additional overhead of 
+                    synchronizing the concurrent creation of unique identifiers through the database would break performance 
+                    limits. It doesn't require datastore access to generate the identities and so has performance benefits 
+                    over some of the other generators.
+                </p>
+                <p>
+                    For a class using <u>datastore identity</u> you need to add metadata something like the following
+                </p>
+                <source><![CDATA[
+<class name="myclass" ... >
+    <datastore-identity strategy="uuid-string"/>
+    ...
+</class>]]></source>
+                <p>
+                    To configure an <u>application identity</u> class to use this generation method you simply add this to the 
+                    class' JDO Meta-Data.
+                </p>
+                <source><![CDATA[
+<class name="myclass" ... >
+    <field name="myfield" primary-key="true" value-strategy="uuid-string"/>
+    ...
+</class>]]></source>
+                <br/>
+            </subsection>
+
+            <a name="uuidhex"/>
+            <subsection name="uuid-hex">
+                <p>
+                    This generator creates identities with 32 characters in hexadecimal format. The identity contains the IP 
+                    address of the local machine where DataNucleus is running, as well as other necessary components to provide 
+                    uniqueness across time.
+                </p>
+                <p>
+                    This generator can be used in concurrent applications. It is especially useful in situations where large 
+                    numbers of transactions within a certain amount of time have to be made, and the additional overhead of 
+                    synchronizing the concurrent creation of unique identifiers through the database would break performance 
+                    limits. It doesn't require datastore access to generate the identities and so has performance benefits 
+                    over some of the other generators.
+                </p>
+                <p>
+                    For a class using <u>datastore identity</u> you need to add metadata something like the following
+                </p>
+                <source><![CDATA[
+<class name="myclass" ... >
+    <datastore-identity strategy="uuid-hex"/>
+    ...
+</class>]]></source>
+                <p>
+                    To configure an <u>application identity</u> class to use this generation method you simply add this to the 
+                    class' JDO Meta-Data.
+                </p>
+                <source><![CDATA[
+<class name="myclass" ... >
+    <field name="myfield" primary-key="true" value-strategy="uuid-hex"/>
+    ...
+</class>]]></source>
+                <br/>
+            </subsection>
+
+            <a name="datastoreuuidhex"/>
+            <subsection name="datastore-uuid-hex">
+                <img src="../images/nucleus_extension.gif" alt=""/>
+                <p>
+                    This method is like the "uuid-hex" option above except that it utilises datastore capabilities to generate
+                    the UUIDHEX code. Consequently this only works on some RDBMS (MSSQL, MySQL). The disadvantage of this
+                    strategy is that it makes a call to the datastore for each new UUID required. The generated UUID is in
+                    the same form as the AUID strategy where identities are generated in memory and so the AUID strategy
+                    is the recommended choice relative to this option.
+                </p>
+                <p>
+                    For a class using <u>datastore identity</u> you need to add metadata something like the following
+                </p>
+                <source><![CDATA[
+<class name="myclass" ... >
+    <datastore-identity strategy="datastore-uuid-hex"/>
+    ...
+</class>]]></source>
+                <p>
+                    To configure an <u>application identity</u> class to use this generation method you simply add this to the 
+                    class' JDO Meta-Data.
+                </p>
+                <source><![CDATA[
+<class name="myclass" ... >
+    <field name="myfield" primary-key="true" value-strategy="datastore-uuid-hex"/>
+    ...
+</class>]]></source>
+                <br/>
+            </subsection>
+
+            <a name="max"/>
+            <subsection name="max">
+                <img src="../images/nucleus_extension.gif" alt=""/>
+                <p>
+                    This method is database neutral and uses the <i>"select max(column) from table" + 1</i> strategy to create
+                    unique ids. The unique identifier value returned from the database is translated to a java type: 
+                    java.lang.Long. <b>It is however not recommended by DataNucleus since it makes a DB call for every record to be 
+                    inserted and hence is inefficient. Each DB call will run a scan in all table contents causing contention 
+                    and locks in the table. We recommend the use of either Sequence or Identity based value generators (see 
+                    below) - which you use would depend on your RDBMS.</b>
+                </p>
+                <p>
+                    For a class using <u>datastore identity</u> you need to add metadata something like the following
+                </p>
+                <source><![CDATA[
+<class name="myclass" ... >
+    <datastore-identity strategy="max"/>
+    ...
+</class>]]></source>
+                <p>
+                    To configure an <u>application identity</u> class to use this generation method you simply add this to the
+                    class' JDO Meta-Data.
+                </p>
+                <source><![CDATA[
+<class name="myclass" ... >
+    <field name="myfield" primary-key="true" value-strategy="max"/>
+    ...
+</class>]]></source>
+                <p>
+                    This value generator will <b>NOT</b> guarantee to generate values unique across different JVMs.
+                    This is because it will select the "max+1" and before creating the record another thread may come in
+                    and insert one.
+                </p>
+                <br/>
+            </subsection>
+
+            <a name="uuid"/>
+            <subsection name="uuid">
+                <img src="../images/nucleus_extension.gif" border="0" alt=""/>
+                <p>
+                    This generator uses the JDK1.5 UUID class to generate values. The values are 128-bit 
+                    (36 character) of the form "0e400c2c-b3a0-4786-a0c6-f2607bf643eb"
+                </p>
+                <p>
+                    This generator can be used in concurrent applications. It is especially useful in situations 
+                    where large numbers of transactions within a certain amount of time have to be made, and the 
+                    additional overhead of synchronizing the concurrent creation of unique identifiers through the 
+                    database would break performance limits.
+                </p>
+                <p>
+                    For a class using <u>datastore identity</u> you need to add metadata something like the 
+                    following
+                </p>
+                <source><![CDATA[
+<class name="myclass" ... >
+    <datastore-identity strategy="uuid"/>
+    ...
+</class>]]></source>
+                <p>
+                    To configure an <u>application identity</u> class to use this generation method you simply add 
+                    this to the class' JDO Meta-Data.
+                </p>
+                <source><![CDATA[
+<class name="myclass" ... >
+    <field name="myfield" primary-key="true" value-strategy="uuid"/>
+    ...
+</class>
+
+Or using annotations
+
+public class MyClass
+{
+    @Persistent(customValueStrategy="uuid")
+    String myField;
+}]]></source>
+                <p>
+                    This value generator will generate values unique across different JVMs
+                </p>
+                <br/>
+            </subsection>
+
+            <a name="auid"/>
+            <subsection name="auid">
+                <img src="../images/nucleus_extension.gif" border="0" alt=""/>
+                <p>
+                    This generator uses a Java implementation of DCE UUIDs to create unique identifiers without the overhead 
+                    of additional database transactions or even an open database connection. The identifiers are Strings of 
+                    the form "LLLLLLLL-MMMM-HHHH-CCCC-NNNNNNNNNNNN" where 'L', 'M', 'H', 'C' and 'N' are the DCE UUID fields
+                    named time low, time mid, time high, clock sequence and node.
+                </p>
+                <p>
+                    This generator can be used in concurrent applications. It is especially useful in situations where large 
+                    numbers of transactions within a certain amount of time have to be made, and the additional overhead of 
+                    synchronizing the concurrent creation of unique identifiers through the database would break performance
+                    limits.
+                </p>
+                <p>
+                    For a class using <u>datastore identity</u> you need to add metadata something like the following
+                </p>
+                <source><![CDATA[
+<class name="myclass" ... >
+    <datastore-identity strategy="auid"/>
+    ...
+</class>]]></source>
+                <p>
+                    To configure an <u>application identity</u> class to use this generation method you simply add this to the 
+                    class' JDO Meta-Data.
+                </p>
+                <source><![CDATA[
+<class name="myclass" ... >
+    <field name="myfield" primary-key="true" value-strategy="auid"/>
+    ...
+</class>]]></source>
+                <p>
+                    This value generator will generate values unique across different JVMs
+                </p>
+                <br/>
+            </subsection>
+
+            <a name="timestamp"/>
+            <subsection name="timestamp">
+                <img src="../images/nucleus_extension.gif" alt=""/>
+                <p>
+                    This method will create a java.sql.Timestamp of the current time (at insertion in the datastore).
+                </p>
+                <p>
+                    For a class using <u>datastore identity</u> you need to add metadata something like the following
+                </p>
+                <source><![CDATA[
+<class name="myclass" ... >
+    <datastore-identity strategy="timestamp"/>
+    ...
+</class>]]></source>
+                <p>
+                    To configure an <u>application identity</u> class to use this generation method you simply add this to the
+                    class' JDO Meta-Data.
+                </p>
+                <source><![CDATA[
+<class name="myclass" ... >
+    <field name="myfield" primary-key="true" value-strategy="timestamp"/>
+    ...
+</class>]]></source>
+                <br/>
+            </subsection>
+
+            <a name="timestamp-value"/>
+            <subsection name="timestamp-value">
+                <img src="../images/nucleus_extension.gif" alt=""/>
+                <p>
+                    This method will create a long of the current time in millisecs (at insertion in the datastore).
+                </p>
+                <p>
+                    For a class using <u>datastore identity</u> you need to add metadata something like the following
+                </p>
+                <source><![CDATA[
+<class name="myclass" ... >
+    <datastore-identity strategy="timestamp-value"/>
+    ...
+</class>]]></source>
+                <p>
+                    To configure an <u>application identity</u> class to use this generation method you simply add this to the
+                    class' JDO Meta-Data.
+                </p>
+                <source><![CDATA[
+<class name="myclass" ... >
+    <field name="myfield" primary-key="true" value-strategy="timestamp-value"/>
+    ...
+</class>]]></source>
+                <br/>
+            </subsection>
+        </section>
+
+        <section name="Standalone ID generation">
+            <img src="../images/nucleus_extension.gif" border="0" alt=""/>
+            <p>
+                This section describes how to use the DataNucleus Value Generator API for generating unique 
+                keys for objects outside the DataNucleus (JDO) runtime. DataNucleus defines a framework for 
+                identity generation and provides many builtin strategies for identities. You can make use of 
+                the same strategies described above but for generating identities manually for your own use. 
+                The process is described below
+            </p>
+            <p>
+                The DataNucleus Value Generator API revolves around 2 classes. The entry point for retrieving 
+                generators is the <b>ValueGenerationManager</b>. This manages the appropriate 
+                <b>ValueGenerator</b> classes. Value generators maintain a block of cached ids in memory
+                which avoid reading the database each time it needs a new unique id. Caching a block of 
+                unique ids provides you the best performance but can cause "holes" in the sequence of ids 
+                for the stored objects in the database. 
+            </p>
+            <p>
+                Let's take an example. Here we want to obtain an identity using the <b>TableGenerator</b>
+                ("increment" above). This stores identities in a datastore table. We want to generate an 
+                identity using this. Here is what we add to our code
+            </p>
+            <source><![CDATA[
+PersistenceManagerImpl pm = (PersistenceManagerImpl) ... // cast your pm to impl ;
+
+// Obtain a ValueGenerationManager
+ValueGenerationManager mgr = new ValueGenerationManager();
+
+// Obtain a ValueGenerator of the required type
+Properties properties = new Properties();
+properties.setProperty("sequence-name", "GLOBAL"); // Use a global sequence number (for all tables)
+ValueGenerator generator = mgr.createValueGenerator("MyGenerator",
+    org.datanucleus.store.rdbms.valuegenerator.TableGenerator.class, props, pm.getStoreManager(),
+                new ValueGenerationConnectionProvider()
+                {
+                    RDBMSManager rdbmsManager = null;
+                    ManagedConnection con;
+                    public ManagedConnection retrieveConnection()
+                    {
+                        rdbmsManager = (RDBMSManager) pm.getStoreManager();
+                        try
+                        {
+                            // important to use TRANSACTION_NONE like DataNucleus does
+                            con = rdbmsManager.getConnection(Connection.TRANSACTION_NONE);;
+                            return con;
+                        }
+                        catch (SQLException e)
+                        {
+                            logger.error("Failed to obtain new DB connection for identity generation!");
+                            throw new RuntimeException(e);
+                        }
+                    }
+                    public void releaseConnection()
+                    {
+                        try
+                        {
+                            con.close();
+                            con = null;
+                        }
+                        catch (DataNucleusException e)
+                        {
+                            logger.error("Failed to close DB connection for identity generation!");
+                            throw new RuntimeException(e);
+                        }
+                        finally
+                        {
+                            rdbmsManager = null;
+                        }
+                    }
+                });
+
+// Retrieve the next identity using this strategy
+Long identifier = (Long)generator.next();]]></source>
+            <p>
+                Some ValueGenerators are specific to RDBMS datastores, and some are generic, so bear this 
+                in mind when selecting and adding your own.
+            </p>
+        </section>
+    </body>
+</document>

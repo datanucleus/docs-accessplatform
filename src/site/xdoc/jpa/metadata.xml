@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<document xmlns="http://maven.apache.org/XDOC/2.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+    <properties>
+        <title>JPA Metadata Overview</title>
+    </properties>
+    <body>
+        <section name="JPA : Metadata Overview">
+            <p>
+                JPA requires the persistence of classes to be defined via Metadata. This Metadata
+                can be provided in the following forms
+            </p>
+            <ul>
+                <li><a href="metadata_xml.html">XML</a> : the traditional mechanism, with XML files 
+                    containing information for each class to be persisted.</li>
+                <li><a href="annotations.html">Annotations</a> : using JDK1.5+ annotations in the 
+                    classes to be persisted</li>
+            </ul>
+            <table>
+                <tr>
+                    <td>We recommend that you use either XML or annotations for the basic persistence 
+                    information, but always use XML for ORM information. This is because it is liable to 
+                    change at deployment time and hence is accessible when in XML form whereas in annotations 
+                    you add an extra compile cycle (and also you may need to deploy
+                    to some other datastore at some point, hence needing a different deployment).</td>
+                </tr>
+            </table>
+
+            <subsection name="Metadata priority">
+                <p>
+                    JPA defines the priority order for metadata as being
+                </p>
+                <ul>
+                    <li>JPA XML Metadata</li>
+                    <li>Annotations</li>
+                </ul>
+                <p>
+                    If a class has annotations and JPA XML Metadata then the XML Metadata
+                    will take precedence over the annotations (or rather be merged on top of the
+                    annotations).
+                </p>
+                <br/>
+            </subsection>
+
+            <subsection name="XML Metadata validation">
+                <p> 
+                    By default any XML Metadata will be validated for accuracy when loading it.
+                    Obviously XML is defined by a DTD or XSD schema and so should follow that.
+                    You can turn off such validations by setting the persistence property
+                    <b>datanucleus.metadata.validate</b> to false when creating your PMF.
+                    Note that this only turns off the XML strictness validation, and <i>not</i>
+                    the checks on inconsistency of specification of relations etc.
+                </p>
+                <br/>
+            </subsection>
+        </section>
+    </body>
+</document>

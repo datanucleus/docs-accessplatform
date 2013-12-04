@@ -1,0 +1,615 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<document xmlns="http://maven.apache.org/XDOC/2.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+    <properties>
+        <title>Enhancer</title>
+    </properties>
+
+    <body>
+        <section name="DataNucleus Enhancer">
+            <p>
+                As is described in the <a href="#enhancement">Class Enhancement guide below</a>, 
+                DataNucleus utilises the common technique of byte-code manipulation to make your normal Java classes 
+                "persistable". The mechanism provided by DataNucleus is to use an "enhancer" process to perform this 
+                manipulation before you use your classes at runtime. The process is very quick and easy.
+            </p>
+            <p>
+                How to use the DataNucleus Enhancer depends on what environment you are using. Below are some typical examples. 
+            </p>
+            <ul>
+                <li>Post-compilation
+                <ul>
+                    <li><a href="#maven">Using Maven via the DataNucleus Maven plugin</a></li>
+                    <li><a href="#ant">Using Ant</a></li>
+                    <li><a href="#manual">Manual invocation at the command line</a></li>
+                    <li><a href="../guides/eclipse/index.html">Using the Eclipse DataNucleus plugin</a></li>
+                </ul></li>
+                <li>At runtime
+                <ul>
+                    <li><a href="#runtime">Runtime Enhancement</a></li>
+                    <li><a href="#api">Programmatically via an API</a></li>
+                </ul></li>
+            </ul>
+
+			<a name="maven"/>
+            <subsection name="Maven">
+                <p>
+                    Maven operates from a series of plugins. There is a DataNucleus plugin for Maven that 
+                    allows enhancement of classes. Go to the Download section of the website and download this.
+                    Once you have the Maven plugin, you then need to set any properties for the plugin in 
+                    your <i>pom.xml</i> file. 
+                    Some properties that you may need to change are below
+                </p>
+                <table>
+                    <tr>
+                        <th>Property</th>
+                        <th>Default</th>
+                        <th>Description</th>
+                    </tr>
+                    <tr>
+                        <td>metadataDirectory</td>
+                        <td>${project.build.outputDirectory}</td>
+                        <td>Directory to use for enhancement files (classes/mappings)</td>
+                    </tr>
+                    <tr>
+                        <td>metadataIncludes</td>
+                        <td>**/*.jdo, **/*.class</td>
+                        <td>Fileset to include for enhancement (if not using persistence-unit)</td>
+                    </tr>
+                    <tr>
+                        <td>metadataExcludes</td>
+                        <td></td>
+                        <td>Fileset to exclude for enhancement (if not using persistence-unit)</td>
+                    </tr>
+                    <tr>
+                        <td>persistenceUnitName</td>
+                        <td></td>
+                        <td>Name of the persistence-unit to enhance (if not using metadataIncludes etc)</td>
+                    </tr>
+                    <tr>
+                        <td>log4jConfiguration</td>
+                        <td></td>
+                        <td>Config file location for Log4J (if using it)</td>
+                    </tr>
+                    <tr>
+                        <td>jdkLogConfiguration</td>
+                        <td></td>
+                        <td>Config file location for JDK1.4 logging (if using it)</td>
+                    </tr>
+                    <tr>
+                        <td>alwaysDetachable</td>
+                        <td>false</td>
+                        <td>Whether to enhance all classes as detachable irrespective of metadata</td>
+                    </tr>
+                    <tr>
+                        <td>verbose</td>
+                        <td>false</td>
+                        <td>Verbose output?</td>
+                    </tr>
+                    <tr>
+                        <td>quiet</td>
+                        <td>false</td>
+                        <td>No output?</td>
+                    </tr>
+                    <tr>
+                        <td>targetDirectory</td>
+                        <td></td>
+                        <td>Where the enhanced classes are written (default is to overwrite them)</td>
+                    </tr>
+                    <tr>
+                        <td>fork</td>
+                        <td>true</td>
+                        <td>Whether to fork the enhancer process.
+                            <b>Note that if you are running on Windows and have a large number of classes/mapping-files
+                            then this will result in a large command line, so set this option to false to avoid hitting
+                            Windows limit on command line length</b></td>
+                    </tr>
+                    <tr>
+                        <td>generatePK</td>
+                        <td>true</td>
+                        <td>Generate a PK class (of name {MyClass}_PK) for cases where there are multiple
+                            PK fields yet no PK class is defined.</td>
+                    </tr>
+                    <tr>
+                        <td>generateConstructor</td>
+                        <td>true</td>
+                        <td>Generate a default constructor if not defined for the class being enhanced.</td>
+                    </tr>
+                    <tr>
+                        <td>detachListener</td>
+                        <td>false</td>
+                        <td>Whether to enhance classes to make use of a detach listener for attempts to access
+                            an undetached field (see <a href="#detachlistener">below</a>)</td>
+                    </tr>
+                </table>
+                <p>
+                    You will need to add <i>datanucleus-api-jdo.jar</i> into the CLASSPATH (of the plugin, or your project) 
+                    for the enhancer to operate. Also if using JPA metadata then you also will need
+                    <i>datanucleus-api-jpa.jar</i> and <i>persistence-api.jar</i> in the CLASSPATH.
+                    You then run the Maven DataNucleus plugin, as follows
+                </p>
+                <source>mvn datanucleus:enhance</source>
+                <p>
+                    This will enhance all classes found that correspond to the classes defined in the JDO files in your 
+                    source tree. If you want to check the current status of enhancement you can also type
+                </p>
+                <source>mvn datanucleus:enhance-check</source>
+                <p>
+                    Or alternatively, you could add the following to your POM
+                </p>
+                <source><![CDATA[
+    <build>
+        ...
+        <plugins>
+            <plugin>
+                <groupId>org.datanucleus</groupId>
+                <artifactId>datanucleus-maven-plugin</artifactId>
+                <version>3.3.0-release</version>
+                <configuration>
+                    <log4jConfiguration>${basedir}/log4j.properties</log4jConfiguration>
+                    <verbose>true</verbose>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>process-classes</phase>
+                        <goals>
+                            <goal>enhance</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+        ...
+    </build>]]></source>
+                <p>
+                    So you then get auto-enhancement after each compile. Please refer to the
+                    <a href="maven.html">Maven JDO guide</a> for more details.
+                </p>
+                <br/>
+            </subsection>
+
+            <a name="ant"/>
+            <subsection name="Ant">
+                <p>
+                    Ant provides a powerful framework for performing tasks and DataNucleus provides an Ant task to 
+                    enhance classes. The DataNucleus Enhancer is in <i>datanucleus-core.jar</i>, and you need to make
+                    sure that the <i>datanucleus-core.jar</i>, <i>datanucleus-api-jdo.jar</i>, <i>jdo-api.jar</i> 
+                    (and optionally <i>log4j.jar</i>) are in your CLASSPATH.
+                    If using JPA metadata then you will also need <i>persistence-api.jar</i> and
+                    <i>datanucleus-api-jpa.jar</i> in the CLASSPATH.
+                    In the DataNucleus Enhancer Ant task, the following parameters are available
+                </p>
+                <table>
+                    <tr>
+                        <th>Parameter</th>
+                        <th>Description</th>
+                        <th>values</th>
+                    </tr>
+                    <tr>
+                        <td>dir</td>
+                        <td>Optional. Directory containing the JDO (class/metadata) files to use for enhancing. 
+                            Uses ant build file directory if the parameter is not specified.</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>destination</td>
+                        <td>Optional. Defining a directory where enhanced classes will be written. 
+                            If omitted, the original classes are updated.</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>alwaysDetachable</td>
+                        <td>Optional. Whether to enhance all classes as detachable irrespective of metadata</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>persistenceUnit</td>
+                        <td>Optional. Defines the "persistence-unit" to enhance.</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>checkonly</td>
+                        <td>Whether to just check the classes for enhancement status. Will respond for each class with 
+                            "ENHANCED" or "NOT ENHANCED". <b>This will disable the enhancement process and just perform these 
+                            checks.</b></td>
+                        <td>true, <b>false</b></td>
+                    </tr>
+                    <tr>
+                        <td>verbose</td>
+                        <td>Whether to have verbose output.</td>
+                        <td>true, <b>false</b></td>
+                    </tr>
+                    <tr>
+                        <td>quiet</td>
+                        <td>Whether to have no output.</td>
+                        <td>true, <b>false</b></td>
+                    </tr>
+                    <tr>
+                        <td>generatePK</td>
+                        <td>Whether to generate PK classes as required.</td>
+                        <td><b>true</b>, false</td>
+                    </tr>
+                    <tr>
+                        <td>generateConstructor</td>
+                        <td>Whether to generate a default constructor as required.</td>
+                        <td><b>true</b>, false</td>
+                    </tr>
+                    <tr>
+                        <td>detachListener</td>
+                        <td>Whether to enhance classes to make use of a detach listener for attempts to access
+                            an undetached field (see <a href="#detachlistener">below</a>)</td>
+                        <td><b>false</b>, true</td>
+                    </tr>
+                    <tr>
+                        <td>filesuffixes</td>
+                        <td>Optional. Suffixes to accept for the input files. The Enhancer Ant Task will scan for the files 
+                            having these suffixes under the directory specified by <i>dir</i> option. The value can include 
+                            comma-separated list of suffixes. If using annotations you can have "class" included as a valid 
+                            suffix here or use the <i>fileset</i>.</td>
+                        <td><b>jdo</b></td>
+                    </tr>
+                    <tr>
+                        <td>fileset</td>
+                        <td>Optional. Defines the files to accept as the input files. Fileset enables finer control to which 
+                            classes / metadata files are accepted to enhanced. If one or more files are found in the fileset,
+                            the Enhancer Ant Task will not scan for additional files defined by the option 
+                            <i>filesuffixes</i>. For more information on defining a fileset, see 
+                            <a href="http://ant.apache.org/manual/CoreTypes/fileset.html">Apache FileSet Manual</a>.</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>if</td>
+                        <td>Optional. The name of a property that must be set in order to the Enhancer Ant Task to execute.</td>
+                        <td></td>
+                    </tr>                   
+                </table>
+                <p>
+                    The enhancer task extends the Apache Ant <a href="http://ant.apache.org/manual/CoreTasks/java.html">Java task</a>, 
+                    thus all parameters available to the Java task are also available to the enhancer task.
+                </p>
+                <p>
+                    So you could define something <i>like</i> the following, setting up the parameters <b>enhancer.classpath</b>, 
+                    <b>jdo.file.dir</b>, and <b>log4j.config.file</b> to suit your situation (the <b>jdo.file.dir</b> is a 
+                    directory containing the JDO files defining the classes to be enhanced). The classes specified by the 
+                    XML Meta-Data files, together with the XML Meta-Data files <u>must be</u> in the CLASSPATH <i>(Please note 
+                    that a CLASSPATH should contain a set of JAR's, and a set of directories. It should NOT explictly include
+                    class files, and should NOT include parts of the package names. If in doubt please consult a Java book).</i>
+                </p>
+                <source><![CDATA[
+<target name="enhance" description="DataNucleus enhancement">
+    <taskdef name="datanucleusenhancer" classpathref="enhancer.classpath" 
+                classname="org.datanucleus.enhancer.EnhancerTask" />
+
+    <datanucleusenhancer classpathref="enhancer.classpath"
+        dir="${jdo.file.dir}" failonerror="true" verbose="true">
+        <jvmarg line="-Dlog4j.configuration=${log4j.config.file}"/>
+    </datanucleusenhancer>
+</target>]]></source>
+                <p>
+                    You can also define the files to be enhanced using a <b>fileset</b>. When a <b>fileset</b> is defined, 
+                    the Enhancer Ant Task will not scan for additional files, and the option <i>filesuffixes</i> is ignored.
+                </p>                
+                <source><![CDATA[
+<target name="enhance" description="DataNucleus enhancement">
+    <taskdef name="datanucleusenhancer" classpathref="enhancer.classpath" 
+                classname="org.datanucleus.enhancer.EnhancerTask" />
+
+    <datanucleusenhancer
+        dir="${jdo.file.dir}" failonerror="true" verbose="true">
+        <fileset dir="${classes.dir}">
+            <include name="**/*.jdo"/>
+            <include name="**/acme/annotated/persistentclasses/*.class"/>
+        </fileset>
+        <classpath>
+            <path refid="enhancer.classpath"/>
+        </classpath>
+    </datanucleusenhancer>
+</target>]]></source>
+                <p>
+                    You can disable the enhancement execution upon the existence of a property with the usage of the 
+                    <i>if</i> parameter.
+                </p>                
+                <source><![CDATA[
+<target name="enhance" description="DataNucleus enhancement">
+    <taskdef name="datanucleusenhancer" classpathref="enhancer.classpath" 
+                classname="org.datanucleus.enhancer.EnhancerTask" if="aPropertyName"/>
+
+    <datanucleusenhancer classpathref="enhancer.classpath"
+        dir="${jdo.file.dir}" failonerror="true" verbose="true">
+        <jvmarg line="-Dlog4j.configuration=${log4j.config.file}"/>
+    </datanucleusenhancer>
+</target>]]></source>
+            </subsection>
+
+			<a name="manual"/>
+            <subsection name="Manually">
+                <p>
+                    DataNucleus provides an Enhancer in <i>datanucleus-core.jar</i>. If you are 
+                    building your application manually and want to enhance your classes you follow the 
+                    instructions in this section. You invoke the enhancer as follows
+                </p>
+                <source>
+java -cp classpath  org.datanucleus.enhancer.DataNucleusEnhancer [options] [mapping-files] [class-files]
+    where options can be
+        -pu {persistence-unit-name} : Name of a "persistence-unit" to enhance the classes for
+        -dir {directory-name} : Name of a directory that contains all model classes/mapping-files to enhance
+        -d {target-dir-name} : Write the enhanced classes to the specified directory
+        -checkonly : Just check the classes for enhancement status
+        -v : verbose output
+        -q : quiet mode (no output, overrides verbose flag too)
+        -alwaysDetachable : enhance all classes as detachable irrespective of metadata
+        -generatePK {flag} : generate any PK classes where needed 
+                             ({flag} should be true or false - default=true)
+        -generateConstructor {flag} : generate default constructor where needed 
+                             ({flag} should be true or false - default=true)
+        -detachListener {flag} : see <a href="#detachlistener">below</a> (set to true if required)
+
+    where "mapping-files" and "class-files" are provided when not enhancing a persistence-unit, 
+        and give the paths to the mapping files and class-files that define the classes being enhanced.
+
+    where classpath must contain the following
+        datanucleus-core.jar
+        datanucleus-api-jdo.jar
+        jdo-api.jar
+        log4j.jar (optional)
+        persistence-api.jar (optional - if using JPA metadata)
+        your classes
+        your meta-data files</source>
+                <p>
+                    The input to the enhancer should be <i>either</i> a set of MetaData/class files <i>or</i> the
+                    name of the "persistence-unit" to enhance. In the first option, if any classes have annotations
+                    then they must be specified. All classes and MetaData files should be in the CLASSPATH when
+                    enhancing. To give an example of how you would invoke the enhancer
+                </p>
+                <source>
+Linux/Unix :
+java -cp target/classes:lib/datanucleus-core.jar:lib/jdo-api.jar:
+                    lib/datanucleus-api-jdo.jar:lib/log4j.jar
+     -Dlog4j.configuration=file:log4j.properties
+     org.datanucleus.enhancer.DataNucleusEnhancer
+     **/*.jdo
+
+Windows :
+java -cp target\classes;lib\datanucleus-core.jar;lib\jdo-api.jar;
+                    lib\datanucleus-api-jdo.jar;lib\log4j.jar
+     -Dlog4j.configuration=file:log4j.properties
+     org.datanucleus.enhancer.DataNucleusEnhancer
+     target/classes/org/mydomain/mypackage1/package.jdo
+
+[should all be on same line. Shown like this for clarity]</source>
+                <p>
+                    So you pass in your JDO MetaData files (and/or the class files wihich use annotations) as the final 
+                    argument(s) in the list, and include the respective JAR's in the classpath (-cp).
+                    The enhancer responds as follows
+                </p>
+                <source>
+DataNucleus Enhancer (version 3.2.0.m2) for API "JDO" using JRE "1.6"
+
+DataNucleus Enhancer : Classpath
+>>  /home/andy/work/myproject//target/classes
+>>  /home/andy/work/myproject/lib/log4j.jar
+>>  /home/andy/work/myproject/lib/jdo-api.jar
+>>  /home/andy/work/myproject/lib/datanucleus-core.jar
+>>  /home/andy/work/myproject/lib/datanucleus-api-jdo.jar
+
+ENHANCED (PersistenceCapable): org.mydomain.mypackage1.Pack
+ENHANCED (PersistenceCapable): org.mydomain.mypackage1.Card
+DataNucleus Enhancer completed with success for 2 classes. Timings : input=422 ms, enhance=490 ms, total=912 ms.
+     ... Consult the log for full details</source>
+                <p>
+                    If you have errors here relating to "Log4J" then you must fix these first. If you receive no output about 
+                    which class was ENHANCED then you should look in the DataNucleus enhancer log for errors. The enhancer performs
+                    much error checking on the validity of the passed MetaData and the majority of errors are caught at this
+                    point. You can also use the DataNucleus Enhancer to check whether classes are enhanced. To invoke the enhancer 
+                    in this mode you specify the <b>checkonly</b> flag. This will return a list of the classes, stating 
+                    whether each class is enhanced for persistence under JDO or not. The classes need to be in the CLASSPATH 
+                    <i>(Please note that a CLASSPATH should contain a set of JAR's, and a set of directories. It should NOT 
+                        explictly include class files, and should NOT include parts of the package names. If in doubt please 
+                        consult a Java book).</i>
+                </p>
+                <br/>
+            </subsection>
+
+			<a name="runtime"/>
+            <subsection name="Runtime Enhancement">
+                <p>
+                    Enhancement of persistent classes at runtime is possible when using JRE 1.5+.
+                    Runtime Enhancement requires the following runtime dependencies: DataNucleus Core library. 
+                    To enable runtime enhancement, the <i>javaagent</i> option must be set in the java command line.
+                    For example,
+                </p>
+                <source>java -javaagent:datanucleus-core.jar Main</source>
+                <p>
+                    The statement above will mean that all classes, when being loaded, will be processed by the
+                    ClassFileTransformer (except class in packages "java.*", "javax.*", "org.datanucleus.*").
+                    This means that it can be slow since the MetaData search algorithm will be utilised for each.
+                    To speed this up you can specify an argument to that command specifying the names of package(s)
+                    that should be processed (and all others will be ignored). Like this
+                </p>
+                <source>
+java -javaagent:datanucleus-core.jar=mydomain.mypackage1,mydomain.mypackage2 Main
+                </source>
+                <p>
+                    so in this case only classes being loaded that are in <i>mydomain.mypackage1</i>
+                    and <i>mydomain.mypackage2</i> will be attempted to be enhanced.
+                </p>
+                <p>
+                    Please take care over the following when using runtime enhancement
+                </p>
+                <ul>
+                    <li>When you have a class with a field of another persistable type
+                        make sure that you mark that field as "persistent" (@Persistent, or in XML)
+                        since with runtime enhancement at that point the related class is likely
+                        not yet enhanced so will likely not be marked as persistent otherwise.
+                        <b>Be explicit</b></li>
+                    <li>
+                        If the agent jar is not found make sure it is specified with an absolute path.
+                    </li>
+                </ul>
+                <br/>
+            </subsection>
+
+            <a name="api"/>
+            <subsection name="Programmatic API">
+                <p>
+                    You could alternatively programmatively enhance classes from within your application.
+                    This is done as follows
+                </p>
+                <source>
+import javax.jdo.JDOEnhancer;
+
+JDOEnhancer enhancer = JDOHelper.getEnhancer();
+enhancer.setVerbose(true);
+enhancer.addPersistenceUnit("MyPersistenceUnit");
+enhancer.enhance();</source>
+                <p>
+                    This will look in META-INF/persistence.xml and enhance all classes defined by that unit.
+                    <b>Please note that you will need to load the enhanced version of the class into a
+                    different ClassLoader after performing this operation to use them</b>.
+                    See <a href="http://www.datanucleus.org/servlet/wiki/pages/viewpage.action?pageId=6619188">this guide</a>
+                </p>
+                <br/>
+            </subsection>
+        </section>
+
+        <section name="Class enhancement">
+            <a name="enhancement"/>
+            <p>
+                DataNucleus requires that all classes that are persisted implement <i>PersistenceCapable</i>, an 
+                interface defined by JDO. <b>Why should we do this, Hibernate/TopLink dont need it ?</b>. Well thats 
+                a simple question really
+            </p>
+            <ul>
+                <li>DataNucleus uses this <i>PersistenceCapable</i> interface, and adds it using bytecode enhancement 
+                    techniques so that you never need to actually change your classes. This means that you get
+                    <b>transparent persistence</b>, and your classes always remain <i>your</i> classes.
+                    ORM tools that use a mix of reflection and/or proxies are not totally transparent.</li>
+                <li>DataNucleus' use of <i>PersistenceCapable</i> provides transparent change tracking. When any 
+                    change is made to an object the change creates a notification to DataNucleus allowing it to be 
+                    optimally persisted. ORM tools that dont have access to such change tracking have to use reflection
+                    to detect changes. The performance of this process will break down as soon as you read a large 
+                    number of objects, but modify just a handful, with these tools having to compare all object 
+                    states for modification at transaction commit time.</li>
+            </ul>
+            <p>
+                Why not also read <a href="http://blog.bolkey.com/2009/05/hibernate-datanucleus-r1/">this comparison</a>
+                of bytecode enhancement, and proxies. It gives a clear enough comparison of the relative benefits.
+            </p>
+            <p>
+                In a JDO-enabled application there are 3 categories of classes. These are <i>PersistenceCapable</i>, 
+                <i>PersistenceAware</i> and normal classes. The Meta-Data defines which classes fit into these 
+                categories. To give an example for JDO, we have 3 classes. The class <i>A</i> is to be persisted in 
+                the datastore. The class <i>B</i> directly updates the fields of class <i>A</i> but doesn't need 
+                persisting. The class <i>C</i> is not involved in the persistence process. We would define JDO
+                MetaData for these classes like this
+            </p>
+            <source><![CDATA[
+<class name="A" persistence-modifier="persistence-capable">
+    <field name="myField">
+        ...
+    </field>
+    ...
+</class>
+<class name="B" persistence-modifier="persistence-aware">
+</class>]]></source>
+            <p>
+                So our MetaData is mainly for those classes that are <i>PersistenceCapable</i> and are to be persisted 
+                to the datastore (we don't really need the <i>persistence-modifier</i> for thse classes since this is 
+                the default). For <i>PersistenceAware</i> classes we simply notate that the class knows about 
+                persistence. We don't define MetaData for any class that has no knowledge of persistence.
+            </p>
+            <p>
+                JDO requires that all classes to be persisted must implement the <i>PersistenceCapable</i> interface 
+                <a href="http://db.apache.org/jdo/api20/apidocs/javax/jdo/spi/PersistenceCapable.html" target="_blank">
+                    <img src="../images/javadoc.gif" alt=""/></a>.
+                Users could manually do this themselves but this would impose work on them. JDO permits the use of a 
+                byte-code enhancer that converts the users normal classes to implement this interface. DataNucleus 
+                provides its own byte-code enhancer (this can be found in the <i>datanucleus-core.jar</i>). This section 
+                describes how to use this enhancer with DataNucleus. The DataNucleus enhancer fully implements JDO2 
+                and so is the recommended choice when persisting using the JDO2 API. The enhancement process adds the 
+                necessary methods to the users class in order to implement <i>PersistenceCapable</i>.
+            </p>
+            <img src="../images/enhancer_persistencecapable.gif" alt=""/><br/>
+            <p>
+                The example above doesn't show all <i>PersistenceCapable</i> methods, but demonstrates that all added 
+                methods and fields are prefixed with "jdo" to distinguish them from the users own methods and fields. 
+                Also each persistent field of the class will be given a jdoGetXXX, jdoSetXXX method so that accesses 
+                of these fields are intercepted so that JDO can manage their "dirty" state.
+            </p>
+            <p>
+                The MetaData defines which classes are required to be persisted, and also defines which aspects of 
+                persistence each class requires. For example if a class has the <i>detachable</i> attribute set to 
+                <i>true</i>, then that class will be enhanced to also implement <i>Detachable</i>
+                <a href="http://db.apache.org/jdo/api20/apidocs/javax/jdo/spi/Detachable.html" target="_blank">
+                    <img src="../images/javadoc.gif" alt=""/></a>
+            </p>
+            <img src="../images/enhancer_detachable.gif" alt=""/><br/>
+            <p>
+                Again, the example above doesn't show all methods added for the Detachable interface but the main 
+                thing to know is that the detached state (object id of the datastore object, the version of the 
+                datastore object when it was detached, and which fields were detached is stored in "jdoDetachedState").
+                Please see the JDO spec for more details.
+            </p>
+            <p>
+                <b>If the MetaData is changed in any way during development, the classes should always be recompiled 
+                    and re-enhanced afterwards.</b>
+            </p>
+
+            <subsection name="Byte-Code Enhancement Myths">
+                <p>
+                    Some groups (e.g Hibernate) perpetuated arguments against "byte-code enhancement" saying that 
+                    it was somehow 'evil'. The most common were :-
+                </p>
+                <ul>
+                    <li><i>Slows down the code-test cycle</i>. This is erroneous since you only need to enhance just 
+                        before test and the provided plugins for Ant, Eclipse and Maven all do the enhancement job 
+                        automatically and rapidly.</li>
+                    <li><i>Is less "lazy" than the proxy approach since you have to load the object as soon as you get
+                        a pointer to it</i>. In a 1-1 relation you <b>have to load</b> the object then since you would 
+                        cause issues with null pointers otherwise. With 1-N relations you load the elements of the 
+                        collection/map only when you access them and not the collection/map. Hardly an issue then is 
+                        it!</li>
+                    <li><i>Fail to detect changes to public fields unless you enhance your client code</i>. Firstly 
+                        very few people will be writing code with public fields since it is bad practice in an OO 
+                        design, and secondly, this is why we have "PersistenceAware" classes.</li>
+                </ul>
+                <p>
+                    So as you can see, there are no valid reasons against byte-code enhancement, and the pluses are 
+                    that runtime detection of dirty events on objects is much quicker, hence your persistence layer 
+                    operates faster without any need for iterative reflection-based checks.
+                    The fact is that Hibernate itself also now has a mode whereby you can do bytecode enhancement
+                    although not the default mode of Hibernate. So maybe it wasn't so evil after all ?
+                </p>
+                <br/>
+            </subsection>
+
+            <subsection name="Decompilation">
+                <p>
+                    Many people will wonder what actually happens to a class upon bytecode enhancement. In
+                    simple terms the necessary methods and fields are added so as to implement
+                    <i>PersistenceCapable</i>. If you want to check this, just use a Java decompiler such as
+                    <a href="http://java.decompiler.free.fr/" target="_blank">JD</a>. It has a nice GUI allowing
+                    you to just select your class to decompile and shows you the source.
+                </p>
+            </subsection>
+
+            <a name="detachlistener"/>
+            <subsection name="Detach Listener">
+                <p>
+                    By default when you access the field of a detached object the bytecode enhanced class will
+                    check if that field is detached and throw a <i>JDODetachedFieldAccessException</i> if it was not
+                    detached. An alternative to this is to register a listener for such exceptions, and enable
+                    use of this listener when enhancing your classes. To enhance your classes to do this
+                    set the <b>detachListener</b> to <i>true</i> and then register the listener like this
+                </p>
+<source><![CDATA[
+org.datanucleus.util.DetachListener.setInstance(myListener);]]></source>
+                <p>
+                    where <i>myListener</i> is an instance of a class that extends/implements
+                    <a href="http://www.datanucleus.org/javadocs/core/latest/org/datanucleus/util/DetachListener.html" target="_blank"><i>org.datanucleus.util.DetachListener</i></a>
+                </p>
+            </subsection>
+        </section>
+    </body>
+</document>

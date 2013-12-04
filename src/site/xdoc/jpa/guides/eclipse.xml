@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<document xmlns="http://maven.apache.org/XDOC/2.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+    <properties>
+        <title>Eclipse Tutorial</title>
+    </properties>
+
+    <body>
+        <section name="DataNucleus JPA and Eclipse">
+            <p>
+                Eclipse provides a powerful development environment for Java systems. DataNucleus provides 
+                its own plugin for use within Eclipse, giving access to many features of DataNucleus from the 
+                convenience of your development environment.
+            </p>
+            <ul>
+                <li><a href="#install">Installation</a></li>
+                <li><a href="#preferences_general">General Preferences</a></li>
+                <li><a href="#preferences_enhancer">Preferences : Enhancer</a></li>
+                <li><a href="#preferences_schematool">Preferences : SchemaTool</a></li>
+                <li><a href="#enable">Enable DataNucleus Support</a></li>
+                <li><a href="#persistence_xml">Generate persistence.xml</a></li>
+                <li><a href="#enhancer">Run the Enhancer</a></li>
+                <li><a href="#schematool">Run SchemaTool</a></li>
+            </ul>
+
+            <a name="install"/>
+            <subsection name="Plugin Installation">
+                <p>
+                    The DataNucleus plugin requires Eclipse 3.1 or above. To obtain and install the 
+                    DataNucleus Eclipse plugin select
+                    <cite>Help -> Software Updates -> Find and Install</cite>
+                    On the panel that pops up select
+                    <cite>Search for new features to install</cite>
+                    Select <cite>New Remote Site</cite>, and in that new window set the URL as
+                    <b>http://www.datanucleus.org/downloads/eclipse-update/</b> and the name as DataNucleus. 
+                    Now select the site it has added "DataNucleus", and click "Finish". 
+                    This will then find the releases of the DataNucleus plugin.
+                    <b>Select the latest version of the DataNucleus Eclipse plugin</b>. 
+                    Eclipse then downloads and installs the plugin. Easy!
+                </p>
+            </subsection>
+
+            <a name="preferences"/>
+            <subsection name="Plugin configuration">
+                <p>
+                    The DataNucleus Eclipse plugin allows saving of preferences so that you get nice defaults
+                    for all subsequent usage. You can set the preferences at two levels :-
+                </p>
+                <ul>
+                    <li><b>Globally for the Plugin</b> : Go to <i>Window -> Preferences -> DataNucleus Eclipse Plugin</i>
+                        and see the options below that</li>
+                    <li><b>For a Project</b> : Go to <i>{your project} -> Properties -> DataNucleus Eclipse Plugin</i>
+                        and select "Enable project-specific properties"</li>
+                </ul>
+                <br/>
+            </subsection>
+
+            <a name="preferences_general"/>
+            <subsection name="Plugin configuration - General">
+                <p>
+                    Firstly open the main plugin preferences page, set the API to be used, and configure the libraries 
+                    needed by DataNucleus. These are in addition to whatever you already have in your projects 
+                    CLASSPATH, but to run the DataNucleus Enhancer/SchemaTool you will require the following
+                </p>
+                <ul>
+                    <li>jdo-api.jar : since we use the JDO bytecode enhancement contract</li>
+                    <li>persistence-api.jar (or equivalent, e.g geronimo-specs-jpa)</li>
+                    <li>datanucleus-core</li>
+                    <li>datanucleus-api-jpa</li>
+                    <li>datanucleus-rdbms : for running SchemaTool</li>
+                    <li>Datastore driver jar (e.g JDBC) : for running SchemaTool</li>
+                </ul>
+                <p>
+                    Below this you can set the location of a configuration file for Log4j to use.
+                    This is useful when you want to debug the Enhancer/SchemaTool operations.
+                </p>
+                <img src="../../images/eclipse/jpa/eclipse_prefs_general.jpg" alt=""/>
+                <br/>
+                <br/>
+            </subsection>
+
+            <a name="preferences_enhancer"/>
+            <subsection name="Plugin configuration - Enhancer">
+                <p>
+                	Open the "Enhancer" page. You have the following settings
+                </p>
+                <ul>
+                    <li><b>Input file extensions</b> : the enhancer accepts input defining the classes to 
+                        be enhanced. With JPA you will typically just specify the "persistence-unit" and list the
+                        classes and mapping files in there. You can alternatively specify the suffices of files that
+                        define what will be enhanced (e.g "class" for annotated classes, and "xml" for the ORM mapping
+                        file defining entities)</li>
+                    <li><b>Verbose</b> : selecting this means you get much more output from the enhancer</li>
+                    <li><b>PersistenceUnit</b> : Name of the persistence unit if enhancing a persistence-unit</li>
+                </ul>
+                <img src="../../images/eclipse/jpa/eclipse_prefs_enhancer.jpg" alt=""/>
+                <br/>
+                <br/>
+            </subsection>
+
+            <a name="preferences_schematool"/>
+            <subsection name="Plugin configuration - SchemaTool">
+                <p>
+                	Open the "SchemaTool" page. You have the following settings
+                </p>
+                <ul>
+                    <li><b>Input file extensions</b> : SchemaTool accepts input defining the classes to 
+                        have their schema generated. As for the enhancer, you can run this from a "persistence-unit"</li>
+                    <li><b>Verbose</b> : selecting this means you get much more output from SchemaTool</li>
+                    <li><b>PersistenceUnit</b> : Name of the persistence unit if running SchemaTool on a persistence-unit</li>
+                    <li><b>Datastore details</b> : You can either specify the location of a properties 
+                        file defining the location of your datastore, or you supply the driver name, URL,
+                        username and password.</li>
+                </ul>
+                <img src="../../images/eclipse/jpa/eclipse_prefs_schematool.jpg" alt=""/>
+                <br/>
+                <br/>
+            </subsection>
+
+            <a name="enable"/>
+            <subsection name="Enabling DataNucleus support">
+                <p>
+                    First thing to note is that the DataNucleus plugin is for Eclipse "Java project"s only.
+                    After having configured the plugin you can now add DataNucleus support on your projects. 
+                    Simply right-click on your project in <b>Package Explorer</b> and select 
+                    <cite>DataNucleus->"Add DataNucleus Support"</cite> from the context menu. 
+                </p>
+                <img src="../../images/eclipse/jpa/eclipse_enable.jpg" alt=""/>
+                <br/>
+                <br/>
+            </subsection>
+
+            <a name="persistence_xml"/>
+            <subsection name="Defining 'persistence.xml'">
+                <p>
+                    You can also use the DataNucleus plugin to generate a "persistence.xml" file adding all
+                    classes into a single <i>persistence-unit</i>. You do this by right-clicking on
+                    your project, and selecting the option. The "persistence.xml" is generated under
+                    META-INF for the source folder.
+                    Please note that the wizard will overwrite existing files without further notice.
+                </p>
+                <br/>
+                <br/>
+            </subsection>
+
+            <a name="enhancer"/>
+            <subsection name="Enhancing the classes">
+                <p>
+                    The DataNucleus Eclipse plugin allows you to easily byte-code enhance your classes using 
+                    the DataNucleus enhancer. Right-click on your project and select "Enable Auto-Enhancement"
+                    from the DataNucleus context menu. Now that you have the enhancer set up you can enable 
+                    enhancement of your classes. The DataNucleus Eclipse plugin currently works by 
+                    enabling/disabling automatic enhancement as a follow on process for the Eclipse build
+                    step. This means that when you enable it, every time Eclipse builds your classes it will 
+                    then enhance the classes defined by the available mapping files or what is annotated. 
+                    Thereafter every time that you build your classes the JPA enabled ones will be enhanced. 
+                    Easy! Messages from the enhancement process will be written to the Eclipse Console.
+                    <b>Make sure that you have your Java files in a source folder, and that the binary class 
+                        files are written elsewhere</b>
+                    If everything is set-up right, you should see the output below.
+                </p>
+                <img src="../../images/eclipse/jpa/eclipse_enhancer.jpg" alt=""/>
+                <br/>
+                <br/>
+            </subsection>
+
+            <a name="schematool"/>
+            <subsection name="Generating your database schema">
+                <p>
+                    Once your classes have been enhanced you are in a position to create the database schema 
+                    (assuming you will be using a new schema - omit this step if you already have your schema). 
+                    Click on the project under "Package Explorer" and under "DataNucleus" there is an option 
+                    "Run SchemaTool". This brings up a panel to define your database location (URL, login, 
+                    password etc). You enter these details and the schema will be generated.
+                </p>
+                <img src="../../images/eclipse/jpa/eclipse_schematool.jpg" alt=""/>
+                <p>
+                    Messages from the SchemaTool process will be written to the Eclipse Console.
+                </p>
+                <br/>
+            </subsection>
+		</section>
+	</body>
+</document>

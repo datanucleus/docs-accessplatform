@@ -1,0 +1,303 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<document xmlns="http://maven.apache.org/XDOC/2.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+    <properties>
+        <title>JDO : Troubleshooting</title>
+    </properties>
+
+    <body>
+        <section name="JDO : Troubleshooting">
+            <p>
+                This section describes the most common problems found when using DataNucleus in different architectures. 
+                It describes symptoms and methods for collecting data for troubleshooting thus reducing time to narrow 
+                the problem down and come to a solution.
+            </p>
+
+        </section>
+        <section name="Out Of Memory error">
+            <subsection name="Introdution">
+                <p>
+                    Java allocate objects in the runtime memory data area called <i>heap</i>. The heap is created on 
+                    virtual machine start-up. The memory allocated to objects are reclaimed by Garbage Collectors when 
+                    the object is no longer referenced 
+                    (See <a href="http://java.sun.com/developer/technicalArticles/ALT/RefObj/">Object References</a>). 
+                    The heap may be of a fixed size, but can also be expanded when more memory is needed or contracted 
+                    when no longer needed. If a larger heap is needed and it cannot be allocated an <i>OutOfMemory</i> 
+                    is thrown. See
+                    <a href="http://java.sun.com/docs/books/vmspec/2nd-edition/html/VMSpecTOC.doc.html">JVM Specification</a>.
+                </p>
+                <p>
+                    <i>Native</i> memory is used by the JVM to perform its operations like creation of threads, sockets, 
+                    jdbc drivers using native code, libraries using native code, etc.
+                </p>
+                <p>
+                    The maximum size of heap memory is determined by the -Xmx on the java command line. If Xmx is not 
+                    set, then the JVM decides for the maximum heap. The heap and native memory are limited to the 
+                    maximum memory allocated by the JVM. For example, if the JVM Xmx is set to 1GB and currently use of 
+                    native memory is 256MB then the heap can only use 768MB.
+                </p>
+            </subsection>
+            <subsection name="Causes">
+                <p>
+                    Common causes of out of memory:
+                    <ul>
+                        <li>Not enough heap - The JVM needs more memory to deal with the application requirements. 
+                            Queries returning more objects than usual can be the cause.</li>
+                        <li>Not enough PermGen - The JVM needs more memory to load class definitions.</li>                        
+                        <li>Memory Leaks - The application does not close the resources, like the PersistenceManager 
+                            or Queries, and the JVM cannot reclaim the memory.</li>
+                        <li>Caching - Caching in the application or inside DataNucleus holding strong references to 
+                            objects.</li>
+                        <li>Garbage Collection - If no full garbage collection is performed before the OutOfMemory it 
+                            can indicate a bug in the JVM Garbage Collector.</li>
+                        <li>Memory Fragmentation - A large object needs to be placed in the memory, but the JVM cannot 
+                            allocate a continous space to it because the memory is fragmented.</li>
+                        <li>JDBC driver - a bug in the JDBC driver not flushing resources or keeping large result sets 
+                            in memory.</li>
+                    </ul>
+                </p>
+            </subsection>
+            <subsection name="Throubleshooting">
+                <p>
+                    <h4>JVM</h4>
+                </p>
+                <p>
+                    Collect garbage collection information by adding <i>-verbosegc</i> to the java command line. 
+                    The <i>verbosegc</i> flag will print garbage collections to System output.
+                </p>               
+                <p>
+                    <h4>Sun JVM</h4>
+                </p>                
+                <p>
+                    The Sun JVM 1.4 or upper accepts the flag <i>-XX:+PrintGCDetails</i>, which prints detailed 
+                    information on Garbage Collections.
+                    The Sun JVM accepts the flag <i>-verbose:class</i>, which prints information about each class loaded.
+                    This is useful to troubleshoot issues when OutOfMemory occurs due to lack of space in the PermGen, 
+                    or when NoClassDefFoundError or Linkage errors occurs.
+                    The Sun JVM 1.5 or upper accepts the flag <i>-XX:+HeapDumpOnOutOfMemoryError</i>, which creates a 
+                    hprof binary file head dump in case of an OutOfMemoryError. You can analyse the heap dump using 
+                    tools such as jhat or YourKit profiler.
+                </p>
+                <p>
+                    <h4>DataNucleus</h4>
+                </p>
+                <p>
+                    DataNucleus keeps in cache persistent objects using weak references by default. Enable debug mode 
+                    <b>DataNucleus.Cache</b> category to investigate the size of the cache in DataNucleus.
+                </p>
+                <br/>
+            </subsection>
+
+            <subsection name="Resolution">
+                <p>
+                    DataNucleus can be configured to reduce the number of objects in cache. DataNucleus has cache for 
+                    persistent objects, metadata, datastore metadata, fields of type Collection or Map, or query results.
+                </p>
+                <p>
+                    <h4>Query Results Cache</h4>
+                </p>
+                <p>
+                    The query results hold strong references to the retrieved objects. If a query returns too many 
+                    objects it can lead to OutOfMemory error. To be able to query over large result sets, change the 
+                    result set type to <i>scroll-insensitive</i> in the pmf setting 
+                    <i>datanucleus.rdbms.query.resultSetType</i>.</p>
+                <p>
+                    <h4>Query leak</h4>
+                </p>
+                <p>
+                    The query results are kept in memory until the PersistenceManager or Query are closed. To avoid 
+                    memory leaks caused by queries in memory, it's capital to explicitly close the query as soon as 
+                    possible. The following snippet shows how to do it.
+                </p>
+<source>
+Query query = pm.newQuery("SELECT FROM org.datanucleus.samples.store.Product WHERE price &lt; :limit");
+List results = (List)query.execute(new Double(200.0));
+//...
+//...
+//closes the query
+query.closeAll(); 
+</source>
+                <p>
+                    <h4>PersistenceManager leak</h4>
+                </p>
+                <p>
+                    It's also a best practice to ensure the PersistenceManager is closed in a try finally block. The 
+                    PersistenceManager has level 1 cache of persistence objects. 
+                    See the following example:
+                </p>
+<source>
+PersistenceManager pm = pmf.getPersistenceManager();
+Transaction tx = pm.currentTransaction();
+try
+{
+    tx.begin();
+    //...
+    tx.commit();
+}
+finally
+{
+    if (tx.isActive())
+    {
+        tx.rollback();
+    }
+    pm.close();
+}
+</source>
+                <p>
+                    <h4>Cache for fields of Collection or Map</h4>
+                </p>
+                <p>
+                    If collection or map fields have large number of elements, the caching of elements can be disabled 
+                    with the property <i>datanucleus.cache.collections</i> setting it to false.</p>
+                <p>
+                    <h4>Persistent Objects cache</h4>
+                </p>
+                <p>
+                    The cache control of persistent objects is described in the <a href="cache.html">Cache Guide</a>
+                </p>
+                <p>
+                    <h4>Metadata and Datastore Metadata cache</h4>
+                </p>
+                <p>
+                    The metadata and datastore metadata caching cannot be controled by the application, because the 
+                    memory required for it is insignificant.
+                </p>
+                <p>
+                    <h4>OutOfMemory when persisting new objects</h4>
+                </p>
+                <p>
+                    When persistent many objects, the flush operation should be periodically invoked. This will give a 
+                    hint to DataNucleus to flush the changes to the database and release the memory. In the below sample 
+                    the <i>pm.flush()</i> operation is invoked on every 10,000 objects persisted.
+                </p>
+                <source><![CDATA[
+PersistenceManager pm = pmf.getPersistenceManager();
+Transaction tx = pm.currentTransaction();
+try
+{
+    tx.begin();
+    for (int i=0; i<100000; i++)
+    {
+        Wardrobe wardrobe = new Wardrobe();
+        wardrobe.setModel("3 doors");
+        pm.makePersistent(wardrobe);
+        if (i % 10000 == 0)
+        {
+            pm.flush();
+        }
+    }
+    tx.commit();
+}
+finally
+{
+    if (tx.isActive())
+    {
+        tx.rollback();
+    }
+    pm.close();
+}]]></source>
+                <br/>
+            </subsection>
+        </section>
+
+        <section name="Frozen application">
+            <subsection name="Introdution">
+                <p>The application pauses for short or long periods or hangs during very long time.</p>
+            </subsection>
+            <subsection name="Causes">
+                <p>
+                    Common causes:
+                    <ul>
+                        <li>Database Locking - Database waiting other transactions to release locks due to deadlock or 
+                            locking contentions.</li>
+                        <li>Garbage Collection Pauses - The garbage collection pauses the application to free memory 
+                            resources.</li>
+                        <li>Application Locking - Thread 2 waiting for resources locked by Thread 1.</li>
+                    </ul>
+                </p>
+            </subsection>
+            <subsection name="Throubleshooting">
+                <p>
+                    <h4>Database locking</h4>
+                </p>
+                <p>
+                    Use a database specific tool or database scripts to find the current database locks.
+                    In Microsoft SQL, the stored procedured <i>sp_lock</i> can be used to examinate the database locks.
+                </p>
+                <p>
+                    <h4>Query Timeout</h4>
+                </p>
+                <p>
+                    To avoid database locking to hang the application when a query is performed, set the query timeout. 
+                    See <a href="query.html#queryTimeout">Query Timeout</a>.
+                </p>
+                <p>
+                    <h4>Garbage Collection pauses</h4>
+                </p>
+                <p>
+                    Check if the application freezes when the garbage collection starts. Add <i>-verbosegc</i> to the 
+                    java command line and restart the application.
+                </p>
+                <p>
+                    <h4>Application Locking</h4>
+                </p>
+                <p>
+                    Thread dumps are snapshots of the threads and monitors in the JVM. Thread dumps help to diagnose 
+                    applications by showing what the application is doing at a certain moment of time.
+                    To generate Thread Dumps in MS Windows, press <b>&lt;ctrl&gt;&lt;break&gt;</b> in the window running 
+                    the java application. 
+                    To generate Thread Dumps in Linux/Unix, execute <b>kill -3 <i>process_id</i></b>
+                </p>
+                <p>
+                    To effectively diagnose a problem, take 5 Thread Dumps with 3 to 5 seconds internal between each one.
+                    See <a href="http://java.sun.com/developer/technicalArticles/Programming/Stacktrace/">An Introduction to Java Stack Traces</a>.
+                </p>
+                <br/>
+            </subsection>
+        </section>
+
+        <section name="Postgres">
+            <subsection name="ERROR: schema does not exist">
+                <p>
+                    <h4>Problem</h4>                
+                </p>
+                <p>
+                    Exception <i>org.postgresql.util.PSQLException: ERROR: schema "PUBLIC" does not exist</i> raised 
+                    during transaction.
+                </p>
+                <p>
+                    <h4>Troubleshooting</h4>
+                </p>
+                <p>
+                    <ul>
+                        <li>Verify that the schema "PUBLIC" exists. If the name is lowercased ("public"), set 
+                            <i>datanucleus.identifier.case=PreserveCase</i>, since Postgres is case sensitive.</li>
+                        <li>Via pgAdmin Postgres tool, open a connection to the schema and verify it is acessible with 
+                            issuing a <i>SELECT 1</i> statement.</li>
+                    </ul>
+                </p>
+                <br/>
+            </subsection>
+        </section>
+
+		<section name="Command Line Tools">
+            <subsection name="CreateProcess error=87">
+                <p>
+                    <h4>Problem</h4>                
+                </p>
+            	<p>CreateProcess error=87 when running DataNucleus tools under Microsoft Windows OS.</p>
+            	<p>Windows has a command line length limitation, between 8K and 64K characters depending on the Windows version, that
+            	   may be triggered when running tools such as the Enhancer or the SchemaTool with too many arguments.
+            	</p>
+                <p>
+                    <h4>Solution</h4>                
+                </p>
+            	<p>
+            		When running such tools from Maven or Ant, disable the fork mechanism by setting the option fork="false". 
+            	</p>
+                <br/>
+            </subsection>
+        </section>
+    </body>
+</document>

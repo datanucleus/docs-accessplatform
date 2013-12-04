@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<document xmlns="http://maven.apache.org/XDOC/2.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+    <properties>
+        <title>AccessPlatform : Datastores</title>
+    </properties>
+
+    <body>
+        <section name="Datastores">
+            <p>
+                The DataNucleus AccessPlatform is designed for flexibility to operate with any type of
+                datastore. We already support a very wide range of datastores and this will only increase
+                in the future. In this section you can find the specifics for particular supported datastores
+                over and above what was already addressed for JDO and JPA persistence.
+            </p>
+            <ul>
+                <li>Relational
+                    <ul>
+                    <li><a href="rdbms.html">RDBMS</a> : tried and tested since the 1970s, relational
+                    databases form an integral component of many systems. They incorporate optimised querying
+                    mechanisms, yet also can suffer from object-relational impedance mismatch in some
+                    situations. They also require an extra level of configuration to map from objects
+                    across to relational tables/columns.</li>
+                    </ul>
+                </li>
+                <li>Documents
+                    <ul>
+                    <li><a href="odf.html">Open Document Format (ODF)</a> : ODF is an international 
+                    standard document format, and its spreadsheets provide a widely used form for publishing of
+                    data, making it available to other groups.</li>
+                    <li><a href="excel.html">Excel (XLS)</a> : Excel spreadsheets provide a widely used
+                    format allowing publishing of data, making it available to other groups (XLS format).</li>
+                    <li><a href="ooxml.html">Excel (OOXML)</a> : Excel spreadsheets provide a widely used
+                    format allowing publishing of data, making it available to other groups (OOXML format).</li>
+                    <li><a href="xml.html">XML</a> : XML defines a document format and, as such, is
+                    a key data transfer medium.</li>
+                    </ul>
+                </li>
+                <li>Map-Based
+                    <ul>
+                    <li><a href="hbase.html">HBase</a> : HBase is a map-based datastore originated within Hadoop, following
+                        the model of BigTable.</li>
+                    <li><a href="appengine.html">Google AppEngine/Datastore</a> : 
+                        <img src="../images/thirdparty.jpg" border="0" alt=""/>
+                        Google AppEngine provides persistence to its own BigTable-based <i>Datastore</i> using a 
+                        DataNucleus plugin, and its v3.0 release is designed to work with DataNucleus 3.2.
+                        <b>Note that, at the time of writing, Google still hasn't released v3.0 of their plugin
+                        and continues to release v1.0 as the default plugin; use that and everything is your problem</b>
+                    </li>
+                    <li><i><a href="https://github.com/pulasthi/Datanucleus-Cassandra-Plugin" target="_blank">Cassandra</a> : 
+                        <img src="../images/thirdparty.jpg" border="0" alt=""/>
+                        plugin providing persistence of all relation types to the Cassandra NoSQL datastore for JDO and JPA. 
+						Works with DataNucleus 2.x</i></li>
+                    </ul>
+                </li>
+                <li>Document-Based
+                    <ul>
+                    <li><a href="mongodb.html" target="_blank">MongoDB</a> : 
+                        plugin providing persistence to the MongoDB NoSQL datastore</li>
+                    <li><i><a href="https://github.com/luigidellaquila/datanucleus-store-orientdb" target="_blank">OrientDB</a> : 
+                        <img src="../images/thirdparty.jpg" border="0" alt=""/>
+                        plugin providing persistence to the OrientDB datastore. Works with DataNucleus 2.x</i></li>
+                    </ul>
+                </li>
+                <li>Graph-Based
+                    <ul>
+                    <li><a href="neo4j.html">Neo4j</a> : plugin providing persistence to the Neo4j graph store</li>
+                    </ul>
+                </li>
+                <li>Web-Based
+                    <ul>
+                    <li><a href="json.html">JSON</a> : another format of document for exchange, in this
+                    case with particular reference to web contexts.</li>
+                    <li><a href="amazons3.html">Amazon S3</a> : Amazon Simple Storage Service.</li>
+                    <li><a href="googlestorage.html">Google Storage</a> : Google Storage.</li>
+                    </ul>
+                </li>
+                <li>Object-Based
+                    <ul>
+                    <li><a href="neodatis.html">NeoDatis</a> : an open source object datastore. This provides
+                    fast persistence of large object graphs, without the necessity of any object-relational
+                    mapping.</li>
+                    <li><i>DB4O : an open source object datastore. DataNucleus (upto and including v3.0) provided a plugin
+                        for db4o. This is now discontinued. Uses DataNucleus v3.0 if you wish to use this, or look in
+                        our SVN for the plugin (no longer developed, so may not run against latest code)</i></li>
+                    </ul>
+                </li>
+                <li>Other
+                    <ul>
+                    <li><a href="ldap.html">LDAP</a> : an internet standard datastore for indexed
+                    data that is not changing significantly.</li>
+                    <li><i><a href="http://www.vmforce.com/" target="_blank">VMForce</a> : 
+                        <img src="../images/thirdparty.jpg" border="0" alt=""/>
+                        plugin providing persistence to the Force.com datastore. Works with DataNucleus 2.x.
+                        You can get the source code for this from 
+                        <a href="https://github.com/forcedotcom/java-sdk/tree/master/jpa">here</a></i></li>
+                    </ul>
+                </li>
+            </ul>
+            <p>
+                <a href="http://www.datanucleus.org/extensions/store_manager.html"><img src="../images/nucleus_plugin.gif" border="0" alt=""/></a>
+                If you have a requirement for persistence to some other datastore, then it would likely be 
+                easily provided by creation of a DataNucleus <i>StoreManager</i>. Please contact us via the
+                forum so that you can provide this and contribute it back to the community.
+            </p>
+        </section>
+
+    </body>
+</document>

@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<document xmlns="http://maven.apache.org/XDOC/2.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+    <properties>
+        <title>Object Lifecycle</title>
+    </properties>
+
+    <body>
+        <section name="JPA : Object Lifecycle">
+            <p>
+                During the persistence process an object goes through lifecycle changes. 
+                Below we demonstrate the primary object lifecycle changes for JPA. With JPA these lifecycles
+                are referred to as "persistence contexts". There are two : <i>transaction</i> (default for
+                JavaEE usage) and <i>extended</i> (default for JavaSE usage). DataNucleus allows control over which
+                to use by specification of the persistence property <b>datanucleus.jpa.persistenceContextType</b>
+            </p>
+
+            <subsection name="Transaction">
+                <img src="../images/jpa_object_lifecycle.jpg" border="0" alt=""/>
+                <p>
+                    A newly created object is <b>transient</b>. You then persist it and it becomes 
+                    <b>persistent</b>. You then commit the transaction and it is detached for use elsewhere
+                    in the application, in <b>detached</b> state. You then attach any changes back to 
+                    persistence and it becomes <b>persistent</b> again. Finally when you delete the object 
+                    from persistence and commit that transaction it is in <b>transient</b> state.
+                </p>
+            </subsection>
+
+            <subsection name="Extended">
+                <img src="../images/jpa_object_lifecycle_2.jpg" border="0" alt=""/>
+                <p>
+                    So a newly created object is <b>transient</b>. You then persist it and it becomes 
+                    <b>persistent</b>. You then commit the transaction and it remains managed in
+                    <b>persistent</b> state. When you close the EntityManager it becomes <b>detached</b>. 
+                    Finally when you delete the object from persistence and commit that transaction it 
+                    is in <b>transient</b> state.
+                </p>
+            </subsection>
+
+            <subsection name="Detachment">
+                <p>
+                    When you detach an object (and its graph) either explicitly (using em.detach()) or implicitly
+                    via the PersistenceContext above, you need to be careful about which fields are detached.
+                    If you detach everything then you can end up with a huge graph that could impact on the
+                    performance of your application. On the other hand you need to ensure that you have all
+                    fields that you will be needing access to whilst detached. Should you access a field
+                    that was not detached an <b>IllegalAccessException</b> is thrown. All fields that are loaded
+                    will be detached so make sure you either load all required when retrieving the object using
+                    <a href="entity_graphs.html">Entity Graphs</a> or you access fields whilst attached (which will
+                    load them).
+                </p>
+                <p>
+                    <b>Important</b> : Please note that some people interpret the JPA spec as implying that an object 
+                    which has a primary key field set to a value as being <i>detached</i>. DataNucleus does <b>not</b>
+                    take this point of view, since the only way you can have a detached object is to detach it from
+                    persistence (i.e it was once managed/attached). To reinforce our view of things, what state is
+                    an object in which has a primitive primary key field ? Using the logic above of these other people
+                    any object of such a class would be in <i>detached</i> state (when not managed) since its PK is
+                    set. 
+                    <b>An object that has a PK field set is <i>transient</i> unless it was detached from persistence</b>.
+                    Note that you can <i>merge</i> a transient object by setting the persistence property
+                    <b>datanucleus.allowAttachOfTransient</b> to <i>true</i>.
+                </p>
+                <p>
+                    Note that DataNucleus does not use the "CascadeType.DETACH" flag explicitly, and instead detaches
+                    the fields that are loaded (or marked for eager loading). In addition it allows the user to make
+                    use of the <i>FetchPlan</i> extension for controlling the fine details of what is loaded (and hence
+                    detached).
+                </p>
+            </subsection>
+
+            <subsection name="Helper Methods">
+                <p>
+                    JPA provides nothing to determine the lifecycle state of an object.
+                    Fortunately DataNucleus does consider this useful, so you can call the following
+                </p>
+                <source>
+String state = NucleusJPAHelper.getObjectState(entity);
+boolean detached = NucleusJPAHelper.isDetached(entity);
+boolean persistent = NucleusJPAHelper.isPersistent(entity);
+boolean deleted = NucleusJPAHelper.isDeleted(entity);
+boolean transactional = NucleusJPAHelper.isTransactional(entity);</source>
+                <p>
+                    When an object is detached it is often useful to know which fields are loaded/dirty.
+                    You can do this with the following helper methods
+                </p>
+<source><![CDATA[
+Object[] detachedState = NucleusJPAHelper.getDetachedStateForObject(entity);
+// detachedState[0] is the identity, detachedState[1] is the version when detached
+// detachedState[2] is a BitSet for loaded fields
+// detachedState[3] is a BitSet for dirty fields
+
+String[] dirtyFieldNames = NucleusJPAHelper.getDirtyFields(entity, em);
+
+String[] loadedFieldNames = NucleusJPAHelper.getLoadedFields(entity, em);
+]]></source>
+            </subsection>
+        </section>
+    </body>
+</document>

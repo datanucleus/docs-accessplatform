@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<document xmlns="http://maven.apache.org/XDOC/2.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+    <properties>
+        <title>JDO API</title>
+    </properties>
+
+    <body>
+        <section name="JDO : Query Caching">
+            <img src="../images/nucleus_extension.gif" border="0" alt=""/>
+            <img src="../images/query_compilation.gif" border="0" alt=""/>
+            <p>
+                JDO doesn't currently define a mechanism for caching of queries. DataNucleus provides
+                3 levels of caching
+            </p>
+            <ul>
+                <li><a href="#genericCompilation">Generic Compilation</a> : when a query is compiled it is 
+                    initially compiled <i>generically</i> into expression trees. This generic compilation
+                    is independent of the datastore in use, so can be used for other datastores.
+                    This can be cached.</li>
+                <li><a href="#datastoreCompilation">Datastore Compilation</a> : after a query is compiled
+                    into expression trees (above) it is then converted into the native language of the
+                    datastore in use. For example with RDBMS, it is converted into SQL.
+                    This can be cached</li>
+                <li><a href="#results">Results</a> : when a query is run and returns objects of the candidate
+                    type, you can cache the identities of the result objects.</li>
+            </ul>
+            <br/>
+
+            <a name="genericCompilation"/>
+            <subsection name="Generic Query Compilation Cache">
+                <p>
+                    This cache is by default set to <i>weak</i>, meaning that the generic query compilation
+                    is cached using weak references. This is set using the persistence property
+                    <b>datanucleus.cache.queryCompilation.type</b>. You can also set it to <i>strong</i>
+                    meaning that strong references are used, or <i>soft</i> meaning that soft references
+                    are used, or finally to <i>none</i> meaning that there is no caching of generic query
+                    compilation information
+                </p>
+                <p>
+                    You can turn caching on/off (default = on) on a query-by-query basis by specifying the
+                    query extension <b>datanucleus.query.compilation.cached</b> as true/false.
+                </p>
+                <source><![CDATA[
+query.addExtension("datanucleus.query.compilation.cached", "true");]]></source>
+                <br/>
+            </subsection>
+
+            <a name="datastoreCompilation"/>
+            <subsection name="Datastore Query Compilation Cache">
+                <p>
+                    This cache is by default set to <i>weak</i>, meaning that the datastore query compilation
+                    is cached using weak references. This is set using the persistence property
+                    <b>datanucleus.cache.queryCompilationDatastore.type</b>. You can also set it to <i>strong</i>
+                    meaning that strong references are used, or <i>soft</i> meaning that soft references
+                    are used, or finally to <i>none</i> meaning that there is no caching of datastore-specific 
+                    query compilation information
+                </p>
+                <p>
+                    You can turn caching on/off (default = on) on a query-by-query basis by specifying the
+                    query extension <b>datanucleus.query.compilation.cached</b> as true/false.
+                </p>
+                <source><![CDATA[
+query.addExtension("datanucleus.query.compilation.cached", "true");]]></source>
+                <br/>
+            </subsection>
+
+            <a name="results"/>
+            <subsection name="Query Results Cache">
+                <p>
+                    This cache is by default set to <i>weak</i>, meaning that the datastore query results
+                    are cached using weak references. This is set using the persistence property
+                    <b>datanucleus.cache.queryResult.type</b>. You can also set it to <i>strong</i>
+                    meaning that strong references are used, or <i>soft</i> meaning that soft references
+                    are used, or finally to <i>none</i> meaning that there is no caching of query results
+                    information. You can also specify <b>datanucleus.cache.queryResult.cacheName</b> to define
+                    the name of the cache used for the query results cache.
+                </p>
+                <p>
+                    You can turn caching on/off (default = off) on a query-by-query basis by specifying the
+                    query extension <b>datanucleus.query.results.cached</b> as true/false.
+                    As a finer degree of control, where cached results are used, you can omit the validation
+                    of object existence in the datastore by setting the query extension
+                    <b>datanucleus.query.resultCache.validateObjects</b>.
+                </p>
+                <source><![CDATA[
+query.addExtension("datanucleus.query.results.cached", "true");
+query.addExtension("datanucleus.query.resultCache.validateObjects", "false");]]></source>
+                <p>
+                    Obviously with a cache of query results, you don't necessarily want to retain this cached
+                    over a long period. In this situation you can evict results from the cache like this.
+                </p>
+                <source><![CDATA[
+import org.datanucleus.api.jdo.JDOQueryCache;
+import org.datanucleus.api.jdo.JDOPersistenceManagerFactory;
+
+...
+JDOQueryCache cache = ((JDOPersistenceManagerFactory)pmf).getQueryCache();
+
+cache.evict(query);]]></source>
+                <p>
+                    which evicts the results of the specific query. The JDOQueryCache has more options available
+                    should you need them ...
+                    <a href="http://www.datanucleus.org/javadocs/core/latest/org/datanucleus/jdo/JDOQueryCache.html" target="_blank"><img src="../images/javadoc.gif" alt=""/></a>.
+                </p>
+                <br/>
+            </subsection>
+        </section>
+    </body>
+</document>

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<document xmlns="http://maven.apache.org/XDOC/2.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+    <properties>
+        <title>JDO Object/Relational Mapping</title>
+    </properties>
+
+    <body>
+        <section name="JDO : Object/Relational Mapping">
+            <p>
+                When you are using an RDBMS datastore you need to specify how your class will map on to the relational
+                datastore. This part is termed <b>Object-Relational Mapping</b>. This is not required for other
+                types of datastore.
+                When you are persisting to RDBMS datastores you are mapping a series of objects into a series of 
+                datastore <i>tables</i> in a <i>schema</i>. These <i>tables</i> are interrelated using 
+                <i>foreign-keys</i>. With JDO you can define fully this object-relational mapping in the MetaData 
+                (or in annotations if you so wish).
+            </p>
+            <p>
+                The design of the persistence layer of an application requiring object-relational mapping can be approached in 3 ways.
+            </p>
+            <ul>
+                <li><b>Forward Mapping</b> - Here you have a set of model classes, and want to design the datastore schema
+                    that will store represent these classes.</li>
+                <li><b>Reverse Mapping</b> - Here you have an existing datastore schema, and want to design your model
+                    classes to represent this schema.</li>
+                <li><b>Meet in the Middle Mapping</b> - Here you have a set of model classes and you have an existing
+                    datastore schema, and you want to match them up.</li>
+            </ul>
+            <p>
+                DataNucleus can be used in all of these modes, though provides significant assistance for <b>Forward Mapping</b> cases.
+                In particular, when using this mode you can use the <a href="../schema.html#schematool">DataNucleus SchemaTool</a> to generate
+                the datastore schema, based on a set of input classes and MetaData files. It should be noted though that
+                <b>DataNucleus SchemaTool</b> also provides modes of operation for updating an existing schema, and hence can also
+                be used for <b>Meet in the Middle Mapping</b>. Additionally, it can be used as a validation mechanism when designing
+                your system in <b>Reverse Mapping</b> mode, where it will inform you of inconsistencies between your classes
+                and your datastore schema.
+            </p>
+        </section>
+    </body>
+</document>

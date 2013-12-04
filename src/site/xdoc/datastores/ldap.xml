@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<document xmlns="http://maven.apache.org/XDOC/2.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+    <properties>
+        <title>LDAP Datastore</title>
+    </properties>
+
+    <body>
+        <section name="LDAP Datastores">
+            <img src="../images/thirdparty/ldap.gif" border="0" alt=""/>
+            <p>
+                DataNucleus supports persisting/retrieving objects to/from LDAP datastores 
+                (using the <a href="../../../plugins/store.ldap.html">datanucleus-ldap</a> plugin). 
+                If you wish to help out development of this plugin either by contributing or by sponsoring particular 
+                functionality please contact us via the <a href="http://forum.datanucleus.org">DataNucleus Forum</a>.
+            </p>
+
+            <subsection name="Datastore Connection">
+                <p>
+                    The following persistence properties will connect to an LDAP running on your local machine
+                </p>
+                <source>
+datanucleus.ConnectionDriverName=com.sun.jndi.ldap.LdapCtxFactory
+datanucleus.ConnectionURL=ldap://localhost:10389
+datanucleus.ConnectionUserName=uid=admin,ou=system
+datanucleus.ConnectionPassword=secret</source>
+                <br/>
+                <p>
+                    So you create your <a href="../jdo/pmf.html">PersistenceManagerFactory</a> or
+                    <a href="../jpa/emf.html">EntityManagerFactory</a> with these properties. 
+                    Thereafter you have the full power of the JDO or JPA APIs at your disposal, for your 
+                    LDAP datastore.
+                </p>
+            </subsection>
+
+            <subsection name="Queries">
+                <p>
+                    Access Platform allows you to query the objects in the datastore using the following
+                </p>
+                <ul>
+                    <li><a href="../jdo/jdoql.html">JDOQL</a> - language based around the objects that are persisted and 
+                        using Java-type syntax</li>
+                    <li><a href="../jpa/jpql.html">JPQL</a> - language based around the objects that are persisted and 
+                        using SQL-like syntax</li>
+                </ul>
+                <p>
+                    Queries are evaluated in-memory.
+                </p>
+                <br/>
+            </subsection>
+
+            <subsection name="Mapping : LDAP Datastore Mapping">
+                <p>
+                    When persisting a Java object to an LDAP datastore clearly the user would like some control
+                    over where and how in the LDAP DIT (directory information tree) we are persisting the object.
+                    In general Java objects are mapped to LDAP entries and fields of the Java objects are mapped 
+                    to attributes of the LDAP entries. 
+                </p>
+                <p>
+                    The following Java types are supported and stored as single-valued attribute to the LDAP entry:
+                </p>
+                <ul>
+                    <li>String, primitives (like int and double), wrappers of primitives (like java.util.Long), 
+                            java.util.BigDecimal, java.util.BigInteger, java.util.UUID</li>
+                    <li>boolean and java.lang.Boolean are converted to RFC 4517 "boolean" syntax (TRUE or FALSE)</li>
+                    <li>java.util.Date and java.util.Calendar are converted to RFC 4517 "generalized time" syntax</li>
+                </ul>
+                <p>
+                    Arrays, Collections, Sets and Lists of these data types are stored as multi-valued attributes. 
+                    Please note that when using Arrays and Lists no order could be guaranteed and no duplicate values are allowed!
+                </p>
+            </subsection>
+
+            <subsection name="Mapping : Relationships">
+                <p>
+                    By default PersistenceCapable objects are stored as separate LDAP entries. There are some options how to 
+                    persist relationship references between PersistenceCapable objects:
+                </p>
+                <ul>
+                    <li><a href="ldap_dn.html">DN matching</a></li>
+                    <li><a href="ldap_attribute.html">Attribute matching</a></li>
+                    <li><a href="ldap_hierarchical.html">LDAP hierarchies</a></li>
+                </ul>
+                <p>
+                    It is also possible to store PersistenceCapable objects <a href="ldap_embedded.html">embedded</a>.
+                </p>
+                <br/>
+            </subsection>
+
+            <subsection name="Examples">
+                <p> 
+                    Here's an example using JDO XML MetaData:
+                </p>
+                <source><![CDATA[
+    <jdo>
+        <package name="org.datanucleus.samples.models.company">
+            <class name="Group" table="ou=Groups,dc=example,dc=com" schema="top,groupOfNames" detachable="true">
+                <field name="name" column="cn" primary-key="true" />
+                <field name="users" column="member" />
+            </class>
+    
+            <class name="Person" table="ou=Users,dc=example,dc=com" schema="top,person,organizationalPerson,inetOrgPerson" detachable="true">
+                <field name="personNum" column="cn" primary-key="true" />
+                <field name="firstName" column="givenMame" />
+                <field name="lastName" column="sn" />
+            </class>
+        </package>
+    </jdo>]]></source>
+                <p>
+                    For the class as a whole we use the <b>table</b> attribute  to set the <i>distinguished name</i> 
+                    of the container under which to store objects of a type. So, for example, we are mapping all 
+                    objects of class Group as subordinates to "ou=Groups,dc=example,dc=com".
+                    You can also use the extension "dn" to specify the same thing.
+                </p>
+                <p>
+                    For the class as a whole we use the <b>schema</b> attribute to define the object classes
+                    of the LDAP entry. So, for example, all objects of type Person are mapped to the
+                    common "top,person,organizationalPerson,inetOrgPerson" object classes in LDAP.
+                    You can also use the extension "objectClass" to specify the same thing.
+                </p>
+                <p>
+                    For each field we use the <b>column</b> attribute to define the <i>LDAP attribute</i> that
+                    we are mapping this field to. So, for example, we map the Group "name" to "cn" in our LDAP.
+                    You can also use the extension "attribute" to specify the same thing.
+                </p>
+                <p>
+                    Some resulting LDAP entries would look like this: 
+                </p>
+                <source><![CDATA[
+dn: cn=Sales,ou=Groups,dc=example,dc=com
+objectClass: top
+objectClass: groupOfNames
+cn: Sales
+member: cn=1,ou=Users,dc=example,dc=com
+
+dn: cn=1,ou=Users,dc=example,dc=com
+objectClass: top
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+cn: 1
+givenName: Bugs
+sn: Bunny]]></source>
+                <p>
+                    Here's the same example using JDO Annotations:
+                </p>
+                <source>
+@PersistenceCapable(table = "ou=Groups,dc=example,dc=com", schema = "top,groupOfNames")
+public class Group
+{
+    @PrimaryKey
+    @Column(name = "cn")
+    String name;
+
+    @Column(name = "member")
+    protected Set&lt;Person&gt; users = new HashSet&lt;Person&gt;();
+}
+
+@PersistenceCapable(table = "ou=Users,dc=example,dc=com", schema = "top,person,organizationalPerson,inetOrgPerson")
+public class Person
+{
+    @PrimaryKey
+    @Column(name = "cn")
+    private long personNum;
+
+    @Column(name = "givenName")
+    private String firstName;
+
+    @Column(name = "sn")
+    private String lastName;
+}</source>
+                <p>
+                    Here's the same example using JPA Annotations:
+                </p>
+                <source>
+@Entity
+@Extensions({
+    @Extension(key="dn", value="ou=Groups,dc=example,dc=com"),
+    @Extension(key="objectClass", value="groupOfNames,top")})
+public class Group
+{
+    @Id
+    @Extension(key="attribute", value="cn")
+    String name;
+
+    @OneToMany
+    @Extension(key="attribute", value="member")
+    protected Set users = new HashSet();
+}
+
+@Entity
+@Extensions({
+    @Extension(key="dn", value="ou=Groups,dc=example,dc=com"),
+    @Extension(key="objectClass", value="person,top,organizationalPerson,inetOrgPerson")})
+public class Person
+{
+    @Id
+    @Extension(key="attribute", value="roomNumber")
+    private long personNum;
+
+    @Extension(key="attribute", value="cn")
+    private String firstName;
+
+    @Extension(key="attribute", value="sn")
+    private String lastName;
+}</source>
+                <br/>
+            </subsection>
+
+            <subsection name="Known Limitations">
+                <p>
+                    The following are known limitations of the current implementation
+                </p>
+                <ul>
+                    <li>Datastore Identity is not currently supported</li>
+                    <li>Optimistic checking of versions is not supported</li>
+                    <li>Identity generators that operate using the datastore are not supported</li>
+                    <li>Cannot map inherited classes to the same LDAP type</li>
+                </ul>
+            </subsection>
+        </section>
+    </body>
+</document>

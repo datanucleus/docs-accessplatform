@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<document xmlns="http://maven.apache.org/XDOC/2.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+    <properties>
+        <title>JDO API</title>
+    </properties>
+
+    <body>
+        <section name="JDO : API">
+            <p>
+                <img align="right" alt="jdo" src="../images/jdo.gif"/>
+                Java Data Objects (JDO) defines an interface (or API) to persist normal Java objects (or POJO's in some
+                peoples terminology) to a datastore. JDO doesn't define the type of datastore; it is 
+                <b>datastore-agnostic</b>. You would use the same interface to persist your Java object to RDBMS, or 
+                OODBMS, or XML, or whatever form of data storage. 
+                The whole point of using such a <i>standard</i> interface is that users can, in principle, swap 
+                between implementations of JDO without changing their code.
+                Make sure you have <i>datanucleus-api-jdo.jar</i> in your CLASSPATH for this API.
+            </p>
+            <p>
+                The process of mapping a class can be split into the following areas
+            </p>
+            <ul>
+                <li>JDO categorises classes into <a href="http://db.apache.org/jdo/class_types.html">3 types</a>.
+                    so you firstly decide which type your class is, and 
+                    <a href="class_mapping.html">mark the class in that category</a></li>
+                <li>JDO allows fields/properties to be defined for persistence, and you can control 
+                    <a href="fields_properties.html">which of these are persisted</a>, and how they are persisted.</li>
+                <li>Some datastores allow a level of mapping between the object-oriented world and the structure
+                    of the datastore, and for this you can define (a level of)
+                    <a href="orm/index.html">Object-Relational Mapping (ORM)</a></li>
+            </ul>
+            <p>
+                Note that with DataNucleus, you can map your classes using 
+                <a href="../jdo/metadata.html">JDO MetaData</a> (<a href="../jdo/metadata_xml.html">XML</a>/<a href="../jdo/annotations.html">Annotations</a>) 
+                OR using
+                <a href="../jpa/metadata.html">JPA MetaData</a> (<a href="../jpa/metadata_xml.html">XML</a>/<a href="../jpa/annotations.html">Annotations</a>)
+                and still use the JDO API with these classes.
+            </p>
+            <p>
+                At runtime with JDO you start with the <a href="pmf.html">creation of a PersistenceManagerFactory (PMF)</a>
+                which provides the connectivity to the datastore. The connection to the datastore is dependent on
+                a set of <a href="../persistence_properties.html">persistence properties</a> defining the datastore
+                location, URL etc as well as behaviour of the persistence process.
+            </p>
+            <p>
+                With JDO, to persist/retrieve objects you require a <a href="pm.html">PersistenceManager (PM)</a>
+                that provides the interface to persistence and querying of the datastore. You can perform persistence
+                and querying within a <a href="transactions.html">transaction</a> if required, or just use it
+                non-transactionally.
+            </p>
+            <p>
+                JDO allows querying of the datastore using a range of query languages. The most utilised is
+                <a href="jdoql.html">JDOQL</a> providing an object-oriented form of querying, whereas some datastores
+                also permit <a href="sql.html">SQL</a>.
+            </p>
+            <p>
+                If in doubt about how things fit together, please make use of the
+                <a href="guides/tutorial_rdbms.html">JDO Tutorial</a>
+            </p>
+            <p>
+                If you just want to get the JDO API javadocs, then you can access those
+                <a href="http://db.apache.org/jdo/api30/apidocs/index.html" target="_blank">here</a> (Apache JDO)
+            </p>
+            <br/>
+
+            <subsection name="JDO References">
+                <ul>
+                    <li><a href="http://db.apache.org/jdo" target="_blank">Apache JDO</a></li>
+                    <li><a href="http://jcp.org/aboutJava/communityprocess/mrel/jsr243/index3.html" target="_blank">JDO 3.0 Specification</a></li>
+                    <li><a href="http://jcp.org/aboutJava/communityprocess/mrel/jsr243/index2.html" target="_blank">JDO 2.2 Specification</a></li>
+                    <li><a href="http://jcp.org/aboutJava/communityprocess/mrel/jsr243/index.html" target="_blank">JDO 2.1 Specification</a></li>
+                    <li><a href="http://jcp.org/aboutJava/communityprocess/final/jsr243/index.html" target="_blank">JDO 2.0 Specification</a></li>
+                    <li><a href="http://jcp.org/aboutJava/communityprocess/final/jsr012/index2.html" target="_blank">JDO 1.0 Specification</a></li>
+                    <li><a href="http://db.apache.org/jdo/api30/apidocs/" target="_blank">JDO 3.0 Javadocs</a></li>
+                    <li><a href="http://db.apache.org/jdo/api20/apidocs/" target="_blank">JDO 2.0 Javadocs</a></li>
+                    <li><a href="http://db.apache.org/jdo/api11/apidocs/" target="_blank">JDO 1.1 Javadocs</a></li>
+                    <li><a href="http://db.apache.org/jdo/mail-lists.html" target="_blank">Apache JDO mailing lists</a></li>
+                    <li><a href="http://db.apache.org/jdo/jdo_v_jpa.html" target="_blank">ORM comparison : JDO .v. JPA</a></li>
+                </ul>
+            </subsection>
+        </section>
+    </body>
+</document>

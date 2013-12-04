@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<document xmlns="http://maven.apache.org/XDOC/2.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+    <properties>
+        <title>JPA Queries</title>
+    </properties>
+
+    <body>
+        <section name="JPA : Query API">
+            <p>
+                Once you have persisted objects you need to query them. For example if you have a web application 
+                representing an online store, the user asks to see all products of a particular type, ordered by 
+                the price. This requires you to query the datastore for these products. JPA specifies support for 
+                <a href="jpql.html">a pseudo-OO query language (JPQL)</a>, 
+                <a href="sql.html">a relational query language (SQL)</a> and
+                <a href="stored_procedures.html">(RDBMS) Stored Procedures</a> (JPA2.1+).
+            </p>
+            <p>
+                Which query language is used is down to the developer. The data-tier of an application could be 
+                written by a primarily Java developer, who would typically think in an object-oriented way and so 
+                would likely prefer <b>JPQL</b>. On the other hand the data-tier could be written by a datastore 
+                developer who is more familiar with SQL concepts and so could easily make more use of <b>SQL</b>.
+                This is the power of an implementation like DataNucleus in that it provides the flexibility for 
+                different people to develop the data-tier utilising their own skills to the full without having 
+                to learn totally new concepts.
+            </p>
+            <p>
+                There are 2 categories of queries with JPA :-
+                <ul>
+                    <li><b>Programmatic Query</b> where the query is defined using the JPA Query API.</li>
+                    <li><b>Named Query</b> where the query is defined in MetaData and referred 
+                        to by its name at runtime(for <a href="jpql.html#named">JPQL</a>, <a href="sql.html#named">SQL</a>
+                        and <a href="stored_procedures.html#named">Stored Procedures</a>).</li>
+                </ul>
+            </p>
+
+            <p>
+                Let's now try to understand the Query API in JPA
+                <a href="http://docs.oracle.com/javaee/7/api/javax/persistence/Query.html" target="_blank"><img src="../images/javadoc.gif" alt=""/></a>,
+                We firstly need to look at a typical Query. We'll take 2 examples
+            </p>
+
+            <subsection name="JPQL Query">
+                <p>
+                    Let's create a JPQL query to highlight its usage
+                </p>
+                <source>
+Query q = em.createQuery("SELECT p FROM Product p WHERE p.param2 &lt; :threshold ORDER BY p.param1 ascending");
+q.setParameter("threshold", my_threshold);
+List results = q.getResultList();</source>
+                <p>
+                    In this Query, we implicitly select JPQL by using the method <i>EntityManager.createQuery()</i>, and the query is specified 
+                    to return all objects of type <i>Product</i> (or subclasses) which have the field <i>param2</i> less than some threshold 
+                    value ordering the results by the value of field <i>param1</i>. We've specified the query like this because we want to pass 
+                    the threshold value in as a parameter (so maybe running it once with one value, and once with a different value).
+                    We then set the parameter value of our <i>threshold</i> parameter. The Query is then executed to return a List of results. 
+                    The example is to highlight the typical methods specified for a (JPQL) Query.
+                </p>
+            </subsection>
+
+            <subsection name="SQL Query">
+                <p>
+                    Let's create an SQL query to highlight its usage
+                </p>
+                <source>
+Query q = em.createNativeQuery("SELECT * FROM Product p WHERE p.param2 &lt; ?1");
+q.setParameter(1, my_threshold);
+List results = q.getResultList();</source>
+                <p>
+                    So we implicitly select SQL by using the method <i>EntityManager.createNativeQuery()</i>, and the query is specified
+                    like in the JPQL case to return all instances of type <i>Product</i> (using the table name in this SQL query) where the column
+                    <i>param2</i> is less than some threshold value.
+                </p>
+                <br/>
+            </subsection>
+
+            <a name="Range"/>
+            <subsection name="setFirstResult(), setMaxResults()">
+                <p>
+                    In JPA to specify the range of a query you have two methods available.
+                    So you could do
+                </p>
+                <source><![CDATA[
+Query q = em.createQuery("SELECT p FROM Product p WHERE p.param2 < :threshold ORDER BY p.param1 ascending");
+q.setFirstResult(1);
+q.setMaxResults(3);]]></source>
+                <p>
+                    so we will get results 1, 2, and 3 returned only. The first result starts at 0 by default.
+                </p>
+                <br/>
+            </subsection>
+
+            <a name="Extensions"/>
+            <subsection name="setHint()">
+                <p>
+                    JPA's query API allows implementations to support extensions ("hints") and provides a simple 
+                    interface for enabling the use of such extensions on queries.
+                </p>
+                <source>q.setHint("extension_name", value);</source>
+                <p>
+                    DataNucleus provides various extensions for different types of queries.
+                </p>
+                <br/>
+            </subsection>
+
+            <a name="Parameters"/>
+            <subsection name="setParameter()">
+                <p>
+                    JPA's query API supports named and numbered parameters and provides method for setting
+                    the value of particular parameters. To set a named parameter, for example, you could do
+                </p>
+                <source><![CDATA[
+Query q = em.createQuery("SELECT p FROM Product p WHERE p.param2 < :threshold ORDER BY p.param1 ascending");
+q.setParameter("threshold", value);]]></source>
+                <p>
+                    To set a numbered parameter you could do
+                </p>
+                <source><![CDATA[
+Query q = em.createQuery("SELECT p FROM Product p WHERE p.param2 < ?1 ORDER BY p.param1 ascending");
+q.setParameter(1, value);]]></source>
+                <p>
+                    Numbered parameters are numbered from 1.
+                </p>
+                <br/>
+            </subsection>
+
+            <a name="ExecuteList"/>
+            <subsection name="getResultList()">
+                <p>
+                    To execute a JPA query you would typically call <i>getResultList</i>. This will return
+                    a List of results. This should not be called when the query is an "UPDATE"/"DELETE".
+                </p>
+                <source><![CDATA[
+Query q = em.createQuery("SELECT p FROM Product p WHERE p.param2 < :threshold ORDER BY p.param1 ascending");
+q.setParameter("threshold", value);
+List results = q.getResultList();]]></source>
+                <br/>
+            </subsection>
+
+            <a name="ExecuteSingle"/>
+            <subsection name="getSingleResult()">
+                <p>
+                    To execute a JPA query where you are expecting a single value to be returned you would 
+                    call <i>getSingleResult</i>. This will return the single Object. If the query returns more than
+                    one result then you will get an Exception.
+                    This should not be called when the query is an "UPDATE"/"DELETE".
+                </p>
+                <source><![CDATA[
+Query q = em.createQuery("SELECT p FROM Product p WHERE p.param2 = :value");
+q.setParameter("value", val1);
+Product prod = q.getSingleResult();]]></source>
+                <br/>
+            </subsection>
+
+            <a name="ExecuteUpdate"/>
+            <subsection name="executeUpdate()">
+                <p>
+                    To execute a JPA UPDATE/DELETE query you would call <i>executeUpdate</i>. 
+                    This will return the number of objects changed by the call.
+                    This should not be called when the query is a "SELECT".
+                </p>
+                <source><![CDATA[
+Query q = em.createQuery("DELETE FROM Product p");
+int number = q.executeUpdate();]]></source>
+                <br/>
+            </subsection>
+
+            <a name="flushmode"/>
+            <subsection name="setFlushMode()">
+                <p>
+                    By default, when a query is executed it will be evaluated against the contents of
+                    the datastore at the point of execution. If there are any outstanding changes waiting to be
+                    flushed then these will not feature in the results. To make sure all outstanding changes
+                    are respected
+                </p>
+                <source><![CDATA[
+q.setFlushMode(FlushModeType.AUTO);]]></source>
+                <br/>
+            </subsection>
+
+            <a name="lockmode"/>
+            <subsection name="setLockMode()">
+                <p>
+                    JPA allows control over whether objects found by a fetch (JPQL query) are locked during that
+                    transaction so that other transactions can't update them in the meantime. For example
+                </p>
+                <source><![CDATA[
+q.setLockMode(LockModeType.PESSIMISTIC_READ);]]></source>
+                <p>
+                    You can also specify this for all queries for all EntityManagers using a persistence property 
+                    <b>datanucleus.rdbms.useUpdateLock</b>.
+                </p>
+                <br/>
+            </subsection>
+
+        </section>
+    </body>
+</document>

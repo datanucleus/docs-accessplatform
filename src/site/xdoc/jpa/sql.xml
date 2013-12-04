@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<document xmlns="http://maven.apache.org/XDOC/2.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+    <properties>
+        <title>JPA Queries - SQL</title>
+    </properties>
+
+    <body>
+        <section name="JPA : SQL Queries">
+            <p>
+                The JPA specification defines its interpretation of SQL, for selecting objects from the datastore. To provide a simple example, 
+                this is what you would do
+            </p>
+            <source>
+Query q = em.createNativeQuery("SELECT p.id, o.firstName, o.lastName FROM Person p, Job j " +
+                "WHERE (p.job = j.id) AND j.name = 'Cleaner'");
+List results = (List)q.getResultsList();</source>
+			<p>
+                This finds all "Person" objects that do the job of "Cleaner". The syntax chosen has to be runnable on the RDBMS
+                that you are using (and since SQL is anything but "standard" you will likely have to change your query when moving to
+                another datastore).
+			</p>
+            <br/>
+
+            <a name="parameters"/>
+            <subsection name="Input Parameters">
+                <p>
+                    In JPQL queries it is convenient to pass in parameters so we dont have to define the same query for 
+                    different values. Here's an example
+                </p>
+                <source>
+Numbered Parameters :
+Query q = em.createQuery("SELECT p FROM Person p WHERE p.lastName = ?1 AND p.firstName = ?2");
+q.setParameter(1, theSurname);
+q.setParameter(2, theForename);</source>
+                <p>
+                    So we have parameters that are prefixed by <b>?</b> (question mark) and are numbered starting at 1.
+                    We then use the numbered position when calling <i>Query.setParameter()</i>. With SQL queries we can't use named
+                    parameters. This is known as <i>numbered</i> parameters.
+                </p>
+                <p>
+                    DataNucleus also supports use of <i>named</i> parameters where you assign names just like in JPQL.
+                    This is not defined by the JPA specification so dont expect other JPA implementations to support it.
+                    Let's take the previous example and rewrite it using <i>named</i> parameters, like this
+                </p>
+                <source>
+Named Parameters :
+Query q = em.createQuery("SELECT p FROM Person p WHERE p.lastName = :firstParam AND p.firstName = :otherParam");
+q.setParameter("firstParam", theSurname);
+q.setParameter("otherParam", theForename);</source>
+                <br/>
+            </subsection>
+
+            <subsection name="Range of Results">
+                <p>
+                    With SQL you can select the range of results to be returned. For example if you have a web page and you are paginating
+                    the results of some search, you may want to get the results from a query in blocks of 20 say, with results
+                    0 to 19 on the first page, then 20 to 39, etc. You can facilitate this as follows
+                </p>
+                <source><![CDATA[
+Query q = em.createNativeQuery("SELECT p FROM Person p WHERE p.age &gt; 20");
+q.setFirstResult(0);
+q.setMaxResults(20);]]></source>
+                <p>
+                    So with this query we get results 0 to 19 inclusive.
+                </p>
+                <br/>
+            </subsection>
+
+            <subsection name="Query Execution">
+                <p>
+                    There are two ways to execute a SQL query. When you know it will return 0 or 1 results you call
+                </p>
+                <source>Object result = query.getSingleResult();</source>
+                <p>
+                    If however you know that the query will return multiple results, or you just don't know then you would call
+                </p>
+                <source>List results = query.getResultList();</source>
+                <br/>
+            </subsection>
+        </section>
+
+        <a name="named"/>
+        <section name="Named Native Query">
+            <p>
+                With the JPA API you can either define a query at runtime, or define it in the MetaData/annotations 
+                for a class and refer to it at runtime using a symbolic name. This second option means that the 
+                method of invoking the query at runtime is much simplified. To demonstrate the process, lets say we
+                have a class called <i>Product</i> (something to sell in a store). We define the JPA Meta-Data for 
+                the class in the normal way, but we also have some query that we know we will require, so we 
+                define the following in the Meta-Data.
+            </p>
+<source>
+    &lt;entity class="Product"&gt;
+        ...
+        &lt;named-native-query name="PriceBelowValue"&gt;&lt;![CDATA[
+        SELECT NAME FROM PRODUCT WHERE PRICE &lt; ?1
+        ]]&gt;&lt;/named-native-query&gt;
+    &lt;/entity&gt;</source>
+            <p>
+                or using annotations
+            </p>
+<source><![CDATA[
+@Entity
+@NamedQuery(name="PriceBelowValue", query="SELECT NAME FROM PRODUCT WHERE PRICE < ?1")
+public class Product {...}]]></source>
+            <p>
+                So here we have an SQL query that will return the names of all Products that have a price less 
+                than a specified value. This leaves us the flexibility to specify the value at runtime. So here we 
+                run our named query, asking for the names of all Products with price below 20 euros.
+            </p>
+<source>
+Query query = em.createNamedNativeQuery("PriceBelowValue"); 
+query.setParameter(1, new Double(20.0));
+List results = query.getResultList();</source>
+            <br/>
+        </section>
+
+    </body>
+</document>

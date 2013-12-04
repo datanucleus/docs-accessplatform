@@ -1,0 +1,319 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<document xmlns="http://maven.apache.org/XDOC/2.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+    <properties>
+        <title>ORM Relationships</title>
+    </properties>
+    <head>
+        <meta name="keywords" content="DataNucleus,JPA,EJB3,JDO,ORM"/>
+    </head>
+
+    <body>
+        <section name="ORM Relationships">
+            <p>
+				There are 2 prevalent persistence specifications in the Java ORM world. JDO2 provides 
+                the most complete definition, whilst JPA is the most recent. In this guide we show the 
+                different types of ORM relation commonly used, and mark against it which specification 
+                supports it. This list is not yet complete but will be added to to provide a 
+                comprehensive list of relationship type and where you can find it.
+            </p>
+            <table>
+                <tr>
+                    <th>Field Type</th>
+                    <th>Relation</th>
+                    <th width="50">JDO2</th>
+                    <th width="50">JPA2</th>
+                    <th width="50">DataNucleus</th>
+                </tr>
+                <tr>
+                    <td>PC</td>
+                    <td><a href="jdo/orm/one_to_one.html#uni">1-1 Unidirectional</a></td>
+                    <td><img src="images/icon_success_sml.gif" border="0" alt=""/></td>
+                    <td><img src="images/icon_success_sml.gif" border="0" alt=""/></td>
+                    <td><img src="images/icon_success_sml.gif" border="0" alt=""/></td>
+                </tr>
+                <tr>
+                    <td>PC</td>
+                    <td><a href="jdo/orm/one_to_one.html#bi">1-1 Bidirectional</a></td>
+                    <td><img src="images/icon_success_sml.gif" border="0" alt=""/></td>
+                    <td><img src="images/icon_success_sml.gif" border="0" alt=""/></td>
+                    <td><img src="images/icon_success_sml.gif" border="0" alt=""/></td>
+                </tr>
+                <tr>
+                    <td>PC</td>
+                    <td><a href="jdo/orm/serialised.html#PC">1-1 serialised</a></td>
+                    <td><img src="images/icon_success_sml.gif" border="0" alt=""/></td>
+                    <td><img src="images/icon_success_sml.gif" border="0" alt=""/></td>
+                    <td><img src="images/icon_success_sml.gif" border="0" alt=""/></td>
+                </tr>
+                <tr>
+                    <td>PC</td>
+                    <td><a href="jdo/orm/compound_identity.html#1_1_uni">1-1 CompoundIdentity Unidirectional</a></td>
+                    <td><img src="images/icon_success_sml.gif" border="0" alt=""/></td>
+                    <td><img src="images/icon_error_sml.gif" border="0" alt=""/></td>
+                    <td><img src="images/icon_success_sml.gif" border="0" alt=""/></td>
+                </tr>
+                <tr>
+                    <td>PC</td>
+                    <td><a href="jdo/orm/compound_identity.html#1_N_coll_bi">1-N CompoundIdentity Bidirectional</a></td>
+                    <td><img src="images/icon_success_sml.gif" border="0" alt=""/></td>
+                    <td><img src="images/icon_error_sml.gif" border="0" alt=""/></td>
+                    <td><img src="images/icon_success_sml.gif" border="0" alt=""/></td>
+                </tr>
+                <tr>
+                    <td>Interface</td>
+                    <td><a href="jdo/orm/interfaces.html">1-1 Unidirectional</a></td>
+                    <td><img src="images/icon_success_sml.gif" border="0" alt=""/></td>
+                    <td><img src="images/icon_error_sml.gif" border="0" alt=""/></td>
+                    <td><img src="images/icon_success_sml.gif" border="0" alt=""/></td>
+                </tr>
+                <tr>
+                    <td>Interface</td>
+                    <td><a href="jdo/orm/interfaces.html">1-1 Bidirectional</a></td>
+                    <td><img src="images/icon_success_sml.gif" border="0" alt=""/></td>
+                    <td><img src="images/icon_error_sml.gif" border="0" alt=""/></td>
+                    <td><img src="images/icon_success_sml.gif" border="0" alt=""/></td>
+                </tr>
+                <tr>
+                    <td>Interface</td>
+                    <td><a href="jdo/orm/serialised.html#Reference">1-1 serialised</a></td>
+                    <td><img src="images/icon_success_sml.gif" border="0" alt=""/></td>
+                    <td>?</td>
+                    <td><img src="images/icon_success_sml.gif" border="0" alt=""/></td>
+                </tr>
+                <tr>
+                    <td>Collection&lt;PC&gt;</td>
+                    <td><a href="jdo/orm/one_to_many_collection.html#fk_uni">1-N ForeignKey Unidirectional Collection</a></td>
+                    <td><img src="images/icon_success_sml.gif" border="0" alt=""/></td>
+                    <td><img src="images/icon_success_sml.gif" border="0" alt=""/></td>
+                    <td><img src="images/icon_success_sml.gif" border="0" alt=""/></td>
+                </tr>
+                <tr>
+                    <td>Collection&lt;PC&gt;</td>
+                    <td><a href="jdo/orm/one_to_many_collection.html#fk_bi">1-N ForeignKey Bidirectional Collection</a></td>
+                    <td><img src="images/icon_success_sml.gif" border="0" alt=""/></td>
+                    <td><img src="images/icon_success_sml.gif" border="0" alt=""/></td>
+                    <td><img src="images/icon_success_sml.gif" border="0" alt=""/></td>
+                </tr>
+                <tr>
+                    <td>Collection&lt;PC&gt;</td>
+                    <td><a href="jdo/orm/one_to_many_collection.html#join_uni">1-N JoinTable Unidirectional Collection</a></td>
+                    <td><img src="images/icon_success_sml.gif" border="0" alt=""/></td>
+                    <td><img src="images/icon_success_sml.gif" border="0" alt=""/></td>
+                    <td><img src="images/icon_success_sml.gif" border="0" alt=""/></td>
+                </tr>
+                <tr>
+                    <td>Collection&lt;PC&gt;</td>
+                    <td><a href="jdo/orm/one_to_many_collection.html#join_bi">1-N JoinTable Bidirectional Collection</a></td>
+                    <td><img src="images/icon_success_sml.gif" border="0" alt=""/></td>
+                    <td><img src="images/icon_success_sml.gif" border="0" alt=""/></td>
+                    <td><img src="images/icon_success_sml.gif" border="0" alt=""/></td>
+                </tr>
+                <tr>
+                    <td>Collection&lt;Non-PC&gt;</td>
+                    <td><a href="jdo/orm/one_to_many_collection.html#join_nonpc">1-N JoinTable Collection</a></td>
+                    <td><img src="images/icon_success_sml.gif" border="0" alt=""/></td>
+                    <td><img src="images/icon_success_sml.gif" border="0" alt=""/></td>
+                    <td><img src="images/icon_success_sml.gif" border="0" alt=""/></td>
+                </tr>
+                <tr>
+                    <td>Collection&lt;PC&gt;</td>
+                    <td><a href="jdo/orm/one_to_many_collection.html#shared_join">1-N JoinTable Collection using shared JoinTable</a></td>
+                    <td><img src="images/icon_error_sml.gif" border="0" alt=""/></td>
+                    <td><img src="images/icon_error_sml.gif" border="0" alt=""/></td>
+                    <td><img src="images/icon_success_sml.gif" border="0" alt=""/></td>
+                </tr>
+                <tr>
+                    <td>Collection&lt;PC&gt;</td>
+                    <td><a href="jdo/orm/one_to_many_collection.html#shared_fk">1-N ForeignKey Collection using shared ForeignKey</a></td>
+                    <td><img src="images/icon_error_sml.gif" border="0" alt=""/></td>
+                    <td><img src="images/icon_error_sml.gif" border="0" alt=""/></td>
+                    <td><img src="images/icon_success_sml.gif" border="0" alt=""/></td>
+                </tr>
+                <tr>
+                    <td>Collection&lt;PC&gt;</td>
+                    <td><a href="jdo/orm/many_to_many.html">M-N JoinTable</a></td>
+                    <td><img src="images/icon_success_sml.gif" border="0" alt=""/></td>
+                    <td><img src="images/icon_success_sml.gif" border="0" alt=""/></td>
+                    <td><img src="images/icon_success_sml.gif" border="0" alt=""/></td>
+                </tr>
+                <tr>
+                    <td>Collection&lt;PC&gt;</td>
+                    <td><a href="jdo/orm/compound_identity.html#1_N_uni">1-N CompoundIdentity Unidirectional</a></td>
+                    <td><img src="images/icon_success_sml.gif" border="0" alt=""/></td>
+                    <td><img src="images/icon_error_sml.gif" border="0" alt=""/></td>
+                    <td><img src="images/icon_success_sml.gif" border="0" alt=""/></td>
+                </tr>
+                <tr>
+                    <td>Collection&lt;PC&gt;</td>
+                    <td><a href="jdo/orm/serialised.html#Collection">1-N serialised Collection</a></td>
+                    <td><img src="images/icon_success_sml.gif" border="0" alt=""/></td>
+                    <td><img src="images/icon_success_sml.gif" border="0" alt=""/></td>
+                    <td><img src="images/icon_success_sml.gif" border="0" alt=""/></td>
+                </tr>
+                <tr>
+                    <td>Collection&lt;PC&gt;</td>
+                    <td><a href="jdo/orm/serialised.html#CollectionElements">1-N JoinTable Collection of serialised elements</a></td>
+                    <td><img src="images/icon_success_sml.gif" border="0" alt=""/></td>
+                    <td><img src="images/icon_error_sml.gif" border="0" alt=""/></td>
+                    <td><img src="images/icon_success_sml.gif" border="0" alt=""/></td>
+                </tr>
+                <tr>
+                    <td>List&lt;PC&gt;</td>
+                    <td><a href="jdo/orm/one_to_many_list.html#fk_uni">1-N ForeignKey Unidirectional Indexed List</a></td>
+                    <td><img src="images/icon_success_sml.gif" border="0" alt=""/></td>
+                    <td><img src="images/icon_error_sml.gif" border="0" alt=""/></td>
+                    <td><img src="images/icon_success_sml.gif" border="0" alt=""/></td>
+                </tr>
+                <tr>
+                    <td>List&lt;PC&gt;</td>
+                    <td><a href="jdo/orm/one_to_many_list.html#fk_bi">1-N ForeignKey Bidirectional Indexed List</a></td>
+                    <td><img src="images/icon_success_sml.gif" border="0" alt=""/></td>
+                    <td><img src="images/icon_error_sml.gif" border="0" alt=""/></td>
+                    <td><img src="images/icon_success_sml.gif" border="0" alt=""/></td>
+                </tr>
+                <tr>
+                    <td>List&lt;PC&gt;</td>
+                    <td><a href="jdo/orm/one_to_many_list.html#join_uni">1-N JoinTable Unidirectional Indexed List</a></td>
+                    <td><img src="images/icon_success_sml.gif" border="0" alt=""/></td>
+                    <td><img src="images/icon_error_sml.gif" border="0" alt=""/></td>
+                    <td><img src="images/icon_success_sml.gif" border="0" alt=""/></td>
+                </tr>
+                <tr>
+                    <td>List&lt;PC&gt;</td>
+                    <td><a href="jdo/orm/one_to_many_list.html#join_bi">1-N JoinTable Bidirectional Indexed List</a></td>
+                    <td><img src="images/icon_success_sml.gif" border="0" alt=""/></td>
+                    <td><img src="images/icon_error_sml.gif" border="0" alt=""/></td>
+                    <td><img src="images/icon_success_sml.gif" border="0" alt=""/></td>
+                </tr>
+                <tr>
+                    <td>List&lt;Non-PC&gt;</td>
+                    <td><a href="jdo/orm/one_to_many_list.html#join_nonpc">1-N JoinTable Indexed List</a></td>
+                    <td><img src="images/icon_success_sml.gif" border="0" alt=""/></td>
+                    <td><img src="images/icon_error_sml.gif" border="0" alt=""/></td>
+                    <td><img src="images/icon_success_sml.gif" border="0" alt=""/></td>
+                </tr>
+                <tr>
+                    <td>List&lt;PC&gt;</td>
+                    <td><a href="jpa/orm/one_to_many_list.html#fk_uni">1-N ForeignKey Unidirectional Ordered List</a></td>
+                    <td><img src="images/icon_error_sml.gif" border="0" alt=""/></td>
+                    <td><img src="images/icon_success_sml.gif" border="0" alt=""/></td>
+                    <td><img src="images/icon_success_sml.gif" border="0" alt=""/></td>
+                </tr>
+                <tr>
+                    <td>List&lt;PC&gt;</td>
+                    <td><a href="jpa/orm/one_to_many_list.html#fk_bi">1-N ForeignKey Bidirectional Ordered List</a></td>
+                    <td><img src="images/icon_error_sml.gif" border="0" alt=""/></td>
+                    <td><img src="images/icon_success_sml.gif" border="0" alt=""/></td>
+                    <td><img src="images/icon_success_sml.gif" border="0" alt=""/></td>
+                </tr>
+                <tr>
+                    <td>List&lt;PC&gt;</td>
+                    <td><a href="jpa/orm/one_to_many_list.html#join_uni">1-N JoinTable Unidirectional Ordered List</a></td>
+                    <td><img src="images/icon_error_sml.gif" border="0" alt=""/></td>
+                    <td><img src="images/icon_success_sml.gif" border="0" alt=""/></td>
+                    <td><img src="images/icon_success_sml.gif" border="0" alt=""/></td>
+                </tr>
+                <tr>
+                    <td>List&lt;PC&gt;</td>
+                    <td><a href="jpa/orm/one_to_many_list.html#join_bi">1-N JoinTable Bidirectional Ordered List</a></td>
+                    <td><img src="images/icon_error_sml.gif" border="0" alt=""/></td>
+                    <td><img src="images/icon_success_sml.gif" border="0" alt=""/></td>
+                    <td><img src="images/icon_success_sml.gif" border="0" alt=""/></td>
+                </tr>
+                <tr>
+                    <td>Map&lt;PC, PC&gt;</td>
+                    <td><a href="jdo/orm/one_to_many_map.html#join_pc_pc">1-N JoinTable Map</a></td>
+                    <td><img src="images/icon_success_sml.gif" border="0" alt=""/></td>
+                    <td><img src="images/icon_error_sml.gif" border="0" alt=""/></td>
+                    <td><img src="images/icon_success_sml.gif" border="0" alt=""/></td>
+                </tr>
+                <tr>
+                    <td>Map&lt;Non-PC, PC&gt;</td>
+                    <td><a href="jdo/orm/one_to_many_map.html#join_simple_pc">1-N JoinTable Map</a></td>
+                    <td><img src="images/icon_success_sml.gif" border="0" alt=""/></td>
+                    <td><img src="images/icon_error_sml.gif" border="0" alt=""/></td>
+                    <td><img src="images/icon_success_sml.gif" border="0" alt=""/></td>
+                </tr>
+                <tr>
+                    <td>Map&lt;PC, Non-PC&gt;</td>
+                    <td><a href="jdo/orm/one_to_many_map.html#join_pc_simple">1-N JoinTable Map</a></td>
+                    <td><img src="images/icon_success_sml.gif" border="0" alt=""/></td>
+                    <td><img src="images/icon_error_sml.gif" border="0" alt=""/></td>
+                    <td><img src="images/icon_success_sml.gif" border="0" alt=""/></td>
+                </tr>
+                <tr>
+                    <td>Map&lt;Non-PC, Non-PC&gt;</td>
+                    <td><a href="jdo/orm/one_to_many_map.html#join_simple_simple">1-N JoinTable Map</a></td>
+                    <td><img src="images/icon_success_sml.gif" border="0" alt=""/></td>
+                    <td><img src="images/icon_error_sml.gif" border="0" alt=""/></td>
+                    <td><img src="images/icon_success_sml.gif" border="0" alt=""/></td>
+                </tr>
+                <tr>
+                    <td>Map&lt;Non-PC, PC&gt;</td>
+                    <td><a href="jdo/orm/one_to_many_map.html#fk_uni_key">1-N ForeignKey Map Unidirectional (key stored in value)</a></td>
+                    <td><img src="images/icon_success_sml.gif" border="0" alt=""/></td>
+                    <td><img src="images/icon_success_sml.gif" border="0" alt=""/></td>
+                    <td><img src="images/icon_success_sml.gif" border="0" alt=""/></td>
+                </tr>
+                <tr>
+                    <td>Map&lt;Non-PC, PC&gt;</td>
+                    <td><a href="jdo/orm/one_to_many_map.html#fk_bi_key">1-N ForeignKey Map Bidirectional (key stored in value)</a></td>
+                    <td><img src="images/icon_success_sml.gif" border="0" alt=""/></td>
+                    <td><img src="images/icon_success_sml.gif" border="0" alt=""/></td>
+                    <td><img src="images/icon_success_sml.gif" border="0" alt=""/></td>
+                </tr>
+                <tr>
+                    <td>Map&lt;PC, Non-PC&gt;</td>
+                    <td><a href="jdo/orm/one_to_many_map.html#fk_uni_value">1-N ForeignKey Map Unidirectional (value stored in key)</a></td>
+                    <td><img src="images/icon_success_sml.gif" border="0" alt=""/></td>
+                    <td><img src="images/icon_error_sml.gif" border="0" alt=""/></td>
+                    <td><img src="images/icon_success_sml.gif" border="0" alt=""/></td>
+                </tr>
+                <tr>
+                    <td>Map&lt;PC, PC&gt;</td>
+                    <td><a href="jdo/orm/serialised.html#Map">1-N serialised Map</a></td>
+                    <td><img src="images/icon_success_sml.gif" border="0" alt=""/></td>
+                    <td><img src="images/icon_success_sml.gif" border="0" alt=""/></td>
+                    <td><img src="images/icon_success_sml.gif" border="0" alt=""/></td>
+                </tr>
+                <tr>
+                    <td>Map&lt;PC, PC&gt;</td>
+                    <td><a href="jdo/orm/serialised.html#MapKeysValues">1-N JoinTable Map of serialised keys/values</a></td>
+                    <td><img src="images/icon_success_sml.gif" border="0" alt=""/></td>
+                    <td><img src="images/icon_error_sml.gif" border="0" alt=""/></td>
+                    <td><img src="images/icon_success_sml.gif" border="0" alt=""/></td>
+                </tr>
+                <tr>
+                    <td>PC[   ]</td>
+                    <td><a href="jdo/orm/arrays.html#fk">1-N ForeignKey Unidirectional Array</a></td>
+                    <td><img src="images/icon_success_sml.gif" border="0" alt=""/></td>
+                    <td><img src="images/icon_error_sml.gif" border="0" alt=""/></td>
+                    <td><img src="images/icon_success_sml.gif" border="0" alt=""/></td>
+                </tr>
+                <tr>
+                    <td>PC[   ]</td>
+                    <td><a href="jdo/orm/arrays.html#join">1-N JoinTable Unidirectional Array</a></td>
+                    <td><img src="images/icon_success_sml.gif" border="0" alt=""/></td>
+                    <td><img src="images/icon_error_sml.gif" border="0" alt=""/></td>
+                    <td><img src="images/icon_success_sml.gif" border="0" alt=""/></td>
+                </tr>
+                <tr>
+                    <td>PC[   ]</td>
+                    <td><a href="jdo/orm/serialised.html#Array">1-N serialised Array</a></td>
+                    <td><img src="images/icon_success_sml.gif" border="0" alt=""/></td>
+                    <td><img src="images/icon_success_sml.gif" border="0" alt=""/></td>
+                    <td><img src="images/icon_success_sml.gif" border="0" alt=""/></td>
+                </tr>
+                <tr>
+                    <td>Non-PC[   ]</td>
+                    <td><a href="jdo/orm/arrays.html#join">1-N JoinTable Unidirectional Array</a></td>
+                    <td><img src="images/icon_success_sml.gif" border="0" alt=""/></td>
+                    <td><img src="images/icon_error_sml.gif" border="0" alt=""/></td>
+                    <td><img src="images/icon_success_sml.gif" border="0" alt=""/></td>
+                </tr>
+            </table>
+        </section>
+    </body>
+</document>

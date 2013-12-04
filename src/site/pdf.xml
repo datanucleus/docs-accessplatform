@@ -1,0 +1,247 @@
+<document xmlns="http://maven.apache.org/DOCUMENT/1.0.1"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/DOCUMENT/1.0.1 http://maven.apache.org/xsd/document-1.0.1.xsd"
+  outputName="datanucleus-accessplatform-docs">
+
+  <meta>
+    <title>DataNucleus AccessPlatform</title>
+    <author>DataNucleus</author>
+  </meta>
+
+  <cover>
+    <coverTitle>${project.name}</coverTitle>
+    <coverSubTitle>v. ${project.version}</coverSubTitle>
+    <coverType>User Guide</coverType>
+    <projectName>${project.name}</projectName>
+    <!--projectLogo>http://www.datanucleus.org/images/logos/DataNucleus_AccessPlatform_85.jpg</projectLogo-->
+    <companyName>DataNucleus</companyName>
+    <companyLogo>http://www.datanucleus.org/images/logos/DataNucleus16-300.jpg</companyLogo>
+  </cover>
+
+  <toc name="Table of Contents">
+    <item name="General" ref="index.xml">
+      <item name="What's New" ref="whats_new.xml"/>
+      <item name="Upgrade Migration" ref="migration.xml"/>
+      <item name="Getting Started" ref="getting_started.xml"/>
+      <item name="Dependencies" ref="dependencies.xml"/>
+      <item name="Persistence API Choice" ref="persistence_api.xml"/>
+      <item name="Development Process" ref="development_process.xml"/>
+      <item name="Compatibility" ref="compatibility.xml"/>
+      <item name="Services" ref="services.xml"/>
+      <item name="ORM Relationships" ref="orm_relationships.xml"/>
+      <item name="Persistence Properties" ref="persistence_properties.xml"/>
+      <item name="Security" ref="security.xml"/>
+      <item name="Logging" ref="logging.xml"/>
+    </item>
+    <item name="Datastore" ref="datastores/index.xml">
+      <item name="Supported Features" ref="datastores/datastore_features.xml"/>
+      <item name="RDBMS" ref="datastores/rdbms.xml">
+        <item name="Java Types (Spatial)" ref="datastores/rdbms_spatial_types.xml"/>
+        <item name="Datastore Types" ref="datastores/rdbms_datastore_types.xml"/>
+        <item name="Failover" ref="datastores/rdbms_failover.xml"/>
+        <item name="Queries" ref="datastores/rdbms_query.xml"/>
+        <item name="JDOQL : Spatial Methods" ref="datastores/rdbms_jdoql_spatial_methods.xml"/>
+        <item name="Statement Batching" ref="datastores/rdbms_statement_batching.xml"/>
+        <item name="Views" ref="datastores/rdbms_views.xml"/>
+        <item name="Datastore API" ref="datastores/rdbms_datastore_schema_api.xml"/>
+      </item>
+      <item name="ODF" ref="datastores/odf.xml"/>
+      <item name="Excel (XLS)" ref="datastores/excel.xml"/>
+      <item name="Excel (OOXML)" ref="datastores/ooxml.xml"/>
+      <item name="XML" ref="datastores/xml.xml"/>
+      <item name="HBase" ref="datastores/hbase.xml"/>
+      <item name="MongoDB" ref="datastores/mongodb.xml"/>
+      <item name="Google AppEngine/Datastore" ref="datastores/appengine.xml"/>
+      <item name="Neo4j" ref="datastores/neo4j.xml"/>
+      <item name="JSON" ref="datastores/json.xml"/>
+      <item name="Amazon S3" ref="datastores/amazons3.xml"/>
+      <item name="GoogleStorage" ref="datastores/googlestorage.xml"/>
+      <item name="LDAP" ref="datastores/ldap.xml">
+        <item name="Relations by DN" ref="datastores/ldap_dn.xml"/>
+        <item name="Relations by Attribute" ref="datastores/ldap_attribute.xml"/>
+        <item name="Relations by Hierarchy" ref="datastores/ldap_hierarchical.xml"/>
+        <item name="Embedded Objects" ref="datastores/ldap_embedded.xml"/>
+      </item>
+      <item name="NeoDatis" ref="datastores/neodatis.xml"/>
+    </item>
+    <item name="JDO API" ref="jdo/api.xml">
+      <item name="Class Mapping" ref="jdo/class_mapping.xml"/>
+      <item name="Datastore Identity" ref="jdo/datastore_identity.xml"/>
+      <item name="Application Identity" ref="jdo/application_identity.xml"/>
+      <item name="Nondurable Identity" ref="jdo/nondurable_identity.xml"/>
+      <item name="Compound Identity" ref="jdo/orm/compound_identity.xml"/>
+      <item name="Versioning" ref="jdo/versioning.xml"/>
+      <item name="Inheritance" ref="jdo/orm/inheritance.xml"/>
+      <item name="Fields/Properties" ref="jdo/fields_properties.xml">
+        <item name="Java Types" ref="jdo/types.xml"/>
+        <item name="Value Generation" ref="jdo/value_generation.xml"/>
+        <item name="Sequences" ref="jdo/sequences.xml"/>
+        <item name="Embedded Fields" ref="jdo/orm/embedded.xml"/>
+        <item name="Serialised Fields" ref="jdo/orm/serialised.xml"/>
+        <item name="Interface Fields" ref="jdo/orm/interfaces.xml"/>
+        <item name="Object Fields" ref="jdo/orm/objects.xml"/>
+        <item name="Array Fields" ref="jdo/orm/arrays.xml"/>
+        <item name="1-to-1 Relations" ref="jdo/orm/one_to_one.xml"/>
+        <item name="1-to-N Relations" ref="jdo/orm/one_to_many.xml">
+          <item name="Collections" ref="jdo/orm/one_to_many_collection.xml"/>
+          <item name="Sets" ref="jdo/orm/one_to_many_set.xml"/>
+          <item name="Lists" ref="jdo/orm/one_to_many_list.xml"/>
+          <item name="Maps" ref="jdo/orm/one_to_many_map.xml"/>
+        </item>
+        <item name="N-to-1 Relations" ref="jdo/orm/many_to_one.xml"/>
+        <item name="M-to-N Relations" ref="jdo/orm/many_to_many.xml"/>
+        <item name="Managing Relationships" ref="jdo/orm/relationships.xml"/>
+        <item name="Cascading" ref="jdo/orm/cascading.xml"/>
+      </item>
+      <item name="MetaData Reference" ref="jdo/metadata.xml">
+        <item name="XML" ref="jdo/metadata_xml.xml"/>
+        <item name="Annotations" ref="jdo/annotations.xml"/>
+        <item name="MetaData API" ref="jdo/metadata_api.xml"/>
+        <item name="ORM MetaData" ref="jdo/orm/metadata_orm.xml"/>
+      </item>
+      <item name="Schema Mapping" ref="jdo/orm/schema_mapping.xml">
+        <item name="Multitenancy" ref="jdo/multitenancy.xml"/>
+        <item name="Datastore Identifiers" ref="jdo/orm/datastore_identifiers.xml"/>
+        <item name="Secondary Tables" ref="jdo/orm/secondary_tables.xml"/>
+      </item>
+      <item name="Constraints" ref="jdo/orm/constraints.xml"/>
+      <item name="Enhancer" ref="jdo/enhancer.xml"/>
+      <item name="Datastore Schema" ref="jdo/schema.xml"/>
+      <item name="Bean Validation" ref="jdo/bean_validation.xml"/>
+      <item name="API Javadocs" ref="http://db.apache.org/jdo/api30/apidocs/index.html"/>
+      <item name="PersistenceManagerFactory" ref="jdo/pmf.xml">
+        <item name="L2 Cache" ref="jdo/cache.xml#level2"/>
+        <item name="Auto-Start" ref="jdo/autostart.xml"/>
+        <item name="Data Federation" ref="jdo/data_federation.xml"/>
+      </item>
+      <item name="PersistenceManager" ref="jdo/pm.xml">
+        <item name="PM Proxy" ref="jdo/pmproxy.xml"/>
+        <item name="Object Lifecycle" ref="jdo/object_lifecycle.xml"/>
+        <item name="Lifecycle Callbacks" ref="jdo/lifecycle_callbacks.xml"/>
+        <item name="Attach/Detach" ref="jdo/attach_detach.xml"/>
+        <item name="Datastore Connection" ref="jdo/datastore_connection.xml"/>
+      </item>
+      <item name="Transactions" ref="jdo/transactions.xml"/>
+      <item name="Fetch Groups" ref="jdo/fetchgroup.xml"/>
+      <item name="Query API" ref="jdo/query.xml">
+        <item name="Query Cache" ref="jdo/query_cache.xml"/>
+        <item name="JDOQL" ref="jdo/jdoql.xml"/>
+        <item name="JDOQL Declarative" ref="jdo/jdoql_declarative.xml"/>
+        <item name="JDOQL Typesafe" ref="jdo/jdoql_typesafe.xml"/>
+        <item name="SQL" ref="jdo/sql.xml"/>
+        <item name="Stored Procedures" ref="jdo/stored_procedures.xml"/>
+        <item name="JPQL" ref="jdo/jpql.xml"/>
+      </item>
+      <item name="Guides" ref="jdo/guides/guides.xml">
+        <item name="Datastore Replication" ref="jdo/replication.xml"/>
+        <item name="JEE Environments" ref="jdo/j2ee.xml"/>
+        <item name="OSGi Environments" ref="jdo/osgi.xml"/>
+        <item name="Troubleshooting" ref="jdo/troubleshooting.xml"/>
+        <item name="Performance Tuning" ref="jdo/performance_tuning.xml"/>
+        <item name="Monitoring" ref="jdo/monitoring.xml"/>
+        <item name="Maven with DataNucleus" ref="jdo/maven.xml"/>
+        <item name="Eclipse with DataNucleus" ref="jdo/guides/eclipse.xml"/>
+        <item name="Tutorial with RDBMS" ref="jdo/guides/tutorial_rdbms.xml"/>
+        <item name="Tutorial with ODF" ref="jdo/guides/tutorial_odf.xml"/>
+        <item name="Tutorial with Excel" ref="jdo/guides/tutorial_excel.xml"/>
+        <item name="Tutorial with MongoDB" ref="jdo/guides/tutorial_mongodb.xml"/>
+        <item name="Tutorial with HBase" ref="jdo/guides/tutorial_hbase.xml"/>
+        <item name="Tutorial with Neo4j" ref="jdo/guides/tutorial_neo4j.xml"/>
+        <item name="1-N Bidir FK Relation" ref="jdo/guides/one_to_many_bi_fk.xml"/>
+        <item name="1-N Bidir Join Relation" ref="jdo/guides/one_to_many_bi_join/index.xml"/>
+        <item name="M-N Relation" ref="jdo/guides/many_to_many.xml"/>
+        <item name="M-N Attributed Relation" ref="jdo/guides/many_to_many_attributed.xml"/>
+        <item name="Spatial Types Tutorial" ref="jdo/guides/spatial_tutorial.xml"/>
+        <item name="DAO Layer Design" ref="jdo/guides/daolayer_design.xml"/>
+      </item>
+    </item>
+    
+    <item name="JPA API" ref="jpa/api.xml">
+      <item name="Class Mapping" ref="jpa/class_mapping.xml"/>
+      <item name="Application Identity" ref="jpa/application_identity.xml"/>
+      <item name="Datastore Identity" ref="jpa/datastore_identity.xml"/>
+      <item name="Compound Identity" ref="jpa/orm/compound_identity.xml"/>
+      <item name="Versioning" ref="jpa/versioning.xml"/>
+      <item name="Inheritance" ref="jpa/orm/inheritance.xml"/>
+      <item name="Fields/Properties" ref="jpa/fields_properties.xml">
+        <item name="Java Types" ref="jpa/types.xml"/>
+        <item name="Value Generation" ref="jpa/value_generation.xml"/>
+        <item name="Embedded Fields" ref="jpa/orm/embedded.xml"/>
+        <item name="Serialised Fields" ref="jpa/orm/serialised.xml"/>
+        <item name="Interface Fields" ref="jpa/orm/interfaces.xml"/>
+        <item name="Object Fields" ref="jpa/orm/objects.xml"/>
+        <item name="Array Fields" ref="jpa/orm/arrays.xml"/>
+        <item name="1-to-1 Relations" ref="jpa/orm/one_to_one.xml"/>
+        <item name="1-to-N Relations" ref="jpa/orm/one_to_many.xml">
+          <item name="Collections" ref="jpa/orm/one_to_many_collection.xml"/>
+          <item name="Sets" ref="jpa/orm/one_to_many_set.xml"/>
+          <item name="Lists" ref="jpa/orm/one_to_many_list.xml"/>
+          <item name="Maps" ref="jpa/orm/one_to_many_map.xml"/>
+        </item>
+        <item name="N-to-1 Relations" ref="jpa/orm/many_to_one.xml"/>
+        <item name="M-to-N Relations" ref="jpa/orm/many_to_many.xml"/>
+        <item name="Managing Relationships" ref="jpa/orm/relationships.xml"/>
+        <item name="Cascading" ref="jpa/orm/cascading.xml"/>
+      </item>
+      <item name="MetaData Reference" ref="jpa/metadata.xml">
+        <item name="XML" ref="jpa/metadata_xml.xml"/>
+        <item name="Annotations" ref="jpa/annotations.xml"/>
+      </item>
+      <item name="Schema Mapping" ref="jpa/orm/schema_mapping.xml">
+        <item name="Multitenancy" ref="jpa/multitenancy.xml"/>
+        <item name="Datastore Identifiers" ref="jpa/orm/datastore_identifiers.xml"/>
+        <item name="Secondary Tables" ref="jpa/orm/secondary_tables.xml"/>
+      </item>
+      <item name="Constraints" ref="jpa/orm/constraints.xml"/>
+      <item name="Enhancer" ref="jpa/enhancer.xml"/>
+      <item name="Datastore Schema" ref="jpa/schema.xml"/>
+      <item name="Bean Validation" ref="jpa/bean_validation.xml"/>
+      <item name="API Javadocs" ref="http://java.sun.com/javaee/6/docs/api/javax/persistence/package-summary.html"/>
+      <item name="EntityManagerFactory" ref="jpa/emf.xml">
+        <item name="L2 Cache" ref="jpa/cache.xml#level2"/>
+      </item>
+      <item name="Entity Manager" ref="jpa/em.xml">
+        <item name="Object Lifecycle" ref="jpa/object_lifecycle.xml"/>
+        <item name="Lifecycle Callbacks" ref="jpa/lifecycle_callbacks.xml"/>
+        <item name="Datastore Connection" ref="jpa/datastore_connection.xml"/>
+      </item>
+      <item name="Transactions" ref="jpa/transactions.xml"/>
+      <item name="Entity Graphs" ref="jpa/entity_graphs.xml"/>
+      <item name="Query API" ref="jpa/query.xml">
+        <item name="Query Cache" ref="jpa/query_cache.xml"/>
+        <item name="JPQL" ref="jpa/jpql.xml"/>
+        <item name="JPQL Criteria" ref="jpa/jpql_criteria.xml"/>
+        <item name="SQL" ref="jpa/sql.xml"/>
+        <item name="Stored Procedures" ref="jpa/stored_procedures.xml"/>
+      </item>
+      <item name="Guides" ref="jpa/guides/guides.xml">
+        <item name="Datastore Replication" ref="jpa/replication.xml"/>
+        <item name="JavaEE Environments" ref="jpa/javaee.xml"/>
+        <item name="OSGi Environments" ref="jpa/osgi.xml"/>
+        <item name="Performance Tuning" ref="jpa/performance_tuning.xml"/>
+        <item name="Troubleshooting" ref="jpa/troubleshooting.xml"/>
+        <item name="Monitoring" ref="jpa/monitoring.xml"/>
+        <item name="Maven with DataNucleus" ref="jpa/maven.xml"/>
+        <item name="Eclipse with DataNucleus" ref="jpa/guides/eclipse.xml"/>
+        <item name="Tutorial with RDBMS" ref="jpa/guides/tutorial_rdbms.xml"/>
+        <item name="Tutorial with ODF" ref="jpa/guides/tutorial_odf.xml"/>
+        <item name="Tutorial with Excel" ref="jpa/guides/tutorial_excel.xml"/>
+        <item name="Tutorial with MongoDB" ref="jpa/guides/tutorial_mongodb.xml"/>
+        <item name="Tutorial with HBase" ref="jpa/guides/tutorial_hbase.xml"/>
+        <item name="Tutorial with Neo4j" ref="jpa/guides/tutorial_neo4j.xml"/>
+        <item name="Eclipse Dali" ref="jpa/guides/eclipse_dali.xml"/>
+        <item name="JPA Tutorial (TheServerSide)" ref="http://www.theserverside.com/tutorial/Slingshot-Yourself-Into-DataNucleus-21-and-JPA-20-with-this-Tutorial-for-RDBMS"/>
+      </item>
+    </item>
+    <item name="REST API" ref="rest/api.xml"/>
+    <item name="Guides" ref="guides/index.xml">
+      <item name="Use with IDEA" ref="guides/idea/index.xml"/>
+      <item name="Use with Netbeans" ref="guides/netbeans/index.xml"/>
+      <item name="Use with Ivy" ref="guides/ivy/antivy.xml"/>
+      <item name="Use with OSGi+SpringDM" ref="http://www.datanucleus.org/servlet/wiki/display/USERS/HOWTO+Use+Datanucleus+with+OSGi+and+Spring+DM"/>
+      <item name="Enhancing with Ant" ref="guides/ant/enhancingwithant.xml"/>
+      <item name="Jobfilter - JDO/JPA web app" ref="guides/jobfilter/index.xml"/>
+    </item>
+  </toc>
+</document>
+

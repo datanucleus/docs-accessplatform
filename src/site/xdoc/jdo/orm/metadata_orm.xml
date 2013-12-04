@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<document xmlns="http://maven.apache.org/XDOC/2.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+    <properties>
+        <title>ORM Meta-Data</title>
+    </properties>
+    <body>
+        <section name="JDO : ORM Meta-Data">
+            <p>
+                JDO defines that MetaData (defined in the <a href="../metadata_xml.html">MetaData guide</a>) can be found in particular
+                locations in the CLASSPATH, and has a particular format. It also defines that you can split your MetaData for
+                <i>Object Relational Mapping (ORM)</i> into separate files if you so wish. So you would define your basic persistence
+                in a file "package.jdo" and then define the MetaData files "package-mysql.orm" (for MySQL), and "package-oracle.orm"
+                (for Oracle). To make use of this JDO 2 Object-Relational Mapping file separation, you must specify the 
+                <a href="../pmf.html">PersistenceManagerFactory</a> property <b>datanucleus.Mapping</b>. 
+                If you set this to, for example, <i>mysql</i> DataNucleus would look for files such as
+                <i>package.jdo</i> and <i>package-mysql.orm</i> in the same locations as specified above.
+            </p>
+
+            <subsection name="Simple Example">
+                <p>
+                    Let us take a sample class and generate MetaData for it. Suppose I have a class as follows
+                </p>
+                <source>
+package mydomain;
+
+public class Person
+{
+    /** Title of the Person. */
+    String title=null;
+
+    /** Forename of the Person. */
+    String forename=null;
+
+    /** Surname of the Person. */
+    String surname=null;
+
+    ...
+}</source>
+                <p>
+                    and I want to use an existing schema. With this case I need to define the table and column names 
+                    that it maps to. To do this I need to use JDO 2 ORM tags. So I come up with MetaData as 
+                    follows in <b>package.jdo</b>
+                </p>
+                <source><![CDATA[
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE jdo PUBLIC
+    "-//Sun Microsystems, Inc.//DTD Java Data Objects Metadata 2.0//EN"
+    "http://java.sun.com/dtd/jdo_2_0.dtd">
+<jdo>
+    <package name="mydomain">
+        <class name="Person" identity-type="datastore">
+            <field name="title"/>
+            <field name="forename"/>
+            <field name="surname"/>
+        </class>
+    </package>
+</jdo>]]></source>
+                <br/>
+
+				<p>
+				    and then I add the ORM information in <b>package-mysql.orm</b> as
+				</p>
+				<source><![CDATA[
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE orm PUBLIC
+    "-//Sun Microsystems, Inc.//DTD Java Data Objects Mapping Metadata 2.0//EN"
+    "http://java.sun.com/dtd/jdo_orm_2_0.dtd">
+<orm>
+    <package name="mydomain">
+        <class name="Person" table="PERSON">
+            <field name="title">
+                <column name="TITLE"/>
+            </field>
+            <field name="forename">
+                <column name="FORENAME" length="100" jdbc-type="VARCHAR"/>
+            </field>
+            <field name="surname">
+                <column name="SURNAME" length="100" jdbc-type="VARCHAR"/>
+            </field>
+        </class>
+    </package>
+</orm>]]></source>
+                <p> 
+                    So you see that our class is being mapped across to a table "PERSON" in the datastore, with columns 
+                    "TITLE", "FORENAME", "SURNAME". We have also specified that the upper size limit on the forename 
+                    and surname fields is 100.
+                </p>
+            </subsection>
+            <subsection name="Memory utilisation">
+                <p>
+                    The XML files are parsed and populated to memory the first time a pesistent operation is executed over 
+                    a persistent class (e.g. <i>pm.makePersistent(object)</i> ). If the persistent class has relationships 
+                    to other persistent classes, the metadata for the classes in the relationships are loaded. In addition 
+                    to the persistent class and classes in the relationships, all other classes / files that were encountered 
+                    while searching for the persistent classes are loaded, plus their relationships.
+                </p>
+                <p>
+                    In average, for each persistent class a 3kb of memory is used to hold metadata information. This value 
+                    will vary according the amount of metadata declared. Although this value can be used as reference in 
+                    earlier stages of development, you should verify if it corresponds to your persistent classes.
+                </p>
+                <p>
+                    A general formula can be used (with caution) to estimate the amount of memory required:
+                </p>
+<source>Amount Required = (# of persistent classes) * 3KB</source>
+            </subsection>
+        </section>
+    </body>
+</document>

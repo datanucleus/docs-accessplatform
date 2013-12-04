@@ -1,0 +1,598 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<document xmlns="http://maven.apache.org/XDOC/2.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+    <properties>
+        <title>JPA Tutorial for Excel</title>
+    </properties>
+
+    <body>
+        <section name="DataNucleus - Tutorial for JPA for Excel">
+            <a href="https://sourceforge.net/projects/datanucleus/files/datanucleus-samples/">
+                <img src="../../images/download.png" alt="Download" border="0"/>
+            </a>
+            <a href="https://github.com/datanucleus/tutorial-jpa">
+                <img src="../../images/source_code.png" alt="Source Code" border="0"/>
+            </a>
+        
+            <subsection name="Background">
+                <p>
+                    An application can be JPA-enabled via many routes depending on the development process of the 
+                    project in question. For example the project could use Eclipse as the IDE for developing classes. 
+                    In that case the project would typically use the Dali Eclipse plugin coupled with the DataNucleus 
+                    Eclipse plugin. Alternatively the project could use Ant, Maven2 or some other build tool. 
+                    In this case this tutorial should be used as a guiding way for using DataNucleus in the application.
+                    The JPA process is quite straightforward.
+                </p>
+                <ol>
+                    <li><a href="#step0">Prerequisite</a> : Download DataNucleus AccessPlatform</li>
+                    <li><a href="#step1">Step 1</a> : Define their persistence definition using Meta-Data.</li>
+                    <li><a href="#step2">Step 2</a> : Define the "persistence-unit"</li>
+                    <li><a href="#step3">Step 3</a> : Compile your classes, and instrument them (using the 
+                        DataNucleus enhancer).</li> 
+                    <li><a href="#step4">Step 4</a> : Write your code to persist your objects within the DAO layer.</li>
+                    <li><a href="#step5">Step 5</a> : Run your application.</li>
+                </ol>
+                <p>
+                    The tutorial guides you through this. You can obtain the code referenced in this tutorial from
+                    <a href="https://sourceforge.net/projects/datanucleus/files/datanucleus-samples/" 
+                    target="_blank">SourceForge</a> (one of the files entitled "datanucleus-samples-jpa-tutorial-*").
+                </p>
+                <br/>
+            </subsection>
+
+            <a name="step0"/>
+            <subsection name="Step 0 : Download DataNucleus AccessPlatform">
+                <p>
+                    You can download DataNucleus in many ways, but the simplest is to download the distribution
+                    zip appropriate to your datastore (in this case Excel). You can do this from
+                    <a href="https://sourceforge.net/projects/datanucleus/files/datanucleus-accessplatform/" 
+                       target="_blank">SourceForge DataNucleus download page</a>.
+                    When you open the zip you will find DataNucleus jars in the <i>lib</i> directory, and
+                    dependency jars in the <i>deps</i> directory.
+                </p>
+                <br/>
+            </subsection>
+
+            <a name="step1"/>
+            <subsection name="Step 1 : Take your model classes and mark which are persistable">
+                <p>
+                    For our tutorial, say we have the following classes representing a store of products for sale.
+                </p>
+                <source><![CDATA[
+package org.datanucleus.samples.jpa.tutorial;
+
+public class Inventory
+{
+    String name = null;
+    Set<Product> products = new HashSet();
+
+    public Inventory(String name)
+    {
+        this.name = name;
+    }
+
+    public Set<Product> getProducts() {return products;}
+}]]></source>
+                <source><![CDATA[
+package org.datanucleus.samples.jpa.tutorial;
+
+public class Product
+{
+    long id;
+    String name = null;
+    String description = null;
+    double price = 0.0;
+
+    public Product(String name, String desc, double price)
+    {
+        this.name = name;
+        this.description = desc;
+        this.price = price;
+    }
+}]]></source>
+<source><![CDATA[
+package org.datanucleus.samples.jpa.tutorial;
+
+public class Book extends Product
+{
+    String author=null;
+    String isbn=null;
+    String publisher=null;
+
+    public Book(String name, String desc, double price, String author, 
+                String isbn, String publisher)
+    {
+        super(name,desc,price);
+        this.author = author;
+        this.isbn = isbn;
+        this.publisher = publisher;
+    }
+}]]></source>
+                <p>
+                    So we have a relationship (Inventory having a set of Products), and inheritance (Product-Book).
+                    Now we need to be able to persist objects of all of these types, so we need to <b>define persistence
+                    for them</b>. There are many things that you can define when deciding how to persist objects of a type
+                    but the essential parts are
+                </p>
+                <ul>
+                    <li>Mark the class as an <i>Entity</i> so it is visible to the persistence mechanism</li>
+                    <li>Identify which field(s) represent the identity of the object.</li>
+                </ul>
+                <p>
+                    So this is what we do now. Note that we could define persistence using XML metadata, annotations. 
+                    In this tutorial we will use annotations.
+                </p>
+                <source><![CDATA[
+package org.datanucleus.samples.jpa.tutorial;
+
+@Entity
+public class Inventory
+{
+    @Id
+    String name = null;
+
+    @OneToMany(cascade={CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH})
+    Set<Product> products = new HashSet();
+    ...
+}]]></source>
+                <source><![CDATA[
+package org.datanucleus.samples.jpa.tutorial;
+
+@Entity
+@Inheritance(strategy=InheritanceType.JOINED)
+public class Product
+{
+    @Id
+    @GeneratedValue(strategy=GenerationType.TABLE)
+    long id;
+
+    ...
+}]]></source>
+<source><![CDATA[
+package org.datanucleus.samples.jpa.tutorial;
+
+@Entity
+public class Book extends Product
+{
+    ...
+}]]></source>
+                <p>
+                    Note that we mark each class that can be persisted with <i>@Entity</i>
+                    and their primary key field(s) with @Id In addition we defined a <i>valueStrategy</i>
+                    for Product field <i>id</i> so that it will have its values generated automatically.
+                    In this tutorial we are using <u>application identity</u> which means that all objects of 
+                    these classes will have their identity defined by the primary key field(s).
+                    You can read more in
+                    <a href="../../jpa/application_identity.html">application identity</a> when designing your systems 
+                    persistence.
+                </p>
+                <br/>
+            </subsection>
+
+			<a name="step2"/>
+            <subsection name="Step 2 : Define the 'persistence-unit'">
+                <p>
+                    Writing your own classes to be persisted is the start point, but you now need to define which 
+                    objects of these classes are actually persisted. You do this via a file
+                    <i>META-INF/persistence.xml</i> at the root of the CLASSPATH. Like this
+                </p>
+                <source><![CDATA[
+<?xml version="1.0" encoding="UTF-8" ?>
+<persistence xmlns="http://java.sun.com/xml/ns/persistence"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://java.sun.com/xml/ns/persistence
+        http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd" version="2.0">
+
+    <!-- JPA tutorial "unit" -->
+    <persistence-unit name="Tutorial">
+        <class>org.datanucleus.samples.jpa.tutorial.Inventory</class>
+        <class>org.datanucleus.samples.jpa.tutorial.Product</class>
+        <class>org.datanucleus.samples.jpa.tutorial.Book</class>
+        <exclude-unlisted-classes/>
+        <properties>
+            <property name="javax.persistence.jdbc.url" value="excel:file:tutorial.xls"/>
+            <property name="datanucleus.autoCreateSchema" value="true"/>
+            <property name="datanucleus.validateTables" value="false"/>
+            <property name="datanucleus.validateConstraints" value="false"/>
+        </properties>
+    </persistence-unit>
+</persistence>]]></source>
+            </subsection>
+
+			<a name="step3"/>
+            <subsection name="Step 3 : Enhance your classes">
+                <p>
+                    DataNucleus relies on the classes that you want to persist be enhanced to implement the interface
+                    <i>PersistenceCapable</i>. You could write your classes manually to do this but this would be 
+                    laborious. Alternatively you can use a post-processing step to compilation that "enhances" your 
+                    compiled classes, adding on the necessary extra methods to make them <i>PersistenceCapable</i>. 
+                    There are several ways to do this, most notably at post-compile, or at runtime. We use the 
+                    post-compile step in this tutorial. <b>DataNucleus JPA</b> provides its own byte-code enhancer for 
+                    instrumenting/enhancing your classes (in <i>datanucleus-core</i>) and this is included in the 
+                    DataNucleus AccessPlatform zip file prerequisite.
+                </p>
+                <p>
+                    To understand on how to invoke the enhancer you need to visualise where the various 
+                    source and jdo files are stored
+                </p>
+                <source>
+src/main/java/org/datanucleus/samples/jpa/tutorial/Book.java
+src/main/java/org/datanucleus/samples/jpa/tutorial/Inventory.java
+src/main/java/org/datanucleus/samples/jpa/tutorial/Product.java
+src/main/resources/META-INF/persistence.xml
+
+target/classes/org/datanucleus/samples/jpa/tutorial/Book.class
+target/classes/org/datanucleus/samples/jpa/tutorial/Inventory.class
+target/classes/org/datanucleus/samples/jpa/tutorial/Product.class
+
+[when using Ant]
+lib/persistence-api.jar
+lib/jdo-api.jar
+lib/datanucleus-core.jar
+lib/datanucleus-api-jpa.jar</source>
+				<p>
+                    The first thing to do is compile your domain/model classes. You can do this in any way 
+                    you wish, but the downloadable JAR provides an Ant task, and a Maven2 project to do this 
+                    for you.
+				</p>
+                <source>
+Using Ant :
+ant compile
+
+Using Maven :
+mvn compile</source>
+                <p>
+                    To enhance classes using the DataNucleus Enhancer, you need to invoke a command something
+                    like this from the root of your project.
+                </p>
+                <source>
+Using Ant :
+ant enhance
+
+Using Maven : (this is usually done automatically after the "compile" goal)
+mvn datanucleus:enhance
+
+Manually on Linux/Unix :
+java -cp target/classes:lib/datanucleus-core.jar:
+         lib/datanucleus-api-jpa.jar:lib/persistence-api.jar;lib/jdo-api.jar
+     org.datanucleus.enhancer.DataNucleusEnhancer 
+     -api JPA -pu Tutorial
+
+Manually on Windows :
+java -cp target\classes;lib\datanucleus-core.jar;
+         lib\datanucleus-api-jpa.jar;lib\persistence-api.jar;lib\jdo-api.jar
+     org.datanucleus.enhancer.DataNucleusEnhancer
+     -api JPA -pu Tutorial
+
+[Command shown on many lines to aid reading - should be on single line]</source>
+                <p>
+                    This command enhances all class files specified in the persistence-unit "Tutorial".
+                    If you accidentally omitted this step, at the point of running your application and 
+                    trying to persist an object, you would get a <i>ClassNotPersistenceCapableException</i>
+                    thrown. The use of the enhancer is documented in more detail in the 
+                    <a href="../enhancer.html">Enhancer Guide</a>. The output of this step are a set of 
+                    class files that represent persistable classes.
+                </p>
+                <br/>
+            </subsection>
+
+			<a name="step4"/>
+            <subsection name="Step 4 : Write the code to persist objects of your classes">
+                <p>
+                    Writing your own classes to be persisted is the start point, but you now need to define which 
+                    objects of these classes are actually persisted, and when. Interaction with the persistence 
+                    framework of JPA is performed via an EntityManager. This provides methods for persisting of 
+                    objects, removal of objects, querying for persisted objects, etc. This section gives examples of 
+                    typical scenarios encountered in an application.
+                </p>
+                <p>
+                    The initial step is to obtain access to an EntityManager, which you do as follows
+                </p>
+                <source>
+EntityManagerFactory emf = Persistence.createEntityManagerFactory("Tutorial");
+EntityManager em = emf.createEntityManager();</source>
+                <p>
+                    So we created an <i>EntityManagerFactory</i> for our "persistence-unit" called "Tutorial".
+                    Now that the application has an EntityManager it can persist objects. This is performed as 
+                    follows
+                </p>
+                <source>
+Transaction tx = em.getTransaction();
+try
+{
+    tx.begin();
+
+    Inventory inv = new Inventory("My Inventory");
+    Product product = new Product("Sony Discman", "A standard discman from Sony", 49.99);
+    inv.getProducts().add(product);
+    em.persist(inv);
+
+    tx.commit();
+}
+finally
+{
+    if (tx.isActive())
+    {
+        tx.rollback();
+    }
+
+    em.close();
+}</source>
+                <p>
+                    Please note that the <i>finally</i> step is important in that it tidies up connections to 
+                    the datastore and the EntityManager.
+                </p>
+                <p>
+                    Now we want to retrieve some objects from persistent storage, so we will use a "Query". 
+                    In our case we want access to all Product objects that have a price below 150.00 and 
+                    ordering them in ascending order.
+                </p>
+                <source>
+Transaction tx = em.getTransaction();
+try
+{
+    tx.begin();
+
+    Query q = pm.createQuery("SELECT p FROM Product p WHERE p.price &lt; 150.00");
+    List results = q.getResultList();
+    Iterator iter = results.iterator();
+    while (iter.hasNext())
+    {
+        Product p = (Product)iter.next();
+
+        ... (use the retrieved object)
+    }
+
+    tx.commit();
+}
+finally
+{
+    if (tx.isActive())
+    {
+        tx.rollback();
+    }
+
+    em.close();
+}</source>
+                <p>
+                    If you want to delete an object from persistence, you would perform an operation something 
+                    like
+                </p>
+                <source>
+Transaction tx = em.getTransaction();
+try
+{
+    tx.begin();
+
+    // Find and delete all objects whose last name is 'Jones'
+    Query q = em.createQuery("DELETE FROM Person p WHERE p.lastName = 'Jones'");
+    int numberInstancesDeleted = q.executeUpdate();
+
+    tx.commit();
+}
+finally
+{
+    if (tx.isActive())
+    {
+        tx.rollback();
+    }
+
+    em.close();
+}</source>
+                <p>
+                    Clearly you can perform a large range of operations on objects. 
+                    We can't hope to show all of these here. Any good JPA book will provide many examples.
+                </p>
+            </subsection>
+
+			<a name="step5"/>
+            <subsection name="Step 5 : Run your application">
+                <p>
+                    To run your JPA-enabled application will require a few things to be available in the Java 
+                    CLASSPATH, these being
+                </p>
+                <ul>
+                    <li>The "persistence.xml" file (stored under META-INF/)</li>
+                    <li>Any ORM MetaData files for your persistable classes</li>
+                    <li>Apache POI jar needed for accessing your datastore</li>
+                    <li>The JDO API JAR (defining the JDO bytecode enhancement contract)</li>
+                    <li>The JPA API JAR (defining the JPA interface)</li>
+                    <li>The <b>DataNucleus Core</b>, <b>DataNucleus JPA API</b> and <b>DataNucleus Excel</b> JARs</li>
+                </ul>
+                <p> After that it is simply a question of starting your application and all should be taken care of. 
+                    You can access the DataNucleus Log file by specifying the 
+                    <a href="../../logging.html">logging</a> configuration properties, and any messages from 
+                    DataNucleus will be output in the normal way. The DataNucleus log is a very powerful way of finding 
+                    problems since it can list all SQL actually sent to the datastore as well as many other 
+                    parts of the persistence process.</p>
+                <source>
+Using Ant (you need the included persistence.xml to specify your database)
+ant run
+
+
+Using Maven:
+mvn exec:java
+
+
+Manually on Linux/Unix :
+java -cp lib/persistence-api.jar:lib/jdo-api.jar:lib/datanucleus-core.jar:lib/datanucleus-excel.jar:
+         lib/datanucleus-api-jpa.jar:lib/{poi_jars}:target/classes/:. 
+     org.datanucleus.samples.jpa.tutorial.Main
+
+
+Manually on Windows :
+java -cp lib\persistence-api.jar;lib\jdo-api.jar;lib\datanucleus-core.jar;lib\datanucleus-excel.jar;
+         lib\datanucleus-api-jpa.jar;lib\{poi_jars};target\classes\;.
+     org.datanucleus.samples.jpa.tutorial.Main
+
+
+Output :
+
+DataNucleus Tutorial with JPA
+=============================
+Persisting products
+Product and Book have been persisted
+
+Executing Query for Products with price below 150.00
+>  Book : JRR Tolkien - Lord of the Rings by Tolkien
+
+Deleting all products from persistence
+
+End of Tutorial</source>
+                <br/>
+            </subsection>
+        </section>
+
+        <section name="Part 2 : Next steps">
+            <a name="part2"/>
+            <p>
+                In the above simple tutorial we showed how to employ JPA and persist objects to an Excel spreadsheet.
+                Obviously this just scratches the surface of what you can do, and to use JPA requires minimal
+                work from the user. In this second part we show some further things that you are likely to want to do.
+            </p>
+            <ol>
+                <li><a href="#step6">Step 6</a> : Controlling the schema.</li>
+                <li><a href="#step7">Step 7</a> : Generate the database tables where your classes are to be persisted
+                    using SchemaTool.</li>
+            </ol>
+
+			<a name="step6"/>
+			<subsection name="Step 6 : Controlling the schema">
+                <p>
+                    In the above simple tutorial we didn't look at controlling the schema generated for these classes.
+                    Now let's pay more attention to this part by defining XML Metadata for the schema. We define this
+                    in XML to separate schema information from persistence information. So we define a file <i>orm.xml</i>
+                </p>
+                <source><![CDATA[
+<?xml version="1.0" encoding="UTF-8" ?>
+<entity-mappings>
+    <description>DataNucleus JPA tutorial</description>
+    <package>org.datanucleus.samples.jpa.tutorial</package>
+    <entity class="org.datanucleus.samples.jpa.tutorial.Product" name="Product">
+        <table name="JPA_PRODUCTS"/>
+        <attributes>
+            <id name="id">
+                <generated-value strategy="TABLE"/>
+            </id>
+            <basic name="name">
+                <column name="PRODUCT_NAME" length="100"/>
+            </basic>
+            <basic name="description">
+                <column length="255"/>
+            </basic>
+        </attributes>
+    </entity>
+
+    <entity class="org.datanucleus.samples.jpa.tutorial.Book" name="Book">
+        <table name="JPA_BOOKS"/>
+        <attributes>
+            <basic name="isbn">
+                <column name="ISBN" length="20"></column>
+            </basic>
+            <basic name="author">
+                <column name="AUTHOR" length="40"/>
+            </basic>
+            <basic name="publisher">
+                <column name="PUBLISHER" length="40"/>
+            </basic>
+        </attributes>
+    </entity>
+
+    <entity class="org.datanucleus.samples.jpa.tutorial.Inventory" name="Inventory">
+        <table name="JPA_INVENTORY"/>
+        <attributes>
+            <id name="name">
+                <column name="NAME" length="40"></column>
+            </id>
+            <one-to-many name="products">
+                <join-table name="JPA_INVENTORY_PRODUCTS">
+                    <join-column name="INVENTORY_ID_OID"/>
+                    <inverse-join-column name="PRODUCT_ID_EID"/>
+                </join-table>
+            </one-to-many>
+        </attributes>
+    </entity>
+</entity-mappings>]]></source>
+                <p>
+                    This file should be placed at the root of the CLASSPATH under <i>META-INF</i>.
+                </p>
+                <br/>
+            </subsection>
+
+			<a name="step7"/>
+			<subsection name="Step 7 : Generate any schema required for your domain classes">
+                <p>
+                    This step is optional, depending on whether you have an existing database schema. If you haven't, 
+                    at this point you can use the <a href="../schema.html#schematool">DataNucleus SchemaTool</a> to 
+                    generate the tables where these domain objects will be persisted. DataNucleus SchemaTool is a 
+                    command line utility (it can be invoked from Maven/Ant in a similar way to how the Enhancer 
+                    is invoked). The first thing that you need is to update the 
+                    <i>src/java/META-INF/persistence.xml</i> file with your database details. 
+                    Here we have a sample file (for HSQLDB) that contains
+                </p>
+                <source><![CDATA[
+<?xml version="1.0" encoding="UTF-8" ?>
+<persistence xmlns="http://java.sun.com/xml/ns/persistence"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://java.sun.com/xml/ns/persistence 
+        http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd" version="2.0">
+
+    <!-- Tutorial "unit" -->
+    <persistence-unit name="Tutorial">
+        <class>org.datanucleus.samples.jpa.tutorial.Inventory</class>
+        <class>org.datanucleus.samples.jpa.tutorial.Product</class>
+        <class>org.datanucleus.samples.jpa.tutorial.Book</class>
+        <properties>
+            <property name="javax.persistence.jdbc.url" value="excel:file:tutorial.xls"/>
+            <property name="datanucleus.autoCreateSchema" value="true"/>
+            <property name="datanucleus.validateTables" value="false"/>
+            <property name="datanucleus.validateConstraints" value="false"/>
+        </properties>
+    </persistence-unit>
+
+</persistence>]]></source>
+                <p>Now we need to run DataNucleus SchemaTool. For our case above you would do something like this</p>
+                <source>
+Using Ant :
+ant createschema
+
+
+Using Maven :
+mvn datanucleus:schema-create
+
+
+Manually on Linux/Unix :
+java -cp target/classes:lib/jdo-api.jar:lib/persistence-api.jar:lib/datanucleus-core.jar:
+         lib/datanucleus-excel.jar:lib/datanucleus-api-jpa.jar:lib/{poi.jar}
+     org.datanucleus.store.schema.SchemaTool
+     -create -api JPA -pu Tutorial
+
+Manually on Windows :
+java -cp target\classes;lib\jdo-api.jar;lib\persistence-api.jar;lib\datanucleus-core.jar;
+         lib\datanucleus-excel.jar;lib\datanucleus-api-jpa.jar;lib\{poi.jar}
+     org.datanucleus.store.schema.SchemaTool
+     -create -api JPA -pu Tutorial
+
+[Command shown on many lines to aid reading. Should be on single line]</source>
+				<p>
+                    This will generate the required tables, indexes, and foreign keys for the classes defined in 
+                    the annotations and <i>orm.xml</i> Meta-Data file.</p>
+                <br/>
+			</subsection>
+
+            <subsection name="Any questions?">
+                <p> 
+                    If you have any questions about this tutorial and how to develop applications for use with 
+                    <b>DataNucleus</b> please read the online documentation since answers are to be found there. 
+                    If you don't find what you're looking for go to our 
+                    <a href="http://forum.datanucleus.org" target="_top">Forums</a>. 
+                </p>
+                <p>
+                    <b>The DataNucleus Team</b>
+                </p>
+            </subsection>
+        </section>
+
+    </body>
+</document>

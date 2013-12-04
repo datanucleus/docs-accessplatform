@@ -1,0 +1,546 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<document xmlns="http://maven.apache.org/XDOC/2.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+    <properties>
+        <title>JDO Embedded Objects</title>
+    </properties>
+
+    <body>
+        <section name="JDO : Embedded Fields">
+            <p>
+                The JDO persistence strategy typically involves persisting the fields of any class into its own table, 
+                and representing any relationships from the fields of that class across to other tables. There are 
+                occasions when this is undesirable, maybe due to an existing datastore schema, or because a more 
+                convenient datastore model is required. JDO allows the persistence of fields as <i>embedded</i> 
+                typically into the same table as the "owning" class.
+            </p>
+
+            <p>
+                One important decision when defining objects of a type to be embedded into another type is whether 
+                objects of that type will ever be persisted in their own right into their own table, and have an 
+                identity. JDO provides a MetaData attribute that you can use to signal this.
+            </p>
+            <source><![CDATA[
+<jdo>
+    <package name="com.mydomain.samples.embedded">
+        <class name="MyClass" embedded-only="true">
+            ...
+        </class>
+
+    </package>
+</jdo>]]></source>
+            <p>
+                With the above MetaData (using the <i>embedded-only</i> attribute), in our application any objects of the class 
+                <b>MyClass</b> <u>cannot</u> be persisted in their own right. They can only be embedded into other objects.
+            </p>
+            <p>
+                JDO's definition of embedding encompasses several types of fields. These are described below
+            </p>
+            <ul>
+                <li><a href="#PC">Embedded PersistenceCapable objects</a> - where you have a 1-1 relationship and you 
+                    want to embed the other PersistenceCapable into the same table as the your object.</li>
+                <li><a href="#NestedPC">Embedded Nested PersistenceCapable objects</a> - like the first example except 
+                    that the other object also has another PersistenceCapable object that also should be embedded</li>
+                <li><a href="#Collection">Embedded Collection elements</a> - where you want to embed the elements of a 
+                    collection into a join table (instead of persisting them into their own table)</li>
+                <li><a href="#Map">Embedded Map keys/values</a> - where you want to embed the keys/values of a map 
+                    into a join table (instead of persisting them into their own table)</li>
+            </ul>
+            <br/>
+
+            <a name="PC"/>
+            <subsection name="Embedding PersistenceCapable objects">
+                <table><tr><td>Applicable to RDBMS, Excel, OOXML, ODF, HBase, MongoDB, Neo4j.</td></tr></table>
+                <p>
+                    In a typical 1-1 relationship between 2 classes, the 2 classes in the relationship are persisted 
+                    to their own table, and a foreign key is managed between them. With JDO and DataNucleus you can 
+                    persist the related PersistenceCapable object as embedded into the same table. This results in a 
+                    single table in the datastore rather than one for each of the 2 classes.
+                </p>
+                <p>
+                    Let's take an example. We are modelling a <b>Computer</b>, and in our simple model our 
+                    <b>Computer</b> has a graphics card and a sound card. So we model these cards using a 
+                    <b>ComputerCard</b> class. So our classes become
+                </p>
+                <source>
+public class Computer
+{
+    private String operatingSystem;
+
+    private ComputerCard graphicsCard;
+
+    private ComputerCard soundCard;
+
+    public Computer(String osName,
+                    ComputerCard graphics,
+                    ComputerCard sound)
+    {
+        this.operatingSystem = osName;
+        this.graphicsCard = graphics;
+        this.soundCard = sound;
+    }
+
+    ...
+}
+
+public class ComputerCard
+{
+    public static final int ISA_CARD = 0;
+    public static final int PCI_CARD = 1;
+    public static final int AGP_CARD = 2;
+
+    private String manufacturer;
+
+    private int type;
+
+    public ComputerCard(String manufacturer,
+                        int type)
+    {
+        this.manufacturer = manufacturer;
+        this.type = type;
+    }
+
+    ...
+}</source>
+                <p>
+                    The traditional (default) way of persisting these classes would be to have a table to represent 
+                    each class. So our datastore will look like this
+                </p>
+                <img src="../../images/orm/embedded_pc_traditional_db.gif" border="0" alt=""/><br/><br/>
+                <p>
+                    However we decide that we want to persist <b>Computer</b> objects into a table called COMPUTER and 
+                    we also want to persist the PC cards into the <u>same table</u>. We define our MetaData like this
+                </p>
+                <source><![CDATA[
+<jdo>
+    <package name="com.mydomain.samples.embedded">
+        <class name="Computer" identity-type="datastore" table="COMPUTER">
+            <field name="operatingSystem">
+                <column name="OS_NAME" length="40" jdbc-type="CHAR"/>
+            </field>
+            <field name="graphicsCard" persistence-modifier="persistent">
+                <embedded null-indicator-column="GRAPHICS_MANUFACTURER">
+                    <field name="manufacturer" column="GRAPHICS_MANUFACTURER"/>
+                    <field name="type" column="GRAPHICS_TYPE"/>
+                </embedded>
+            </field>
+            <field name="soundCard" persistence-modifier="persistent">
+                <embedded null-indicator-column="SOUND_MANUFACTURER">
+                    <field name="manufacturer" column="SOUND_MANUFACTURER"/>
+                    <field name="type" column="SOUND_TYPE"/>
+                </embedded>
+            </field>
+        </class>
+
+        <class name="ComputerCard" table="COMPUTER_CARD">
+            <field name="manufacturer"/>
+            <field name="type"/>
+        </class>
+    </package>
+</jdo>]]></source>
+                <p>
+                    So here we will end up with a TABLE called "COMPUTER" with columns "COMPUTER_ID", "OS_NAME", 
+                    "GRAPHICS_MANUFACTURER", "GRAPHICS_TYPE", "SOUND_MANUFACTURER", "SOUND_TYPE". If we call 
+                    makePersistent() on any objects of type <b>Computer</b>, they will be persisted into this table.
+                </p>
+                <img src="../../images/orm/embedded_pc_embedded_db.gif" border="0" alt=""/><br/>
+                <p>
+                    You will notice in the MetaData our use of the attribute <i>null-indicator-column</i>. This is 
+                    used when retrieving objects from the datastore and detecting if it is a NULL embedded object. 
+                    In the case we have here, if the column GRAPHICS_MANUFACTURER is null at retrieval, then the 
+                    embedded "graphicsCard" field will be set as null. Similarly for the "soundCard" field when 
+                    SOUND_MANUFACTURER is null.
+                </p>
+                <p>
+                    If the <b>ComputerCard</b> class above has a reference back to the related <b>Computer</b>, 
+                    JDO defines a mechanism whereby this will be populated. You would add the XML element 
+                    <i>owner-field</i> to the <i>&lt;embedded&gt;</i> tag defining the field within <b>ComputerCard</b> 
+                    that represents the <b>Computer</b> it relates to. When this is specified DataNucleus will 
+                    populate it automatically, so that when you retrieve the <b>Computer</b> and access the
+                    <b>ComputerCard</b> objects within it, they will have the link in place.
+                </p>
+                <p>
+                    It should be noted that in this latter (embedded) case we can still persist objects of type 
+                    <b>ComputerCard</b> into their own table - the MetaData definition for <b>ComputerCard</b> is used 
+                    for the table definition in this case.
+                </p>
+                <p>
+                    Please note that if, instead of specifying the &lt;embedded&gt; block we had specified <b>embedded</b>
+                    in the field element we would have ended up with the same thing, just that the fields and columns would have been 
+                    mapped using their default mappings, and that the &lt;embedded&gt; provides control over
+                    how they are mapped.
+                </p>
+                
+                <p>
+                    <b>Note that by default the embedded objects cannot have inheritance.</b>
+                    Inheritance in embedded objects is only support for RDBMS and MongoDB, and involves defining
+                    a discriminator in the metadata of the embedded type.
+                </p>
+                <p>See also :-</p>
+                <ul>
+                    <li><a href="../metadata_xml.html#embedded">MetaData reference for &lt;embedded&gt; element</a></li>
+                    <li><a href="../annotations.html#Embedded">Annotations reference for @Embedded</a></li>
+                </ul>
+                <br/>
+            </subsection>
+
+            <a name="NestedPC"/>
+            <subsection name="Embedding Nested PersistenceCapable objects">
+                <table><tr><td>Applicable to RDBMS, Excel, OOXML, ODF, HBase, MongoDB, Neo4j.</td></tr></table>
+                <p>
+                    In the above example we had an embedded PersistenceCapable object within a persisted object. What 
+                    if our embedded PersistenceCapable object also contain another PersistenceCapable object. So, 
+                    using the above example what if <b>ComputerCard</b> contains an object of type <b>Connector</b> ?
+                </p>
+                <source>
+public class ComputerCard
+{
+    ...
+
+    Connector connector;
+
+    public ComputerCard(String manufacturer,
+                        int type,
+                        Connector conn)
+    {
+        this.manufacturer = manufacturer;
+        this.type = type;
+        this.connector = conn;
+    }
+
+    ...
+}
+
+public class Connector
+{
+    int type;
+}</source>
+                <p>Well we want to store all of these objects into the same record in the COMPUTER table.</p>
+                <source><![CDATA[
+<jdo>
+    <package name="com.mydomain.samples.embedded">
+        <class name="Computer" identity-type="datastore" table="COMPUTER">
+            <field name="operatingSystem">
+                <column name="OS_NAME" length="40" jdbc-type="CHAR"/>
+            </field>
+            <field name="graphicsCard" persistence-modifier="persistent">
+                <embedded null-indicator-column="GRAPHICS_MANUFACTURER">
+                    <field name="manufacturer" column="GRAPHICS_MANUFACTURER"/>
+                    <field name="type" column="GRAPHICS_TYPE"/>
+                    <field name="connector">
+                        <embedded>
+                            <field name="type" column="GRAPHICS_CONNECTOR_TYPE"/>
+                        </embedded>
+                    </field>
+                </embedded>
+            </field>
+            <field name="soundCard" persistence-modifier="persistent">
+                <embedded null-indicator-column="SOUND_MANUFACTURER">
+                    <field name="manufacturer" column="SOUND_MANUFACTURER"/>
+                    <field name="type" column="SOUND_TYPE"/>
+                    <field name="connector">
+                        <embedded>
+                            <field name="type" column="SOUND_CONNECTOR_TYPE"/>
+                        </embedded>
+                    </field>
+                </embedded>
+            </field>
+        </class>
+
+        <class name="ComputerCard" table="COMPUTER_CARD">
+            <field name="manufacturer"/>
+            <field name="type"/>
+        </class>
+
+        <class name="Connector" embedded-only="true">
+            <field name="type"/>
+        </class>
+    </package>
+</jdo>]]></source>
+                <p>
+                    So we simply nest the embedded definition of the <b>Connector</b> objects within the embedded 
+                    definition of the <b>ComputerCard</b> definitions for <b>Computer</b>. JDO supports this to as 
+                    many levels as you require! The <b>Connector</b> objects will be persisted into the 
+                    GRAPHICS_CONNECTOR_TYPE, and SOUND_CONNECTOR_TYPE columns in the COMPUTER table.
+                </p>
+                <img src="../../images/orm/embedded_pc_nested_embedded_db.gif" border="0" alt=""/><br/>
+                <br/>
+            </subsection>
+
+            <a name="Collection"/>
+            <subsection name="Embedding Collection Elements">
+                <table><tr><td>Applicable to RDBMS, MongoDB</td></tr></table>
+                <p>
+                    In a typical 1-N relationship between 2 classes, the 2 classes in the relationship are persisted 
+                    to their own table, and either a join table or a foreign key is used to relate them. With JDO and 
+                    DataNucleus you have a variation on the join table relation where you can persist the objects of 
+                    the "N" side into the join table itself so that they don't have their own identity, and aren't 
+                    stored in the table for that class.
+                    <b>This is supported in DataNucleus with the following provisos</b>
+                </p>
+                <ul>
+                    <li>You can have inheritance in embedded keys/values and a discriminator is added (you must define 
+                        the discriminator in the metadata of the embedded type).</li>
+                    <li>When retrieving embedded elements, all fields are retrieved in one call. That is, fetch 
+                        plans are not utilised. This is because the embedded element has no identity so we have to 
+                        retrieve all initially.</li>
+                </ul>
+                <p>
+                    It should be noted that where the collection "element" is not <i>PersistenceCapable</i> or of a 
+                    "reference" type (Interface or Object) it will <u>always</u> be embedded, and this functionality 
+                    here applies to <i>PersistenceCapable</i> elements only. DataNucleus doesn't support the embedding 
+                    of reference type objects currently.
+                </p>
+                <p>
+                    Let's take an example. We are modelling a <b>Network</b>, and in our simple model our 
+                    <b>Network</b> has collection of <b>Device</b>s. So we define our classes as
+                </p>
+                <source>
+public class Network
+{
+    private String name;
+
+    private Collection devices = new HashSet();
+
+    public Network(String name)
+    {
+        this.name = name;
+    }
+
+    ...
+}
+
+public class Device
+{
+    private String name;
+
+    private String ipAddress;
+
+    public Device(String name,
+                  String addr)
+    {
+        this.name = name;
+        this.ipAddress = addr;
+    }
+
+    ...
+}</source>
+                <p>
+                    We decide that instead of <b>Device</b> having its own table, we want to persist them into the join
+                    table of its relationship with the <b>Network</b> since they are only used by the network itself.
+                    We define our MetaData like this
+                </p>
+                <source><![CDATA[
+<jdo>
+    <package name="com.mydomain.samples.embedded">
+        <class name="Network" identity-type="datastore" table="NETWORK">
+            <field name="name">
+                <column name="NAME" length="40" jdbc-type="VARCHAR"/>
+            </field>
+            <field name="devices" persistence-modifier="persistent" table="NETWORK_DEVICES">
+                <collection element-type="com.mydomain.samples.embedded.Device"/>
+                <join>
+                    <column name="NETWORK_ID"/>
+                </join>
+                <element>
+                    <embedded>
+                        <field name="name">
+                            <column name="DEVICE_NAME" allows-null="true"/>
+                        </field>
+                        <field name="ipAddress">
+                            <column name="DEVICE_IP_ADDR" allows-null="true"/>
+                        </field>
+                    </embedded>
+                </element>
+            </field>
+        </class>
+
+        <class name="Device" table="DEVICE" embedded-only="true">
+            <field name="name">
+                <column name="NAME"/>
+            </field>
+            <field name="ipAddress">
+                <column name="IP_ADDRESS"/>
+            </field>
+        </class>
+    </package>
+</jdo>]]></source>
+                <p>
+                    So here we will end up with a table called "NETWORK" with columns "NETWORK_ID", and "NAME",
+                    and a table called "NETWORK_DEVICES" with columns "NETWORK_ID", "ADPT_PK_IDX", "DEVICE_NAME",
+                    "DEVICE_IP_ADDR". When we persist a <b>Network</b> object, any devices are persisted into the 
+                    NETWORK_DEVICES table.
+                </p>
+                <img src="../../images/orm/embedded_collection_embedded_db.gif" border="0" alt=""/><br/><br/>
+
+                <p>
+                    Please note that if, instead of specifying the &lt;embedded&gt; block we had specified 
+                    <b>embedded-element</b> in the collection element we would have ended up with the same thing, 
+                    just that the fields and columns would be mapped using their default mappings, and that the 
+                    &lt;embedded&gt; provides control over how they are mapped.
+                </p>
+                <p>
+                    You note that in our example above DataNucleus has added an extra column "ADPT_PK_IDX" to provide 
+                    the primary key of the join table now that we're storing the elements as embedded. A variation on 
+                    this would have been if we wanted to maybe use the "DEVICE_IP_ADDR" as the other part of the 
+                    primary key, in which case the "ADPT_PK_IDX" would not be needed. You would specify this as 
+                    follows
+                </p>
+                <source><![CDATA[
+            <field name="devices" persistence-modifier="persistent" table="NETWORK_DEVICES">
+                <collection element-type="com.mydomain.samples.embedded.Device"/>
+                <join>
+                    <primary-key name="NETWORK_DEV_PK">
+                        <column name="NETWORK_ID"/>
+                        <column name="DEVICE_IP_ADDR"/>
+                    </primary-key>
+                    <column name="NETWORK_ID"/>
+                </join>
+                <element>
+                    <embedded>
+                        <field name="name">
+                            <column name="DEVICE_NAME" allows-null="true"/>
+                        </field>
+                        <field name="ipAddress">
+                            <column name="DEVICE_IP_ADDR" allows-null="true"/>
+                        </field>
+                    </embedded>
+                </element>
+            </field>]]></source>
+                <p>
+                    This results in the join table only having the columns "NETWORK_ID", "DEVICE_IP_ADDR", and 
+                    "DEVICE_NAME", and having a primary key as the composite of "NETWORK_ID" and "DEVICE_IP_ADDR". 
+                </p>
+                <p>See also :-</p>
+                <ul>
+                    <li><a href="../metadata_xml.html#embedded">MetaData reference for &lt;embedded&gt; element</a></li>
+                    <li><a href="../metadata_xml.html#element">MetaData reference for &lt;element&gt; element</a></li>
+                    <li><a href="../metadata_xml.html#join">MetaData reference for &lt;join&gt; element</a></li>
+                    <li><a href="../annotations.html#Embedded">Annotations reference for @Embedded</a></li>
+                    <li><a href="../annotations.html#Element">Annotations reference for @Element</a></li>
+                </ul>
+            </subsection>
+
+            <a name="Map"/>
+            <subsection name="Embedding Map Keys/Values">
+                <table><tr><td>Applicable to RDBMS, MongoDB</td></tr></table>
+                <p>
+                    In a typical 1-N map relationship between classes, the classes in the relationship are persisted 
+                    to their own table, and a join table forms the map linkage. With JDO and DataNucleus you have a 
+                    variation on the join table relation where you can persist either the key class or the value class,
+                    or both key class and value class into the join table.
+                    <b>This is supported in DataNucleus with the following provisos</b>
+                </p>
+                <ul>
+                    <li>You can have inheritance in embedded keys/values and a discriminator is added (you must define 
+                        the discriminator in the metadata of the embedded type).</li>
+                    <li>When retrieving embedded keys/values, all fields are retrieved in one call. That is, 
+                        fetch plans are not utilised. This is because the embedded key/value has no identity so 
+                        we have to retrieve all initially.</li>
+                </ul>
+                <p>
+                    It should be noted that where the map "key"/"value" is not <i>PersistenceCapable</i> or of a 
+                    "reference" type (Interface or Object) it will <u>always</u> be embedded, and this functionality 
+                    here applies to <i>PersistenceCapable</i> keys/values only. DataNucleus doesn't support embedding 
+                    reference type elements currently.
+                </p>
+                <p>
+                    Let's take an example. We are modelling a <b>FilmLibrary</b>, and in our simple model our 
+                    <b>FilmLibrary</b> has map of <b>Film</b>s, keyed by a String alias. So we define our classes as
+                </p>
+                <source>
+public class FilmLibrary
+{
+    private String owner;
+
+    private Map films = new HashMap();
+
+    public FilmLibrary(String owner)
+    {
+        this.owner = owner;
+    }
+
+    ...
+}
+
+public class Film
+{
+    private String name;
+
+    private String director;
+
+    public Film(String name, String director)
+    {
+        this.name = name;
+        this.director = director;
+    }
+
+    ...
+}</source>
+                <p>
+                    We decide that instead of <b>Film</b> having its own table, we want to persist them into the join
+                    table of its map relationship with the <b>FilmLibrary</b> since they are only used by the library 
+                    itself. We define our MetaData like this
+                </p>
+                <source><![CDATA[
+<jdo>
+    <package name="com.mydomain.samples.embedded">
+        <class name="FilmLibrary" identity-type="datastore" table="FILM_LIBRARY">
+            <field name="owner">
+                <column name="OWNER" length="40" jdbc-type="VARCHAR"/>
+            </field>
+            <field name="films" persistence-modifier="persistent" table="FILM_LIBRARY_FILMS">
+                <map key-type="java.lang.String" value-type="com.mydomain.samples.embedded.Film"/>
+                <join>
+                    <column name="FILM_LIBRARY_ID"/>
+                </join>
+                <key>
+                    <column name="FILM_ALIAS"/>
+                </key>
+                <value>
+                    <embedded>
+                        <field name="name">
+                            <column name="FILM_NAME"/>
+                        </field>
+                        <field name="director">
+                            <column name="FILM_DIRECTOR" allows-null="true"/>
+                        </field>
+                    </embedded>
+                </value>
+            </field>
+        </class>
+
+        <class name="Film" embedded-only="true">
+            <field name="name"/>
+            <field name="director"/>
+        </class>
+    </package>
+</jdo>]]></source>
+                <p>
+                    So here we will end up with a table called "FILM_LIBRARY" with columns "FILM_LIBRARY_ID", and "OWNER",
+                    and a table called "FILM_LIBRARY_FILMS" with columns "FILM_LIBRARY_ID", "FILM_ALIAS", "FILM_NAME", "FILM_DIRECTOR".
+                    When we persist a <b>FilmLibrary</b> object, any films are persisted into the FILM_LIBRARY_FILMS table.
+                </p>
+                <img src="../../images/orm/embedded_map_embedded_db.gif" border="0" alt=""/><br/><br/>
+                <p>
+                    Please note that if, instead of specifying the &lt;embedded&gt; block we had specified <b>embedded-key</b>
+                    of <b>embedded-value</b> in the map element we would have ended up with the same thing, just that the fields 
+                    and columns would be mapped using their default mappings, and that the &lt;embedded&gt; provides control over
+                    how they are mapped.
+                </p>
+                <p>See also :-</p>
+                <ul>
+                    <li><a href="../metadata_xml.html#embedded">MetaData reference for &lt;embedded&gt; element</a></li>
+                    <li><a href="../metadata_xml.html#key">MetaData reference for &lt;key&gt; element</a></li>
+                    <li><a href="../metadata_xml.html#value">MetaData reference for &lt;value&gt; element</a></li>
+                    <li><a href="../metadata_xml.html#join">MetaData reference for &lt;join&gt; element</a></li>
+                    <li><a href="../annotations.html#Embedded">Annotations reference for @Embedded</a></li>
+                    <li><a href="../annotations.html#Key">Annotations reference for @Key</a></li>
+                    <li><a href="../annotations.html#Value">Annotations reference for @Value</a></li>
+                </ul>
+            </subsection>
+        </section>
+
+    </body>
+</document>

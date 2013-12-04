@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<document xmlns="http://maven.apache.org/XDOC/2.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+    <properties>
+        <title>RDBMS Statement Batching</title>
+    </properties>
+
+    <body>
+        <section name="RDBMS : Statement Batching">
+            <img src="../images/nucleus_extension.gif" alt=""/>
+            <p>
+                When changes are required to be made to an underlying RDBMS datastore, statements are sent via JDBC.
+                A statement is, in general, a single SQL command, and is then executed. In some circumstances
+                the statements due to be sent to the datastore are the same JDBC statement several times. In this case
+                the statement can be <i>batched</i>. This means that a statement is created for the SQL, and it is
+                passed to the datastore with multiple sets of values before being executed. When it is executed
+                the SQL is executed for each of the sets of values. DataNucleus allows statement batching under certain
+                circumstances.
+            </p>
+            <p>
+                The maximum number of statements that can be included in a <i>batch</i> can be set via a persistence
+                property <b>datanucleus.rdbms.statementBatchLimit</b>. This defaults to 50. If you set it to -1 then there is
+                no maximum limit imposed. Setting it to 0 means that batching is turned off.
+            </p>
+            <p>
+                <b>It should be noted that while batching sounds essential, it is only of any possible use
+                when the exact same SQL is required to be executed more than 1 times in a row. If a different SQL
+                needs executing between 2 such statements then no batching is possible anyway.</b>. Let's take an example
+            </p>
+            <source>
+INSERT INTO MYTABLE VALUES(?,?,?,?)
+INSERT INTO MYTABLE VALUES(?,?,?,?)
+SELECT ID, NAME FROM MYOTHERTABLE WHERE VALUE=?
+INSERT INTO MYTABLE VALUES(?,?,?,?)
+SELECT ID, NAME FROM MYOTHERTABLE WHERE VALUE=?</source>
+            <p>
+                In this example the first two statements can be batched together since they are identical and nothing
+                else separates them. All subsequent statements cannot be batched since no two identical statements
+                follow each other.
+            </p>
+            <p>
+                The statements that DataNucleus currently allows for batching are
+            </p>
+            <ul>
+                <li>Insert of objects (from version 2.1.1). This is not enabled when objects being inserted are
+                    using <i>identity</i> value generation strategy</li>
+                <li>Delete of objects</li>
+                <li>Insert of container elements/keys/values</li>
+                <li>Delete of container elements/keys/values</li>
+            </ul>
+        </section>
+    </body>
+</document>

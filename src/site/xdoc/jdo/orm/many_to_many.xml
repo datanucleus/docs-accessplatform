@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<document xmlns="http://maven.apache.org/XDOC/2.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+    <properties>
+        <title>JDO M-N Relationships</title>
+    </properties>
+
+    <body>
+        <section name="JDO : M-N Relationships">
+            <p>
+                You have a M-to-N (or Many-to-Many) relationship if an object of a class A has associated objects of class B, 
+                and class B has associated objects of class A. This relationship may be achieved through Java Set, Map, List 
+                or subclasses of these, although the only one that supports a true M-N is for a Set/Collection.
+            </p>
+            <p>
+                With DataNucleus this can be set up as described in this section, using what is called a <b><u>Join Table</u></b> 
+                relationship. Let's take the following example and describe how to model it with the different types of 
+                collection classes. We have 2 classes, <b>Product</b> and <b>Supplier</b> as below.
+            </p>
+            <br/>
+            <img src="../../images/orm/relationship_M_N_class.jpg" border="0" alt=""/>
+            <br/>
+            <p>
+                Here the <b>Product</b> class knows about the <b>Supplier</b> class. In addition the <b>Supplier</b> knows 
+                about the <b>Product</b> class, however with DataNucleus (as with the majority of JDO implementations) these 
+                relationships are independent.
+            </p>
+            <p>
+                <b>Please note that RDBMS supports the full range of options on this page, whereas other datastores
+                (ODF, Excel, HBase, MongoDB, etc) persist the Collection in a column in the owner object and a column in
+                the non-owner object rather than using join-tables since that concept is RDBMS-only.</b>
+            </p>
+        </section>
+
+        <section name="Using Set">
+            <p>
+                If you define the XML metadata for these classes as follows
+            </p>
+            <source><![CDATA[
+<package name="mydomain">
+    <class name="Product" identity-type="datastore">
+        ...
+        <field name="suppliers" table="PRODUCTS_SUPPLIERS">
+            <collection element-type="mydomain.Supplier"/>
+            <join>
+                <column name="PRODUCT_ID"/>
+            </join>
+            <element>
+                <column name="SUPPLIER_ID"/>
+            </element>
+        </field>
+    </class>
+
+    <class name="Supplier" identity-type="datastore">
+        ...
+        <field name="products" mapped-by="suppliers">
+            <collection element-type="mydomain.Product"/>
+        </field>
+    </class>
+</package>]]></source>
+            <p>alternatively using annotations</p>
+<source><![CDATA[
+public class Product
+{
+    ...
+
+    @Persistent(table="PRODUCTS_SUPPLIERS")
+    @Join(column="PRODUCT_ID")
+    @Element(column="SUPPLIER_ID")
+    Set<Supplier> suppliers;
+}
+
+public class Supplier
+{
+    ...
+
+    @Persistent(mappedBy="suppliers")
+    Set<Products> products;
+}]]></source>
+            <p>
+                Note how we have specified the information only once regarding join table name, and join column names
+                as well as the &lt;join&gt;. This is the JDO standard way of specification, and results in a single 
+                join table.
+            </p>
+            <br/>
+            <img src="../../images/orm/relationship_M_N_singlejoin_db.jpg" border="0" alt=""/>
+            <br/>
+            <br/>
+            <br/>
+
+            <p>
+                See also :-
+            </p>
+            <ul>
+                <li><a href="../../guides/jdo/many_many/index.html">M-N Worked Example</a></li>
+                <li><a href="../../guides/jdo/many_many_attributed/index.html">M-N with Attributes Worked Example</a></li>
+            </ul>
+            <br/>
+        </section>
+
+        <section name="Using List">
+            <p>
+                <b>Firstly a true M-N relation with Lists is impossible since there are two lists, and it is
+                undefined as to which one applies to which side etc. What is shown below is two independent
+                1-N unidirectional join table relations.</b>
+                If you define the Meta-Data for these classes as follows
+            </p>
+            <source><![CDATA[
+<package name="mydomain">
+    <class name="Product" identity-type="datastore">
+        ...
+        <field name="suppliers" persistence-modifier="persistent">
+            <collection element-type="mydomain.Supplier"/>
+            <join/>
+        </field>
+    </class>
+
+    <class name="Supplier" identity-type="datastore">
+        ...
+        <field name="products" persistence-modifier="persistent">
+            <collection element-type="mydomain.Product"/>
+            <join/>
+        </field>
+    </class>
+</package>]]></source>
+            <p>alternatively using annotations</p>
+<source><![CDATA[
+public class Product
+{
+    ...
+
+    @Join
+    List<Supplier> suppliers;
+}
+
+public class Supplier
+{
+    ...
+
+    @Join
+    List<Products> products;
+}]]></source>
+            <p>
+                There will be 4 tables, one for <b>Product</b>, one for <b>Supplier</b>, and the join tables. The difference from the 
+                Set example is in the contents of the join tables. An index column is added to keep track of the position of objects 
+                in the Lists.
+            </p>
+            <br/>
+            <img src="../../images/orm/relationship_M_N_list_db.gif" border="0" alt=""/>
+            <br/>
+            <p>
+                In the case of a List at both ends it doesn't make sense to use a single join table because the ordering
+                can only be defined at one side, so you have to have 2 join tables.
+            </p>
+        </section>
+
+        <section name="Using Map">
+            <p>
+                If you define the Meta-Data for these classes as follows
+            </p>
+            <source><![CDATA[
+<package name="mydomain">
+    <class name="Product" identity-type="datastore">
+        ...
+        <field name="suppliers" persistence-modifier="persistent">
+            <map key-type="java.lang.String" value-type="mydomain.Supplier"/>
+            <join/>
+        </field>
+    </class>
+
+    <class name="Supplier" identity-type="datastore">
+        ...
+        <field name="products" persistence-modifier="persistent">
+            <map key-type="java.lang.String" value-type="mydomain.Product"/>
+            <join/>
+        </field>
+    </class>
+</package>]]></source>
+            <p>
+                This will create 4 tables in the datastore, one for <b>Product</b>, one for <b>Supplier</b>, and the join tables 
+                which also contains the keys to the Maps (a String).
+            </p>
+            <br/>
+            <img src="../../images/orm/relationship_M_N_map_db.gif" border="0" alt=""/>
+            <br/>
+        </section>
+
+        <section name="Relationship Behaviour">
+            <p>
+                Please be aware of the following.
+            </p>
+            <ul>
+                <li>To add an object to an M-N relationship you need to set it at both ends of the relation since the relation
+                    is bidirectional and without such information the JDO implementation won't know which end of the relation
+                    is correct.</li>
+                <li>If you want to delete an object from one end of a M-N relationship you will have to remove it first from 
+                    the other objects relationship. If you don't you will get an error message that the object to be deleted 
+                    has links to other objects and so cannot be deleted.</li>
+            </ul>
+        </section>
+
+    </body>
+</document>

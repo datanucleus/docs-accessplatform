@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<document xmlns="http://maven.apache.org/XDOC/2.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+    <properties>
+        <title>Logging</title>
+    </properties>
+
+    <body>
+        <section name="DataNucleus Logging">
+            <p>
+                DataNucleus can be configured to log significant amounts of information regarding its process.
+                This information can be very useful in tracking the persistence process, and particularly if you have 
+				problems. DataNucleus will log as follows :-
+            </p>
+            <ul>
+                <li><b>Log4J</b> - if you have Log4J in the CLASSPATH, 
+                    <a href="http://jakarta.apache.org/log4j" target="_blank">Apache Log4J</a> will be used</li>
+                <li><b>java.util.logging</b> - if you don't have Log4J in the CLASSPATH, 
+                    then <i>java.util.logging</i> will be used</li>
+            </ul>
+            <p>
+                DataNucleus logs messages to various categories (in Log4J and java.util.logging these correspond to a 
+                "Logger"), allowing you to filter the logged messages by these categories - so if you are only 
+                interested in a particular category you can effectively turn the others off. DataNucleus's log is 
+                written by default in English. If your JDK is running in a Spanish locale then your log will be 
+                written in Spanish. 
+                <b>If you have time to translate our log messages into other languages, please contact one of the 
+				developers via the <a href="http://forum.datanucleus.org">Online Forum</a>.</b>
+            </p>
+
+            <subsection name="Logging Categories">
+                <p>
+                    DataNucleus uses a series of <b>categories</b>, and logs all messages to these <b>categories</b>. 
+					Currently DataNucleus uses the following
+                    <ul>
+                        <li><b>DataNucleus.Persistence</b> - All messages relating to the persistence process</li>
+                        <li><b>DataNucleus.Transaction</b> - All messages relating to transactions</li>
+                        <li><b>DataNucleus.Connection</b> - All messages relating to Connections.</li>
+                        <li><b>DataNucleus.Query</b> - All messages relating to queries</li>
+                        <li><b>DataNucleus.Cache</b> - All messages relating to the DataNucleus Cache</li>
+                        <li><b>DataNucleus.MetaData</b> - All messages relating to MetaData</li>
+                        <li><b>DataNucleus.Datastore</b> - All general datastore messages</li>
+                        <li><b>DataNucleus.Datastore.Schema</b> - All schema related datastore log messages</li>
+                        <li><b>DataNucleus.Datastore.Persist</b> - All datastore persistence messages</li>
+                        <li><b>DataNucleus.Datastore.Retrieve</b> - All datastore retrieval messages</li>
+                        <li><b>DataNucleus.Datastore.Native</b> - Log of all 'native' statements sent to the datastore</li>
+                        <li><b>DataNucleus.General</b> - All general operational messages</li>
+                        <li><b>DataNucleus.Lifecycle</b> - All messages relating to object lifecycle changes</li>
+                        <li><b>DataNucleus.ValueGeneration</b> - All messages relating to value generation</li>
+                        <li><b>DataNucleus.Enhancer</b> - All messages from the DataNucleus Enhancer.</li>
+                        <li><b>DataNucleus.SchemaTool</b> - All messages from DataNucleus SchemaTool</li>
+                        <li><b>DataNucleus.JDO</b> - All messages general to JDO</li>
+                        <li><b>DataNucleus.JPA</b> - All messages general to JPA</li>
+                        <li><b>DataNucleus.JCA</b> - All messages relating to Connector JCA.</li>
+                        <li><b>DataNucleus.IDE</b> - Messages from the DataNucleus IDE.</li>
+                    </ul>
+                </p>
+            </subsection>
+
+            <subsection name="Using Log4J">
+                <p>
+                    Log4J allows logging messages at various severity levels. The levels used by Log4J, and by DataNucleus's 
+					use of Log4J are <b>DEBUG</b>, <b>INFO</b>, <b>WARN</b>, <b>ERROR</b>, <b>FATAL</b>. Each message 
+					is logged at a particular level to a <b>category</b> (as described above). The other setting is 
+					<b>OFF</b> which turns off a logging category. This is very useful in a production situation 
+					where maximum performance is required.
+                </p>
+                <p>
+                    To enable the DataNucleus log, you need to provide a Log4J configuration file when starting up your 
+					application. This may be done for you if you are running within a JavaEE application server 
+					(check your manual for details). If you are starting your application yourself, you would set 
+					a JVM parameter as
+                    <source>
+-Dlog4j.configuration=file:log4j.properties
+                    </source>
+                    where log4j.properties is the name of your Log4J configuration file. Please note the "file:" 
+					prefix to the file since a URL is expected.
+                    [When using java.util.logging you need to specify the system property "java.util.logging.config.file"]
+                </p>
+                <p>
+                    The Log4J configuration file is very simple in nature, and you typically define where the log goes to 
+                    (e.g to a file), and which logging level messages you want to see. Here's an example
+                </p>
+                <source>
+# Define the destination and format of our logging
+log4j.appender.A1=org.apache.log4j.FileAppender
+log4j.appender.A1.File=datanucleus.log
+log4j.appender.A1.layout=org.apache.log4j.PatternLayout
+log4j.appender.A1.layout.ConversionPattern=%d{HH:mm:ss,SSS} (%t) %-5p [%c] - %m%n
+
+# DataNucleus Categories
+log4j.category.DataNucleus.JDO=INFO, A1
+log4j.category.DataNucleus.Cache=INFO, A1
+log4j.category.DataNucleus.MetaData=INFO, A1
+log4j.category.DataNucleus.General=INFO, A1
+log4j.category.DataNucleus.Transaction=INFO, A1
+log4j.category.DataNucleus.Datastore=DEBUG, A1
+log4j.category.DataNucleus.ValueGeneration=DEBUG, A1
+
+log4j.category.DataNucleus.Enhancer=INFO, A1
+log4j.category.DataNucleus.SchemaTool=INFO, A1</source>
+                <p>
+                    In this example, I am directing my log to a file (<i>datanucleus.log</i>). I have defined a particular 
+					"pattern" for the messages that appear in the log (to contain the date, level, category, and the 
+					message itself). In addition I have assigned a level "threshold" for each of the DataNucleus 
+					<b>categories</b>. So in this case I want to see all messages down to DEBUG level for the 
+					DataNucleus RDBMS persister.
+                </p>
+                <p>
+                    <b>Performance Tip</b> : Turning OFF the logging, or at least down to ERROR level provides
+                    a <i>significant</i> improvement in performance. With Log4J you do this via
+                </p>
+<source>log4j.category.DataNucleus=OFF</source>
+                <br/>
+            </subsection>
+
+            <subsection name="Using java.util.logging">
+                <p>
+                    <i>java.util.logging</i> allows logging messages at various severity levels. The levels used 
+					by java.util.logging, and by DataNucleus's internally are
+                    <b>fine</b>, <b>info</b>, <b>warn</b>, <b>severe</b>. Each message is logged at a particular level 
+                    to a <b>category</b> (as described above).
+                </p>
+                <p>
+                    By default, the <i>java.util.logging</i> configuration is taken from a properties file 
+					&lt;JRE_DIRECTORY&gt;/lib/logging.properties". Modify this file and configure the categories to 
+					be logged, or use the <i>java.util.logging.config.file</i> system property to specify a properties
+					file (in java.util.Properties format) where the logging configuration will be read from.
+					Here is an example:                      
+                </p>
+                <source>
+handlers=java.util.logging.FileHandler, java.util.logging.ConsoleHandler
+DataNucleus.General.level=fine 
+DataNucleus.JDO.level=fine 
+
+# --- ConsoleHandler ---
+# Override of global logging level
+java.util.logging.ConsoleHandler.level=SEVERE
+java.util.logging.ConsoleHandler.formatter=java.util.logging.SimpleFormatter
+
+# --- FileHandler ---
+# Override of global logging level
+java.util.logging.FileHandler.level=SEVERE
+
+# Naming style for the output file:
+java.util.logging.FileHandler.pattern=datanucleus.log
+
+# Limiting size of output file in bytes:
+java.util.logging.FileHandler.limit=50000
+
+# Number of output files to cycle through, by appending an
+# integer to the base file name:
+java.util.logging.FileHandler.count=1
+
+# Style of output (Simple or XML):
+java.util.logging.FileHandler.formatter=java.util.logging.SimpleFormatter</source>
+                <p>
+                    Please read the <a href="http://java.sun.com/j2se/1.4.2/docs/api/java/util/logging/LogManager.html">javadocs</a> for 
+                    <i>java.util.logging</i> for additional details on its configuration.
+                </p>
+            </subsection>
+
+            <subsection name="Sample Log Output">
+                <p>
+                    Here is a sample of the type of information you may see in the DataNucleus log when using Log4J.
+                </p>
+                <source>
+21:26:09,000 (main) INFO  DataNucleus.Datastore.Schema - Adapter initialised : MySQLAdapter, MySQL version 4.0.11
+21:26:09,365 (main) INFO  DataNucleus.Datastore.Schema - Creating table null.DELETE_ME1080077169045
+21:26:09,370 (main) DEBUG DataNucleus.Datastore.Schema - CREATE TABLE DELETE_ME1080077169045
+(
+    UNUSED INTEGER NOT NULL
+) TYPE=INNODB
+21:26:09,375 (main) DEBUG DataNucleus.Datastore.Schema - Execution Time = 3 ms
+21:26:09,388 (main) WARN  DataNucleus.Datastore.Schema - Schema Name could not be determined for this datastore
+21:26:09,388 (main) INFO  DataNucleus.Datastore.Schema - Dropping table null.DELETE_ME1080077169045
+21:26:09,388 (main) DEBUG DataNucleus.Datastore.Schema - DROP TABLE DELETE_ME1080077169045
+21:26:09,392 (main) DEBUG DataNucleus.Datastore.Schema - Execution Time = 3 ms
+21:26:09,392 (main) INFO  DataNucleus.Datastore.Schema - Initialising Schema "" using "SchemaTable" auto-start
+21:26:09,401 (main) DEBUG DataNucleus.Datastore.Schema - Retrieving type for table DataNucleus_TABLES
+21:26:09,406 (main) INFO  DataNucleus.Datastore.Schema - Creating table null.DataNucleus_TABLES
+21:26:09,406 (main) DEBUG DataNucleus.Datastore.Schema - CREATE TABLE DataNucleus_TABLES
+(
+    CLASS_NAME VARCHAR (128) NOT NULL UNIQUE ,
+    `TABLE_NAME` VARCHAR (127) NOT NULL UNIQUE 
+) TYPE=INNODB
+21:26:09,416 (main) DEBUG DataNucleus.Datastore.Schema - Execution Time = 10 ms
+21:26:09,417 (main) DEBUG DataNucleus.Datastore - Retrieving type for table DataNucleus_TABLES
+21:26:09,418 (main) DEBUG DataNucleus.Datastore - Validating table : null.DataNucleus_TABLES
+21:26:09,425 (main) DEBUG DataNucleus.Datastore - Execution Time = 7 ms</source>
+                <p>
+                    So you see the time of the log message, the level of the message (DEBUG, INFO, etc), the 
+					category (DataNucleus.Datastore, etc), and the message itself. So, for example, if I had set the 
+					<i>DataNucleus.Datastore.Schema</i> to DEBUG and all other categories to INFO I would see *all* DDL statements 
+					sent to the database and very little else.
+                </p>
+            </subsection>
+
+        </section>
+
+    </body>
+</document>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<document xmlns="http://maven.apache.org/XDOC/2.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+    <properties>
+        <title>Persistence Manager Proxy</title>
+    </properties>
+
+    <body>
+        <section name="JDO : PersistenceManager Proxies">
+            <p>
+                As you read in the guide for <a href="pm.html">PersistenceManager</a>, you perform
+                all operations using a <i>PersistenceManager</i>. This means that you need to obtain
+                this when you want to start datastore operations. 
+                In some architectures (e.g in a web environment) it can be convenient to maintain a 
+                single PersistenceManager for use in a servlet init() method to initialise a static 
+                variable. Alternatively for use in a SessionBean to initialise a static variable. 
+                Thereafter you just refer to the proxy. The proxy isn't the actual <i>PersistenceManager</i>
+                just a proxy, delegating to the real object. If you call close() on the proxy
+                the real PM will be closed, and when you next invoke an operation on the proxy it
+                will create a new PM delegate and work with that.
+            </p>
+            <p>
+                To create a PM proxy is simple
+            </p>
+            <source>PersistenceManager pm = pmf.getPersistenceManagerProxy();</source>
+            <p>
+                So we have our proxy, and now we can perform operations
+            </p>
+        </section>
+    </body>
+</document>

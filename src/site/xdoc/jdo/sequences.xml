@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<document xmlns="http://maven.apache.org/XDOC/2.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+    <properties>
+        <title>JDO Datastore Sequences</title>
+    </properties>
+
+    <body>
+        <section name="JDO : Datastore Sequences">
+            <p>
+                Particularly when specifying the identity of an object, sequences are a very useful facility. 
+                DataNucleus supports the <a href="value_generation.html">automatic assignment of sequence values for 
+                object identities</a>. However such sequences may also have use when a user wishes to assign such
+                identity values themselves, or for other roles within an application. JDO 2 defines an interface 
+                for sequences for use in an application - known as <b>Sequence</b>.
+                <a href="http://db.apache.org/jdo/api20/apidocs/javax/jdo/datastore/Sequence.html" target="_blank"><img src="../images/javadoc.gif" alt=""/></a>.
+                There are 2 forms of "sequence" available through this interface - the ones that DataNucleus provides 
+                utilising datastore capabilities, and ones that a user provides using something known as a 
+                "factory class".
+            </p>
+            <br/>
+            <subsection name="DataNucleus Sequences">
+                <p>
+                    DataNucleus internally provides 2 forms of sequences. When the underlying datastore supports native 
+                    sequences, then these can be leveraged through this interface. Alternatively, where the 
+                    underlying datastore doesn't support native sequences, then a table-based incrementing sequence 
+                    can be used. The first thing to do is to specify the <b>Sequence</b> in the Meta-Data for the 
+                    package requiring the sequence. This is done as follows
+                </p>
+                <source><![CDATA[
+<jdo>
+    <package name="MyPackage">
+        <class name="MyClass">
+            ...
+        </class>
+
+        <sequence name="ProductSequence" datastore-sequence="PRODUCT_SEQ" strategy="contiguous"/>
+        <sequence name="ProductSequenceNontrans" datastore-sequence="PRODUCT_SEQ_NONTRANS" strategy="nontransactional"/>
+    </package>
+</jdo>]]></source>
+                <p>
+                    So we have defined two <b>Sequences</b> for the package <i>MyPackage</i>. Each sequence has a 
+                    symbolic name that is referred to within JDO (within DataNucleus), and it has a name in the datastore. 
+                    The final attribute represents whether the sequence is transactional or not.
+                </p>
+                <p>
+                    All we need to do now is to access the <b>Sequence</b> in our persistence code in our application. This is done as follows
+                </p>
+                <source><![CDATA[
+PersistenceManager pm = pmf.getPersistenceManager();
+
+Sequence seq = pm.getSequence("MyPackage.ProductSequence");
+]]></source>
+                <p>
+                    and this <b>Sequence</b> can then be used to provide values.
+                </p>
+                <source>long value = seq.nextValue();</source>
+                <p>
+                    Please be aware that when you have a <b>Sequence</b> declared with a strategy of "contiguous" 
+                    this means "transactional contiguous" and that you need to have a Transaction open when you 
+                    access it.
+                </p>
+                <p>
+                    JDO3.1 allows control over the allocation size (default=50) and initial value (default=1) for the 
+                    sequence. So we can do
+                </p>
+                <source><![CDATA[
+        <sequence name="ProductSequence" datastore-sequence="PRODUCT_SEQ" strategy="contiguous"
+                allocation-size="10"/>]]></source>
+                <p>
+                    which will allocate 10 new sequence values each time the allocated sequence values is exhausted.
+                </p>
+                <br/>
+            </subsection>
+
+            <subsection name="Factory Class Sequences">
+                <p>
+                    It is equally possible to provide your own <b>Sequence</b> capability using a 
+                    <i>factory class</i>. This is a class that creates an implementation of the JDO <b>Sequence</b>. 
+                    Let's give an example of what you need to provide. Firstly you need an implementation of the 
+                    JDO <b>Sequence</b> interface, so we define ours like this
+                </p>
+                <source><![CDATA[
+public class SimpleSequence implements Sequence
+{
+    String name;
+    long current = 0;
+
+    public SimpleSequence(String name)
+    {
+        this.name = name;
+    }
+
+    public String getName()
+    {
+        return name;
+    }
+
+    public Object next()
+    {
+        current++;
+        return new Long(current);
+    }
+
+    public long nextValue()
+    {
+        current++;
+        return current;
+    }
+
+    public void allocate(int arg0)
+    {
+    }
+
+    public Object current()
+    {
+        return new Long(current);
+    }
+
+    public long currentValue()
+    {
+        return current;
+    }
+}]]></source>
+                <p>
+                    So our sequence simply increments by 1 each call to <i>next()</i>. The next thing we need to 
+                    do is provide a <i>factory class</i> that creates this <b>Sequence</b>. This factory needs to 
+                    have a static <i>newInstance</i> method that returns the <b>Sequence</b> object. We define our 
+                    factory like this
+                </p>
+                <source><![CDATA[
+package org.datanucleus.samples.sequence;
+
+import javax.jdo.datastore.Sequence;
+
+public class SimpleSequenceFactory
+{
+    public static Sequence newInstance()
+    {
+        return new SimpleSequence("MySequence");
+    }
+}]]></source>
+                <p>
+                    and now we define our MetaData like this
+                </p>
+                <source><![CDATA[
+<jdo>
+    <package name="MyPackage">
+        <class name="MyClass">
+            ...
+        </class>
+
+        <sequence name="ProductSequenceFactory" strategy="nontransactional"
+            factory-class="org.datanucleus.samples.sequence.SimpleSequenceFactory"/>
+    </package>
+</jdo>]]></source>
+                <p>
+                    So now we can call 
+                </p>
+                <source><![CDATA[
+PersistenceManager pm = pmf.getPersistenceManager();
+
+Sequence seq = pm.getSequence("MyPackage.ProductSequenceFactory");
+]]></source>
+                <br/>
+            </subsection>
+        </section>
+    </body>
+</document>

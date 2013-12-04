@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<document xmlns="http://maven.apache.org/XDOC/2.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+    <properties>
+        <title>JPA Datastore Identifiers</title>
+    </properties>
+
+    <body>
+        <section name="JPA : Datastore Identifiers">
+            <p>
+                A datastore identifier is a simple name of a database object, such as a column, table, index, or view, 
+                and is composed of a sequence of letters, digits, and underscores ( _ ) that represents it's name. 
+                DataNucleus allows users to specify the names of tables, columns, indexes etc but if the user doesn't 
+                specify these DataNucleus will generate names.
+                Generation of identifier names is controlled by an IdentifierFactory, and DataNucleus provides a 
+                default implementation. You can 
+                <a href="http://www.datanucleus.org/extensions/rdbms_identifier_factory.html">provide your own IdentifierFactory plugin</a>
+                to give your own preferred naming if so desired.
+                You set the <i>IdentifierFactory</i> by setting the persistence property 
+                <i>datanucleus.identifierFactory</i>. Set it to the symbolic name of the factory you want to use. 
+                JPA defines what datastore identifiers should default to when not specified. DataNucleus provides a 
+                factory that meets this requirement.
+            </p>
+            <ul>
+                <li><a href="#jpa">jpa</a> IdentifierFactory (default for JPA persistence)</li>
+            </ul>
+            <p>
+                In describing the different possible naming conventions available out of the box with DataNucleus we'll use the
+                following example
+            </p>
+            <source><![CDATA[
+class MyClass
+{
+    String myField1;
+    Collection<MyElement> elements1; // Using join table
+    Collection<MyElement> elements2; // Using foreign-key
+}
+
+class MyElement
+{
+    String myElementField;
+    MyClass myClass2;
+}]]></source>
+            <br/>
+
+            <a name="jpa"/>
+            <subsection name="IdentifierFactory 'jpa'">
+                <p>
+                    The <i>IdentifierFactory</i> "jpa" aims at providing a naming policy consistent with the JPA 
+                    specification.
+                </p>
+                <p>
+                    Using the same example above, the rules in this <i>IdentifierFactory</i> mean that, assuming that 
+                    the user doesnt specify any &lt;column&gt; elements :-
+                </p>
+                <ul>
+                    <li><i>MyClass</i> will be persisted into a table named <b>MYCLASS</b></li>
+                    <li>When using datastore identity <b>MYCLASS</b> will have a column called <b>MYCLASS_ID</b></li>
+                    <li><i>MyClass.myField1</i> will be persisted into a column called <b>MYFIELD1</b></li>
+                    <li><i>MyElement</i> will be persisted into a table named <b>MYELEMENT</b></li>
+                    <li><i>MyClass.elements1</i> will be persisted into a join table called <b>MYCLASS_MYELEMENT</b></li>
+                    <li><b>MYCLASS_ELEMENTS1</b> will have columns called <b>MYCLASS_MYCLASS_ID</b> (FK to owner table) and
+                        <b>ELEMENTS1_ELEMENT_ID</b> (FK to element table)</li>
+                    <li><b>MyClass.elements2</b> will be persisted into a column <b>ELEMENTS2_MYCLASS_ID</b> (FK to owner) table</li>
+                    <li>Any discriminator column will be called <b>DTYPE</b></li>
+                    <li>Any index column in a List for field <i>MyClass.myField1</i> will be called 
+                        <b>MYFIELD1_ORDER</b></li>
+                    <li>Any adapter column added to a join table to form part of the primary key will be called <b>IDX</b></li>
+                    <li>Any version column for a table will be called <b>VERSION</b></li>
+                </ul>
+            </subsection>
+
+            <subsection name="IdentifierFactory - Controlling the Case">
+                <p>
+                    The underlying datastore will define what case of identifiers are accepted. By default, 
+                    DataNucleus will capitalise names (assuming that the datastore supports it). You can however 
+                    influence the case used for identifiers. This is specifiable with the persistence property 
+                    <i>datanucleus.identifier.case</i>, having the following values
+                </p>
+                <ul>
+                    <li>UpperCase: identifiers are in upper case</li>
+                    <li>LowerCase: identifiers are in lower case</li>
+                    <li>PreserveCase: No case changes are made to the name of the identifier provided by the user 
+                        (class name or jdo metadata).</li>
+                </ul>
+                <p>
+                    <b>Please be aware that some datastores only support UPPERCASE or lowercase identifiers and so 
+                        setting this parameter may have no effect if your database doesn't support that option.</b>
+                    <b>Please note also that this case control only applies to DataNucleus-generated identifiers. If
+                        you provide your own identifiers for things like schema/catalog etc then you need to specify
+                        those using the case you wish to use in the datastore (including quoting as necessary)</b>
+                </p>
+            </subsection>
+
+        </section>
+    </body>
+</document>

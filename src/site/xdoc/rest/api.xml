@@ -1,0 +1,327 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<document xmlns="http://maven.apache.org/XDOC/2.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+    <properties>
+        <title>REST API</title>
+    </properties>
+
+    <body>
+        <section name="REST API">
+            <p>
+                The DataNucleus REST API provides a RESTful interface to persist JSON objects to the datastore. 
+                All entities are accessed, queried and stored as resources via well defined HTTP methods. 
+                This API consists of a <b>servlet</b> that internally handles the persistence of objects (using JDO). 
+                Your POJO classes need to be accessible from this servlet, and can use either JDO or JPA metadata 
+                (annotations or XML).
+                The REST API automatically exposes the persistent class in RESTful style, and requires minimum 
+                configuration as detailed in the sections linked below.
+            </p>
+            <br/>
+        </section>
+
+        <section name="Servlet Configuration">
+            <a name="servlet"/>
+            <p>
+            	The configuration of the REST API consists in the deployment of jar libraries to the CLASSPATH 
+                and the configuration of the servlet in the <i>/WEB-INF/web.xml</i>. After it's configured, 
+                all persistent classes are automatically exposed via RESTful HTTP interface. You need to have
+                enhanced versions of the model classes in the CLASSPATH.
+            </p>
+            <br/>
+
+            <subsection name="Libraries">
+            	<p>
+                    DataNucleus REST API requires the libraries: <i>datanucleus-core</i>, <i>datanucleus-api-rest</i>, 
+                    <i>datanucleus-api-jdo</i>, <i>jdo-api</i>, as well as <i>datanucleus-rdbms</i> (or whichever 
+                    datastore you wish to persist to if not RDBMS). 
+                    You would also require JPA API jar if using JPA metadata (XML/annotations) in your model classes.
+                    In WAR files, these libraries are deployed under the folder <i>/WEB-INF/lib/</i>.
+            	</p>
+                <br/>
+			</subsection>
+
+            <subsection name="web.xml">
+            	<p>
+            		The DataNucleus REST Servlet class implementation is <i>org.datanucleus.api.rest.RestServlet</i>. 
+                    It has to be configured in the <i>/WEB-INF/web.xml</i> file, and it takes one initialisation parameter.
+            	</p>
+                <table>
+                    <tr>
+                        <th>Parameter</th>
+                        <th>Description</th>
+                    </tr>
+                    <tr>
+                        <td>persistence-context</td>
+                        <td>Name of a PMF (if using <i>jdoconfig.xml</i>), or the name of a 
+                            persistence-unit (if using <i>persistence.xml</i>) accessible to the servlet</td>
+                    </tr>
+                </table>
+<source><![CDATA[
+<!DOCTYPE web-app PUBLIC
+ "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
+ "http://java.sun.com/dtd/web-app_2_3.dtd">
+
+<web-app xmlns="http://java.sun.com/xml/ns/javaee" version="2.5">
+
+    <servlet>
+        <servlet-name>DataNucleus</servlet-name>
+        <servlet-class>org.datanucleus.api.rest.RestServlet</servlet-class>
+        <init-param>
+            <param-name>persistence-context</param-name>
+            <param-value>myPMFName</param-value>
+        </init-param>	     
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>DataNucleus</servlet-name>
+        <url-pattern>/dn/*</url-pattern>
+    </servlet-mapping>
+  
+...
+</web-app>]]></source>
+                <p>
+                    changing <i>myPMFName</i> to the name of your PMF, or the name of your persistence-unit, and changing
+                    <i>/dn/*</i> to the URL pattern where you want DataNucleus REST API calls to be answered.
+                </p>
+            </subsection>
+        </section>
+
+        <section name="HTTP Methods">
+            <a name="http"/>
+            <p>
+                The persistence to the datastore in your application is performed via HTTP methods as following:
+            </p>
+            <table>
+            	<tr>
+            		<th>Method</th>
+            		<th>Operation</th>
+            		<th>URL format</th>
+            		<th>Return</th>
+            		<th>Arguments</th>
+            	</tr>
+            	<tr>
+            		<td>POST</td>
+            		<td>Insert object</td>
+            		<td>/{full-class-name}</td>
+            		<td>The JSON Object is returned.</td>
+            		<td>The JSON Object is passed in the HTTP Content.</td>
+            	</tr>
+            	<tr>
+            		<td>PUT</td>
+            		<td>Update object</td>
+            		<td>/{full-class-name}/{primary key}</td>
+            		<td>The JSON Object is returned.</td>
+            		<td>The JSON Object is passed in the HTTP Content. The primary-key is specified in the URL if the
+                        PK is application-identity single field or if it is datastore-identity</td>
+            	</tr>
+             	<tr>
+            		<td>DELETE</td>
+            		<td>Delete object</td>
+            		<td>/{full-class-name}/{primary key}</td>
+            		<td></td>
+            		<td>The primary key fields are passed in the HTTP Content (JSONObject) if the PK uses multiple PK 
+                        fields, otherwise in the URL.</td>
+            	</tr>
+             	<tr>
+            		<td>DELETE</td>
+            		<td>Delete all objects of type</td>
+            		<td>/{full-class-name}</td>
+            		<td></td>
+            		<td></td>
+            	</tr>
+             	<tr>
+            		<td>GET</td>
+            		<td>Fetch all objects of type</td>
+            		<td>/{full-class-name}</td>
+            		<td>JSON Array of JSON objects</td>
+            		<td></td>
+            	</tr>
+             	<tr>
+            		<td>GET</td>
+            		<td>Fetch a single object</td>
+            		<td>/{full-class-name}/{primary key}</td>
+            		<td>A JSON object</td>
+            		<td>The primary key fields are passed in the HTTP Content (JSONObject) if the PK uses multiple PK 
+                        fields, otherwise in the URL</td>
+            	</tr>
+             	<tr>
+            		<td>GET</td>
+            		<td>Query objects via a filter. Returns a JSON Array of objects</td>
+            		<td>/{full-class-name}?{filter}</td>
+            		<td>JSON Array of JSON objects</td>
+            		<td>Filter component of a JDOQL query</td>
+            	</tr>
+             	<tr>
+            		<td>GET</td>
+            		<td>Query objects via JDOQL. Returns a JSON Array of objects</td>
+            		<td>/jdoql?{JDOQL-single-string-query}<br/>
+                        /query?{JDOQL-single-string-query}</td>
+            		<td>JSON Array of JSON objects</td>
+            		<td>JDOQL single string query</td>
+            	</tr>
+             	<tr>
+            		<td>GET</td>
+                    <td>Query objects via JPQL. Returns a JSON Array of objects</td>
+            		<td>/jpql?{JPQL-single-string-query}</td>
+            		<td>JSON Array of JSON objects</td>
+            		<td>JPQL single string query</td>
+            	</tr>
+             	<tr>
+            		<td>HEAD</td>
+            		<td>Validates if an object exists</td>
+            		<td>/{full-class-name}/{primary key}</td>
+            		<td></td>
+            		<td>The primary key fields are passed in the HTTP Content (JSONObject) if the PK uses multiple PK 
+                        fields, otherwise in the URL</td>
+            	</tr>
+            </table>
+            <br/>
+        </section>
+
+        <section name="Example REST Usages">
+            <p>
+                Note that the URL in all of these examples assumes you have "/dn/*" is your <i>web.xml</i> configuration.
+            </p>
+
+            <subsection name="Insert a new object of class using application identity">
+                <p>
+                    This inserts a Greeting object. The returned object will have the "id" field set.
+                </p>
+<source>
+POST http://localhost/dn/mydomain.Greeting
+{"author":null,
+ "content":"test insert",
+ "date":1239213923232}</source>
+				<p>Response:</p>				            	
+<source>
+{"author":null,
+ "content":"test insert",
+ "date":1239213923232,
+ "id":1}</source>
+                <br/>
+            </subsection>
+
+            <subsection name="Insert a new object of class using datastore identity">
+                <p>
+                    This inserts a Person object. The returned object will have the "_id" property set.
+                </p>
+<source>
+POST http://localhost/dn/mydomain.Person
+{"firstName":"Joe",
+ "lastName":"User",
+ "age":15}</source>
+                <p>Response:</p>				            	
+<source>
+{"firstName":"Joe",
+ "lastName":"User",
+ "age":15,
+ "_id":2}</source>
+                <br/>
+            </subsection>
+
+            <subsection name="Update an object of class using application identity">
+                <p>
+                    This updates a Greeting object with id=1, updating the "content" field only.
+                </p>
+<source>
+PUT http://localhost/dn/mydomain.Greeting/1
+{"content":"test update"}</source>
+                <br/>
+            </subsection>
+
+            <subsection name="Update an object using datastore identity">
+                <p>
+                    This updates a Person object with identity of 2, updating the "age" field only.
+                </p>
+<source>
+PUT http://localhost/dn/mydomain.Person/2
+{"age":23}</source>
+                <br/>
+            </subsection>
+
+            <subsection name="Fetch all objects of class using application identity">
+                <p>
+                    This gets the Extent of Greeting objects.
+                </p>
+<source>
+GET http://localhost/dn/mydomain.Greeting
+</source>
+				<p>Response:</p>				            	
+<source>
+[{"author":null,
+  "content":"test",
+  "date":1239213624216,
+  "id":1},
+ {"author":null,
+  "content":"test2",
+  "date":1239213632286,
+  "id":2}]</source>				            	
+                <br/>
+            </subsection>
+
+            <subsection name="Fetch object with id 2 using datastore identity">
+<source>
+GET http://localhost/dn/mydomain.Person/2
+</source>
+				<p>Response:</p>				            	
+<source>
+{"firstName":"Joe",
+ "lastName":"User",
+ "age":23,
+ "_id":2}</source>
+                <p>
+                    Note that it replies with a JSONObject that has "_id" property representing the datastore id.
+                </p>
+                <br/>
+            </subsection>
+
+            <subsection name="Query object of class using application identity">
+                <p>
+                    This performs the JDOQL query
+                </p>
+                <pre>SELECT FROM mydomain.Greeting WHERE content == 'test'</pre>
+<source>
+GET http://localhost/dn/mydomain.Greeting?content=='test'
+</source>
+				<p>Response:</p>				            	
+<source>
+[{"author":null,
+  "content":"test",
+  "date":1239213624216,
+  "id":1}]</source>
+                <br/>
+            </subsection>
+
+            <subsection name="Fetch object using Application PrimaryKey Class (JSON)">
+<source>
+GET http://localhost/dn/google.maps.Markers/{"class":"com.google.appengine.api.datastore.Key","id":1001,"kind":"Markers"}
+</source>
+				<p>Response:</p>				            	
+<source>
+{"class":"google.maps.Markers",
+ "key":{"class":"com.google.appengine.api.datastore.Key",
+        "id":1001,
+        "kind":"Markers"
+       },
+ "markers":[
+            {"class":"google.maps.Marker",
+             "html":"Paris",
+             "key":{"class":"com.google.appengine.api.datastore.Key",
+                    "id":1,
+                    "kind":"Marker",
+                    "parent":{"class":"com.google.appengine.api.datastore.Key",
+                              "id":1001,
+                              "kind":"Markers"
+                             }
+                   },
+             "lat":48.862222,
+             "lng":2.351111
+            }
+           ]
+}</source>
+                <br/>
+            </subsection>
+        </section>
+    </body>
+</document>

@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<document xmlns="http://maven.apache.org/XDOC/2.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+    <properties>
+        <title>Embedded Objects</title>
+    </properties>
+    <body>
+        <section name="LDAP : Embedded Objects">
+            <p>
+                With JDO it is possible to persist field as embedded. This may be useful for LDAP datastores where often many attributes
+                are stored within one entry however logically they describe different objects.
+            </p>
+            <p>
+                Let's assume we have the following entry in our directory:
+            </p>
+            <source><![CDATA[
+dn: cn=Bugs Bunny,ou=Employees,dc=example,dc=com
+objectClass: top
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+cn: Bugs Bunny
+givenName: Bugs
+sn: Bunny
+postalCode: 3578
+l: Hollywood
+street: Sunset Boulevard
+uid: bbunny
+userPassword: secret]]></source>
+            <p>
+                This entry contains multiple type of information: a person, its address and its account data. So we will create the following Java classes:
+            </p>
+            <source><![CDATA[
+public class Employee {
+    String firstName;
+    String lastName;
+    String fullName;
+    Address address;
+    Account account;
+}
+
+public class Address {
+    int zip;
+    String city
+    String street;
+}
+
+public class Account {
+    String id;
+    String password;
+}]]></source>
+            <p>
+                The JDO metadata to map these objects to one LDAP entry would look like this:
+            </p>
+                <source><![CDATA[
+<jdo>
+    <package name="com.example">
+        <class name="Person" table="ou=Employees,dc=example,dc=com" schema="top,person,organizationalPerson,inetOrgPerson">
+            <field name="fullName" primary-key="true" column="cn" />
+            <field name="firstName" column="givenName" />
+            <field name="lastName" column="sn" />
+            <field name="account">
+                <embedded null-indicator-column="uid">
+                    <field name="id" column="uid" />
+                    <field name="password" column="userPassword" />
+                </embedded>
+            </field>
+            <field name="address">
+                <embedded null-indicator-column="l">
+                    <field name="zip" column="postalCode" />
+                    <field name="city" column="l" />
+                    <field name="street" column="street" />
+                </embedded>
+            </field>
+        </class>
+        <class name="Account" embedded-only="true">
+            <field name="uid" />
+            <field name="password" />
+        </class>
+        <class name="Address" embedded-only="true">
+            <field name="zip" />
+            <field name="city" />
+            <field name="street" />
+        </class>
+    </package>
+</jdo>]]></source>
+        </section>
+        
+    </body>
+</document>

@@ -1,0 +1,2614 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<document xmlns="http://maven.apache.org/XDOC/2.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+    <properties>
+        <title>JDO XML Meta-Data</title>
+    </properties>
+    <body>
+        <section name="JDO : XML Meta-Data Reference">
+            <p>
+                JDO has always accepted Metadata in XML format. As described in the
+                <a href="metadata.html">Metadata Overview</a> this has to be contained in files with
+                particular filenames in particular locations (relative to the name of the class), and
+                that this metadata is <i>discovered</i> at runtime. You can provide JDO metadata, or
+                alternatively ORM metadata, but with virtually identical format. This page defines the format of
+                the XML Metadata. Here is an example header for <b>package.jdo</b> files with 
+                <a href="http://xmlns.jcp.org/xml/ns/jdo/jdo_3_0.xsd" target="_blank">JDO XSD</a> specification
+            </p>
+            <source><![CDATA[
+<?xml version="1.0" encoding="UTF-8" ?>
+<jdo xmlns="http://xmlns.jcp.org/xml/ns/jdo/jdo"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/jdo/jdo
+        http://xmlns.jcp.org/xml/ns/jdo/jdo_3_0.xsd" version="3.0">
+    ...
+</jdo>]]></source>
+            <p>
+                Here is an example header for <b>package.orm</b> files with 
+                <a href="http://xmlns.jcp.org/xml/ns/jdo/orm_3_0.xsd" target="_blank">ORM XSD</a> specification
+            </p>
+            <source><![CDATA[
+<?xml version="1.0" encoding="UTF-8" ?>
+<orm xmlns="http://xmlns.jcp.org/xml/ns/jdo/orm"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/jdo/orm
+        http://xmlns.jcp.org/xml/ns/jdo/orm_3_0.xsd" version="3.0">
+    ...
+</orm>]]></source>
+            <p>
+                What follows provides a reference guide to MetaData elements (refer to the relevant XSD for precise details).
+            </p>
+            <ul>
+                <li>jdo
+                <ul>
+                    <li><a href="#package">package</a>
+                    <ul>
+                        <li><a href="#class">class</a>
+                        <ul>
+                            <li><a href="#datastore-identity">datastore-identity</a>
+                            <ul>
+                                <li><a href="#column">column</a></li>
+                                <li><a href="#datastoreidentityextension">extension</a></li>
+                            </ul></li>
+                            <li><a href="#primary-key">primary-key</a>
+                            <ul>
+                                <li><a href="#column">column</a></li>
+                            </ul></li>
+                            <li><a href="#inheritance">inheritance</a>
+                            <ul>
+                                <li><a href="#discriminator">discriminator</a>
+                                <ul>
+                                    <li><a href="#column">column</a></li>
+                                </ul></li>
+                                <li><a href="#join">join</a>
+                                <ul>
+                                    <li><a href="#column">column</a></li>
+                                </ul></li>
+                            </ul></li>
+                            <li><a href="#version">version</a>
+                            <ul>
+                                <li><a href="#column">column</a></li>
+                                <li><a href="#versionextension">extension</a></li>
+                            </ul></li>
+                            <li><a href="#join">join</a>
+                            <ul>
+                                <li><a href="#column">column</a></li>
+                            </ul></li>
+                            <li><a href="#foreignkey">foreign-key</a>
+                            <ul>
+                                <li><a href="#column">column</a></li>
+                                <li><a href="#field">field</a></li>
+                                <li><a href="#property">property</a></li>
+                            </ul></li>
+                            <li><a href="#index">index</a>
+                            <ul>
+                                <li><a href="#column">column</a></li>
+                                <li><a href="#field">field</a></li>
+                                <li><a href="#property">property</a></li>
+                            </ul></li>
+                            <li><a href="#unique">unique</a>
+                            <ul>
+                                <li><a href="#column">column</a></li>
+                                <li><a href="#field">field</a></li>
+                                <li><a href="#property">property</a></li>
+                            </ul></li>
+
+                            <li><a href="#field">field</a>
+                            <ul>
+                                <li><a href="#collection">collection</a>
+                                <ul>
+                                    <li><a href="#collectionextension">extension</a></li>
+                                </ul></li>
+                                <li><a href="#map">map</a>
+                                <ul>
+                                    <li><a href="#mapextension">extension</a></li>
+                                </ul></li>
+                                <li><a href="#array">array</a></li>
+                                <li><a href="#join">join</a>
+                                <ul>
+                                    <li><a href="#primary-key">primary-key</a></li>
+                                    <li><a href="#index">index</a></li>
+                                    <li><a href="#column">column</a></li>
+                                </ul></li>
+                                <li><a href="#embedded">embedded</a>
+                                <ul>
+                                    <li><a href="#field">field</a>
+                                    <ul>
+                                        <li><a href="#column">column</a></li>
+                                    </ul></li>
+                                </ul></li>
+                                <li><a href="#element">element</a>
+                                <ul>
+                                    <li><a href="#column">column</a></li>
+                                </ul></li>
+                                <li><a href="#key">key</a>
+                                <ul>
+                                    <li><a href="#column">column</a></li>
+                                </ul></li>
+                                <li><a href="#value">value</a>
+                                <ul>
+                                    <li><a href="#column">column</a></li>
+                                </ul></li>
+                                <li><a href="#order">order</a>
+                                <ul>
+                                    <li><a href="#column">column</a></li>
+                                    <li><a href="#orderextension">extension</a></li>
+                                </ul></li>
+                                <li><a href="#column">column</a>
+                                <ul>
+                                    <li><a href="#columnextension">extension</a></li>
+                                </ul></li>
+                                <li><a href="#foreignkey">foreign-key</a>
+                                <ul>
+                                    <li><a href="#column">column</a></li>
+                                </ul></li>
+                                <li><a href="#index">index</a>
+                                <ul>
+                                    <li><a href="#column">column</a></li>
+                                </ul></li>
+                                <li><a href="#unique">unique</a>
+                                <ul>
+                                    <li><a href="#column">column</a></li>
+                                </ul></li>
+
+                                <li><a href="#fieldextension">extension</a></li>
+                            </ul></li>
+                            
+                            <li><a href="#property">property</a>
+                            <ul>
+                                <li><a href="#collection">collection</a>
+                                <ul>
+                                    <li><a href="#collectionextension">extension</a></li>
+                                </ul></li>
+                                <li><a href="#map">map</a>
+                                <ul>
+                                    <li><a href="#mapextension">extension</a></li>
+                                </ul></li>
+                                <li><a href="#array">array</a></li>
+                                <li><a href="#join">join</a>
+                                <ul>
+                                    <li><a href="#primary-key">primary-key</a></li>
+                                    <li><a href="#index">index</a></li>
+                                    <li><a href="#column">column</a></li>
+                                </ul></li>
+                                <li><a href="#embedded">embedded</a>
+                                <ul>
+                                    <li><a href="#field">field</a>
+                                    <ul>
+                                        <li><a href="#column">column</a></li>
+                                    </ul></li>
+                                </ul></li>
+                                <li><a href="#element">element</a>
+                                <ul>
+                                    <li><a href="#column">column</a></li>
+                                </ul></li>
+                                <li><a href="#key">key</a>
+                                <ul>
+                                    <li><a href="#column">column</a></li>
+                                </ul></li>
+                                <li><a href="#value">value</a>
+                                <ul>
+                                    <li><a href="#column">column</a></li>
+                                </ul></li>
+                                <li><a href="#order">order</a>
+                                <ul>
+                                    <li><a href="#column">column</a></li>
+                                </ul></li>
+                                <li><a href="#column">column</a>
+                                <ul>
+                                    <li><a href="#columnextension">extension</a></li>
+                                </ul></li>
+                                <li><a href="#foreignkey">foreign-key</a>
+                                <ul>
+                                    <li><a href="#column">column</a></li>
+                                </ul></li>
+                                <li><a href="#index">index</a>
+                                <ul>
+                                    <li><a href="#column">column</a></li>
+                                </ul></li>
+                                <li><a href="#unique">unique</a>
+                                <ul>
+                                    <li><a href="#column">column</a></li>
+                                </ul></li>
+
+                                <li><a href="#propertyextension">extension</a></li>
+                            </ul></li>
+
+                            <li><a href="#fetch-group">fetch-group</a>
+                            <ul>
+                                <li><a href="#field">field</a></li>
+                            </ul></li>
+                            <li><a href="#query">query</a></li>
+                        </ul></li>
+                        <li><a href="#sequence">sequence</a>
+                        <ul>
+                            <li><a href="#sequenceextension">extension</a></li>
+                        </ul></li>
+                        <li><a href="#fetch-plan">fetch-plan</a></li>
+                        <li><a href="#classextension">extension</a></li>
+                    </ul></li>
+                </ul></li>
+                <li><a href="#extension">extension</a></li>
+            </ul>
+
+            <!-- PACKAGE ELEMENT -->
+            <a name="package"/>
+            <subsection name="Metadata for package tag">
+                <p>
+                    These are attributes within the <b>&lt;package&gt;</b> tag (jdo/package). This is used to denote
+                    a package, and all of the <b>&lt;class&gt;</b> elements that follow are in this Java package.
+                </p>
+                <table>
+                    <tr>
+                        <th>Attribute</th>
+                        <th>Description</th>
+                        <th>Values</th>
+                    </tr>
+                    <tr>
+                        <td colspan="4">
+                            <b>Standard (JDO) Tags</b>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>name</td>
+                        <td>Name of the java package</td>
+                        <td/>
+                    </tr>
+                    <tr class="c">
+                        <td>catalog</td>
+                        <td>Name of the catalog in which to persist the classes in this package. See also the property name 
+                            "javax.jdo.mapping.Catalog" in the <a href="pmf.html">PMF Guide</a>.</td>
+                        <td/>
+                    </tr>
+                    <tr class="c">
+                        <td>schema</td>
+                        <td>Name of the schema in which to persist the classes in this package. See also the property name 
+                            "javax.jdo.mapping.Schema" in the <a href="pmf.html">PMF Guide</a>.</td>
+                        <td/>
+                    </tr>
+                </table>
+                <br/>
+            </subsection>
+
+            <!-- CLASS ELEMENT -->
+            <a name="class"/>
+            <subsection name="Metadata for class tag">
+                <p>
+                    These are attributes within the <b>&lt;class&gt;</b> tag (jdo/package/class). This is used to define
+                    the persistence definition for this class.
+                </p>
+                <table>
+                    <tr>
+                        <th>Attribute</th>
+                        <th>Description</th>
+                        <th>Values</th>
+                    </tr>
+                    <tr>
+                        <td colspan="4">
+                            <b>Standard (JDO) Tags</b>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>name</td>
+                        <td>Name of the class to persist</td>
+                        <td/>
+                    </tr>
+                    <tr>
+                        <td>identity-type</td>
+                        <td>The identity type, specifying whether they are uniquely provided by the JDO implementation (datastore identity), 
+                            accessible fields in the object (application identity), or not at all (nondurable identity).
+                            <b>DataNucleus only supports nondurable identity for SQL views</b>.</td>
+                        <td>
+                            <b>datastore</b>, application, nondurable</td>
+                    </tr>
+                    <tr>
+                        <td>objectid-class</td>
+                        <td>The class name of the primary key. When using <b>application identity</b>.</td>
+                        <td/>
+                    </tr>
+                    <tr>
+                        <td>requires-extent</td>
+                        <td>Whether the JDO implementation must provide an Extent for this class.</td>
+                        <td><b>true</b>, false</td>
+                    </tr>
+                    <tr>
+                        <td>detachable</td>
+                        <td>Whether the class is detachable from the persistence graph.</td>
+                        <td>true, <b>false</b></td>
+                    </tr>
+                    <tr>
+                        <td>embedded-only</td>
+                        <td>Whether this class should only be stored embedded in the tables for other classes.</td>
+                        <td>true, <b>false</b></td>
+                    </tr>
+                    <tr>
+                        <td>persistence-modifier</td>
+                        <td>What type of persistability type this class exhibits. 
+                            Please refer to <a href="http://db.apache.org/jdo/class_types.html">JDO Class Types</a>.</td>
+                        <td><b>persistence-capable</b> | persistence-aware | non-persistent</td>
+                    </tr>
+                    <tr>
+                        <td>persistence-capable-superclass</td>
+                        <td>Class name of superclass that is persistent capable.
+                            This is deprecated in JDO2 and you no longer need to specify it, leaving it to DataNucleus
+                            to determine if there is a superclass that is <i>PersistenceCapable</i>.</td>
+                        <td/>
+                    </tr>
+                    <tr class="c">
+                        <td>catalog</td>
+                        <td>Name of the catalog in which to persist the class. See also the property name 
+                            "javax.jdo.mapping.Catalog" in the <a href="pmf.html">PMF Guide</a>.</td>
+                        <td/>
+                    </tr>
+                    <tr class="c">
+                        <td>schema</td>
+                        <td>Name of the schema in which to persist the class. See also the property name 
+                            "javax.jdo.mapping.Schema" in the <a href="pmf.html">PMF Guide</a>.</td>
+                        <td/>
+                    </tr>
+                    <tr class="c">
+                        <td>table</td>
+                        <td>Name of the table/view in which to persist the class. See also the property name 
+                            "datanucleus.identifier.case" in the 
+                            <a href="../persistence_properties.html">Persistence Properties Guide</a>.</td>
+                        <td/>
+                    </tr>
+                    <tr>
+                        <td>cacheable</td>
+                        <td>Whether the class can be cached in a Level 2 cache. <b>From JDO2.2</b></td>
+                        <td><b>true</b> | false</td>
+                    </tr>
+                    <tr>
+                        <td>serializeRead</td>
+                        <td>Whether to default to locking objects of this type when reading them.
+                            <b>From JDO2.2</b></td>
+                        <td>true | <b>false</b></td>
+                    </tr>
+                </table>
+                <br/>
+            </subsection>
+
+            <!-- DATASTORE-IDENTITY ELEMENT -->
+            <a name="datastore-identity"/>
+            <subsection name="Metadata for datastore-identity tag">
+                <p>
+                    These are attributes within the <b>&lt;datastore-identity&gt;</b> tag (jdo/package/class/datastore-identity). 
+                    This is used when the <b>&lt;class&gt;</b> to which this pertains uses datastore identity. It is used to define
+                    the precise definition of datastore identity to be used.
+                    This element can contain <b>column</b> sub-elements allowing definition of the column details where required - 
+                    these are optional.
+                </p>
+                <table>
+                    <tr>
+                        <th>Attribute</th>
+                        <th>Description</th>
+                        <th>Values</th>
+                    </tr>
+                    <tr>
+                        <td colspan="3">
+                            <b>Standard (JDO) Tags</b>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>strategy</td>
+                        <td>Strategy for datastore identity generation for this class. 
+                            <i>native</i> allows DataNucleus to choose the most suitable for the datastore.<br/>
+                            <i>sequence</i> will use a sequence (specified by the attribute <b>sequence</b>) - if supported by 
+                            the datastore.<br/>
+                            <i>increment</i> will use the id values in the datastore to decide the next id. <br/>
+                            <i>uuid-string</i> will use a UUID string generator (16-characters).<br/>
+                            <i>uuid-hex</i> will use a UUID string generator (32-characters).<br/>
+                            <i>identity</i> will use a datastore inbuilt auto-incrementing types.<br/>
+                            <i>auid</i> is a DataNucleus extension, that is an almost universal id generator (best possible derivate of a DCE UUID).<br/>
+                            <i>max</i> is a DataNucleus extension, that uses "select max(column)+1 from table" for the identity.<br/>
+                            <i>timestamp</i> is a DataNucleus extension, providing the current timestamp.<br/>
+                            <i>timestamp-value</i> is a DataNucleus extension, providing the current timestamp millisecs.<br/>
+                            <i>[other values]</i> to utilise user-supplied DataNucleus <a href="http://www.datanucleus.org/extensions/value_generator.html">value generator</a>
+                            plugins.
+                        </td>
+                        <td><b>native</b> | sequence | increment | identity | uuid-string | uuid-hex | <i>auid</i> | <i>max</i> | <i>timestamp</i> | <i>timestamp-value</i> | <i> [other values]</i></td>
+                    </tr>
+                    <tr>
+                        <td>sequence</td>
+                        <td>Name of the sequence to use to generate identity values, when using a <b>strategy</b> of <i>sequence</i>. 
+                            Please see also the <b>class</b> extension tags for controlling the sequence.</td>
+                        <td></td>
+                    </tr>
+                    <tr class="c">
+                        <td>column</td>
+                        <td>Name of the column used for the datastore identity for this class.</td>
+                        <td></td>
+                    </tr>
+                </table>
+                <br/>
+
+                <a name="datastoreidentityextension"/>
+                <p>
+                    These are attributes within the <b>&lt;extension&gt;</b> tag (jdo/package/class/datastore-identity/extension). 
+                    These are for controlling the generation of ids when in <b>datastore identity</b> mode.
+                </p>
+                <table>
+                    <tr>
+                        <th>Attribute</th>
+                        <th>Description</th>
+                        <th>Values</th>
+                    </tr>
+                    <tr>
+                        <td colspan="3">
+                            <b>Extension (JDO) Tags</b>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>sequence-table-basis</td>
+                        <td>This defines the basis on which to generate unique identities when using the TableValueGenerator
+                            (used by the "increment" strategy, and sometimes by "native"). You can either define identities unique
+                            against the base table name, or against the base class name (in an inheritance tree).
+                            Used when the strategy is set to <i>native</i> or <i>increment</i></td>
+                        <td><b>class</b> | table</td>
+                    </tr>
+                    <tr class="c">
+                        <td>sequence-catalog-name</td>
+                        <td>The catalog used to store sequences for use by value generators. See 
+                            <a href="value_generation.html">Value Generation</a>.
+                            Default catalog for the datastore will be used if not specified.</td>
+                        <td></td>
+                    </tr>
+                    <tr class="c">
+                        <td>sequence-schema-name</td>
+                        <td>The schema used to store sequences for use by value generators. See 
+                            <a href="value_generation.html">Value Generation</a>.
+                            Default schema for the datastore will be used if not specified.</td>
+                        <td></td>
+                    </tr>
+                    <tr class="c">
+                        <td>sequence-table-name</td>
+                        <td>The table used to store sequences for use by value generators. See 
+                            <a href="value_generation.html">Value Generation</a>.</td>
+                        <td><b>SEQUENCE_TABLE</b></td>
+                    </tr>
+                    <tr class="c">
+                        <td>sequence-name-column-name</td>
+                        <td>The column name in the sequence-table used to store the name of the sequence for use by value generators. 
+                            See <a href="value_generation.html">Value Generation</a>.</td>
+                        <td><b>SEQUENCE_NAME</b></td>
+                    </tr>
+                    <tr class="c">
+                        <td>sequence-nextval-column-name</td>
+                        <td>The column name in the sequence-table used to store the next value in the sequence for use by value 
+                            generators. See <a href="value_generation.html">Value Generation</a>.</td>
+                        <td><b>NEXT_VAL</b></td>
+                    </tr>
+                    <tr>
+                        <td>key-min-value</td>
+                        <td>The minimum key value for use by value generators. Keys lower than this will not be generated. 
+                            See <a href="value_generation.html">Value Generation</a>.</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>key-max-value</td>
+                        <td>The maximum key value for use by value generators. Keys higher than this will not be generated. 
+                            See <a href="value_generation.html">Value Generation</a>.</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>key-initial-value</td>
+                        <td>The starting value for use by value generators. Keys will start from this value when being generated. 
+                            See <a href="value_generation.html">Value Generation</a>.</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>key-cache-size</td>
+                        <td>The cache size for keys for use by value generators. The cache of keys will be constrained by this value. 
+                            See <a href="value_generation.html">Value Generation</a>.</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>key-database-cache-size</td>
+                        <td>The database cache size for keys for use by value generators. The cache of keys will be constrained by 
+                            this value. See <a href="value_generation.html">Value Generation</a>.</td>
+                        <td></td>
+                    </tr>
+                </table>
+                <br/>
+            </subsection>
+
+            <!-- PRIMARY KEY ELEMENT -->
+            <a name="primary-key"/>
+            <subsection name="Metadata for primary-key tag">
+                <p>
+                    These are attributes within the <b>&lt;primary-key&gt;</b> tag (jdo/package/class/primary-key or
+                    class/field/join/primary-key). It is used to specify the name of the primary key constraint in the
+                    datastore during the schema generation process. When used under &lt;join&gt; it specifies that the
+                    join table has a primary-key.
+                </p>
+                <table>
+                    <tr>
+                        <th>Attribute</th>
+                        <th>Description</th>
+                        <th>Values</th>
+                    </tr>
+                    <tr>
+                        <td colspan="4">
+                            <b>Standard (JDO) Tags</b>
+                        </td>
+                    </tr>
+                    <tr class="c">
+                        <td>name</td>
+                        <td>Name of the primary key constraint.</td>
+                        <td></td>
+                    </tr>
+                    <tr class="c">
+                        <td>column</td>
+                        <td>Name of the column to use for the primary key</td>
+                        <td></td>
+                    </tr>
+                </table>
+                <br/>
+            </subsection>
+
+            <!-- INHERITANCE ELEMENT -->
+            <a name="inheritance"/>
+            <subsection name="Metadata for inheritance tag">
+                <p>
+                    These are attributes within the <b>&lt;inheritance&gt;</b> tag (jdo/package/class/inheritance). It is used when this
+                    class is part of an inheritance tree, and to denote how the class is stored in the datastore since there are several
+                    ways (strategies) in which it can be stored.
+                </p>
+                <table>
+                    <tr>
+                        <th>Attribute</th>
+                        <th>Description</th>
+                        <th>Values</th>
+                    </tr>
+                    <tr>
+                        <td colspan="4">
+                            <b>Standard (JDO) Tags</b>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>strategy</td>
+                        <td>Strategy for inheritance of this class. Please refer to the 
+                            <a href="orm/inheritance.html">Inheritance Guide</a>.
+                           Note that "complete-table" is a DataNucleus extension to JDO2</td>
+                        <td>new-table, subclass-table, superclass-table, complete-table</td>
+                    </tr>
+                </table>
+                <br/>
+            </subsection>
+
+            <!-- DISCRIMINATOR ELEMENT -->
+            <a name="discriminator"/>
+            <subsection name="Metadata for discriminator tag">
+                <p>
+                    These are attributes within the <b>&lt;discriminator&gt;</b> tag (jdo/package/class/inheritance/discriminator).
+                    This is used to define a discriminator column that is used when this class is stored in the same table as another
+                    class in the same inheritance tree. The discriminator column will contain a value for objects of this class, and 
+                    different values for objects of other classes in the inheritance tree.
+                </p>
+                <table>
+                    <tr>
+                        <th>Attribute</th>
+                        <th>Description</th>
+                        <th>Values</th>
+                    </tr>
+                    <tr>
+                        <td colspan="4">
+                            <b>Standard (JDO) Tags</b>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>strategy</td>
+                        <td>Strategy for the discrimination column</td>
+                        <td>value-map | class-name | none</td>
+                    </tr>
+                    <tr>
+                        <td>value</td>
+                        <td>Value for the discrimination column</td>
+                        <td></td>
+                    </tr>
+                    <tr class="c">
+                        <td>column</td>
+                        <td>Name for the discrimination column</td>
+                        <td></td>
+                    </tr>
+                    <tr class="c">
+                        <td>indexed</td>
+                        <td>Whether the discriminator column should be indexed.
+                            This is to be specified when <a href="orm/constraints.html">defining index information</a></td>
+                        <td>true | false | unique</td>
+                    </tr>
+                </table>
+                <br/>
+            </subsection>
+            
+            <!-- VERSION ELEMENT -->
+            <a name="version"/>
+            <subsection name="Metadata for version tag">
+                <p>
+                    These are attributes within the <b>&lt;version&gt;</b> tag (jdo/package/class/version). This is used to define
+                    whether and how this class is handled with respect to optimistic transactions.
+                </p>
+                <table>
+                    <tr>
+                        <th>Attribute</th>
+                        <th>Description</th>
+                        <th>Values</th>
+                    </tr>
+                    <tr>
+                        <td colspan="4">
+                            <b>Standard (JDO) Tags</b>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>strategy</td>
+                        <td>Strategy for versioning of this class. The "version-number" mode uses an incremental numbered value, and the 
+                            "date-time" mode uses a java.sql.Timestamp value. <i>state-image</i> isn't currently supported.</td>
+                        <td>state-image, date-time, version-number</td>
+                    </tr>
+                    <tr class="c">
+                        <td>column</td>
+                        <td>Name of the column in the datastore to store this field</td>
+                        <td/>
+                    </tr>
+                    <tr class="c">
+                        <td>indexed</td>
+                        <td>Whether the version column should be indexed.
+                            This is to be specified when <a href="orm/constraints.html">defining index information</a></td>
+                        <td>true | false | unique</td>
+                    </tr>
+                </table>
+                <br/>
+                
+                <a name="versionextension"/>
+                <p>
+                    These are attributes within the <b>&lt;extension&gt;</b> tag (jdo/package/class/version/extension).
+                </p>
+                <table>
+                    <tr>
+                        <th>Attribute</th>
+                        <th>Description</th>
+                        <th>Values</th>
+                    </tr>
+                    <tr>
+                        <td colspan="3">
+                            <b>Extension (JDO) Tags</b>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>field-name</td>
+                        <td>This extension allows you to define a field that will be used to contain the
+                            version of the object. It is populated by DataNucleus at persist.
+                            See <a href="orm/versioning.html#field">JDO Versioning</a></td>
+                        <td></td>
+                    </tr>
+                </table>
+                <br/>
+                <br/>
+            </subsection>
+
+            <!-- QUERY ELEMENT -->
+            <a name="query"/>
+            <subsection name="Metadata for query tag">
+                <p>
+                    These are attributes within the <b>&lt;query&gt;</b> tag (jdo/package/class/query). This element is used to define
+                    any "named queries" that are to be available for this class. This element contains the query single-string
+                    form as its content.
+                </p>
+                <table>
+                    <tr>
+                        <th>Attribute</th>
+                        <th>Description</th>
+                        <th>Values</th>
+                    </tr>
+                    <tr>
+                        <td colspan="4">
+                            <b>Standard (JDO) Tags</b>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>name</td>
+                        <td>Name of the query. This name is mandatory and is used in calls to <i>pm.newNamedQuery()</i>. Has to be 
+                            unique for this class.</td>
+                        <td/>
+                    </tr>
+                    <tr>
+                        <td>language</td>
+                        <td>Query language to use. Some datastores offer other languages</td>
+                        <td><b>JDOQL</b> | SQL | JPQL</td>
+                    </tr>
+                    <tr>
+                        <td>unique</td>
+                        <td>Whether the query is to return a unique result (only for SQL queries).</td>
+                        <td>true | <b>false</b></td>
+                    </tr>
+                    <tr>
+                        <td>result-class</td>
+                        <td>Class name of any result class (only for SQL queries).</td>
+                        <td/>
+                    </tr>
+                </table>
+                <br/>
+            </subsection>
+
+            <!-- FIELD ELEMENT -->
+            <a name="field"/>
+            <subsection name="Metadata for field tag">
+                <p>
+                    These are attributes within the <b>&lt;field&gt;</b> tag (jdo/package/class/field). This is used to define the
+                    persistence behaviour of the fields of the class to which it pertains. Certain types of fields are, by default,
+                    persisted. This element can be used to change the default behaviour and maybe not persist a field, or to persist
+                    something that normally isn't persisted. It is used, in addition, to define more details about how the field
+                    is persisted in the datastore.
+                </p>
+                <table>
+                    <tr>
+                        <th>Attribute</th>
+                        <th>Description</th>
+                        <th>Values</th>
+                    </tr>
+                    <tr>
+                        <td colspan="4">
+                            <b>Standard (JDO) Tags</b>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>name</td>
+                        <td>Name of the field.</td>
+                        <td/>
+                    </tr>
+                    <tr>
+                        <td>persistence-modifier</td>
+                        <td>The persistence-modifier specifies how JDO manage each field in your persistent class. There are three 
+                            options: persistent, transactional and none.
+                            <ul>
+                                <li><b>persistent</b> means that your field will managed by JDO and stored in the database on 
+                                    transaction commit.</li>
+                                <li><b>transactional</b> means that your field will managed by JDO but not stored in the database. 
+                                    Transactional fields values will be saved by JDO when you start your transaction and restored 
+                                    when you roll back your transaction.</li>
+                                <li><b>none</b> means that your field will not be managed by JDO.</li>
+                            </ul>
+                        </td>
+                        <td>persistent, transactional, none</td>
+                    </tr>
+                    <tr>
+                        <td>primary-key</td>
+                        <td>Whether the field is part of any primary key (if using <b>application identity</b>).</td>
+                        <td>true, <b>false</b></td>
+                    </tr>
+                    <tr>
+                        <td>null-value</td>
+                        <td>How to treat null values of persistent fields during storage. Valid options are "exception", "default", 
+                            "none" (where "none" is the default).</td>
+                        <td>exception, default, <b>none</b></td>
+                    </tr>
+                    <tr>
+                        <td>default-fetch-group</td>
+                        <td>Whether this field is part of the default fetch group for the class. Defaults to true for non-key fields 
+                            of primitive types, java.util.Date, java.lang.*, java.math.*, etc.</td>
+                        <td><b>true</b>, false</td>
+                    </tr>
+                    <tr>
+                        <td>embedded</td>
+                        <td>Whether this field should be stored, if possible, as part of the object instead as its own object in 
+                            the datastore. This defaults to true for primitive types, java.util.Date, java.lang.*, java.math.* etc and
+                            false for PersistenceCapable, reference (Object, Interface) and container types.</td>
+                        <td>true, false</td>
+                    </tr>
+                    <tr>
+                        <td>serialized</td>
+                        <td>Whether this field should be stored serialised  into a single column of the table of the containing object.</td>
+                        <td>true, <b>false</b></td>
+                    </tr>
+                    <tr>
+                        <td>dependent</td>
+                        <td>Whether the field should be used to check for dependent objects, and to delete them when this object is 
+                            deleted. In other words <b>cascade delete</b> capable.</td>
+                        <td>true, <b>false</b></td>
+                    </tr>
+                    <tr>
+                        <td>mapped-by</td>
+                        <td>The name of the field at the other end of a relationship.
+                            Used by 1-1, 1-N, M-N to mark a relation as bidirectional.</td>
+                        <td/>
+                    </tr>
+                    <tr>
+                        <td>value-strategy</td>
+                        <td>The strategy for populating values to this field. Is typically used for 
+                            <a href="value_generation.html">generating primary key values</a>.
+                            See the definitions under "datastore-identity".</td>
+                        <td>native | sequence | increment | identity | uuid-string | uuid-hex | <i>auid</i> | <i>max</i> | <i>timestamp</i> | <i>timestamp-value</i> | <i>[other values]</i></td>
+                    </tr>
+                    <tr>
+                        <td>sequence</td>
+                        <td>Name of the sequence to use to generate values, when using a <b>strategy</b> of <i>sequence</i>.
+                            Please see also the <b>class</b> extension tags for controlling the sequence.</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>recursion-depth</td>
+                        <td>The depth that will be recursed when this field is self-referencing. Should be used alongside
+                            FetchPlan.setMaxFetchDepth() to control the objects fetched.</td>
+                        <td>-1, <b>1</b>, 2, ... (integer)</td>
+                    </tr>
+                    <tr>
+                        <td>field-type</td>
+                        <td>Used to specify a more restrictive type than the field definition
+                            in the class. This might be required in order to map the field to the datastore. To be
+                            portable, specify the name of a single type that is itself able to be mapped to the datastore 
+                            (e.g. a field of type Object can specify field-type="Integer").
+                        </td>
+                        <td></td>
+                    </tr>
+                    <tr class="c">
+                        <td>indexed</td>
+                        <td>Whether the column(s) for this field should be indexed.
+                            This is to be specified when <a href="orm/constraints.html">defining index information</a></td>
+                        <td>true | false | unique</td>
+                    </tr>
+                    <tr class="c">
+                        <td>table</td>
+                        <td>Table name to use for any join table overriding the default name provided by DataNucleus.
+                            This is used either for <a href="orm/one_to_many_set.html">1-N relationships with a join table</a>
+                            or for <a href="orm/secondary_tables.html">Secondary Tables</a>.
+                            See also the property name "datanucleus.identifier.case" in the 
+                            <a href="../persistence_properties.html">Persistence Properties Guide</a>.</td>
+                        <td></td>
+                    </tr>
+                    <tr class="c">
+                        <td>column</td>
+                        <td>Column name to use for this field (alternative to specifying column sub-elements if only one column).</td>
+                        <td></td>
+                    </tr>
+                    <tr class="c">
+                        <td>delete-action</td>
+                        <td>The foreign-key delete action. This is a shortcut to 
+                            <a href="orm/constraints.html">specifying foreign key information</a>. Please refer to 
+                            the &lt;foreign-key&gt; element for full details.</td>
+                        <td>cascade | restrict | null | default | none</td>
+                    </tr>
+                    <tr>
+                        <td>cacheable</td>
+                        <td>Whether the field/property can be cached in a Level 2 cache. <b>From JDO2.2</b></td>
+                        <td><b>true</b> | false</td>
+                    </tr>
+                    <tr>
+                        <td>load-fetch-group</td>
+                        <td>Name of a fetch group to activate when a load of this field is initiated (due to it 
+                            being currently unloaded). Not used for getObjectById, queries, extents etc.
+                            Better to use "fetch-group" and define your groups</td>
+                        <td></td>
+                    </tr>
+                </table>
+                <br/>
+
+                <a name="fieldextension"/>
+                <p>
+                    These are attributes within the <b>&lt;extension&gt;</b> tag (jdo/package/class/field/extension).
+                </p>
+                <table>
+                    <tr>
+                        <th>Attribute</th>
+                        <th>Description</th>
+                        <th>Values</th>
+                    </tr>
+                    <tr>
+                        <td colspan="3">
+                            <b>Extension (JDO) Tags</b>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>cascade-persist</td>
+                        <td>JDO defines that when an object is persisted then all fields will also be persisted
+                            using "persistence-by-reachability". This extension allows you to turn off the persistence
+                            of a field relation.</td>
+                        <td><b>true</b> | false</td>
+                    </tr>
+                    <tr>
+                        <td>cascade-update</td>
+                        <td>JDO defines that when an object is updated then all fields containing PersistenceCapable objects will also 
+                            be updated using "persistence-by-reachability". This extension allows you to turn off the update
+                            of a field relation.</td>
+                        <td><b>true</b> | false</td>
+                    </tr>
+                    <tr>
+                        <td>cascade-refresh</td>
+                        <td>When calling PersistenceManager.refresh() only fetch plan fields of the passed object will be
+                        refreshed. Setting this to true will refresh the fields of related PC objects in this field</td>
+                        <td>true | <b>false</b></td>
+                    </tr>
+                    <tr>
+                        <td>allow-nulls</td>
+                        <td>When the field is a collection by default it will not be allowed to have nulls present
+                            but you can allow them by setting this DataNucleus extension tag</td>
+                        <td>true | <b>false</b></td>
+                    </tr>
+                    <tr class="c">
+                        <td>insertable</td>
+                        <td>Whether this field should be supplied when inserting into the datastore.</td>
+                        <td><b>true</b> | false</td>
+                    </tr>
+                    <tr class="c">
+                        <td>updateable</td>
+                        <td>Whether this field should be supplied when updating the datastore.</td>
+                        <td><b>true</b> | false</td>
+                    </tr>
+                    <tr class="c">
+                        <td>adapter-column-name</td>
+                        <td>In some situations DataNucleus will add a special datastore column to a join table so that collections
+                            can allow the storage of duplicate elements. This extension allows the specification of the column name
+                            to be used. This should be specified within the field at the collection end of the relationship.
+                            JDO2 doesnt allow a standard place for such a specification and so is an extension tag.</td>
+                        <td><b>INTEGER_IDX</b></td>
+                    </tr>
+                    <tr>
+                        <td>implementation-classes</td>
+                        <td>Used to define the possible classes implementing this interface/Object field. This is used to limit the possible 
+                            tables that this is a foreign key to (when this field is specified as an interface/Object in the class).
+                            Value should be comma-separated list of fully-qualified class names</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>key-implementation-classes</td>
+                        <td>Used to define the possible classes implementing this interface/Object key. This is used to limit the possible 
+                            tables that this is a foreign key to (when this key is specified as an interface/Object).
+                            Value should be comma-separated list of fully-qualified class names</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>value-implementation-classes</td>
+                        <td>Used to define the possible classes implementing this interface/Object value. This is used to limit the possible 
+                            tables that this is a foreign key to (when this value is specified as an interface/Object).
+                            Value should be comma-separated list of fully-qualified class names</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>strategy-when-notnull</td>
+                        <td>This is to be used in conjunction with the "value-strategy" attribute. Default JDO2 behaviour when you 
+                            have a "value-strategy" defined for a field is to always create a strategy value for that field regardless 
+                            of whether you have set the value of the field yourself. This extension allows you to only apply the 
+                            strategy if the field is null at persistence. This extension has no effect on primitive field
+                            types (which can't be null) and the value-strategy will always be applied to such fields.</td>
+                        <td><b>true</b> | false</td>
+                    </tr>
+                    <tr class="c">
+                        <td>relation-discriminator-column</td>
+                        <td>Name of a column to use for discrimination of the relation used by objects stored.
+                            This is defined when, for example, a join table is shared by multiple relations and 
+                            the objects placed in the join table need discriminating for which relation they are for</td>
+                        <td><b>RELATION_DISCRIM</b></td>
+                    </tr>
+                    <tr class="c">
+                        <td>relation-discriminator-pk</td>
+                        <td>Whether the column added for the discrimination of relations is to be part of the PK when using a join table.</td>
+                        <td>true | <b>false</b></td>
+                    </tr>
+                    <tr class="c">
+                        <td>relation-discriminator-value</td>
+                        <td>Value to use in the relation discriminator column for objects of this fields relation.
+                            This is defined when, for example, a join table is shared by multiple relations and 
+                            the objects placed in the join table need discriminating for which relation they are for.</td>
+                        <td>Fully-qualified class name</td>
+                    </tr>
+                    <tr class="c">
+                        <td>select-function</td>
+                        <td>Permits to use a function when fetching contents from the database. A ? (question mark) is mandatory to have 
+                            and will be replaced by the column name when generating the SQL statement.
+                            For example to specify a value of <i>UPPER(?)</i> will convert the field value
+                            to upper case on a datastore that supports that UPPER function.
+                        </td>
+                        <td></td>
+                    </tr>
+                    <tr class="c">
+                        <td>insert-function</td>
+                        <td>Permits to use a function when inserting into the database. A ? (question mark) is optional and will be 
+                            replaced by the column name when generating the SQL statement.
+                            For example to specify a value of <i>TRIM(?)</i> will trim the field value
+                            on a datastore that supports that TRIM function.
+                        </td>
+                        <td></td>
+                    </tr>
+                    <tr class="c">
+                        <td>update-function</td>
+                        <td>Permits to use a function when updating into the database. A ? (question mark) is optional and will be replaced
+                            by the column name when generating the SQL statement.
+                            For example to specify a value of <i>FUNC(?)</i> will perform "FUNC" on the field value
+                            on a datastore that supports that FUNC function.
+                        </td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>sequence-table-basis</td>
+                        <td>This defines the basis on which to generate unique identities when using the TableValueGenerator
+                            (used by the "increment" strategy, and sometimes by "native"). You can either define identities unique
+                            against the base table name, or against the base class name (in an inheritance tree).
+                            Used when the strategy is set to <i>native</i> or <i>increment</i></td>
+                        <td><b>class</b> | table</td>
+                    </tr>
+                    <tr class="c">
+                        <td>sequence-catalog-name</td>
+                        <td>The catalog used to store sequences for use by value generators. See 
+                            <a href="value_generation.html">Value Generation</a>.
+                            Default catalog for the datastore will be used if not specified.</td>
+                        <td></td>
+                    </tr>
+                    <tr class="c">
+                        <td>sequence-schema-name</td>
+                        <td>The schema used to store sequences for use by value generators. See 
+                            <a href="value_generation.html">Value Generation</a>.
+                            Default schema for the datastore will be used if not specified.</td>
+                        <td></td>
+                    </tr>
+                    <tr class="c">
+                        <td>sequence-table-name</td>
+                        <td>The table used to store sequences for use by value generators. See 
+                            <a href="value_generation.html">Value Generation</a>.</td>
+                        <td><b>SEQUENCE_TABLE</b></td>
+                    </tr>
+                    <tr class="c">
+                        <td>sequence-name-column-name</td>
+                        <td>The column name in the sequence-table used to store the name of the sequence for use by value generators. 
+                            See <a href="value_generation.html">Value Generation</a>.</td>
+                        <td><b>SEQUENCE_NAME</b></td>
+                    </tr>
+                    <tr class="c">
+                        <td>sequence-nextval-column-name</td>
+                        <td>The column name in the sequence-table used to store the next value in the sequence for use by value 
+                            generators. See <a href="value_generation.html">Value Generation</a>.</td>
+                        <td><b>NEXT_VAL</b></td>
+                    </tr>
+                    <tr>
+                        <td>key-min-value</td>
+                        <td>The minimum key value for use by value generators. Keys lower than this will not be generated. 
+                            See <a href="value_generation.html">Value Generation</a>.</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>key-max-value</td>
+                        <td>The maximum key value for use by value generators. Keys higher than this will not be generated. 
+                            See <a href="value_generation.html">Value Generation</a>.</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>key-initial-value</td>
+                        <td>The starting value for use by value generators. Keys will start from this value when being generated. 
+                            See <a href="value_generation.html">Value Generation</a>.</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>key-cache-size</td>
+                        <td>The cache size for keys for use by value generators. The cache of keys will be constrained by this value. 
+                            See <a href="value_generation.html">Value Generation</a>.</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>key-database-cache-size</td>
+                        <td>The database cache size for keys for use by value generators. The cache of keys will be constrained by 
+                            this value. See <a href="value_generation.html">Value Generation</a>.</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>mapping-class</td>
+                        <td>Specifies the mapping class to be used for mapping this field. This is only used where the user wants
+                            to override the default DataNucleus mapping class and provide their own mapping class for this field.</td>
+                        <td>Fully-qualified class name</td>
+                    </tr>
+                </table>
+                <br/>
+            </subsection>
+
+            <!-- PROPERTY ELEMENT -->
+            <a name="property"/>
+            <subsection name="Metadata for property tag">
+                <p>
+                    These are attributes within the <b>&lt;property&gt;</b> tag (jdo/package/class/property). 
+                    This is used to define the persistence behaviour of the Java Bean properties of the class to which it 
+                    pertains. This element can be used to change the default behaviour and maybe not persist a property, 
+                    or to persist something that normally isn't persisted. It is used, in addition, to define more details
+                    about how the property is persisted in the datastore. 
+                </p>
+                <table>
+                    <tr>
+                        <th>Attribute</th>
+                        <th>Description</th>
+                        <th>Values</th>
+                    </tr>
+                    <tr>
+                        <td colspan="4">
+                            <b>Standard (JDO) Tags</b>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>name</td>
+                        <td>Name of the property. The "name" of a property is obtained by taking the 
+                            getXXX, setXXX method names and using the XXX and making the first letter lowercase.</td>
+                        <td/>
+                    </tr>
+                    <tr>
+                        <td>persistence-modifier</td>
+                        <td>The persistence-modifier specifies how to manage each property in your persistent class. 
+                            There are three options: persistent, transactional and none.
+                            <ul>
+                                <li><b>persistent</b> means that your field will be managed and stored in the database on 
+                                    transaction commit.</li>
+                                <li><b>transactional</b> means that your field will be managed but not stored in the
+                                    database. Transactional fields values will be saved by JDO when you start your 
+                                    transaction and restored when you roll back your transaction.</li>
+                                <li><b>none</b> means that your field will not be managed.</li>
+                            </ul>
+                        </td>
+                        <td>persistent, transactional, none</td>
+                    </tr>
+                    <tr>
+                        <td>primary-key</td>
+                        <td>Whether the property is part of any primary key (if using <b>application identity</b>).</td>
+                        <td>true, <b>false</b></td>
+                    </tr>
+                    <tr>
+                        <td>null-value</td>
+                        <td>How to treat null values of persistent properties during storage.</td>
+                        <td>exception, default, <b>none</b></td>
+                    </tr>
+                    <tr>
+                        <td>default-fetch-group</td>
+                        <td>Whether this property is part of the default fetch group for the class. 
+                            Defaults to true for non-key fields of primitive types, java.util.Date, java.lang.*,
+                            java.math.*, etc.</td>
+                        <td><b>true</b>, false</td>
+                    </tr>
+                    <tr>
+                        <td>embedded</td>
+                        <td>Whether this property should be stored, if possible, as part of the object instead as its 
+                            own object in the datastore. This defaults to true for primitive types, java.util.Date, 
+                            java.lang.*, java.math.* etc and false for PersistenceCapable, reference (Object, Interface)
+                            and container types.</td>
+                        <td>true, false</td>
+                    </tr>
+                    <tr>
+                        <td>serialized</td>
+                        <td>Whether this property should be stored serialised  into a single column of the table of the 
+                            containing object.</td>
+                        <td>true, <b>false</b></td>
+                    </tr>
+                    <tr>
+                        <td>dependent</td>
+                        <td>Whether the property should be used to check for dependent objects, and to delete them when 
+                            this object is deleted. In other words <b>cascade delete</b> capable.</td>
+                        <td>true, <b>false</b></td>
+                    </tr>
+                    <tr>
+                        <td>mapped-by</td>
+                        <td>The name of the property at the other end of a relationship.
+                            Used by 1-1, 1-N, M-N to mark a relation as bidirectional.</td>
+                        <td/>
+                    </tr>
+                    <tr>
+                        <td>value-strategy</td>
+                        <td>The strategy for populating values to this property. Is typically used for 
+                            <a href="value_generation.html">generating primary key values</a>.
+                            See the definitions under "datastore-identity".</td>
+                        <td>native | sequence | increment | identity | uuid-string | uuid-hex | <i>auid</i> | <i>max</i> | <i>timestamp</i> | <i>timestamp-value</i> | <i>[other values]</i></td>
+                    </tr>
+                    <tr>
+                        <td>sequence</td>
+                        <td>Name of the sequence to use to generate values, when using a <b>strategy</b> of <i>sequence</i>.
+                            Please see also the <b>class</b> extension tags for controlling the sequence.</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>recursion-depth</td>
+                        <td>The depth that will be recursed when this property is self-referencing. 
+                            Should be used alongside FetchPlan.setMaxFetchDepth() to control the objects fetched.</td>
+                        <td>-1, <b>1</b>, 2, ... (integer)</td>
+                    </tr>
+                    <tr>
+                        <td>field-type</td>
+                        <td>Used to specify a more restrictive type than the property definition
+                            in the class. This might be required in order to map the field to the datastore. To be
+                            portable, specify the name of a single type that is itself able to be mapped to the datastore 
+                            (e.g. a field of type Object can specify field-type="Integer").
+                        </td>
+                        <td></td>
+                    </tr>
+                    <tr class="c">
+                        <td>indexed</td>
+                        <td>Whether the column(s) for this property should be indexed.
+                            This is to be specified when <a href="orm/constraints.html">defining index information</a></td>
+                        <td>true | false | unique</td>
+                    </tr>
+                    <tr class="c">
+                        <td>table</td>
+                        <td>Table name to use for any join table overriding the default name provided by DataNucleus.
+                            This is used either for <a href="orm/one_to_many_set.html">1-N relationships with a join table</a>
+                            or for <a href="orm/secondary_tables.html">Secondary Tables</a>.
+                            See also the property name "datanucleus.identifier.case" in the 
+                            <a href="../persistence_properties.html">Persistence Properties Guide</a>.</td>
+                        <td></td>
+                    </tr>
+                    <tr class="c">
+                        <td>column</td>
+                        <td>Column name to use for this property (alternative to specifying column sub-elements if 
+                            only one column).</td>
+                        <td></td>
+                    </tr>
+                    <tr class="c">
+                        <td>delete-action</td>
+                        <td>The foreign-key delete action. This is a shortcut to 
+                            <a href="orm/constraints.html">specifying foreign key information</a>. Please refer to 
+                            the &lt;foreign-key&gt; element for full details.</td>
+                        <td>cascade | restrict | null | default | none</td>
+                    </tr>
+                    <tr>
+                        <td>cacheable</td>
+                        <td>Whether the field/property can be cached in a Level 2 cache. <b>From JDO2.2</b></td>
+                        <td><b>true</b> | false</td>
+                    </tr>
+                    <tr>
+                        <td>load-fetch-group</td>
+                        <td>Name of a fetch group to activate when a load of this field is initiated (due to it 
+                            being currently unloaded). Not used for getObjectById, queries, extents etc.
+                            Better to use "fetch-group" and define your groups</td>
+                        <td></td>
+                    </tr>
+                </table>
+                <br/>
+
+                <a name="propertyextension"/>
+                <p>
+                    These are attributes within the <b>&lt;extension&gt;</b> tag (jdo/package/class/property/extension).
+                </p>
+                <table>
+                    <tr>
+                        <th>Attribute</th>
+                        <th>Description</th>
+                        <th>Values</th>
+                    </tr>
+                    <tr>
+                        <td colspan="3">
+                            <b>Extension (JDO) Tags</b>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>cascade-persist</td>
+                        <td>JDO defines that when an object is persisted then all fields will also be persisted
+                            using "persistence-by-reachability". This extension allows you to turn off the persistence
+                            of a field relation.</td>
+                        <td><b>true</b> | false</td>
+                    </tr>
+                    <tr>
+                        <td>cascade-update</td>
+                        <td>JDO defines that when an object is updated then all fields containing PersistenceCapable objects will also 
+                            be updated using "persistence-by-reachability". This extension allows you to turn off the update
+                            of a field relation.</td>
+                        <td><b>true</b> | false</td>
+                    </tr>
+                    <tr>
+                        <td>cascade-refresh</td>
+                        <td>When calling PersistenceManager.refresh() only fetch plan fields of the passed object will be
+                        refreshed. Setting this to true will refresh the fields of related PC objects in this field</td>
+                        <td>true | <b>false</b></td>
+                    </tr>
+                    <tr>
+                        <td>allow-nulls</td>
+                        <td>When the field is a collection by default it will not be allowed to have nulls present
+                            but you can allow them by setting this DataNucleus extension tag</td>
+                        <td>true | <b>false</b></td>
+                    </tr>
+                    <tr class="c">
+                        <td>insertable</td>
+                        <td>Whether this field should be supplied when inserting into the datastore.</td>
+                        <td><b>true</b> | false</td>
+                    </tr>
+                    <tr class="c">
+                        <td>updateable</td>
+                        <td>Whether this field should be supplied when updating the datastore.</td>
+                        <td><b>true</b> | false</td>
+                    </tr>
+                    <tr class="c">
+                        <td>adapter-column-name</td>
+                        <td>In some situations DataNucleus will add a special datastore column to a join table so that collections
+                            can allow the storage of duplicate elements. This extension allows the specification of the column name
+                            to be used. This should be specified within the field at the collection end of the relationship.
+                            JDO2 doesnt allow a standard place for such a specification and so is an extension tag.</td>
+                        <td><b>INTEGER_IDX</b></td>
+                    </tr>
+                    <tr>
+                        <td>implementation-classes</td>
+                        <td>Used to define the possible classes implementing this interface/Object field. This is used to limit the possible 
+                            tables that this is a foreign key to (when this field is specified as an interface/Object in the class).
+                            Value should be comma-separated list of fully-qualified class names</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>key-implementation-classes</td>
+                        <td>Used to define the possible classes implementing this interface/Object key. This is used to limit the possible 
+                            tables that this is a foreign key to (when this key is specified as an interface/Object).
+                            Value should be comma-separated list of fully-qualified class names</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>value-implementation-classes</td>
+                        <td>Used to define the possible classes implementing this interface/Object value. This is used to limit the possible 
+                            tables that this is a foreign key to (when this value is specified as an interface/Object).
+                            Value should be comma-separated list of fully-qualified class names</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>strategy-when-notnull</td>
+                        <td>This is to be used in conjunction with the "value-strategy" attribute. Default JDO2 behaviour when you 
+                            have a "value-strategy" defined for a field is to always create a strategy value for that field regardless 
+                            of whether you have set the value of the field yourself. This extension allows you to only apply the 
+                            strategy if the field is null at persistence. This extension has no effect on primitive field
+                            types (which can't be null) and the value-strategy will always be applied to such fields.</td>
+                        <td><b>true</b> | false</td>
+                    </tr>
+                    <tr class="c">
+                        <td>relation-discriminator-column</td>
+                        <td>Name of a column to use for discrimination of the relation used by objects stored.
+                            This is defined when, for example, a join table is shared by multiple relations and 
+                            the objects placed in the join table need discriminating for which relation they are for</td>
+                        <td><b>RELATION_DISCRIM</b></td>
+                    </tr>
+                    <tr class="c">
+                        <td>relation-discriminator-pk</td>
+                        <td>Whether the column added for the discrimination of relations is to be part of the PK when using a join table.</td>
+                        <td>true | <b>false</b></td>
+                    </tr>
+                    <tr class="c">
+                        <td>relation-discriminator-value</td>
+                        <td>Value to use in the relation discriminator column for objects of this fields relation.
+                            This is defined when, for example, a join table is shared by multiple relations and 
+                            the objects placed in the join table need discriminating for which relation they are for.</td>
+                        <td>Fully-qualified class name</td>
+                    </tr>
+                    <tr class="c">
+                        <td>select-function</td>
+                        <td>Permits to use a function when fetching contents from the database. A ? (question mark) is mandatory to have 
+                            and will be replaced by the column name when generating the SQL statement.
+                            For example to specify a value of <i>UPPER(?)</i> will convert to upper case the field 
+                            value on a datastore that supports that UPPER function.
+                        </td>
+                        <td></td>
+                    </tr>
+                    <tr class="c">
+                        <td>insert-function</td>
+                        <td>Permits to use a function when inserting into the database. A ? (question mark) is optional and will be 
+                            replaced by the column name when generating the SQL statement.
+                            For example to specify a value of <i>TRIM(?)</i> will trim the field value
+                            on a datastore that supports that TRIM function.
+                        </td>
+                        <td></td>
+                    </tr>
+                    <tr class="c">
+                        <td>update-function</td>
+                        <td>Permits to use a function when updating into the database. A ? (question mark) is optional and will be replaced
+                            by the column name when generating the SQL statement.
+                            For example to specify a value of <i>FUNC(?)</i> will perform FUNC() on the field value
+                            on a datastore that supports that FUNC function.
+                        </td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>sequence-table-basis</td>
+                        <td>This defines the basis on which to generate unique identities when using the TableValueGenerator
+                            (used by the "increment" strategy, and sometimes by "native"). You can either define identities unique
+                            against the base table name, or against the base class name (in an inheritance tree).
+                            Used when the strategy is set to <i>native</i> or <i>increment</i></td>
+                        <td><b>class</b> | table</td>
+                    </tr>
+                    <tr class="c">
+                        <td>sequence-catalog-name</td>
+                        <td>The catalog used to store sequences for use by value generators. See 
+                            <a href="value_generation.html">Value Generation</a>.
+                            Default catalog for the datastore will be used if not specified.</td>
+                        <td></td>
+                    </tr>
+                    <tr class="c">
+                        <td>sequence-schema-name</td>
+                        <td>The schema used to store sequences for use by value generators. See 
+                            <a href="value_generation.html">Value Generation</a>.
+                            Default schema for the datastore will be used if not specified.</td>
+                        <td></td>
+                    </tr>
+                    <tr class="c">
+                        <td>sequence-table-name</td>
+                        <td>The table used to store sequences for use by value generators. See 
+                            <a href="value_generation.html">Value Generation</a>.</td>
+                        <td><b>SEQUENCE_TABLE</b></td>
+                    </tr>
+                    <tr class="c">
+                        <td>sequence-name-column-name</td>
+                        <td>The column name in the sequence-table used to store the name of the sequence for use by value generators. 
+                            See <a href="value_generation.html">Value Generation</a>.</td>
+                        <td><b>SEQUENCE_NAME</b></td>
+                    </tr>
+                    <tr class="c">
+                        <td>sequence-nextval-column-name</td>
+                        <td>The column name in the sequence-table used to store the next value in the sequence for use by value 
+                            generators. See <a href="value_generation.html">Value Generation</a>.</td>
+                        <td><b>NEXT_VAL</b></td>
+                    </tr>
+                    <tr>
+                        <td>key-min-value</td>
+                        <td>The minimum key value for use by value generators. Keys lower than this will not be generated. 
+                            See <a href="value_generation.html">Value Generation</a>.</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>key-max-value</td>
+                        <td>The maximum key value for use by value generators. Keys higher than this will not be generated. 
+                            See <a href="value_generation.html">Value Generation</a>.</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>key-initial-value</td>
+                        <td>The starting value for use by value generators. Keys will start from this value when being generated. 
+                            See <a href="value_generation.html">Value Generation</a>.</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>key-cache-size</td>
+                        <td>The cache size for keys for use by value generators. The cache of keys will be constrained by this value. 
+                            See <a href="value_generation.html">Value Generation</a>.</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>key-database-cache-size</td>
+                        <td>The database cache size for keys for use by value generators. The cache of keys will be constrained by 
+                            this value. See <a href="value_generation.html">Value Generation</a>.</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>mapping-class</td>
+                        <td>Specifies the mapping class to be used for mapping this field. This is only used where the user wants
+                            to override the default DataNucleus mapping class and provide their own mapping class for this field.</td>
+                        <td>Fully-qualified class name</td>
+                    </tr>
+                </table>
+                <br/>
+            </subsection>
+
+            <!-- FETCH-GROUP ELEMENT -->
+            <a name="fetch-group"/>
+            <subsection name="Metadata for fetch-group tag">
+                <p>
+                    These are attributes within the <b>&lt;fetch-group&gt;</b> tag (jdo/package/class/fetch-group). This element is 
+                    used to define fetch groups that are utilised at runtime, and are of particular use with attach/detach.
+                    This element can contain <b>fetch-group</b> sub-elements allowing definition of hierarchical groups. 
+                    It can also contain <b>field</b> elements, defining the fields that are part of this fetch-group.
+                </p>
+                <table>
+                    <tr>
+                        <th>Attribute</th>
+                        <th>Description</th>
+                        <th>Values</th>
+                    </tr>
+                    <tr>
+                        <td colspan="4">
+                            <b>Standard (JDO) Tags</b>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>name</td>
+                        <td>Name of the fetch group. Used with the fetch plan of the PersistenceManager.</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>post-load</td>
+                        <td>Whether to call jdoPostLoad when the fetch group is invoked.</td>
+                        <td>true | false</td>
+                    </tr>
+                </table>
+                <br/>
+            </subsection>
+
+            <!-- EMBEDDED ELEMENT -->
+            <a name="embedded"/>
+            <subsection name="Metadata for embedded tag">
+                <p>
+                    These are attributes within the <b>&lt;embedded&gt;</b> tag (jdo/package/class/embedded). It is used when this
+                    field is a PersistenceCapable and is embedded into the same table as the class.
+                </p>
+                <table>
+                    <tr>
+                        <th>Attribute</th>
+                        <th>Description</th>
+                        <th>Values</th>
+                    </tr>
+                    <tr>
+                        <td colspan="4">
+                            <b>Standard (JDO) Tags</b>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>owner-field</td>
+                        <td>Name of the field in the embedded PersistenceCapable that is the link back to the owning object (if any).</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>null-indicator-column</td>
+                        <td>Name of the column to be used for detacting if the embedded object is null.</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>null-indicator-value</td>
+                        <td>Value of the null-indicator-column that signifies that the embedded object is null.</td>
+                        <td></td>
+                    </tr>
+                </table>
+                <br/>
+            </subsection>
+
+            <!-- KEY ELEMENT -->
+            <a name="key"/>
+            <subsection name="Metadata for key tag">
+                <p>
+                    These are attributes within the <b>&lt;key&gt;</b> tag (jdo/package/class/field/key). This element is used
+                    to define details for the persistence of a Map.
+                </p>
+                <table>
+                    <tr>
+                        <th>Attribute</th>
+                        <th>Description</th>
+                        <th>Values</th>
+                    </tr>
+                    <tr>
+                        <td colspan="4">
+                            <b>Standard (JDO) Tags</b>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>mapped-by</td>
+                        <td>When the map is formed by a foreign-key, the key can be a field in a value PersistenceCapable class.
+                            This attribute defines which field in the value class is used as the key</td>
+                        <td></td>
+                    </tr>
+                    <tr class="c">
+                        <td>column</td>
+                        <td>Name of the column (if only one)</td>
+                        <td></td>
+                    </tr>
+                    <tr class="c">
+                        <td>delete-action</td>
+                        <td>Action to be performed when the owner object is deleted.
+                            This is to be specified when <a href="orm/constraints.html">defining foreign key information</a></td>
+                        <td>cascade | restrict | null | default | none</td>
+                    </tr>
+                    <tr class="c">
+                        <td>indexed</td>
+                        <td>Whether the key column should be indexed.
+                            This is to be specified when <a href="orm/constraints.html">defining index information</a></td>
+                        <td>true | false | unique</td>
+                    </tr>
+                    <tr class="c">
+                        <td>unique</td>
+                        <td>Whether the key column should be unique.
+                            This is to be specified when <a href="orm/constraints.html">defining unique key information</a></td>
+                        <td>true | false</td>
+                    </tr>
+                </table>
+                <br/>
+            </subsection>
+            
+            <!-- VALUE ELEMENT -->
+            <a name="value"/>
+            <subsection name="Metadata for value tag">
+                <p>
+                    These are attributes within the <b>&lt;value&gt;</b> tag (jdo/package/class/field/value). This element is used
+                    to define details for the persistence of a Map.
+                </p>
+                <table>
+                    <tr>
+                        <th>Attribute</th>
+                        <th>Description</th>
+                        <th>Values</th>
+                    </tr>
+                    <tr>
+                        <td>mapped-by</td>
+                        <td>When the map is formed by a foreign-key, the value can be a field in a key PersistenceCapable class.
+                            This attribute defines which field in the key class is used as the value.</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td colspan="4">
+                            <b>Standard (JDO) Tags</b>
+                        </td>
+                    </tr>
+                    <tr class="c">
+                        <td>column</td>
+                        <td>Name of the column (if only one)</td>
+                        <td></td>
+                    </tr>
+                    <tr class="c">
+                        <td>delete-action</td>
+                        <td>Action to be performed when the owner object is deleted.
+                            This is to be specified when <a href="orm/constraints.html">defining foreign key information</a></td>
+                        <td>cascade | restrict | null | default | none</td>
+                    </tr>
+                    <tr class="c">
+                        <td>indexed</td>
+                        <td>Whether the value column should be indexed.
+                            This is to be specified when <a href="orm/constraints.html">defining index information</a></td>
+                        <td>true | false | unique</td>
+                    </tr>
+                    <tr class="c">
+                        <td>unique</td>
+                        <td>Whether the value column should be unique.
+                            This is to be specified when <a href="orm/constraints.html">defining unique key information</a></td>
+                        <td>true | false</td>
+                    </tr>
+                </table>
+                <br/>
+            </subsection>
+            
+            <!-- ORDER ELEMENT -->
+            <a name="order"/>
+            <subsection name="Metadata for order tag">
+                <p>
+                    These are attributes within the <b>&lt;order&gt;</b> tag (jdo/package/class/field/order).
+                    This is used to define the column details for the ordering column in a List.
+                </p>
+                <table>
+                    <tr>
+                        <th>Attribute</th>
+                        <th>Description</th>
+                        <th>Values</th>
+                    </tr>
+                    <tr>
+                        <td colspan="4">
+                            <b>Standard (JDO) Tags</b>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>mapped-by</td>
+                        <td>When a List is formed by a foreign-key, the ordering can be a field in the element 
+                            PersistenceCapable class. This attribute defines which field in the element class is used as 
+                            the ordering. The field must be of type <i>int</i>, <i>Integer</i>, <i>long</i>, <i>Long</i>.
+                            DataNucleus will write the index positions to this field (starting at 0 for the first item in the List)</td>
+                        <td></td>
+                    </tr>
+                    <tr class="c">
+                        <td>column</td>
+                        <td>Name of the column to use for ordering.</td>
+                        <td></td>
+                    </tr>
+                </table>
+                <br/>
+                <a name="orderextension"/>
+                <p>
+                    These are attributes within the <b>&lt;extension&gt;</b> tag (jdo/package/class/field/order/extension).
+                </p>
+                <table>
+                    <tr>
+                        <th>Attribute</th>
+                        <th>Description</th>
+                        <th>Values</th>
+                    </tr>
+                    <tr>
+                        <td colspan="3">
+                            <b>Extension (JDO) Tags</b>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>list-ordering</td>
+                        <td>Used to make the list be an "ordered list" where it has no index column and instead
+                            will order the elements by the specified expression upon retrieval. The ordering expression
+                            takes names and ASC/DESC and can be a composite</td>
+                        <td>{orderfield [ASC|DESC] [,{orderfield} ASC|DESC]}</td>
+                    </tr>
+                </table>
+                <br/>
+            </subsection>
+            
+            <!-- INDEX ELEMENT -->
+            <a name="index"/>
+            <subsection name="Metadata for index tag">
+                <p>
+                    These are attributes within the <b>&lt;index&gt;</b> tag (jdo/package/class/field/index). This element is used where
+                    a user wishes to add specific indexes to the datastore to provide more efficient access to particular fields.
+                </p>
+                <table>
+                    <tr>
+                        <th>Attribute</th>
+                        <th>Description</th>
+                        <th>Values</th>
+                    </tr>
+                    <tr>
+                        <td colspan="4">
+                            <b>Standard (JDO) Tags</b>
+                        </td>
+                    </tr>
+                    <tr class="c">
+                        <td>name</td>
+                        <td>Name of the index in the datastore</td>
+                        <td></td>
+                    </tr>
+                    <tr class="c">
+                        <td>unique</td>
+                        <td>Whether the index is unique</td>
+                        <td>true | false</td>
+                    </tr>
+                    <tr class="c">
+                        <td>column</td>
+                        <td>Name of the column to use (alternative to specifying it as a sub-element).</td>
+                        <td></td>
+                    </tr>
+                </table>
+                <br/>
+                <a name="indexextension"/>
+                <p>
+                    These are attributes within the <b>&lt;extension&gt;</b> tag (jdo/package/class/field/index/extension).
+                </p>
+                <table>
+                    <tr>
+                        <th>Attribute</th>
+                        <th>Description</th>
+                        <th>Values</th>
+                    </tr>
+                    <tr>
+                        <td colspan="3">
+                            <b>Extension (JDO) Tags</b>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>extended-setting</td>
+                        <td>Additional settings to the index. This extension is used to set database proprietary settings.</td>
+                        <td></td>
+                    </tr>
+                </table>
+                <br/>
+            </subsection>
+
+            <!-- FOREIGNKEY ELEMENT -->
+            <a name="foreignkey"/>
+            <subsection name="Metadata for foreign-key tag">
+                <p>
+                    These are attributes within the <b>&lt;foreign-key&gt;</b> tag (jdo/package/class/field/foreign-key). This is 
+                    used where the user wishes to define the behaviour of the foreign keys added due to the relationships in the object model.
+                    This is to be read in conjunction with <a href="orm/constraints.html">foreign-key guide</a>
+                </p>
+                <table>
+                    <tr>
+                        <th>Attribute</th>
+                        <th>Description</th>
+                        <th>Values</th>
+                    </tr>
+                    <tr>
+                        <td colspan="4">
+                            <b>Standard (JDO) Tags</b>
+                        </td>
+                    </tr>
+                    <tr class="c">
+                        <td>name</td>
+                        <td>Name of the foreign key in the datastore</td>
+                        <td></td>
+                    </tr>
+                    <tr class="c">
+                        <td>deferred</td>
+                        <td>Whether the constraints are initially deferred.</td>
+                        <td>true | false</td>
+                    </tr>
+                    <tr class="c">
+                        <td>delete-action</td>
+                        <td>Action to be performed when the owner object is deleted.</td>
+                        <td>cascade | restrict | null | default</td>
+                    </tr>
+                    <tr class="c">
+                        <td>update-action</td>
+                        <td>Action to be performed when the owner object is updated.</td>
+                        <td>cascade | restrict | null | default</td>
+                    </tr>
+                </table>
+                <br/>
+            </subsection>
+
+            <!-- UNIQUE ELEMENT -->
+            <a name="unique"/>
+            <subsection name="Metadata for unique tag">
+                <p>
+                    These are attributes within the <b>&lt;unique&gt;</b> tag (jdo/package/class/unique, jdo/package/class/field/unique). 
+                    This element is used where a user wishes to add specific unique constraints to the datastore to provide more 
+                    control over particular fields.
+                </p>
+                <table>
+                    <tr>
+                        <th>Attribute</th>
+                        <th>Description</th>
+                        <th>Values</th>
+                    </tr>
+                    <tr>
+                        <td colspan="4">
+                            <b>Standard (JDO) Tags</b>
+                        </td>
+                    </tr>
+                    <tr class="c">
+                        <td>name</td>
+                        <td>Name of the constraint in the datastore</td>
+                        <td></td>
+                    </tr>
+                    <tr class="c">
+                        <td>column</td>
+                        <td>Name of the column to use (alternative to specifying it as a sub-element).</td>
+                        <td></td>
+                    </tr>
+                </table>
+                <br/>
+            </subsection>
+
+            <!-- COLUMN ELEMENT -->
+            <a name="column"/>
+            <subsection name="Metadata for column tag">
+                <p>
+                    These are attributes within the <b>&lt;column&gt;</b> tag (*/column). This is used to define the 
+                    details of a column in the datastore, and so can be used to match to an existing datastore schema.
+                </p>
+                <table>
+                    <tr>
+                        <th>Attribute</th>
+                        <th>Description</th>
+                        <th>Values</th>
+                    </tr>
+                    <tr>
+                        <td colspan="4">
+                            <b>Standard (JDO) Tags</b>
+                        </td>
+                    </tr>
+                    <tr class="c">
+                        <td>name</td>
+                        <td>Name of the column in the datastore. See also the property name "datanucleus.identifier.case" 
+                            in the <a href="../persistence_properties.html">Persistence Properties Guide</a>.</td>
+                        <td/>
+                    </tr>
+                    <tr class="c">
+                        <td>length</td>
+                        <td>Length of the column in the datastore (for character types), or the precision of the
+                            column in the datastore (for floating point field types).
+                        </td>
+                        <td>positive integer</td>
+                    </tr>
+                    <tr class="c">
+                        <td>scale</td>
+                        <td>Scale of the column in the datastore (for floating point field types).</td>
+                        <td>positive integer</td>
+                    </tr>
+                    <tr class="c">
+                        <td>jdbc-type</td>
+                        <td>JDBC Type to use for this column in the datastore when the default value is not satisfactory.
+                            Please refer to JDBC for the valid types. Not all of these types are supported for all RDBMS
+                            mappings.</td>
+                        <td>Valid JDBC Type (CHAR, VARCHAR, LONGVARCHAR, NUMERIC, DECIMAL, BIT, TINYINT, SMALLINT, 
+                            INTEGER, BIGINT, REAL, FLOAT, DOUBLE, BINARY, VARBINARY, LONGVARBINARY, DATE, TIME, TIMESTAMP,
+                            BLOB, BOOLEAN, CLOB, DATALINK)</td>
+                    </tr>
+                    <tr class="c">
+                        <td>sql-type</td>
+                        <td>SQL Type to use for this column in the datastore. This should not usually be necessary since the
+                            specification of JDBC type together with length/scale will likely define it.</td>
+                        <td>Valid SQL Type (e.g VARCHAR, CHAR, NUMERIC etc)</td>
+                    </tr>
+                    <tr class="c">
+                        <td>allows-null</td>
+                        <td>Whether the column in the datastore table should allow nulls or not. 
+                            The default is "false" for primitives, and "true" otherwise.</td>
+                        <td>true | false</td>
+                    </tr>
+                    <tr class="c">
+                        <td>default-value</td>
+                        <td>Default value to use for this column when creating the table. If you want the
+                            default to be NULL, then put this as "#NULL". This is particularly for cases where you have
+                            a table that stores multiple classes in an inheritance tree (subclass-table, superclass-table)
+                            so when you persist a superclass object it doesn't have the subclass fields in its INSERT
+                            and so the datastore uses the default-value settings that are embodied in the CREATE TABLE
+                            statement.</td>
+                        <td>Default value expression</td>
+                    </tr>
+                    <tr class="c">
+                        <td>target</td>
+                        <td>Declares the name of the primary key column for the referenced table. For columns contained in join elements, 
+                            this is the name of the primary key column in the primary table. For columns contained in field, element, 
+                            key, value, or array elements, this is the name of the primary key column of the primary table of the 
+                            other side of the relationship.</td>
+                        <td>target column name</td>
+                    </tr>
+                    <tr class="c">
+                        <td>target-field</td>
+                        <td>Declares the name of the primary key field for the referenced class. For columns contained in join elements, 
+                            this is the name of the primary key field in the base class. For columns contained in field, element, 
+                            key, value, or array elements, this is the name of the primary key field of the base class of the 
+                            other side of the relationship.</td>
+                        <td>target field name</td>
+                    </tr>
+                    <tr class="c">
+                        <td>insert-value</td>
+                        <td>Value to use for this column when it has no field in the class and an object is being 
+                            inserted. If you want the inserted value to be NULL, then put this as "#NULL"</td>
+                        <td>Insert value</td>
+                    </tr>
+                    <tr class="c">
+                        <td>position</td>
+                        <td>Position of the column in the table (0 = first).</td>
+                        <td>positive integer</td>
+                    </tr>
+                </table>
+                <br/>
+
+                <a name="columnextension"/>
+                <p>
+                    These are attributes within the <b>&lt;extension&gt;</b> tag (*/column/extension).
+                </p>
+                <table>
+                    <tr>
+                        <th>Attribute</th>
+                        <th>Description</th>
+                        <th>Values</th>
+                    </tr>
+                    <tr>
+                        <td colspan="3">
+                            <b>Extension (JDO) Tags</b>
+                        </td>
+                    </tr>
+                    <tr class="c">
+                        <td>datastore-mapping-class</td>
+                        <td>Specifies the datastore mapping class to be used for mapping this field. This is only used where the user wants
+                            to override the default DataNucleus datastore mapping class and provide their own mapping class for this field based
+                            on the database data type. This datastore mapping class must be available for the DataNucleus PersistenceManagerFactory
+                            classpath.</td>
+                        <td>Fully-qualified class name</td>
+                    </tr>
+                    <tr class="c">
+                        <td>enum-check-constraint</td>
+                        <td>Specifies that a CHECK constraint for this column must be generated based on the values of a java.lang.Enum type.
+                            e.g. enum Color (RED, GREEN, BLUE) where its name is persisted a CHECK constraint is defined as 
+                            <i>CHECK "COLUMN" IN ('RED', 'GREEN', 'BLUE')</i>.</td>
+                        <td>true | false</td>
+                    </tr>
+                </table>
+                <br/>
+            </subsection>
+
+            <!-- JOIN ELEMENT -->
+            <a name="join"/>
+            <subsection name="Metadata for join tag">
+                <p>
+                    These are attributes within the <b>&lt;join&gt;</b> tag (jdo/package/class/field/join). 
+                    This element is added when the field has a mapping to a "join" table (as part of a 1-N relationship). It is also used
+                    to specify overriding of details in an inheritance tree where the primary key columns are shared up the hierarchy.
+                    A further use (when specified under the &lt;class&gt; element) is for specifying the column details
+                    for joining to a <a href="orm/secondary_tables.html">Secondary Table</a>.
+                </p>
+                <table>
+                    <tr>
+                        <th>Attribute</th>
+                        <th>Description</th>
+                        <th>Values</th>
+                    </tr>
+                    <tr>
+                        <td colspan="4">
+                            <b>Standard (JDO) Tags</b>
+                        </td>
+                    </tr>
+                    <tr class="c">
+                        <td>column</td>
+                        <td>Name of the column used to join to the PK of the primary table (when only one column used).
+                            Used in <a href="orm/secondary_tables.html">Secondary Tables</a>.</td>
+                        <td></td>
+                    </tr>
+                    <tr class="c">
+                        <td>table</td>
+                        <td>Table name used when joining the PK of a FCO class table to a secondary table.
+                            See <a href="orm/secondary_tables.html">Secondary Tables</a>.</td>
+                        <td></td>
+                    </tr>
+                    <tr class="c">
+                        <td>delete-action</td>
+                        <td>Action to be performed when the owner object is deleted.
+                            This is to be specified when <a href="orm/constraints.html">defining foreign key information</a></td>
+                        <td>cascade | restrict | null | default | none</td>
+                    </tr>
+                    <tr class="c">
+                        <td>indexed</td>
+                        <td>Whether the join table owner column should be indexed.
+                            This is to be specified when <a href="orm/constraints.html">defining index information</a></td>
+                        <td>true | false | unique</td>
+                    </tr>
+                    <tr class="c">
+                        <td>unique</td>
+                        <td>Whether the join table owner column should be unique.
+                            This is to be specified when <a href="orm/constraints.html">defining unique key information</a></td>
+                        <td>true | false</td>
+                    </tr>
+                    <tr class="c">
+                        <td>outer</td>
+                        <td>Whether to use an outer join here.
+                        This is of particular relevance to secondary tables</td>
+                        <td>true | <b>false</b></td>
+                    </tr>
+                </table>
+
+                <a name="joinextension"/>
+                <p>
+                    These are attributes within the <b>&lt;extension&gt;</b> tag (jdo/package/class/field/join/extension). 
+                    These are for controlling the join table.
+                </p>
+                <table>
+                    <tr>
+                        <th>Attribute</th>
+                        <th>Description</th>
+                        <th>Values</th>
+                    </tr>
+                    <tr>
+                        <td colspan="3">
+                            <b>Extension (JDO) Tags</b>
+                        </td>
+                    </tr>
+                    <tr class="c">
+                        <td>primary-key</td>
+                        <td>This parameter defines if the join table will be assigned a primary key. The default is true since
+                            it is considered a best practice to have primary keys on all tables. This allows the option of turning
+                            it off.</td>
+                        <td><b>true</b> | false</td>
+                    </tr>
+                </table>
+                <br/>
+            </subsection>
+
+            <!-- ELEMENT ELEMENT -->
+            <a name="element"/>
+            <subsection name="Metadata for element tag">
+                <p>
+                    These are attributes within the <b>&lt;element&gt;</b> tag (jdo/package/class/field/element). 
+                    This element is added when the field has a mapping to a "element" (as part of a 1-N relationship).
+                </p>
+                <table>
+                    <tr>
+                        <th>Attribute</th>
+                        <th>Description</th>
+                        <th>Values</th>
+                    </tr>
+                    <tr>
+                        <td colspan="4">
+                            <b>Standard (JDO) Tags</b>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>mapped-by</td>
+                        <td>The name of the field at the other ("N") end of a relationship when this field is the "1" side of a 
+                            1-N relationship (for FK relationships). This performs the same function as specifying "mapped-by" on
+                            the &lt;field&gt; element.</td>
+                        <td/>
+                    </tr>
+                    <tr class="c">
+                        <td>column</td>
+                        <td>Name of the column (alternative to specifying it as a sub-element).</td>
+                        <td></td>
+                    </tr>
+                    <tr class="c">
+                        <td>delete-action</td>
+                        <td>Action to be performed when the owner object is deleted.
+                            This is to be specified when <a href="orm/constraints.html">defining foreign key information</a></td>
+                        <td>cascade | restrict | null | default | none</td>
+                    </tr>
+                    <tr class="c">
+                        <td>indexed</td>
+                        <td>Whether the element column should be indexed.
+                            This is to be specified when <a href="orm/constraints.html">defining index information</a></td>
+                        <td>true | false | unique</td>
+                    </tr>
+                    <tr class="c">
+                        <td>unique</td>
+                        <td>Whether the element column should be unique.
+                            This is to be specified when <a href="orm/constraints.html">defining unique key information</a></td>
+                        <td>true | false</td>
+                    </tr>
+                </table>
+                <br/>
+            </subsection>
+            
+            <!-- COLLECTION ELEMENT -->
+            <a name="collection"/>
+            <subsection name="Metadata for collection tag">
+                <p>
+                    These are attributes within the <b>&lt;collection&gt;</b> tag (jdo/package/class/field/collection). This is used
+                    to define the persistence of a Collection.
+                </p>
+                <table>
+                    <tr>
+                        <th>Attribute</th>
+                        <th>Description</th>
+                        <th>Values</th>
+                    </tr>
+                    <tr>
+                        <td colspan="4">
+                            <b>Standard (JDO) Tags</b>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>element-type</td>
+                        <td>The type of element stored in this Collection or array (fully qualified class).
+                            This is not required when the field is an array. It is also not required when the Collection is
+                            defined using JDK 1.5 generics.</td>
+                        <td/>
+                    </tr>
+                    <tr>
+                        <td>embedded-element</td>
+                        <td>Whether the elements of a collection or array-valued persistent field should be stored embedded or as 
+                            first-class objects. It's a hint for the JDO implementation to store, if possible, the elements of the 
+                            collection as part of the it instead of as their own instances in the datastore. See the &lt;embedded&gt;
+                            element for details on how to define the field mappings for the embedded element.</td>
+                        <td>true, false</td>
+                    </tr>
+                    <tr>
+                        <td>dependent-element</td>
+                        <td>Whether the elements of the collection are to be considered dependent on the owner object.</td>
+                        <td>true, <b>false</b></td>
+                    </tr>
+                    <tr>
+                        <td>serialized-element</td>
+                        <td>Whether the elements of a collection or array-valued persistent field should be stored serialised into
+                            a single column of the join table (where used).</td>
+                        <td>true, <b>false</b></td>
+                    </tr>
+                </table>
+                <a name="collectionextension"/>
+                <p>
+                    These are attributes within the <b>&lt;extension&gt;</b> tag (jdo/package/class/field/collection/extension).
+                </p>
+                <table>
+                    <tr>
+                        <th>Attribute</th>
+                        <th>Description</th>
+                        <th>Values</th>
+                    </tr>
+                    <tr>
+                        <td colspan="3">
+                            <b>Extension (JDO) Tags</b>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>cache</td>
+                        <td>Whether this SCO collection will be cached by DataNucleus or whether every access of the collection will go through to the 
+                            datastore. See also "datanucleus.cache.collections" in the 
+                            <a href="../persistence_properties.html">Persistence Properties Guide</a>. This MetaData
+                            attribute is used to override the value used by the <i>PersistenceManagerFactory</i></td>
+                        <td><b>true</b> | false</td>
+                    </tr>
+                    <tr>
+                        <td>cache-lazy-loading</td>
+                        <td>Whether objects from this SCO collection will be lazy loaded (loaded when required) or whether they should
+                            be loaded at initialisation. See also "datanucleus.cache.collections.lazy" in the 
+                            <a href="../persistence_properties.html">Persistence Properties Guide</a>.
+                            This MetaData attribute is used to override the value used by the <i>PersistenceManagerFactory</i></td>
+                        <td><b>true</b> | false</td>
+                    </tr>
+                    <tr>
+                        <td>comparator-name</td>
+                        <td>Defines the name of the comparator to use with SortedSet, TreeSet collections. The specified name
+                            is the name of the comparator class, which must have a default constructor. This extension is
+                            only used by SortedSet, TreeSet fields.</td>
+                        <td>Fully-qualified class name</td>
+                    </tr>
+                </table>
+                <br/>
+            </subsection>
+
+            <!-- MAP ELEMENT -->
+            <a name="map"/>
+            <subsection name="Metadata for map tag">
+                <p>
+                    These are attributes within the <b>&lt;map&gt;</b> tag (jdo/package/class/field/map). This is used
+                    to define the persistence of a Map.
+                </p>
+                <table>
+                    <tr>
+                        <th>Attribute</th>
+                        <th>Description</th>
+                        <th>Values</th>
+                    </tr>
+                    <tr>
+                        <td colspan="4">
+                            <b>Standard (JDO) Tags</b>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>key-type</td>
+                        <td>The type of key stored in this Map (fully qualified class).
+                            This is not required when the Map is defined using JDK 1.5 generics.</td>
+                        <td/>
+                    </tr>
+                    <tr>
+                        <td>embedded-key</td>
+                        <td>Whether the elements of a Map key field should be stored embedded or as first-class objects.</td>
+                        <td>true, false</td>
+                    </tr>
+                    <tr>
+                        <td>value-type</td>
+                        <td>The type of value stored in this Map (fully qualified class).
+                            This is not required when the Map is defined using JDK 1.5 generics.</td>
+                        <td/>
+                    </tr>
+                    <tr>
+                        <td>embedded-value</td>
+                        <td>Whether the elements of a Map value field should be stored embedded or as first-class objects.</td>
+                        <td>true, false</td>
+                    </tr>
+                    <tr>
+                        <td>dependent-key</td>
+                        <td>Whether the keys of the map are to be considered dependent on the owner object.</td>
+                        <td>true, <b>false</b></td>
+                    </tr>
+                    <tr>
+                        <td>dependent-value</td>
+                        <td>Whether the value of the map are to be considered dependent on the owner object.</td>
+                        <td>true, <b>false</b></td>
+                    </tr>
+                    <tr>
+                        <td>serialized-key</td>
+                        <td>Whether the keys of a map-valued persistent field should be stored serialised into
+                            a single column of the join table (where used).</td>
+                        <td>true, <b>false</b></td>
+                    </tr>
+                    <tr>
+                        <td>serialized-value</td>
+                        <td>Whether the values of a map-valued persistent field should be stored serialised into
+                            a single column of the join table (where used).</td>
+                        <td>true, <b>false</b></td>
+                    </tr>
+                </table>
+                <br/>
+
+                <a name="mapextension"/>
+                <p>
+                    These are attributes within the <b>&lt;extension&gt;</b> tag (jdo/package/class/field/map/extension).
+                </p>
+                <table>
+                    <tr>
+                        <th>Attribute</th>
+                        <th>Description</th>
+                        <th>Values</th>
+                    </tr>
+                    <tr>
+                        <td colspan="3">
+                            <b>Extension (JDO) Tags</b>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>cache</td>
+                        <td>Whether this SCO map will be cached by DataNucleus or whether every access of the map will go through to the 
+                            datastore. See also "datanucleus.cache.collections" in the 
+                            <a href="../persistence_properties.html">Persistence Properties Guide</a>. This MetaData
+                            attribute is used to override the value used by the <i>PersistenceManagerFactory</i></td>
+                        <td><b>true</b> | false</td>
+                    </tr>
+                    <tr>
+                        <td>cache-lazy-loading</td>
+                        <td>Whether objects from this SCO map will be lazy loaded (loaded when required) or whether they should
+                            be loaded at initialisation. See also "datanucleus.cache.collections.lazy" in the 
+                            <a href="../persistence_properties.html">Persistence Properties Guide</a>.
+                            This MetaData attribute is used to override the value used by the <i>PersistenceManagerFactory</i></td>
+                        <td><b>true</b> | false</td>
+                    </tr>
+                    <tr>
+                        <td>comparator-name</td>
+                        <td>Defines the name of the comparator to use with SortedMap, TreeMap maps. The specified name
+                            is the name of the comparator class, which must have a default constructor. This extension is
+                            only used by SortedMap, TreeMap fields.</td>
+                        <td>Fully-qualified class name</td>
+                    </tr>
+                </table>
+                <br/>
+            </subsection>
+
+            <!-- ARRAY ELEMENT -->
+            <a name="array"/>
+            <subsection name="Metadata for array tag">
+                <p>
+                    This is used to define the persistence of an array. DataNucleus provides support for many types of arrays,
+                    either serialised into a single column, using a join table, or via a foreign-key (for arrays of PC objects).
+                </p>
+                <table>
+                    <tr>
+                        <th>Attribute</th>
+                        <th>Description</th>
+                        <th>Values</th>
+                    </tr>
+                    <tr>
+                        <td colspan="4">
+                            <b>Standard (JDO) Tags</b>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>embedded-element</td>
+                        <td>Whether the array elements should be stored embedded (default = true for primitives, wrappers etc
+                            and false for PersistenceCapable objects).</td>
+                        <td>true, false</td>
+                    </tr>
+                    <tr>
+                        <td>serialized-element</td>
+                        <td>Whether the array elements should be stored serialised into a single column in the join table.</td>
+                        <td>true, <b>false</b></td>
+                    </tr>
+                    <tr>
+                        <td>dependent-element</td>
+                        <td>Whether the elements of the array are to be considered dependent on the owner object.</td>
+                        <td>true, <b>false</b></td>
+                    </tr>
+                </table>
+                <br/>
+            </subsection>
+
+            <!-- SEQUENCE ELEMENT -->
+            <a name="sequence"/>
+            <subsection name="Metadata for sequence tag">
+                <p>
+                    These are attributes within the <b>&lt;sequence&gt;</b> tag. This is used to denote
+                    a JDO datastore sequence.
+                </p>
+                <table>
+                    <tr>
+                        <th>Attribute</th>
+                        <th>Description</th>
+                        <th>Values</th>
+                    </tr>
+                    <tr>
+                        <td colspan="4">
+                            <b>Standard (JDO) Tags</b>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>name</td>
+                        <td>Symbolic name for the sequence for this package</td>
+                        <td/>
+                    </tr>
+                    <tr>
+                        <td>datastore-sequence</td>
+                        <td>Name of the sequence in the datastore</td>
+                        <td/>
+                    </tr>
+                    <tr>
+                        <td>factory-class</td>
+                        <td>Factory class for creating the sequence. Please refer to the 
+                            <a href="sequences.html">Sequence guide</a></td>
+                        <td/>
+                    </tr>
+                    <tr>
+                        <td>strategy</td>
+                        <td>Strategy to use for application of this sequence.</td>
+                        <td>nontransactional | contiguous | noncontiguous</td>
+                    </tr>
+                    <tr>
+                        <td>allocation-size</td>
+                        <td>Allocation size for the sequence for this package</td>
+                        <td>50</td>
+                    </tr>
+                    <tr>
+                        <td>initial-value</td>
+                        <td>Initial value for the sequence for this package</td>
+                        <td>1</td>
+                    </tr>
+                </table>
+
+                <a name="sequenceextension"/>
+                <p>
+                    These are attributes within the <b>&lt;extension&gt;</b> tag (jdo/package/class/sequence/extension). 
+                    These are for controlling the datastore sequences created by DataNucleus. Please refer to the documentation
+                    for the value generator being used for applicability
+                </p>
+                <table>
+                    <tr>
+                        <th>Attribute</th>
+                        <th>Description</th>
+                        <th>Values</th>
+                    </tr>
+                    <tr>
+                        <td colspan="3">
+                            <b>Extension (JDO) Tags</b>
+                        </td>
+                    </tr>
+                    <tr class="c">
+                        <td>sequence-catalog-name</td>
+                        <td>The catalog used to store sequences for use by value generators. See 
+                            <a href="value_generation.html">Value Generation</a>.
+                            Default catalog for the datastore will be used if not specified.</td>
+                        <td></td>
+                    </tr>
+                    <tr class="c">
+                        <td>sequence-schema-name</td>
+                        <td>The schema used to store sequences for use by value generators. See 
+                            <a href="value_generation.html">Value Generation</a>.
+                            Default schema for the datastore will be used if not specified.</td>
+                        <td></td>
+                    </tr>
+                    <tr class="c">
+                        <td>sequence-table-name</td>
+                        <td>The table used to store sequences for use by value generators. See 
+                            <a href="value_generation.html">Value Generation</a>.</td>
+                        <td><b>SEQUENCE_TABLE</b></td>
+                    </tr>
+                    <tr class="c">
+                        <td>sequence-name-column-name</td>
+                        <td>The column name in the sequence-table used to store the name of the sequence for use by value generators. 
+                            See <a href="value_generation.html">Value Generation</a>.</td>
+                        <td><b>SEQUENCE_NAME</b></td>
+                    </tr>
+                    <tr class="c">
+                        <td>sequence-nextval-column-name</td>
+                        <td>The column name in the sequence-table used to store the next value in the sequence for use by value 
+                            generators. See <a href="value_generation.html">Value Generation</a>.</td>
+                        <td><b>NEXT_VAL</b></td>
+                    </tr>
+                    <tr>
+                        <td>key-min-value</td>
+                        <td>The minimum key value for use by value generators. Keys lower than this will not be generated. 
+                            See <a href="value_generation.html">Value Generation</a>.</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>key-max-value</td>
+                        <td>The maximum key value for use by value generators. Keys higher than this will not be generated. 
+                            See <a href="value_generation.html">Value Generation</a>.</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>key-initial-value</td>
+                        <td>The starting value for use by value generators. Keys will start from this value when being generated. 
+                            See <a href="value_generation.html">Value Generation</a>.</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>key-cache-size</td>
+                        <td>The cache size for keys for use by value generators. The cache of keys will be constrained by this value. 
+                            See <a href="value_generation.html">Value Generation</a>.</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>key-database-cache-size</td>
+                        <td>The database cache size for keys for use by value generators. The cache of keys will be constrained by 
+                            this value. See <a href="value_generation.html">Value Generation</a>.</td>
+                        <td></td>
+                    </tr>
+                </table>
+                <br/>
+            </subsection>
+
+            <!-- FETCH-PLANP ELEMENT -->
+            <a name="fetch-plan"/>
+            <subsection name="Metadata for fetch-plan tag">
+                <p>
+                    These are attributes within the <b>&lt;fetch-plan&gt;</b> tag (jdo/fetch-plan). This element is 
+                    used to define fetch plans that are utilised at runtime, and are of particular use with queries.
+                    This element contains <b>fetch-group</b> sub-elements.
+                </p>
+                <table>
+                    <tr>
+                        <th>Attribute</th>
+                        <th>Description</th>
+                        <th>Values</th>
+                    </tr>
+                    <tr>
+                        <td colspan="4">
+                            <b>Standard (JDO) Tags</b>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>name</td>
+                        <td>Name of the fetch plan.</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>maxFetchDepth</td>
+                        <td>Max depth to fetch with this fetch plan</td>
+                        <td>1</td>
+                    </tr>
+                    <tr>
+                        <td>fetchSize</td>
+                        <td>Size to fetch with this fetch plan (for use with query result sets</td>
+                        <td>0</td>
+                    </tr>
+                </table>
+                <br/>
+            </subsection>
+
+            <!-- class extension ELEMENT -->
+            <a name="classextension"/>
+            <subsection name="Metadata for class extension tag">
+                <p>
+                    These are attributes within the <b>&lt;extension&gt;</b> tag (jdo/package/class/extension). 
+                    These are for controlling the class definition
+                </p>
+                <table>
+                    <tr>
+                        <th>Attribute</th>
+                        <th>Description</th>
+                        <th>Values</th>
+                    </tr>
+                    <tr>
+                        <td colspan="3">
+                            <b>Extension (JDO) Tags</b>
+                        </td>
+                    </tr>
+                    <tr class="c">
+                        <td>requires-table</td>
+                        <td>This is for use with a "nondurable" identity case and specifies whether the class requires
+                            a table/view in the datastore.</td>
+                        <td><b>true</b> | false</td>
+                    </tr>
+                    <tr class="c">
+                        <td>ddl-definition</td>
+                        <td>Definition of the TABLE SCHEMA to be used by the class.</td>
+                        <td><b>true</b> | false</td>
+                    </tr>
+                    <tr class="c">
+                        <td>ddl-imports</td>
+                        <td>Classes imported resolve macro identifiers in the definition of a RDBMS Table.</td>
+                        <td></td>
+                    </tr>
+                    <tr class="c">
+                        <td>mysql-engine-type</td>
+                        <td>"Engine Type" to use when creating the table for this class in MySQL.
+                            Refer to the MySQL documentation for ENGINE type (e.g INNODB, MEMORY, ISAM)</td>
+                        <td></td>
+                    </tr>
+                    <tr class="c">
+                        <td>view-definition</td>
+                        <td>Definition of the VIEW to be used by the class.
+                            Please refer to the <a href="../rdbms/views.html">RDBMS Views Guide</a> for details. If your view already
+                            exists, then specify this as " " and have the autoStart flags set to false.</td>
+                        <td></td>
+                    </tr>
+                    <tr class="c">
+                        <td>view-imports</td>
+                        <td>Classes imported resolve macro identifiers in the definition of a RDBMS View.
+                            Please refer to the <a href="../rdbms/views.html">RDBMS Views Guide</a> for details.</td>
+                        <td></td>
+                    </tr>
+                    <tr class="c">
+                        <td>read-only</td>
+                        <td>Whether objects of this type are read-only. Setting this to true will prevent any
+                            insert/update/delete of this type</td>
+                        <td>true | <b>false</b></td>
+                    </tr>
+                </table>
+                <br/>
+
+            </subsection>
+
+            <!-- EXTENSION ELEMENT -->
+            <a name="extension"/>
+            <subsection name="Metadata for extension tag">
+                <p>
+                    These are attributes within the <b>&lt;extension&gt;</b> tag. This is used to denote
+                    a DataNucleus extension to JDO.
+                </p>
+                <table>
+                    <tr>
+                        <th>Attribute</th>
+                        <th>Description</th>
+                        <th>Values</th>
+                    </tr>
+                    <tr>
+                        <td colspan="4">
+                            <b>Standard (JDO) Tags</b>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>vendor-name</td>
+                        <td>Name of the vendor. For DataNucleus we use the name "datanucleus" (lowercase).</td>
+                        <td/>
+                    </tr>
+                    <tr>
+                        <td>key</td>
+                        <td>Key of the extension property</td>
+                        <td/>
+                    </tr>
+                    <tr>
+                        <td>value</td>
+                        <td>Value of the extension property</td>
+                        <td/>
+                    </tr>
+                </table>
+                <br/>
+            </subsection>
+        </section>
+    </body>
+</document>

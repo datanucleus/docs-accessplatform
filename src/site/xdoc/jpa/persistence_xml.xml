@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<document xmlns="http://maven.apache.org/XDOC/2.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+    <properties>
+        <title>JPA - persistence.xml</title>
+    </properties>
+    <body>
+        <section name="JPA : Metadata - persistence.xml">
+            <p> 
+                The file <i>persistence.xml</i> exists to define the various <i>persistence-unit</i>s that are to be available
+                for persistence using JPA. Each <i>persistence-unit</i> defines a set of classes and their mapping characteristics
+                when persisting them. The file <i>persistence.xml</i> has to match the format defined by the XSD for that file
+            </p>
+            <p>
+                Here is an example valid for <b>persistence.xml</b> files with XSD specification
+            </p>
+            <source><![CDATA[
+<?xml version="1.0" encoding="UTF-8" ?>
+<persistence xmlns="http://xmlns.jcp.org/xml/ns/persistence"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence
+        http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd" version="2.1">
+    ...
+</persistence>]]></source>
+            <p>
+                Your MetaData should match the <a href="http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd" target="_blank">XSD</a> 
+                specification.
+            </p>
+        </section>
+    </body>
+</document>

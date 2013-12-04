@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<document xmlns="http://maven.apache.org/XDOC/2.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+    <properties>
+        <title>JDO 1-N Relationships</title>
+    </properties>
+
+    <body>
+        <section name="JDO : 1-N Relationships">
+            <p>
+				You have a 1-N (one to many) when you have one object of a class that has a Collection/Map of 
+                objects of another class. In the <i>java.util</i> package there are an assortment of possible 
+                collection/map classes and they all have subtly different behaviour with respect to allowing nulls,
+                allowing duplicates, providing ordering, etc. There are two ways in which you can represent a
+                collection or map in a datastore : <b>Join Table</b> (where a join table is used to provide the 
+                relationship mapping between the objects), and <b>Foreign-Key</b> (where a foreign key is placed 
+                in the table of the object contained in the collection or map.
+            </p>
+            <p>
+                We split our documentation based on what type of collection/map you are using.
+            </p>
+            <ul>
+                <li><a href="one_to_many_collection.html">1-N using Collection types</a></li>
+                <li><a href="one_to_many_set.html">1-N using Set types</a></li>
+                <li><a href="one_to_many_list.html">1-N using List type</a></li>
+                <li><a href="one_to_many_map.html">1-N using Map type</a></li>
+            </ul>
+            <br/>
+        </section>
+    </body>
+</document>

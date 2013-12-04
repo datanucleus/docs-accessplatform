@@ -1,0 +1,610 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<document xmlns="http://maven.apache.org/XDOC/2.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+    <properties>
+        <title>JDO Tutorial using RDBMS</title>
+    </properties>
+
+    <body>
+        <section name="DataNucleus - Tutorial for JDO using RDBMS">
+            <a href="https://sourceforge.net/projects/datanucleus/files/datanucleus-samples/">
+                <img src="../../images/download.png" alt="Download" border="0"/>
+            </a>
+            <a href="https://github.com/datanucleus/tutorial-jdo">
+                <img src="../../images/source_code.png" alt="Source Code" border="0"/>
+            </a>
+        
+            <subsection name="Background">
+                <p>
+                    An application can be JDO-enabled via many routes depending on the development process of 
+                    the project in question. For example the project could use Eclipse as the IDE for 
+                    developing classes. In that case the project would typically use the DataNucleus Eclipse 
+                    plugin. Alternatively the project could use Ant, <a href="../maven.html">Maven</a> or some other 
+                    build tool. In this case this tutorial should be used as a guiding way for using DataNucleus in 
+                    the application. The JDO process is quite straightforward.
+                </p>
+                <ol>
+                    <li><a href="#step0">Prerequisite</a> : Download DataNucleus AccessPlatform</li>
+                    <li><a href="#step1">Step 1</a> : Define their persistence definition using Meta-Data.</li>
+                    <li><a href="#step2">Step 2</a> : Define the "persistence-unit"</li>
+                    <li><a href="#step3">Step 3</a> : Compile your classes, and instrument them (using the 
+                        DataNucleus enhancer).</li> 
+                    <li><a href="#step4">Step 4</a> : Write your code to persist your objects within the DAO layer.</li>
+                    <li><a href="#step5">Step 5</a> : Run your application.</li>
+                </ol>
+                <p>
+                    The tutorial guides you through this. You can obtain the code referenced in this tutorial from
+                    <a href="https://sourceforge.net/projects/datanucleus/files/datanucleus-samples/" 
+                    target="_blank">SourceForge</a> (one of the files entitled "datanucleus-samples-jdo-tutorial-*").
+                </p>
+                <br/>
+            </subsection>
+
+            <a name="step0"/>
+            <subsection name="Prerequisite : Download DataNucleus AccessPlatform">
+                <p>
+                    You can download DataNucleus in many ways, but the simplest is to download the distribution
+                    zip appropriate to your datastore. You can do this from
+                    <a href="https://sourceforge.net/projects/datanucleus/files/datanucleus-accessplatform/" 
+                       target="_blank">SourceForge DataNucleus download page</a>.
+                    When you open the zip you will find DataNucleus jars in the <i>lib</i> directory, and
+                    dependency jars in the <i>deps</i> directory.
+                </p>
+                <br/>
+            </subsection>
+
+            <a name="step1"/>
+            <subsection name="Step 1 : Take your model classes and mark which are persistable">
+                <p>
+                    For our tutorial, say we have the following classes representing a store of products for sale.
+                </p>
+                <source><![CDATA[
+package org.datanucleus.samples.jdo.tutorial;
+
+public class Inventory
+{
+    String name = null;
+    Set<Product> products = new HashSet();
+
+    public Inventory(String name)
+    {
+        this.name = name;
+    }
+
+    public Set<Product> getProducts() {return products;}
+}]]></source>
+                <source><![CDATA[
+package org.datanucleus.samples.jdo.tutorial;
+
+public class Product
+{
+    long id;
+    String name = null;
+    String description = null;
+    double price = 0.0;
+
+    public Product(String name, String desc, double price)
+    {
+        this.name = name;
+        this.description = desc;
+        this.price = price;
+    }
+}]]></source>
+<source><![CDATA[
+package org.datanucleus.samples.jdo.tutorial;
+
+public class Book extends Product
+{
+    String author=null;
+    String isbn=null;
+    String publisher=null;
+
+    public Book(String name, String desc, double price, String author, 
+                String isbn, String publisher)
+    {
+        super(name,desc,price);
+        this.author = author;
+        this.isbn = isbn;
+        this.publisher = publisher;
+    }
+}]]></source>
+                <p>
+                    So we have a relationship (Inventory having a set of Products), and inheritance (Product-Book).
+                    Now we need to be able to persist objects of all of these types, so we need to <b>define persistence
+                    for them</b>. There are many things that you can define when deciding how to persist objects of a type
+                    but the essential parts are
+                </p>
+                <ul>
+                    <li>Mark the class as <i>PersistenceCapable</i> so it is visible to the persistence mechanism</li>
+                    <li>Identify which field(s) represent the identity of the object (or use datastore-identity
+                    if no field meets this requirement).</li>
+                </ul>
+                <p>
+                    So this is what we do now. Note that we could define persistence using XML metadata, annotations or
+                    via the JDO API. In this tutorial we will use annotations.
+                </p>
+                <source><![CDATA[
+package org.datanucleus.samples.jdo.tutorial;
+
+@PersistenceCapable
+public class Inventory
+{
+    @PrimaryKey
+    String name = null;
+
+    ...
+}]]></source>
+                <source><![CDATA[
+package org.datanucleus.samples.jdo.tutorial;
+
+@PersistenceCapable
+public class Product
+{
+    @PrimaryKey
+    @Persistent(valueStrategy=IdGeneratorStrategy.INCREMENT)
+    long id;
+
+    ...
+}]]></source>
+<source><![CDATA[
+package org.datanucleus.samples.jdo.tutorial;
+
+@PersistenceCapable
+public class Book extends Product
+{
+    ...
+}]]></source>
+                <p>
+                    Note that we mark each class that can be persisted with <i>@PersistenceCapable</i>
+                    and their primary key field(s) with @PrimaryKey. In addition we defined a <i>valueStrategy</i>
+                    for Product field <i>id</i> so that it will have its values generated automatically.
+                    In this tutorial we are using <u>application identity</u> which means that all objects of 
+                    these classes will have their identity defined by the primary key field(s).
+                    You can read more in
+                    <a href="../datastore_identity.html">datastore identity</a> and 
+                    <a href="../application_identity.html">application identity</a> when designing your systems persistence.
+                </p>
+                <br/>
+            </subsection>
+
+			<a name="step2"/>
+            <subsection name="Step 2 : Define the 'persistence-unit'">
+                <p>
+                    Writing your own classes to be persisted is the start point, but you now need to define which 
+                    objects of these classes are actually persisted. You do this via a file
+                    <i>META-INF/persistence.xml</i> at the root of the CLASSPATH. Like this
+                </p>
+                <source><![CDATA[
+<?xml version="1.0" encoding="UTF-8" ?>
+<persistence xmlns="http://java.sun.com/xml/ns/persistence"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://java.sun.com/xml/ns/persistence
+        http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd" version="2.0">
+
+    <!-- JDO tutorial "unit" -->
+    <persistence-unit name="Tutorial">
+        <class>org.datanucleus.samples.jdo.tutorial.Inventory</class>
+        <class>org.datanucleus.samples.jdo.tutorial.Product</class>
+        <class>org.datanucleus.samples.jdo.tutorial.Book</class>
+        <exclude-unlisted-classes/>
+        <properties>
+            <property name="javax.jdo.option.ConnectionURL" value="jdbc:hsqldb:mem:datanucleus"/>
+            <property name="javax.jdo.option.ConnectionDriverName" value="org.hsqldb.jdbcDriver"/>
+            <property name="javax.jdo.option.ConnectionUserName" value="sa"/>
+            <property name="javax.jdo.option.ConnectionPassword" value=""/>
+            <property name="datanucleus.autoCreateSchema" value="true"/>
+            <property name="datanucleus.validateTables" value="false"/>
+            <property name="datanucleus.validateConstraints" value="false"/>
+        </properties>
+    </persistence-unit>
+</persistence>]]></source>
+                 <p>
+                     Note that you could equally use a properties file to define the persistence with JDO, but
+                     in this tutorial we use <i>persistence.xml</i> for convenience.
+                 </p>
+            </subsection>
+
+			<a name="step3"/>
+            <subsection name="Step 3 : Enhance your classes">
+                <p>
+                    JDO relies on the classes that you want to persist implementing <i>PersistenceCapable</i>. 
+                    You could write your classes manually to do this but this would be laborious. Alternatively you 
+                    can use a post-processing step to compilation that "enhances" your compiled classes, adding on the 
+                    necessary extra methods to make them <i>PersistenceCapable</i>. There are several ways
+                    to do this, most notably at post-compile, or at runtime. We use the post-compile step in this tutorial.
+                    <b>DataNucleus JDO</b> provides its own byte-code enhancer for instrumenting/enhancing your classes
+                    (in <i>datanucleus-core</i>) and this is included in the DataNucleus AccessPlatform zip file prerequisite.
+                </p>
+                <p>
+                    To understand on how to invoke the enhancer you need to visualise where the various 
+                    source and jdo files are stored
+                </p>
+                <source>
+src/main/java/org/datanucleus/samples/jdo/tutorial/Book.java
+src/main/java/org/datanucleus/samples/jdo/tutorial/Inventory.java
+src/main/java/org/datanucleus/samples/jdo/tutorial/Product.java
+src/main/resources/META-INF/persistence.xml
+
+target/classes/org/datanucleus/samples/jdo/tutorial/Book.class
+target/classes/org/datanucleus/samples/jdo/tutorial/Inventory.class
+target/classes/org/datanucleus/samples/jdo/tutorial/Product.class
+
+[when using Ant]
+lib/jdo-api.jar
+lib/datanucleus-core.jar
+lib/datanucleus-api-jdo.jar</source>
+				<p>
+                    The first thing to do is compile your domain/model classes. You can do this in any way 
+                    you wish, but the downloadable JAR provides an Ant task, and a Maven2 project to do this 
+                    for you.
+				</p>
+                <source>
+Using Ant :
+ant compile
+
+Using Maven2 :
+mvn compile</source>
+                <p>
+                    To enhance classes using the DataNucleus Enhancer, you need to invoke a command something
+                    like this from the root of your project.
+                </p>
+                <source>
+Using Ant :
+ant enhance
+
+Using Maven : (this is usually done automatically after the "compile" goal)
+mvn datanucleus:enhance
+
+Manually on Linux/Unix :
+java -cp target/classes:lib/datanucleus-core.jar:lib/datanucleus-api-jdo.jar:
+         lib/jdo-api.jar
+     org.datanucleus.enhancer.DataNucleusEnhancer -pu Tutorial
+
+Manually on Windows :
+java -cp target\classes;lib\datanucleus-core.jar;lib\datanucleus-api-jdo.jar;
+         lib\jdo-api.jar
+     org.datanucleus.enhancer.DataNucleusEnhancer -pu Tutorial
+
+[Command shown on many lines to aid reading - should be on single line]</source>
+                <p>
+                    This command enhances the .class files that have @PersistenceCapable annotations.
+                    If you accidentally omitted this step, at the point of running your application and 
+                    trying to persist an object, you would get a <i>ClassNotPersistenceCapableException</i>
+                    thrown. The use of the enhancer is documented in more detail in the 
+                    <a href="../enhancer.html">Enhancer Guide</a>. The output of this step are a set of 
+                    class files that represent <i>PersistenceCapable</i> classes.
+                </p>
+                <br/>
+            </subsection>
+
+			<a name="step4"/>
+            <subsection name="Step 4 : Write the code to persist objects of your classes">
+                <p>
+                    Writing your own classes to be persisted is the start point, but you now need to define 
+                    which objects of these classes are actually persisted, and when. Interaction with the 
+                    persistence framework of JDO is performed via a PersistenceManager. This provides methods
+                    for persisting of objects, removal of objects, querying for persisted objects, etc. 
+                    This section gives examples of typical scenarios encountered in an application.
+                </p>
+                <p>
+                    The initial step is to obtain access to a PersistenceManager, which you do as follows
+                </p>
+                <source>
+PersistenceManagerFactory pmf = JDOHelper.getPersistenceManagerFactory("Tutorial");
+PersistenceManager pm = pmf.getPersistenceManager();</source>
+                <p>
+                    Now that the application has a PersistenceManager it can persist objects. 
+                    This is performed as follows
+                </p>
+                <source>
+Transaction tx=pm.currentTransaction();
+try
+{
+    tx.begin();
+    Inventory inv = new Inventory("My Inventory");
+    Product product = new Product("Sony Discman", "A standard discman from Sony", 49.99);
+    inv.getProducts().add(product);
+    pm.makePersistent(inv);
+    tx.commit();
+}
+finally
+{
+    if (tx.isActive())
+    {
+        tx.rollback();
+    }
+    pm.close();
+}</source>
+                <p>
+                    Note the following
+                </p>
+                <ul>
+                    <li>We have persisted the <i>Inventory</i> but since this referenced the <i>Product</i>
+                    then that is also persisted.</li>
+                    <li>The <i>finally</i> step is important to tidy up any connection to the datastore, and
+                    close the PersistenceManager</li>
+                </ul>
+                <p> 
+                    If you want to retrieve an object from persistent storage, something like this will give 
+                    what you need. This uses a "Query", and retrieves all Product objects that have a price
+                    below 150.00, ordering them in ascending price order.
+                </p>
+                <source><![CDATA[
+Transaction tx = pm.currentTransaction();
+try
+{
+    tx.begin();
+
+    Query q = pm.newQuery("SELECT FROM " + Product.class.getName() + 
+                          " WHERE price < 150.00 ORDER BY price ASC");
+    List<Product> products = (List<Product>)q.execute();
+    Iterator<Product> iter = products.iterator();
+    while (iter.hasNext())
+    {
+        Product p = iter.next();
+
+        ... (use the retrieved objects)
+    }
+
+    tx.commit();
+}
+finally
+{
+    if (tx.isActive())
+    {
+        tx.rollback();
+    }
+
+    pm.close();
+}]]></source>
+                <p>
+                    If you want to delete an object from persistence, you would perform an operation 
+                    something like
+                </p>
+                <source><![CDATA[
+Transaction tx = pm.currentTransaction();
+try
+{
+    tx.begin();
+
+    ... (retrieval of objects etc)
+
+    pm.deletePersistent(product);
+    
+    tx.commit();
+}
+finally
+{
+    if (tx.isActive())
+    {
+        tx.rollback();
+    }
+
+    pm.close();
+}]]></source>
+                <p>
+                    Clearly you can perform a large range of operations on objects. 
+                    We can't hope to show all of these here. Any good JDO book will provide many examples.
+                </p>
+                <br/>
+            </subsection>
+
+			<a name="step5"/>
+            <subsection name="Step 5 : Run your application">
+                <p>
+                    To run your JDO-enabled application will require a few things to be available in the 
+                    Java CLASSPATH, these being
+                </p>
+                <ul>
+                    <li>Any persistence.xml file for the PersistenceManagerFactory creation</li>
+                    <li>Any JDO XML MetaData files for your persistable classes (not used in this example)</li>
+                    <li>Any JDBC driver classes needed for accessing your datastore</li>
+                    <li>The JDO API JAR (defining the JDO interface)</li>
+                    <li>The <b>DataNucleus Core</b>, <b>DataNucleus JDO API</b> and <b>DataNucleus RDBMS</b> JARs</li>
+                </ul>
+                <p> After that it is simply a question of starting your application and all should be taken care 
+                    of. You can access the DataNucleus Log file by specifying the 
+                    <a href="../../logging.html">logging</a> 
+                    configuration properties, and any messages from DataNucleus will be output in the normal way.
+                    The DataNucleus log is a very powerful way of finding problems since it can list all SQL 
+                    actually sent to the datastore as well as many other parts of the persistence process.
+                </p>
+                <source>
+Using Ant (you need the included "persistence.xml" to specify your database)
+ant run
+
+
+Using Maven:
+mvn exec:java
+
+
+Manually on Linux/Unix :
+java -cp lib/jdo-api.jar:lib/datanucleus-core.jar:lib/datanucleus-rdbms.jar:
+         lib/datanucleus-api-jdo.jar:lib/{jdbc-driver}.jar:target/classes/:. 
+             org.datanucleus.samples.jdo.tutorial.Main
+
+
+Manually on Windows :
+java -cp lib\jdo-api.jar;lib\datanucleus-core.jar;lib\datanucleus-rdbms.jar;
+         lib\datanucleus-api-jdo.jar;lib\{jdbc-driver}.jar;target\classes\;. 
+             org.datanucleus.samples.jdo.tutorial.Main
+
+
+Output :
+
+DataNucleus Tutorial
+=============
+Persisting products
+Product and Book have been persisted
+
+Retrieving Extent for Products
+>  Product : Sony Discman [A standard discman from Sony]
+>  Book : JRR Tolkien - Lord of the Rings by Tolkien
+
+Executing Query for Products with price below 150.00
+>  Book : JRR Tolkien - Lord of the Rings by Tolkien
+
+Deleting all products from persistence
+Deleted 2 products
+
+End of Tutorial</source>
+            </subsection>
+        </section>
+
+        <section name="Part 2 : Next steps">
+            <a name="part2"/>
+            <p>
+                In the above simple tutorial we showed how to employ JDO and persist objects to an RDBMS.
+                Obviously this just scratches the surface of what you can do, and to use JDO requires minimal
+                work from the user. In this second part we show some further things that you are likely to want to do.
+            </p>
+            <ol>
+                <li><a href="#step6">Step 6</a> : Controlling the schema.</li>
+                <li><a href="#step7">Step 7</a> : Generate the database tables where your classes are to be persisted
+                    using SchemaTool.</li>
+            </ol>
+
+			<a name="step6"/>
+			<subsection name="Step 6 : Controlling the schema">
+                <p>
+                    In the above simple tutorial we didn't look at controlling the schema generated for these classes.
+                    Now let's pay more attention to this part by defining XML Metadata for the schema.
+                </p>
+                <source><![CDATA[
+<?xml version="1.0"?>
+<!DOCTYPE orm PUBLIC 
+    "-//Sun Microsystems, Inc.//DTD Java Data Objects Metadata 2.0//EN" 
+    "http://java.sun.com/dtd/orm_2_0.dtd">
+<orm>
+    <package name="org.datanucleus.samples.jdo.tutorial">
+        <class name="Inventory" identity-type="datastore" table="INVENTORIES">
+            <inheritance strategy="new-table"/>
+            <field name="name">
+                <column name="INVENTORY_NAME" length="100" jdbc-type="VARCHAR"/>
+            </field>
+            <field name="products">
+                <join/>
+            </field>
+        </class>
+
+        <class name="Product" identity-type="datastore" table="PRODUCTS">
+            <inheritance strategy="new-table"/>
+            <field name="name">
+                <column name="PRODUCT_NAME" length="100" jdbc-type="VARCHAR"/>
+            </field>
+            <field name="description">
+                <column length="255" jdbc-type="VARCHAR"/>
+            </field>
+        </class>
+
+        <class name="Book" identity-type="datastore" table="BOOKS">
+            <inheritance strategy="new-table"/>
+            <field name="isbn">
+                <column length="20" jdbc-type="VARCHAR"/>
+            </field>
+            <field name="author">
+                <column length="40" jdbc-type="VARCHAR"/>
+            </field>
+            <field name="publisher">
+                <column length="40" jdbc-type="VARCHAR"/>
+            </field>
+        </class>
+    </package>
+</orm>]]></source>
+                <p>
+                    With JDO you have various options as far as where this XML MetaData files is placed in 
+                    the file structure, and whether they refer to a single class, or multiple classes in a 
+                    package. With the above example, we have both classes specified in the same file 
+                    <i>package-hsql.orm</i>, in the package these classes are in, since we want to persist
+                    to HSQL.
+                </p>
+
+            </subsection>
+
+            <a name="step7"/>
+            <subsection name="Step 7 : Generate any schema required for your domain classes">
+                <p>
+                    This step is optional, depending on whether you have an existing database schema. 
+                    If you haven't, at this point you can use the 
+                    <a href="../schema.html#schematool">SchemaTool</a> to generate the tables where these 
+                    domain objects will be persisted. DataNucleus SchemaTool is a command line utility (it 
+                    can be invoked from Maven2/Ant in a similar way to how the Enhancer is invoked). 
+                    The first thing that you need is to update the <i>persistence.xml</i> file with your 
+                    database details. Here we have a sample file (for HSQLDB)
+                </p>
+                <source><![CDATA[
+<?xml version="1.0" encoding="UTF-8" ?>
+<persistence xmlns="http://java.sun.com/xml/ns/persistence"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://java.sun.com/xml/ns/persistence 
+        http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd" version="2.0">
+
+    <!-- Tutorial "unit" -->
+    <persistence-unit name="Tutorial">
+        <class>org.datanucleus.samples.jdo.tutorial.Inventory</class>
+        <class>org.datanucleus.samples.jdo.tutorial.Product</class>
+        <class>org.datanucleus.samples.jdo.tutorial.Book</class>
+        <exclude-unlisted-classes/>
+        <properties>
+            <property name="javax.jdo.option.ConnectionURL" value="jdbc:hsqldb:mem:datanucleus"/>
+            <property name="javax.jdo.option.ConnectionDriverName" value="org.hsqldb.jdbcDriver"/>
+            <property name="javax.jdo.option.ConnectionUserName" value="sa"/>
+            <property name="javax.jdo.option.ConnectionPassword" value=""/>
+            <property name="datanucleus.autoCreateSchema" value="true"/>
+            <property name="datanucleus.validateTables" value="false"/>
+            <property name="datanucleus.validateConstraints" value="false"/>
+        </properties>
+    </persistence-unit>
+
+</persistence>]]></source>
+                <p>
+                    Now we need to run DataNucleus SchemaTool. For our case above you would do 
+                    something like this
+                </p>
+                <source>
+Using Ant :
+ant createschema
+
+
+Using Maven2 :
+mvn datanucleus:schema-create
+
+
+Manually on Linux/Unix :
+java -cp target/classes:lib/datanucleus-core.jar:lib/datanucleus-rdbms.jar:
+         lib/datanucleus-jdo-api.jar:lib/jdo-api.jar:lib/{jdbc_driver.jar}
+     org.datanucleus.store.schema.SchemaTool
+     -create -pu Tutorial
+
+Manually on Windows :
+java -cp target\classes;lib\datanucleus-core.jar;lib\datanucleus-rdbms.jar;
+         lib\datanucleus-api-jdo.jar;lib\jdo-api.jar;lib\{jdbc_driver.jar}
+     org.datanucleus.store.schema.SchemaTool
+     -create -pu Tutorial
+
+[Command shown on many lines to aid reading. Should be on single line]</source>
+				<p>
+                    This will generate the required tables, indexes, and foreign keys for the classes 
+                    defined in the JDO Meta-Data file. The generated schema in this case will be as follows
+                </p>
+                <img src="../../images/jdo/tutorial_rdbms_schema.gif" border="0" alt=""/>
+                <br/>
+                <br/>
+			</subsection>
+
+            <subsection name="Any questions?">
+                <p>
+                    If you have any questions about this tutorial and how to develop applications for use 
+                    with <b>DataNucleus</b> please read the online documentation since answers are to be 
+                    found there. If you don't find what you're looking for go to our 
+                    <a href="http://forum.datanucleus.org" target="_top">Forums</a>. 
+                </p>
+                <p>
+                    <b>The DataNucleus Team</b>
+                </p>
+            </subsection>
+        </section>
+
+    </body>
+</document>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<document xmlns="http://maven.apache.org/XDOC/2.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+    <properties>
+        <title>JavaEE Deployment for JPA</title>
+    </properties>
+
+    <body>
+        <section name="JPA : Usage of DataNucleus within a JavaEE environment">
+            <p>
+                JPA is designed to allow easy deployment into a JavaEE container. The JavaEE container takes care
+                of integration of the JPA implementation (DataNucleus), so there is no JCA connector required.
+            </p>
+            <p>
+                Key points to remember when deploying your JPA application to use DataNucleus under JavaEE
+            </p>
+            <ul>
+                <li>Define a JTA datasource for your persistence operations</li>
+                <li>Define a non-JTA datasource for your schema and sequence operations. These are cross-EntityManager
+                    and so need their own datasource that is not affected by transactions.</li>
+            </ul>
+            <p>
+                Individual guides for specific JavaEE servers are listed below. If you have a guide for
+                some other server, please notify us via the DataNucleus forum and it will be added to this list.
+            </p>
+            <ul>
+                <li><a href="http://www.datanucleus.org/servlet/wiki/pages/viewpage.action?pageId=27688962">JBoss 7.1</a></li>
+            </ul>
+        </section>
+    </body>
+</document>

@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<document xmlns="http://maven.apache.org/XDOC/2.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+    <properties>
+        <title>JDO Secondary Tables</title>
+    </properties>
+
+    <body>
+        <section name="JDO : Secondary Tables">
+            <table><tr><td>Applicable to RDBMS</td></tr></table>
+            <p>
+                The standard JDO persistence strategy is to persist an object of a class into its own table. 
+                In some situations you may wish to map the class to a primary table as well as one or more secondary 
+                tables. For example when you have a Java class that could have been split up into 2 separate classes 
+                yet, for whatever reason, has been written as a single class, however you have a legacy datastore and 
+                you need to map objects of this class into 2 tables. JDO allows persistence of fields of a class 
+                into <i>secondary</i> tables.
+            </p>
+            <p>
+                The process for managing this situation is best demonstrated with an example. Let's suppose we have 
+                a class that represents a <b>Printer</b>. The <b>Printer</b> class contains within it various 
+                attributes of the toner cartridge. So we have
+            </p>
+            <source><![CDATA[
+package com.mydomain.samples.secondarytable;
+
+public class Printer
+{
+    long id;
+    String make;
+    String model;
+
+    String tonerModel;
+    int tonerLifetime;
+
+    /**
+     * Constructor.
+     * @param make Make of printer (e.g Hewlett-Packard)
+     * @param model Model of Printer (e.g LaserJet 1200L)
+     * @param tonerModel Model of toner cartridge
+     * @param tonerLifetime lifetime of toner (number of prints)
+     */
+    public Printer(String make, String model, String tonerModel, int tonerLifetime)
+    {
+        this.make = make;
+        this.model = model;
+        this.tonerModel = tonerModel;
+        this.tonerLifetime = tonerLifetime;
+    }
+
+}]]></source>
+            <p>
+                Now we have a database schema that has 2 tables (PRINTER and PRINTER_TONER) in which to store objects 
+                of this class. So we need to tell DataNucleus to perform this mapping. So we define the MetaData for 
+                the <b>Printer</b> class like this
+            </p>
+            <source><![CDATA[
+<class name="Printer" table="PRINTER">
+    <join table="PRINTER_TONER" column="PRINTER_REFID"/>
+
+    <field name="id" primary-key="true">
+        <column name="PRINTER_ID"/>
+    </field>
+    <field name="make">
+        <column name="MAKE"/>
+    </field>
+    <field name="model">
+        <column name="MODEL"/>
+    </field>
+    <field name="tonerModel" table="PRINTER_TONER">
+        <column name="MODEL"/>
+    </field>
+    <field name="tonerLifetime" table="PRINTER_TONER">
+        <column name="LIFETIME"/>
+    </field>
+</class>]]></source>
+            <p>
+                So here we have defined that objects of the <b>Printer</b> class will be stored in the primary 
+                table PRINTER. In addition we have defined that some fields are stored in the table PRINTER_TONER. 
+                This is achieved by way of
+            </p>
+            <ul>
+                <li>We will store <i>tonerModel</i> and <i>tonerLifetime</i> in the table PRINTER_TONER. This is 
+                    achieved by using &lt;field <b>table="PRINTER_TONER"</b>&gt;</li>
+                <li>The table PRINTER_TONER will use a primary key column called PRINTER_REFID. This is achieved by 
+                    using &lt;join table="PRINTER_TONER" column="PRINTER_REFID"/&gt;</li>
+            </ul>
+            <p>
+                You could equally specify this using annotations
+            </p>
+            <source><![CDATA[
+@PersistenceCapable
+@Join(name="PRINTER_TONER", column="PRINTER_REFID")
+public class Printer
+{
+    @Persistent(primaryKey="true", column="PRINTER_ID")
+    long id;
+    @Column(name="MAKE")
+    String make;
+    @Column(name="MODEL")
+    String model;
+
+    @Persistent(table="PRINTER_TONER", column="MODEL")
+    String tonerModel;
+    @Persistent(table="PRINTER_TONER", column="LIFETIME")
+    int tonerLifetime;
+    ...
+}]]></source>
+            <p>
+                This results in the following database tables :-
+            </p>
+            <img src="../../images/orm/secondarytables_db.gif" alt="Secondary Tables database" border="0"/><br/>
+            <p>
+                So we now have our primary and secondary database tables. The primary key of the PRINTER_TONER table 
+                serves as a foreign key to the primary class. Whenever we persist a <b>Printer</b> object a row will
+                be inserted into <u>both</u> of these tables.
+            </p>
+
+            <subsection name="Specifying the primary key">
+                <p>
+                    You saw above how we defined the column name that will be the primary key of the secondary table 
+                    (the PRINTER_REFID column). What we didn't show is how to specify the name of the primary key 
+                    constraint to be generated. To do this you change the MetaData to
+                </p>
+                <source><![CDATA[
+<class name="Printer" identity-type="datastore" table="PRINTER">
+    <join table="PRINTER_TONER" column="PRINTER_REFID">
+        <primary-key name="TONER_PK"/>
+    </join>
+
+    <field name="id" primary-key="true">
+        <column name="PRINTER_ID"/>
+    </field>
+    <field name="make">
+        <column name="MAKE"/>
+    </field>
+    <field name="model">
+        <column name="MODEL"/>
+    </field>
+    <field name="tonerModel" table="PRINTER_TONER">
+        <column name="MODEL"/>
+    </field>
+    <field name="tonerLifetime" table="PRINTER_TONER">
+        <column name="LIFETIME"/>
+    </field>
+</class>]]></source>
+                <p>
+                    So this will create the primary key constraint with the name "TONER_PK".
+                </p>
+                <p>See also :-</p>
+                <ul>
+                    <li><a href="../metadata_xml.html#primary-key">MetaData reference for &lt;primary-key&gt; element</a></li>
+                    <li><a href="../metadata_xml.html#join">MetaData reference for &lt;join&gt; element</a></li>
+                    <li><a href="../annotations.html#PrimaryKey">Annotations reference for @PrimaryKey</a></li>
+                    <li><a href="../annotations.html#Join">Annotations reference for @Join</a></li>
+                    <li><a href="../../guides/jdo/orm_secondary_table.html">Secondary Table tutorial</a></li>
+                </ul>
+            </subsection>
+        </section>
+
+        <section name="Worked Example">
+            <p>
+                The above process can be seen with an example
+            </p>
+            <source><![CDATA[
+public class Printer
+{
+    String make;
+    String model;
+    String tonerModel;
+    int tonerLifetime;
+
+    public Printer(String make, String model, String tonerModel, int tonerLife)
+    {
+        this.make = make;
+        this.model = model;
+        this.tonerModel = tonerModel;
+        this.tonerLifetime = tonerLife;
+    }
+
+    ...
+}]]></source>
+            <p>
+                We now need to specify which fields we want to store in any secondary tables. 
+                To do this we can define the metadata like this
+            </p>
+            <source><![CDATA[
+<?xml version="1.0"?>
+<!DOCTYPE jdo PUBLIC
+    "-//Sun Microsystems, Inc.//DTD Java Data Objects Metadata 2.0//EN" 
+    "http://java.sun.com/dtd/jdo_2_0.dtd">
+<jdo>
+    <package name="mydomain">
+        <class name="Printer" table="PRINTER">           
+            <datastore-identity>
+                <column name="ID"/>
+            </datastore-identity>                 
+            <join table="TONER">
+                <column name="ID"/>
+            </join>
+            <field name="make"/>
+            <field name="model"/>
+            <field name="tonerModel" table="TONER"/>
+            <field name="tonerLifetime" table="TONER"/>
+        </class>
+    </package>
+</jdo>]]></source>
+            <p>
+                With this we have stated that the fields <i>make</i> and <i>model</i> will be stored in the default 
+                table, that we named PRINTER, and that <i>tonerModel</i> and <i>tonerLifetime</i> we be stored in the 
+                table TONER. The tables will both store the unique identity assigned to the objects we persist, 
+                in this case we have specified the column name ID for both tables, though we would usually only do 
+                this when working to  an existing schema. When we retrieve any of our stored objects the tables will 
+                be joined automatically by matching the identities.
+            </p>
+            <p>
+                We can see how this works in more detail by setting the query logging to DEBUG (set 
+                <b>log4j.category.DataNucleus.Query=DEBUG</b>, in your <b>log4j.properties</b> file). We can 
+                retrieve all of our stored Printer objects by performing the following query
+            </p>
+            <source><![CDATA[
+Query q = pm.newQuery(Printer.class);
+List<Printer> list = (List<Printer>)q.execute();]]></source>
+            <p>
+                Now if we look in our log file we can see how this has been converted into the appropriate 
+                query language for our datastore. With an RDBMS datastore using SQL, for example, we get
+            </p>
+            <source><![CDATA[SELECT FROM mydomain.Printer Query compiled to datastore query 
+"SELECT 'mydomain.Printer' AS NUCLEUS_TYPE,`A0`.`MAKE`,`A0`.`MODEL`,`A1`.`TONER_MODEL`,
+            `A1`.`TONER_LIFETIME`,`A0`.`ID` 
+FROM `PRINTER` `A0` INNER JOIN `TONER` `A1` ON `A0`.`ID` = `A1`.`ID`"]]></source>
+            <p>
+               So we can see that in this case an INNER JOIN was performed using the ID columns as expected.
+            </p>
+            <br/>
+            <p><b>This worked example was provided by a DataNucleus user <i>Tom Robson</i></b></p>
+        </section>
+    </body>
+</document>

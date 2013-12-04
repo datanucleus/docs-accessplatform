@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<document xmlns="http://maven.apache.org/XDOC/2.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+    <properties>
+        <title>JPA Constraints</title>
+    </properties>
+
+    <body>
+        <section name="JPA : Constraints">
+            <p>
+                A datastore often provides ways of constraining the storage of data to maintain relationships and 
+                improve performance. These are known as <i>constraints</i> and they come in various forms. These are :-
+            </p>
+            <ul>
+                <li><a href="#index">Indexes</a> - these are used to mark fields that are referenced often as indexes so that
+                    when they are used the performance is optimised.</li>
+                <li><a href="#unique">Unique constraints</a> - these are placed on fields that should have a unique value. 
+                    That is, only one object will have a particular value.</li>
+                <li><a href="#fk">Foreign-Keys</a> - these are used to interrelate objects, and allow the datastore to keep
+                    the integrity of the data in the datastore.</li>
+                <li><a href="#pk">Primary-Keys</a> - allow the PK to be set, and also to have a name.</li>
+            </ul>
+
+            <a name="unique"/>
+            <subsection name="Unique constraints">
+                <table><tr><td>Applicable to RDBMS, NeoDatis, MongoDB</td></tr></table>
+                <p>
+                    Some datastores provide the ability to have unique constraints defined on tables to give 
+                    extra control over data integrity. JPA1 provides a mechanism for defining such unique constraints.
+                    Let's take an example class, and show how to specify this
+                </p>
+                <source><![CDATA[
+public class Person
+{
+    String forename;
+    String surname;
+    String nickname;
+    ...
+}]]></source>
+                <p>
+                    and here we want to impose uniqueness on the "nickname" field, so there is only one Person
+                    known as "DataNucleus Guru" for example !
+                </p>
+                <source><![CDATA[
+<entity class="Person">
+    <table name="PEOPLE"/>
+    <attributes>
+        ...
+        <basic name="nickname">
+            <column name="SURNAME" unique="true"/>
+        </basic>
+        ...
+    </attributes>
+</entity>]]></source>
+                <p>
+                    The second use of unique constraints is where we want to impose uniqueness across composite columns.
+                    So we reuse the class above, and this time we want to impose a constraint that there is only one 
+                    Person with a particular "forename+surname".
+                </p>
+                <source><![CDATA[
+<entity class="Person">
+    <table name="PEOPLE">
+        <unique-constraint>
+            <column-name>FORENAME</column-name>
+            <column-name>SURNAME</column-name>
+        </unique-constraint>
+    </table>
+    <attributes>
+        ...
+        <basic name="forename">
+            <column name="FORENAME"/>
+        </basic>
+        <basic name="surname">
+            <column name="SURNAME"/>
+        </basic>
+        ...
+    </attributes>
+</entity>]]></source>
+                <p>
+                    In the same way we can also impose unique constraints on &lt;join-table&gt; and &lt;secondary-table&gt;
+                </p>
+                <p>See also :-</p>
+                <ul>
+                    <li><a href="../metadata_xml.html#column">MetaData reference for &lt;column&gt; element</a></li>
+                    <li><a href="../metadata_xml.html#unique-constraint">MetaData reference for &lt;unique-constraint&gt; element</a></li>
+                    <li><a href="../annotations.html#Column">Annotations reference for @Column</a></li>
+                    <li><a href="../annotations.html#UniqueConstraint">Annotations reference for @UniqueConstraint</a></li>
+                </ul>
+                <br/>
+            </subsection>
+
+            <a name="index"/>
+            <subsection name="Indexes">
+                <table><tr><td>Applicable to RDBMS, NeoDatis, MongoDB</td></tr></table>
+                <p>
+                    Many datastores provide the ability to have indexes defined to give performance benefits.
+                    With RDBMS the indexes are specified on the table and the indexes to the rows are stored 
+                    separately. In the same way an ODBMS typically allows indexes to be specified on the fields 
+                    of the class, and these are managed by the datastore. JPA 2.1 allows you to define the indexes
+                    on a table-by-table basis by metadata as in the following example (note that you cannot specify
+                    indexes on a field basis like in JDO)
+                </p>
+<source><![CDATA[
+import javax.persistence.Index;
+
+@Entity
+@Table(indexes={@Index(name="SOME_VAL_IDX", columnList="SOME_VALUE")})
+public class MyClass
+{
+    @Column(name="SOME_VALUE")
+    long someValue;
+
+    ...
+}]]></source>
+                <br/>
+            </subsection>
+
+            <a name="fk"/>
+            <subsection name="Foreign Keys">
+                <table><tr><td>Applicable to RDBMS</td></tr></table>
+                <p>
+                    When objects have relationships with one object containing, for example, a Collection of another 
+                    object, it is common to store a foreign key in the datastore representation to link the two 
+                    associated tables. Moreover, it is common to define behaviour about what happens to the dependent 
+                    object when the owning object is deleted. Should the deletion of the owner cause the deletion of 
+                    the dependent object maybe ? JPA 2.1 adds support for defining the foreign key for relation fields
+                    as per the following example
+                </p>
+<source><![CDATA[
+public class MyClass
+{
+    ...
+
+    @OneToOne
+    @JoinColumn(name="OTHER_ID", foreignKey=@ForeignKey(name="OTHER_FK", 
+        foreignKeyDefinition="FOREIGN KEY (OTHER_ID) REFERENCES MY_OTHER_TBL (MY_OTHER_ID) ]"))
+    MyOtherClass other;
+
+}]]></source>
+                <p>
+                    Note that when you don't specify any foreign key the JPA provider is free to add the foreign keys
+                    that it considers are necessary.                
+                </p>
+                <br/>
+            </subsection>
+
+            <a name="pk"/>
+            <subsection name="Primary Keys">
+                <table><tr><td>Applicable to RDBMS</td></tr></table>
+                <p>
+                    In RDBMS datastores, it is accepted as good practice to have a primary key on all tables. You specify in 
+                    other parts of the MetaData which fields are part of the primary key (if using application identity).
+                    Unfortunately JPA1 doesnt allow specification of the name of the primary key constraint, nor of whether
+                    join tables are given a primary key constraint at all.
+                </p>
+                <br/>
+            </subsection>
+
+		</section>
+	</body>
+</document>

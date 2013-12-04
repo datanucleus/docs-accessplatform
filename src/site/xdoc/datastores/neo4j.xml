@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<document xmlns="http://maven.apache.org/XDOC/2.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+    <properties>
+        <title>Neo4j Datastore</title>
+    </properties>
+
+    <body>
+        <section name="Neo4j Datastores">
+            <a href="http://www.neo4j.org" target="_blank"><img src="../images/thirdparty/neo4j.jpg" border="0" alt=""/></a>
+            <p>
+                DataNucleus supports persisting/retrieving objects to/from <b>embedded</b> Neo4j graph datastores (using the 
+                <a href="../../../plugins/store.neo4j.html">datanucleus-neo4j</a> plugin) which utilises the
+                Neo4j Java driver. Simply specify your "connectionURL" as follows
+            </p>
+            <source>datanucleus.ConnectionURL=neo4j:{db_location}</source>
+            <p>
+                For example
+            </p>
+            <source>datanucleus.ConnectionURL=neo4j:myNeo4jDB</source>
+            <p>
+                You then create your PMF/EMF as normal and use JDO/JPA as normal.
+            </p>
+            <p>
+                The jars required to use DataNucleus Neo4j persistence are <i>datanucleus-core</i>,
+                <i>datanucleus-api-jdo</i>/<i>datanucleus-api-jpa</i>, <i>datanucleus-neo4j</i>
+                and <i>neo4j</i>
+            </p>
+            <p>
+                <b>Note that this is for embedded Neo4j. This is because at the time of writing there is no binary protocol for 
+                connecting Java clients to the server with Neo4j. When that is available we would hope to support it.</b>
+            </p>
+            <p>
+                There are tutorials available for use of DataNucleus with Neo4j 
+                <a href="../jdo/guides/tutorial_neo4j.html">for JDO</a> and
+                <a href="../jpa/guides/tutorial_neo4j.html">for JPA</a>
+            </p>
+            <p>
+                Things to bear in mind with Neo4j usage :-
+            </p>
+            <ul>
+                <li>Querying can be performed using JDOQL or JPQL. Some components of a filter are handled in the datastore, 
+                and the remainder in-memory. Currently any expression of a field (in the same 'table'), or a literal are 
+                handled in-datastore, as are the operators &amp;&amp;, ||, &gt;, &gt;=, &lt;, &lt;=, ==, and !=. Also
+                the majority of ordering and result clauses are evaluatable in the datastore, as well as query result range 
+                restrictions.</li>
+                <li>When an object is persisted it becomes a Node in Neo4j. You define the names of the
+                properties of that node by specifying the "column" name using JDO/JPA metadata</li>
+                <li>Any 1-1, 1-N, M-N, N-1 relation is persisted as a Relationship object in Neo4j and any positioning of 
+                elements in a List or array is preserved via a property on the Relationship.</li>
+                <li>If you wanted to specify some neo4j.properties file for use of your embedded database then
+                specify the persistence property <b>datanucleus.ConnectionPropertiesFile</b> set to the filename.</li>
+                <li>This plugin is in prototype stage so would welcome feedback and, better still, some contributions to 
+                fully exploit the power of Neo4j. Register your interest on the <a href="http://forum.datanucleus.org">DataNucleus Forum</a></li>
+            </ul>
+            <br/>
+
+            <subsection name="Persistence Implementation">
+                <p>
+                    Let's take some example classes, and then describe how these are persisted in Neo4j.
+                </p>
+<source><![CDATA[
+public class Store
+{
+    @Persistent(primaryKey="true", valueStrategy="identity")
+    long id;
+
+    Inventory inventory;
+
+    ...
+}
+
+public class Inventory
+{
+    @Persistent(primaryKey="true", valueStrategy="identity")
+    long id;
+
+    Set<Product> products;
+
+    ...
+}
+
+public class Product
+{
+    @Persistent(primaryKey="true", valueStrategy="identity")
+    long id;
+
+    String name;
+
+    double value;
+
+    ...
+}]]></source>
+                <p>
+                    When we persist a Store object, which has an Inventory, which has three Product objects, then we get
+                    the following
+                </p>
+                <ul>
+                    <li><b>Node</b> for the <i>Store</i>, with the "id" is represented as the node id</li>
+                    <li><b>Node</b> for the <i>Inventory</i>, with the "id" is represented as the node id</li>
+                    <li><b>Relationship</b> between the <i>Store</i> Node and the <i>Inventory</i> Node, with
+                        the relationship type as "SINGLE_VALUED", 
+                        and with the property <i>DN_FIELD_NAME</i> as "inventory"</li>
+                    <li><b>Node</b> for <i>Product</i> #1, with properties for "name" and "value" as well as the
+                        "id" represented as the node id</li>
+                    <li><b>Node</b> for <i>Product</i> #2, with properties for "name" and "value" as well as the
+                        "id" represented as the node id</li>
+                    <li><b>Node</b> for <i>Product</i> #3, with properties for "name" and "value" as well as the
+                        "id" represented as the node id</li>
+                    <li><b>Relationship</b> between the <i>Inventory</i> Node and the <i>Product</i> #1 Node, with
+                        the relationship type "MULTI_VALUED" and the property <i>DN_FIELD_NAME</i> as "products"</li>
+                    <li><b>Relationship</b> between the <i>Inventory</i> Node and the <i>Product</i> #2 Node, with
+                        the relationship type "MULTI_VALUED" and the property <i>DN_FIELD_NAME</i> as "products"</li>
+                    <li><b>Relationship</b> between the <i>Inventory</i> Node and the <i>Product</i> #3 Node, with
+                        the relationship type "MULTI_VALUED" and the property <i>DN_FIELD_NAME</i> as "products"</li>
+                    <li><b>Index</b> in "DN_TYPES" for the <i>Store</i> Node with "class" as "mydomain.Store"</li>
+                    <li><b>Index</b> in "DN_TYPES" for the <i>Inventory</i> Node with "class" as "mydomain.Inventory"</li>
+                    <li><b>Index</b> in "DN_TYPES" for the <i>Product</i> Node with "class" as "mydomain.Product"</li>
+                </ul>
+                <p>
+                    Note that, to be able to handle polymorphism more easily, if we also have a class <i>Book</i>
+                    that extends <i>Product</i> then when we persist an object of this type we will have two entries
+                    in "DN_TYPES" for this Node, one with "class" as "mydomain.Book" and one with "class" as
+                    "mydomain.Product" so we can interrogate the Index to find the real inheritance level of this Node.
+                </p>
+                <br/>
+            </subsection>
+
+            <subsection name="Query Implementation">
+                <p>
+                    In terms of querying, a JDOQL/JPQL query is converted into a generic query compilation, and then
+                    this is attempted to be converted into a Neo4j "Cypher" query. Not all syntaxis are convertable
+                    currently and the query falls back to in-memory evauation in that case.
+                </p>
+            </subsection>
+        </section>
+
+    </body>
+</document>

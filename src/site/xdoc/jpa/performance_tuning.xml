@@ -1,0 +1,349 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<document xmlns="http://maven.apache.org/XDOC/2.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+    <properties>
+        <title>JPA : Performance Tuning</title>
+    </properties>
+
+    <body>
+        <section name="JPA : Performance Tuning">
+            <p>
+                DataNucleus, by default, provides certain functionality. In particular circumstances some of this 
+                functionality may not be appropriate and it may be desirable to turn on or off particular features
+                to gain more performance for the application in question. This section contains a few common tips
+            </p>
+
+            <subsection name="Enhancement">
+                <p>
+                    You should perform enhancement <b>before</b> runtime. That is, do not use <i>java agent</i>
+                    since it will enhance classes at runtime, when you want responsiveness from your application.
+                </p>
+                <br/>
+            </subsection>
+
+            <subsection name="Schema : Creation">
+                <p>
+                    DataNucleus provides 4 persistence properties <b>datanucleus.autoCreateSchema</b>, 
+                    <b>datanucleus.autoCreateTables</b>, <b>datanucleus.autoCreateColumns</b>, and 
+                    <b>datanucleus.autoCreateConstraints</b> that allow creation of the datastore tables. This can 
+                    cause performance issues at startup. We recommend setting these to <i>false</i> at runtime, and 
+                    instead using <a href="schema.html#schematool">SchemaTool</a> to <b>generate any required database 
+                    schema before running DataNucleus (for RDBMS, HBase, etc)</b>.
+                </p>
+                <br/>
+            </subsection>
+
+            <subsection name="Schema : O/R Mapping">
+                <p>
+                    Where you have an inheritance tree it is best to add a <b>discriminator</b> to the base 
+                    class so that it's simple for DataNucleus to determine the class name for a particular row.
+                    For RDBMS : this results in cleaner/simpler SQL which is faster to execute, otherwise it would be
+                    necessary to do a UNION of all possible tables. For other datastores, a discriminator stores the
+                    key information necessary to instantiate the resultant class on retrieval so ought to be more
+                    efficient also.
+                </p>
+                <br/>
+            </subsection>
+
+            <subsection name="Schema : Validation">
+                <p>
+                    DataNucleus provides 3 persistence properties <b>datanucleus.validateTables</b>, 
+                    <b>datanucleus.validateConstraints</b>, <b>datanucleus.validateColumns</b> that enforce strict 
+                    validation of the datastore tables against the Meta-Data defined tables. This can cause performance 
+                    issues at startup. In general this should be run only at schema generation, and should be turned off 
+                    for production usage. Set all of these properties to <i>false</i>. In addition there is a property 
+                    <b>datanucleus.rdbms.CheckExistTablesOrViews</b> which checks whether the tables/views that the 
+                    classes map onto are present in the datastore. This should be set to <i>false</i> if you require 
+                    fast start-up. Finally, the property <b>datanucleus.rdbms.initializeColumnInfo</b> determines whether 
+                    the default values for columns are loaded from the database. This property should be set to 
+                    <i>NONE</i> to avoid loading database metadata.
+                </p>
+                <p>
+                    To sum up, the optimal settings with schema creation and validation disabled are:
+                </p>
+<source>          
+#schema creation
+datanucleus.autoCreateSchema=false
+datanucleus.autoCreateTables=false
+datanucleus.autoCreateColumns=false
+datanucleus.autoCreateConstraints=false
+      
+#schema validation
+datanucleus.validateTables=false
+datanucleus.validateConstraints=false
+datanucleus.validateColumns=false
+datanucleus.rdbms.CheckExistTablesOrViews=false
+datanucleus.rdbms.initializeColumnInfo=None
+</source>
+                <br/>
+            </subsection>
+
+            <subsection name="EntityManagerFactory usage">
+                <p>
+                    Creation of <a href="emf.html">EntityManagerFactory</a> objects can be expensive and should be 
+                    kept to a minimum. Depending on the structure of your application, use a single factory per datastore
+                    wherever possible. Clearly if your application spans multiple servers then this may be impractical, 
+                    but should be borne in mind.
+                </p>
+                <p>
+                    You can improve startup speed by not specifying all classes in the <i>persistence-unit</i> so that
+                    they are discovered at runtime. Obviously this may impact on persistence operations later if classes
+                    are not known about.
+                </p>
+                <p>
+                    Some RDBMS (such as Oracle) have trouble returning information across multiple catalogs/schemas 
+                    and so, when DataNucleus starts up and tries to obtain information about the existing tables, it 
+                    can take some time. This is easily remedied by specifying the catalog/schema name to be used - 
+                    either for the EMF as a whole (using the persistence properties <b>datanucleus.Catalog</b>,
+                    <b>datanucleus.Schema</b>) or for the package/class using attributes in the MetaData. 
+                    This subsequently reduces the amount of information that the RDBMS needs to search through and 
+                    so can give significant speed ups when you have many catalogs/schemas being managed by the RDBMS.
+                </p>
+                <br/>
+            </subsection>
+
+            <subsection name="Database Connection Pooling">
+                <p>
+                    DataNucleus, by default, will allocate connections when they are required. It then will close 
+                    the connection. In addition, when it needs to perform something via JDBC (RDBMS datastores) it 
+                    will allocate a PreparedStatement, and then discard the statement after use. This can be 
+                    inefficient relative to a database connection and statement pooling facility such as Apache DBCP.
+                    With Apache DBCP a Connection is allocated when required and then when it is closed the 
+                    Connection isn't actually closed but just saved in a pool for the next request that comes in for 
+                    a Connection. This saves the time taken to establish a Connection and hence can give performance 
+                    speed ups the order of maybe 30% or more. You can read about how to enable connection pooling 
+                    with DataNucleus in the 
+                    <a href="datastore_connection.html#pooling">Connection Pooling Guide</a>.
+                </p>
+                <p>
+                    As an addendum to the above, you could also turn on caching of PreparedStatements. This can also
+                    give a performance boost, depending on your persistence code, the JDBC driver and the SQL being issued.
+                    Look at the persistence property <b>datanucleus.connectionPool.maxStatements</b>.
+                </p>
+                <br/>
+            </subsection>
+
+            <subsection name="EntityManager usage">
+                <p>
+                    Clearly the structure of your application will have a major influence on how you utilise an 
+                    <a href="em.html">EntityManager</a>.
+                    A pattern that gives a clean definition of process is to use a different persistence manager for 
+                    each request to the data access layer. This reduces the risk of conflicts where one thread performs 
+                    an operation and this impacts on the successful completion of an operation being performed by 
+                    another thread. Creation of EM's is not an expensive process and use of multiple threads 
+                    writing to the same manager should be avoided.
+                </p>
+                <p>
+                    <b>Make sure that you always close the EntityManager after use</b>. It releases all resources
+                    connected to it, and failure to do so will result in memory leaks. Also note that when closing the
+                    EntityManager if you have the persistence property <b>datanucleus.detachOnClose</b>
+                    set to <i>true</i> (when in an extended PersistenceContext) this will detach all objects in the 
+                    Level1 cache. Disable this if you don't need these objects to be detached, since it can be expensive 
+                    when there are many objects.
+                </p>
+                <br/>
+            </subsection>
+
+            <subsection name="Persistence Process">
+                <p>
+                    To optimise the persistence process for performance you need to analyse what operations are
+                    performed and when, to see if there are some features that you could disable to get the persistence
+                    you require and omit what is not required. If you think of a typical transaction, the following
+                    describes the process
+                </p>
+                <ul>
+                    <li>Start the transaction</li>
+                    <li>Perform persistence operations. If you are using "optimistic" transactions then all 
+                        datastore operations will be delayed until commit. Otherwise all datastore operations will
+                        default to being performed immediately. If you are handling a very large number of objects
+                        in the transaction you would benefit by either disabling "optimistic" transactions, or
+                        alternatively setting the persistence property <b>datanucleus.flush.mode</b> to <i>AUTO</i>, or
+                        alternatively, do a manual flush every "n" objects, like this
+<source><![CDATA[
+for (int i=0;i<1000000;i++)
+{
+    if ((i%10000)/10000 == 0 && i != 0)
+    {
+        pm.flush();
+    }
+    ...
+}]]></source>
+                        </li>
+                    <li>Commit the transaction
+                        <ul>
+                            <li>All dirty objects are flushed.</li>
+                            <li>Objects enlisted in the transaction are put in the Level 2 cache. You can disable the level 2
+                                cache with the persistence property <b>datanucleus.cache.level2.type</b> set to <i>none</i></li>
+                            <li>Objects enlisted in the transaction are detached if you have the persistence property
+                                <b>datanucleus.detachAllOnCommit</b> set to <i>true</i> (when using a transactional 
+                                PersistenceContext). Disable this if you don't need these objects to be detached at this point</li>
+                        </ul>
+                    </li>
+                </ul>
+            </subsection>
+
+            <subsection name="Retrieval of object by identity">
+                <p>
+                    If you are retrieving an object by its identity and know that it will be present in the
+                    Level2 cache, for example, you can set the persistence property 
+                    <b>datanucleus.findObject.validateWhenCached</b> to <i>false</i> and this will skip
+                    a separate call to the datastore to validate that the object exists in the datastore.
+                </p>
+                <br/>
+            </subsection>
+
+            <subsection name="Identity Generators">
+                <p>
+                    DataNucleus provides a series of value generators for generation of identity values. 
+                    These can have an impact on the performance depending on the choice of generator, and also on the 
+                    configuration of the generator.
+                </p>
+                <ul>
+                    <li>The <i>max</i> strategy should not really be used for production since it makes a separate DB 
+                        call for each insertion of an object. Something like the <i>table</i> strategy should be 
+                        used instead. Better still would be to choose <i>auto</i> and let DataNucleus decide for you.</li>
+                    <li>The <i>sequence</i> strategy allows configuration of the datastore sequence. The default can 
+                        be non-optimum. As a guide, you can try setting <b>key-cache-size</b> to 10</li>
+                </ul>
+                <p>
+                    The <b>auto</b> identity generator value is the recommended choice since this will allow DataNucleus 
+                    to decide which identity generator is best for the datastore in use.
+                </p>
+                <br/>
+            </subsection>
+
+            <subsection name="Collection/Map caching">
+                <img src="../images/nucleus_extension.gif" border="0" alt=""/>
+                <p>
+                    DataNucleus has 2 ways of handling calls to SCO Collections/Maps. The original method was to 
+                    pass all calls through to the datastore. The second method (which is now the default) is to 
+                    cache the collection/map elements/keys/values. This second method will read the
+                    elements/keys/values once only and thereafter use the internally cached values. This second 
+                    method gives significant performance gains relative to the original method. You can configure
+                    the handling of collections/maps as follows :-
+                </p>
+                <ul>
+                    <li><b>Globally for the EMF</b> - this is controlled by setting the persistence property 
+                        <b>datanucleus.cache.collections</b>. Set it to <i>true</i> for caching the collections 
+                        (default), and <i>false</i> to pass through to the datastore.</li>
+                    <li><b>For the specific Collection/Map</b> - this overrides the global setting and is controlled 
+                        by adding a MetaData <i>&lt;collection&gt;</i> or <i>&lt;map&gt;</i> extension <b>cache</b>.
+                        Set it to <i>true</i> to cache the collection data, and <i>false</i> to pass through to the 
+                        datastore.</li>
+                </ul>
+                <p>
+                    The second method also allows a finer degree of control. This allows the use of lazy loading 
+                    of data, hence elements will only be loaded if they are needed. You can configure this as follows :-
+                </p>
+                <ul>
+                    <li><b>Globally for the EMF</b> - this is controlled by setting the property
+                        <b>datanucleus.cache.collections.lazy</b>. Set it to true to use lazy loading, and set it to false 
+                        to load the elements when the collection/map is initialised.</li>
+                    <li><b>For the specific Collection/Map</b> - this overrides the global EMF setting and is controlled 
+                        by adding a MetaData <i>&lt;collection&gt;</i> or <i>&lt;map&gt;</i> extension 
+                        <b>cache-lazy-loading</b>. Set it to <i>true</i> to use lazy loading, and <i>false</i> to load 
+                        once at initialisation.</li>
+                </ul>
+                <br/>
+            </subsection>
+            
+            <subsection name="NonTransactional Reads (Reading persistent objects outside a transaction)">
+                <p>
+                    Performing non-transactional reads has advantages and disadvantages in performance and data freshness in cache. 
+                    The objects read are held cached by the EntityManager. The second time an application
+                    requests the same objects from the EntityManager they are retrieved from cache. 
+                    The time spent reading the object from cache is minimum, but the objects may become stale and not
+                    represent the database status. If fresh values need to be loaded from the database, then the user 
+                    application should first call <i>refresh</i> on the object.
+                </p>
+                <p>
+                    Another disadvantage of performing non-transactional reads is that each operation realized opens 
+                    a new database connection, but it can be minimized with the use of connection pools, and also on
+                    some of the datastore the (nontransactional) connection is retained.
+                </p>
+                <br/>
+            </subsection>
+
+            <subsection name="Accessing fields of persistent objects when not managed by a EntityManager">
+                <p>
+                    Reading fields of unmanaged objects (outside the scope of an <i>EntityManager</i>) is a 
+                    trivial task, but performed in a certain manner can determine the application performance. 
+                    The objective here is not give you an absolute response on the subject, but point out the benefits 
+                    and drawbacks for the many possible solutions.
+                </p>
+                <ul>
+                    <li>Use <b>datanucleus.RetainValues</b>=true. This is the default for JPA operation and will ensure
+                        that after commit the fields of the object retain their values (rather than being nulled).</li>
+                    <li>Use <i>detach</i> method.
+<source>
+Object copy = null;
+try
+{
+    EntityManager em = emf.createEntityManager();
+    em.getTransaction().begin();
+
+    //retrieve in some way the object, query, find, etc
+    Object obj = em.find(MyClass.class, id);
+    copy = em.detach(obj);
+
+    em.getTransaction().commit();
+}
+finally
+{
+    em.close();
+}
+//read or change the detached object here
+System.out.prinln(copy.getName());</source>
+                    </li>
+                    <li>Use <b>datanucleus.detachAllOnCommit</b>=true. Dependent on the persistence context you may
+                        automatically have this set.
+<source>
+Object obj = null;
+try
+{
+    EntityManager pm = emf.createEntityManager();
+    em.getTransaction().begin();
+
+    //retrieve in some way the object, query, find, etc
+    obj = em.find(MyClass.class, id);
+    em.getTransaction().commit(); // Object "obj" is now detached
+}
+finally
+{
+    em.close();
+}
+//read or change the detached object here
+System.out.prinln(obj.getName());</source>
+                        
+                    </li>
+                </ul>
+                <p>
+                    The bottom line is to not use detachment if instances will only be used to read values.
+                </p>
+                <br/>
+            </subsection>
+
+            <subsection name="Fetch Control">
+                <p>
+                    When fetching objects you have control over what gets fetched. This can have an impact if you are
+                    then detaching those objects. With JPA the maximum fetch depth is -1 (unlimited).
+                    So with JPA you ought to set it to the extent that you want to detach, or better still make
+                    use of DataNucleus fetch groups to control the specific fields to detach.
+                </p>
+                <br/>
+            </subsection>
+
+            <subsection name="Logging">
+                <p>
+                    I/O consumes a huge slice of the total processing time. Therefore it is recommended to reduce or 
+                    disable logging in production. To disable the logging set the DataNucleus category to OFF in the Log4j 
+                    configuration. See <a href="logging.html">Logging</a> for more information.
+                </p>
+<source>log4j.category.DataNucleus=OFF</source>
+                <br/>
+            </subsection>            
+        </section>
+
+    </body>
+</document>

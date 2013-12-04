@@ -1,0 +1,513 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<document xmlns="http://maven.apache.org/XDOC/2.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+    <properties>
+        <title>RDBMS Datastores</title>
+    </properties>
+
+    <body>
+        <section name="RDBMS Datastores">
+            <img src="../images/thirdparty/mysql.gif" border="0" alt=""/>
+            <img src="../images/thirdparty/mariadb.png" border="0" alt=""/>
+            <img src="../images/thirdparty/sqlserver.png" border="0" alt=""/>
+            <img src="../images/thirdparty/oracle.gif" border="0" alt=""/>
+            <img src="../images/thirdparty/sybase.gif" border="0" alt=""/>
+            <img src="../images/thirdparty/hsql.gif" border="0" alt=""/>
+            <img src="../images/thirdparty/h2.png" border="0" alt="H2"/>
+            <img src="../images/thirdparty/postgresql.gif" border="0" alt=""/>
+            <img src="../images/thirdparty/postgis.gif" border="0" alt=""/>
+            <img src="../images/thirdparty/maxdb.jpg" border="0" alt=""/>
+            <img src="../images/thirdparty/derby.gif" border="0" alt=""/>
+            <img src="../images/thirdparty/db2.gif" border="0" alt=""/>
+            <img src="../images/thirdparty/informix.jpg" border="0" alt=""/>
+            <img src="../images/thirdparty/sqlite.png" border="0" alt=""/>
+            <img src="../images/thirdparty/firebird.gif" border="0" alt=""/>
+
+            <p>
+                DataNucleus supports persisting objects to RDBMS datastores (using the 
+                <a href="../../../plugins/store.rdbms.html">datanucleus-rdbms</a> plugin). 
+                It supports the vast majority of RDBMS products available today. 
+                DataNucleus communicates with the RDBMS datastore using JDBC. RDBMS systems accept varying standards 
+                of SQL and so DataNucleus will support particular RDBMS/JDBC combinations only, though clearly we try 
+                to support as many as possible.
+            </p>
+            <p>
+                The jars required to use DataNucleus RDBMS persistence are <i>datanucleus-core</i>,
+                <i>datanucleus-api-jdo</i>/<i>datanucleus-api-jpa</i>, <i>datanucleus-rdbms</i>
+                and <i>JDBC driver</i>.
+            </p>
+            <p>
+                There are tutorials available for use of DataNucleus with RDBMS 
+                <a href="../jdo/guides/tutorial_rdbms.html">for JDO</a> and
+                <a href="../jpa/guides/tutorial_rdbms.html">for JPA</a>
+            </p>
+            <p>
+                By default when you create a PersistenceManagerFactory or EntityManagerFactory to connect to a particular
+                datastore DataNucleus will automatically detect the <i>datastore adapter</i> to use and will use its 
+                own internal adapter for that type of datastore. If you find that either DataNucleus has incorrectly 
+                detected the adapter to use, you can override the default behaviour using the persistence property
+                <b>datanucleus.rdbms.datastoreAdapterClassName</b>.
+            </p>
+
+            <p>
+                The following RDBMS have support built in to DataNucleus. Click on the one of interest to see details
+                of any provisos for its support, as well as the JDBC connection information
+            </p>
+            <ul>
+                <li><a href="#mysql">MySQL/MariaDB</a></li>
+                <li><a href="#postgresql">PostgreSQL Database</a></li>
+                <li><a href="#postgis">PostgreSQL+PostGIS Database</a></li>
+                <li><a href="#hsqldb">HSQL DB</a></li>
+                <li><a href="#h2">H2 Database</a></li>
+                <li><a href="#sqlite">SQLite</a></li>
+                <li><a href="#derby">Apache Derby</a></li>
+                <li><a href="#sqlserver">Microsoft SQLServer</a></li>
+                <li><a href="#sybase">Sybase</a></li>
+                <li><a href="#oracle">Oracle</a></li>
+                <li><a href="#db2">IBM DB2</a></li>
+                <li><a href="#informix">IBM Informix</a></li>
+                <li><a href="#firebird">Firebird</a></li>
+                <li><a href="#maxdb">SAPDB/MaxDB</a></li>
+                <li><a href="#virtuoso">Virtuoso</a></li>
+                <li><a href="#pointbase">Pointbase</a></li>
+                <li><a href="#timesten">Oracle TimesTen</a></li>
+                <li><a href="#mckoi">McKoi database</a></li>
+            </ul>
+            <p>
+                <img src="../images/nucleus_plugin.gif" border="0" alt=""/> Note that if your RDBMS is not listed
+                or currently supported you can easily write your own 
+                <a href="http://www.datanucleus.org/extensions/rdbms_datastore_adapter.html">Datastore Adapter</a> for it
+                raise an issue in DataNucleus JIRA when you have it working and attach a patch to contribute it.
+                Similarly if you are using an adapter that has some problem on your case you could use the same
+                plugin mechanism to override the non-working feature.
+            </p>
+
+            <a name="db2"/>
+            <subsection name="DB2">
+                <p>
+                    To specify DB2 as your datastore, you will need something like the following specifying 
+                    (where "mydb1" is the name of the database)
+                </p>
+                <source>
+datanucleus.ConnectionDriverName=com.ibm.db2.jcc.DB2Driver
+datanucleus.ConnectionURL=jdbc:db2://localhost:50002/mydb1
+datanucleus.ConnectionUserName='username'     (e.g db2inst1)
+datanucleus.ConnectionPassword='password'</source>
+                <p>
+                    With DB2 Express-C v9.7 you need to have db2jcc.jar and db2jcc_license_cu.jar in the CLASSPATH.
+                </p>
+                <br/>
+            </subsection>
+            
+            <a name="mysql"/>
+            <subsection name="MySQL">
+                <p>
+                    <a href="http://www.mysql.com">MySQL</a> and its more developed drop in replacement
+                    <a href="https://mariadb.org">MariaDB</a> are supported as an RDBMS datastore by DataNucleus with the 
+                    following provisos
+                </p>
+                <ul>
+                    <li><b>INNODB</b> tables must be used since it is the only table type that allows foreign keys etc at 
+                        the moment. You can however define what type your table uses by setting the &lt;class&gt;
+                        extension "mysql-engine-type" to be MyISAM or whatever for the class being persisted.</li>
+                    <li>JDOQL.isEmpty()/contains() will not work in MySQL 4.0 (or earlier) since the query uses EXISTS 
+                        and that is only available from MySQL 4.1</li>
+                    <li>MySQL on Windows MUST specify <i>datanucleus.identifier.case</i> as "LowerCase" since the MySQL server 
+                        stores all identifiers in lowercase BUT the mysql-connector-java JDBC driver has a bug (in versions 
+                        up to and including 3.1.10) where it claims that the MySQL server stores things in mixed case when 
+                        it doesnt</li>
+                    <li>MySQL 3.* will not work reliably with inheritance cases since DataNucleus requires UNION and this doesn't
+                        exist in MySQL 3.*</li>
+                    <li>MySQL before version 4.1 will not work correctly on JDOQL Collection.size(), Map.size() operations
+                        since this requires subqueries, which are not supported before MySQL 4.1.</li>
+                    <li>If you receive an error "Incorrect arguments to mysql_stmt_execute" then this is a bug in MySQL and 
+                        you need to update your JDBC URL to append "?useServerPrepStmts=false".</li>
+                    <li>MySQL throws away the milliseconds on a Date and so cannot be used reliably for Optimistic locking
+                        using strategy "date-time" (use "version" instead)</li>
+                    <li>You can specify "BLOB", "CLOB" JDBC types when using MySQL with DataNucleus but you must turn validation
+                        of columns OFF. This is because these types are not supported by the MySQL JDBC driver and
+                        it returns them as LONGVARBINARY/LONGVARCHAR when querying the column type</li>
+                </ul>
+                <p>
+                    To specify MySQL as your datastore, you will need something like the following specifying (replacing 'db-name' 
+                    with name of your database etc)
+                </p>
+                <source>
+datanucleus.ConnectionDriverName=com.mysql.jdbc.Driver
+datanucleus.ConnectionURL=jdbc:mysql://'host':'port'/'db-name'
+datanucleus.ConnectionUserName='user-name'
+datanucleus.ConnectionPassword='password'
+                </source>
+            </subsection>
+
+            <a name="sqlserver"/>
+            <subsection name="MS SQL Server">
+                <p>
+                    <a href="http://www.microsoft.com/sql">Microsoft SQLServer</a> is supported as an RDBMS datastore by 
+                    DataNucleus with the following proviso
+                </p>
+                <ul>
+                    <li>MS SQL 2000 does not keep accuracy on <i>datetime</i> datatypes. This is an MS SQL 2000 issue. 
+                        In order to keep the accuracy when storing <i>java.util.Date</i> java types, use <i>int</i> datatype.</li>
+                </ul>
+                <p>
+                    To specify MS SQL as your datastore, you will need something like the following specifying (replacing 'db-name' 
+                    with name of your database etc)
+                </p>
+                <p>Microsoft SqlServer 2005 JDBC Driver (Recommended)</p>
+                <source>
+datanucleus.ConnectionDriverName=com.microsoft.sqlserver.jdbc.SQLServerDriver
+datanucleus.ConnectionURL=jdbc:sqlserver://'host':'port';DatabaseName='db-name'
+                    ;SelectMethod=cursor
+datanucleus.ConnectionUserName='user-name'
+datanucleus.ConnectionPassword='password'
+                </source>
+                <p>Microsoft SqlServer 2000 JDBC Driver</p>
+                <source>
+datanucleus.ConnectionDriverName=com.microsoft.jdbc.sqlserver.SQLServerDriver
+datanucleus.ConnectionURL=jdbc:microsoft:sqlserver://'host':'port';DatabaseName='db-name'
+                    ;SelectMethod=cursor
+datanucleus.ConnectionUserName='user-name'
+datanucleus.ConnectionPassword='password'
+                </source>
+            </subsection>
+
+            <a name="oracle"/>
+            <subsection name="Oracle">
+                <p>
+                    To specify <a href="http://www.oracle.com/database/">Oracle</a> as your datastore, you will need 
+                    something like the following specifying (replacing 'db-name' with name of your database etc) ... 
+                    you can also use 'oci' instead of 'thin' depending on your driver.
+                </p>
+                <source>
+datanucleus.ConnectionDriverName=oracle.jdbc.driver.OracleDriver
+datanucleus.ConnectionURL=jdbc:oracle:thin:@'host':'port':'db-name'
+datanucleus.ConnectionUserName='user-name'
+datanucleus.ConnectionPassword='password'
+                </source>
+            </subsection>
+
+            <a name="sybase"/>
+            <subsection name="Sybase">
+                <p>
+                    To specify <a href="http://www.sybase.com">Sybase</a> as your datastore, you will need something 
+                    like the following specifying (replacing 'db-name' with name of your database etc)
+                </p>
+                <source>
+datanucleus.ConnectionDriverName=com.sybase.jdbc2.jdbc.SybDriver
+datanucleus.ConnectionURL=jdbc:sybase:Tds:'host':'port'/'db-name'
+datanucleus.ConnectionUserName='user-name'
+datanucleus.ConnectionPassword='password'
+                </source>
+            </subsection>
+
+            <a name="hsqldb"/>
+            <subsection name="HSQLDB">
+                <p>
+                    <a href="http://hsqldb.org">HSQLDB</a> is supported as an RDBMS datastore by DataNucleus with the 
+                    following proviso
+                </p>
+                <ul>
+                    <li>Use of batched statements is disabled since HSQLDB has a bug where it throws exceptions
+                        "batch failed" (really informative). Still waiting for this to be fixed in HSQLDB</li>
+                    <li>Use of JDOQL/JPQL subqueries cannot be used where you want to refer back to the parent query
+                        since HSQLDB up to and including version 1.8 don't support this.</li>
+                </ul>
+                <p>
+                    To specify HSQL (1.x) as your datastore, you will need something like the following specifying 
+                    (replacing 'db-name' with name of your database etc)
+                </p>
+                <source>
+datanucleus.ConnectionDriverName=org.hsqldb.jdbcDriver
+datanucleus.ConnectionURL=jdbc:hsqldb:hsql://'host':'port'/'db-name'
+datanucleus.ConnectionUserName='user-name'
+datanucleus.ConnectionPassword='password'
+                </source>
+                <p>Note that in HSQLDB v2.x the driver changes to <i>org.hsqldb.jdbc.JDBCDriver</i></p>
+                <br/>
+            </subsection>
+
+            <a name="h2"/>
+            <subsection name="H2">
+                <p>
+                    <a href="http://www.h2database.com">H2</a> is supported as an RDBMS datastore by DataNucleus
+                </p>
+                <p>
+                    To specify H2 as your datastore, you will need something like the following specifying (replacing 'db-name' with 
+                    name of your database etc)
+                </p>
+                <source>
+datanucleus.ConnectionDriverName=org.h2.Driver
+datanucleus.ConnectionURL=jdbc:h2:'db-name'
+datanucleus.ConnectionUserName=sa
+datanucleus.ConnectionPassword=
+                </source>
+                <br/>
+            </subsection>
+
+            <a name="informix"/>
+            <subsection name="Informix">
+                <p>
+                    Informix is supported as an RDBMS datastore by DataNucleus
+                </p>
+                <p>
+                    To specify Informix as your datastore, you will need something like the following specifying (replacing 'db-name' with 
+                    name of your database etc)
+                </p>
+                <source>
+datanucleus.ConnectionDriverName=com.informix.jdbc.IfxDriver
+datanucleus.ConnectionURL=jdbc:informix-sqli://[{ip|host}:port][/dbname]:
+                    INFORMIXSERVER=servername[;name=value[;name=value]...]
+datanucleus.ConnectionUserName=informix
+datanucleus.ConnectionPassword=password
+                </source>
+                <p>e.g.</p>
+                <source>
+datanucleus.ConnectionDriverName=com.informix.jdbc.IfxDriver
+datanucleus.ConnectionURL=jdbc:informix-sqli://192.168.254.129:9088:
+                    informixserver=demo_on;database=buf_log_db
+datanucleus.ConnectionUserName=informix
+datanucleus.ConnectionPassword=password
+                </source>
+                <p>
+                    Note that some database logging options in Informix do not allow changing autoCommit dinamically. You need to rebuild the database
+                    to support it. To rebuild the database refer to Informix documention, but as example, 
+                    run $INFORMIXDIR\bin\dbaccess and execute the command "CREATE DATABASE mydb WITH BUFFERED LOG".
+                </p>
+                <p>
+                    <b>INDEXOF</b>: Informix 11.x does not have a function to search a string in another string. 
+                    DataNucleus defines a user defined function, DATANUCLEUS_STRPOS, which is automatically created 
+                    on startup. The SQL for the UDF function is:
+                </p>
+                <source>
+create function DATANUCLEUS_STRPOS(str char(40),search char(40),from smallint) returning smallint
+    define i,pos,lenstr,lensearch smallint;
+    let lensearch = length(search);
+    let lenstr = length(str);
+
+    if lenstr=0 or lensearch=0 then return 0; end if;
+
+    let pos=-1;
+    for i=1+from to lenstr
+        if substr(str,i,lensearch)=search then
+            let pos=i;
+            exit for;
+        end if;
+    end for;
+    return pos;
+end function;                
+                </source>
+            </subsection>
+
+            <a name="postgresql"/>
+            <subsection name="PostgreSQL">
+                <p>
+                    To specify <a href="http://www.postgresql.org">PostgreSQL</a> as your datastore, you will need 
+                    something like the following specifying (replacing 'db-name' with name of your database etc)
+                </p>
+                <source>
+datanucleus.ConnectionDriverName=org.postgresql.Driver
+datanucleus.ConnectionURL=jdbc:postgresql://'host':'port'/'db-name'
+datanucleus.ConnectionUserName='user-name'
+datanucleus.ConnectionPassword='password'
+                </source>
+            </subsection>
+            
+            <a name="postgis"/>
+            <subsection name="PostgreSQL with PostGIS extension">
+                <p>
+                    To specify <a href="http://www.postgis.org">PostGIS</a> as your datastore, you will need to decide 
+                    first which geometry library you want to use and then set the connection url accordingly.
+                </p>
+                <p>
+                    For the PostGIS JDBC geometries you will need something like the following specifying 
+                    (replacing 'db-name' with name of your database etc)
+                </p>
+                <source>
+datanucleus.ConnectionDriverName=org.postgresql.Driver
+datanucleus.ConnectionURL=jdbc:postgresql://'host':'port'/'db-name'
+datanucleus.ConnectionUserName='user-name'
+datanucleus.ConnectionPassword='password'
+                </source>
+                <p>For Oracle's JGeometry you will need something like the following specifying 
+                    (replacing 'db-name' with name of your database etc) </p>
+                <source>
+datanucleus.ConnectionDriverName=org.postgresql.Driver
+datanucleus.ConnectionURL=jdbc:postgres_jgeom://'host':'port'/'db-name'
+datanucleus.ConnectionUserName='user-name'
+datanucleus.ConnectionPassword='password'
+                </source>
+                <p>For the JTS (Java Topology Suite) geometries you will need something like the following 
+                specifying (replacing 'db-name' with name of your database etc) </p>
+                <source>
+datanucleus.ConnectionDriverName=org.postgresql.Driver
+datanucleus.ConnectionURL=jdbc:postgres_jts://'host':'port'/'db-name'
+datanucleus.ConnectionUserName='user-name'
+datanucleus.ConnectionPassword='password'
+                </source>
+            </subsection>
+
+            <a name="derby"/>
+            <subsection name="Apache Derby">
+                <p> 
+                    To specify <a href="http://db.apache.org/derby/">Apache Derby</a> as your datastore, you will need 
+                    something like the following specifying (replacing 'db-name' with filename of your database etc)
+                </p>
+                <source>
+datanucleus.ConnectionDriverName=org.apache.derby.jdbc.EmbeddedDriver
+datanucleus.ConnectionURL=jdbc:derby:'db-name';create=true
+datanucleus.ConnectionUserName='user-name'
+datanucleus.ConnectionPassword='password'
+                </source>
+                <p>
+                    Above settings are used together with the Apache Derby in embedded mode. The below settings are used in network mode, where
+                    the default port number is 1527.
+                </p>
+                <source>
+datanucleus.ConnectionDriverName=org.apache.derby.jdbc.ClientDriver
+datanucleus.ConnectionURL=jdbc:derby://'hostname':'portnumber'/'db-name';create=true
+datanucleus.ConnectionUserName='user-name'
+datanucleus.ConnectionPassword='password'
+                </source>                
+                <p>org.apache.derby.jdbc.ClientDriver</p>
+                <p>
+                    <b>ASCII</b>: Derby 10.1 does not have a function to convert a char into ascii code. DataNucleus needs 
+                    such function to converts chars to int values when performing queries converting chars to ints. 
+                    DataNucleus defines a user defined function, DataNucleus_ASCII, which is automatically created on startup. 
+                    The SQL for the UDF function is:
+                </p>
+<source>
+DROP FUNCTION NUCLEUS_ASCII;
+CREATE FUNCTION NUCLEUS_ASCII(C CHAR(1)) RETURNS INTEGER
+EXTERNAL NAME 'org.datanucleus.store.rdbms.adapter.DerbySQLFunction.ascii'
+CALLED ON NULL INPUT
+LANGUAGE JAVA PARAMETER STYLE JAVA;
+</source>                    
+                <p>
+                    <b>String.matches(pattern)</b>: When pattern argument is a column, DataNucleus defines a function that
+                    allows Derby 10.1 to perform the matches function.
+                    The SQL for the UDF function is:
+                </p>
+<source>
+DROP FUNCTION NUCLEUS_MATCHES;
+CREATE FUNCTION NUCLEUS_MATCHES(TEXT VARCHAR(8000), PATTERN VARCHAR(8000)) RETURNS INTEGER
+EXTERNAL NAME 'org.datanucleus.store.rdbms.adapter.DerbySQLFunction.matches'
+CALLED ON NULL INPUT
+LANGUAGE JAVA PARAMETER STYLE JAVA;
+</source>                
+            </subsection>
+
+            <a name="firebird"/>
+            <subsection name="Firebird">
+                <p>
+                    <a href="http://www.firebirdsql.org">Firebird</a> is supported as an RDBMS datastore by DataNucleus 
+                    with the proviso that
+                </p>
+                <ul>
+                    <li>Auto-table creation is severely limited with Firebird. In Firebird, DDL statements are not 
+                        auto-committed and are executed at the end of a transaction, after any DML statements. This makes 
+                        "on the fly" table creation in the middle of a DML transaction not work. You must make sure that
+                        "autoStartMechanism" is NOT set to "SchemaTable" since this will use DML. You must also make sure
+                        that nobody else is connected to the database at the same time. Don't ask us why such
+                        limitations are in a RDBMS, but then it was you that chose to use it ;-)</li>
+                </ul>
+                <p> To specify Firebird as your datastore, you will need something like the following specifying 
+                    (replacing 'db-name' with filename of your database etc) </p>
+                <source>
+datanucleus.ConnectionDriverName=org.firebirdsql.jdbc.FBDriver
+datanucleus.ConnectionURL=jdbc:firebirdsql://localhost/'db-name'
+datanucleus.ConnectionUserName='user-name'
+datanucleus.ConnectionPassword='password'
+                </source>
+            </subsection>
+
+            <a name="maxdb"/>
+            <subsection name="SAPDB/MaxDB">
+                <p> To specify SAPDB/MaxDB as your datastore, you will need something like the following specifying 
+                    (replacing 'db-name' with filename of your database etc) </p>
+                <source>
+datanucleus.ConnectionDriverName=com.sap.dbtech.jdbc.DriverSapDB
+datanucleus.ConnectionURL=jdbc:sapdb://localhost/'db-name'
+datanucleus.ConnectionUserName='user-name'
+datanucleus.ConnectionPassword='password'
+                </source>
+            </subsection>
+
+            <a name="sqlite"/>
+            <subsection name="SQLite">
+                <p>
+                    <a href="http://www.sqlite.org/">SQLite</a> is supported as an RDBMS datastore by DataNucleus with 
+                    the proviso that
+                </p>
+                <ul>
+                    <li>When using sequences, you must set the persistence property 
+                        <b>datanucleus.valuegeneration.transactionAttribute</b> to <b>UsePM</b></li>
+                </ul>
+                <p> To specify SQLite as your datastore, you will need something like the following specifying 
+                    (replacing 'db-name' with filename of your database etc) </p>
+                <source>
+datanucleus.ConnectionDriverName=org.sqlite.JDBC
+datanucleus.ConnectionURL=jdbc:sqlite:'db-name'
+datanucleus.ConnectionUserName=
+datanucleus.ConnectionPassword=
+                </source>
+            </subsection>
+
+            <a name="virtuoso"/>
+            <subsection name="Virtuoso">
+                <p> 
+                    To specify <a href="http://virtuoso.openlinksw.com/dataspace/dav/wiki/Main/">Virtuoso</a> as your 
+                    datastore, you will need something like the following specifying 
+                    (replacing 'db-name' with filename of your database etc) 
+                </p>
+                <source>
+datanucleus.ConnectionDriverName=virtuoso.jdbc.Driver
+datanucleus.ConnectionURL=jdbc:virtuoso://127.0.0.1/{dbname}
+datanucleus.ConnectionUserName=
+datanucleus.ConnectionPassword=
+                </source>
+            </subsection>
+
+            <a name="pointbase"/>
+            <subsection name="Pointbase">
+                <p>
+                    To specify <a href="http://docs.oracle.com/cd/E13218_01/wlp/docs92/db/pointbase.html#wp1058500">Pointbase</a> as your datastore, you will need 
+                    something like the following specifying (replacing 'db-name' with filename of your database etc)
+                </p>
+                <source>
+datanucleus.ConnectionDriverName=com.pointbase.jdbc.jdbcUniversalDriver
+datanucleus.ConnectionURL=jdbc:pointbase://127.0.0.1/{dbname}
+datanucleus.ConnectionUserName=
+datanucleus.ConnectionPassword=
+                </source>
+            </subsection>
+
+            <a name="mckoi"/>
+            <subsection name="McKoi">
+                <p>
+                    <a href="http://www.mckoi.com/database">McKoi</a> is supported as an RDBMS datastore by DataNucleus 
+                    with the following proviso
+                </p>
+                <ul>
+                    <li>McKoi doesn't provide full information to allow correct validation of tables/constraints.</li>
+                </ul>
+                <p> To specify McKoi as your datastore, you will need something like the following specifying 
+                    (replacing 'db-name' with name of your database etc) </p>
+                <source>
+datanucleus.ConnectionDriverName=com.mckoi.JDBCDriver
+datanucleus.ConnectionURL=jdbc:mckoi://'host':'port'/'db-name'
+datanucleus.ConnectionUserName='user-name'
+datanucleus.ConnectionPassword='password'
+                </source>
+            </subsection>
+
+            <subsection name="JDBC Driver parameters">
+                <p> If you need to pass additional parameters to the JDBC driver you can append these to the end of the 
+                    <b>datanucleus.ConnectionURL</b>. For example, </p>
+                <source>datanucleus.ConnectionURL=jdbc:mysql://localhost?useUnicode=true&amp;characterEncoding=UTF-8</source>
+                <br/>
+            </subsection>
+        </section>
+    </body>
+</document>

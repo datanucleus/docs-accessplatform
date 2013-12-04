@@ -1,0 +1,375 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<document xmlns="http://maven.apache.org/XDOC/2.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+    <properties>
+        <title>JDO 1-N Relationships : Map</title>
+    </properties>
+
+    <body>
+        <section name="JDO : 1-N Relationships with Maps">
+            <p>
+				You have a 1-N (one to many) or N-1 (many to one) when you have one object of a class that has a Map of objects of another 
+                class. There are two general ways in which you can represent this in a datastore.
+                <b>Join Table</b> (where a join table is used to provide the relationship mapping between the objects), and
+                <b>Foreign-Key</b> (where a foreign key is placed in the table of the object contained in the Map.
+		    </p>
+            <p>
+                The various possible relationships are described below.
+            </p>
+            <ul>
+                <li><a href="#join_pc_pc">Map[PC, PC] using join table</a></li>
+                <li><a href="#join_simple_pc">Map[Simple, PC] using join table</a></li>
+                <li><a href="#join_pc_simple">Map[PC, Simple] using join table</a></li>
+                <li><a href="#join_simple_simple">Map[Simple, Simple] using join table</a></li>
+
+                <li><a href="#fk_bi_key">1-N Bidirectional using Foreign-Key (key stored in the value class)</a></li>
+                <li><a href="#fk_uni_key">1-N Unidirectional using Foreign-Key (key stored in the value class)</a></li>
+                <li><a href="#fk_uni_value">1-N Unidirectional using Foreign-Key (value stored in the key class)</a></li>
+                <li><a href="embedded.html#Map">1-N embedded keys/values using Join Table</a></li>
+                <li><a href="serialised.html#Map">1-N Serialised map</a></li>
+                <li><a href="compound_identity.html#1_N_map_bi">1-N Bidirectional "Compound Identity" (owner object 
+                    as part of PK in value)</a></li>
+            </ul>
+            <p>
+                This page is aimed at Map fields and so applies to fields of Java type
+                <i>java.util.HashMap, java.util.Hashtable, java.util.LinkedHashMap, java.util.Map, java.util.SortedMap, 
+                    java.util.TreeMap, java.util.Properties</i>
+            </p>
+            <p>
+                <b>Please note that RDBMS supports the full range of options on this page, whereas other datastores
+                (ODF, Excel, HBase, MongoDB, etc) persist the Map in a column in the owner object rather than using
+                join-tables or foreign-keys since those concepts are RDBMS-only</b>
+            </p>
+            <br/>
+        </section>
+
+        <section name="1-N Map using Join Table">
+            <p>
+                We have a class <b>Account</b> that contains a Map. With a Map we store values using keys. As a result we have
+                3 main combinations of key and value, bearing in mind whether the key or value is <i>PersistenceCapable</i>.
+            </p>
+
+            <a name="join_pc_pc"/>
+            <subsection name="Map[PC, PC]">
+                <p>
+                    Here both the keys and the values are <i>PersistenceCapable</i>. Like this
+                </p>
+                <img src="../../images/orm/relationship_1_N_uni_map_pc_pc_class.jpg" border="0" alt=""/>
+                
+                <p>
+                    If you define the Meta-Data for these classes as follows
+                </p>
+                <source><![CDATA[
+<package name="com.mydomain">
+    <class name="Account" identity-type="datastore">
+        ...
+        <field name="addresses" persistence-modifier="persistent">
+            <map key-type="com.mydomain.Name" value-type="com.mydomain.Address"/>
+            <join/>
+        </field>
+    </class>
+
+    <class name="Address" identity-type="datastore">
+        ...
+    </class>
+
+    <class name="Name" identity-type="datastore">
+    </class>
+</package>]]></source>
+                <p>
+                    This will create 4 tables in the datastore, one for <b>Account</b>, one for <b>Address</b>, one for <b>Name</b>
+                    and a join table containing foreign keys to the key/value tables.
+                </p>
+                <br/>
+                <img src="../../images/orm/relationship_1_N_uni_map_pc_pc_db.gif" border="0" alt=""/>
+                <br/>
+                <p>
+                    If you want to configure the names of the columns in the "join" table you would use the &lt;key&gt; and
+                    &lt;value&gt; subelements of &lt;field&gt;, something like this
+                </p>
+                <source><![CDATA[
+        <field name="addresses" persistence-modifier="persistent" table="ACCOUNT_ADDRESS">
+            <map key-type="com.mydomain.Name" value-type="com.mydomain.Address"/>
+            <join>
+                <column name="ACCOUNT_ID"/>
+            </join>
+            <key>
+                <column name="NAME_ID"/>
+            </key>
+            <value>
+                <column name="ADDRESS_ID"/>
+            </value>
+        </field>]]></source>
+                <p>
+                    If you wish to fully define the schema table and column names etc, follow these tips
+                </p>
+                <ul>
+                    <li>To specify the name of the table where a class is stored, specify the <i>table</i> 
+                        attribute on the <b>class</b> element</li>
+                    <li>To specify the names of the columns where the fields of a class are stored, specify 
+                        the <i>column</i> attribute on the <b>field</b> element.</li>
+                    <li>To specify the name of the join table, specify the <i>table</i> attribute on the 
+                        <b>field</b> element.</li>
+                    <li>To specify the names of the columns of the join table, specify the <i>column</i> 
+                        attribute on the <b>join</b>, <b>key</b>, and <b>value</b> elements.</li>
+                    <li>To specify the foreign-key between container table and join table, specify 
+                        &lt;foreign-key&gt; below the &lt;join&gt; element.</li>
+                    <li>To specify the foreign-key between join table and key table, specify &lt;foreign-key&gt; below
+                        the &lt;key&gt; element.</li>
+                    <li>To specify the foreign-key between join table and value table, specify &lt;foreign-key&gt; below
+                        the &lt;value&gt; element.</li>
+                </ul>
+                <p>
+                    Which changes the names of the join table to ACCOUNT_ADDRESS from ACCOUNT_ADDRESSES and the names of the columns in 
+                    the join table from ACCOUNT_ID_OID to ACCOUNT_ID, from NAME_ID_KID to NAME_ID, and from 
+                    ADDRESS_ID_VID to ADDRESS_ID.
+                </p>
+                <br/>
+            </subsection>
+
+            <a name="join_simple_pc"/>
+            <subsection name="Map[Simple, PC]">
+                <p>
+                    Here our key is a simple type (in this case a String) and the values are <i>PersistenceCapable</i>. Like this
+                </p>
+                <img src="../../images/orm/relationship_1_N_uni_map_simple_pc_class.jpg" border="0" alt=""/>
+
+                <p>
+                    If you define the Meta-Data for these classes as follows
+                </p>
+                <source><![CDATA[
+<package name="com.mydomain">
+    <class name="Account" identity-type="datastore">
+        ...
+        <field name="addresses" persistence-modifier="persistent">
+            <map key-type="java.lang.String" value-type="com.mydomain.Address"/>
+            <join/>
+        </field>
+    </class>
+
+    <class name="Address" identity-type="datastore">
+        ...
+    </class>
+</package>]]></source>
+                <br/>
+                <p>
+                    This will create 3 tables in the datastore, one for <b>Account</b>, one for <b>Address</b>
+                    and a join table also containing the key.
+                </p>
+                <img src="../../images/orm/relationship_1_N_uni_map_simple_pc_db.gif" border="0" alt=""/>
+                <br/>
+                <p>
+                    If you want to configure the names of the columns in the "join" table you would use the &lt;key&gt; and
+                    &lt;value&gt; subelements of &lt;field&gt; as shown above.
+                </p>
+                <p>
+                    Please note that the column ADPT_PK_IDX is added by DataNucleus when the column type of the key is not valid to be
+                    part of a primary key (with the RDBMS being used). If the column type of your key is acceptable for use as part
+                    of a primary key then you will not have this "ADPT_PK_IDX" column.
+                </p>
+                <br/>
+            </subsection>
+
+            <a name="join_pc_simple"/>
+            <subsection name="Map[PC, Simple]">
+                <p>
+                    This operates exactly the same as "Map[Simple, PC]" except that the additional table is for the key instead of the value.
+                </p>
+            </subsection>
+
+            <a name="join_simple_simple"/>
+            <subsection name="Map[Simple, Simple]">
+                <p>
+                    Here our keys and values are of simple types (in this case a String). Like this
+                </p>
+                <img src="../../images/orm/relationship_1_N_uni_map_string_string_class.jpg" border="0" alt=""/>
+
+                <p>
+                    If you define the Meta-Data for these classes as follows
+                </p>
+                <source><![CDATA[
+<package name="com.mydomain">
+    <class name="Account" identity-type="datastore">
+        ...
+        <field name="addresses" persistence-modifier="persistent">
+            <map key-type="java.lang.String" value-type="java.lang.String"/>
+            <join/>
+        </field>
+    </class>
+</package>]]></source>
+                <p>
+                    This results in just 2 tables. The "join" table contains both the key AND the value.
+                </p>
+                <img src="../../images/orm/relationship_1_N_uni_map_simple_simple_db.gif" border="0" alt=""/>
+                <br/>
+                <p>
+                    If you want to configure the names of the columns in the "join" table you would use the &lt;key&gt; and
+                    &lt;value&gt; subelements of &lt;field&gt; as shown above.
+                </p>
+                <p>
+                    Please note that the column ADPT_PK_IDX is added by DataNucleus when the column type of the key is not valid to be
+                    part of a primary key (with the RDBMS being used). If the column type of your key is acceptable for use as part
+                    of a primary key then you will not have this "ADPT_PK_IDX" column.
+                </p>
+                <br/>
+            </subsection>
+
+            <subsection name="Embedded">
+                <p>
+                    The above relationship types assume that all PersistenceCapable classes in the 1-N relation will have their 
+                    own table. A variation on this is where you have a join table but you embed the keys, the values, or the keys and
+                    the values of the map into this join table. This is described in <a href="embedded.html#Map">Embedded Maps</a>.
+                </p>
+            </subsection>
+
+            <br/>
+        </section>
+
+        <section name="1-N Map using Foreign-Key">
+            <a name="fk_bi_key"/>
+            <subsection name="1-N Foreign-Key Bidirectional (key stored in value)">
+                <p>
+                    In this case we have an object with a Map of objects and we're associating the objects using a foreign-key in the table
+                    of the value.
+                </p>
+                <img src="../../images/orm/relationship_1_N_bi_map_fk_simple_pc_class.jpg" border="0" alt=""/>
+                <p>
+                    With these classes we want to store a foreign-key in the value table (ADDRESS), and we want to use the "alias"
+                    field in the Address class as the key to the map. If you define the Meta-Data for these classes as follows
+                </p>
+                <source><![CDATA[
+<package name="com.mydomain">
+    <class name="Account" identity-type="datastore">
+        ...
+        <field name="addresses" persistence-modifier="persistent" mapped-by="account">
+            <map key-type="java.lang.String" value-type="com.mydomain.Address"/>
+            <key mapped-by="alias"/>
+        </field>
+    </class>
+
+    <class name="Address" identity-type="datastore">
+        ...
+        <field name="account" persistence-modifier="persistent">
+        </field>
+        <field name="alias" null-value="exception">
+            <column name="KEY" length="20" jdbc-type="VARCHAR"/>
+        </field>
+    </class>
+</package>]]></source>
+                <p>
+                    This will create 2 tables in the datastore. One for <u>Account</u>, and one for <u>Address</u>. 
+                    The table for <u>Address</u> will contain the key field as well as an index to the <u>Account</u> record 
+                    (notated by the <i>mapped-by</i> tag).
+                </p>
+                <br/>
+                <img src="../../images/orm/relationship_1_N_map_key_in_value_db.gif" border="0" alt=""/>
+                <br/>
+            </subsection>
+
+            <a name="fk_uni_key"/>
+            <subsection name="1-N Foreign-Key Unidirectional (key stored in value)">
+                <p>
+                    In this case we have an object with a Map of objects and we're associating the objects using a foreign-key in the table
+                    of the value. As in the case of the bidirectional relation above we're using a field (<i>alias</i>) in the Address
+                    class as the key of the map.
+                </p>
+                <img src="../../images/orm/relationship_1_N_uni_map_fk_simple_pc_class.jpg" border="0" alt=""/>
+                <p>
+                    In this relationship, the <u>Account</u> class has a Map of <u>Address</u> objects, yet the <u>Address</u>
+                    knows nothing about the <u>Account</u>. In this case we don't have a field in the Address to link back to the
+                    Account and so DataNucleus has to use columns in the datastore representation of the <u>Address</u> class. So we define
+                    the MetaData like this
+                </p>
+                <source><![CDATA[
+<package name="com.mydomain">
+    <class name="Account" identity-type="datastore">
+        ...
+        <field name="addresses" persistence-modifier="persistent">
+            <map key-type="java.lang.String" value-type="com.mydomain.Address"/>
+            <key mapped-by="alias"/>
+            <value column="ACCOUNT_ID_OID"/>
+        </field>
+    </class>
+
+    <class name="Address" identity-type="datastore">
+        ...
+        <field name="alias" null-value="exception">
+            <column name="KEY" length="20" jdbc-type="VARCHAR"/>
+        </field>
+    </class>
+</package>]]></source>
+                <p>
+                    Again there will be 2 tables, one for <b>Address</b>, and one for <b>Account</b>.
+                    Note that we have no "mapped-by" attribute specified on the "field" element, and also no "join" element. 
+                    If you wish to specify the names of the columns used in the schema for the foreign key in the <u>Address</u> table 
+                    you should use the <i>value</i> element within the field of the map.
+                </p>
+                <br/>
+                <img src="../../images/orm/relationship_1_N_map_key_in_value_db.gif" border="0" alt=""/>
+                <br/>
+                <p>
+                    In terms of operation within your classes of assigning the objects in the relationship. You have to take your 
+                    <u>Account </u>object and add the <u>Address</u> to the <u>Account</u> map field since the <u>Address</u> 
+                    knows nothing about the <u>Account</u>. Also be aware that each <u>Address</u> object can have only one owner, 
+                    since it has a single foreign key to the <u>Account</u>. If you wish to have an <u>Address</u> assigned to multiple 
+                    <u>Accounts</u> then you should use the "Join Table" relationship above.
+                </p>
+                <br/>
+            </subsection>
+
+            <a name="fk_uni_value"/>
+            <subsection name="1-N Foreign-Key Unidirectional (value stored in key)">
+                <p>
+                    In this case we have an object with a Map of objects and we're associating the objects using a foreign-key in the table
+                    of the key. We're using a field (<i>businessAddress</i>) in the Address class as the value of the map.
+                </p>
+                <img src="../../images/orm/relationship_1_N_uni_map_fk_simple_pc_class.jpg" border="0" alt=""/>
+                <p>
+                    In this relationship, the <u>Account</u> class has a Map of <u>Address</u> objects, yet the <u>Address</u>
+                    knows nothing about the <u>Account</u>. We don't have a field in the Address to link back to the
+                    Account and so DataNucleus has to use columns in the datastore representation of the <u>Address</u> class. So we define
+                    the MetaData like this
+                </p>
+                <source><![CDATA[
+<package name="com.mydomain">
+    <class name="Account" identity-type="datastore">
+        ...
+        <field name="phoneNumbers" persistence-modifier="persistent">
+            <map key-type="com.mydomain.Address" value-type="java.lang.String"/>
+            <key column="ACCOUNT_ID_OID"/>
+            <value mapped-by="businessPhoneNumber"/>
+        </field>
+    </class>
+
+    <class name="Address" identity-type="datastore">
+        ...
+        <field name="businessPhoneNumber" null-value="exception">
+            <column name="BUS_PHONE" length="20" jdbc-type="VARCHAR"/>
+        </field>
+    </class>
+</package>]]></source>
+                <p>
+                    There will be 2 tables, one for <b>Address</b>, and one for <b>Account</b>. The key thing here is that we have
+                    specified a "mapped-by" on the "value" element.
+                    Note that we have no "mapped-by" attribute specified on the "field" element, and also no "join" element. 
+                    If you wish to specify the names of the columns used in the schema for the foreign key in the <u>Address</u> table 
+                    you should use the <i>key</i> element within the field of the map.
+                </p>
+                <br/>
+                <img src="../../images/orm/relationship_1_N_map_value_in_key_db.gif" border="0" alt=""/>
+                <br/>
+                <p>
+                    In terms of operation within your classes of assigning the objects in the relationship. You have to take your 
+                    <u>Account </u>object and add the <u>Address</u> to the <u>Account</u> map field since the <u>Address</u> 
+                    knows nothing about the <u>Account</u>. Also be aware that each <u>Address</u> object can have only one owner, 
+                    since it has a single foreign key to the <u>Account</u>. If you wish to have an <u>Address</u> assigned to multiple 
+                    <u>Accounts</u> then you should use the "Join Table" relationship above.
+                </p>
+                <br/>
+            </subsection>
+
+        </section>
+
+    </body>
+</document>

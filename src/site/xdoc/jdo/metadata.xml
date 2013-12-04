@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<document xmlns="http://maven.apache.org/XDOC/2.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+    <properties>
+        <title>JDO Metadata Overview</title>
+    </properties>
+    <body>
+        <section name="JDO : Metadata Overview">
+            <p>
+                JDO requires the persistence of classes to be defined via Metadata. This Metadata
+                can be provided in the following forms
+            </p>
+            <ul>
+                <li><a href="metadata_xml.html">XML</a> : the traditional mechanism, with XML files 
+                    containing information for each class to be persisted. As a further complication
+                    you can define basic persistence metadata for a class in one file, and then ORM
+                    metadata for that class in a separate file (since the ORM metadata is specific
+                    to a certain datastore).</li>
+                <li><a href="annotations.html">Annotations</a> : using JDK1.5+ annotations in the 
+                    classes to be persisted</li>
+                <li><a href="metadata_api.html">API</a> : a programmatic API allowing definition
+                    of which classes are to be persisted at runtime</li>
+            </ul>
+            <table>
+                <tr>
+                    <td>When not using the MetaData API we recommend that you use either XML or annotations
+                    for the basic persistence information, but always use XML for ORM information. This is
+                    because it is liable to change at deployment time and hence is accessible when in XML form
+                    whereas in annotations you add an extra compile cycle (and also you may need to deploy
+                    to some other datastore at some point, hence needing a different deployment).</td>
+                </tr>
+            </table>
+
+            <subsection name="Metadata priority">
+                <p>
+                    JDO defines the priority order for metadata as being
+                </p>
+                <ul>
+                    <li>API Metadata</li>
+                    <li>ORM XML Metadata</li>
+                    <li>JDO XML Metadata</li>
+                    <li>Annotations</li>
+                </ul>
+                <p>
+                    So if a class has Metadata defined by API then that will override all other
+                    Metadata. If a class has annotations and JDO XML Metadata then the XML Metadata
+                    will take precedence over the annotations (or rather be merged on top of the
+                    annotations). You can use whichever (or multiple) of the above forms at the same time
+                    for a single class.
+                </p>
+                <br/>
+            </subsection>
+
+            <subsection name="XML Metadata loading">
+                <p> 
+                    JDO expects the XML Meta-Data to be specified in a file or files in particular
+                    locations in the file system. For example, if you have a class 
+                    <i>com.mycompany.sample.myexample</i>, JDO will look for any of the following 
+                    files until it finds one (in the order stated) :-
+                </p>
+                <source>
+META-INF/package.jdo
+WEB-INF/package.jdo
+package.jdo
+com/package.jdo
+com/mycompany/package.jdo
+com/mycompany/sample/package.jdo
+com/mycompany/sample/myexample.jdo</source>
+                <p>
+                    In addition, for this example, DataNucleus allows the previous JDO 1.0.0 alternatives 
+                    of
+                </p>
+                <source>
+com.jdo
+com/mycompany.jdo
+com/mycompany/sample.jdo</source>
+           
+                <p>
+                    In addition to the above, you can split your MetaData definitions between JDO MetaData
+                    files. For example if you have the following classes
+                </p>
+                <source>
+com/mycompany/A.java
+com/mycompany/B.java
+com/mycompany/C.java
+com/mycompany/app1/D.java
+com/mycompany/app1/E.java</source>
+                <p> 
+                    You could define the MetaData for these 5 classes in many ways -- for example put all
+                    class definitions in <b>com/mycompany/package.jdo</b>, or put the definitions for D 
+                    and E in 
+                    <b>com/mycompany/app1/package.jdo</b> and the definitions for A, B, C in 
+                    <b>com/mycompany/package.jdo</b>, or have some in their class named MetaData files e.g 
+                    <b>com/mycompany/app1/A.jdo</b>, or a mixture of the above. DataNucleus will always 
+                    search for the MetaData file containing the class definition for the class that it 
+                    requires. 
+                </p>
+                <br/>
+            </subsection>
+
+            <subsection name="XML Metadata validation">
+                <img src="../images/nucleus_extension.gif" border="0" alt=""/>
+                <p> 
+                    By default any XML Metadata will be validated for accuracy when loading it.
+                    Obviously XML is defined by a DTD or XSD schema and so should follow that.
+                    You can turn off such validations by setting the persistence property
+                    <b>datanucleus.metadata.validate</b> to false when creating your PMF.
+                    Note that this only turns off the XML strictness validation, and <i>not</i>
+                    the checks on inconsistency of specification of relations etc.
+                </p>
+                <br/>
+            </subsection>
+
+            <subsection name="XML ORM Metadata usage">
+                <img src="../images/nucleus_extension.gif" border="0" alt=""/>
+                <p> 
+                    You can use ORM metadata to override particular datastore-specific things like
+                    table and column names. If your application doesn't make use of ORM metadata then
+                    you could turn off the searches for ORM Metadata files when a class is loaded up.
+                    You do this with the persistence property <b>datanucleus.metadata.supportORM</b>
+                    setting it to false.
+                </p>
+                <br/>
+            </subsection>
+
+            <subsection name="Metadata discovery at class initialisation">
+                <img src="../images/nucleus_extension.gif" border="0" alt=""/>
+                <p>
+                    JDO provides a mechanism whereby when a class is initialised (by the ClassLoader)
+                    any PersistenceManagerFactory is notified of its existence, and its Metadata can be
+                    loaded. This is enabled by the enhancement process. If you decided that you maybe only
+                    wanted some classes present in one PMF and other classes present in a different PMF
+                    then you can disable this and leave it to DataNucleus to discover the Metadata when
+                    operations are performed on that PMF. The persistence property to define to disable this
+                    is <b>datanucleus.metadata.autoregistration</b> (setting it to false).
+                </p>
+            </subsection>
+        </section>
+    </body>
+</document>

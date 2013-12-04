@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<document xmlns="http://maven.apache.org/XDOC/2.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+    <properties>
+        <title>OSGi Deployment for JPA</title>
+    </properties>
+
+    <body>
+        <section name="JPA : Usage of DataNucleus within an OSGi environment">
+            <p>
+                DataNucleus jars are OSGi bundles, and as such, can be deployed in an OSGi environment.
+                Being an OSGi environment care must be taken with respect to class-loading. In particular
+                the persistence property <b>datanucleus.primaryClassLoader</b> will need setting.
+                Please refer to the following guide(s) for assistance until a definitive guide can be
+                provided
+            </p>
+            <ul>
+                <li><a href="http://www.datanucleus.org/servlet/wiki/display/USERS/HOWTO+Use+Datanucleus+with+OSGi+and+Spring+DM">Guide to use of DataNucleus with OSGi and Spring dmServer</a></li>
+                <li><a href="http://www.datanucleus.org/servlet/wiki/pages/viewpage.action?pageId=1179712">Guide to JPOX inside Eclipse RCP</a></li>
+                <li><a href="http://www.datanucleus.org/servlet/wiki/pages/viewpage.action?pageId=1179721">Guide to JPOX with Spring and Eclipse RCP</a></li>
+            </ul>
+            <p>
+                An important thing to note : any dependent jar that is required by DataNucleus needs to be OSGi enabled.
+                By this we mean the jar needs to have the MANIFEST.MF file including <i>ExportPackage</i> for
+                the packages required by DataNucleus. Failure to have this will result in <i>ClassNotFoundException</i>
+                when trying to load its classes.
+            </p>
+            <p>
+                Use <i>jdo-api.jar</i> v3.0.1 or later since those are OSGi-enabled.
+                Also the Geronimo "jpa" jar that is included in the DataNucleus distribution is OSGi enabled too.
+            </p>
+            <p>
+                When using DataNucleus in an Eclipse Equinox OSGi environment you can use the persistence property
+                <b>datanucleus.plugin.pluginRegistryClassName</b> as <i>org.datanucleus.plugin.EclipsePluginRegistry</i>
+                and when in other OSGi environments set that property to <i>org.datanucleus.plugin.OSGiPluginRegistry</i>.
+            </p>
+            <br/>
+
+            <subsection name="JPA and OSGi">
+                <p>
+                    In a non OSGi world the persitence provider implementation is loaded using the service provider pattern. 
+                    The full qualified name of the implementation is stored in a file under 
+                    <i>META-INF/services/javax.persistence.spi.PersistenceProvider</i> (inside the jar of the implementation) 
+                    and each time the persistence provider is required it gets loaded with a <i>Class.forName</i> using the 
+                    name of the implementing class found inside the
+                    <i>META-INF/services/javax.persistence.spi.PersistenceProvider</i>. In the OSGi world that doesn't work. 
+                    The bundle that needs to load the persistence provider implementation cannot load 
+                    <i>META-INF/services/javax.persistence.spi.PersistenceProvider</i>. A work around is to copy that file 
+                    inside each bundle that requires access to the peristence provider. Another work around is to export the 
+                    persistence provider as OSGi service. This is what the DataNucleus JPA jar does.
+                </p>
+                <p>
+                    Further reading available on
+                    <a href="http://jazoon.com/Portals/0/Content/slides/we_a7_1630-1650_ward.pdf">this link</a>
+                </p>
+                <br/>
+            </subsection>
+
+            <subsection name="Sample using OSGi and JPA">
+                <p>
+                    If you go to <a href="http://sourceforge.net/projects/datanucleus/files/datanucleus-samples/3.1/">DataNucleus sample downloads</a>
+                    you will find a sample called <i>datanucleus-samples-osgi-jpa</i>. This provides a simple example
+                    that you can build and load into such as Apache Karaf to demonstrate JPA persistence. Here we
+                    attempt to highlight the key aspects specific to OSGi in this sample.
+                </p>
+                <p>
+                    Model classes are written in the exact same way as you would for any application.
+                </p>
+                <p>
+                    Creation of the EMF is specified in a persistence-unit as normal <b>except that</b>
+                    we need to provide two overriding properties
+                </p>
+<source><![CDATA[
+        Map<Object, Object> overrideProps = new HashMap();
+        overrideProps.put("datanucleus.primaryClassLoader", this.getClass().getClassLoader());
+        overrideProps.put("datanucleus.plugin.pluginRegistryClassName", "org.datanucleus.plugin.OSGiPluginRegistry");
+
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("PU", overrideProps);]]></source>
+                <p>
+                    so we have provided a class loader for the OSGi context of the application, and also specified
+                    that we want to use the <i>OSGiPluginRegistry</i>.
+                </p>
+                <p>
+                    All persistence and query operations using EntityManager etc thereafter are identical to what
+                    you would use in a normal JSE/JEE application.
+                </p>
+                <p>
+                    The <i>pom.xml</i> also defines the imports/exports for our OSGi application bundle, so look at
+                    this if wanting guidance on what these could look like when using Maven and the "felix bundle" plugin.
+                </p>
+                <p>
+                    If you read the file <i>README.txt</i> you can see basic instructions on how to deploy this
+                    application into a fresh download of Apache Karaf, and run it. It makes uses of Spring DM to
+                    start the JPA "application".
+                </p>
+            </subsection>
+        </section>
+    </body>
+</document>

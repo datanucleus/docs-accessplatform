@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<document xmlns="http://maven.apache.org/XDOC/2.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+    <properties>
+        <title>JDO Data Federation</title>
+    </properties>
+
+    <body>
+        <section name="JDO : Data Federation">
+            <img src="../images/nucleus_extension.gif" alt=""/>
+            <p>
+                By default JDO provides a <a href="pmf.html">PersistenceManagerFactory</a> (PMF) to represent a datastore.
+                DataNucleus extends this to allow for a PMF to represent multiple datastores. This is intended for
+                use where you have a data model for an application and maybe some classes are persisted into 
+                a different datastore. 
+                <b>Note that this is work-in-progress and only tested for basic persist/retrieve operations
+                using different schemas of the same datastore</b>.
+                Obviously if you have relations between one object in one datastore and another object in another
+                datastore you cannot have <i>foreign-keys</i> (or equivalent).
+            </p>
+            <br/>
+
+            <subsection name="Defining Primary and Secondary Datastores">
+            <p>
+                You could specify the datastores to be used for the PMF like this. Here we have
+                <i>datanucleus.properties</i> defining the <b>primary datastore</b>.
+            </p>
+<source><![CDATA[
+javax.jdo.option.ConnectionDriverName=com.mysql.jdbc.Driver
+javax.jdo.option.ConnectionURL=jdbc:mysql://127.0.0.1/nucleus?useServerPrepStmts=false
+javax.jdo.option.ConnectionUserName=mysql
+javax.jdo.option.ConnectionPassword=
+
+datanucleus.datastore.store2=datanucleus2.properties]]></source>
+            <p>
+                You note that this refers to a <b>store2</b>, which is defined by <i>datanucleus2.properties</i>.
+                So the <b>secondary datastore</b> is defined by
+            </p>
+
+<source><![CDATA[
+javax.jdo.option.ConnectionURL=mongodb:/nucleus]]></source>
+                <br/>
+            </subsection>
+
+            <subsection name="Defining which class is persisted to which datastore">
+                <p>
+                    So now we need to notate which class is persisted to <b>primary</b> and which is persisted to
+                    <b>secondary</b> datastores. We do it like this, for the classes persisted to the
+                    secondary datastore.
+                </p>
+<source><![CDATA[
+@PersistenceCapable
+@Extension(vendorName="datanucleus", key="datastore", value="store2")
+public class MyOtherClass
+{
+    ...
+}]]></source>
+                <p>
+                    So for any persistence of objects of type <i>MyOtherClass</i>, they will be persisted into
+                    the MongoDB secondary datastore.
+                </p>
+            </subsection>
+        </section>
+    </body>
+</document>

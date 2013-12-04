@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<document xmlns="http://maven.apache.org/XDOC/2.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+    <properties>
+        <title>Datastore Identity</title>
+    </properties>
+
+    <body>
+        <section name="JDO : Datastore Identity">
+            <p>
+                With <b>datastore identity</b> you are leaving the assignment of id's to DataNucleus and your class will 
+                <b>not</b> have a field for this identity - it will be added to the datastore representation by DataNucleus. 
+                It is, to all extents and purposes a <i>surrogate key</i> that will have its own column in the 
+                datastore. To specify that a class is to use <b>datastore identity</b> with JDO, you add the 
+                following to the MetaData for the class.
+            </p>
+            <source><![CDATA[
+<class name="MyClass" identity-type="datastore">
+...
+</class>]]></source>
+            <p>or using JDO annotations</p>
+            <source><![CDATA[
+@PersistenceCapable(identityType=IdentityType.DATASTORE)
+public class MyClass
+{
+    ...
+}]]></source>
+            <p>
+                So you are specifying the <b>identity-type</b> as <i>datastore</i>. You don't need to add this 
+                because <i>datastore</i> is the default, so in the absence of any value, it will be assumed to be 
+                'datastore'.
+            </p>
+            <table>
+                <tr>
+                    <td>
+                        <b>When you have an inheritance hierarchy, you should specify the identity type in the 
+                        <u>base</u> class for the inheritance tree. This is then used for all persistent classes 
+                        in the tree.</b>
+                    </td>
+                </tr>
+            </table>
+            <br/>
+
+            <subsection name="Generating identities">
+                <img src="../images/jdo2.gif" alt=""/>
+                <p>
+                    By choosing <b>datastore identity</b> you are handing the process of identity generation to the 
+                    JDO implementation. This does not mean that you haven't got any control over how it does this. 
+                    JDO 2 defines many ways of generating these identities and DataNucleus supports all of these and 
+                    provides some more of its own besides.
+                </p>
+                <p>
+                    Defining which one to use is a simple matter of adding a MetaData element to your classes 
+                    definition, like this
+                </p>
+                <source><![CDATA[
+<class name="MyClass" identity-type="datastore">
+    <datastore-identity strategy="sequence" sequence="MY_SEQUENCE"/>
+    ...
+</class>
+
+
+<class name="MyClass" identity-type="datastore">
+    <datastore-identity strategy="identity"/>
+    ...
+</class>]]></source>
+                <p>
+                    or using annotations, for example
+                </p>
+                <source>
+@PersistenceCapable
+@DatastoreIdentity(strategy="sequence", sequence="MY_SEQUENCE")
+public class MyClass
+{
+    ...
+}</source>
+                <p>
+                    Some of the datastore identity strategies require additional attributes, but the specification is
+                    straightforward.
+                </p>
+                <p>See also :-</p>
+                <ul>
+                    <li><a href="value_generation.html">Identity Generation Guide</a> - strategies for generating ids</li>
+                    <li><a href="metadata_xml.html#datastore-identity">MetaData reference for &lt;datastore-identity&gt; element</a></li>
+                    <li><a href="annotations.html#DatastoreIdentity">Annotations reference for @DatastoreIdentity</a></li>
+                </ul>
+                <br/>
+            </subsection>
+
+            <subsection name="Accessing the Identity">
+                <p>
+                    When using <b>datastore identity</b>, the class has no associated field so you can't just 
+                    access a field of the class to see its identity - if you need a field to be able to access the 
+                    identity then you should be using<a href="application_identity.html">application identity</a>. 
+                    There are, however, ways to get the identity for the datastore identity case, if you have the
+                    object.
+                </p>
+                <source>Object id = pm.getObjectId(obj);</source>
+                <source>Object id = JDOHelper.getObjectId(obj);</source>
+                <p>
+                    You should be aware however that the "identity" is in a complicated form, and is not available as 
+                    a simple integer value for example. Again, if you want an identity of that form then you should use 
+                    <a href="application_identity.html">application identity</a>
+                </p>
+                <br/>
+            </subsection>
+
+            <subsection name="DataNucleus Implementation">
+                <p>
+                    When implementing <b>datastore identity</b> all JDO implementations have to provide a public 
+                    class that represents this identity. If you call <i>pm.getObjectId(...)</i> for a class using 
+                    datastore identity you will be passed an object which, in the case of DataNucleus will be of type 
+                    <i>org.datanucleus.identity.OIDImpl</i>. If you were to call "toString()" on this object you would 
+                    get something like 
+                </p>
+                <source>
+1[OID]mydomain.MyClass
+This is made up of :-
+    1 = identity number of this object
+    class-name</source>
+                <p>
+                    <b>The definition of this datastore identity is JDO implementation dependent. As a result you 
+                        should not use the <i>org.datanucleus.identity.OID</i> class in your application if you want to 
+                        remain implementation independent</b>
+                </p>
+                <p>
+                    <img src="../images/nucleus_plugin.gif" border="0" alt=""/>
+                    DataNucleus allows you the luxury of being able to 
+                    <a href="http://www.datanucleus.org/extensions/datastoreidentity.html">provide your own datastore identity class</a> 
+                    so you can have whatever formatting you want for identities.
+                </p>
+                <br/>
+            </subsection>
+
+            <subsection name="Accessing objects by Identity">
+                <p>
+                    If you have the JDO identity then you can access the object with that identity like this
+                </p>
+                <source>Object obj = pm.getObjectById(id);</source>
+                <p>
+                    You can also access the object from the object class name and the toString() form of the
+                    datastore identity (e.g "1[OID]mydomain.MyClass") like this
+                </p>
+                <source>Object obj = pm.getObjectById(MyClass.class, mykey);</source>
+                <br/>
+            </subsection>
+        </section>
+    </body>
+</document>

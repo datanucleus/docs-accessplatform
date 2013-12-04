@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<document xmlns="http://maven.apache.org/XDOC/2.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+    <properties>
+        <title>JPA Queries - Stored Procedures</title>
+    </properties>
+
+    <body>
+        <section name="JPA : Stored Procedures">
+            <p>
+                The JPA 2.1 specification adds support for calling stored procedures through its API.
+                It allows some flexibility in the type of stored procedure being used, supporting IN/OUT/INOUT parameters
+                as well as result sets being returned. Obviously if a datastore does not support stored procedures then
+                this functionality will not apply.
+            </p>
+            <p>
+                You start off by creating a stored procedure query, like this, referencing the stored procedure name
+                in the datastore.
+            </p>
+<source><![CDATA[
+StoredProcedureQuery spq = em.createStoredProcedureQuery("PERSON_SP_1");
+]]></source>
+            <p>
+                If we have any parameters in this stored procedure we need to register them, for example
+            </p>
+<source><![CDATA[
+spq.registerStoredProcedureParameter("PARAM1", String.class, ParameterMode.IN);
+spq.registerStoredProcedureParameter("PARAM2", Integer.class, ParameterMode.OUT);
+]]></source>
+            <p>
+                If you have any result class, or result set mapping then you can specify those in the
+                <i>createStoredProcedureQuery</i> call.
+                Now we are ready to execute the query and access the results.
+            </p>
+            <br/>
+
+            <subsection name="Simple execution, returning a result set">
+                <p>
+                    A common form of stored procedure will simply return a single result set. 
+                    You execute such a procedure as follows
+                </p>
+<source><![CDATA[
+List results = spq.getResultList();
+]]></source>
+                <p>
+                    or if expecting a single result, then
+                </p>
+<source><![CDATA[
+Object result = spq.getSingleResult();
+]]></source>
+                <br/>
+            </subsection>
+
+            <subsection name="Simple execution, returning output parameters">
+                <p>
+                    A common form of stored procedure will simply return output parameter(s). 
+                    You execute such a procedure as follows
+                </p>
+<source><![CDATA[
+spq.execute();
+Object paramVal = spq.getOutputParameterValue("PARAM2");
+]]></source>
+                <p>or you can also access the output parameters via position (if specified by position).</p>
+                <br/>
+            </subsection>
+
+            <subsection name="Generalised execution, for multiple result sets">
+                <p>
+                    A more complicated, yet general, form of execution of the stored procedure is as follows
+                </p>
+<source><![CDATA[
+boolean isResultSet = spq.execute(); // returns true when we have a result set from the proc
+List results1 = spq.getResultList(); // get the first result set
+if (spq.hasMoreResults())
+{
+    List results2 = spq.getResultList(); // get the second result set
+}
+]]></source>
+                <p>
+                    So the user can get hold of multiple result sets returned by their stored procedure.
+                </p>
+                <br/>
+            </subsection>
+        </section>
+
+        <a name="named"/>
+        <section name="Named Stored Procedure Queries">
+            <p>
+                Just as with normal queries, you can also register a stored procedure query at development time
+                and then access it via name from the EntityManager. So we define one like this (not important
+                on which class it is defined)
+            </p>
+<source><![CDATA[
+@NamedStoredProcedureQuery(name="myTestProc", procedureName="MY_TEST_SP_1",
+    parameters={@StoredProcedureParameter(name="PARAM1", type=String.class, mode=ParameterMode.IN})
+
+@Entity
+public class MyClass {...}
+]]></source>
+            <p>
+                and then create the query from the EntityManager
+            </p>
+<source><![CDATA[
+StoredProcedureQuery spq = em.createNamedStoredProcedureQuery("myTestProc");
+]]></source>
+        </section>
+
+    </body>
+</document>

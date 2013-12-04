@@ -1,0 +1,310 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<document xmlns="http://maven.apache.org/XDOC/2.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+    <properties>
+        <title>Application Identity</title>
+    </properties>
+
+    <body>
+        <section name="JPA : Application Identity">
+            <p>
+                With <b>application identity</b> you are taking control of the specification of id's to DataNucleus. 
+                Application identity requires a primary key class <i>(unless using SingleFieldIdentity, where one is 
+                provided for you)</i>, and each persistent capable class may define a different class for its primary 
+                key, and different persistent capable classes can use the same primary key class, as appropriate. With
+                <b>application identity</b> the field(s) of the primary key will be present as field(s) of the class 
+                itself. To specify that a class is to use <b>application identity</b>, you add the following to 
+                the MetaData for the class.
+            </p>
+            <source><![CDATA[
+<entity class="org.mydomain.MyClass">
+    <id-class class="org.mydomain.MyIdClass"/>
+    <attributes>
+        <id name="myPrimaryKeyField"/>
+    </attributes>
+</entity>]]></source>
+            <p>
+                For JPA we specify the <b>id</b> field and <b>id-class</b>.
+                Alternatively, if we are using annotations
+            </p>
+            <source><![CDATA[
+@Entity
+@IdClass(class=MyIdClass.class)
+public class MyClass
+{
+    @Id
+    private long myPrimaryKeyField;
+}]]></source>
+            <table>
+                <tr>
+                    <td>
+                        <b>When you have an inheritance hierarchy, you should specify the identity type in the 
+                        <u>base instantiable</u> class for the inheritance tree. This is then used for all persistent 
+                        classes in the tree.</b> This means that you can have MappedSuperclass without any identity
+                        fields/properties as superclass, and then the base instantiable class is the first persistable
+                        class which has the identity field(s). This is a change from DataNucleus 2.2 where you had to
+                        have identity fields in the base persistable class of the inheritance tree.
+                    </td>
+                </tr>
+            </table>
+            <p>See also :-</p>
+                <ul>
+                    <li><a href="metadata_xml.html#id">MetaData reference for &lt;id&gt; element</a></li>
+                    <li><a href="annotations.html#Id">Annotations reference for @Id</a></li>
+                </ul>
+            <br/>
+
+            <subsection name="Primary Key">
+                <p>
+                    Using <b>application identity</b> requires the use of a Primary Key class. With JPA when you
+                    have a single-field you don't need to provide a primary key class.
+                    Where the class has multiple fields that form the primary key a Primary Key class must be provided
+                    (via the <b>id-class</b>).
+                </p>
+                <p>See also :-</p>
+                <ul>
+                    <li><a href="#primarykey">Primary Key Guide</a> - user-defined and built-in primary keys</li>
+                </ul>
+                <br/>
+            </subsection>
+
+            <subsection name="Generating identities">
+                <p>
+                    By choosing <b>application identity</b> you are controlling the process of identity generation 
+                    for this class. This does not mean that you have a lot of work to do for this. JPA1 defines many 
+                    ways of generating these identities and DataNucleus supports all of these and provides some 
+                    more of its own besides.
+                </p>
+                <p>See also :-</p>
+                <ul>
+                    <li><a href="value_generation.html">Identity Generation Guide</a> - strategies for generating ids</li>
+                </ul>
+                <br/>
+            </subsection>
+
+            <subsection name="Changing Identities">
+                <p>
+                    JPA doesn't define what happens if you change the identity (an identity field) of an object
+                    once persistent. <b>DataNucleus doesn't currently support changes to identities.</b>
+                </p>
+                <br/>
+            </subsection>
+
+            <subsection name="Accessing objects by Identity">
+                <p>
+                    You access an object from its object class name and identity "value" as follows
+                </p>
+                <source>Object obj = em.find(MyClass.class, mykey);</source>
+                <p>
+                    If you have defined your own "IdClass" then the <i>mykey</i> is the toString() form
+                    if the identity of your PK class.
+                </p>
+                <br/>
+            </subsection>
+        </section>
+
+        <section name="JPA : PrimaryKey Classes">
+            <p>
+                When you choose application identity you are defining which fields of the class are part of the primary key,
+                and you are taking control of the specification of id's to DataNucleus. Application identity requires a
+                primary key (PK) class, and each persistent capable class may define a different class for its primary 
+                key, and different persistent capable classes can use the same primary key class, as appropriate. 
+                If you have only a single primary-key field then there are builtin PK classes so you
+                can forget this section. Where you have more than 1 primary key field, you would define 
+                the PK class like this
+            </p>
+            <source><![CDATA[
+<entity class="MyClass">
+    <id-class class="MyIdClass"/>
+    ...
+</entity>]]></source>
+            <p>or using annotations</p>
+            <source><![CDATA[
+@Entity
+@IdClass(class=MyIdClass.class)
+public class MyClass
+{
+    ...
+}]]></source>
+            <p>
+                You now need to define the PK class to use. This is simplified for you because <b>if you have only 
+                one PK field then you dont need to define a PK class</b> and you only define it when you have a 
+                composite PK.
+            </p>
+            <p>
+                An important thing to note is that the PK can only be made up of fields of the following Java types
+            </p>
+            <ul>
+                <li>Primitives : <b>boolean</b>, <b>byte</b>, <b>char</b>, <b>int</b>, <b>long</b>, 
+                    <b>short</b></li>
+                <li>java.lang : <b>Boolean</b>, <b>Byte</b>, <b>Character</b>, <b>Integer</b>, <b>Long</b>, 
+                    <b>Short</b>, <b>String</b>, <b>Enum</b>, StringBuffer</li>
+                <li>java.math : <b>BigInteger</b></li>
+                <li>java.sql : <b>Date</b>, <b>Time</b>, <b>Timestamp</b></li>
+                <li>java.util : <b>Date</b>, Currency, Locale, TimeZone, UUID</li>
+                <li>java.net : URI, URL</li>
+                <li>javax.jdo.spi : <b>PersistenceCapable</b></li>
+            </ul>
+            <p>
+                Note that the types in <b>bold</b> are JPA standard types. Any others are DataNucleus extensions and,
+                as always, <a href="../datastores/index.html">check the specific datastore docs</a> to see what is
+                supported for your datastore.
+            </p>
+
+            <subsection name="Single PrimaryKey field">
+                <p>
+                    The simplest way of using <b>application identity</b> is where you have a single PK field, and in 
+                    this case you use an inbuilt primary key class that DataNucleus provides, so you don't need to 
+                    specify the <i>objectid-class</i>. Let's take an example</p>
+            	<source><![CDATA[
+public class MyClass
+{
+    long id;
+    ...
+}
+
+<entity class="MyClass">
+    <attributes>
+        <id name="id"/>
+        ...
+    </attributes>
+</entity>]]></source>
+                <p>or using annotations</p>
+<source><![CDATA[
+@Entity
+public class MyClass
+{
+    @Id
+    long id;
+    ...
+}]]></source>
+                <p>
+                    So we didnt specify the JPA "id-class". You will, of course, have to give 
+                    the field a value before persisting the object, either by setting it yourself, or by using a 
+                    <a href="value_generation.html">value-strategy</a> on that field.
+                </p>
+                <br/>
+            </subsection>
+
+            <subsection name="Multiple PrimaryKey field">
+                <img src="../images/nucleus_extension.gif" alt=""/>
+                <p>
+                    Since there are many possible combinations of primary-key fields it is impossible for JPA
+                    to provide a series of builtin composite primary key classes. However the 
+                    <a href="enhancer.html">DataNucleus enhancer</a>
+                    provides a mechanism for auto-generating a primary-key class for a persistable class. It follows
+                    the rules listed below and should work for all cases. Obviously if you want to tailor the
+                    output of things like the PK toString() method then you ought to define your own.
+                    The enhancer generation of primary-key class is only enabled if you don't define your own
+                    class.
+                </p>
+                <br/>
+            </subsection>
+
+            <subsection name="Rules for User-Defined PrimaryKey classes">
+                <p> If you wish to use <b>application identity</b> and don't want to use the "SingleFieldIdentity" 
+                    builtin PK classes then you must define a Primary Key class of your own. You can't use classes 
+                    like java.lang.String, or java.lang.Long directly. You must follow these rules when defining 
+                    your primary key class.</p>
+                <ul>
+                    <li>the Primary Key class must be public</li>
+                    <li>the Primary Key class must implement Serializable</li>
+                    <li>the Primary Key class must have a public no-arg constructor, which might be the default 
+                        constructor</li>
+                    <li>The PrimaryKey class can have a constructor taking the primary key fields,
+                        or can use Java bean setters/getters</li>
+                    <li>the field types of all non-static fields in the Primary Key class must be serializable, 
+                        and are recommended to be primitive, String, Date, or Number types</li>
+                    <li>all serializable non-static fields in the Primary Key class can be public, but
+                        package/protected/private should also be fine</li>
+                    <li>the names of the non-static fields in the Primary Key class must include the names of the 
+                        primary key fields in the Entity, and the types of the common fields must be identical</li>
+                    <li>the equals() and hashCode() methods of the Primary Key class must use the value(s) of all 
+                        the fields corresponding to the primary key fields in the JDO class</li>
+                    <li>if the Primary Key class is an inner class, it must be static</li>
+                    <li>the Primary Key class must override the toString() method defined in Object, and return a 
+                        String that can be used as the parameter of a constructor</li>
+                    <li>the Primary Key class must provide a String constructor that returns an instance that 
+                        compares equal to an instance that returned that String by the toString() method.</li>
+                    <li>the Primary Key class must be only used within a single inheritence tree.</li>
+                </ul>
+                <p>
+                    Please note that if one of the fields that comprises the primary key is in itself
+                    a persistable object then you have <a href="orm/compound_identity.html">Compound Identity</a>
+                    and should consult the documentation for that feature which contains its own example.
+                </p>
+                <br/>
+            </subsection>
+
+            <subsection name="PrimaryKey Example - Multiple Field">
+                <p>
+                    Here's an example of a composite (multiple field) primary key class
+                </p>
+                <source><![CDATA[
+@Entity
+@IdClass(ComposedIdKey.class)
+public class MyClass
+{
+    @Id
+    String field1;
+
+    @Id
+    String field2;
+    ...
+}
+
+public class ComposedIdKey implements Serializable
+{
+    public String field1;
+    public String field2;
+
+    /**
+     *  Default constructor.
+     */
+    public ComposedIdKey ()
+    {
+    }
+
+    /**
+     * Constructor accepting same input as generated by toString().
+     */
+    public ComposedIdKey(String value) 
+    {
+        StringTokenizer token = new StringTokenizer (value, "::");
+        //field1
+        this.field1 = token.nextToken ();
+        //field2
+        this.field2 = token.nextToken ();
+    }
+
+    public boolean equals(Object obj)
+    {
+        if (obj == this)
+        {
+            return true;
+        }
+        if (!(obj instanceof ComposedIdKey))
+        {
+            return false;
+        }
+        ComposedIdKey c = (ComposedIdKey)obj;
+
+        return field1.equals(c.field1) && field2.equals(c.field2);
+    }
+
+    public int hashCode ()
+    {
+        return this.field1.hashCode() ^ this.field2.hashCode();
+    }
+
+    public String toString ()
+    {
+        // Give output expected by String constructor
+        return "" + this.field1 + "::" + this.field2;
+    }
+}]]></source>
+            </subsection>
+        </section>
+    </body>
+</document>

@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<document xmlns="http://maven.apache.org/XDOC/2.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+    <properties>
+        <title>JPA Class Mapping</title>
+    </properties>
+
+    <body>
+        <section name="JPA : Class Mapping">
+            <p>
+                The first thing to decide when implementing your persistence layer is which classes are to be
+                persisted. If you need to persist a field/property then you must mark that class as persistable.
+                In JPA there are three types of persistable classes.
+            </p>
+            <ul>
+                <li><b>Entity</b> - persistable class with full control over its persistence.</li>
+                <li><b>MappedSuperclass</b> - persistable class that will not be persisted into its own table
+                        simply providing some fields to be persisted. Consequently an inheritance tree cannot just
+                        have a mapped superclass on its own. 
+                        <a href="orm/inheritance.html#mappedsuperclass">Read more</a></li>
+                <li><b>Embeddable</b> - persistable class that is only persistable embedded into
+                        an entity class.
+                        <a href="orm/embedded.html">Read more</a></li>
+            </ul>
+            <p>
+                Let's take a sample class (<i>Hotel</i>) as an example
+                We can define a class as persistable using either annotations in the class, or XML metadata.
+            </p>
+            <p>
+                To achieve the above aim with XML metadata, we do this
+            </p>
+            <source><![CDATA[
+<entity class="org.datanucleus.test.Hotel">
+    ...
+</entity>]]></source>
+            <p>
+                Alternatively, using <a href="annotations.html">JPA Annotations</a>, like this
+            </p>
+            <source>
+@Entity
+public class Hotel
+{
+    ...
+}</source>
+            <p>
+                In the above example we have marked the class as an <b>entity</b>. We could equally have
+                marked it as <b>mapped-superclass</b> 
+                (using annotation @MappedSuperclass, or XML element &lt;mapped-superclass&gt;) or
+                as <b>embeddable</b>
+                (using annotation @Embeddable, or XML element &lt;embeddable&gt;).
+            </p>
+            <p>See also :-</p>
+            <ul>
+                <li><a href="metadata_xml.html">JPA XML reference</a></li>
+                <li><a href="annotations.html">JPA Annotations reference</a></li>
+            </ul>
+
+            <subsection name="Persistence Aware">
+                <img src="../images/nucleus_extension.gif" border="0" alt=""/>
+                <p>
+                    With JPA you cannot access public fields of classes. DataNucleus allows an extension to
+                    permit this, but such classes need special enhancement. To allow this you need to
+                </p>
+                <ul>
+                    <li>Annotate the class that will access these public fields (assuming it isn't an Entity)
+                        with the DataNucleus extension annotation @PersistenceAware</li>
+                </ul>
+                <p>
+                    You perform the annotation of the class as follows
+                </p>
+                <source><![CDATA[
+@PersistenceAware
+public class MyClassThatAccessesPublicFields
+{
+    ...
+}]]></source>
+                <p>See also :-</p>
+                <ul>
+                    <li><a href="annotations.html#PersistenceAware">Annotations reference for @PersistenceAware</a></li>
+                </ul>
+            </subsection>
+
+            <subsection name="Read-Only">
+                <img src="../images/nucleus_extension.gif" border="0" alt=""/>
+                <p>
+                    You can, if you wish, make a class <i>read-only</i>. This is a DataNucleus extension and you set
+                    it as follows
+                </p>
+                <source><![CDATA[
+@Entity
+@Extension(vendorName="datanucleus", key="read-only", value="true")
+public class MyClass
+{
+    ...
+}]]></source>
+                <br/>
+            </subsection>
+
+        </section>
+	</body>
+</document>

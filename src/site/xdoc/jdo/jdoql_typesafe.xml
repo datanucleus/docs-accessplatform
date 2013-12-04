@@ -1,0 +1,295 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<document xmlns="http://maven.apache.org/XDOC/2.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+    <properties>
+        <title>JDOQL : TypeSafe</title>
+    </properties>
+
+    <body>
+        <section name="JDO : Typesafe JDOQL Queries">
+            <p>
+                In JPA2 there is a query API referred to as "criteria". This is really an API allowing
+                the construction of queries expression by expression, and optionally making it type safe
+                so that if you refactor a field name then it is changed in the queries.
+                JDO has no such feature currently, but there exist third party extensions providing this.
+                One is called <a href="http://source.mysema.com/static/querydsl/2.0.0/reference/html/ch02.html#jdoql_integration">QueryDSL</a>.
+                DataNucleus now provides its own typesafe JDOQL query API, inspired by the ideas in QueryDSL 
+                (and some others), and is proposed for inclusion in JDO3.1.
+            </p>
+            <p>
+                <b>With this API you can express your queries in a typesafe way and allow easier refactoring.
+                This API produces queries that are much more elegant and simpler than the equivalent
+                "Criteria" API in JPA, or the Hibernate Criteria API.</b>
+                See this
+                <a href="http://datanucleus.blogspot.com/2010/11/jdo-typesafe-vs-jpa-criteria.html">comparison of JPA Criteria and JDO Typesafe</a>
+            </p>
+            <br/>
+
+            <subsection name="Preparation">
+                <p>
+                    To set up your environment to use this typesafe query API you need to enable annotation
+                    processing (JDK1.6), place some DataNucleus jars in your build path, and specify an
+                    <i>@PersistenceCapable</i> annotation on your classes to be used in queries (you can still
+                    provide the remaining information in XML metadata if you wish to).
+                </p>
+                <p>
+                    With Maven2 you need to have the following in your POM
+                </p>
+                <source><![CDATA[
+    <dependencies>
+        <dependency>
+            <groupId>org.datanucleus</groupId>
+            <artifactId>datanucleus-core</artifactId>
+            <version>[2.9, )</version>
+        </dependency>
+        <dependency>
+            <groupId>org.datanucleus</groupId>
+            <artifactId>datanucleus-api-jdo</artifactId>
+            <version>[2.9, )</version>
+        </dependency>
+        <dependency>
+            <groupId>org.datanucleus</groupId>
+            <artifactId>datanucleus-jdo-query</artifactId>
+            <version>[2.9, )</version>
+        </dependency>
+        <dependency>
+            <groupId>javax.jdo</groupId>
+            <artifactId>jdo-api</artifactId>
+            <version>3.1-SNAPSHOT</version>
+        </dependency>
+        ...
+     </dependencies>
+
+            <plugin>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>1.6</source>
+                    <target>1.6</target>
+                </configuration>
+            </plugin>
+]]></source>
+                <p>
+                    With Eclipse you need to
+                </p>
+                <ul>
+                    <li>Go to <i>Java Compiler</i> and make sure the compiler compliance level is 1.6 or above</li>
+                    <li>Go to <i>Java Compiler -> Annotation Processing</i> and enable the project specific settings
+                        and enable annotation processing</li>
+                    <li>Go to <i>Java Compiler -> Annotation Processing -> Factory Path</i>, enable the project 
+                        specific settings and then add the following jars to the list:
+                        "datanucleus-jdo-query.jar", "datanucleus-api-jdo.jar", "datanucleus-core.jar", 
+                        "jdo-api.jar"</li>
+                </ul>
+                <br/>
+            </subsection>
+
+            <subsection name="Query Classes">
+                <p>
+                    The above preparation will mean that whenever you compile, the DataNucleus annotation processor
+                    will generate a <b>query class</b> for each model class that is annotated as persistable. So what
+                    is a <b>query class</b> you ask. It is simply a mechanism for providing an intuitive API
+                    to generating queries. If we have the following model class
+                </p>
+                <source><![CDATA[
+@PersistenceCapable
+public class Product
+{
+    @PrimaryKey
+    long id;
+    String name;
+    double value;
+
+    ...
+}]]></source>
+                <p>
+                    then the <b>query class</b> for this will be
+                </p>
+                <source><![CDATA[
+public class QProduct 
+    extends org.datanucleus.api.jdo.query.PersistableExpressionImpl<Product> 
+    implements PersistableExpression<Product>
+{
+    public static QProduct candidate(String name) {...}
+    public static QProduct candidate() {...}
+    public static QProduct variable(String name) {...}
+    public static QProduct parameter(String name) {...}
+
+    public NumericExpression<Long> id;
+    public StringExpression name;
+    public NumericExpression<Double> value;
+
+    ...
+}]]></source>
+                <p>
+                    Note that it has the name <i><b>Q</b>{className}</i>.
+                    Also the generated class, by default, has a public field for each persistable field/property and 
+                    is of a type <i>XXXExpression</i>. These expressions allow us to give Java like syntax when defining 
+                    your queries (see below). So you access your persistable members in a query as
+                    <b>candidate.name</b> for example.
+                </p>
+                <p>
+                    As mentioned above this is the default style of query class. However you can also create it
+                    in <i>property</i> style, where you access your persistable members as
+                    <b>candidate.name()</b> for example. The benefit of this approach is that if you have 1-1, N-1
+                    relationship fields then it only initialises the members when called, whereas in the <i>field</i>
+                    case above it has to initialise all in the constructor, so at static initialisation.
+                    You enable use of <i>property</i> mode by adding the compiler argument
+                    <b>-AqueryMode=PROPERTY</b>. All examples below use <i>field</i> mode but just add <i>()</i>
+                    after the field to see the equivalent in <i>property</i> mode
+                </p>
+                <br/>
+            </subsection>
+
+            <subsection name="Query API - Filtering and Ordering">
+                <p>
+                    Let's provide a sample usage of this query API. We want to construct a query
+                    for all products with a value below a certain level, and where the name starts 
+                    with "Wal", and then order the results by the product name. So a typical query in
+                    a JDO-enabled application
+                </p>
+                <source><![CDATA[
+pm = pmf.getPersistenceManager();
+JDOPersistenceManager jdopm = (JDOPersistenceManager)pm;
+
+TypesafeQuery<Product> tq = jdopm.newTypesafeQuery(Product.class);
+QProduct cand = QProduct.candidate();
+List<Product> results = 
+    tq.filter(cand.value.lt(40.00).and(cand.name.startsWith("Wal")))
+        .orderBy(cand.name.asc())
+        .executeList();]]></source>
+                <p>
+                    This equates to the single-string query
+                </p>
+                <source><![CDATA[
+SELECT FROM mydomain.Product 
+    WHERE this.value < 40.0 && this.name.startsWith("Wal") 
+    ORDER BY this.name ASCENDING]]></source>
+                <p>
+                    As you see, we create a parametrised query, and then make use of the <b>query class</b>
+                    to access the candidate, and from that make use of its fields, and the various Java
+                    methods present for the types of those fields.
+                    Also the API is <i>fluent</i>.
+                </p>
+                <br/>
+            </subsection>
+
+            <subsection name="Query API - Results">
+                <p>
+                    Let's take the query in the above example and return the name and value of the Products only
+                </p>
+                <source><![CDATA[
+TypesafeQuery<Product> tq = jdopm.newTypesafeQuery(Product.class);
+QProduct cand = QProduct.candidate();
+List<Object[]> results = 
+    tq.filter(cand.value.lt(40.00).and(cand.name.startsWith(tq.stringParameter("prefix"))))
+        .orderBy(cand.name.asc())
+        .setParameter("prefix", "Wal")
+        .executeResultList(false, cand.name, cand.value);]]></source>
+                <p>
+                    This equates to the single-string query
+                </p>
+                <source><![CDATA[
+SELECT this.name,this.value FROM mydomain.Product 
+    WHERE this.value < 40.0 && this.name.startsWith(:prefix) 
+    ORDER BY this.name ASCENDING]]></source>
+                <p>
+                    A further example using aggregates
+                </p>
+                <source><![CDATA[
+TypesafeQuery<Product> tq = jdopm.newTypesafeQuery(Product.class);
+QProduct cand = QProduct.candidate();
+Object[] results = tq.executeResultUnique(false, cand.max(), cand.min());]]></source>
+                <p>
+                    This equates to the single-string query
+                </p>
+                <source><![CDATA[
+SELECT max(this.value), min(this.value) FROM mydomain.Product]]></source>
+                <br/>
+            </subsection>
+
+            <subsection name="Query API - Parameters">
+                <p>
+                    Let's take the query in the above example and specify the "Wal" in a parameter.
+                </p>
+                <source><![CDATA[
+TypesafeQuery<Product> tq = jdopm.newTypesafeQuery(Product.class);
+QProduct cand = QProduct.candidate();
+List<Product> results = 
+    tq.filter(cand.value.lt(40.00).and(cand.name.startsWith(tq.stringParameter("prefix"))))
+        .orderBy(cand.name.asc())
+        .setParameter("prefix", "Wal")
+        .executeList();]]></source>
+                <p>
+                    This equates to the single-string query
+                </p>
+                <source><![CDATA[
+SELECT FROM mydomain.Product
+    WHERE this.value < 40.0 && this.name.startsWith("Wal") 
+    ORDER BY this.name ASCENDING]]></source>
+                <br/>
+            </subsection>
+
+            <subsection name="Query API - Variables">
+                <p>
+                    Let's try to find all Inventory objects containing a Product with a particular name.
+                    This means we need to use a variable.
+                </p>
+                <source><![CDATA[
+TypesafeQuery<Inventory> tq = jdopm.newTypesafeQuery(Inventory.class);
+QProduct var = QProduct.variable("var");
+QInventory cand = QInventory.candidate();
+List<Inventory> results = 
+    tq.filter(cand.products.contains(var).and(var.name.startsWith("Wal")))
+        .executeList();]]></source>
+                <p>
+                    This equates to the single-string query
+                </p>
+                <source><![CDATA[
+SELECT FROM mydomain.Inventory 
+    WHERE this.products.contains(var) && var.name.startsWith("Wal")]]></source>
+                <br/>
+            </subsection>
+
+            <subsection name="Query API - Subqueries">
+                <p>
+                    Let's try to find all Products that have a value below the average of all Products.
+                    This means we need to use a subquery
+                </p>
+                <source><![CDATA[
+TypesafeQuery<Product> tq = jdopm.newTypesafeQuery(Product.class);
+QProduct cand = QProduct.candidate();
+TypesafeSubquery<Product> tqsub = tq.subquery(Product.class, "p");
+QProduct candsub = QProduct.candidate("p");
+List<Product> results = 
+    tq.filter(cand.value.lt(tqsub.selectUnique(candsub.value.avg())))
+        .executeList();]]></source>
+                <p>
+                    This equates to the single-string query
+                </p>
+                <source><![CDATA[
+SELECT FROM mydomain.Product 
+    WHERE this.value < (SELECT AVG(p.value) FROM mydomain.Product p)]]></source>
+                <br/>
+            </subsection>
+
+            <a name="Candidates"/>
+            <subsection name="Query API - Candidates">
+                <p>
+                    If you don't want to query instances in the datastore but instead query a collection of
+                    candidate instances, you can do this by setting the candidates, like this
+                </p>
+                <source><![CDATA[
+TypesafeQuery<Product> tq = jdopm.newTypesafeQuery(Product.class);
+QProduct cand = QProduct.candidate();
+List<Product> results = 
+    tq.filter(cand.value.lt(40.00)).setCandidates(myCandidates).executeList();]]></source>
+                <p>
+                    This will process the query <a href="jdoql.html#inmemory">in-memory</a>.
+                </p>
+                <br/>
+            </subsection>
+        </section>
+
+    </body>
+</document>

@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<document xmlns="http://maven.apache.org/XDOC/2.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+    <properties>
+        <title>JPA Schema Mapping</title>
+    </properties>
+
+    <body>
+        <section name="JPA : Schema Mapping">
+            <p>
+                You saw in our <a href="../class_mapping.html">basic class mapping guide</a> how you define a classes
+                basic persistence, notating which fields are persisted. The next step is to define how it maps to the
+                schema of the datastore (in this case RDBMS). The simplest way of mapping is to map each class to its own table. 
+                This is the default model in JDO persistence (with the exception of inheritance). 
+                If you don't specify the table and column names, then DataNucleus will generate table and column names for you.
+                <b>You should specify your table and column names if you have an existing schema.</b> Failure to do so will mean
+                that DataNucleus uses its own names and these will almost certainly not match what you have in the datastore.
+            </p>
+
+            <subsection name="Tables and Column names">
+                <p> 
+                    The main thing that developers want to do when they set up the persistence of their data is to control the names of the 
+                    tables and columns used for storing the classes and fields. This is an essential step when mapping to an existing schema,
+                    because it is necessary to map the classes onto the existing database entities. Let's take an example
+                </p>
+                <source>
+public class Hotel
+{
+    private String name;
+    private String address;
+    private String telephoneNumber;
+    private int numberOfRooms;
+    ...
+}</source>      
+                <p>In our case we want to map this class to a table called <b>ESTABLISHMENT</b>, and has columns <i>NAME</i>, 
+                    <i>DIRECTION</i>, <i>PHONE</i> and <i>NUMBER_OF_ROOMS</i> (amongst other things). So 
+                    we define our Meta-Data like this</p>
+                <source><![CDATA[
+<entity class="Hotel">
+    <table name="ESTABLISHMENT"/>
+    <attributes>
+        <basic name="name">
+            <column name="NAME"/>
+        </basic>
+        <basic name="address">
+            <column name="DIRECTION"/>
+        </basic>
+        <basic name="telephoneNumber">
+            <column name="PHONE"/>
+        </basic>
+        <basic name="numberOfRooms">
+            <column name="NUMBER_OF_ROOMS"/>
+        </basic>
+    </attributes>
+</entity>]]></source>
+                <p>
+                    So we have defined the table and the column names.
+                    It should be mentioned that if you don't specify the table and column names then DataNucleus will generate
+                    names for the datastore identifiers consistent with the JPA specification.
+                    The table name will be based on the class name, and the column names will be based on the field names and 
+                    the role of the field (if part of a relationship).
+                </p>
+                <p>See also :-</p>
+                <ul>
+                    <li><a href="datastore_identifiers.html">Identifier Guide</a> - defining the identifiers to use for table/column names</li>
+                    <li><a href="../metadata_xml.html#column">MetaData reference for &lt;column&gt; element</a></li>
+                </ul>
+                <br/>
+            </subsection>
+
+            <subsection name="Column nullability and default values">
+                <p>
+                    So we've seen how to specify the basic structure of a table, naming the table and its columns, and how to control the 
+                    types of the columns. We can extend this further to control whether the columns are allowed to contain nulls. Let's take a 
+                    related class for our hotel. Here we have a class to model the payments made to the hotel.
+                </p>
+                <source>
+public class Payment
+{
+    Customer customer;
+    String bankTransferReference;
+    String currency;
+    double amount;
+}</source>
+                <p>
+                    In this class we can model payments from a customer of an amount. Where the customer pays by bank transfer we can save the
+                    reference number. Since the bank transfer reference is optional we want that column to be nullable. So let's
+                    specify the MetaData for the class.
+                </p>
+                <source><![CDATA[
+<entity class="Payment">
+    <attributes>
+        <one-to-one name="customer">
+            <primary-key-join-column name="CUSTOMER_ID"/>
+        </one-to-one>
+        <basic name="bankTransferReference">
+            <column name="TRANSFER_REF" nullable="true"/>
+        </basic>
+        <basic name="currency">
+            <column name="CURRENCY" default-value="GBP"/>
+        </basic>
+        <basic name="amount">
+            <column name="AMOUNT"/>
+        </basic>
+    </attributes>
+</entity>]]></source>
+                <p>
+                    So we make use of the <i>nullable</i> attribute. The table, when created by DataNucleus, will then provide the nullability 
+                    that we require. Unfortunately with JPA there is no way to specify a default value for a field when it hasnt been
+                    set (unlike JDO where you can do that).
+                </p>
+                <p>See also :-</p>
+                <ul>
+                    <li><a href="../metadata_xml.html#column">MetaData reference for &lt;column&gt; element</a></li>
+                </ul>
+                <br/>
+            </subsection>
+
+            <subsection name="Column types">
+                <p>
+                    DataNucleus will provide a default type for any columns that it creates, but it will allow users to 
+                    override this default. The default that DataNucleus chooses is always based on the Java type for the 
+                    field being mapped. For example a Java field of type "int" will be mapped to a column type of INTEGER 
+                    in RDBMS datastores. Similarly String will be mapped to VARCHAR. JPA does NOT allow detailed control 
+                    over the JDBC type as such, with the exception of distinguishing BLOB/CLOB/TIME/TIMESTAMP types. 
+                    Fortunately DataNucleus (from v3.0.2) provides an extension to overcome this flaw in the JPA spec.
+                    Here we make use of a DataNucleus annotation <b>@JdbcType</b>
+                </p>
+                <source><![CDATA[
+public class Payment
+{
+    @JdbcType("CHAR")
+    String currency;
+
+    ...
+}]]></source>
+                <p>
+                    So we defined the JDBC type that this field will use (rather than the default of VARCHAR).
+                </p>
+                <p>
+                    JPA does allow permit control over the length/precision/scale of columns. So we define this as follows
+                </p>
+                <source><![CDATA[
+<entity name="Payment">
+    <attributes>
+        <one-to-one name="customer">
+            <primary-key-join-column name="CUSTOMER_ID"/>
+        </one-to-one>
+        <basic name="bankTransferReference">
+            <column name="TRANSFER_REF" nullable="true" length="255"/>
+        </basic>
+        <basic name="currency">
+            <column name="CURRENCY" default-value="GBP" length="3"/>
+        </basic>
+        <basic name="amount">
+            <column name="AMOUNT" precision="10" scale="2"/>
+        </basic>
+    </attributes>
+</entity>
+]]></source>
+                <p>
+                    So we have defined TRANSFER_REF to use VARCHAR(255) column type, CURRENCY to use (VAR)CHAR(3) column type, and AMOUNT to use
+                    DECIMAL(10,2) column type.
+                </p>
+                <p>See also :-</p>
+                <ul>
+                    <li><a href="../types.html">Types Guide</a> - defining mapping of Java types</li>
+                    <li><a href="../../datastores/rdbms_datastore_types.html">RDBMS Types Guide</a> - defining mapping of Java types to JDBC/SQL types</li>
+                    <li><a href="../metadata_xml.html#column">MetaData reference for &lt;column&gt; element</a></li>
+                </ul>
+            </subsection>
+		</section>
+	</body>
+</document>

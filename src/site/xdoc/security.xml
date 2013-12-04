@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<document xmlns="http://maven.apache.org/XDOC/2.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+    <properties>
+        <title>Security</title>
+    </properties>
+
+    <body>
+        <section name="Java Security Manager">
+            <p>
+                The Java Security Manager can be used with DataNucleus to provide a security platform to sensitive 
+                applications.
+            </p>
+            <p>
+            	To use the Security Manager, specify the <i>java.security.manager</i> and <i>java.security.policy</i> 
+                arguments when starting the JVM. e.g.
+            </p>
+<source>
+java -Djava.security.manager -Djava.security.policy==/etc/apps/security/security.policy ...
+</source>
+            <p>
+            	Note that when you use <i>-Djava.security.policy==...</i> (double equals sign) you override the 
+                default JVM security policy files, while if you use <i>-Djava.security.policy=...</i> (single 
+                equals sign), you append the security policy file to any existing ones.
+            </p>
+            <p>
+                The following is a sample security policy file to be used with DataNucleus.
+            </p>
+<source>
+<![CDATA[
+grant codeBase "file:${/}jdo2-api-2.0.jar" {
+
+    //jdo API needs datetime (timezone class needs the following)
+    permission java.util.PropertyPermission "user.country", "read";
+    permission java.util.PropertyPermission "user.variant", "read";
+    permission java.util.PropertyPermission "user.timezone", "read,write";
+    permission java.util.PropertyPermission "java.home", "read";
+};
+grant codeBase "file:${/}datanucleus*.jar" {
+
+     //jdo
+    permission javax.jdo.spi.JDOPermission "getMetadata";
+    permission javax.jdo.spi.JDOPermission "setStateManager";
+	
+    //DataNucleus needs to get classloader of classes
+    permission java.lang.RuntimePermission "getClassLoader";
+	
+    //DataNucleus needs to detect the java and os version
+    permission java.util.PropertyPermission "java.version", "read";
+    permission java.util.PropertyPermission "os.name", "read";
+
+    //DataNucleus reads these system properties
+    permission java.util.PropertyPermission "datanucleus.*", "read";	
+    permission java.util.PropertyPermission "javax.jdo.*", "read";	
+	
+    //DataNucleus runtime enhancement (needs read access to all jars/classes in classpath, 
+    // so use <<ALL FILES>> to facilitate config)
+    permission java.lang.RuntimePermission "createClassLoader";
+    permission java.io.FilePermission "<<ALL FILES>>", "read";
+	
+    //DataNucleus needs to read manifest files (read permission to location of MANIFEST.MF files) 
+    permission java.io.FilePermission "${user.dir}${/}-", "read";
+    permission java.io.FilePermission "<<ALL FILES>>", "read";
+	
+    //DataNucleus uses reflection!!!
+    permission java.lang.reflect.ReflectPermission "suppressAccessChecks";
+    permission java.lang.RuntimePermission "accessDeclaredMembers";
+};
+
+grant codeBase "file:${/}datanucleus-hbase*.jar" {
+
+    //HBASE does not run in a doPrivileged, so we do...
+    permission java.net.SocketPermission "*", "connect,resolve";
+};
+
+]]>
+</source>
+        </section>
+    </body>
+</document>

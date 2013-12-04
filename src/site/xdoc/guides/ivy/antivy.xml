@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<document xmlns="http://maven.apache.org/XDOC/2.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+    <properties>
+        <title>DataNucleus - Ant and Ivy Tutorial</title>
+    </properties>
+
+    <body>
+        <section name="DataNucleus with Ant and Ivy">
+            <subsection name="Background">
+                <img src="../../images/ant.gif" alt="Ant"/>
+                <img src="../../images/ivy.png" alt="Ivy"/>
+                <p>
+                    This guide introduces Apache Ant Ivy as tool to manage project dependencies for DataNucleus based applications.
+                </p>
+                <p>
+                    In this quick tutorial you will learn how to use Apache Ant Ivy to compile and enhance persistent 
+                    classes.
+                </p>
+            </subsection>
+            <subsection name="Enhancement">
+                <p>
+                    DataNucleus enhances persistent classes during compile time. It's a transparent process when 
+                    using the JDK 1.6 or upper, otherwise use the DataNucleus Ant Enhancer Task (See <a href="../ant/enhancingwithant.html">Ant Guide</a>). 
+                </p>
+            </subsection>
+            <subsection name="Build files">
+                <p>
+                    There are two ivy files and one traditional ant build file:
+                </p>
+                <ul>
+                    <li>ivy.xml</li>
+                    <li>ivysettings.xml</li>
+                    <li>build.xml</li>
+				</ul>
+                <p>
+                    The <i>ivy.xml</i> declares the project dependencies to DataNucleus libraries and 
+                    the <i>ivysettings.xml</i> declares the DataNucleus SNAPSHOT repository. 
+                </p>                                 
+                <p>
+                    The <i>ivy.xml</i> file:
+                    <source>            
+<![CDATA[
+<ivy-module version="2.0">
+	<info organisation="datanuleus" module="sample" revision="1.0.0" />
+	<configurations>
+		<conf name="build" description="build dependancies" />
+		<conf name="enhancer" extends="build" description="enhancer dependances" />
+		<conf name="runtime" extends="build" description="runtime dependances" />
+	</configurations>
+
+	<publications>
+		<artifact />
+	</publications>
+	<dependencies>
+		<dependency org="org.datanucleus" name="datanucleus-core" rev="3.2.0-m2" conf="build->default"/>
+		<dependency org="javax.jdo" name="jdo-api" rev="3.0" conf="build->default"/>
+		<dependency org="org.datanucleus" name="datanucleus-rdbms" rev="3.2.0-m2" conf="runtime->default"/>
+	</dependencies>
+
+</ivy-module>]]>
+                    </source>
+                </p>
+                <p>
+                    The <i>ivysettings.xml</i> file:
+                    <source>            
+<![CDATA[
+<ivysettings>
+  <settings defaultResolver="resolver"/>
+  <resolvers>
+    <chain name="resolver">
+      <url name="datanucleus-nightly" m2compatible="true">
+        <artifact 
+         pattern="http://www.datanucleus.org/downloads/maven2-nightly/[organisation]/[module]/[revision]/[artifact]-[revision].[ext]" />
+      </url>
+      <ibiblio name="ibiblio" m2compatible="true"/>
+      <filesystem name="repository">
+        <ivy pattern="${ivy.settings.dir}/../repository/[organisation]/[module]/[module]-[revision].xml" /> 
+        <artifact pattern="${ivy.settings.dir}/../repository/[organisation]/[artifact]/[artifact]-[revision].[ext]" /> 
+      </filesystem>		
+    </chain>
+  </resolvers>
+</ivysettings>]]>
+                    </source>
+                </p>
+                <p>
+                    The <i>build.xml</i> file:
+                    <source>            
+<![CDATA[
+<project basedir="." default="default" name="build" xmlns:ivy="antlib:org.apache.ivy.ant">
+    <property environment="env"/>
+    <property name="debuglevel" value="source,lines,vars"/>
+    <property name="target" value="1.5"/>
+    <property name="source" value="1.5"/>
+    <property name="bin" value="bin"/>
+    <property name="src" value="src"/>
+    <property name="dist" value="target"/>
+
+	<target name="default" depends="retrieve,compile,jar,publish"></target>
+	
+    <target name="retrieve" description="retrieve dependencies with ivy">
+        <ivy:retrieve/>
+    	<ivy:cachepath pathid="build.path" conf="build" />
+    	<ivy:cachepath pathid="enhancer.path" conf="enhancer" />
+    </target>	
+    <target name="publish">
+    	<ivy:cleancache />
+    	
+        <ivy:publish deliverivypattern="ivy.xml" resolver="repository" overwrite="true">
+        	<artifacts pattern="${dist}/[artifact]-[revision].[ext]"/>
+        </ivy:publish>
+    </target>
+	<target name="compile">
+		<delete dir="${bin}" failonerror="true"></delete>
+		<mkdir dir="${bin}"/>
+        <copy todir="${bin}">
+            <fileset dir="${src}" includes="**/**.jdo" />
+        </copy>
+		<!-- using JDK 1.6 and datanucleus-core will enhance the classes automatically --> 
+		<!-- MUST use fork, so datanucleus ensures that classes are enhanced before going ahead with the build -->
+		<javac srcdir="${src}"
+		       destdir="${bin}"
+		       source="${source}"
+		       target="${target}"
+		       debuglevel="${debuglevel}"
+		       debug="true"
+		       fork="true">
+			<classpath refid="build.path"></classpath>
+			<classpath refid="enhancer.path"></classpath>
+		</javac>
+	</target>
+	
+	<target name="jar">
+		<delete dir="${dist}" failonerror="false"></delete>
+		<mkdir dir="${dist}"/>
+        <jar destfile="${dist}/${ivy.module}-${ivy.revision}.jar">
+            <fileset dir="${src}" includes="**/**.jdo" />
+            <fileset dir="${bin}"/>
+        </jar>
+	</target>
+
+</project>]]>
+                    </source>
+                </p>
+            </subsection>
+        </section>
+    </body>
+</document>

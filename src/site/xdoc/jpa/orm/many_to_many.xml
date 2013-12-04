@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<document xmlns="http://maven.apache.org/XDOC/2.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+    <properties>
+        <title>JPA M-N Relationships</title>
+    </properties>
+
+    <body>
+        <section name="JPA : M-N Relationships">
+            <p>
+                You have a M-to-N (or Many-to-Many) relationship if an object of a class A has associated objects of class B,
+                and class B has associated objects of class A. This relationship may be achieved through Java Collection, 
+                Set, List or subclasses of these, although the only one that supports a true M-N is Set.
+            </p>
+            <p>
+                With DataNucleus this can be set up as described in this section, using what is called a <b><u>Join Table</u></b> 
+                relationship. Let's take the following example and describe how to model it with the different types of 
+                collection classes. We have 2 classes, <b>Product</b> and <b>Supplier</b> as below.
+            </p>
+            <br/>
+            <img src="../../images/orm/relationship_M_N_class.jpg" border="0" alt=""/>
+            <br/>
+            <p>
+                Here the <b>Product</b> class knows about the <b>Supplier</b> class. In addition the <b>Supplier</b> knows
+                about the <b>Product</b> class, however with these relationships are really independent.
+            </p>
+        </section>
+
+        <section name="Using Set">
+            <p>
+                If you define the Meta-Data for these classes as follows
+            </p>
+            <source><![CDATA[
+<entity-mappings>
+    <entity class="mydomain.Product">
+        <table name="PRODUCT"/>
+        <attributes>
+            <id name="id">
+                <column name="PRODUCT_ID"/>
+            </id>
+            ...
+            <many-to-many name="suppliers" mapped-by="products">
+                <join-table name="PRODUCTS_SUPPLIERS">
+                    <join-column name="PRODUCT_ID"/>
+                    <inverse-join-column name="SUPPLIER_ID"/>
+                </join-table>
+            </many-to-many>
+        </attributes>
+    </entity>
+
+    <entity class="mydomain.Supplier">
+        <table name="SUPPLIER"/>
+        <attributes>
+            <id name="id">
+                <column name="SUPPLIER_ID"/>
+            </id>
+            ...
+            <many-to-many name="products"/>
+        </attributes>
+    </entity>
+</entity-mappings>]]></source>
+                <p>
+                    or alternatively using annotations
+                </p>
+                <source><![CDATA[
+public class Product
+{
+    ...
+
+    @ManyToMany(mappedBy="products")
+    @JoinTable(name="PRODUCTS_SUPPLIERS")
+    @JoinColumn(name="PRODUCT_ID")
+    @InverseJoinColumn(name="SUPPLIER_ID")
+    Collection<Supplier> suppliers
+}
+
+public class Supplier
+{
+    ...
+
+    @ManyToMany
+    Collection<Product> products;
+
+    ...
+}]]></source>
+            <p>
+                Note how we have specified the information only once regarding join table name, and join column names
+                as well as the &lt;join-table&gt;. This is the JPA standard way of specification, and results in a single
+                join table. The "mapped-by" ties the two fields together.
+            </p>
+            <br/>
+            <img src="../../images/orm/relationship_M_N_singlejoin_db.jpg" border="0" alt=""/>
+            <br/>
+            <br/>
+            <br/>
+
+            <p>
+                See also :-
+            </p>
+            <ul>
+                <li><a href="../../guides/jdo/many_many/index.html">M-N Worked Example</a></li>
+                <li><a href="../../guides/jdo/many_many_attributed/index.html">M-N with Attributes Worked Example</a></li>
+            </ul>
+            <br/>
+        </section>
+
+        <section name="Using List">
+            <p>
+                If you define the Meta-Data for these classes as follows
+            </p>
+            <source><![CDATA[
+<entity-mappings>
+    <entity class="mydomain.Product">
+        <table name="PRODUCT"/>
+        <attributes>
+            <id name="id">
+                <column name="PRODUCT_ID"/>
+            </id>
+            ...
+            <many-to-many name="suppliers" mapped-by="products">
+                <order-by>name</order-by>
+                <join-table name="PRODUCTS_SUPPLIERS">
+                    <join-column name="PRODUCT_ID"/>
+                    <inverse-join-column name="SUPPLIER_ID"/>
+                </join-table>
+            </many-to-many>
+        </attributes>
+    </entity>
+
+    <entity class="mydomain.Supplier">
+        <table name="SUPPLIER"/>
+        <attributes>
+            <id name="id">
+                <column name="SUPPLIER_ID"/>
+            </id>
+            ...
+            <many-to-many name="products">
+                <order-by>name</order-by>
+            </many-to-many>
+        </attributes>
+    </entity>
+</entity-mappings>]]></source>
+            <p>
+                There will be 3 tables, one for <b>Product</b>, one for <b>Supplier</b>, and the join table. The difference
+                from the Set example is that we now have &lt;order-by&gt; at both sides of the relation. This has no effect
+                in the datastore schema but when the Lists are retrieved they are ordered using the specified order-by.
+            </p>
+            <br/>
+            <img src="../../images/orm/relationship_M_N_singlejoin_db.jpg" border="0" alt=""/>
+            <br/>
+        </section>
+
+        <section name="Relationship Behaviour">
+            <p>
+                Please be aware of the following.
+            </p>
+            <b>
+            <ul>
+                <li>To add an object to an M-N relationship you need to set it at both ends of the relation since the relation
+                    is bidirectional and without such information the JPA implementation won't know which end of the relation
+                    is correct.</li>
+                <li>If you want to delete an object from one end of a M-N relationship you will have to remove it first from 
+                    the other objects relationship. If you don't you will get an error message that the object to be deleted 
+                    has links to other objects and so cannot be deleted.</li>
+            </ul>
+            </b>
+        </section>
+
+    </body>
+</document>

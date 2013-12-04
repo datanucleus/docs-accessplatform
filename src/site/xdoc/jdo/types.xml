@@ -1,0 +1,1096 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<document xmlns="http://maven.apache.org/XDOC/2.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+    <properties>
+        <title>Persistable Java Types</title>
+    </properties>
+
+    <body>
+        <section name="JDO : Persistable Field Types">
+            <p>
+                When persisting a class, a persistence solution needs to know how to persist the types of each field
+                in the class. Clearly a persistence solution can only support a finite number of Java types; it 
+                cannot know how to persist every possible type creatable. The JDO specification define lists of 
+                types that are required to be supported by all implementations of those specifications. 
+                This support can be conveniently split into two parts
+            </p>
+            <br/>
+
+            <subsection name="First-Class (FCO) Types">
+                <p>
+                    An object that can be <i>referred to</i> (object reference, providing a relation) and that
+                    has an "identity" is termed a <b>First Class Object (FCO)</b>. DataNucleus supports the
+                    following Java types as FCO
+                </p>
+                <ul>
+                    <li><b>PersistenceCapable</b> : any class marked for persistence can be persisted
+                        with its own identity in the datastore</li>
+                    <li><b>interface</b> where the field represents a <i>PersistenceCapable</i> object</li>
+                    <li><b>java.lang.Object</b> where the field represents a <i>PersistenceCapable</i> object</li>
+                </ul>
+                <br/>
+            </subsection>
+
+            <subsection name="Supported Second-Class (SCO) Types">
+                <p>
+                    An object that does not have an "identity" is termed a <b>Second Class Object (SCO)</b>. 
+                    This is something like a String or Date field in a class, or alternatively a Collection (that 
+                    contains other objects). The table below shows the currently supported <b>SCO</b> java types 
+                    in DataNucleus. The table shows
+                </p>
+                <ul>
+                    <li><b>Extension?</b> : whether the type is JDO2 standard, or is a DataNucleus extension</li>
+                    <li><b>default-fetch-group (DFG)</b> : whether the field is retrieved by default when
+                        retrieving the object itself</li>
+                    <li><b>persistence-modifier</b> : whether the field is persisted by default, or whether
+                        the user has to mark the field as persistent in XML/annotations to persist it</li>
+                    <li><b>proxied</b> : whether the field is represented by a "proxy" that intercepts
+                        any operations to detect whether it has changed internally.</li>
+                    <li><b>primary-key</b> : whether the field can be used as part of the primary-key</li>
+                </ul>
+                <br/>
+                <table>
+                    <tr>
+                        <th>Java Type</th>
+                        <th>Extension?</th>
+                        <th width="50">DFG?</th>
+                        <th width="70">Persistent?</th>
+                        <th width="70">Proxied?</th>
+                        <th width="40">PK?</th>
+                        <th width="170">Plugin</th>
+                    </tr>
+                    <tr>
+                        <td>boolean</td>
+                        <td></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td>datanucleus-core</td>
+                    </tr>
+                    <tr>
+                        <td>byte</td>
+                        <td></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td>datanucleus-core</td>
+                    </tr>
+                    <tr>
+                        <td>char</td>
+                        <td></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td>datanucleus-core</td>
+                    </tr>
+                    <tr>
+                        <td>double</td>
+                        <td></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td>datanucleus-core</td>
+                    </tr>
+                    <tr>
+                        <td>float</td>
+                        <td></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td>datanucleus-core</td>
+                    </tr>
+                    <tr>
+                        <td>int</td>
+                        <td></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td>datanucleus-core</td>
+                    </tr>
+                    <tr>
+                        <td>long</td>
+                        <td></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td>datanucleus-core</td>
+                    </tr>
+                    <tr>
+                        <td>short</td>
+                        <td></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td>datanucleus-core</td>
+                    </tr>
+                    <tr>
+                        <td>boolean[]</td>
+                        <td></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td>datanucleus-core</td>
+                    </tr>
+                    <tr>
+                        <td>byte[]</td>
+                        <td></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td>datanucleus-core</td>
+                    </tr>
+                    <tr>
+                        <td>char[]</td>
+                        <td></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td>datanucleus-core</td>
+                    </tr>
+                    <tr>
+                        <td>double[]</td>
+                        <td></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td>datanucleus-core</td>
+                    </tr>
+                    <tr>
+                        <td>float[]</td>
+                        <td></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td>datanucleus-core</td>
+                    </tr>
+                    <tr>
+                        <td>int[]</td>
+                        <td></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td>datanucleus-core</td>
+                    </tr>
+                    <tr>
+                        <td>long[]</td>
+                        <td></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td>datanucleus-core</td>
+                    </tr>
+                    <tr>
+                        <td>short[]</td>
+                        <td></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td>datanucleus-core</td>
+                    </tr>
+
+                    <!-- java.lang -->
+                    <tr>
+                        <td>java.lang.Boolean</td>
+                        <td></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td>datanucleus-core</td>
+                    </tr>
+                    <tr>
+                        <td>java.lang.Byte</td>
+                        <td></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td>datanucleus-core</td>
+                    </tr>
+                    <tr>
+                        <td>java.lang.Character</td>
+                        <td></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td>datanucleus-core</td>
+                    </tr>
+                    <tr>
+                        <td>java.lang.Double</td>
+                        <td></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td>datanucleus-core</td>
+                    </tr>
+                    <tr>
+                        <td>java.lang.Float</td>
+                        <td></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td>datanucleus-core</td>
+                    </tr>
+                    <tr>
+                        <td>java.lang.Integer</td>
+                        <td></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td>datanucleus-core</td>
+                    </tr>
+                    <tr>
+                        <td>java.lang.Long</td>
+                        <td></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td>datanucleus-core</td>
+                    </tr>
+                    <tr>
+                        <td>java.lang.Short</td>
+                        <td></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td>datanucleus-core</td>
+                    </tr>
+                    <tr>
+                        <td>java.lang.Boolean[]</td>
+                        <td></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td>datanucleus-core</td>
+                    </tr>
+                    <tr>
+                        <td>java.lang.Byte[]</td>
+                        <td></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td>datanucleus-core</td>
+                    </tr>
+                    <tr>
+                        <td>java.lang.Character[]</td>
+                        <td></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td>datanucleus-core</td>
+                    </tr>
+                    <tr>
+                        <td>java.lang.Double[]</td>
+                        <td></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td>datanucleus-core</td>
+                    </tr>
+                    <tr>
+                        <td>java.lang.Float[]</td>
+                        <td></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td>datanucleus-core</td>
+                    </tr>
+                    <tr>
+                        <td>java.lang.Integer[]</td>
+                        <td></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td>datanucleus-core</td>
+                    </tr>
+                    <tr>
+                        <td>java.lang.Long[]</td>
+                        <td></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td>datanucleus-core</td>
+                    </tr>
+                    <tr>
+                        <td>java.lang.Short[]</td>
+                        <td></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td>datanucleus-core</td>
+                    </tr>
+                    <tr>
+                        <td>java.lang.Number [4]</td>
+                        <td></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td>datanucleus-core</td>
+                    </tr>
+                    <tr>
+                        <td>java.lang.Object</td>
+                        <td></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td>datanucleus-core</td>
+                    </tr>
+                    <tr>
+                        <td>java.lang.String</td>
+                        <td></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td>datanucleus-core</td>
+                    </tr>
+                    <tr>
+                        <td>java.lang.StringBuffer [3]</td>
+                        <td><img src="../images/nucleus_extension.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td>datanucleus-core</td>
+                    </tr>
+                    <tr>
+                        <td>java.lang.String[]</td>
+                        <td></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td>datanucleus-core</td>
+                    </tr>
+                    <tr>
+                        <td>java.lang.Class</td>
+                        <td><img src="../images/nucleus_extension.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td>datanucleus-core</td>
+                    </tr>
+
+                    <!-- java.math -->
+                    <tr>
+                        <td>java.math.BigDecimal</td>
+                        <td></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td>datanucleus-core</td>
+                    </tr>
+                    <tr>
+                        <td>java.math.BigInteger</td>
+                        <td></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td>datanucleus-core</td>
+                    </tr>
+                    <tr>
+                        <td>java.math.BigDecimal[]</td>
+                        <td></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td>datanucleus-core</td>
+                    </tr>
+                    <tr>
+                        <td>java.math.BigInteger[]</td>
+                        <td></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td>datanucleus-core</td>
+                    </tr>
+
+                    <!-- java.sql -->
+                    <tr>
+                        <td>java.sql.Date</td>
+                        <td></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td>datanucleus-core</td>
+                    </tr>
+                    <tr>
+                        <td>java.sql.Time</td>
+                        <td></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td>datanucleus-core</td>
+                    </tr>
+                    <tr>
+                        <td>java.sql.Timestamp</td>
+                        <td></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td>datanucleus-core</td>
+                    </tr>
+
+                    <!-- java.util -->
+                    <tr>
+                        <td>java.util.ArrayList</td>
+                        <td></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td>datanucleus-core</td>
+                    </tr>
+                    <tr>
+                        <td>java.util.BitSet</td>
+                        <td></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td>datanucleus-core</td>
+                    </tr>
+                    <tr>
+                        <td>java.util.Calendar</td>
+                        <td><img src="../images/nucleus_extension.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td>datanucleus-core</td>
+                    </tr>
+                    <tr>
+                        <td>java.util.Collection</td>
+                        <td></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td>datanucleus-core</td>
+                    </tr>
+                    <tr>
+                        <td>java.util.Currency</td>
+                        <td></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td>datanucleus-core</td>
+                    </tr>
+                    <tr>
+                        <td>java.util.Date</td>
+                        <td></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td>datanucleus-core</td>
+                    </tr>
+                    <tr>
+                        <td>java.util.Date[]</td>
+                        <td></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td>datanucleus-core</td>
+                    </tr>
+                    <tr>
+                        <td>java.util.GregorianCalendar [7]</td>
+                        <td><img src="../images/nucleus_extension.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td>datanucleus-core</td>
+                    </tr>
+                    <tr>
+                        <td>java.util.HashMap</td>
+                        <td></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td>datanucleus-core</td>
+                    </tr>
+                    <tr>
+                        <td>java.util.HashSet</td>
+                        <td></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td>datanucleus-core</td>
+                    </tr>
+                    <tr>
+                        <td>java.util.Hashtable</td>
+                        <td></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td>datanucleus-core</td>
+                    </tr>
+                    <tr>
+                        <td>java.util.LinkedHashMap [5]</td>
+                        <td></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td>datanucleus-core</td>
+                    </tr>
+                    <tr>
+                        <td>java.util.LinkedHashSet [6]</td>
+                        <td></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td>datanucleus-core</td>
+                    </tr>
+                    <tr>
+                        <td>java.util.LinkedList</td>
+                        <td></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td>datanucleus-core</td>
+                    </tr>
+                    <tr>
+                        <td>java.util.List</td>
+                        <td></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td>datanucleus-core</td>
+                    </tr>
+                    <tr>
+                        <td>java.util.Locale</td>
+                        <td></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td>datanucleus-core</td>
+                    </tr>
+                    <tr>
+                        <td>java.util.Locale[]</td>
+                        <td></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td>datanucleus-core</td>
+                    </tr>
+                    <tr>
+                        <td>java.util.Map</td>
+                        <td></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td>datanucleus-core</td>
+                    </tr>
+                    <tr>
+                        <td>java.util.Properties</td>
+                        <td><img src="../images/nucleus_extension.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td>datanucleus-core</td>
+                    </tr>
+                    <tr>
+                        <td>java.util.PriorityQueue</td>
+                        <td><img src="../images/nucleus_extension.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td>datanucleus-core</td>
+                    </tr>
+                    <tr>
+                        <td>java.util.Queue</td>
+                        <td><img src="../images/nucleus_extension.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td>datanucleus-core</td>
+                    </tr>
+                    <tr>
+                        <td>java.util.Set</td>
+                        <td></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td>datanucleus-core</td>
+                    </tr>
+                    <tr>
+                        <td>java.util.SortedMap [2]</td>
+                        <td><img src="../images/nucleus_extension.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td>datanucleus-core</td>
+                    </tr>
+                    <tr>
+                        <td>java.util.SortedSet [1]</td>
+                        <td><img src="../images/nucleus_extension.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td>datanucleus-core</td>
+                    </tr>
+                    <tr>
+                        <td>java.util.Stack</td>
+                        <td><img src="../images/nucleus_extension.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td>datanucleus-core</td>
+                    </tr>
+                    <tr>
+                        <td>java.util.TimeZone</td>
+                        <td></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td>datanucleus-core</td>
+                    </tr>
+                    <tr>
+                        <td>java.util.TreeMap [2]</td>
+                        <td></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td>datanucleus-core</td>
+                    </tr>
+                    <tr>
+                        <td>java.util.TreeSet [1]</td>
+                        <td></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td>datanucleus-core</td>
+                    </tr>
+                    <tr>
+                        <td>java.util.UUID</td>
+                        <td><img src="../images/nucleus_extension.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td>datanucleus-core</td>
+                    </tr>
+                    <tr>
+                        <td>java.util.Vector</td>
+                        <td></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td>datanucleus-core</td>
+                    </tr>
+
+                    <!-- java.awt -->
+                    <tr>
+                        <td>java.awt.Color</td>
+                        <td><img src="../images/nucleus_extension.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td>datanucleus-core</td>
+                    </tr>
+                    <tr>
+                        <td>java.awt.image.BufferedImage</td>
+                        <td><img src="../images/nucleus_extension.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td>datanucleus-core</td>
+                    </tr>
+                    <tr>
+                        <td>java.awt.Point</td>
+                        <td><img src="../images/nucleus_extension.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td>datanucleus-awtgeom</td>
+                    </tr>
+                    <tr>
+                        <td>java.awt.Rectangle</td>
+                        <td><img src="../images/nucleus_extension.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td>datanucleus-awtgeom</td>
+                    </tr>
+                    <tr>
+                        <td>java.net.URI</td>
+                        <td><img src="../images/nucleus_extension.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td>datanucleus-core</td>
+                    </tr>
+                    <tr>
+                        <td>java.net.URL</td>
+                        <td><img src="../images/nucleus_extension.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td>datanucleus-core</td>
+                    </tr>
+                    <tr>
+                        <td>java.io.Serializable</td>
+                        <td></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td>datanucleus-core</td>
+                    </tr>
+                    <tr>
+                        <td>java.io.File [8]</td>
+                        <td><img src="../images/nucleus_extension.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td>datanucleus-rdbms</td>
+                    </tr>
+
+                    <tr>
+                        <td>javax.jdo.spi.PersistenceCapable</td>
+                        <td></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td>datanucleus-core</td>
+                    </tr>
+                    <tr>
+                        <td>javax.jdo.spi.PersistenceCapable[]</td>
+                        <td></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td>datanucleus-core</td>
+                    </tr>
+                    <tr>
+                        <td>java.lang.Enum</td>
+                        <td></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td>datanucleus-core</td>
+                    </tr>
+                    <tr>
+                        <td>java.lang.Enum[]</td>
+                        <td></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td>datanucleus-core</td>
+                    </tr>
+                    <tr>
+                        <td>javax.time.calendar.LocalDateTime</td>
+                        <td><img src="../images/nucleus_extension.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td>datanucleus-core</td>
+                    </tr>
+                    <tr>
+                        <td>javax.time.calendar.LocalTime</td>
+                        <td><img src="../images/nucleus_extension.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td>datanucleus-core</td>
+                    </tr>
+                    <tr>
+                        <td>javax.time.calendar.LocalDate</td>
+                        <td><img src="../images/nucleus_extension.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td>datanucleus-core</td>
+                    </tr>
+                    <tr>
+                        <td>org.joda.time.DateTime</td>
+                        <td><img src="../images/nucleus_extension.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td>datanucleus-jodatime</td>
+                    </tr>
+                    <tr>
+                        <td>org.joda.time.LocalTime</td>
+                        <td><img src="../images/nucleus_extension.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td>datanucleus-jodatime</td>
+                    </tr>
+                    <tr>
+                        <td>org.joda.time.LocalDate</td>
+                        <td><img src="../images/nucleus_extension.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td>datanucleus-jodatime</td>
+                    </tr>
+                    <tr>
+                        <td>org.joda.time.Duration</td>
+                        <td><img src="../images/nucleus_extension.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td>datanucleus-jodatime</td>
+                    </tr>
+                    <tr>
+                        <td>org.joda.time.Interval</td>
+                        <td><img src="../images/nucleus_extension.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td>datanucleus-jodatime</td>
+                    </tr>
+                    <tr>
+                        <td>org.joda.time.Period</td>
+                        <td><img src="../images/nucleus_extension.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td>datanucleus-jodatime</td>
+                    </tr>
+                    <tr>
+                        <td>com.google.common.collect.Multiset</td>
+                        <td><img src="../images/nucleus_extension.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td>datanucleus-guava</td>
+                    </tr>
+                </table>
+                <ul>
+                    <li><b>[1]</b> - <i>java.util.SortedSet</i>, <i>java.util.TreeSet</i> allow the specification of 
+                        comparators via the "comparator-name" DataNucleus extension MetaData element 
+                        (within &lt;collection&gt;). The headSet, tailSet, subSet methods are only supported when 
+                        using cached collections.</li>
+                    <li><b>[2]</b> - <i>java.util.SortedMap</i>, <i>java.util.TreeMap</i> allow the specification of 
+                        comparators via the "comparator-name" DataNucleus extension MetaData element 
+                        (within &lt;map&gt;). The headMap, tailMap, subMap methods are only supported when
+                        using cached containers.</li>
+                    <li><b>[3]</b> - <i>java.lang.StringBuffer</i> dirty check mechanism is limited to immutable mode, 
+                        it means, if you change a StringBuffer object field, you must reassign it to the owner object
+                        field to make sure changes are propagated to the database.</li>
+                    <li><b>[4]</b> - <i>java.lang.Number</i> will be stored in a column capable of storing a 
+                        BigDecimal, and will store to the precision of the object to be persisted. On reading back 
+                        the object will be returned typically as a BigDecimal since there is no mechanism for 
+                        determing the type of the object that was stored.</li>
+                    <li><b>[5]</b> - <i>java.util.LinkedHashMap</i> treated as a Map currently. No List-ordering
+                        is supported.</li>
+                    <li><b>[6]</b> - <i>java.util.LinkedHashSet</i> treated as a Set currently. No List-ordering
+                        is supported.</li>
+                    <li><b>[7]</b> - <i>java.util.Calendar</i> can be stored into two columns (millisecs, Timezone)
+                        or into a single column (Timestamp). The single column option is not guaranteed to
+                        preserve the TimeZone of the input Calendar.</li>
+                    <li><b>[8]</b> - available only for RDBMS, persisted into LONGVARBINARY, and retrieved as streamable
+                        so as not to adversely affect memory utilisation, hence suitable for large files. New in 3.2.8 of datanucleus-rdbms</li>
+                </ul>
+                <p>
+                    Note that support is available for persisting other types depending on the datastore to 
+                    which you are persisting
+                </p>
+                <ul>
+                    <li><a href="../rdbms/spatial_types.html">RDBMS GeoSpatial types</a> 
+                        via the DataNucleus RDBMS Spatial plugin</li>
+                </ul>
+                <p>
+                    If you have support for any additional types and would either like to contribute them, or
+                    have them listed here, let us know
+                </p>
+                <br/>
+                <p>
+                    <img src="../images/nucleus_plugin.gif" border="0" alt=""/>
+                    You can add support for other basic Java types quite easily, particularly if you can store
+                    it as a String or Long and then retrieve it back into its object form from that -
+                    <a href="http://www.datanucleus.org/extensions/java_types.html">See the Java Types plugin-point</a>
+                    You can also define more specific support for it with RDBMS datastores -
+                    <a href="http://www.datanucleus.org/extensions/rdbms_java_types.html">See the RDBMS Java Types plugin-point</a>
+                </p>
+                <p>
+                    Handling of second-class types uses wrappers and bytecode enhancement with DataNucleus. This
+                    contrasts to what Hibernate uses (proxies), and what Hibernate imposes on you. See 
+                    <a href="http://blog.bolkey.com/2009/05/hibernate-datanucleus-r1/" target="_blank">this blog entry</a> if you
+                    have doubts about this approach.
+                </p>
+                <br/>
+            </subsection>
+
+            <subsection name="Enums">
+                <p>
+                    By default an Enum is persisted as either a String form (the name), or as an integer form 
+                    (the ordinal). You control which form by specifying the column <i>jdbc-type</i>.
+                </p>
+                <p>
+                    An extension to this is where you have an Enum that defines its own "value"s for the different 
+                    enum options.
+                </p>
+                <source><![CDATA[
+public enum MyColour 
+{
+    RED((short)1), GREEN((short)3), BLUE((short)5), YELLOW((short)8);
+
+    private short value;
+
+    private MyColour(short value)
+    {
+            this.value = value;
+    }
+
+    public short getValue() 
+    {
+            return value;
+    }
+
+    public static MyColour getEnumByValue(short value)
+    {
+        switch (value)
+        {
+            case 1:
+                return RED;
+            case 3:
+                return GREEN;
+            case 5:
+                return BLUE;
+            default:
+                return YELLOW;
+        }
+    }
+}]]></source>
+                <p>
+                    With the default persistence it would persist as String-based, so persisting "RED" "GREEN" "BLUE"
+                    etc. With <i>jdbc-type</i> as INTEGER it would persist 0, 1, 2, 3 being the ordinal values.
+                    If you define the metadata as
+                </p>
+                <source><![CDATA[
+@Extensions({
+    @Extension(vendorName="datanucleus", key="enum-getter-by-value", value="getEnumByValue"),
+    @Extension(vendorName="datanucleus", key="enum-value-getter", value="getValue")
+   })
+MyColour colour;]]></source>
+                <p>
+                    this will now persist 1, 3, 5, 8, being the "value" of each of the enum options.
+                </p>
+                <br/>
+            </subsection>
+
+            <a name="typeconverter"/>
+            <subsection name="TypeConverters">
+                <img src="../images/nucleus_plugin.gif" border="0" alt=""/>
+                <p>
+                    By default DataNucleus will store the value using its own internal configuration/default
+                    for the java type and for the datastore. The user can, however, change that by making use of a
+                    <i>TypeConverter</i>. You firstly need to define the <i>TypeConverter</i> class (assuming
+                    you aren't going to use an 
+                    <a href="https://sourceforge.net/p/datanucleus/code/HEAD/tree/platform/core/trunk/src/java/org/datanucleus/store/types/converters/">internal DataNucleus converter</a>, and
+                    for this you should refer to the
+                    <a href="http://www.datanucleus.org/extensions/type_converter.html">TypeConverter plugin-point</a>.
+                    Once you have the converter defined, and registered in a <i>plugin.xml</i> under a name you then
+                    mark the field/property to use it
+                </p>
+<source><![CDATA[
+    @Extension(vendorName="datanucleus", key="type-converter-name", value="kryo-serialise")
+    String longString;
+]]></source>
+                <p>
+                    In this case we have a String field but we want to serialise it, not using normal Java serialisation
+                    but using the "Kryo" library. When it is stored it will be converted into a serialised form
+                    and when read back in will be deserialised. You can see the example Kryo TypeConverter over
+                    on <a href="https://github.com/datanucleus/type-converter-kryo">GitHub</a>.
+                </p>
+            </subsection>
+
+            <subsection name="Eclipse EMF models">
+                <p>
+                    You could try to persist Eclipse EMF models using 
+                    <a href="http://wiki.eclipse.org/Texo">the Texo project</a> to generate POJOs
+                </p>
+            </subsection>
+        </section>
+    </body>
+</document>

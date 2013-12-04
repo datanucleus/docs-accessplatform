@@ -1,0 +1,418 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<document xmlns="http://maven.apache.org/XDOC/2.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+    <properties>
+        <title>JDO API</title>
+    </properties>
+
+    <body>
+        <section name="JDO : Caching">
+            <p>
+                Caching is an essential mechanism in providing efficient usage of resources in many systems. 
+                Data management using JDO is no different and provides a definition of caching at 2 levels. 
+                Caching allows objects to be retained and returned rapidly without having to make an extra call to 
+                the datastore. The 2 levels of caching available with DataNucleus are
+            </p>
+            <ul>
+                <li><a href="pm.html#level1_cache">Level 1 Cache</a> - mandated by the JDO specification, and represents 
+                    the caching of instances within a PersistenceManager</li>
+                <li><a href="#level2">Level 2 Cache</a> - represents the caching of instances within a 
+                    PersistenceManagerFactory (across multiple PersistenceManager's)</li>
+            </ul>
+            <p>
+                You can think of a cache as a Map, with values referred to by keys. 
+                In the case of JDO, the key is the object identity (identity is unique in JDO).
+            </p>
+            <br/>
+
+            <a name="level2"/>
+            <subsection name="Level 2 Cache">
+                <p>
+                    By default the <b>Level 2</b> Cache is enabled.
+                    The user can configure the <b>Level 2</b> Cache if they so wish.
+                    This is controlled by use of the persistence property <b>datanucleus.cache.level2.type</b>.
+                    You set this to "type" of cache required.
+                    With the <b>Level 2</b> Cache you currently have the following options.
+                </p>
+                <ul>
+                    <li><b>none</b> - turn OFF Level 2 caching.</li>
+                    <li><b>weak</b> - use the internal (weak reference based) L2 cache. Provides support for 
+                        the JDO 2 interface of being able to pin objects into the cache, and unpin them when 
+                        required. This option does not support distributed caching, solely running within the 
+                        JVM of the client application. Weak references are held to non pinned objects.</li>
+                    <li><b>soft</b> - use the internal (soft reference based) L2 cache. Provides support for 
+                        the JDO 2 interface of being able to pin objects into the cache, and unpin them when 
+                        required. This option does not support distributed caching, solely running within the 
+                        JVM of the client application. Soft references are held to non pinned objects.</li>
+                    <li><a href="#ehcache">EHCache</a> - a simple wrapper to EHCache's caching 
+                        product. Provides basic support for adding items to the cache and retrieval from the cache. 
+                        Doesn't support pinning and unpinning.</li>
+                    <li><a href="#ehcache">EHCacheClassBased</a> - similar to the EHCache option
+                        but class-based.</li>
+                    <li><a href="#oscache">OSCache</a> - a simple wrapper to OSCache's caching 
+                        product. Provides basic support for adding items to the cache and retrieval from the cache. 
+                        Doesn't support pinning and unpinning.</li>
+                    <li><a href="#swarmcache">SwarmCache</a> - a simple wrapper to SwarmCache's 
+                        caching product. Provides basic support for adding items to the cache and retrieval from the 
+                        cache. Doesn't support pinning and unpinning.</li>
+                    <li><a href="#coherence">Oracle Coherence</a> - a simple wrapper to Oracle's 
+                        Coherence caching product. Provides basic support for adding items to the cache and retrieval 
+                        from the cache. Doesn't support pinning and unpinning. Oracle's caches support distributed 
+                        caching, so you could, in principle, use DataNucleus in a distributed environment with 
+                        this option.</li>
+                    <li><a href="#javax.cache">javax.cache</a> - a simple wrapper to the standard javax.cache's 
+                        caching product. Provides basic support for adding items to the cache and retrieval from the 
+                        cache. Doesn't support pinning and unpinning.</li>
+                    <li><a href="#jcache">JCache</a> - a simple wrapper to the old version of javax.cache's 
+                        caching product. Provides basic support for adding items to the cache and retrieval from the 
+                        cache. Doesn't support pinning and unpinning.</li>
+                    <li><a href="#memcached">spymemcached</a> - a simple wrapper to the "spymemcached" client for
+                        memcached caching product. Provides basic support for adding items to the cache and retrieval 
+                        from the cache. Doesn't support pinning and unpinning.</li>
+                    <li><a href="#memcached">xmemcached</a> - a simple wrapper to the "xmemcached" client for
+                        memcached caching product. Provides basic support for adding items to the cache and retrieval 
+                        from the cache. Doesn't support pinning and unpinning.</li>
+                    <li><a href="#cacheonix">cacheonix</a> - a simple wrapper to the Cacheonix distributed
+                        caching software. Provides basic support for adding items to the cache and retrieval 
+                        from the cache. Doesn't support pinning and unpinning.</li>
+                </ul>
+                <p>
+                    The javax.cache cache is available in the datanucleus-core plugin.
+                    The EHCache, OSCache, SwarmCache, Coherence, JCache, Cacheonix, and Memcache caches are available in the
+                    <a href="../../../plugins/cache.html">datanucleus-cache</a> plugin.
+                </p>
+                <p>
+                    In addition you can control the <i>mode</i> of operation of the L2 cache. You do this using the
+                    persistence property <b>datanucleus.cache.level2.mode</b>.
+                    The default is <i>UNSPECIFIED</i> which means that DataNucleus will cache all objects of entities unless 
+                    the entity is explicitly marked as not cacheable. The other options are
+                    <i>NONE</i> (don't cache ever), <i>ALL</i> (cache all entities regardless of annotations),
+                    <i>ENABLE_SELECTIVE</i> (cache entities explicitly marked as cacheable), or
+                    <i>DISABLE_SELECTIVE</i> (cache entities unless explicitly marked as not cacheable - i.e same
+                    as our default).
+                </p>
+                <p>
+                    Objects are placed in the L2 cache when you commit() the transaction of a 
+                    PersistenceManager. This means that you only have datastore-persisted objects in that 
+                    cache. Also, if an object is deleted during a transaction then at commit it 
+                    will be removed from the L2 cache if it is present.
+                </p>
+                <p>
+                    <a href="http://www.datanucleus.org/extensions/level2_cache.html"><img src="../images/nucleus_plugin.gif" border="0" alt=""/></a>
+                    The Level 2 cache is a DataNucleus plugin point allowing you to provide your own cache
+                    where you require it. Use the examples of the EHCache, Coherence caches etc as reference.
+                </p>
+                <p>
+                    Note that you can have a PMF with L2 caching enabled yet have a PM with it disabled. This is
+                    achieved by creating the PM as you would normally, and then call
+                </p>
+<source><![CDATA[pm.setProperty("datanucleus.cache.level2.type", "none");]]></source>
+                <br/>
+            </subsection>
+
+            <subsection name="Controlling the Level 2 Cache">
+                <p>
+                    The majority of times when using a JDO-enabled system you will not have to take control over 
+                    any aspect of the caching other than specification of whether to use a <b>Level 2</b> Cache or 
+                    not. With JDO and DataNucleus you have the ability to control which objects remain in the cache. 
+                    This is available via a method on the <i>PersistenceManagerFactory</i>.
+                </p>
+                <source>
+PersistenceManagerFactory pmf = JDOHelper.getPersistenceManagerFactory(props);
+DataStoreCache cache = pmf.getDataStoreCache();</source>
+				<p>
+				    The <i>DataStoreCache</i> interface 
+				    <a href="http://db.apache.org/jdo/api20/apidocs/javax/jdo/datastore/DataStoreCache.html" target="_blank"><img src="../images/javadoc.gif" alt=""/></a>
+				    provides methods to control the retention of objects in the cache. You have 3 groups of methods
+				</p>
+                <ul>
+                    <li><b>evict</b> - used to remove objects from the Level 2 Cache</li>
+                    <li><b>pin</b> - used to pin objects into the cache, meaning that they will not get removed by 
+                        garbage collection, and will remain in the Level 2 cache until removed.</li>
+                    <li><b>unpin</b> - used to reverse the effects of pinning an object in the Level 2 cache. 
+                        This will mean that the object can thereafter be garbage collected if not being used.</li>
+                </ul>
+                <p> 
+                    These methods can be called to <i>pin</i> objects into the cache that will be much used. Clearly 
+                    this will be very much application dependent, but it provides a mechanism for users to exploit 
+                    the caching features of JDO. If an object is not "pinned" into the L2 cache then it can typically 
+                    be garbage collected at any time, so you should utilise the pinning capability for objects that 
+                    you wish to retain access to during your application lifetime. For example, if you have an object 
+                    that you want to be found from the cache you can do
+                </p>
+                <source>
+PersistenceManagerFactory pmf = JDOHelper.getPersistenceManagerFactory(props);
+DataStoreCache cache = pmf.getDataStoreCache();
+cache.pinAll(MyClass.class, false); // Pin all objects of type MyClass from now on
+PersistenceManager pm = pmf.getPersistenceManager();
+Transaction tx = pm.currentTransaction();
+try
+{
+    tx.begin();
+
+    pm.makePersistent(myObject);
+    // "myObject" will now be pinned since we are pinning all objects of type MyClass.
+
+    tx.commit();
+}
+finally
+{
+    if (tx.isActive())
+    {
+    	tx.close();
+    }
+}</source>
+                <p>
+                    Thereafter, whenever something refers to <i>myObject</i>, it will find it in the Level 2 cache. 
+                    To turn this behaviour off, the user can either <u>unpin</u> it or <u>evict</u> it.
+                </p>
+                <p>
+                    JDO allows control over which classes are put into a Level 2 cache. You do this 
+                    by specifying the <b>cacheable</b> attribute to <i>false</i> (defaults to true).
+                    So with the following specification, no objects of type <i>MyClass</i>
+                    will be put in the L2 cache.
+                </p>
+                <source><![CDATA[
+Using XML:
+<class name="MyClass" cacheable="false">
+    ...
+</class>
+
+Using Annotations:
+@Cacheable("false")
+public class MyClass
+{
+    ...
+}]]></source>
+                <p>
+                    JDO allows you control over which fields of an object are put in the Level 2 cache.
+                    You do this by specifying the <b>cacheable</b> attribute to <i>false</i> (defaults to true).
+                    This setting is only required for fields that are relationships to other persistable objects. 
+                    Like this
+                </p>
+                <source><![CDATA[
+Using XML:
+<class name="MyClass">
+    <field name="values"/>
+    <field name="elements" cacheable="false"/>
+    ...
+</class>
+
+Using Annotations:
+public class MyClass
+{
+    ...
+
+    Collection values;
+
+    @Cacheable("false")
+    Collection elements;
+}]]></source>
+                <p>
+                    So in this example we will cache "values" but not "elements".
+                    If a field is <i>cacheable</i> then
+                </p>
+                <ul>
+                    <li>If it is a persistable object, the "identity" of the related object will be stored
+                        in the Level 2 cache for this field of this object</li>
+                    <li>If it is a Collection of persistable elements, the "identity" of the elements will be 
+                        stored in the Level 2 cache for this field of this object</li>
+                    <li>If it is a Map of persistable keys/values, the "identity" of the keys/values will be 
+                        stored in the Level 2 cache for this field of this object</li>
+                </ul>
+                <p>
+                    When pulling an object in from the Level 2 cache and it has a reference to another object
+                    Access Platform uses the "identity" to find that object in the Level 1 or Level 2 caches
+                    to re-relate the objects.
+                </p>
+                <br/>
+                <img src="../images/nucleus_extension.gif" alt=""/>
+                <p>
+                    DataNucleus has an extension in metadata allowing the user to define that all instances of a class
+                    are automatically <i>pinned</i> in the Level 2 cache.
+                </p>
+                <source><![CDATA[
+@PersistenceCapable
+@Extension(vendorName="datanucleus", key="cache-pin", value="true")
+public class MyClass
+{
+    ...
+}]]></source>
+                <br/>
+                <br/>
+            </subsection>
+
+            <a name="javax.cache"/>
+            <subsection name="L2 Cache using javax.cache">
+                <p>
+                    DataNucleus provides a simple wrapper to 
+                    <a href="http://jcp.org/en/jsr/detail?id=107" target="_blank">javax.cache's caches</a>. 
+                    To enable this you should set the persistence properties
+                </p>
+                <source>
+datanucleus.cache.level2.type=javax.cache
+datanucleus.cache.level2.cacheName={cache name}
+datanucleus.cache.level2.timeout={expiration time in millis - optional}</source>
+                <br/>
+            </subsection>
+
+            <a name="jcache"/>
+            <subsection name="L2 Cache using JCache">
+                <p>
+                    DataNucleus provides a simple wrapper to 
+                    <a href="http://sourceforge.net/projects/jsr107cache/" target="_blank">JCache's caches</a>. 
+                    This is an old version of what will become javax.cache (separate option).
+                    To enable this you should set the persistence properties
+                </p>
+                <source>
+datanucleus.cache.level2.type=jcache
+datanucleus.cache.level2.cacheName={cache name}
+datanucleus.cache.level2.timeout={expiration time in millis - optional}</source>
+                <br/>
+            </subsection>
+
+            <a name="coherence"/>
+            <subsection name="L2 Cache using Oracle Coherence">
+                <p>
+                    DataNucleus provides a simple wrapper to 
+                    <a href="http://www.oracle.com/technology/products/coherence/index.html" target="_blank">Oracle's Coherence caches</a>.
+                    This currently takes the <i>NamedCache</i> interface in Coherence and instantiates a cache of a 
+                    user provided name. To enabled this you should set the following persistence properties
+                </p>
+                <source>
+datanucleus.cache.level2.type=coherence
+datanucleus.cache.level2.cacheName={coherence cache name}</source>
+                <p>
+                    The <i>Coherence cache name</i> is the name that you would normally put into a call to 
+                    CacheFactory.getCache(name). As mentioned earlier, this cache does not support the 
+                    <i>pin/unpin</i> operations found in the standard JDO interface. However you do have the 
+                    benefits of Oracle's distributed/serialized caching. If you require more control over the 
+                    Coherence cache whilst using it with DataNucleus, you can just access the cache directly via
+                </p>
+                <source>
+DataStoreCache cache = pmf.getDataStoreCache();
+NamedCache coherenceCache = ((CoherenceLevel2Cache)cache).getCoherenceCache();</source>
+                <br/>
+            </subsection>
+
+            <a name="ehcache"/>
+            <subsection name="L2 Cache using EHCache">
+                <p>
+                    DataNucleus provides a simple wrapper to 
+                    <a href="http://www.sf.net/projects/ehcache" target="_blank">EHCache's caches</a>. 
+                    To enable this you should set the persistence properties
+                </p>
+                <source>
+datanucleus.cache.level2.type=ehcache
+datanucleus.cache.level2.cacheName={cache name}
+datanucleus.cache.level2.configurationFile={EHCache configuration file (in classpath)}</source>
+                <p>
+                    The EHCache plugin also provides an alternative L2 Cache that is class-based. 
+                    To use this you would need to replace "ehcache" above with "ehcacheclassbased".
+                </p>
+                <br/>
+            </subsection>
+
+            <a name="oscache"/>
+            <subsection name="L2 Cache using OSCache">
+                <p>
+                    DataNucleus provides a simple wrapper to 
+                    <a href="http://www.opensymphony.com/oscache/" target="_blank">OSCache's caches</a>. 
+                    To enable this you should set the persistence properties
+                </p>
+                <source>
+datanucleus.cache.level2.type=oscache
+datanucleus.cache.level2.cacheName={cache name}</source>
+                <br/>
+            </subsection>
+
+            <a name="swarmcache"/>
+            <subsection name="L2 Cache using SwarmCache">
+                <p>
+                    DataNucleus provides a simple wrapper to 
+                    <a href="http://swarmcache.sourceforge.net/" target="_blank">SwarmCache's caches</a>. 
+                    To enable this you should set the persistence properties
+                </p>
+                <source>
+datanucleus.cache.level2.type=swarmcache
+datanucleus.cache.level2.cacheName={cache name}</source>
+                <br/>
+            </subsection>
+
+            <a name="memcached"/>
+            <subsection name="L2 Cache using Spymemcached/Xmemcached">
+                <p>
+                    DataNucleus provides a simple wrapper to 
+                    <a href="http://code.google.com/p/spymemcached/">Spymemcached caches</a> and
+                    <a href="http://code.google.com/p/xmemcached/">Xmemcached caches</a>. 
+                    To enable this you should set the persistence properties
+                </p>
+                <source>
+datanucleus.cache.level2.type=spymemcached    [or "xmemcached"]
+datanucleus.cache.level2.cacheName={prefix for keys, to avoid clashes with other memcached objects}
+datanucleus.cache.level2.memcached.servers=...
+datanucleus.cache.level2.memcached.expireSeconds=...</source>
+                <p>
+                    <b>datanucleus.cache.level2.memcached.servers</b> is a space separated list of memcached
+                    hosts/ports, e.g. host:port host2:port.
+                    <b>datanucleus.cache.level2.memcached.expireSeconds</b> if not set or set to 0 then no expire
+                </p>
+                <br/>
+            </subsection>
+
+            <a name="cacheonix"/>
+            <subsection name="L2 Cache using Cacheonix">
+                <p>
+                    DataNucleus provides a simple wrapper to 
+                    <a href="http://www.cacheonix.com/" target="_blank">Cacheonix</a>. 
+                    To enable this you should set the persistence properties
+                </p>
+                <source>
+datanucleus.cache.level2.type=cacheonix
+datanucleus.cache.level2.cacheName={cache name}</source>
+                <p>
+                    Note that you can optionally also specify
+                </p>
+                <source>
+datanucleus.cache.level2.timeout={timeout-in-millis (default=60)}
+datanucleus.cache.level2.configurationFile={Cacheonix configuration file (in classpath)}</source>
+                <p>
+                    and define a <i>cacheonix-config.xml</i> like
+                </p>
+                <source><![CDATA[
+<?xml version="1.0"?>
+<cacheonix>
+   <local>
+      <!-- One cache per class being stored. -->
+      <localCache name="mydomain.MyClass">
+         <store>
+            <lru maxElements="1000" maxBytes="1mb"/>
+            <expiration timeToLive="60s"/>
+         </store>
+      </localCache>
+
+      <!-- Fallback cache for classes indeterminable from their id. -->
+      <localCache name="datanucleus">
+         <store>
+            <lru maxElements="1000" maxBytes="10mb"/>
+            <expiration timeToLive="60s"/>
+         </store>
+      </localCache>
+
+      <localCache name="default" template="true">
+         <store>
+            <lru maxElements="10" maxBytes="10mb"/>
+            <overflowToDisk maxOverflowBytes="1mb"/>
+            <expiration timeToLive="1s"/>
+         </store>
+      </localCache>
+   </local>
+
+</cacheonix>]]></source>
+                <br/>
+            </subsection>
+
+        </section>
+    </body>
+</document>

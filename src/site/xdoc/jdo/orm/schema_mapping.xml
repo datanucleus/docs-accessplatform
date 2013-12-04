@@ -1,0 +1,328 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<document xmlns="http://maven.apache.org/XDOC/2.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+    <properties>
+        <title>JDO Schema Mapping</title>
+    </properties>
+
+    <body>
+        <section name="JDO : Schema Mapping">
+            <p>
+                You saw in our <a href="../class_mapping.html">basic class mapping guide</a> how you define MetaData for
+                a classes basic persistence, notating which fields are persisted. The next step is to define how it maps to the
+                schema of the datastore (in this case RDBMS). The simplest way of mapping is to map each class to its own table. 
+                This is the default model in JDO persistence (with the exception of inheritance). 
+                If you don't specify the table and column names, then DataNucleus will generate table and column names for you.
+                <b>You should specify your table and column names if you have an existing schema.</b> Failure to do so will mean
+                that DataNucleus uses its own names and these will almost certainly not match what you have in the datastore.
+                There are several aspects to cover here
+            </p>
+            <ul>
+                <li><a href="#names">Table and column names</a></li>
+                <li><a href="#datastoreidentity">Column for datastore identity</a></li>
+                <li><a href="#applicationidentity">Column(s) for application identity</a></li>
+                <li><a href="#nullsdefaults">Column nullability and default value</a></li>
+                <li><a href="#columntypes">Column Types</a></li>
+                <li><a href="#unmapped">Columns with no field in the class</a></li>
+            </ul>
+
+            <a name="names"/>
+            <subsection name="Tables and Column names">
+                <p> 
+                    The main thing that developers want to do when they set up the persistence of their data is to control the names of the 
+                    tables and columns used for storing the classes and fields. This is an essential step when mapping to an existing schema,
+                    because it is necessary to map the classes onto the existing database entities. Let's take an example
+                </p>
+                <source>
+public class Hotel
+{
+    private String name;
+    private String address;
+    private String telephoneNumber;
+    private int numberOfRooms;
+    ...
+}</source>      
+                <p>In our case we want to map this class to a table called <b>ESTABLISHMENT</b>, and has columns <i>NAME</i>, 
+                    <i>DIRECTION</i>, <i>PHONE</i> and <i>NUMBER_OF_ROOMS</i> (amongst other things). So 
+                    we define our Meta-Data like this</p>
+                <source><![CDATA[
+<class name="Hotel" table="ESTABLISHMENT">
+    <field name="name">
+        <column name="NAME"/>
+    </field>
+    <field name="address">
+        <column name="DIRECTION"/>
+    </field>
+    <field name="telephoneNumber">
+        <column name="PHONE"/>
+    </field>
+    <field name="numberOfRooms">
+        <column name="NUMBER_OF_ROOMS"/>
+    </field>
+</class>]]></source>
+                <p>
+                    So we have defined the table and the column names.
+                    It should be mentioned that if you don't specify the table and column names then DataNucleus will generate
+                    names for the datastore identifiers. The table name will be based on the class name, and the column
+                    names will be based on the field names and the role of the field (if part of a relationship).
+                </p>
+                <p>See also :-</p>
+                <ul>
+                    <li><a href="datastore_identifiers.html">Identifier Guide</a> - defining the identifiers to use for table/column names</li>
+                    <li><a href="../metadata_xml.html#column">MetaData reference for &lt;column&gt; element</a></li>
+                    <li><a href="../metadata_xml.html#primary-key">MetaData reference for &lt;primary-key&gt; element</a></li>
+                    <li><a href="../annotations.html#Column">Annotations reference for @Column</a></li>
+                    <li><a href="../annotations.html#PrimaryKey_Class">Annotations reference for @PrimaryKey</a></li>
+                </ul>
+                <br/>
+            </subsection>
+
+            <a name="datastoreidentity"/>
+            <subsection name="Column names for datastore-identity">
+                <p>
+                    When you select <i>datastore-identity</i> a surrogate column will be added in the datastore. You need to be able
+                    to define the column name if mapping to an existing schema (or wanting to control the schema). So lets say we have
+                    the following
+                </p>
+                <source>
+public class MyClass // persisted to table "MYCLASS"
+{
+    ...
+}
+
+public class MySubClass extends MyClass // persisted to table "MYSUBCLASS"
+{
+    ...
+}</source>
+                <p>
+                    We want to define the names of the identity column in "MYCLASS" and "MYSUBCLASS". Here's how we do it
+                </p>
+                <source><![CDATA[
+<class name="MyClass" table="MYCLASS">
+    <datastore-identity>
+        <column name="MY_PK_COLUMN"/>
+    </datastore-identity>
+    ...
+</class>
+<class name="MySubClass" table="MYSUBCLASS">
+    <datastore-identity>
+        <column name="MYSUB_PK_COLUMN"/>
+    </datastore-identity>
+    ...
+</class>]]></source>
+                <p>
+                    So we will have a PK column "MY_PK_COLUMN" in the table "MYCLASS", and a PK column "MYSUB_PK_COLUMN" in the table
+                    "MYSUBCLASS" (and that corresponds to the "MY_PK_COLUMN" value in "MYCLASS"). We could also do
+                </p>
+                <source><![CDATA[
+<class name="MyClass" table="MYCLASS">
+    <datastore-identity>
+        <column name="MY_PK_COLUMN"/>
+    </datastore-identity>
+    ...
+</class>
+<class name="MySubClass" table="MYSUBCLASS">
+    <inheritance strategy="new-table"/>
+    <primary-key>
+        <column name="MYSUB_PK_COLUMN"/>
+    </primary-key>
+    ...
+</class>]]></source>
+                <p>See also :-</p>
+                <ul>
+                    <li><a href="inheritance.html">Inheritance Guide</a> - defining how to use inheritance between classes</li>
+                    <li><a href="../metadata_xml.html#column">MetaData reference for &lt;column&gt; element</a></li>
+                    <li><a href="../metadata_xml.html#primary-key">MetaData reference for &lt;primary-key&gt; element</a></li>
+                    <li><a href="../annotations.html#Column">Annotations reference for @Column</a></li>
+                    <li><a href="../annotations.html#PrimaryKey_Class">Annotations reference for @PrimaryKey</a></li>
+                </ul>
+                <br/>
+            </subsection>
+
+            <a name="applicationidentity"/>
+            <subsection name="Column names for application-identity">
+                <p>
+                    When you select <i>application-identity</i> you have some field(s) that form the "primary-key" of the class.
+                    A common situation is that you have inherited classes and each class has its own table, and so the primary-key
+                    column names can need defining for each class in the inheritance tree. So lets show an example how to do it
+                </p>
+                <source>
+public class MyClass // persisted to table "MYCLASS"
+{
+    long id; // PK field
+    ...
+}
+
+public class MySubClass extends MyClass // persisted to table "MYSUBCLASS"
+{
+    ...
+}</source>
+                <p>
+                    Defining the column name for "MyClass.id" is easy since we use the same as shown previously "column" for the field.
+                    Obviously the table "MYSUBCLASS" will also need a PK column. Here's how we define the column mapping
+                </p>
+                <source><![CDATA[
+<class name="MyClass" identity-type="application" table="MYCLASS">
+    <field name="myPrimaryKeyField" primary-key="true">
+        <column name="MY_PK_COLUMN"/>
+    </field>
+    ...
+</class>
+<class name="MySubClass" identity-type="application" table="MYSUBCLASS">
+    <inheritance strategy="new-table"/>
+    <primary-key>
+        <column name="MYSUB_PK_COLUMN" target="MY_PK_COLUMN"/>
+    </primary-key>
+    ...
+</class>]]></source>
+                <p>
+                    So we will have a PK column "MY_PK_COLUMN" in the table "MYCLASS", and a PK column "MYSUB_PK_COLUMN" in the table
+                    "MYSUBCLASS" (and that corresponds to the "MY_PK_COLUMN" value in "MYCLASS"). You can also use
+                </p>
+                <source><![CDATA[
+<class name="MyClass" identity-type="application" table="MYCLASS">
+    <field name="myPrimaryKeyField" primary-key="true">
+        <column name="MY_PK_COLUMN"/>
+    </field>
+    ...
+</class>
+<class name="MySubClass" identity-type="application" table="MYSUBCLASS">
+    <inheritance strategy="new-table">
+        <join>
+            <column name="MYSUB_PK_COLUMN" target="MY_PK_COLUMN"/>
+        </join>
+    </inheritance>
+    ...
+</class>]]></source>
+                <p>See also :-</p>
+                <ul>
+                    <li><a href="inheritance.html">Inheritance Guide</a> - defining how to use inheritance between classes</li>
+                    <li><a href="../metadata_xml.html#inheritance">MetaData reference for &lt;inheritance&gt; element</a></li>
+                    <li><a href="../metadata_xml.html#column">MetaData reference for &lt;column&gt; element</a></li>
+                    <li><a href="../metadata_xml.html#primary-key">MetaData reference for &lt;primary-key&gt; element</a></li>
+                    <li><a href="../annotations.html#Inheritance">Annotations reference for @Inheritance</a></li>
+                    <li><a href="../annotations.html#Column">Annotations reference for @Column</a></li>
+                    <li><a href="../annotations.html#PrimaryKey_Class">Annotations reference for @PrimaryKey</a></li>
+                </ul>
+                <br/>
+            </subsection>
+
+            <a name="nullsdefaults"/>
+            <subsection name="Column nullability and default values">
+                <p>
+                    So we've seen how to specify the basic structure of a table, naming the table and its columns, and how to control the 
+                    types of the columns. We can extend this further to control whether the columns are allowed to contain nulls and to set 
+                    a default value for a column if we ever have need to insert into it and not specify a particular column. Let's take a 
+                    related class for our hotel. Here we have a class to model the payments made to the hotel.
+                </p>
+                <source>
+public class Payment
+{
+    Customer customer;
+    String bankTransferReference;
+    String currency;
+    double amount;
+}</source>
+                <p>
+                    In this class we can model payments from a customer of an amount. Where the customer pays by bank transfer we can save the
+                    reference number. Since our hotel is in the United Kingdom we want the default currency to be pounds, or to use its ISO4217
+                    currency code "GBP". In addition, since the bank transfer reference is optional we want that column to be nullable. So let's
+                    specify the MetaData for the class.
+                </p>
+                <source><![CDATA[
+<class name="Payment">
+    <field name="customer" persistence-capable="persistent" column="CUSTOMER_ID"/>
+    <field name="bankTransferReference">
+        <column name="TRANSFER_REF" allows-null="true"/>
+    </field>
+    <field name="currency">
+        <column name="CURRENCY" default-value="GBP"/>
+    </field>
+    <field name="amount" column="AMOUNT"/>
+</class>]]></source>
+                <p>So we make use of the <i>allows-null</i> and <i>default-value</i> attributes. The table, when created by DataNucleus,
+                    will then provide the default and nullability that we require.</p>
+                <p>See also :-</p>
+                <ul>
+                    <li><a href="../metadata_xml.html#column">MetaData reference for &lt;column&gt; element</a></li>
+                    <li><a href="../annotations.html#Column">Annotations reference for @Column</a></li>
+                </ul>
+                <br/>
+            </subsection>
+
+            <a name="columntypes"/>
+            <subsection name="Column types">
+                <p>
+                    DataNucleus will provide a default type for any columns that it creates, but it will allow users to override this default.
+                    The default that DataNucleus chooses is always based on the Java type for the field being mapped. For example a Java field
+                    of type "int" will be mapped to a column type of INTEGER in RDBMS datastores. Similarly String will be mapped to
+                    VARCHAR. To override the default setting (and always the best policy if you are wanting your MetaData to give the same
+                    datastore definition with all JDO implementations) you do as follows
+                </p>
+                <source><![CDATA[
+<class name="Payment">
+    <field name="customer" persistence-capable="persistent" column="CUSTOMER_ID">
+    <field name="bankTransferReference">
+        <column name="TRANSFER_REF" jdbc-type="VARCHAR" length="255" allows-null="true"/>
+    </field>
+    <field name="currency">
+        <column name="CURRENCY" jdbc-type="CHAR" length="3" default-value="GBP"/>
+    </field>
+    <field name="amount">
+        <column name="AMOUNT" jdbc-type="DECIMAL" length="10" scale="2"/>
+    </field>
+</class>
+]]></source>
+                <p>
+                    So we have defined TRANSFER_REF to use VARCHAR(255) column type, CURRENCY to use CHAR(3) column type, and AMOUNT to use
+                    DECIMAL(10,2) column type. Please be aware that DataNucleus only supports persisting particular Java types to particular
+                    JDBC/SQL types. We have demonstrated above the <i>jdbc-type</i> attribute, but there is also an <i>sql-type</i> 
+                    attribute. This is to be used where you want to map to some specific SQL type (and will not be needed in the 
+                    vast majority of cases - the <i>jdbc-type</i> should generally be used).
+                </p>
+                <p>See also :-</p>
+                <ul>
+                    <li><a href="../types.html">Types Guide</a> - defining persistence of Java types</li>
+                    <li><a href="../../datastores/rdbms_datastore_types.html">RDBMS Types Guide</a> - defining mapping of Java types to available JDBC/SQL types</li>
+                    <li><a href="../metadata_xml.html#column">MetaData reference for &lt;column&gt; element</a></li>
+                    <li><a href="../annotations.html#Column">Annotations reference for @Column</a></li>
+                </ul>
+            </subsection>
+
+            <a name="unmapped"/>
+            <subsection name="Columns with no field in the class">
+                <p>
+                    DataNucleus supports mapping of columns in the datastore that have no associated field in
+                    the java class. These are useful where you maybe have a table used by other applications and dont use
+                    some of the information in your Java model. DataNucleus needs to know about these columns so that it can
+                    validate the schema correctly, and also insert particular values when inserting objects into the table.
+                    You could handle this by defining your schema yourself so that the particular columns have "DEFAULT"
+                    settings, but this way you allow DataNucleus to know about all information. So to give an example
+                </p>
+                <source><![CDATA[
+<class name="Hotel" table="ESTABLISHMENT">
+    <field name="name">
+        <column name="NAME"/>
+    </field>
+    <field name="address">
+        <column name="DIRECTION"/>
+    </field>
+    <field name="telephoneNumber">
+        <column name="PHONE"/>
+    </field>
+    <field name="numberOfRooms">
+        <column name="NUMBER_OF_ROOMS"/>
+    </field>
+    <column name="YEAR_ESTABLISHED" jdbc-type="INTEGER" insert-value="1980"/>
+    <column name="MANAGER_NAME" jdbc-type="VARCHAR" insert-value="N/A"/>
+</class>]]></source>
+                <p>
+                    So in this example our table "ESTABLISHMENT" has the columns associated with the specified fields
+                    and also has columns "YEAR_ESTABLISHED" (that is INTEGER-based and will be given a value of "1980"
+                    on any inserts) and "MANAGER_NAME" (VARCHAR-based and will be given a value of "N/A" on any inserts).
+                </p>
+            </subsection>
+		</section>
+	</body>
+</document>

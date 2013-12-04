@@ -1,0 +1,297 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<document xmlns="http://maven.apache.org/XDOC/2.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+    <properties>
+        <title>Value Generators</title>
+    </properties>
+
+    <body>
+        <section name="JPA : Value Generation">
+            <p>
+                Fields of a class can either have the values set by you the user, or you can set DataNucleus to 
+                generate them for you. This is of particular importance with identity fields where you want unique
+                identities. You can use this value generation process with the identity field(s) in JPA. 
+                There are many different "strategies" for generating values, as defined by the JPA specification.
+                Some strategies are specific to a particular datastore, and some are generic. You should
+                choose the strategy that best suits your target datastore. The available strategies are :-
+            </p>
+            <ul>
+                <li><a href="#native"><b>AUTO</b></a> - this is the default and allows DataNucleus
+                    to choose the most suitable for the datastore</li>
+                <li><a href="#sequence"><b>SEQUENCE</b></a> - this uses a datastore sequence (if supported
+                    by the datastore)</li>
+                <li><a href="#identity"><b>IDENTITY</b></a> - these use autoincrement/identity/serial features in 
+                    the datastore (if supported by the datastore)</li>
+                <li><a href="#increment"><b>TABLE</b></a> - this is datastore neutral and increments
+                    a sequence value using a table.</li>
+            </ul>
+            <p>See also :-</p>
+            <ul>
+                <li><a href="metadata_xml.html#generated-value">JPA MetaData reference for &lt;generated-value&gt;</a></li>
+                <li><a href="annotations.html#GeneratedValue">JPA Annotation reference for @GeneratedValue</a></li>
+            </ul>
+            <br/>
+            <p>
+                <b>Please note that the JPA spec only requires the ability to generate values for identity
+                fields. DataNucleus allows you to do it for any field.</b> Please bear this in mind when
+                considering portability.
+            </p>
+            <table>
+                <tr>
+                    <th>
+                        Please note that by defining a value-strategy for a field then it will, by default, 
+                        always generate a value for that field on persist. If the field can store nulls and 
+                        you only want it to generate the value at persist when it is null (i.e you haven't 
+                        assigned a value yourself) then you can add the extension <i>"strategy-when-notnull"</i> 
+                        as <i>false</i>
+                    </th>
+                </tr>
+            </table>
+            <br/>
+
+            <a name="native"/>
+            <subsection name="AUTO">
+                <p>
+                    With this strategy DataNucleus will choose the most appropriate strategy for the datastore being used.
+                    If you define the field as String-based then it will choose <a href="#uuidhex">uuid-hex</a>. Otherwise
+                    the field is numeric in which case it chooses <a href="#identity">identity</a> if supported, otherwise
+                    <a href="#sequence">sequence</a> if supported, otherwise <a href="#increment">increment</a> if supported
+                    otherwise throws an exception. On RDBMS you can get the behaviour used up until DN v3.0 by specifying
+                    the persistence property <b>datanucleus.rdbms.useLegacyNativeValueStrategy</b> as <i>true</i>
+                </p>
+            </subsection>
+
+            <a name="sequence"/>
+            <subsection name="SEQUENCE">
+                <p>
+                    A sequence is a user-defined database function that generates a sequence of unique numeric ids. 
+                    The unique identifier value returned from the database is translated to a java type: java.lang.Long. 
+                    DataNucleus supports sequences for the following datastores:
+                </p>
+                <ul>
+                    <li>Oracle</li>
+                    <li>PostgreSQL</li>
+                    <li>SAP DB</li>
+                    <li>DB2</li>
+                    <li>Firebird</li>
+                    <li>HSQLDB</li>
+                    <li>H2</li>
+                    <li>Derby (from v10.6)</li>
+                </ul>
+                <p>
+                    To configure a class to use either of these generation methods using <u>application identity</u> 
+                    you would add the following to the class' Meta-Data
+                </p>
+                <source><![CDATA[
+<sequence-generator name="SEQ1" sequence-name="MY_SEQ" initial-value="5" allocation-size="10"/>
+<entity class="MyClass">
+    <attributes>
+        <id name="myId">
+            <generated-value strategy="SEQUENCE" generator="SEQ1"/>
+        </id>
+    </attributes>
+</entity>]]></source>
+                <p>or using annotations</p>
+                <source><![CDATA[
+@Entity
+@SequenceGenerator(name="SEQ1", sequenceName="MY_SEQ", initialValue=5, allocationSize=10)
+public class MyClass
+{
+    @Id
+    @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="SEQ1")
+    private long myfield;
+    ...
+}]]></source>
+                <p>
+                    If the sequence does not yet exist in the database at the time DataNucleus needs a new unique 
+                    identifier, a new sequence is created in the database based on the JPA Meta-Data configuration. 
+                    Additional properties for configuring sequences are set in the JPA Meta-Data, see the available 
+                    properties below. Unsupported properties by a database are silently ignored by DataNucleus.
+                </p>
+                <table>
+                    <tr>
+                        <th>Property</th>
+                        <th>Description</th>
+                        <th>Required</th>
+                    </tr>
+                    <tr>
+                        <td>key-database-cache-size</td>
+                        <td>specifies how many sequence numbers are to be preallocated and stored in memory for faster access. 
+                            This is an optimization feature provided by the database</td>
+                        <td>No</td>
+                    </tr>
+                    <tr>
+                        <td>sequence-catalog-name</td>
+                        <td>Name of the catalog where the sequence is.</td>
+                        <td>No.</td>
+                    </tr>
+                    <tr>
+                        <td>sequence-schema-name</td>
+                        <td>Name of the schema where the sequence is.</td>
+                        <td>No.</td>
+                    </tr>
+				</table>
+                <p>
+                    This value generator will generate values unique across different JVMs
+                </p>
+                <br/>
+            </subsection>
+
+            <a name="identity"/>
+            <subsection name="IDENTITY">
+                <p>
+                    Auto-increment/identity/serial are primary key columns that are populated when a row is inserted in the
+                    table. These use the databases own keywords on table creation and so rely on having the table structure 
+                    either created by DataNucleus or having the column with the necessary keyword.
+                </p>
+                <p>
+                	DataNucleus supports auto-increment/identity/serial keys for many databases including :
+                </p>
+                <ul>
+                    <li>DB2 (IDENTITY)</li>
+                    <li>MySQL (AUTOINCREMENT)</li>
+                    <li>MSSQL (IDENTITY)</li>
+                    <li>Sybase (IDENTITY)</li>
+                    <li>HSQLDB (IDENTITY)</li>
+                    <li>H2 (IDENTITY)</li>
+                    <li>PostgreSQL (SERIAL)</li>
+                    <li>Derby (IDENTITY)</li>
+                    <li>MongoDB - String based</li>
+                    <li>Neo4j - long based</li>
+                </ul>
+                <p>
+                    <b>This generation strategy should only be used if there is a single "root" table for 
+                    the inheritance tree. If you have more than 1 root table (e.g using subclass-table inheritance)
+                    then you should choose a different generation strategy</b>
+                </p>
+                <p>
+                    For a class using <u>application identity</u> you need to set the <i>value-strategy</i> attribute 
+                    on the primary key field. You can configure the Meta-Data for the class something like this 
+                </p>
+                <source><![CDATA[
+<entity class="MyClass">
+    <attributes>
+        <id name="myId">
+            <generated-value strategy="IDENTITY"/>
+        </id>
+    </attributes>
+</entity>]]></source>
+                <p>
+                    Please be aware that if you have an inheritance tree with the base class defined as using "identity" then
+                    the column definition for the PK of the base table will be defined as "AUTO_INCREMENT" or "IDENTITY" or 
+                    "SERIAL" (dependent on the RDBMS) and all subtables will NOT have this identifier added to their PK column
+                    definitions. This is because the identities are assigned in the base table (since all objects will have 
+                    an entry in the base table).
+                </p>
+                <p>
+                    <b>Please note that if using optimistic transactions, this strategy will mean that the value
+                    is only set when the object is actually persisted (i.e at flush() or commit())</b>
+                </p>
+                <p>
+                    This value generator will generate values unique across different JVMs
+                </p>
+                <br/>
+            </subsection>
+
+            <a name="increment"/>
+            <subsection name="TABLE">
+                <p>
+                    This method is database neutral and uses a sequence table that holds an incrementing sequence value. The 
+                    unique identifier value returned from the database is translated to a java type: java.lang.Long. This 
+                    strategy will work with any datastore. This method require a sequence table in the database and creates 
+                    one if doesn't exist.
+                </p>
+                <p>
+                    To configure an <u>application identity</u> class to use this generation method you simply add this to the
+                    class' Meta-Data. If your class is in an inheritance tree you should define this for the base class only.
+                </p>
+                <source><![CDATA[
+<entity class="MyClass">
+    <attributes>
+        <id name="myId">
+            <generated-value strategy="TABLE"/>
+        </id>
+    </attributes>
+</entity>]]></source>
+                <p>
+					Additional properties for configuring this generator are set in the JPA Meta-Data, see the 
+                    available properties below. Unsupported properties are silently ignored by DataNucleus.
+                </p>
+				<table>
+                    <tr>
+                        <th>Property</th>
+                        <th>Description</th>
+                        <th>Required</th>
+                    </tr>
+                    <tr>
+                        <td>key-initial-value</td>
+                        <td>First value to be allocated.</td>
+                        <td>No. Defaults to 1</td>
+                    </tr>
+                    <tr>
+                        <td>key-cache-size</td>
+                        <td>number of unique identifiers to cache. The keys are pre-allocated, cached 
+                            and used on demand. If <i>key-cache-size</i> is greater than 1, it may generate holes in the 
+                            object keys in the database, if not all keys are used.</td>
+                        <td>No. Default is 50</td>
+                    </tr>
+                    <tr>
+                        <td>sequence-table-basis</td>
+                        <td>Whether to define uniqueness on the base class name or the base table name.
+                            Since there is no "base table name" when the root class has "subclass-table"
+                            this should be set to "class" when the root class has "subclass-table" inheritance</td>
+                        <td>No. Defaults to <i>class</i>, but the other option is <i>table</i></td>
+                    </tr>
+                    <tr>
+                        <td>sequence-name</td>
+                        <td>name for the sequence (overriding the "sequence-table-basis" above).
+                            The row in the table will use this in the PK column</td>
+                        <td>No</td>
+                    </tr>
+                    <tr>
+                        <td>sequence-table-name</td>
+                        <td>Table name for storing the sequence.</td>
+                        <td>No. Defaults to <i>SEQUENCE_TABLE</i></td>
+                    </tr>
+                    <tr>
+                        <td>sequence-catalog-name</td>
+                        <td>Name of the catalog where the table is.</td>
+                        <td>No.</td>
+                    </tr>
+                    <tr>
+                        <td>sequence-schema-name</td>
+                        <td>Name of the schema where the table is.</td>
+                        <td>No.</td>
+                    </tr>
+                    <tr>
+                        <td>sequence-name-column-name</td>
+                        <td>Name for the column that represent sequence names.</td>
+                        <td>No. Defaults to <i>SEQUENCE_NAME</i></td>
+                    </tr>
+                    <tr>
+                        <td>sequence-nextval-column-name</td>
+                        <td>Name for the column that represent incremeting sequence values.</td>
+                        <td>No. Defaults to <i>NEXT_VAL</i></td>
+                    </tr>
+                    <tr>
+                        <td>table-name</td>
+                        <td>Name of the table whose column we are generating the value for (used when we have
+                            no previous sequence value and want a start point.</td>
+                        <td>No.</td>
+                    </tr>
+                    <tr>
+                        <td>column-name</td>
+                        <td>Name of the column we are generating the value for (used when we have
+                            no previous sequence value and want a start point.</td>
+                        <td>No.</td>
+                    </tr>
+                </table>
+                <p>
+                    This value generator will generate values unique across different JVMs
+                </p>
+                <br/>
+            </subsection>
+        </section>
+    </body>
+</document>

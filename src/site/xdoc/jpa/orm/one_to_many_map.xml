@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<document xmlns="http://maven.apache.org/XDOC/2.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+    <properties>
+        <title>JPA 1-N Relationships : Map</title>
+    </properties>
+
+    <body>
+        <section name="JPA : 1-N Relationships with Maps">
+            <p>
+				You have a 1-N (one to many) when you have one object of a class that has a Map of 
+                objects of another class. There are two general ways in which you can represent this in a datastore.
+                <b>Join Table</b> (where a join table is used to provide the relationship mapping between the objects), and
+                <b>Foreign-Key</b> (where a foreign key is placed in the table of the object contained in the Map.
+		    </p>
+            <p>
+                The various possible relationships are described below.
+            </p>
+            <ul>
+                <li><a href="#join_simple_pc">Map[Simple, PC] using join table</a></li>
+                <li><a href="#join_simple_simple">Map[Simple, Simple] using join table</a></li>
+                <li><a href="#fk_uni_key">1-N Unidirectional using Foreign-Key (key stored in the value class)</a></li>
+                <li><a href="#fk_bi_key">1-N Bidirectional using Foreign-Key (key stored in the value class)</a></li>
+            </ul>
+            <p>
+                This page is aimed at Map fields and so applies to fields of Java type
+                <i>java.util.HashMap, java.util.Hashtable, java.util.LinkedHashMap, java.util.Map, java.util.SortedMap, 
+                java.util.TreeMap, java.util.Properties</i>
+            </p>
+            <p>
+                <b>Please note that RDBMS supports the full range of options on this page, whereas other datastores
+                (ODF, Excel, HBase, MongoDB, etc) persist the Map in a column in the owner object rather than using
+                join-tables or foreign-keys since those concepts are RDBMS-only</b>
+            </p>
+            <br/>
+        </section>
+
+        <section name="1-N Map using Join Table">
+            <p>
+                We have a class <b>Account</b> that contains a Map. With a Map we store values using keys. 
+                As a result we have the following combinations of key and value, bearing in mind whether the key or 
+                value is <i>persistable</i>.
+            </p>
+
+            <a name="join_simple_pc"/>
+            <subsection name="Map[Simple, PC]">
+                <p>
+                    Here our key is a simple type (in this case a String) and the values are <i>PersistenceCapable</i>. Like this
+                </p>
+                <img src="../../images/orm/relationship_1_N_uni_map_simple_pc_class.jpg" border="0" alt=""/>
+
+                <p>
+                    If you define the Meta-Data for these classes as follows
+                </p>
+                <source><![CDATA[
+@Entity
+public class Account
+{
+    @OneToMany
+    @JoinTable
+    Map<String, Address> addresses;
+
+    ...
+}
+
+@Entity
+public class Address {...}]]></source>
+                <br/>
+                <p>
+                    This will create 3 tables in the datastore, one for <b>Account</b>, one for <b>Address</b>
+                    and a join table also containing the key.
+                </p>
+                <img src="../../images/orm/relationship_1_N_uni_map_simple_pc_db.gif" border="0" alt=""/>
+                <br/>
+                <p>
+                    You can configure the names of the columns in the join table using the <i>joinColumns</i>
+                    attributes of the various annotations.
+                </p>
+                <p>
+                    Please note that the column ADPT_PK_IDX is added by DataNucleus when the column type of the key is not valid to be
+                    part of a primary key (with the RDBMS being used). If the column type of your key is acceptable for use as part
+                    of a primary key then you will not have this "ADPT_PK_IDX" column.
+                </p>
+                <br/>
+            </subsection>
+
+            <a name="join_simple_simple"/>
+            <subsection name="Map[Simple, Simple]">
+                <p>
+                    Here our keys and values are of simple types (in this case a String). Like this
+                </p>
+                <img src="../../images/orm/relationship_1_N_uni_map_string_string_class.jpg" border="0" alt=""/>
+
+                <p>
+                    If you define the Meta-Data for these classes as follows
+                </p>
+                <source><![CDATA[
+@Entity
+public class Account
+{
+    @ElementCollection
+    @CollectionTable
+    Map<String, String> addresses;
+
+    ...
+}]]></source>
+                <p>
+                    This results in just 2 tables. The "join" table contains both the key AND the value.
+                </p>
+                <img src="../../images/orm/relationship_1_N_uni_map_simple_simple_db.gif" border="0" alt=""/>
+                <br/>
+                <p>
+                    You can configure the names of the columns in the join table using the <i>joinColumns</i>
+                    attributes of the various annotations.
+                </p>
+                <p>
+                    Please note that the column ADPT_PK_IDX is added by DataNucleus when the column type of the key is not valid to be
+                    part of a primary key (with the RDBMS being used). If the column type of your key is acceptable for use as part
+                    of a primary key then you will not have this "ADPT_PK_IDX" column.
+                </p>
+                <br/>
+            </subsection>
+        </section>
+
+        <section name="1-N Map using Foreign-Key">
+            <a name="fk_uni_key"/>
+            <subsection name="1-N Foreign-Key Unidirectional (key stored in value)">
+                <p>
+                    In this case we have an object with a Map of objects and we're associating the objects using a 
+                    foreign-key in the table of the value. We're using a field (<i>alias</i>) in the Address class as 
+                    the key of the map.
+                </p>
+                <img src="../../images/orm/relationship_1_N_uni_map_fk_simple_pc_class.jpg" border="0" alt=""/>
+                <p>
+                    In this relationship, the <u>Account</u> class has a Map of <u>Address</u> objects, yet the 
+                    <u>Address</u> knows nothing about the <u>Account</u>. In this case we don't have a field in the 
+                    Address to link back to the Account and so DataNucleus has to use columns in the datastore representation of 
+                    the <u>Address</u> class. So we define the MetaData like this
+                </p>
+                <source><![CDATA[
+<entity-mappings>
+    <entity class="Account">
+        <table name="ACCOUNT"/>
+        <attributes>
+            <id name="id">
+                <column name="ACCOUNT_ID"/>
+            </id>
+            ...
+            <one-to-many name="addresses" target-entity="com.mydomain.Address">
+                <map-key name="alias"/>
+                <join-column name="ACCOUNT_ID_OID"/>
+            </one-to-many>
+        </attributes>
+    </entity>
+
+    <entity class="Address">
+        <table name="ADDRESS"/>
+        <attributes>
+            <id name="id">
+                <column name="ADDRESS_ID"/>
+            </id>
+            ...
+            <basic name="alias">
+                <column name="KEY" length="20"/>
+            </basic>
+        </attributes>
+    </entity>
+</entity-mappings>]]></source>
+                <p>
+                    Again there will be 2 tables, one for <b>Address</b>, and one for <b>Account</b>.
+                    If you wish to specify the names of the columns used in the schema for the foreign key in the 
+                    <u>Address</u> table you should use the <i>join-column</i> element within the field of the map.
+                </p>
+                <br/>
+                <img src="../../images/orm/relationship_1_N_map_key_in_value_db.gif" border="0" alt=""/>
+                <br/>
+                <p>
+                    In terms of operation within your classes of assigning the objects in the relationship. You have to 
+                    take your <u>Account </u>object and add the <u>Address</u> to the <u>Account</u> map field since the 
+                    <u>Address</u> knows nothing about the <u>Account</u>. Also be aware that each <u>Address</u> object 
+                    can have only one owner, since it has a single foreign key to the <u>Account</u>.
+                </p>
+                <br/>
+            </subsection>
+
+            <a name="fk_bi_key"/>
+            <subsection name="1-N Foreign-Key Bidirectional (key stored in value)">
+                <p>
+                    In this case we have an object with a Map of objects and we're associating the objects using a 
+                    foreign-key in the table of the value.
+                </p>
+                <img src="../../images/orm/relationship_1_N_bi_map_fk_simple_pc_class.jpg" border="0" alt=""/>
+                <p>
+                    With these classes we want to store a foreign-key in the value table (ADDRESS), and we want to use the "alias"
+                    field in the Address class as the key to the map. If you define the Meta-Data for these classes as follows
+                </p>
+                <source><![CDATA[
+<entity-mappings>
+    <entity class="Account">
+        <table name="ACCOUNT"/>
+        <attributes>
+            <id name="id">
+                <column name="ACCOUNT_ID"/>
+            </id>
+            ...
+            <one-to-many name="addresses" target-entity="com.mydomain.Address" mapped-by="account">
+                <map-key name="alias"/>
+            </one-to-many>
+        </attributes>
+    </entity>
+
+    <entity class="Address">
+        <table name="ADDRESS"/>
+        <attributes>
+            <id name="id">
+                <column name="ADDRESS_ID"/>
+            </id>
+            ...
+            <basic name="alias">
+                <column name="KEY" length="20"/>
+            </basic>
+            <many-to-one name="account">
+                <join-column name="ACCOUNT_ID_OID"/>
+            </many-to-one>
+        </attributes>
+    </entity>
+</entity-mappings>]]></source>
+                <p>
+                    This will create 2 tables in the datastore. One for <u>Account</u>, and one for <u>Address</u>. 
+                    The table for <u>Address</u> will contain the key field as well as an index to the <u>Account</u> 
+                    record (notated by the <i>mapped-by</i> tag).
+                </p>
+                <br/>
+                <img src="../../images/orm/relationship_1_N_map_key_in_value_db.gif" border="0" alt=""/>
+                <br/>
+            </subsection>
+
+        </section>
+
+    </body>
+</document>

@@ -1,0 +1,428 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<document xmlns="http://maven.apache.org/XDOC/2.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+    <properties>
+        <title>Persistence Manager Factory</title>
+    </properties>
+
+    <body>
+        <section name="JDO : PersistenceManagerFactory">
+            <p>
+                Any JDO-enabled application will require at least one <i>PersistenceManagerFactory</i> (PMF). Typically 
+                applications create one per datastore being utilised. A <i>PersistenceManagerFactory</i> provides 
+                access to <i>PersistenceManager</i>s which allow objects to be persisted, and retrieved.
+                The <i>PersistenceManagerFactory</i> can be configured to provide particular behaviour.
+            </p>
+            <p>
+                <b>Important : A <i>PersistenceManagerFactory</i> is designed to be thread-safe. 
+                A <i>PersistenceManager</i> is not</b>
+            </p>
+            <p>
+                There are many ways of creating a <i>PersistenceManagerFactory</i> 
+                <a href="http://db.apache.org/jdo/api30/apidocs/javax/jdo/PersistenceManagerFactory.html" target="_blank"><img src="../images/javadoc.gif" alt=""/></a>.
+            </p>
+            <source>
+Properties properties = new Properties();
+properties.setProperty("javax.jdo.PersistenceManagerFactoryClass", 
+    "org.datanucleus.api.jdo.JDOPersistenceManagerFactory");
+properties.setProperty("javax.jdo.option.ConnectionURL","jdbc:mysql://localhost/myDB");
+properties.setProperty("javax.jdo.option.ConnectionDriverName","com.mysql.jdbc.Driver");
+properties.setProperty("javax.jdo.option.ConnectionUserName","login");
+properties.setProperty("javax.jdo.option.ConnectionPassword","password");
+PersistenceManagerFactory pmf = JDOHelper.getPersistenceManagerFactory(properties);</source>
+            <p>
+                A slight variation on this, is to have a file to specify these properties like this
+            </p>
+            <source>
+javax.jdo.PersistenceManagerFactoryClass=org.datanucleus.api.jdo.JDOPersistenceManagerFactory
+javax.jdo.option.ConnectionURL=jdbc:mysql://localhost/myDB
+javax.jdo.option.ConnectionDriverName=com.mysql.jdbc.Driver
+javax.jdo.option.ConnectionUserName=login
+javax.jdo.option.ConnectionPassword=password</source>
+            <p>
+                and then to create the <i>PersistenceManagerFactory</i> using this file
+            </p>
+<source>
+File propsFile = new File(filename);
+PersistenceManagerFactory pmf = JDOHelper.getPersistenceManagerFactory(propsFile);</source>
+            <p>
+                or if the above file is in the CLASSPATH (at "datanucleus.properties" in the root of the CLASSPATH), then
+            </p>
+<source>
+PersistenceManagerFactory pmf = JDOHelper.getPersistenceManagerFactory("datanucleus.properties");</source>
+            <p>
+                If using a <i>named PMF</i> file, you can create the PMF by providing the  
+                <a href="#pmf_named">name of the PMF</a> like this
+            </p>
+<source>
+PersistenceManagerFactory pmf = JDOHelper.getPersistenceManagerFactory("myNamedPMF");</source>
+            <p>
+                If using a <i>META-INF/persistence.xml</i> file, you can simply specify the 
+                <a href="#persistenceunit">persistence-unit</a> name as
+            </p>
+<source>
+PersistenceManagerFactory pmf = JDOHelper.getPersistenceManagerFactory("myPersistenceUnit");</source>
+            <p>
+                Another alternative, when specifying your datastore via JNDI, would be to call 
+                <i>JDOHelper.getPersistenceManagerFactory(jndiLocation, context);</i>, and then set the other 
+                persistence properties on the received PMF.
+            </p>
+            <p>
+                Whichever way we wish to obtain the <i>PersistenceManagerFactory</i> we have defined a series of 
+                properties to give the behaviour of the <i>PersistenceManagerFactory</i>. The first property specifies 
+                to use the DataNucleus implementation, and the following 4 properties define the datastore that it 
+                should connect to. There are many properties available. Some of these are standard JDO properties, 
+                and some are DataNucleus extensions.
+            </p>
+            <br/>
+
+            <subsection name="Specifying the datastore properties">
+                <p>
+                    With JDO you have 3 ways of specifying the datastore via persistence properties
+                </p>
+                <ul>
+                    <li><b>Specify the connection URL/driverName/userName/password</b> and it will internally
+                    create a DataSource for this URL (with optional connection pooling). This is achieved by
+                    specifying <b>javax.jdo.option.ConnectionDriverName</b>, <b>javax.jdo.option.ConnectionURL</b>,
+                    <b>javax.jdo.option.ConnectionUserName</b>, and <b>javax.jdo.option.ConnectionPassword</b></li>
+                    <li><b>Specify the JNDI name of the connectionFactory</b> This is achieved by specifying
+                    <b>javax.jdo.option.ConnectionFactoryName</b>, and <b>javax.jdo.option.ConnectionFactory2Name</b> (for secondary operations)</li>
+                    <li><b>Specify the DataSource of the connectionFactory</b> This is achieved by specifying
+                    <b>javax.jdo.option.ConnectionFactory</b>, and <b>javax.jdo.option.ConnectionFactory2</b> (for secondary operations)</li>
+                </ul>
+            </subsection>
+
+            <subsection name="JDO Persistence Properties">
+                <table>
+                    <tr>
+                        <th>Name</th>
+                        <th>Values</th>
+                        <th>Description</th>
+                    </tr>
+                    <tr>
+                        <td>javax.jdo.PersistenceManagerFactoryClass</td>
+                        <td></td>
+                        <td>The name of the PMF implementation.
+                            <i>org.datanucleus.api.jdo.JDOPersistenceManagerFactory</i>
+                            <b>Only required if you have more than one JDO implementation in the CLASSPATH</b></td>
+                    </tr>
+                    <tr>
+                        <td>javax.jdo.option.ConnectionFactory</td>
+                        <td></td>
+                        <td>Alias for <a href="../persistence_properties.html#ConnectionFactory">datanucleus.ConnectionFactory</a></td>
+                    </tr>
+                    <tr>
+                        <td>javax.jdo.option.ConnectionFactory2</td>
+                        <td></td>
+                        <td>Alias for <a href="../persistence_properties.html#ConnectionFactory2">datanucleus.ConnectionFactory2</a></td>
+                    </tr>
+                    <tr>
+                        <td>javax.jdo.option.ConnectionFactoryName</td>
+                        <td></td>
+                        <td>Alias for <a href="../persistence_properties.html#ConnectionFactoryName">datanucleus.ConnectionFactoryName</a></td>
+                    </tr>
+                    <tr>
+                        <td>javax.jdo.option.ConnectionFactory2Name</td>
+                        <td></td>
+                        <td>Alias for <a href="../persistence_properties.html#ConnectionFactory2Name">datanucleus.ConnectionFactory2Name</a></td>
+                    </tr>
+                    <tr>
+                        <td>javax.jdo.option.ConnectionDriverName</td>
+                        <td></td>
+                        <td>Alias for <a href="../persistence_properties.html#ConnectionDriverName">datanucleus.ConnectionDriverName</a></td>
+                    </tr>
+                    <tr>
+                        <td>javax.jdo.option.ConnectionURL</td>
+                        <td></td>
+                        <td>Alias for <a href="../persistence_properties.html#ConnectionURL">datanucleus.ConnectionURL</a></td>
+                    </tr>
+                    <tr>
+                        <td>javax.jdo.option.ConnectionUserName</td>
+                        <td></td>
+                        <td>Alias for <a href="../persistence_properties.html#ConnectionUserName">datanucleus.ConnectionUserName</a></td>
+                    </tr>
+                    <tr>
+                        <td>javax.jdo.option.ConnectionPassword</td>
+                        <td></td>
+                        <td>Alias for <a href="../persistence_properties.html#ConnectionPassword">datanucleus.ConnectionPassword</a></td>
+                    </tr>
+                    <tr>
+                        <td>javax.jdo.option.IgnoreCache</td>
+                        <td>true | <b>false</b></td>
+                        <td>Alias for <a href="../persistence_properties.html#IgnoreCache">datanucleus.IgnoreCache</a></td>
+                    </tr>
+                    <tr>
+                        <td>javax.jdo.option.Multithreaded</td>
+                        <td>true | <b>false</b></td>
+                        <td>Alias for <a href="../persistence_properties.html#Multithreaded">datanucleus.Multithreaded</a></td>
+                    </tr>
+                    <tr>
+                        <td>javax.jdo.option.NontransactionalRead</td>
+                        <td>false | <b>true</b></td>
+                        <td>Alias for <a href="../persistence_properties.html#NontransactionalRead">datanucleus.NontransactionalRead</a></td>
+                    </tr>
+                    <tr>
+                        <td>javax.jdo.option.NontransactionalWrite</td>
+                        <td>false | <b>true</b></td>
+                        <td>Alias for <a href="../persistence_properties.html#NontransactionalWrite">datanucleus.NontransactionalWrite</a></td>
+                    </tr>
+                    <tr>
+                        <td>javax.jdo.option.Optimistic</td>
+                        <td>true | <b>false</b></td>
+                        <td>Alias for <a href="../persistence_properties.html#Optimistic">datanucleus.Optimistic</a></td>
+                    </tr>
+                    <tr>
+                        <td>javax.jdo.option.RetainValues</td>
+                        <td>true | <b>false</b></td>
+                        <td>Alias for <a href="../persistence_properties.html#RetainValues">datanucleus.RetainValues</a></td>
+                    </tr>
+                    <tr>
+                        <td>javax.jdo.option.RestoreValues</td>
+                        <td>true | <b>false</b></td>
+                        <td>Alias for <a href="../persistence_properties.html#RestoreValues">datanucleus.RestoreValues</a></td>
+                    </tr>
+                    <tr>
+                        <td>javax.jdo.option.Mapping</td>
+                        <td></td>
+                        <td>Alias for <a href="../persistence_properties.html#Mapping">datanucleus.Mapping</a>
+                            <i>RDBMS datastores only</i></td>
+                    </tr>
+                    <tr>
+                        <td>javax.jdo.mapping.Catalog</td>
+                        <td></td>
+                        <td>Alias for <a href="../persistence_properties.html#Catalog">datanucleus.Catalog</a>
+                            <i>RDBMS datastores only</i></td>
+                    </tr>
+                    <tr>
+                        <td>javax.jdo.mapping.Schema</td>
+                        <td></td>
+                        <td>Alias for <a href="../persistence_properties.html#Schema">datanucleus.Schema</a>
+                            <i>RDBMS datastores only</i></td>
+                    </tr>
+                    <tr>
+                        <td>javax.jdo.option.DetachAllOnCommit</td>
+                        <td>true | <b>false</b></td>
+                        <td>Alias for <a href="../persistence_properties.html#DetachAllOnCommit">datanucleus.DetachAllOnCommit</a></td>
+                    </tr>
+                    <tr>
+                        <td>javax.jdo.option.TransactionType</td>
+                        <td></td>
+                        <td>Alias for <a href="../persistence_properties.html#TransactionType">datanucleus.TransactionType</a></td>
+                    </tr>
+                    <tr>
+                        <td>javax.jdo.option.PersistenceUnitName</td>
+                        <td></td>
+                        <td>Alias for <a href="../persistence_properties.html#PersistenceUnitName">datanucleus.PersistenceUnitName</a></td>
+                    </tr>
+                    <tr>
+                        <td>javax.jdo.option.ServerTimeZoneID</td>
+                        <td></td>
+                        <td>Alias for <a href="../persistence_properties.html#ServerTimeZoneID">datanucleus.ServerTimeZoneID</a></td>
+                    </tr>
+                    <tr>
+                        <td>javax.jdo.option.Name</td>
+                        <td></td>
+                        <td>Name of the named PMF to use. Refers to a PMF defined in "META-INF/jdoconfig.xml".</td>
+                    </tr>
+                    <tr>
+                        <td>javax.jdo.option.CopyOnAttach</td>
+                        <td><b>true</b> | false</td>
+                        <td>Alias for <a href="../persistence_properties.html#CopyOnAttach">datanucleus.CopyOnAttach</a></td>
+                    </tr>
+                    <tr>
+                        <td>javax.jdo.option.ReadOnly</td>
+                        <td>true | <b>false</b></td>
+                        <td>Alias for <a href="../persistence_properties.html#ReadOnlyDatastore">datanucleus.readOnlyDatastore</a></td>
+                    </tr>
+                    <tr>
+                        <td>javax.jdo.option.TransactionIsolationLevel</td>
+                        <td></td>
+                        <td>Alias for <a href="../persistence_properties.html#TransactionIsolationLevel">datanucleus.transactionIsolation</a></td>
+                    </tr>
+                    <tr>
+                        <td>javax.jdo.option.DatastoreReadTimeoutMillis</td>
+                        <td></td>
+                        <td>Alias for <a href="../persistence_properties.html#DatastoreReadTimeoutMillis">datanucleus.datastoreReadTimeout</a></td>
+                    </tr>
+                    <tr>
+                        <td>javax.jdo.option.DatastoreWriteTimeoutMillis</td>
+                        <td></td>
+                        <td>Alias for <a href="../persistence_properties.html#DatastoreWriteTimeoutMillis">datanucleus.datastoreWriteTimeout</a></td>
+                    </tr>
+                </table>
+                <br/>
+                <img src="../images/nucleus_extension.gif" border="0" alt=""/>
+                <p>
+                    DataNucleus provides many properties to extend the control that JDO gives you.
+                    These can be used alongside the above standard JDO properties, but will only work with 
+                    DataNucleus. Please consult the 
+                    <a href="../persistence_properties.html">Persistence Properties Guide</a> for full details.
+                </p>
+            </subsection>
+        </section>
+
+        <section name="PersistenceManagerFactory for Persistence-Unit">
+            <a name="persistenceunit"/>
+            <p>
+                When designing an application you can usually nicely separate your persistable objects into independent 
+                groupings that can be treated separately, perhaps within a different DAO object, if using DAOs. 
+                JDO uses the (JPA) idea of a <i>persistence-unit</i>. A <i>persistence-unit</i> provides a 
+                convenient way of specifying a set of metadata files, and classes, and jars that contain all classes to 
+                be persisted in a grouping. The persistence-unit is named, and the name is used for identifying it.
+                Consequently this name can then be used when defining what classes are to be enhanced, for example.
+            </p>
+            <p>
+                To define a <i>persistence-unit</i> you first need to add a file <b>persistence.xml</b> to the 
+                <i>META-INF/</i> directory of the CLASSPATH (this may mean WEB-INF/classes/META-INF when using a 
+                web-application). This file will be used to define your <i>persistence-unit</i>s. Lets show an example
+            </p>
+            <source><![CDATA[
+<?xml version="1.0" encoding="UTF-8" ?>
+<persistence xmlns="http://xmlns.jcp.org/xml/ns/persistence"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence
+        http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd" version="2.1">
+
+    <!-- Online Store -->
+    <persistence-unit name="OnlineStore">
+        <class>org.datanucleus.samples.metadata.store.Product</class>
+        <class>org.datanucleus.samples.metadata.store.Book</class>
+        <class>org.datanucleus.samples.metadata.store.CompactDisc</class>
+        <class>org.datanucleus.samples.metadata.store.Customer</class>
+        <class>org.datanucleus.samples.metadata.store.Supplier</class>
+        <exclude-unlisted-classes/>
+        <properties>
+            <property name="datanucleus.ConnectionDriverName" value="org.h2.Driver"/>
+            <property name="datanucleus.ConnectionURL" value="jdbc:h2:mem:datanucleus"/>
+            <property name="datanucleus.ConnectionUserName" value="sa"/>
+            <property name="datanucleus.ConnectionPassword" value=""/>
+        </properties>
+    </persistence-unit>
+
+    <!-- Accounting -->
+    <persistence-unit name="Accounting">
+        <mapping-file>/com/datanucleus/samples/metadata/accounts/package.jdo</mapping-file>
+        <properties>
+            <property name="datanucleus.ConnectionDriverName" value="org.h2.Driver"/>
+            <property name="datanucleus.ConnectionURL" value="jdbc:h2:mem:datanucleus"/>
+            <property name="datanucleus.ConnectionUserName" value="sa"/>
+            <property name="datanucleus.ConnectionPassword" value=""/>
+        </properties>
+    </persistence-unit>
+
+</persistence>]]></source>
+            <p>
+                In this example we have defined 2 <i>persistence-unit</i>s. The first has the name "OnlineStore" and 
+                contains 5 classes (annotated). The second has the name "Accounting" and contains a metadata file called 
+                "package.jdo" in a particular package (which will define the classes being part of that unit). This means
+                that once we have defined this we can reference these <i>persistence-unit</i>s in our persistence 
+                operations. You can find the XSD for <i>persistence.xml</i>
+                <a href="http://http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd">here</a>.
+            </p>
+            <p>There are several sub-elements of this <i>persistence.xml</i> file</p>
+            <ul>
+                <li><b>provider</b> - Not used by JDO</li>
+                <li><b>jta-data-source</b> - JNDI name for JTA connections</li>
+                <li><b>non-jta-data-source</b> - JNDI name for non-JTA connections</li>
+                <li><b>jar-file</b> - name of a JAR file to scan for annotated classes to include in this
+                persistence-unit.</li>
+                <li><b>mapping-file</b> - name of an XML "mapping" file containing persistence information
+                to be included in this persistence-unit. This is the "JDO" mapping file (<b>not</b> the ORM)</li>
+                <li><b>class</b> - name of an annotated class to include in this persistence-unit</li>
+                <li><b>properties</b> - properties defining the persistence factory to be used.</li>
+            </ul>
+            <br/>
+
+            <subsection name="Use with JDO">
+                <p>
+                    JDO accepts the "persistence-unit" name to be specified when creating the
+                    <i>PersistenceManagerFactory</i>, like this
+                </p>
+                <source>
+PersistenceManagerFactory pmf = JDOHelper.getPersistenceManagerFactory("MyPersistenceUnit");</source>
+                <br/>
+            </subsection>
+
+            <a name="persistenceunit_dynamic"/>
+            <subsection name="Dynamically generated Persistence-Unit">
+                <img src="../images/nucleus_extension.gif" border="0" alt=""/>
+                <p>
+                    DataNucleus allows an extension to JDO to dynamically create persistence-units at runtime.
+                    Use the following code sample as a guide. Obviously any classes defined in the persistence-unit
+                    need to have been enhanced.
+                </p>
+                <source><![CDATA[
+import org.datanucleus.metadata.PersistenceUnitMetaData;
+import org.datanucleus.api.jdo.JDOPersistenceManagerFactory;
+ 
+PersistenceUnitMetaData pumd = new PersistenceUnitMetaData("dynamic-unit", "RESOURCE_LOCAL", null);
+pumd.addClassName("org.datanucleus.test.A");
+pumd.setExcludeUnlistedClasses();
+pumd.addProperty("javax.jdo.ConnectionURL", "jdbc:hsqldb:mem:nucleus");
+pumd.addProperty("javax.jdo.ConnectionDriverName", "org.hsqldb.jdbcDriver");
+pumd.addProperty("javax.jdo.ConnectionUserName", "sa");
+pumd.addProperty("javax.jdo.ConnectionPassword", "");
+pumd.addProperty("datanucleus.autoCreateSchema", "true");
+
+PersistenceManagerFactory pmf = new JDOPersistenceManagerFactory(pumd, null);]]></source>
+                <p>
+                    It should be noted that if you call <i>pumd.toString();</i> then this returns the text that
+                    would have been found in a <i>persistence.xml</i> file.
+                </p>
+            </subsection>
+        </section>
+
+        <section name="Named PersistenceManagerFactory">
+            <a name="pmf_named"/>
+            <p>
+                Typically applications create one PMF per datastore being utilised. An alternate to
+                <a href="#persistenceunit">persistence-unit</a> is to use a <b>named PMF</b>, defined in a file
+                <i>META-INF/jdoconfig.xml</i> at the root of the CLASSPATH
+                (this may mean WEB-INF/classes/META-INF when using a web-application).
+                Let's see an example of a <i>jdoconfig.xml</i>
+            </p>
+            <source><![CDATA[
+<?xml version="1.0" encoding="utf-8"?>
+<jdoconfig xmlns="http://xmlns.jcp.org/xml/ns/jdo/jdoconfig"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="http://xmlns.jcp.org/xml/ns/jdo/jdoconfig">
+
+    <!-- Datastore Txn PMF -->
+    <persistence-manager-factory name="Datastore">
+        <property name="javax.jdo.PersistenceManagerFactoryClass" value="org.datanucleus.api.jdo.JDOPersistenceManagerFactory"/>
+        <property name="javax.jdo.option.ConnectionURL" value="jdbc:mysql://localhost/datanucleus?useServerPrepStmts=false"/>
+        <property name="javax.jdo.option.ConnectionDriverName" value="com.mysql.jdbc.Driver"/>
+        <property name="javax.jdo.option.ConnectionUserName" value="datanucleus"/>
+        <property name="javax.jdo.option.ConnectionPassword" value=""/>
+        <property name="javax.jdo.option.Optimistic" value="false"/>
+        <property name="datanucleus.autoCreateSchema" value="true"/>
+    </persistence-manager-factory>
+
+    <!-- Optimistic Txn PMF -->
+    <persistence-manager-factory name="Optimistic">
+        <property name="javax.jdo.PersistenceManagerFactoryClass" value="org.datanucleus.api.jdo.JDOPersistenceManagerFactory"/>
+        <property name="javax.jdo.option.ConnectionURL" value="jdbc:mysql://localhost/datanucleus?useServerPrepStmts=false"/>
+        <property name="javax.jdo.option.ConnectionDriverName" value="com.mysql.jdbc.Driver"/>
+        <property name="javax.jdo.option.ConnectionUserName" value="datanucleus"/>
+        <property name="javax.jdo.option.ConnectionPassword" value=""/>
+        <property name="javax.jdo.option.Optimistic" value="true"/>
+        <property name="datanucleus.autoCreateSchema" value="true"/>
+    </persistence-manager-factory>
+
+</jdoconfig>]]></source>
+            <p>
+                So in this example we have 2 named PMFs. The first is known by the name "Datastore" and 
+                utilises datastore transactions. The second is known by the name "Optimistic" and utilises
+                optimistic transactions. You simply define all properties for the particular PMF within its
+                specification block. And finally we instantiate our PMF like this
+            </p>
+            <source>
+PersistenceManagerFactory pmf = JDOHelper.getPersistenceManagerFactory("Optimistic");</source>
+            <p>
+                That's it. The PMF we are returned from JDOHelper will have all of the properties
+                defined in <i>META-INF/jdoconfig.xml</i> under the name of "Optimistic".
+            </p>
+        </section>
+    </body>
+</document>
