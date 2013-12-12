@@ -23,11 +23,10 @@
                 Things to bear in mind with JSON usage :-
             </p>
             <ul>
-                <li>Querying can be performed using JDOQL or JPQL. Any filtering/ordering will be performed
-                        <b>in-memory</b></li>
-                <li>Relations : A spreadsheet cannot store related objects directly, since each object is a 
-                        row of a particular worksheet. DataNucleus gets around this by storing the String-form of 
-                        the identity of the related object in the relation cell.</li>
+                <li>Querying can be performed using JDOQL or JPQL. Any filtering/ordering will be performed <b>in-memory</b></li>
+                <li>Relations : DataNucleus stores the id of the related object(s) in the element of the field. If a relation
+                    is bidirectional then it will be stored at both ends of the relation; this facilitates easy access to the
+                    related object with no need to do a query to find it.</li>
             </ul>
             <br/>
 

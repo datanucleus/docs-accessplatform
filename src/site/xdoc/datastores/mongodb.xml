@@ -3,7 +3,7 @@
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
     <properties>
-        <title>MongoDB Datastore</title>
+        <title>MongoDB Datastores</title>
     </properties>
 
     <body>
@@ -41,21 +41,22 @@
             </p>
             <ul>
                 <li>Querying can be performed using JDOQL or JPQL. 
-                        Some components of a filter are handled in the datastore, and the remainder in-memory.
-                        Currently any expression of a field (in the same table), or a literal are handled in-datastore, 
-                        as are the operators &amp;&amp;, ||, &gt;, &gt;=, &lt;, &lt;=, ==, and !=.</li>
-                <li>If you want a query to be runnable on a slave MongoDB instance then you should set the
-                        query extension (JDO) / hint (JPA) <b>slave-ok</b> as <i>true</i>, and when executed it can be
-                        run on a slave instance.</li>
-                <li>All objects of a class are persisted to a particular "document" (specifiable with the "table"
-                        in metadata), and a field of a class is persisted to a particular "field" ("column" in the 
-                        metadata).</li>
-                <li>Relations : A spreadsheet cannot store related objects directly, since each object is a 
-                        row of a particular worksheet. DataNucleus gets around this by storing the String-form of 
-                        the identity of the related object in the relation cell.</li>
+                    Some components of a filter are handled in the datastore, and the remainder in-memory.
+                    Currently any expression of a field (in the same table), or a literal are handled in-datastore, 
+                    as are the operators &amp;&amp;, ||, &gt;, &gt;=, &lt;, &lt;=, ==, and !=.</li>
+                <li>If you want a query to be runnable on a slave MongoDB instance then you should set the query extension (JDO) / hint (JPA) 
+                    <b>slave-ok</b> as <i>true</i>, and when executed it can be run on a slave instance.</li>
+                <li>All objects of a class are persisted to a particular "document" (specifiable with the "table" in metadata), 
+                    and a field of a class is persisted to a particular "field" ("column" in the metadata).</li>
+                <li>Relations : DataNucleus stores the id of the related object(s) in a field of the owning object.
+                    When a relation is bidirectional both ends of the relation will store the relation information.</li>
                 <li><a href="http://www.mongodb.org/display/DOCS/Capped+Collections">Capped collections</a> : 
-                        you can specify the extension metadata key <i>mongodb.capped.size</i>
-                        as the number of bytes of the size of the collection for the class in question.</li>
+                    you can specify the extension metadata key <i>mongodb.capped.size</i>
+                    as the number of bytes of the size of the collection for the class in question.</li>
+                <li>If you want to specify the max number of connections per host with MongoDB then set the persistence property
+                    <b>datanucleus.mongodb.connectionsPerHost</b></li>
+                <li>If you want to specify the MongoDB <i>threadsAllowedToBlockForConnectionMultiplier</i>, then set the persistence property
+                    <b>datanucleus.mongodb.threadsAllowedToBlockForConnectionMultiplier</b></li>
             </ul>
 
             <subsection name="Mapping : Embedded Persistable fields">
