@@ -18,10 +18,23 @@
                 changes to move between versions of DataNucleus. We aim to keep this to a minimum.
             </p>
 
+            <a name="3_3_5_FROM_3_3_4"/>
+            <subsection name="Migration from 3.3.4 to 3.3.5">
+                <p>
+                    Migrating will require the following changes
+                </p>
+                <ul>
+                    <li>RDBMS : where you have a query that has a collection member in the FetchPlan it previously would 
+                    have been ignored. Now it is used to attempt a bulk-fetch of the collection. Since this is new functionality
+                    there may be cases where the syntax is not optimal; remove the collection field from the query FetchPlan to
+                    get the previous behaviour.</li>
+                </ul>
+            </subsection>
+
             <a name="3_3_4_FROM_3_3_3"/>
             <subsection name="Migration from 3.3.3 to 3.3.4">
                 <p>
-                    Migrating from AccessPlatform 3.3.3 to 3.3.4 will require the following changes
+                    Migrating will require the following changes
                 </p>
                 <ul>
                     <li>RDBMS : default mapping for Boolean/boolean java types is now JDBC type BOOLEAN for H2 database; previously
@@ -43,23 +56,21 @@
             <a name="3_3_2_FROM_3_3_1"/>
             <subsection name="Migration from 3.3.1 to 3.3.2">
                 <p>
-                    Migrating from AccessPlatform 3.3.1 to 3.3.2 will require no changes except
-                    to internal API(s).
+                    Migrating will require no changes except to internal API(s).
                 </p>
             </subsection>
 
             <a name="3_3_1_FROM_3_3_0_REL"/>
             <subsection name="Migration from 3.3.0.RELEASE to 3.3.1">
                 <p>
-                    Migrating from AccessPlatform 3.3.0.RELEASE to 3.3.1 will require no changes except
-                    to internal API(s).
+                    Migrating will require no changes except to internal API(s).
                 </p>
             </subsection>
 
             <a name="3_3_0_REL_FROM_3_3_0_M1"/>
             <subsection name="Migration from 3.3.0.M1 to 3.3.0.RELEASE">
                 <p>
-                    Migrating from AccessPlatform 3.3.0.M1 to 3.3.0.RELEASE will require the following changes
+                    Migrating will require the following changes
                 </p>
                 <ul>
                     <li>DataNucleus @FetchGroup extension annotation for JPA is now dropped and people should use
@@ -70,7 +81,7 @@
             <a name="3_3_0_M1_FROM_3_2_3"/>
             <subsection name="Migration from 3.2.3 to 3.3.0.M1">
                 <p>
-                    Migrating from AccessPlatform 3.2.3 to 3.3.0.M1 will require the following changes
+                    Migrating will require the following changes
                 </p>
                 <ul>
                     <li><b>Now requires a compliant JPA 2.1 API jar</b>. An official JPA 2.1 API jar is
@@ -81,10 +92,45 @@
                 </ul>
             </subsection>
 
+            <a name="3_2_9_FROM_3_2_8"/>
+            <subsection name="Migration from 3.2.8 to 3.2.9">
+                <p>
+                    Migrating will require the following changes
+                </p>
+                <ul>
+                    <li>RDBMS : where you have a query that has a collection member in the FetchPlan it previously would 
+                    have been ignored. Now it is used to attempt a bulk-fetch of the collection. Since this is new functionality
+                    there may be cases where the syntax is not optimal; remove the collection field from the query FetchPlan to
+                    get the previous behaviour.</li>
+                </ul>
+            </subsection>
+
+            <a name="3_2_8_FROM_3_2_7"/>
+            <subsection name="Migration from 3.2.7 to 3.2.8">
+                <p>
+                    Migrating will require the following changes
+                </p>
+                <ul>
+                    <li>RDBMS : default mapping for Boolean/boolean java types is now JDBC type BOOLEAN for H2 database; previously
+                    this was unspecified so most likely fell back to CHAR for that database. Specify the jdbc-type explicitly if you
+                    want to have CHAR</li>
+                </ul>
+            </subsection>
+
+            <a name="3_2_7_FROM_3_2_6"/>
+            <subsection name="Migration from 3.2.6 to 3.2.7">
+                <p>
+                    Migrating from AccessPlatform 3.2.6 to 3.2.7 will require the following changes
+                </p>
+                <ul>
+                    <li><i>datanucleus-googlecollections</i> plugin is now renamed to <i>datanucleus-guava</i></li>
+                </ul>
+            </subsection>
+
             <a name="3_2_3_FROM_3_2_2"/>
             <subsection name="Migration from 3.2.2 to 3.2.3">
                 <p>
-                    Migrating from AccessPlatform 3.2.2 to 3.2.3 will require the following changes
+                    Migrating will require the following changes
                 </p>
                 <ul>
                     <li>The persistence property <i>datanucleus.metadata.validate</i> is renamed to
@@ -97,14 +143,14 @@
             <a name="3_2_2_FROM_3_2_1"/>
             <subsection name="Migration from 3.2.1 to 3.2.2">
                 <p>
-                    Migrating from AccessPlatform 3.2.1 to 3.2.2 will require no changes.
+                    Migrating will require no changes.
                 </p>
             </subsection>
 
             <a name="3_2_1_FROM_3_2_0_REL"/>
             <subsection name="Migration from 3.2.0.RELEASE to 3.2.1">
                 <p>
-                    Migrating from AccessPlatform 3.2.0.RELEASE to 3.2.1 will require the following changes
+                    Migrating will require the following changes
                 </p>
                 <ul>
                     <li>The persistence property <i>datanucleus.attachSameDatastore</i> defaults to <i>true</i>
@@ -121,14 +167,14 @@
             <a name="3_2_0_REL_FROM_3_2_0_M4"/>
             <subsection name="Migration from 3.2.0.M4 to 3.2.0.RELEASE">
                 <p>
-                    Migrating from AccessPlatform 3.2.0.M4 to 3.2.0.RELEASE should require no changes.
+                    Migrating will require no changes.
                 </p>
             </subsection>
 
             <a name="3_2_0_M4_FROM_3_2_0_m3"/>
             <subsection name="Migration from 3.2.0.M3 to 3.2.0.M4">
                 <p>
-                    Migrating from AccessPlatform 3.2.0.M3 to 3.2.0.M4 will require the following changes.
+                    Migrating will require the following changes.
                 </p>
                 <ul>
                     <li>The RDBMS persistence property <i>datanucleus.rdbms.sqlParamValuesInBrackets</i> is now
@@ -143,14 +189,14 @@
             <a name="3_2_0_M3_FROM_3_2_0_M2"/>
             <subsection name="Migration from 3.2.0.M2 to 3.2.0.M3">
                 <p>
-                    Migrating from AccessPlatform 3.2.0.M2 to 3.2.0.M3 will require no changes.
+                    Migrating will require no changes.
                 </p>
             </subsection>
 
             <a name="3_2_0_M2_FROM_3_2_0_M1"/>
             <subsection name="Migration from 3.2.0.M1 to 3.2.0.M2">
                 <p>
-                    Migrating from AccessPlatform 3.2.0.M1 to 3.2.0.M2 will require the following changes.
+                    Migrating will require the following changes.
                 </p>
                 <ul>
                     <li>The Maven plugin has been renamed to <b>datanucleus-maven-plugin</b> from
@@ -170,7 +216,7 @@
             <a name="3_2_0_M1_FROM_3_1"/>
             <subsection name="Migration from 3.1.x to 3.2.0.M1">
                 <p>
-                    Migrating from AccessPlatform 3.1 to 3.2.0.M1 will require the following changes.
+                    Migrating will require the following changes.
                 </p>
                 <ul>
                     <li>The Enhancer plugin is now merged into "datanucleus-core".
@@ -189,7 +235,7 @@
             <a name="3_1_2_FROM_3_1_1"/>
             <subsection name="Migration from 3.1.1 to 3.1.2">
                 <p>
-                    Migrating from AccessPlatform 3.1.1 to 3.1.2 will require no changes.
+                    Migrating will require no changes.
                 </p>
                 <br/>
             </subsection>
@@ -197,7 +243,7 @@
             <a name="3_1_1_FROM_3_1_0_REL"/>
             <subsection name="Migration from 3.1.0.RELEASE to 3.1.1">
                 <p>
-                    Migrating from AccessPlatform 3.1.0.RELEASE to 3.1.1 will require no changes.
+                    Migrating will require no changes.
                 </p>
                 <br/>
             </subsection>
@@ -205,7 +251,7 @@
             <a name="3_1_0_REL_FROM_3_1_0_M5"/>
             <subsection name="Migration from 3.1.0.M5 to 3.1.0.RELEASE">
                 <p>
-                    Migrating from AccessPlatform 3.1.0.M5 to 3.1.0.RELEASE will require the following changes.
+                    Migrating will require the following changes.
                 </p>
                 <ul>
                     <li>You no longer are required to specify the persistence property 
@@ -217,7 +263,7 @@
             <a name="3_1_0_M5_FROM_3_1_0_M4"/>
             <subsection name="Migration from 3.1.0.M4 to 3.1.0.M5">
                 <p>
-                    Migrating from AccessPlatform 3.1.0.M4 to 3.1.0.M5 will require no changes.
+                    Migrating will require no changes.
                 </p>
                 <br/>
             </subsection>
@@ -225,7 +271,7 @@
             <a name="3_1_0_M4_FROM_3_1_0_M3"/>
             <subsection name="Migration from 3.1.0.M3 to 3.1.0.M4">
                 <p>
-                    Migrating from AccessPlatform 3.1.0.M3 to 3.1.0.M4 will require the following changes.
+                    Migrating will require the following changes.
                 </p>
                 <ul>
                     <li>The enhancer (v3.1) is now upgraded and requires ASM v4.0+. You can continue to use
@@ -238,7 +284,7 @@
             <a name="3_1_0_M3_FROM_3_1_0_M2"/>
             <subsection name="Migration from 3.1.0.M2 to 3.1.0.M3">
                 <p>
-                    Migrating from AccessPlatform 3.1.0.M2 to 3.1.0.M3 will require the following changes.
+                    Migrating will require the following changes.
                 </p>
                 <ul>
                     <li>Persistence property <i>datanucleus.managedRuntime</i> replaced by <b>datanucleus.jmxType</b> 
@@ -259,7 +305,7 @@
             <a name="3_1_0_M2_FROM_3_1_0_M1"/>
             <subsection name="Migration from 3.1.0.M1 to 3.1.0.M2">
                 <p>
-                    Migrating from AccessPlatform 3.1.0.M1 to 3.1.0.M2 will require the following changes.
+                    Migrating will require the following changes.
                 </p>
                 <ul>
                     <li>"javax.cache" is now split into "jcache" (old API) and "javax.cache" (standard API) and
@@ -272,7 +318,7 @@
             <a name="3_1_0_M1_FROM_3_0"/>
             <subsection name="Migration from 3.0.x to 3.1.0.M1">
                 <p>
-                    Migrating from AccessPlatform 3.0 to 3.1.0.M1 will require the following changes.
+                    Migrating will require the following changes.
                 </p>
                 <ul>
                     <li>Excel, ODF, MongoDB and HBase plugins now respect JDO/JPA table/column naming strategies. 
@@ -287,7 +333,7 @@
             <a name="3_0_4_FROM_3_0_3"/>
             <subsection name="Migration from 3.0.3 to 3.0.4">
                 <p>
-                    Migrating from AccessPlatform 3.0.3 to 3.0.4 will require the following changes.
+                    Migrating will require the following changes.
                 </p>
                 <ul>
                     <li>Move java.awt geometric type support into <b>datanucleus-awtgeom</b> plugin</li>
@@ -298,7 +344,7 @@
             <a name="3_0_3_FROM_3_0_3"/>
             <subsection name="Migration from 3.0.2 to 3.0.3">
                 <p>
-                    Migrating from AccessPlatform 3.0.2 to 3.0.3 will require no changes.
+                    Migrating will require no changes.
                 </p>
                 <br/>
             </subsection>
@@ -306,7 +352,7 @@
             <a name="3_0_2_FROM_3_0_1"/>
             <subsection name="Migration from 3.0.1 to 3.0.2">
                 <p>
-                    Migrating from AccessPlatform 3.0.1 to 3.0.2 will require the following changes.
+                    Migrating will require the following changes.
                 </p>
                 <ul>
                     <li>HBase : Default behaviour was to use Java serialisation to get the bytes of the PK
@@ -321,7 +367,7 @@
             <a name="3_0_0_REL_FROM_3_0_0_M6"/>
             <subsection name="Migration from 3.0.0 M6 to 3.0.0 RELEASE">
                 <p>
-                    Migrating from AccessPlatform 3.0.0 M6 to 3.0.0 RELEASE will require no changes.
+                    Migrating will require no changes.
                 </p>
                 <br/>
             </subsection>
@@ -329,7 +375,7 @@
             <a name="3_0_0_M6_FROM_3_0_0_M5"/>
             <subsection name="Migration from 3.0.0 M5 to 3.0.0 M6">
                 <p>
-                    Migrating from AccessPlatform 3.0.0 M5 to 3.0.0 M6 will require the following changes.
+                    Migrating will require the following changes.
                 </p>
                 <ul>
                     <li>The plugin attribute "override" utilised by "java_type", "store_mapping" and "rdbms_mapping" is
@@ -347,7 +393,7 @@
             <a name="3_0_0_M5_FROM_3_0_0_M4"/>
             <subsection name="Migration from 3.0.0 M4 to 3.0.0 M5">
                 <p>
-                    Migrating from AccessPlatform 3.0.0 M4 to 3.0.0 M5 should require no changes.
+                    Migrating should require no changes.
                 </p>
                 <br/>
             </subsection>
@@ -355,7 +401,7 @@
             <a name="3_0_0_M4_FROM_3_0_0_M3"/>
             <subsection name="Migration from 3.0.0 M3 to 3.0.0 M4">
                 <p>
-                    Migrating from AccessPlatform 3.0.0 M3 to 3.0.0 M4 will require the following changes.
+                    Migrating will require the following changes.
                 </p>
                 <ul>
                     <li>Maven2 plugin option "outputFile" is renamed to "ddlFile" for consistency with all docs/tools</li>
@@ -366,7 +412,7 @@
             <a name="3_0_0_M3_FROM_3_0_0_M2"/>
             <subsection name="Migration from 3.0.0 M2 to 3.0.0 M3">
                 <p>
-                    Migrating from AccessPlatform 3.0.0 M2 to 3.0.0 M3 will require the following changes.
+                    Migrating will require the following changes.
                 </p>
                 <ul>
                     <li>Anyone using "memcache" cache provider should rename it to "spymemcached". This renaming
@@ -386,7 +432,7 @@
             <a name="3_0_0_M2_FROM_3_0_0_M1"/>
             <subsection name="Migration from 3.0.0 M1 to 3.0.0 M2">
                 <p>
-                    Migrating from AccessPlatform 3.0.0 M1 to 3.0.0 M2 will require the following changes.
+                    Migrating will require the following changes.
                 </p>
                 <ul>
                     <li>The connection password decryption interface has been repackaged/renamed to
@@ -404,7 +450,7 @@
             <a name="3_0_0_M1_FROM_2_2_x"/>
             <subsection name="Migration from 2.2.x to 3.0.0 M1">
                 <p>
-                    Migrating from AccessPlatform 2.2.x to 3.0.0 M1 will require the following changes.
+                    Migrating will require the following changes.
                 </p>
                 <ul>
                     <li>JDO API has been moved into its own plugin "datanucleus-api-jdo" and you will need this
@@ -429,7 +475,7 @@
             <a name="2_2_1_FROM_2_2_0_REL"/>
             <subsection name="Migration from 2.2.0 RELEASE to 2.2.1">
                 <p>
-                    Migrating from AccessPlatform 2.2.0 RELEASE to 2.2.1 will require the following changes.
+                    Migrating will require the following changes.
                 </p>
                 <ul>
                     <li>JDO 3.1 changes the return type of JDOQL "AVG" to be double or BigDecimal depending
@@ -441,7 +487,7 @@
             <a name="2_2_0_REL_FROM_2_2_0_M3"/>
             <subsection name="Migration from 2.2.0 Milestone3 to 2.2.0 RELEASE">
                 <p>
-                    Migrating from AccessPlatform 2.2.0 M3 to 2.2.0 RELEASE will require the following changes.
+                    Migrating will require the following changes.
                 </p>
                 <ul>
                     <li><b>datanucleus-connectionpool</b> is no longer provided/needed, and is included within 
@@ -460,7 +506,7 @@
             <a name="2_2_0_M3_FROM_2_2_0_M2"/>
             <subsection name="Migration from 2.2.0 Milestone2 to 2.2.0 Milestone3">
                 <p>
-                    Migrating from AccessPlatform 2.2.0 M2 to 2.2.0 M3 will require the following changes.
+                    Migrating will require the following changes.
                 </p>
                 <ul>
                     <li>Persistence property <b>datanucleus.attachPolicy</b> was removed since no longer
@@ -479,7 +525,7 @@
             <a name="2_2_0_M2_FROM_2_2_0_M1"/>
             <subsection name="Migration from 2.2.0 Milestone1 to 2.2.0 Milestone2">
                 <p>
-                    Migrating from AccessPlatform 2.2.0 M1 to 2.2.0 M2 will require the following changes.
+                    Migrating will require the following changes.
                 </p>
                 <ul>
                     <li>NucleusJDOHelper methods for getting dirty/loaded fields have been improved.
@@ -494,7 +540,7 @@
             <a name="2_2_0_M1_FROM_2_1_x"/>
             <subsection name="Migration from 2.1.x to 2.2.0 Milestone1">
                 <p>
-                    Migrating from AccessPlatform 2.1.x to 2.2.0 M1 will require the following changes.
+                    Migrating will require the following changes.
                 </p>
                 <ul>
                     <li>Legacy JDOQL implementation for RDBMS is now dropped. Use AccessPlatform 2.1 if you 
@@ -506,7 +552,7 @@
             <a name="2_1_3_FROM_2_1_2"/>
             <subsection name="Migration from 2.1.2 to 2.1.3">
                 <p>
-                    Migrating from AccessPlatform 2.1.2 to 2.1.3 will require the following changes.
+                    Migrating will require the following changes.
                 </p>
                 <ul>
                     <li>Persistence property <b>datanucleus.attachPolicy</b> is now removed, and
@@ -518,7 +564,7 @@
             <a name="2_1_2_FROM_2_1_1"/>
             <subsection name="Migration from 2.1.1 to 2.1.2">
                 <p>
-                    Migrating from AccessPlatform 2.1.1 to 2.1.2 will require the following changes.
+                    Migrating will require the following changes.
                 </p>
                 <ul>
                     <li>The metadata extension <i>index</i> that is used to specify a column position (in table)
@@ -531,7 +577,7 @@
             <a name="2_1_1_FROM_2_1_0_REL"/>
             <subsection name="Migration from 2.1.0 RELEASE to 2.1.1">
                 <p>
-                    Migrating from AccessPlatform 2.1.0 RELEASE to 2.1.1 will require the following changes.
+                    Migrating will require the following changes.
                 </p>
                 <ul>
                     <li>Default allocation size for <i>increment</i> and <i>sequence</i> value strategies have
@@ -544,7 +590,7 @@
             <a name="2_1_0_REL_FROM_2_1_0_M3"/>
             <subsection name="Migration from 2.1.0 Milestone3 to 2.1.0 RELEASE">
                 <p>
-                    Migrating from AccessPlatform 2.1.0 M3 to 2.1.0 RELEASE will require the following changes.
+                    Migrating will require the following changes.
                 </p>
                 <ul>
                     <li>Move to using JDO3 jar instead of JDO 2.3 "ec"</li>
@@ -557,14 +603,14 @@
             <a name="2_1_0_M3_FROM_2_1_0_M2"/>
             <subsection name="Migration from 2.1.0 Milestone2 to 2.1.0 Milestone3">
                 <p>
-                    Migrating from AccessPlatform 2.1.0 M2 to 2.1.0 M3 will require no changes.
+                    Migrating will require no changes.
                 </p>
             </subsection>
 
             <a name="2_1_0_M2_FROM_2_1_0_M1"/>
             <subsection name="Migration from 2.1.0 Milestone1 to 2.1.0 Milestone2">
                 <p>
-                    Migrating from AccessPlatform 2.1.0 M1 to 2.1.0 M2 will require the following changes.
+                    Migrating will require the following changes.
                 </p>
                 <ul>
                     <li>JPQL "CASE" statements are now supported</li>
@@ -580,7 +626,7 @@
             <a name="2_1_0_M1_FROM_2_0_x"/>
             <subsection name="Migration from 2.0.x to 2.1.0 Milestone1">
                 <p>
-                    Migrating from AccessPlatform 2.0.x to 2.1.0 M1 will require the following changes.
+                    Migrating will require the following changes.
                 </p>
                 <ul>
                     <li>The JDOQL implementation used for RDBMS is now the rewritten "generic" implementation.
