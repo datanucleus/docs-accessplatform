@@ -83,7 +83,8 @@ SELECT [&lt;result&gt;]
                     For RDBMS datastores any multi-valued field will be <i>bulk-fetched</i> if it is defined to be EAGER
                     or is placed in the current EntityGraph. By <i>bulk-fetched</i> we mean that there will be a single SQL
                     issued per collection field (hence avoiding the N+1 problem). Note that you can disable this by either not putting
-                    multi-valued fields in the FetchPlan, or by setting the query extension "datanucleus.multivaluedFetch" to "none".
+                    multi-valued fields in the FetchPlan, or by setting the query extension "datanucleus.multivaluedFetch" to "none"
+                    (default is "bulk-fetch" using the single SQL per field).
                     All non-RDBMS datastores do respect this FETCH JOIN setting, since a collection/map is stored in a single 
                     "column" in the object and so is readily retrievable.
                 </p>

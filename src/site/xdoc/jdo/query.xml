@@ -252,7 +252,8 @@ q.getFetchPlan().setFetchSize(FetchPlan.FETCH_SIZE_OPTIMAL);</source>
                     members this is not supported. However what will happen is that any collection field will be retrieved
                     in a single SQL query for all candidate objects; this avoids the "N+1" problem, resulting in 1 original 
                     SQL query plus 1 SQL query per collection member. Note that you can disable this by either not putting
-                    multi-valued fields in the FetchPlan, or by setting the query extension "datanucleus.multivaluedFetch" to "none".
+                    multi-valued fields in the FetchPlan, or by setting the query extension "datanucleus.multivaluedFetch" to "none"
+                    (default is "bulk-fetch" using the single SQL per field).
                     For non-RDBMS datastores the collection/map is stored by way of a Collection of ids of the related objects 
                     in a single "column" of the object and so is retrievable in the same query.
                     See also <a href="fetchgroup.html">Fetch Groups</a>.
