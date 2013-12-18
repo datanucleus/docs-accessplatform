@@ -12,60 +12,28 @@
             <p>
                 DataNucleus supports persisting/retrieving objects to/from XML documents 
                 (using the <a href="../../../plugins/store.xml.html">datanucleus-xml</a> plugin).
-                It makes use of JAXB.
+                Simply specify your "connectionURL" as follows
+            </p>
+            <source>datanucleus.ConnectionURL=xml:file:myfile.xml</source>
+            <p>
+                replacing "myfile.xml" with your filename, which can be absolute or relative
+            </p>
+            <p>
+                It makes use of JAXB, and the jars required to use DataNucleus XML persistence are <i>datanucleus-core</i>,
+                <i>datanucleus-api-jdo</i>/<i>datanucleus-api-jpa</i>, <i>datanucleus-xml</i>
+                and <i>JAXB API</i>, <i>JAXB Reference Implementation</i>.
                 If you wish to help out in this effort either by contributing or by sponsoring particular 
                 functionality please contact us via the <a href="http://forum.datanucleus.org">DataNucleus Forum</a>.
             </p>
             <p>
-                The jars required to use DataNucleus XML persistence are <i>datanucleus-core</i>,
-                <i>datanucleus-api-jdo</i>/<i>datanucleus-api-jpa</i>, <i>datanucleus-xml</i>
-                and <i>JAXB API</i>, <i>JAXB Reference Implementation</i>
+                Things to bear in mind with ODF usage :-
             </p>
-
-            <subsection name="Datastore Connection">
-                <p>
-                    DataNucleus supports file-based XML storage currently.
-                </p>
-                <p>
-                    The following persistence properties will connect to a local file on your local machine
-                </p>
-                <source>datanucleus.ConnectionURL=xml:file:myfile.xml</source>
-                <p>
-                    replacing "myfile.xml" with your filename, which can be absolute or relative
-                </p>
-                <p>
-                    So you create your <a href="../jdo/pmf.html">PersistenceManagerFactory</a> or
-                    <a href="../jpa/emf.html">EntityManagerFactory</a> with these properties. 
-                    Thereafter you have the full power of the JDO or JPA APIs at your disposal, for your 
-                    XML datastore.
-                </p>
-                <br/>
-            </subsection>
-
-            <subsection name="Queries">
-                <p>
-                    Access Platform allows you to query the objects in the datastore using the following
-                </p>
-                <ul>
-                    <li><a href="../jdo/jdoql.html">JDOQL</a> - language based around the objects that are persisted and 
-                        using Java-type syntax</li>
-                    <li><a href="../jpa/jpql.html">JPQL</a> - language based around the objects that are persisted and 
-                        using SQL-like syntax</li>
-                </ul>
-                <br/>
-            </subsection>
-
-            <subsection name="Known Limitations">
-                <p>
-                    The following are known limitations of the current implementation
-                </p>
-                <ul>
-                    <li>Application identity is supported but can only have 1 PK field and must be a String.
-                        This is a limitation of JAXB</li>
-                    <li>Persistent properties are not supported, only persistent fields</li>
-                </ul>
-                <br/>
-            </subsection>
+            <ul>
+                <li><b>indentation</b> : the persistence property <b>datanucleus.xml.indentSize</b> defaults to 4 but set it to the desired indent size</li>
+                <li>Querying using JDOQL/JPQL will operate in-memory currently.</li>
+                <li>Application identity is supported but can only have 1 PK field and must be a String. This is a limitation of JAXB</li>
+                <li>Persistent properties are not supported, only persistent fields</li>
+            </ul>
     
             <subsection name="Mapping : XML Datastore Mapping">
                 <p>
