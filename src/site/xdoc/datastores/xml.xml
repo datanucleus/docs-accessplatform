@@ -11,12 +11,12 @@
             <img src="../images/thirdparty/xml.png" border="0" alt=""/>
             <p>
                 DataNucleus supports persisting/retrieving objects to/from XML documents 
-                (using the <a href="../../../plugins/store.xml.html">datanucleus-xml</a> plugin).
+                (using the <a href="../../../plugins/store_xml.html">datanucleus-xml</a> plugin).
                 Simply specify your "connectionURL" as follows
             </p>
             <source>datanucleus.ConnectionURL=xml:file:myfile.xml</source>
             <p>
-                replacing "myfile.xml" with your filename, which can be absolute or relative
+                replacing <i>myfile.xml</i> with your filename, which can be absolute or relative.
             </p>
             <p>
                 It makes use of JAXB, and the jars required to use DataNucleus XML persistence are <i>datanucleus-core</i>,
@@ -26,13 +26,16 @@
                 functionality please contact us via the <a href="http://forum.datanucleus.org">DataNucleus Forum</a>.
             </p>
             <p>
-                Things to bear in mind with ODF usage :-
+                Things to bear in mind with XML usage :-
             </p>
             <ul>
-                <li><b>indentation</b> : the persistence property <b>datanucleus.xml.indentSize</b> defaults to 4 but set it to the desired indent size</li>
+                <li>Indentation of XML : the persistence property <b>datanucleus.xml.indentSize</b> defaults to 4 but you can set it to the desired indent size</li>
                 <li>Querying using JDOQL/JPQL will operate in-memory currently.</li>
                 <li>Application identity is supported but can only have 1 PK field and must be a String. This is a limitation of JAXB</li>
                 <li>Persistent properties are not supported, only persistent fields</li>
+                <li>Out of the box it will use the JAXB reference implementation. You could, in principle, provide support for other JAXB implementations by implementing
+                    <i>org.datanucleus.store.xml.JAXBHandler</i> and then specify the persistence property <b>datanucleus.xml.jaxbHandlerClass</b> to the JAXBHandler
+                    implementation. If you do manage to write a JAXBHandler for other JAXB implementations please consider contributing it to the project</li>
             </ul>
     
             <subsection name="Mapping : XML Datastore Mapping">
