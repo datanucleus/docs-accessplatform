@@ -25,9 +25,17 @@
                 Here the <b>Product</b> class knows about the <b>Supplier</b> class. In addition the <b>Supplier</b> knows
                 about the <b>Product</b> class, however with these relationships are really independent.
             </p>
+            <p>
+                The various possible relationships are described below.
+            </p>
+            <ul>
+                <li><a href="#set">M-N Set relation</a></li>
+                <li><a href="#list_ordered">M-N Ordered List relation</a></li>
+            </ul>
         </section>
 
         <section name="Using Set">
+            <a name="set"/>
             <p>
                 If you define the Meta-Data for these classes as follows
             </p>
@@ -105,7 +113,8 @@ public class Supplier
             <br/>
         </section>
 
-        <section name="Using List">
+        <section name="Using Ordered Lists">
+            <a name="list_ordered"/>
             <p>
                 If you define the Meta-Data for these classes as follows
             </p>
@@ -142,12 +151,39 @@ public class Supplier
     </entity>
 </entity-mappings>]]></source>
             <p>
+                or using annotations
+            </p>
+                <source><![CDATA[
+public class Product
+{
+    ...
+
+    @ManyToMany
+    @JoinTable(name="PRODUCTS_SUPPLIERS",
+        joinColumns={@JoinColumn(name="PRODUCT_ID")},
+        inverseJoinColumns={@JoinColumn(name="SUPPLIER_ID")})
+    @OrderBy("id")
+    List<Supplier> suppliers
+}
+
+public class Supplier
+{
+    ...
+
+    @ManyToMany
+    @OrderBy("id")
+    List<Product> products
+}]]></source>
+            <p>
                 There will be 3 tables, one for <b>Product</b>, one for <b>Supplier</b>, and the join table. The difference
                 from the Set example is that we now have &lt;order-by&gt; at both sides of the relation. This has no effect
                 in the datastore schema but when the Lists are retrieved they are ordered using the specified order-by.
             </p>
             <br/>
             <img src="../../images/orm/relationship_M_N_singlejoin_db.jpg" border="0" alt=""/>
+            <p>
+                <b>Note that you cannot have a many-to-many relation using indexed lists since both sides would need its own index</b>.
+            </p>
             <br/>
         </section>
 

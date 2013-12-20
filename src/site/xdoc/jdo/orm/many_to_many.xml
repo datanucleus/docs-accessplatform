@@ -31,9 +31,20 @@
                 (ODF, Excel, HBase, MongoDB, etc) persist the Collection in a column in the owner object and a column in
                 the non-owner object rather than using join-tables since that concept is RDBMS-only.</b>
             </p>
+            <p>
+                The various possible relationships are described below.
+            </p>
+            <ul>
+                <li><a href="#set">M-N Set relation</a></li>
+                <li><a href="#list_ordered">M-N Ordered List relation</a></li>
+                <li><a href="#list_indexed">M-N Indexed List - modelled as 2 1-N Unidirectional relations using Join Table</a></li>
+                <li><a href="#map">M-N Map - modelled as 2 1-N Unidirectional using Join Table</a></li>
+            </ul>
+            <br/>
         </section>
 
         <section name="Using Set">
+            <a name="set"/>
             <p>
                 If you define the XML metadata for these classes as follows
             </p>
@@ -99,7 +110,72 @@ public class Supplier
             <br/>
         </section>
 
-        <section name="Using List">
+        <section name="Using Ordered Lists">
+            <a name="list_ordered"/>
+            <p>
+                If you define the Meta-Data for these classes as follows
+            </p>
+            <source><![CDATA[
+<package name="mydomain">
+    <class name="Product" identity-type="datastore">
+        ...
+
+        <field name="suppliers">
+            <collection element-type="mydomain.Supplier"/>
+            <order>
+                <extension vendor-name="datanucleus" key="list-ordering" value="id ASC"/>
+            </order>
+            <join/>
+        </field>
+    </class>
+
+    <class name="Supplier" identity-type="datastore">
+        ...
+
+        <field name="products">
+            <collection element-type="mydomain.Product"/>
+            <order>
+                <extension vendor-name="datanucleus" key="list-ordering" value="id ASC"/>
+            </order>
+            <join/>
+        </field>
+    </class>
+</package>]]></source>
+            <p>
+                or using annotations
+            </p>
+                <source><![CDATA[
+public class Product
+{
+    ...
+
+    @Persistent(table="PRODUCTS_SUPPLIERS")
+    @Join(column="PRODUCT_ID")
+    @Element(column="SUPPLIER_ID")
+    @Order(extensions=@Extension(vendorName="datanucleus", key="list-ordering", value="id ASC"))
+    List<Supplier> suppliers
+}
+
+public class Supplier
+{
+    ...
+
+    @Persistent
+    @Order(extensions=@Extension(vendorName="datanucleus", key="list-ordering", value="id ASC"))
+    List<Product> products
+}]]></source>
+            <p>
+                There will be 3 tables, one for <b>Product</b>, one for <b>Supplier</b>, and the join table. The difference
+                from the Set example is that we now have &lt;order-by&gt; at both sides of the relation. This has no effect
+                in the datastore schema but when the Lists are retrieved they are ordered using the specified order-by.
+            </p>
+            <br/>
+            <img src="../../images/orm/relationship_M_N_singlejoin_db.jpg" border="0" alt=""/>
+            <br/>
+        </section>
+
+        <section name="Using indexed Lists">
+            <a name="list_indexed"/>
             <p>
                 <b>Firstly a true M-N relation with Lists is impossible since there are two lists, and it is
                 undefined as to which one applies to which side etc. What is shown below is two independent
@@ -156,6 +232,7 @@ public class Supplier
         </section>
 
         <section name="Using Map">
+            <a name="map"/>
             <p>
                 If you define the Meta-Data for these classes as follows
             </p>
