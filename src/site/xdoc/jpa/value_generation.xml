@@ -59,7 +59,27 @@
                     <a href="#sequence">sequence</a> if supported, otherwise <a href="#increment">increment</a> if supported
                     otherwise throws an exception. On RDBMS you can get the behaviour used up until DN v3.0 by specifying
                     the persistence property <b>datanucleus.rdbms.useLegacyNativeValueStrategy</b> as <i>true</i>
+                    For a class using <u>application identity</u> you need to set the <i>value-strategy</i> attribute 
+                    on the primary key field. You can configure the Meta-Data for the class something like this 
                 </p>
+                <source><![CDATA[
+<entity class="MyClass">
+    <attributes>
+        <id name="myId">
+            <generated-value strategy="AUTO"/>
+        </id>
+    </attributes>
+</entity>]]></source>
+                <p>or using annotations</p>
+                <source><![CDATA[
+@Entity
+public class MyClass
+{
+    @Id
+    @GeneratedValue(strategy=GenerationType.AUTO)
+    private long myId;
+    ...
+}]]></source>
             </subsection>
 
             <a name="sequence"/>
@@ -100,7 +120,7 @@ public class MyClass
 {
     @Id
     @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="SEQ1")
-    private long myfield;
+    private long myId;
     ...
 }]]></source>
                 <p>
@@ -177,6 +197,16 @@ public class MyClass
         </id>
     </attributes>
 </entity>]]></source>
+                <p>or using annotations</p>
+                <source><![CDATA[
+@Entity
+public class MyClass
+{
+    @Id
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    private long myId;
+    ...
+}]]></source>
                 <p>
                     Please be aware that if you have an inheritance tree with the base class defined as using "identity" then
                     the column definition for the PK of the base table will be defined as "AUTO_INCREMENT" or "IDENTITY" or 
@@ -214,6 +244,16 @@ public class MyClass
         </id>
     </attributes>
 </entity>]]></source>
+                <p>or using annotations</p>
+                <source><![CDATA[
+@Entity
+public class MyClass
+{
+    @Id
+    @GeneratedValue(strategy=GenerationType.TABLE)
+    private long myId;
+    ...
+}]]></source>
                 <p>
 					Additional properties for configuring this generator are set in the JPA Meta-Data, see the 
                     available properties below. Unsupported properties are silently ignored by DataNucleus.
