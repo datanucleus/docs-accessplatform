@@ -419,7 +419,7 @@ DataNucleus Enhancer completed with success for 2 classes. Timings : input=422 m
                     To enable runtime enhancement, the <i>javaagent</i> option must be set in the java command line.
                     For example,
                 </p>
-                <source>java -javaagent:datanucleus-core.jar Main</source>
+                <source>java -javaagent:datanucleus-core.jar=-api=JDO Main</source>
                 <p>
                     The statement above will mean that all classes, when being loaded, will be processed by the
                     ClassFileTransformer (except class in packages "java.*", "javax.*", "org.datanucleus.*").
@@ -428,7 +428,7 @@ DataNucleus Enhancer completed with success for 2 classes. Timings : input=422 m
                     that should be processed (and all others will be ignored). Like this
                 </p>
                 <source>
-java -javaagent:datanucleus-core.jar=mydomain.mypackage1,mydomain.mypackage2 Main
+java -javaagent:datanucleus-core.jar=mydomain.mypackage1,mydomain.mypackage2=-api=JDO Main
                 </source>
                 <p>
                     so in this case only classes being loaded that are in <i>mydomain.mypackage1</i>
