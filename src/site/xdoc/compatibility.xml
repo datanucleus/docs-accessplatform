@@ -9,54 +9,97 @@
     <body>
         <section name="AccessPlatform : Compatibility">
             <p>
-                We aim to make DataNucleus AccessPlatform as compatible with related software as possible.
-                Here we give an overview of known compatibilities/problems
+                There are two aspects to compatibility that we discuss here. The compatibility between DataNucleus plugins, and the compatibility of DataNucleus with
+                third party software.
             </p>
-            <table>
-                <tr>
-                    <th>Software</th>
-                    <th>Status</th>
-                </tr>
-                <tr>
-                    <td>GraniteDS</td>
-                    <td>Fully compatible from GraniteDS 2.0+</td>
-                </tr>
-                <tr>
-                    <td>Scala</td>
-                    <td>Fully compatible</td>
-                </tr>
-                <tr>
-                    <td>Play Framework</td>
-                    <td><a href="http://www.playframework.com/documentation/2.1.0/JavaJPA">Fully compatible with version 2.0 or later.</a>
-                        <i>Version 1 of Play had a hardcoded Hibernate implementation which was obviously a bad idea 
-                        when the whole point of having a persistence standard (JPA) is to allow portability.</i></td>
-                </tr>
-                <tr>
-                    <td>GWT</td>
-                    <td>Current versions of GWT (2+) ought to be able to serialise/deserialise any <b>detached</b>
-                        JDO/JPA objects. Earlier GWT versions had a problem with a bytecode enhancement field of
-                        type Object[] and there was a project
-                        <a href="http://noon.gilead.free.fr/gilead/" target="_blank">GILEAD</a> that
-                        attempted to handle this for various persistence solutions (and in version 1.3 will
-                        have specific support for DataNucleus, already in Gilead SVN).
-                        Also look at
-                        <a href="http://groups.google.com/group/Google-Web-Toolkit-Contributors/browse_thread/thread/3c768d8d33bfb1dcseems" target="_blank">this</a>
-                        and <a href="http://timepedia.blogspot.com/2009/04/google-appengine-and-gwt-now-marriage.html" target="_blank">this</a>.
-                    </td>
-                </tr>
-                <tr>
-                    <td>iReport v5</td>
-                    <td>Fully compatible, but you could consider removing the following
-                        <i>iReport-5.0.0/ireport/modules/ext/commons-dbcp-1.2.2.jar</i> and 
-                        <i>iReport-5.0.0/ireport/modules/ext/*hive*</i> 
-                        as they have been found by some to cause conflicts.
-                    </td>
-                </tr>
-                <tr>
-                    <td>SpringFramework</td>
-                    <td>Fully compatible since DataNucleus is a compliant JDO/JPA implementation</td>
-                </tr>
-            </table>
+
+            <subsection name="Plugin Compatibility">
+                <p>
+                    If you download one of the DataNucleus AccessPlatform distribution zip files you get a consistent set of DataNucleus plugins.
+                    Alternatively you can inspect the Maven "POM" files in Maven Central repository to see the dependency requirements. For the record the latest
+                    released versions of the following plugins are all consistent.
+                </p>
+<source>
+datanucleus-core 3.2.10
+
+datanucleus-api-jdo 3.2.6
+datanucleus-api-jpa 3.3.5
+datanucleus-api-rest 3.2.1
+
+datanucleus-excel 3.2.0-release
+datanucleus-hbase 3.2.4
+datanucleus-json 3.2.1
+datanucleus-ldap 3.2.2
+datanucleus-mongodb 3.2.6
+datanucleus-neo4j 3.2.3
+datanucleus-neodatis 3.2.2
+datanucleus-odf 3.2.1
+datanucleus-rdbms 3.2.9
+datanucleus-xml 3.2.1
+
+datanucleus-cache 3.1.3
+
+datanucleus-geospatial 3.2.5
+datanucleus-jodatime 3.2.1
+datanucleus-guava 3.2.3
+
+datanucleus-jdo-query 3.2.2
+datanucleus-jpa-query 3.2.3
+</source>
+                <br/>
+            </subsection>
+
+            <subsection name="Third Party Compatibility">
+                <p>
+                    We aim to make DataNucleus AccessPlatform as compatible with related software as possible.
+                    Here we give an overview of known compatibilities/problems
+                </p>
+                <table>
+                    <tr>
+                        <th>Software</th>
+                        <th>Status</th>
+                    </tr>
+                    <tr>
+                        <td>GraniteDS</td>
+                        <td>Fully compatible from GraniteDS 2.0+</td>
+                    </tr>
+                    <tr>
+                        <td>Scala</td>
+                        <td>Fully compatible</td>
+                    </tr>
+                    <tr>
+                        <td>Play Framework</td>
+                        <td><a href="http://www.playframework.com/documentation/2.1.0/JavaJPA">Fully compatible with version 2.0 or later.</a>
+                            <i>Version 1 of Play had a hardcoded Hibernate implementation which was obviously a bad idea 
+                            when the whole point of having a persistence standard (JPA) is to allow portability.</i></td>
+                    </tr>
+                    <tr>
+                        <td>GWT</td>
+                        <td>Current versions of GWT (2+) ought to be able to serialise/deserialise any <b>detached</b>
+                            JDO/JPA objects. Earlier GWT versions had a problem with a bytecode enhancement field of
+                            type Object[] and there was a project
+                            <a href="http://noon.gilead.free.fr/gilead/" target="_blank">GILEAD</a> that
+                            attempted to handle this for various persistence solutions (and in version 1.3 will
+                            have specific support for DataNucleus, already in Gilead SVN).
+                            Also look at
+                            <a href="http://groups.google.com/group/Google-Web-Toolkit-Contributors/browse_thread/thread/3c768d8d33bfb1dcseems" target="_blank">this</a>
+                            and <a href="http://timepedia.blogspot.com/2009/04/google-appengine-and-gwt-now-marriage.html" target="_blank">this</a>.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>iReport v5</td>
+                        <td>Fully compatible, but you could consider removing the following
+                            <i>iReport-5.0.0/ireport/modules/ext/commons-dbcp-1.2.2.jar</i> and 
+                            <i>iReport-5.0.0/ireport/modules/ext/*hive*</i> 
+                            as they have been found by some to cause conflicts.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>SpringFramework</td>
+                        <td>Fully compatible since DataNucleus is a compliant JDO/JPA implementation</td>
+                    </tr>
+                </table>
+            </subsection>
         </section>
 
     </body>
