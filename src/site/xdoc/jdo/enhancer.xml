@@ -428,7 +428,7 @@ DataNucleus Enhancer completed with success for 2 classes. Timings : input=422 m
                     that should be processed (and all others will be ignored). Like this
                 </p>
                 <source>
-java -javaagent:datanucleus-core.jar=mydomain.mypackage1,mydomain.mypackage2=-api=JDO Main
+java -javaagent:datanucleus-core.jar=-api=JDO,mydomain.mypackage1,mydomain.mypackage2 Main
                 </source>
                 <p>
                     so in this case only classes being loaded that are in <i>mydomain.mypackage1</i>
