@@ -1225,6 +1225,24 @@
                     </tr>
                 </table>
                 <br/>
+                <a name="FindObjectTypeConversion"/>
+                <table>
+                    <tr>
+                        <th colspan="2"><b>datanucleus.findObject.typeConversion</b></th>
+                    </tr>
+                    <tr>
+                        <td width="120">Description</td>
+                        <td>
+                            When calling PM.getObjectById(Class, Object) or EM.find(Class, Object) the second argument really ought to be
+                            the exact type of the primary-key field. This property enables conversion of basic numeric types (Long, Integer, Short)
+                            to the appropriate numeric type (if the PK is a numeric type). Set this to <i>false</i> if you want strict JPA compliance.</td>
+                    </tr>
+                    <tr>
+                        <td>Range of Values</td>
+                        <td><b>true</b> | false</td>
+                    </tr>
+                </table>
+                <br/>
                 <br/>
                 <br/>
             </subsection>

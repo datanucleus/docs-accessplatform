@@ -411,25 +411,6 @@ EntityManagerFactory emf = new JPAEntityManagerFactory(pumd, null);]]></source>
                     </tr>
                 </table>
                 <br/>
-                <table>
-                    <tr>
-                        <th colspan="2">
-                            <b>datanucleus.jpa.findTypeConversion</b>
-                        </th>
-                    </tr>
-                    <tr>
-                        <td width="120">Description</td>
-                        <td>JPA requires that any implementation throws an exception from <i>EM.find</i> if the key argument
-                        is not of the exact type required for the field. Having this property set to <i>true</i>
-                        means that DataNucleus can attempt to perform type conversion to attempt to make it match.
-                        This is useful, for example, where you PK type is something like Long and you pass a long or int in.</td>
-                    </tr>
-                    <tr>
-                        <td>Range of Values</td>
-                        <td><b>true</b> | false</td>
-                    </tr>
-                </table>
-                <br/>
             </subsection>
         </section>
     </body>

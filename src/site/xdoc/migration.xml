@@ -18,6 +18,17 @@
                 changes to move between versions of DataNucleus. We aim to keep this to a minimum.
             </p>
 
+            <a name="3_3_7_FROM_3_3_6"/>
+            <subsection name="Migration from 3.3.6 to 3.3.7">
+                <p>
+                    Migrating will require the following changes
+                </p>
+                <ul>
+                    <li>Persistence property <b>datanucleus.jpa.findTypeConversion</b> is now removed and replaced with
+                        <b>datanucleus.findObject.typeConversion</b>, defaulting to <i>true</i></li>
+                </ul>
+            </subsection>
+
             <a name="3_3_6_FROM_3_3_5"/>
             <subsection name="Migration from 3.3.5 to 3.3.6">
                 <p>
