@@ -78,6 +78,7 @@ public class Booking
                     (where the datastore supports it) , you can specify extended settings that is appended to the end of
                     any <i>CREATE INDEX</i> statement.
                 </p>
+<source><![CDATA[
 <class name="Booking">
     <index name="MY_BOOKING_INDEX">
         <extension vendor-name="datanucleus" key="extended-setting" value=" USING HASH"/>
