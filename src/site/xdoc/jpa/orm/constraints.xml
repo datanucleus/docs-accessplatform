@@ -113,6 +113,13 @@ public class MyClass
 
     ...
 }]]></source>
+                <img src="../../images/nucleus_extension.gif" border="0" alt=""/>
+                <p>
+                    Should you have need to tailor the index creation, for example to generate a particular type of index
+                    (where the datastore supports it) , you can specify extended settings that is appended to the end of
+                    any <i>CREATE INDEX</i> statement. For example to generate hash-based index on MySQL
+                </p>
+<source><![CDATA[@Extension(key="extended-setting", value=" USING HASH")]]></source>
                 <br/>
             </subsection>
 

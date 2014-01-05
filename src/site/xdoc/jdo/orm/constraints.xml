@@ -72,6 +72,18 @@ public class Booking
                 <p>
                     This creates an index for the specified column (where the datastore supports columns i.e RDBMS).
                 </p>
+                <img src="../../images/nucleus_extension.gif" border="0" alt=""/>
+                <p>
+                    Should you have need to tailor the index creation, for example to generate a particular type of index
+                    (where the datastore supports it) , you can specify extended settings that is appended to the end of
+                    any <i>CREATE INDEX</i> statement.
+                </p>
+<class name="Booking">
+    <index name="MY_BOOKING_INDEX">
+        <extension vendor-name="datanucleus" key="extended-setting" value=" USING HASH"/>
+    </index>
+    ...
+</class>]]></source>
                 <p>See also :-</p>
                 <ul>
                     <li><a href="../metadata_xml.html#index">MetaData reference for &lt;index&gt; element</a></li>
