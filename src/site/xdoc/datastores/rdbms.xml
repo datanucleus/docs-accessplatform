@@ -23,6 +23,7 @@
             <img src="../images/thirdparty/informix.jpg" border="0" alt=""/>
             <img src="../images/thirdparty/sqlite.png" border="0" alt=""/>
             <img src="../images/thirdparty/firebird.gif" border="0" alt=""/>
+            <img src="../images/thirdparty/nuodb.jpg" border="0" alt=""/>
 
             <p>
                 DataNucleus supports persisting objects to RDBMS datastores (using the 
@@ -68,6 +69,7 @@
                 <li><a href="#db2">IBM DB2</a></li>
                 <li><a href="#informix">IBM Informix</a></li>
                 <li><a href="#firebird">Firebird</a></li>
+                <li><a href="#nuodb">NuoDB</a></li>
                 <li><a href="#maxdb">SAPDB/MaxDB</a></li>
                 <li><a href="#virtuoso">Virtuoso</a></li>
                 <li><a href="#pointbase">Pointbase</a></li>
@@ -419,6 +421,19 @@ datanucleus.ConnectionDriverName=org.firebirdsql.jdbc.FBDriver
 datanucleus.ConnectionURL=jdbc:firebirdsql://localhost/'db-name'
 datanucleus.ConnectionUserName='user-name'
 datanucleus.ConnectionPassword='password'
+                </source>
+            </subsection>
+
+            <a name="nuodb"/>
+            <subsection name="NuoDB">
+                <p> To specify NuoDB as your datastore, you will need something like the following specifying 
+                    (replacing 'db-name' with filename of your database etc) </p>
+                <source>
+datanucleus.ConnectionDriverName=com.nuodb.jdbc.Driver
+datanucleus.ConnectionURL=jdbc:com.nuodb://localhost/'db-name'
+datanucleus.ConnectionUserName='user-name'
+datanucleus.ConnectionPassword='password'
+datanucleus.Schema={my-schema-name}
                 </source>
             </subsection>
 
