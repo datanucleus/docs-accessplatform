@@ -262,6 +262,11 @@
                     <td>Defines this field as being a 1-N relation of Objects that are not Entities.</td>
                 </tr>
                 <tr class="d">
+                    <td><a href="#Index_Field">@Index</a></td>
+                    <td>Field/Method</td>
+                    <td>Specifies an index on this field/property (DataNucleus extension).</td>
+                </tr>
+                <tr class="d">
                     <td><a href="#JdbcType">@JdbcType</a></td>
                     <td>Field/Method</td>
                     <td>Specifies the JDBC Type to use on this field/property (DataNucleus extension).</td>
@@ -2436,6 +2441,44 @@ public class Person
 {
     @ElementCollection
     Collection&lt;String&gt; values;
+    ...
+}</source>
+                <br/>
+                <br/>
+            </subsection>
+
+            <a name="Index_Field"/>
+            <subsection name="@Index (field/method - extension)">
+                <p>
+                    This DataNucleus-extension annotation is used to define an index for this field/property.
+                    Specified on the <b>field/property</b>.
+                </p>
+                <table>
+                    <tr class="d">
+                        <th>Attribute</th>
+                        <th>Type</th>
+                        <th>Description</th>
+                        <th>Default</th>
+                    </tr>
+                    <tr class="d">
+                        <td>name</td>
+                        <td>String</td>
+                        <td>Name of the index</td>
+                        <td></td>
+                    </tr>
+                    <tr class="d">
+                        <td>unique</td>
+                        <td>boolean</td>
+                        <td>Whether the index is unique</td>
+                        <td>false</td>
+                    </tr>
+                </table>
+                <source>
+@Entity
+public class MyClass
+{
+    @Index(name="ENABLED_IDX")
+    boolean enabled;
     ...
 }</source>
                 <br/>

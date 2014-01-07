@@ -45,6 +45,20 @@ public class MyClass
 
     ...
 }]]></source>
+                <img src="../../images/nucleus_extension.gif" border="0" alt=""/>
+                <p>
+                    The JPA @Index annotation is only applicable at a class level. DataNucleus provides its own @Index annotation that you
+                    can specify on a field/method to signify that the column(s) for this field/method will be indexed. Like this
+                </p>
+<source><![CDATA[
+@Entity
+public class MyClass
+{
+    @org.datanucleus.api.jpa.annotations.Index(name="VAL_IDX")
+    long someValue;
+
+    ...
+}]]></source>
                 <br/>
             </subsection>
 
