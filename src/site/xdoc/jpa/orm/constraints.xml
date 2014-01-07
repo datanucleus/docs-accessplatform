@@ -22,6 +22,32 @@
                 <li><a href="#pk">Primary-Keys</a> - allow the PK to be set, and also to have a name.</li>
             </ul>
 
+            <a name="index"/>
+            <subsection name="Indexes">
+                <table><tr><td>Applicable to RDBMS, NeoDatis, MongoDB</td></tr></table>
+                <p>
+                    Many datastores provide the ability to have indexes defined to give performance benefits.
+                    With RDBMS the indexes are specified on the table and the indexes to the rows are stored 
+                    separately. In the same way an ODBMS typically allows indexes to be specified on the fields 
+                    of the class, and these are managed by the datastore. JPA 2.1 allows you to define the indexes
+                    on a table-by-table basis by metadata as in the following example (note that you cannot specify
+                    indexes on a field basis like in JDO)
+                </p>
+<source><![CDATA[
+import javax.persistence.Index;
+
+@Entity
+@Table(indexes={@Index(name="SOME_VAL_IDX", columnList="SOME_VALUE")})
+public class MyClass
+{
+    @Column(name="SOME_VALUE")
+    long someValue;
+
+    ...
+}]]></source>
+                <br/>
+            </subsection>
+
             <a name="unique"/>
             <subsection name="Unique constraints">
                 <table><tr><td>Applicable to RDBMS, NeoDatis, MongoDB</td></tr></table>
@@ -87,39 +113,6 @@ public class Person
                     <li><a href="../annotations.html#Column">Annotations reference for @Column</a></li>
                     <li><a href="../annotations.html#UniqueConstraint">Annotations reference for @UniqueConstraint</a></li>
                 </ul>
-                <br/>
-            </subsection>
-
-            <a name="index"/>
-            <subsection name="Indexes">
-                <table><tr><td>Applicable to RDBMS, NeoDatis, MongoDB</td></tr></table>
-                <p>
-                    Many datastores provide the ability to have indexes defined to give performance benefits.
-                    With RDBMS the indexes are specified on the table and the indexes to the rows are stored 
-                    separately. In the same way an ODBMS typically allows indexes to be specified on the fields 
-                    of the class, and these are managed by the datastore. JPA 2.1 allows you to define the indexes
-                    on a table-by-table basis by metadata as in the following example (note that you cannot specify
-                    indexes on a field basis like in JDO)
-                </p>
-<source><![CDATA[
-import javax.persistence.Index;
-
-@Entity
-@Table(indexes={@Index(name="SOME_VAL_IDX", columnList="SOME_VALUE")})
-public class MyClass
-{
-    @Column(name="SOME_VALUE")
-    long someValue;
-
-    ...
-}]]></source>
-                <img src="../../images/nucleus_extension.gif" border="0" alt=""/>
-                <p>
-                    Should you have need to tailor the index creation, for example to generate a particular type of index
-                    (where the datastore supports it) , you can specify extended settings that is appended to the end of
-                    any <i>CREATE INDEX</i> statement. For example to generate hash-based index on MySQL
-                </p>
-<source><![CDATA[@Extension(key="extended-setting", value=" USING HASH")]]></source>
                 <br/>
             </subsection>
 
