@@ -421,5 +421,72 @@ System.out.prinln(pc.getName());</source>
             </subsection>            
         </section>
 
+        <section name="General Comments on Overall Performance">
+            <p>
+                In most applications, the performance of the persistence layer is very unlikely to be a bottleneck.
+                More likely the design of the datastore itself, and in particular its indices are more likely to 
+                have the most impact, or alternatively network latency. That said, it is the DataNucleus projects' 
+                committed aim to provide the best performance possible, though we also want to provide functionality, 
+                so there is a compromise with respect to resource.
+            </p>
+            <table><tr><td>
+                <b>What is a benchmark?</b>
+                This is simply a series of persistence operations performing particular things
+                e.g persist <i>n</i> objects, or retrieve <i>n</i> objects. If those operations are
+                representative of your application then the benchmark is valid to you. 
+            </td></tr></table>
+            <p>
+                To find (or create) a benchmark appropriate to your project you need to determine the
+                typical persistence operations that your application will perform. Are you interested in
+                persisting 100 objects at once, or 1 million, for example? Then when you have
+                a benchmark appropriate for that operation, compare the persistence solutions.
+            </p>
+            <p>
+                The performance tuning guide above gives a good oversight of tuning capabilities, and also refer to the following 
+                <a href="http://datanucleus.blogspot.com/2011/03/performance-benchmarking.html">blog entry</a>
+                for our take on performance of DataNucleus AccessPlatform. And then the later
+                <a href="http://datanucleus.blogspot.co.uk/2013/02/performance-effect-of-various-features.html">blog entry about how to tune for bulk operations</a>
+            </p>
+
+            <h4>GeeCon JPA provider comparison (Jun 2012)</h4>
+            <p>
+                There is an interesting <a href="http://vimeo.com/44789644">presentation on JPA provider performance</a> 
+                that was presented at GeeCon 2012 by Patrycja Wegrzynowicz. This presentation takes the time to look 
+                at what operations the persistence provider is performing, and does more than just "persist large 
+                number of flat objects into a single table", and so gives you something more interesting to analyse. 
+                DataNucleus comes out pretty well in many situations. You can also see the PDF 
+                <a href="http://s3-eu-west-1.amazonaws.com/presentations2012/50_presentation.pdf">here</a>.
+            </p>
+
+            <a name="polepos"/>
+            <h4>PolePosition (Dec 2008)</h4>
+            <p>
+                The <a href="http://www.polepos.org">PolePosition</a> benchmark is a project on SourceForge
+                to provide a benchmark of the write, read and delete of different data structures using the
+                various persistence tools on the market. JPOX was run against this benchmark just before
+                being renamed as DataNucleus and the results are found 
+                <a href="http://www.datanucleus.org/servlet/wiki/display/ENG/Polepos">in the DataNucleus Wiki</a>.
+                The input data used for that benchmark run is found 
+                <a href="http://jpox.svn.sourceforge.net/viewvc/jpox/benchmark/polepos/trunk/">in JPOX SVN</a>.
+                Some comments on the PolePos benchmark :-
+            </p>
+            <ul>
+                <li>It is essential that tests for such as Hibernate and DataNucleus performance comparable
+                things. Some of the original tests had the "delete" simply doing a "DELETE FROM TBL" for Hibernate
+                yet doing an Extent followed by delete each object individually for a JDO implementation. This is
+                an unfair comparison and in the source tree in JPOX SVN this is corrected. This fix was pointed
+                out to the PolePos SourceForge project but is not, as yet, fixed</li>
+                <li>It is essential that schema is generated before the test, otherwise the test is no longer
+                a benchmark of just a persistence operation. The source tree in JPOX SVN assumes the schema
+                exists. This fix was pointed out to the PolePos SourceForge project but is not, as yet, fixed</li>
+                <li>Each persistence implementation should have its own tuning options, and be able to add 
+                things like discriminators since that is what would happen in a real application. The source
+                tree in JPOX SVN does this for JPOX running. Similarly a JDO implementation would tune the
+                fetch groups being used - this is not present in the SourceForge project but is in JPOX SVN.</li>
+                <li>DataNucleus performance is considered to be significantly improved over JPOX particularly
+                due to batched inserts, and due to a rewritten query implementation that does enhanced fetching.</li>
+            </ul>
+        </section>
+
     </body>
 </document>
