@@ -43,12 +43,15 @@ SELECT ID, NAME FROM MYOTHERTABLE WHERE VALUE=?</source>
                 The statements that DataNucleus currently allows for batching are
             </p>
             <ul>
-                <li>Insert of objects (from version 2.1.1). This is not enabled when objects being inserted are
-                    using <i>identity</i> value generation strategy</li>
+                <li>Insert of objects. This is not enabled when objects being inserted are using <i>identity</i> value generation strategy</li>
                 <li>Delete of objects</li>
                 <li>Insert of container elements/keys/values</li>
                 <li>Delete of container elements/keys/values</li>
             </ul>
+            <p>
+                <b>Please note that if using MySQL, you should also specify the connection URL with the argument <i>rewriteBatchedStatements=true</i>
+                since MySQL won't actually batch without this</b>
+            </p>
         </section>
     </body>
 </document>
