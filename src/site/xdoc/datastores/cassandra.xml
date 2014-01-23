@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<document xmlns="http://maven.apache.org/XDOC/2.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+    <properties>
+        <title>Cassandra Datastores</title>
+    </properties>
+
+    <body>
+        <section name="Cassandra Datastores">
+            <img src="../images/thirdparty/cassandra.png" border="0" alt=""/>
+            <p>
+                DataNucleus supports a limited for of persisting/retrieving objects to/from Cassandra datastores (using the 
+                <a href="https://github.com/datanucleus/datanucleus-cassandra">datanucleus-cassandra</a> plugin) which utilises the
+                DataStax Java driver. Simply specify your "connectionURL" as follows
+            </p>
+            <source>datanucleus.ConnectionURL=cassandra:[{server}]</source>
+            <p>
+                For example, to connect to a local server
+            </p>
+            <source>datanucleus.ConnectionURL=cassandra:</source>
+            <p>
+                <b>NOTE THAT THIS IS A WORK-IN-PROGRESS NEW PLUGIN THAT NEEDS YOUR HELP TO FULLY DEVELOP</b>.
+                It is intended to have this plugin feature complete by DataNucleus v4.0, but is available in
+                GitHub for testing/improvement.
+                The jars required to use DataNucleus MongoDB persistence are <i>datanucleus-core</i>,
+                <i>datanucleus-api-jdo</i>/<i>datanucleus-api-jpa</i>, <i>datanucleus-cassandra</i>
+                and <i>cassandra-driver-core</i>
+            </p>
+            <p>
+                Things to bear in mind with Cassandra usage :-
+            </p>
+            <ul>
+                <li>Cassandra doesn't use transactions, so any JDO/JPA transaction operation is a no-op (i.e will be ignored).</li>
+                <li>This uses Cassandra 2.x (and CQL v3.x), not Thrift (like the previous unofficial attempts at a datanucleus-cassandra plugin used)</li>
+            </ul>
+
+        </section>
+    </body>
+</document>
