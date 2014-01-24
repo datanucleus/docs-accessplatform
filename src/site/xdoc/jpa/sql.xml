@@ -103,7 +103,7 @@ q.setMaxResults(20);]]></source>
             </p>
 <source><![CDATA[
 @Entity
-@NamedQuery(name="PriceBelowValue", query="SELECT NAME FROM PRODUCT WHERE PRICE < ?1")
+@NamedNativeQuery(name="PriceBelowValue", query="SELECT NAME FROM PRODUCT WHERE PRICE < ?1")
 public class Product {...}]]></source>
             <p>
                 So here we have an SQL query that will return the names of all Products that have a price less 
@@ -111,7 +111,7 @@ public class Product {...}]]></source>
                 run our named query, asking for the names of all Products with price below 20 euros.
             </p>
 <source>
-Query query = em.createNamedNativeQuery("PriceBelowValue"); 
+Query query = em.createNamedQuery("PriceBelowValue"); 
 query.setParameter(1, new Double(20.0));
 List results = query.getResultList();</source>
             <br/>
