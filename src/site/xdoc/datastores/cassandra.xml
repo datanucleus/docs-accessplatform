@@ -14,7 +14,11 @@
                 <a href="https://github.com/datanucleus/datanucleus-cassandra">datanucleus-cassandra</a> plugin) which utilises the
                 DataStax Java driver. Simply specify your "connectionURL" as follows
             </p>
-            <source>datanucleus.ConnectionURL=cassandra:[{server}]</source>
+            <source>datanucleus.ConnectionURL=cassandra:[{host1}[{port}] [,{host2} [,{host3}]]]</source>
+            <p>
+                where it will create a Cassandra <i>cluster</i> with contact points of <i>host1</i> (<i>host2</i>, <i>host3</i> etc), 
+                and if the port is specified on the first host then will use that as the port (no port specified on alternate hosts).
+            </p>
             <p>
                 For example, to connect to a local server
             </p>
