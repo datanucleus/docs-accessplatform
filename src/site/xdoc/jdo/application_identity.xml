@@ -38,13 +38,11 @@ public class MyClass
                 <tr>
                     <td>
                         <b>When you have an inheritance hierarchy, you should specify the identity type in the 
-                        <u>base instantiable</u> class for the inheritance tree. This is then used for all persistent classes 
+                        <i>base instantiable</i> class for the inheritance tree. This is then used for all persistent classes 
                         in the tree.</b>
                         This means that you can have superclass(es) using application-identity without any identity
                         fields/properties but using <i>subclass-table</i> inheritance, and then the base instantiable 
-                        class is the first persistable class which has the identity field(s). 
-                        This is a change from DataNucleus 2.2 where you had to have identity fields in the base 
-                        persistable class of the inheritance tree.
+                        class is the first persistable class which has the identity field(s).
                     </td>
                 </tr>
             </table>
@@ -59,7 +57,8 @@ public class MyClass
                 <p>
                     Using <b>application identity</b> requires the use of a Primary Key class. When you have a single
                     primary-key field a built-in class is available meaning you don't need to define this class. 
-                    This is referred to as <i>SingleFieldIdentity</i>.
+                    This is referred to as <i>SingleFieldIdentity</i>. 
+                    <b>We strongly recommend not to specify the PK class when you have a single PK field since these built-in classes are likely more optimised.</b>
                     Where the class has multiple fields that form the primary key a Primary Key class must be provided.
                 </p>
                 <p>See also :-</p>
