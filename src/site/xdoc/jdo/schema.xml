@@ -593,11 +593,15 @@ package org.datanucleus.store.schema;
 
 public interface SchemaAwareStoreManager
 {
-     public int createSchema(Set<String> classNames, Properties props);
+     public int createSchema(String schemaName, Properties props);
 
-     public int deleteSchema(Set<String> classNames, Properties props);
+     public int deleteSchema(String schemaName, Properties props);
 
-     public int validateSchema(Set<String> classNames, Properties props);
+     public int createSchemaForClasses(Set<String> classNames, Properties props);
+
+     public int deleteSchemaForClasses(Set<String> classNames, Properties props);
+
+     public int validateSchemaForClasses(Set<String> classNames, Properties props);
 }]]></source>
                 <p>
                     So for example to create the schema for classes <i>mydomain.A</i> and <i>mydomain.B</i> 
@@ -615,7 +619,7 @@ try
 {
     Properties props = new Properties();
     // Set any properties for schema generation
-    ((SchemaAwareStoreManager)ctx.getStoreManager()).createSchema(classNames, props);
+    ((SchemaAwareStoreManager)ctx.getStoreManager()).createSchemaForClasses(classNames, props);
 }
 catch(Exception e)
 {
