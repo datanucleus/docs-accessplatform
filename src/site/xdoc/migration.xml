@@ -24,6 +24,8 @@
                     Migrating will require the following changes
                 </p>
                 <ul>
+                    <li>Persistence property <b>datanucleus.allowAttachOfTransient</b> now defaults to <i>true</i> for JPA usage; set it explicitly to get old behaviour</li>
+                    <li>Persistence property <i>datanucleus.metadata.validate</i> was removed (replaced by <b>datanucleus.metadata.xml.validate</b> some time back)</li>
                 </ul>
             </subsection>
 
