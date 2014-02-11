@@ -1580,12 +1580,29 @@
                     </tr>
                     <tr>
                         <td width="120">Description</td>
-                        <td>Name of the identifier factory to use when generating table/column names etc. 
+                        <td>Name of the identifier factory to use when generating table/column names etc (RDBMS datastores only). 
                             See also the <a href="jdo/orm/datastore_identifiers.html">JDO RDBMS Identifier Guide</a>.</td>
                     </tr>
                     <tr>
                         <td>Range of Values</td>
                         <td>datanucleus1 | <b>datanucleus2</b> | jpox | jpa | {user-plugin-name}</td>
+                    </tr>
+                </table>
+                <br/>
+                <table>
+                    <tr>
+                        <th colspan="2">
+                            <b>datanucleus.identifier.namingFactory</b>
+                        </th>
+                    </tr>
+                    <tr>
+                        <td width="120">Description</td>
+                        <td>Name of the identifier NamingFactory to use when generating table/column names etc (non-RDBMS datastores).
+                            Defaults to "datanucleus2" for JDO and "jpa" for JPA usage.</td>
+                    </tr>
+                    <tr>
+                        <td>Range of Values</td>
+                        <td>datanucleus2 | jpa | {user-plugin-name}</td>
                     </tr>
                 </table>
                 <br/>
