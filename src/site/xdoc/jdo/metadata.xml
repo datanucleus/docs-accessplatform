@@ -54,10 +54,9 @@
 
             <subsection name="XML Metadata loading">
                 <p> 
-                    JDO expects the XML Meta-Data to be specified in a file or files in particular
-                    locations in the file system. For example, if you have a class 
-                    <i>com.mycompany.sample.myexample</i>, JDO will look for any of the following 
-                    files until it finds one (in the order stated) :-
+                    JDO expects the XML Meta-Data to be specified in a file or files in particular locations in the CLASSPATH. 
+                    For example, if you have a class <i>com.mycompany.sample.myexample</i>, JDO will look for any of the following 
+                    resources until it finds one (in the order stated) :-
                 </p>
                 <source>
 META-INF/package.jdo
@@ -68,8 +67,7 @@ com/mycompany/package.jdo
 com/mycompany/sample/package.jdo
 com/mycompany/sample/myexample.jdo</source>
                 <p>
-                    In addition, for this example, DataNucleus allows the previous JDO 1.0.0 alternatives 
-                    of
+                    In addition, for this example, DataNucleus allows the previous JDO 1.0.0 alternatives of
                 </p>
                 <source>
 com.jdo
@@ -77,8 +75,8 @@ com/mycompany.jdo
 com/mycompany/sample.jdo</source>
            
                 <p>
-                    In addition to the above, you can split your MetaData definitions between JDO MetaData
-                    files. For example if you have the following classes
+                    In addition to the above, you can split your MetaData definitions between JDO MetaData files. 
+                    For example if you have the following classes
                 </p>
                 <source>
 com/mycompany/A.java
@@ -105,7 +103,7 @@ com/mycompany/app1/E.java</source>
                     By default any XML Metadata will be validated for accuracy when loading it.
                     Obviously XML is defined by a DTD or XSD schema and so should follow that.
                     You can turn off such validations by setting the persistence property
-                    <b>datanucleus.metadata.validate</b> to false when creating your PMF.
+                    <b>datanucleus.metadata.xml.validate</b> to false when creating your PMF.
                     Note that this only turns off the XML strictness validation, and <i>not</i>
                     the checks on inconsistency of specification of relations etc.
                 </p>
