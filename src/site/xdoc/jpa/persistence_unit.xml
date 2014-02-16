@@ -143,7 +143,7 @@ pumd.addProperty("javax.persistence.jdbc.url", "jdbc:h2:mem:nucleus");
 pumd.addProperty("javax.persistence.jdbc.driver", "org.h2.Driver");
 pumd.addProperty("javax.persistence.jdbc.user", "sa");
 pumd.addProperty("javax.persistence.jdbc.password", "");
-pumd.addProperty("datanucleus.autoCreateSchema", "true");
+pumd.addProperty("datanucleus.schema.autoCreateAll", "true");
 
 EntityManagerFactory emf = new JPAEntityManagerFactory(pumd, null);]]></source>
                 <p>

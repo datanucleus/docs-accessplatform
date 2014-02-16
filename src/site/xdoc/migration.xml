@@ -27,6 +27,15 @@
                     <li>Persistence property <b>datanucleus.allowAttachOfTransient</b> now defaults to <i>true</i> for JPA usage; set it explicitly to get old behaviour</li>
                     <li>Persistence property <i>datanucleus.metadata.validate</i> was removed (replaced by <b>datanucleus.metadata.xml.validate</b> some time back)</li>
                     <li>Persistence property <i>datanucleus.defaultInheritanceStrategy</i> is renamed to <b>datanucleus.metadata.defaultInheritanceStrategy</b></li>
+                    <li>Persistence property <i>datanucleus.autoCreateSchema</i> is renamed to <b>datanucleus.schema.autoCreateAll</b></li>
+                    <li>Persistence property <i>datanucleus.autoCreateTables</i> is renamed to <b>datanucleus.schema.autoCreateTables</b></li>
+                    <li>Persistence property <i>datanucleus.autoCreateColumns</i> is renamed to <b>datanucleus.schema.autoCreateColumns</b></li>
+                    <li>Persistence property <i>datanucleus.autoCreateConstraints</i> is renamed to <b>datanucleus.schema.autoCreateConstraints</b></li>
+                    <li>Persistence property <i>datanucleus.validateSchema</i> is renamed to <b>datanucleus.schema.validateAll</b></li>
+                    <li>Persistence property <i>datanucleus.validateTables</i> is renamed to <b>datanucleus.schema.validateTables</b></li>
+                    <li>Persistence property <i>datanucleus.validateColumns</i> is renamed to <b>datanucleus.schema.validateColumns</b></li>
+                    <li>Persistence property <i>datanucleus.validateConstraints</i> is renamed to <b>datanucleus.schema.validateConstraints</b></li>
+                    <li>Persistence property <i>datanucleus.fixedDatastore</i> is now removed, since it only equated to setting the "autoCreate" properties to false.</li>
                 </ul>
             </subsection>
 

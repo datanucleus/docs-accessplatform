@@ -36,7 +36,7 @@
                 <img src="../images/nucleus_extension.gif" border="0" alt=""/>
                 <p>
                     If you want to create the schema ("tables"+"columns"+"constraints") during the persistence 
-                    process, the property <b>datanucleus.autoCreateSchema</b> provides a way of telling 
+                    process, the property <b>datanucleus.schema.autoCreateAll</b> provides a way of telling 
                     DataNucleus to do this. It's a shortcut to setting the other 3 properties to true.
                     Thereafter, during calls to DataNucleus to persist classes or performs queries of persisted data,
                     whenever it encounters a new class to persist that it has no information about, it will use 
@@ -48,21 +48,20 @@
                 <ul>
                     <li>
                         If you wanted to only create the "tables" required, and none of the "constraints" the property 
-                        <b>datanucleus.autoCreateTables</b> provides this, simply performing the tables part of the above.
+                        <b>datanucleus.schema.autoCreateTables</b> provides this, simply performing the tables part of the above.
                     </li>
                     <li>
                         If you want to create any missing "columns" that are required, the property 
-                        <b>datanucleus.autoCreateColumns</b> provides this, validating and adding any missing  columns.
+                        <b>datanucleus.schema.autoCreateColumns</b> provides this, validating and adding any missing  columns.
                     </li>
                     <li>
                         If you wanted to only create the "constraints" required, and none of the "tables" the property 
-                        <b>datanucleus.autoCreateConstraints</b> provides this, simply performing the "constraints"
+                        <b>datanucleus.schema.autoCreateConstraints</b> provides this, simply performing the "constraints"
                         part of the above.
                     </li>
                     <li>
-                        If you want to keep your schema fixed (i.e don't allow any modifications at runtime) then
-                        the property <b>datanucleus.fixedDatastore</b> should be set to <i>true</i> and this has the 
-                        effect of setting the "table"+"columns"+"constraints" autoCreate values to <i>false</i>
+                        If you want to keep your schema fixed (i.e don't allow any modifications at runtime) then make sure that the
+                        properties <b>datanucleus.schema.autoCreate{XXX}</b> are set to <i>false</i>
                     </li>
                 </ul>
             </subsection>
@@ -102,13 +101,13 @@
                 <p>
                     DataNucleus can check any existing schema against what is implied by the MetaData.
                 </p>
-                <p> The property <b>datanucleus.validateTables</b> provides a way of telling DataNucleus to 
+                <p> The property <b>datanucleus.schema.validateTables</b> provides a way of telling DataNucleus to 
                     validate any tables that it needs against their current definition in the datastore. If 
                     the user already has a schema, and want to make sure that their tables match what 
                     DataNucleus requires (from the MetaData definition) they would set this property to 
                     <i>true</i>. This can be useful for example where you are trying to map to an existing 
                     schema and want to verify that you've got the correct MetaData definition.</p>
-                <p> The property <b>datanucleus.validateColumns</b> provides a way of telling DataNucleus to 
+                <p> The property <b>datanucleus.schema.validateColumns</b> provides a way of telling DataNucleus to 
                     validate any columns of the tables that it needs against their current definition in the 
                     datastore. If the user already has a schema, and want to make sure that their tables match 
                     what DataNucleus requires (from the MetaData definition) they would set this property
@@ -116,7 +115,7 @@
                     defaultability/nullability settings. <b>Please be aware that many JDBC drivers contain bugs 
                     that return incorrect column detail information and so having this turned off is sometimes
                     the only option (dependent on the JDBC driver quality).</b></p>
-                <p> The property <b>datanucleus.validateConstraints</b> provides a way of telling DataNucleus 
+                <p> The property <b>datanucleus.schema.validateConstraints</b> provides a way of telling DataNucleus 
                     to validate any constraints (primary keys, foreign keys, indexes) that it needs against 
                     their current definition in the datastore. If the user already has a schema, and want to 
                     make sure that their table constraints match what DataNucleus requires (from the 
