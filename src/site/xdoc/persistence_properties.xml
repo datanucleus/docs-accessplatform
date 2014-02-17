@@ -1907,6 +1907,26 @@
                 <table>
                     <tr>
                         <th colspan="2">
+                            <b>datanucleus.connection.nontx.usePrimaryFactory</b>
+                        </th>
+                    </tr>
+                    <tr>
+                        <td width="120">Description</td>
+                        <td>
+                            When we have a non-transactional PM/EM operation, this allows the user to select whether to just take connections from
+                            the primary connection factory. Is of particular use in JavaSE environments (in JavaEE you typically have a transactional and
+                            a non-transactional datasource, so would want to use the secondary for such operations).
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Range of Values</td>
+                        <td>true | <b>false</b></td>
+                    </tr>
+                </table>
+                <br/>
+                <table>
+                    <tr>
+                        <th colspan="2">
                             <b>datanucleus.connection.resourceType</b>
                         </th>
                     </tr>
