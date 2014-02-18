@@ -1907,15 +1907,15 @@
                 <table>
                     <tr>
                         <th colspan="2">
-                            <b>datanucleus.connection.nontx.usePrimaryFactory</b>
+                            <b>datanucleus.connection.singleConnectionPerExecutionContext</b>
                         </th>
                     </tr>
                     <tr>
                         <td width="120">Description</td>
                         <td>
-                            When we have a non-transactional PM/EM operation, this allows the user to select whether to just take connections from
-                            the primary connection factory. Is of particular use in JavaSE environments (in JavaEE you typically have a transactional and
-                            a non-transactional datasource, so would want to use the secondary for such operations).
+                            With an ExecutionContext (PM/EM) we normally allocate one connection for a transaction and close it after the transaction, then a different
+                            connection for nontransactional ops. This flag acts as a hint to the store plugin to obtain and retain a single connection throughout
+                            the lifetime of the PM/EM.
                         </td>
                     </tr>
                     <tr>
