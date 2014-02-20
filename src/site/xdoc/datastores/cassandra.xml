@@ -24,9 +24,8 @@
             </p>
             <source>datanucleus.ConnectionURL=cassandra:</source>
             <p>
-                <b>NOTE THAT THIS IS A WORK-IN-PROGRESS NEW PLUGIN THAT NEEDS YOUR HELP TO FULLY DEVELOP</b>.
-                It is intended to have this plugin feature complete by DataNucleus v4.0, but is available in
-                GitHub for testing/improvement.
+                It is intended to have this plugin feature complete by DataNucleus v4.0, but is available in GitHub for testing/improvement.
+                <b>This plugin requires your assistance to make it as complete as possible. Don't expect anything if you aren't prepared to help</b>.
                 The jars required to use DataNucleus Cassandra persistence are <i>datanucleus-core</i>,
                 <i>datanucleus-api-jdo</i>/<i>datanucleus-api-jpa</i>, <i>datanucleus-cassandra</i>
                 and <i>cassandra-driver-core</i>
@@ -37,6 +36,7 @@
             <ul>
                 <li>Cassandra doesn't use transactions, so any JDO/JPA transaction operation is a no-op (i.e will be ignored).</li>
                 <li>This uses Cassandra 2.x (and CQL v3.x), not Thrift (like the previous unofficial attempts at a datanucleus-cassandra plugin used)</li>
+                <li>You need to specify the "schema" (<i>datanucleus.mapping.Schema</i>)</li>
             </ul>
 
         </section>
