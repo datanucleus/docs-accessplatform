@@ -192,9 +192,9 @@ public class Book extends Product
         <exclude-unlisted-classes/>
         <properties>
             <property name="javax.persistence.jdbc.url" value="mongodb:/nucleus1"/>
-            <property name="datanucleus.autoCreateSchema" value="true"/>
-            <property name="datanucleus.validateTables" value="false"/>
-            <property name="datanucleus.validateConstraints" value="false"/>
+            <property name="datanucleus.schema.autoCreateAll" value="true"/>
+            <property name="datanucleus.schema.validateTables" value="false"/>
+            <property name="datanucleus.schema.validateConstraints" value="false"/>
         </properties>
     </persistence-unit>
 </persistence>]]></source>
@@ -541,9 +541,9 @@ End of Tutorial</source>
         <exclude-unlisted-classes/>
         <properties>
             <property name="javax.persistence.jdbc.url" value="mongodb:/nucleus1"/>
-            <property name="datanucleus.autoCreateSchema" value="true"/>
-            <property name="datanucleus.validateTables" value="false"/>
-            <property name="datanucleus.validateConstraints" value="false"/>
+            <property name="datanucleus.schema.autoCreateAll" value="true"/>
+            <property name="datanucleus.schema.validateTables" value="false"/>
+            <property name="datanucleus.schema.validateConstraints" value="false"/>
         </properties>
     </persistence-unit>
 

@@ -3,11 +3,11 @@
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
     <properties>
-        <title>JDO Tutorial using MongoDB</title>
+        <title>JDO Tutorial using Cassandra</title>
     </properties>
 
     <body>
-        <section name="DataNucleus - Tutorial for JDO using MongoDB">
+        <section name="DataNucleus - Tutorial for JDO using Cassandra">
             <a href="https://sourceforge.net/projects/datanucleus/files/datanucleus-samples/">
                 <img src="../../images/download.png" alt="Download" border="0"/>
             </a>
@@ -46,7 +46,7 @@
             <subsection name="Prerequisite : Download DataNucleus AccessPlatform">
                 <p>
                     You can download DataNucleus in many ways, but the simplest is to download the distribution
-                    zip appropriate to your datastore (MongoDB in this case). You can do this from
+                    zip appropriate to your datastore (Cassandra in this case). You can do this from
                     <a href="https://sourceforge.net/projects/datanucleus/files/datanucleus-accessplatform/" 
                        target="_blank">SourceForge DataNucleus download page</a>.
                     When you open the zip you will find DataNucleus jars in the <i>lib</i> directory, and
@@ -190,7 +190,7 @@ public class Book extends Product
         <class>org.datanucleus.samples.jdo.tutorial.Book</class>
         <exclude-unlisted-classes/>
         <properties>
-            <property name="javax.jdo.option.ConnectionURL" value="mongodb:/nucleus"/>
+            <property name="javax.jdo.option.ConnectionURL" value="cassandra:"/>
             <property name="datanucleus.schema.autoCreateAll" value="true"/>
             <property name="datanucleus.schema.validateTables" value="false"/>
             <property name="datanucleus.schema.validateConstraints" value="false"/>
@@ -397,9 +397,9 @@ finally
                 <ul>
                     <li>Any persistence.xml file for the PersistenceManagerFactory creation</li>
                     <li>Any JDO XML MetaData files for your persistable classes (not used in this example)</li>
-                    <li>MongoDB driver class needed for accessing your datastore</li>
+                    <li>Cassandra DataStax driver class needed for accessing your datastore</li>
                     <li>The JDO API JAR (defining the JDO interface)</li>
-                    <li>The <b>DataNucleus Core</b>, <b>DataNucleus JDO API</b> and <b>DataNucleus MongoDB</b> JARs</li>
+                    <li>The <b>datanucleus-core</b>, <b>datanucleus-api-jdo</b> and <b>datanucleus-cassandra</b> JARs</li>
                 </ul>
                 <p> After that it is simply a question of starting your application and all should be taken care 
                     of. You can access the DataNucleus Log file by specifying the 
@@ -418,14 +418,14 @@ mvn exec:java
 
 
 Manually on Linux/Unix :
-java -cp lib/jdo-api.jar:lib/datanucleus-core.jar:lib/datanucleus-mongodb.jar:
-         lib/datanucleus-api-jdo.jar:lib/{mongodb_jars}:target/classes/:. 
+java -cp lib/jdo-api.jar:lib/datanucleus-core.jar:lib/datanucleus-cassandra.jar:
+         lib/datanucleus-api-jdo.jar:lib/{cassandra_jars}:target/classes/:. 
              org.datanucleus.samples.jdo.tutorial.Main
 
 
 Manually on Windows :
-java -cp lib\jdo-api.jar;lib\datanucleus-core.jar;lib\datanucleus-mongodb.jar;
-         lib\datanucleus-api-jdo.jar;lib\{mongodb_jars};target\classes\;. 
+java -cp lib\jdo-api.jar;lib\datanucleus-core.jar;lib\datanucleus-cassandra.jar;
+         lib\datanucleus-api-jdo.jar;lib\{cassandra_jars};target\classes\;. 
              org.datanucleus.samples.jdo.tutorial.Main
 
 
@@ -453,7 +453,7 @@ End of Tutorial</source>
         <section name="Part 2 : Next steps">
             <a name="part2"/>
             <p>
-                In the above simple tutorial we showed how to employ JDO and persist objects to MongoDB.
+                In the above simple tutorial we showed how to employ JDO and persist objects to Cassandra.
                 Obviously this just scratches the surface of what you can do, and to use JDO requires minimal
                 work from the user. In this second part we show some further things that you are likely to want to do.
             </p>
@@ -514,8 +514,8 @@ End of Tutorial</source>
                     With JDO you have various options as far as where this XML MetaData files is placed in 
                     the file structure, and whether they refer to a single class, or multiple classes in a 
                     package. With the above example, we have both classes specified in the same file 
-                    <i>package-mongodb.orm</i>, in the package these classes are in, since we want to persist
-                    to MongoDB.
+                    <i>package-cassandra.orm</i>, in the package these classes are in, since we want to persist
+                    to Cassandra.
                 </p>
 
             </subsection>
@@ -545,7 +545,7 @@ End of Tutorial</source>
         <class>org.datanucleus.samples.jdo.tutorial.Book</class>
         <exclude-unlisted-classes/>
         <properties>
-            <property name="javax.jdo.option.ConnectionURL" value="mongodb:/nucleus"/>
+            <property name="javax.jdo.option.ConnectionURL" value="cassandra:"/>
             <property name="datanucleus.schema.autoCreateAll" value="true"/>
             <property name="datanucleus.schema.validateTables" value="false"/>
             <property name="datanucleus.schema.validateConstraints" value="false"/>
@@ -567,14 +567,14 @@ mvn datanucleus:schema-create
 
 
 Manually on Linux/Unix :
-java -cp target/classes:lib/datanucleus-core.jar:lib/datanucleus-mongodb.jar:
-         lib/datanucleus-jdo-api.jar:lib/jdo-api.jar:lib/{mongodb_driver.jar}
+java -cp target/classes:lib/datanucleus-core.jar:lib/datanucleus-cassandra.jar:
+         lib/datanucleus-jdo-api.jar:lib/jdo-api.jar:lib/{cassandra_driver.jar}
      org.datanucleus.store.schema.SchemaTool
      -create -pu Tutorial
 
 Manually on Windows :
-java -cp target\classes;lib\datanucleus-core.jar;lib\datanucleus-mongodb.jar;
-         lib\datanucleus-api-jdo.jar;lib\jdo-api.jar;lib\{mongodb_driver.jar}
+java -cp target\classes;lib\datanucleus-core.jar;lib\datanucleus-cassandra.jar;
+         lib\datanucleus-api-jdo.jar;lib\jdo-api.jar;lib\{cassandra_driver.jar}
      org.datanucleus.store.schema.SchemaTool
      -create -pu Tutorial
 

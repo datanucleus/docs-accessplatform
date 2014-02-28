@@ -24,9 +24,9 @@
 
             <subsection name="Schema : Creation">
                 <p>
-                    DataNucleus provides 4 persistence properties <b>datanucleus.autoCreateSchema</b>, 
-                    <b>datanucleus.autoCreateTables</b>, <b>datanucleus.autoCreateColumns</b>, and 
-                    <b>datanucleus.autoCreateConstraints</b> that allow creation of the datastore tables. This can 
+                    DataNucleus provides 4 persistence properties <b>datanucleus.schema.autoCreateAll</b>, 
+                    <b>datanucleus.schema.autoCreateTables</b>, <b>datanucleus.schema.autoCreateColumns</b>, and 
+                    <b>datanucleus.schema.autoCreateConstraints</b> that allow creation of the datastore tables. This can 
                     cause performance issues at startup. We recommend setting these to <i>false</i> at runtime, and 
                     instead using <a href="schema.html#schematool">SchemaTool</a> to <b>generate any required database 
                     schema before running DataNucleus (for RDBMS, HBase)</b>.
@@ -48,8 +48,8 @@
 
             <subsection name="Schema : Validation">
                 <p>
-                    DataNucleus provides 3 persistence properties <b>datanucleus.validateTables</b>, 
-                    <b>datanucleus.validateConstraints</b>, <b>datanucleus.validateColumns</b> that enforce strict 
+                    DataNucleus provides 3 persistence properties <b>datanucleus.schema.validateTables</b>, 
+                    <b>datanucleus.schema.validateConstraints</b>, <b>datanucleus.schema.validateColumns</b> that enforce strict 
                     validation of the datastore tables against the Meta-Data defined tables. This can cause performance 
                     issues at startup. In general this should be run only at schema generation, and should be turned off 
                     for production usage. Set all of these properties to <i>false</i>. In addition there is a property 
@@ -64,15 +64,15 @@
                 </p>
 <source>          
 #schema creation
-datanucleus.autoCreateSchema=false
-datanucleus.autoCreateTables=false
-datanucleus.autoCreateColumns=false
-datanucleus.autoCreateConstraints=false
+datanucleus.schema.autoCreateAll=false
+datanucleus.schema.autoCreateTables=false
+datanucleus.schema.autoCreateColumns=false
+datanucleus.schema.autoCreateConstraints=false
       
 #schema validation
-datanucleus.validateTables=false
-datanucleus.validateConstraints=false
-datanucleus.validateColumns=false
+datanucleus.schema.validateTables=false
+datanucleus.schema.validateConstraints=false
+datanucleus.schema.validateColumns=false
 datanucleus.rdbms.CheckExistTablesOrViews=false
 datanucleus.rdbms.initializeColumnInfo=None
 </source>

@@ -9,14 +9,35 @@
     <body>
         <section name="AccessPlatform : Migration between versions">
             <p>
-                This version of DataNucleus AccessPlatform builds on the 3.2 releases, and adds JPA 2.1.
-                Some internal APIs could be changed from 3.1/3.2.
+                This version of DataNucleus AccessPlatform builds on the 3.3 releases and includes significant refactoring to the
+                internal APIs to allow future flexibility.
                 All releases are checked regularly against the JDO/JPA TCKs, meaning that DataNucleus is 
                 always stable in terms of functionality.
                 Occasionally, due to unknown bugs, or due to new functionality being introduced we need to 
                 change some aspects of DataNucleus. As a result sometimes users will have to make some 
                 changes to move between versions of DataNucleus. We aim to keep this to a minimum.
             </p>
+
+            <a name="4_0_0_M1_FROM_3_3_7"/>
+            <subsection name="Migration from 3.3.7 to 4.0.0.M1">
+                <p>
+                    Migrating will require the following changes
+                </p>
+                <ul>
+                    <li>Persistence property <b>datanucleus.allowAttachOfTransient</b> now defaults to <i>true</i> for JPA usage; set it explicitly to get old behaviour</li>
+                    <li>Persistence property <i>datanucleus.metadata.validate</i> was removed (replaced by <b>datanucleus.metadata.xml.validate</b> some time back)</li>
+                    <li>Persistence property <i>datanucleus.defaultInheritanceStrategy</i> is renamed to <b>datanucleus.metadata.defaultInheritanceStrategy</b></li>
+                    <li>Persistence property <i>datanucleus.autoCreateSchema</i> is renamed to <b>datanucleus.schema.autoCreateAll</b></li>
+                    <li>Persistence property <i>datanucleus.autoCreateTables</i> is renamed to <b>datanucleus.schema.autoCreateTables</b></li>
+                    <li>Persistence property <i>datanucleus.autoCreateColumns</i> is renamed to <b>datanucleus.schema.autoCreateColumns</b></li>
+                    <li>Persistence property <i>datanucleus.autoCreateConstraints</i> is renamed to <b>datanucleus.schema.autoCreateConstraints</b></li>
+                    <li>Persistence property <i>datanucleus.validateSchema</i> is renamed to <b>datanucleus.schema.validateAll</b></li>
+                    <li>Persistence property <i>datanucleus.validateTables</i> is renamed to <b>datanucleus.schema.validateTables</b></li>
+                    <li>Persistence property <i>datanucleus.validateColumns</i> is renamed to <b>datanucleus.schema.validateColumns</b></li>
+                    <li>Persistence property <i>datanucleus.validateConstraints</i> is renamed to <b>datanucleus.schema.validateConstraints</b></li>
+                    <li>Persistence property <i>datanucleus.fixedDatastore</i> is now removed, since it only equated to setting the "autoCreate" properties to false.</li>
+                </ul>
+            </subsection>
 
             <a name="3_3_7_FROM_3_3_6"/>
             <subsection name="Migration from 3.3.6 to 3.3.7">

@@ -1252,13 +1252,13 @@
                 <table>
                     <tr>
                         <th colspan="2">
-                            <b>datanucleus.autoCreateSchema</b>
+                            <b>datanucleus.schema.autoCreateAll</b>
                         </th>
                     </tr>
                     <tr>
                         <td width="120">Description</td>
-                        <td>Whether to automatically generate any tables and constraints that don't exist. Please refer to 
-                            the <a href="jdo/schema.html">Schema Guide</a> for more details.</td>
+                        <td>Whether to automatically generate any schema, tables, columns, constraints that don't exist. 
+                            Please refer to the <a href="jdo/schema.html">Schema Guide</a> for more details.</td>
                     </tr>
                     <tr>
                         <td>Range of Values</td>
@@ -1269,13 +1269,14 @@
                 <table>
                     <tr>
                         <th colspan="2">
-                            <b>datanucleus.autoCreateTables</b>
+                            <b>datanucleus.schema.autoCreateSchema</b>
                         </th>
                     </tr>
                     <tr>
                         <td width="120">Description</td>
-                        <td>Whether to automatically generate any tables that don't exist. Please refer to 
-                            the <a href="jdo/schema.html">Schema Guide</a> for more details.</td>
+                        <td>Whether to automatically generate any schema that doesn't exist. This depends very much on whether the
+                            datastore in question supports this operation. 
+                            Please refer to the <a href="jdo/schema.html">Schema Guide</a> for more details.</td>
                     </tr>
                     <tr>
                         <td>Range of Values</td>
@@ -1286,7 +1287,24 @@
                 <table>
                     <tr>
                         <th colspan="2">
-                            <b>datanucleus.autoCreateColumns</b>
+                            <b>datanucleus.schema.autoCreateTables</b>
+                        </th>
+                    </tr>
+                    <tr>
+                        <td width="120">Description</td>
+                        <td>Whether to automatically generate any tables that don't exist. 
+                            Please refer to the <a href="jdo/schema.html">Schema Guide</a> for more details.</td>
+                    </tr>
+                    <tr>
+                        <td>Range of Values</td>
+                        <td>true | <b>false</b></td>
+                    </tr>
+                </table>            
+                <br/>
+                <table>
+                    <tr>
+                        <th colspan="2">
+                            <b>datanucleus.schema.autoCreateColumns</b>
                         </th>
                     </tr>
                     <tr>
@@ -1303,7 +1321,7 @@
                 <table>
                     <tr>
                         <th colspan="2">
-                            <b>datanucleus.autoCreateConstraints</b>
+                            <b>datanucleus.schema.autoCreateConstraints</b>
                         </th>
                     </tr>
                     <tr>
@@ -1338,13 +1356,13 @@
                 <table>
                     <tr>
                         <th colspan="2">
-                            <b>datanucleus.validateSchema</b>
+                            <b>datanucleus.schema.validateAll</b>
                         </th>
                     </tr>
                     <tr>
                         <td width="120">Description</td>
-                        <td>Alias for defining <b>datanucleus.validateTables</b>, <b>datanucleus.validateColumns</b>
-                            and <b>datanucleus.validateConstraints</b> as all true.
+                        <td>Alias for defining <b>datanucleus.schema.validateTables</b>, <b>datanucleus.schema.validateColumns</b>
+                            and <b>datanucleus.schema.validateConstraints</b> as all true.
                             Please refer to the <a href="jdo/schema.html">Schema Guide</a> for more details.</td>
                     </tr>
                     <tr>
@@ -1356,7 +1374,7 @@
                 <table>
                     <tr>
                         <th colspan="2">
-                            <b>datanucleus.validateTables</b>
+                            <b>datanucleus.schema.validateTables</b>
                         </th>
                     </tr>
                     <tr>
@@ -1373,7 +1391,7 @@
                 <table>
                     <tr>
                         <th colspan="2">
-                            <b>datanucleus.validateColumns</b>
+                            <b>datanucleus.schema.validateColumns</b>
                         </th>
                     </tr>
                     <tr>
@@ -1391,7 +1409,7 @@
                 <table>
                     <tr>
                         <th colspan="2">
-                            <b>datanucleus.validateConstraints</b>
+                            <b>datanucleus.schema.validateConstraints</b>
                         </th>
                     </tr>
                     <tr>
@@ -1436,23 +1454,6 @@
                     <tr>
                         <td>Range of Values</td>
                         <td><b>EXCEPTION</b> | IGNORE</td>
-                    </tr>
-                </table>
-                <br/>
-                <a name="FixedDatastore"/>
-                <table>
-                    <tr>
-                        <th colspan="2">
-                            <b>datanucleus.fixedDatastore</b>
-                        </th>
-                    </tr>
-                    <tr>
-                        <td width="120">Description</td>
-                        <td>Whether the datastore is fixed in structure or not.</td>
-                    </tr>
-                    <tr>
-                        <td>Range of Values</td>
-                        <td>true | <b>false</b></td>
                     </tr>
                 </table>
                 <br/>
@@ -1580,12 +1581,29 @@
                     </tr>
                     <tr>
                         <td width="120">Description</td>
-                        <td>Name of the identifier factory to use when generating table/column names etc. 
+                        <td>Name of the identifier factory to use when generating table/column names etc (RDBMS datastores only). 
                             See also the <a href="jdo/orm/datastore_identifiers.html">JDO RDBMS Identifier Guide</a>.</td>
                     </tr>
                     <tr>
                         <td>Range of Values</td>
                         <td>datanucleus1 | <b>datanucleus2</b> | jpox | jpa | {user-plugin-name}</td>
+                    </tr>
+                </table>
+                <br/>
+                <table>
+                    <tr>
+                        <th colspan="2">
+                            <b>datanucleus.identifier.namingFactory</b>
+                        </th>
+                    </tr>
+                    <tr>
+                        <td width="120">Description</td>
+                        <td>Name of the identifier NamingFactory to use when generating table/column names etc (non-RDBMS datastores).
+                            Defaults to "datanucleus2" for JDO and "jpa" for JPA usage.</td>
+                    </tr>
+                    <tr>
+                        <td>Range of Values</td>
+                        <td>datanucleus2 | jpa | {user-plugin-name}</td>
                     </tr>
                 </table>
                 <br/>
@@ -1901,6 +1919,26 @@
                     <tr>
                         <td>Range of Values</td>
                         <td><b>true</b> | false</td>
+                    </tr>
+                </table>
+                <br/>
+                <table>
+                    <tr>
+                        <th colspan="2">
+                            <b>datanucleus.connection.singleConnectionPerExecutionContext</b>
+                        </th>
+                    </tr>
+                    <tr>
+                        <td width="120">Description</td>
+                        <td>
+                            With an ExecutionContext (PM/EM) we normally allocate one connection for a transaction and close it after the transaction, then a different
+                            connection for nontransactional ops. This flag acts as a hint to the store plugin to obtain and retain a single connection throughout
+                            the lifetime of the PM/EM.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Range of Values</td>
+                        <td>true | <b>false</b></td>
                     </tr>
                 </table>
                 <br/>
@@ -2572,9 +2610,7 @@
                     </tr>
                     <tr>
                         <td width="120">Description</td>
-                        <td>Whether to validate the MetaData file(s) for XML correctness (against the DTD) when parsing.
-                            Note that this was originally called <i>datanucleus.metadata.validate</i> but is
-                            renamed in v3.2.3</td>
+                        <td>Whether to validate the MetaData file(s) for XML correctness (against the DTD) when parsing.</td>
                     </tr>
                     <tr>
                         <td>Range of values</td>

@@ -159,12 +159,12 @@ PersistenceManagerFactory pmf = JDOHelper.getPersistenceManagerFactory("myPersis
                     </tr>
                     <tr>
                         <td>javax.jdo.option.NontransactionalRead</td>
-                        <td>false | <b>true</b></td>
+                        <td><b>true</b> | false</td>
                         <td>Alias for <a href="../persistence_properties.html#NontransactionalRead">datanucleus.NontransactionalRead</a></td>
                     </tr>
                     <tr>
                         <td>javax.jdo.option.NontransactionalWrite</td>
-                        <td>false | <b>true</b></td>
+                        <td><b>true</b> | false</td>
                         <td>Alias for <a href="../persistence_properties.html#NontransactionalWrite">datanucleus.NontransactionalWrite</a></td>
                     </tr>
                     <tr>
@@ -363,7 +363,7 @@ pumd.addProperty("javax.jdo.ConnectionURL", "jdbc:hsqldb:mem:nucleus");
 pumd.addProperty("javax.jdo.ConnectionDriverName", "org.hsqldb.jdbcDriver");
 pumd.addProperty("javax.jdo.ConnectionUserName", "sa");
 pumd.addProperty("javax.jdo.ConnectionPassword", "");
-pumd.addProperty("datanucleus.autoCreateSchema", "true");
+pumd.addProperty("datanucleus.schema.autoCreateAll", "true");
 
 PersistenceManagerFactory pmf = new JDOPersistenceManagerFactory(pumd, null);]]></source>
                 <p>
@@ -396,7 +396,7 @@ PersistenceManagerFactory pmf = new JDOPersistenceManagerFactory(pumd, null);]]>
         <property name="javax.jdo.option.ConnectionUserName" value="datanucleus"/>
         <property name="javax.jdo.option.ConnectionPassword" value=""/>
         <property name="javax.jdo.option.Optimistic" value="false"/>
-        <property name="datanucleus.autoCreateSchema" value="true"/>
+        <property name="datanucleus.schema.autoCreateAll" value="true"/>
     </persistence-manager-factory>
 
     <!-- Optimistic Txn PMF -->
@@ -407,7 +407,7 @@ PersistenceManagerFactory pmf = new JDOPersistenceManagerFactory(pumd, null);]]>
         <property name="javax.jdo.option.ConnectionUserName" value="datanucleus"/>
         <property name="javax.jdo.option.ConnectionPassword" value=""/>
         <property name="javax.jdo.option.Optimistic" value="true"/>
-        <property name="datanucleus.autoCreateSchema" value="true"/>
+        <property name="datanucleus.schema.autoCreateAll" value="true"/>
     </persistence-manager-factory>
 
 </jdoconfig>]]></source>
