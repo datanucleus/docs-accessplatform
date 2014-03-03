@@ -1257,8 +1257,8 @@
                     </tr>
                     <tr>
                         <td width="120">Description</td>
-                        <td>Whether to automatically generate any tables and constraints that don't exist. Please refer to 
-                            the <a href="jdo/schema.html">Schema Guide</a> for more details.</td>
+                        <td>Whether to automatically generate any schema, tables, columns, constraints that don't exist. 
+                            Please refer to the <a href="jdo/schema.html">Schema Guide</a> for more details.</td>
                     </tr>
                     <tr>
                         <td>Range of Values</td>
@@ -1269,13 +1269,31 @@
                 <table>
                     <tr>
                         <th colspan="2">
+                            <b>datanucleus.schema.autoCreateSchema</b>
+                        </th>
+                    </tr>
+                    <tr>
+                        <td width="120">Description</td>
+                        <td>Whether to automatically generate any schema that doesn't exist. This depends very much on whether the
+                            datastore in question supports this operation. 
+                            Please refer to the <a href="jdo/schema.html">Schema Guide</a> for more details.</td>
+                    </tr>
+                    <tr>
+                        <td>Range of Values</td>
+                        <td>true | <b>false</b></td>
+                    </tr>
+                </table>            
+                <br/>
+                <table>
+                    <tr>
+                        <th colspan="2">
                             <b>datanucleus.schema.autoCreateTables</b>
                         </th>
                     </tr>
                     <tr>
                         <td width="120">Description</td>
-                        <td>Whether to automatically generate any tables that don't exist. Please refer to 
-                            the <a href="jdo/schema.html">Schema Guide</a> for more details.</td>
+                        <td>Whether to automatically generate any tables that don't exist. 
+                            Please refer to the <a href="jdo/schema.html">Schema Guide</a> for more details.</td>
                     </tr>
                     <tr>
                         <td>Range of Values</td>
