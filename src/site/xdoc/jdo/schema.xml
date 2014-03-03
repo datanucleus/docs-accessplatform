@@ -190,6 +190,8 @@ public class MyClass {...}]]></source>
                 and is very simple to operate. It has the following modes of operation :
             </p>
             <ul>
+                <li><b>createSchema</b> - create the specified schema if the datastore supports that operation.</li>
+                <li><b>deleteSchema</b> - delete the specified schema if the datastore supports that operation.</li>
                 <li><b>create</b> - create all database tables required for the classes defined by the input data.</li>
                 <li><b>delete</b> - delete all database tables required for the classes defined by the input data.</li>
                 <li><b>deletecreate</b> - delete all database tables required for the classes defined by the input 
@@ -263,6 +265,11 @@ public class MyClass {...}]]></source>
                         <td>Fileset to exclude for schema generation</td>
                     </tr>
                     <tr>
+                        <td>schemaName</td>
+                        <td></td>
+                        <td>Name of the schema (mandatory when using <i>createSchema</i> or <i>deleteSchema</i> options)</td>
+                    </tr>
+                    <tr>
                         <td>persistenceUnitName</td>
                         <td></td>
                         <td>Name of the persistence-unit to generate the schema for (defines the classes
@@ -328,7 +335,7 @@ public class MyClass {...}]]></source>
             <plugin>
                 <groupId>org.datanucleus</groupId>
                 <artifactId>datanucleus-maven-plugin</artifactId>
-                <version>3.2.0-m3</version>
+                <version>4.0.0-m1</version>
                 <configuration>
                     <props>${basedir}/datanucleus.properties</props>
                     <log4jConfiguration>${basedir}/log4j.properties</log4jConfiguration>
@@ -345,10 +352,12 @@ public class MyClass {...}]]></source>
                     the Maven goals
                 </p>
                 <source>
-mvn datanucleus:schema-create              Create the Schema
-mvn datanucleus:schema-delete              Delete the schema
-mvn datanucleus:schema-deletecreate        Delete and create the schema
-mvn datanucleus:schema-validate            Validate the Schema
+mvn datanucleus:schema-createschema        Create the Schema
+mvn datanucleus:schema-deleteschema        Delete the Schema
+mvn datanucleus:schema-create              Create the tables for the specified classes
+mvn datanucleus:schema-delete              Delete the tables for the specified classes
+mvn datanucleus:schema-deletecreate        Delete and create the tables for the specified classes
+mvn datanucleus:schema-validate            Validate the tables for the specified classes
 mvn datanucleus:schema-info                Output info for the Schema
 mvn datanucleus:schema-dbinfo              Output info for the datastore</source>
             </subsection>
@@ -369,7 +378,12 @@ mvn datanucleus:schema-dbinfo              Output info for the datastore</source
                     <tr>
                         <td>mode</td>
                         <td>Mode of operation.</td>
-                        <td><b>create</b>, delete, validate, dbinfo, schemainfo</td>
+                        <td><b>create</b>, delete, deletecreate, validate, dbinfo, schemainfo, createSchema, deleteSchema</td>
+                    </tr>
+                    <tr>
+                        <td>schemaName</td>
+                        <td>Schema name to use when used in <i>createSchema</i>/<i>deleteSchema</i> modes</td>
+                        <td></td>
                     </tr>
                     <tr>
                         <td>verbose</td>
@@ -378,12 +392,12 @@ mvn datanucleus:schema-dbinfo              Output info for the datastore</source
                     </tr>
                     <tr>
                         <td>props</td>
-                        <td>The filename to use for PMF properties</td>
+                        <td>The filename to use for persistence properties</td>
                         <td></td>
                     </tr>
                     <tr>
                         <td>ddlFile</td>
-                        <td>The filename where SchemaTool should output the DDL (for RDBMS).</td>
+                        <td>The filename where SchemaTool should output the DDL.</td>
                         <td></td>
                     </tr>
                     <tr>
@@ -505,6 +519,8 @@ java [-cp classpath] [system_props] org.datanucleus.store.schema.SchemaTool [mod
         -Ddatanucleus.Mapping=orm_mapping_name (optional)
         -Dlog4j.configuration=file:{log4j.properties} (optional)
     where modes can be
+        -createSchema {schemaName} : create the specified schema (if supported)
+        -deleteSchema {schemaName} : delete the specified schema (if supported)
         -create : Create the tables specified by the mapping-files/class-files
         -delete : Delete the tables specified by the mapping-files/class-files
         -deletecreate : Delete the tables specified by the mapping-files/class-files and then create them
@@ -554,7 +570,7 @@ java -cp target/classes:lib/log4j.jar:lib/jdo-api.jar:lib/datanucleus-core.jar:l
       target/classes/org/datanucleus/examples/inverse/package.jdo
 
 
-DataNucleus SchemaTool (version 3.2.0.m1) : Creation of the schema
+DataNucleus SchemaTool (version 4.0.0.m1) : Creation of the schema
 
 DataNucleus SchemaTool : Classpath
 >>  /home/andy/work/DataNucleus/samples/packofcards/target/classes
