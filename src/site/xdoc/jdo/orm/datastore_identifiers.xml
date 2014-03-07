@@ -9,27 +9,33 @@
     <body>
         <section name="JDO : Datastore Identifiers">
             <p>
-                A datastore identifier is a simple name of a database object, such as a column, table, index, or view, 
-                and is composed of a sequence of letters, digits, and underscores ( _ ) that represents it's name. 
-                DataNucleus allows users to specify the names of tables, columns, indexes etc but if the user doesn't 
-                specify these DataNucleus will generate names.
-                Generation of identifier names is controlled by an IdentifierFactory, and DataNucleus provides a 
-                default implementation. 
-                You can <a href="http://www.datanucleus.org/extensions/rdbms_identifier_factory.html">provide your own IdentifierFactory plugin</a> 
+                A datastore identifier is a simple name of a database object, such as a column, table, index, or view, and is composed of a
+                sequence of letters, digits, and underscores ( _ ) that represents it's name. DataNucleus allows users to specify the names of tables, 
+                columns, indexes etc but if the user doesn't specify these DataNucleus will generate names.
+                With RDBMS the generation of identifier names is controlled by an IdentifierFactory, and DataNucleus provides a default implementation depending
+                on the API in use. With non-RDBMS the generation of identifier names is controlled by a NamingFactory and again a default implementation is
+                assigned dependent on the API in use.
+            </p>
+            <p>
+                Generation of identifier names is controlled by an IdentifierFactory, and DataNucleus provides a default implementation. 
+                You can <a href="http://www.datanucleus.org/extensions/rdbms_identifier_factory.html">provide your own RDBMS IdentifierFactory plugin</a> 
+                or your own <a href="http://www.datanucleus.org/extensions/identifier_namingfactory.html">provide your own NamingFactory plugin</a> 
                 to give your own preferred naming if so desired.
-                You set the <i>IdentifierFactory</i> by setting the PMF property <i>datanucleus.identifierFactory</i>. 
-                Set it to the symbolic name of the factory you want to use. JDO doesnt define what the names of 
-                datastore identifiers should be but DataNucleus provides the following factories for your use.
+                For RDBMS you set the <i>RDBMS IdentifierFactory</i> by setting the persistence property <i>datanucleus.identifierFactory</i>. 
+                For non-RDBMS you set the <i>NamingFactory</i> by setting the persistence property <i>datanucleus.identifier.namingFactory</i>. 
+                Set it to the symbolic name of the factory you want to use. JDO doesn't define what the names of datastore identifiers should be but DataNucleus 
+                provides the following factories for your use.
             </p>
             <ul>
-                <li><a href="#datanucleus2">datanucleus2</a> IdentifierFactory (default for JDO persistence)</li>
-                <li><a href="#jpa">jpa</a> IdentifierFactory (default for JPA persistence)</li>
-                <li><a href="#datanucleus1">datanucleus1</a> IdentifierFactory (used in DataNucleus v1)</li>
-                <li><a href="#jpox">jpox</a> IdentifierFactory (compatible with JPOX)</li>
+                <li><a href="#datanucleus2">datanucleus2</a> NamingFactory (default for JDO persistence for non-RDBMS)</li>
+                <li><a href="#jpa">jpa</a> NamingFactory (default for JPA persistence for non-RDBMS)</li>
+                <li><a href="#rdbms_datanucleus2">datanucleus2</a> RDBMS IdentifierFactory (default for JDO persistence)</li>
+                <li><a href="#rdbms_jpa">jpa</a> RDBMS IdentifierFactory (default for JPA persistence)</li>
+                <li><a href="#rdbms_datanucleus1">datanucleus1</a> RDBMS IdentifierFactory (used in DataNucleus v1)</li>
+                <li><a href="#rdbms_jpox">jpox</a> RDBMS IdentifierFactory (compatible with JPOX)</li>
             </ul>
             <p>
-                In describing the different possible naming conventions available out of the box with DataNucleus we'll use the
-                following example
+                In describing the different possible naming conventions available out of the box with DataNucleus we'll use the following example
             </p>
             <source><![CDATA[
 class MyClass
@@ -47,7 +53,62 @@ class MyElement
             <br/>
 
             <a name="datanucleus2"/>
-            <subsection name="IdentifierFactory 'datanucleus2'">
+            <subsection name="NamingFactory 'datanucleus2'">
+                <img src="../../images/nucleus_extension.gif" border="0" alt=""/>
+                <p>
+                    This is default for JDO persistence to non-RDBMS datastores.
+                </p>
+                <p>
+                    Using the example above, the rules in this <i>NamingFactory</i> mean that, assuming 
+                    that the user doesn't specify any &lt;column&gt; elements :-
+                </p>
+                <ul>
+                    <li><i>MyClass</i> will be persisted into a table named <b>MYCLASS</b></li>
+                    <li>When using datastore identity <b>MYCLASS</b> will have a column called <b>MYCLASS_ID</b></li>
+                    <li><i>MyClass.myField1</i> will be persisted into a column called <b>MYFIELD1</b></li>
+                    <li><i>MyElement</i> will be persisted into a table named <b>MYELEMENT</b></li>
+                    <li><i>MyClass.elements1</i> will be persisted into a join table called <b>MYCLASS_ELEMENTS1</b></li>
+                    <li><b>MYCLASS_ELEMENTS1</b> will have columns called <b>MYCLASS_ID_OID</b> (FK to owner table) and
+                        <b>MYELEMENT_ID_EID</b> (FK to element table)</li>
+                    <li><b>MYCLASS_ELEMENTS1</b> will have column names like <b>STRING_ELE</b>, <b>STRING_KEY</b>,
+                        <b>STRING_VAL</b> for non-PC elements/keys/values of collections/maps</li>
+                    <li><b>MyClass.elements2</b> will be persisted into a column <b>ELEMENTS2_MYCLASS_ID_OWN</b> or <b>ELEMENTS2_MYCLASS_ID_OID</b> (FK to owner) table</li>
+                    <li>Any discriminator column will be called <b>DISCRIMINATOR</b></li>
+                    <li>Any index column in a List will be called <b>IDX</b></li>
+                    <li>Any adapter column added to a join table to form part of the primary key will be called <b>IDX</b></li>
+                    <li>Any version column for a table will be called <b>VERSION</b></li>
+                </ul>
+            </subsection>
+
+            <a name="jpa"/>
+            <subsection name="NamingFactory 'jpa'">
+                <img src="../../images/jpa1.gif" border="0" alt=""/>
+                <p>
+                    The <i>NamingFactory</i> "jpa" aims at providing a naming policy consistent with the "JPA" specification.
+                </p>
+                <p>
+                    Using the same example above, the rules in this <i>NamingFactory</i> mean that, assuming that 
+                    the user doesn't specify any &lt;column&gt; elements :-
+                </p>
+                <ul>
+                    <li><i>MyClass</i> will be persisted into a table named <b>MYCLASS</b></li>
+                    <li>When using datastore identity <b>MYCLASS</b> will have a column called <b>MYCLASS_ID</b></li>
+                    <li><i>MyClass.myField1</i> will be persisted into a column called <b>MYFIELD1</b></li>
+                    <li><i>MyElement</i> will be persisted into a table named <b>MYELEMENT</b></li>
+                    <li><i>MyClass.elements1</i> will be persisted into a join table called <b>MYCLASS_MYELEMENT</b></li>
+                    <li><b>MYCLASS_ELEMENTS1</b> will have columns called <b>MYCLASS_MYCLASS_ID</b> (FK to owner table) and
+                        <b>ELEMENTS1_ELEMENT_ID</b> (FK to element table)</li>
+                    <li><b>MyClass.elements2</b> will be persisted into a column <b>ELEMENTS2_MYCLASS_ID</b> (FK to owner) table</li>
+                    <li>Any discriminator column will be called <b>DTYPE</b></li>
+                    <li>Any index column in a List for field <i>MyClass.myField1</i> will be called 
+                        <b>MYFIELD1_ORDER</b></li>
+                    <li>Any adapter column added to a join table to form part of the primary key will be called <b>IDX</b></li>
+                    <li>Any version column for a table will be called <b>VERSION</b></li>
+                </ul>
+            </subsection>
+
+            <a name="rdbms_datanucleus2"/>
+            <subsection name="RDBMS IdentifierFactory 'datanucleus2'">
                 <img src="../../images/nucleus_extension.gif" border="0" alt=""/>
                 <p>
                     This became the default for JDO persistence from DataNucleus v2.x onwards and changes a few 
@@ -55,7 +116,7 @@ class MyElement
                     and consistent (we retain "datanucleus1" for backwards compatibility).
                 </p>
                 <p>
-                    Using the same example above, the rules in this <i>IdentifierFactory</i> mean that, assuming 
+                    Using the same example above, the rules in this <i>RDBMS IdentifierFactory</i> mean that, assuming 
                     that the user doesnt specify any &lt;column&gt; elements :-
                 </p>
                 <ul>
@@ -76,15 +137,15 @@ class MyElement
                 </ul>
             </subsection>
 
-            <a name="datanucleus1"/>
-            <subsection name="IdentifierFactory 'datanucleus1'">
+            <a name="rdbms_datanucleus1"/>
+            <subsection name="RDBMS IdentifierFactory 'datanucleus1'">
                 <img src="../../images/nucleus_extension.gif" border="0" alt=""/>
                 <p>
                     This was the default in DataNucleus v1.x for JDO persistence and provided a reasonable 
                     default naming of datastore identifiers using the class and field names as its basis.
                 </p>
                 <p>
-                    Using the example above, the rules in this <i>IdentifierFactory</i> mean that, assuming that 
+                    Using the example above, the rules in this <i>RDBMS IdentifierFactory</i> mean that, assuming that 
                     the user doesnt specify any &lt;column&gt; elements :-
                 </p>
                 <ul>
@@ -105,15 +166,15 @@ class MyElement
                 </ul>
             </subsection>
 
-            <a name="jpa"/>
-            <subsection name="IdentifierFactory 'jpa'">
+            <a name="rdbms_jpa"/>
+            <subsection name="RDBMS IdentifierFactory 'jpa'">
                 <img src="../../images/jpa1.gif" border="0" alt=""/>
                 <p>
-                    The <i>IdentifierFactory</i> "jpa" aims at providing a naming policy consistent with the 
+                    The <i>RDBMS IdentifierFactory</i> "jpa" aims at providing a naming policy consistent with the 
                     "JPA" specification.
                 </p>
                 <p>
-                    Using the same example above, the rules in this <i>IdentifierFactory</i> mean that, assuming that 
+                    Using the same example above, the rules in this <i>RDBMS IdentifierFactory</i> mean that, assuming that 
                     the user doesnt specify any &lt;column&gt; elements :-
                 </p>
                 <ul>
@@ -133,11 +194,11 @@ class MyElement
                 </ul>
             </subsection>
 
-            <a name="jpox"/>
-            <subsection name="IdentifierFactory 'jpox'">
+            <a name="rdbms_jpox"/>
+            <subsection name="RDBMS IdentifierFactory 'jpox'">
                 <img src="../../images/nucleus_extension.gif" border="0" alt=""/>
                 <p>
-                    This <i>IdentifierFactory</i> exists for backward compatibility with JPOX 1.2.0.
+                    This <i>RDBMS IdentifierFactory</i> exists for backward compatibility with JPOX 1.2.0.
                     If you experience changes of schema identifiers when migrating from JPOX 1.2.0 to datanucleus,
                     you should give this one a try.
                 </p>
@@ -147,16 +208,16 @@ class MyElement
                 </p>
 			</subsection>
 
-            <subsection name="IdentifierFactory - Controlling the Case">
+            <subsection name="Controlling the Case">
                 <p>
                     The underlying datastore will define what case of identifiers are accepted. By default, DataNucleus will capitalise names
                     (assuming that the datastore supports it). You can however influence the case used for identifiers.
-                    This is specifiable with the PMF property <i>datanucleus.identifier.case</i>, having the following values
+                    This is specifiable with the persistence property <i>datanucleus.identifier.case</i>, having the following values
                 </p>
                 <ul>
                     <li>UpperCase: identifiers are in upper case</li>
                     <li>LowerCase: identifiers are in lower case</li>
-                    <li>PreserveCase: No case changes are made to the name of the identifier provided by the user (class name or jdo metadata).</li>
+                    <li>MixedCase: No case changes are made to the name of the identifier provided by the user (class name or metadata).</li>
                 </ul>
                 <p>
                     <b>Please be aware that some datastores only support UPPERCASE or lowercase identifiers and so setting this parameter 
