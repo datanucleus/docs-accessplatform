@@ -48,6 +48,10 @@ public class Person
                 You can add bean validation annotations to classes marked as @Entity, @MappedSuperclass or
                 @Embeddable.
             </p>
+            <p>
+                A further use of the Bean Validation annotations @Size(max=...) and @NotNull is that if you specify these
+                then you have no need to specify the equivalent JPA attributes since they equate to the same thing.
+            </p>
         </section>
     </body>
 </document>

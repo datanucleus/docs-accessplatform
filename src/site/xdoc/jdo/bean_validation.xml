@@ -47,6 +47,11 @@ public class Person
                 and that the "name" field is not null and between 3 and 80 characters. If it doesn't validate then
                 at persist/update an exception will be thrown.
             </p>
+            <p>
+                A further use of the Bean Validation annotations @Size(max=...) and @NotNull is that if you specify these
+                then you have no need to specify the equivalent JDO "length" and "allowsNull" attributes since they equate to
+                the same thing.
+            </p>
         </section>
     </body>
 </document>
