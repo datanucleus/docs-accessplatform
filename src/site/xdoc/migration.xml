@@ -25,6 +25,10 @@
                 </p>
                 <ul>
                     <li>Persistence property <b>datanucleus.identifier.case</b> value <i>PreserveCase</i> is now <b>MixedCase</b></li>
+                    <li>User mapping extensions are now not needed if there is a TypeConverter that does the conversion. Also the
+                        helper mapping classes ObjectAsStringMapping etc are now removed.</li>
+                    <li>DataNucleus now uses ASM v5 so should, in principle, be JDK1.8-ready (as well as backwards compatible). 
+                        Report any problems in the normal way</li>
                 </ul>
             </subsection>
 
