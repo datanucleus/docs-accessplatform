@@ -145,6 +145,7 @@ finally
                 <li>RDBMS : <a href="#pooling_rdbms_c3p0">C3P0</a></li>
                 <li>RDBMS : <a href="#pooling_rdbms_proxool">Proxool</a></li>
                 <li>RDBMS : <a href="#pooling_rdbms_bonecp">BoneCP</a></li>
+                <li>RDBMS : <a href="#pooling_rdbms_hikaricp">HikariCP</a></li>
                 <li>RDBMS : <a href="#pooling_rdbms_tomcat">Tomcat</a></li>
                 <li>RDBMS : <a href="#pooling_rdbms_manual">Manually creating a DataSource</a> for a 3rd party software package</li>
                 <li>RDBMS : <a href="http://www.datanucleus.org/documentation/extensions/rdbms_connection_pool.html">Custom Connection Pooling Plugins for RDBMS</a> 
@@ -323,6 +324,37 @@ datanucleus.connectionPool.minPoolSize=3
 
 # Pooling of PreparedStatements
 datanucleus.connectionPool.maxStatements=0</source>
+                <br/>
+            </subsection>
+
+            <a name="pooling_rdbms_hikaricp"/>
+            <subsection name="RDBMS : HikariCP">
+                <p>
+                    DataNucleus allows you to utilise a connection pool using HikariCP to efficiently manage the 
+                    connections to the datastore.
+                    <a href="https://github.com/brettwooldridge/HikariCP">HikariCP</a> is a third-party library providing
+                    connection pooling. This is accessed by specifying the persistence property 
+                    <b>datanucleus.connectionPoolingType</b>. To utilise this connection pooling we do this
+                </p>
+                <source>
+// Specify our persistence properties used for creating our PMF
+Properties props = new Properties();
+properties.setProperty("datanucleus.ConnectionDriverName","com.mysql.jdbc.Driver");
+properties.setProperty("datanucleus.ConnectionURL","jdbc:mysql://localhost/myDB");
+properties.setProperty("datanucleus.ConnectionUserName","login");
+properties.setProperty("datanucleus.ConnectionPassword","password");
+properties.setProperty("datanucleus.connectionPoolingType", "HikariCP");</source>
+                <p>
+                    So the <i>PMF</i> will use connection pooling using HikariCP. To do this you will
+                    need the <i>HikariCP</i> JAR (and SLF4J, javassist as required) to be in the CLASSPATH.
+                </p>
+                <p>
+                    You can also specify persistence properties to control the actual pooling.
+                    The currently supported properties for HikariCP are shown below
+                </p>
+                <source>
+# Pooling of Connections
+datanucleus.connectionPool.maxPoolSize=5</source>
                 <br/>
             </subsection>
 
