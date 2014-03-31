@@ -15,6 +15,7 @@
                 Whilst we aim to ultimately support all API features on all supported datastores, this isn't
                 currently possible. See below for a summary of what feature is supported on which datastore.
                 <!--b>Click on the datastore name in the column header to select it</b-->.
+                GAE is listed for reference even though Google currently do not have a version of their plugin that works with DataNucleus v4.x
             </p>
 
             <div id="features_table">
@@ -37,8 +38,6 @@
                         <img src="../images/datastore_cassandra.gif" border="0" alt=""/></a></th>
                     <th width="25"><a href="#" onclick="activateColumn('col_mongodb');return false;">
                         <img src="../images/datastore_mongodb.gif" border="0" alt=""/></a></th>
-                    <th width="25"><a href="#" onclick="activateColumn('col_gae');return false;">
-                        <img src="../images/datastore_gae.gif" border="0" alt=""/></a></th>
                     <th width="25"><a href="#" onclick="activateColumn('col_json');return false;">
                         <img src="../images/datastore_json.gif" border="0" alt=""/></a></th>
                     <th width="25"><a href="#" onclick="activateColumn('col_amazons3');return false;">
@@ -51,6 +50,8 @@
                         <img src="../images/datastore_neo4j.gif" border="0" alt=""/></a></th>
                     <th width="25"><a href="#" onclick="activateColumn('col_neodatis');return false;">
                         <img src="../images/datastore_neodatis.gif" border="0" alt=""/></a></th>
+                    <th width="25"><a href="#" onclick="activateColumn('col_gae');return false;">
+                        <img src="../images/datastore_gae.gif" border="0" alt=""/></a></th>
                 </tr>
                 <tr>
                     <td></td>
@@ -70,13 +71,13 @@
                     <td class="col_hbase"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_cassandra"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_mongodb"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
-                    <td class="col_gae"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_json"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_amazons3"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_googlestorage"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_ldap"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_neo4j"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_neodatis"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                    <td class="col_gae"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                 </tr>
                 <tr>
                     <td>Application Identity</td>
@@ -88,13 +89,13 @@
                     <td class="col_hbase"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_cassandra"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_mongodb"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
-                    <td class="col_gae"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_json"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_amazons3"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_googlestorage"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_ldap"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_neo4j"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_neodatis"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                    <td class="col_gae"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                 </tr>
                 <tr>
                     <td>Nondurable Identity <a href="#1">[1]</a></td>
@@ -106,13 +107,13 @@
                     <td class="col_hbase"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_cassandra"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_mongodb"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
-                    <td class="col_gae"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_json"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_amazons3"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_googlestorage"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_ldap"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_neo4j"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_neodatis"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                    <td class="col_gae"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                 </tr>
                 <tr>
                     <td>Composite Identity</td>
@@ -124,13 +125,13 @@
                     <td class="col_hbase"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_cassandra"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_mongodb"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
-                    <td class="col_gae"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_json"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_amazons3"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_googlestorage"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_ldap"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_neo4j"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_neodatis"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                    <td class="col_gae"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                 </tr>
                 <tr>
                     <td>Nontransactional</td>
@@ -142,13 +143,13 @@
                     <td class="col_hbase"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_cassandra"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_mongodb"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
-                    <td class="col_gae"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_json"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_amazons3"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_googlestorage"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_ldap"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_neo4j"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_neodatis"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                    <td class="col_gae"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                 </tr>
                 <tr>
                     <td>ACID Transactions</td>
@@ -160,13 +161,13 @@
                     <td class="col_hbase"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_cassandra"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_mongodb"><img src="../images/icon_warning_sml.gif" border="0" alt=""/></td>
-                    <td class="col_gae"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_json"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_amazons3"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_googlestorage"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_ldap"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_neo4j"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_neodatis"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                    <td class="col_gae"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                 </tr>
                 <tr>
                     <td>Versioned objects</td>
@@ -178,13 +179,13 @@
                     <td class="col_hbase"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_cassandra"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_mongodb"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
-                    <td class="col_gae"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_json"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_amazons3"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_googlestorage"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_ldap"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_neo4j"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_neodatis"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                    <td class="col_gae"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                 </tr>
                 <tr>
                     <td>Optimistic Checks</td>
@@ -196,13 +197,13 @@
                     <td class="col_hbase"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_cassandra"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_mongodb"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
-                    <td class="col_gae"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_json"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_amazons3"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_googlestorage"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_ldap"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_neo4j"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_neodatis"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                    <td class="col_gae"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                 </tr>
                 <tr>
                     <td>Fetch Plan control</td>
@@ -214,13 +215,13 @@
                     <td class="col_hbase"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_cassandra"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_mongodb"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
-                    <td class="col_gae"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_json"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_amazons3"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_googlestorage"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_ldap"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_neo4j"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_neodatis"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                    <td class="col_gae"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                 </tr>
                 <tr>
                     <td>Native Connection access (JDO)</td>
@@ -232,13 +233,13 @@
                     <td class="col_hbase"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_cassandra"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_mongodb"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
-                    <td class="col_gae"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_json"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_amazons3"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_googlestorage"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_ldap"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_neo4j"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_neodatis"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                    <td class="col_gae"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                 </tr>
                 <tr>
                     <td>Encryption of data <a href="#7">[7]</a></td>
@@ -250,13 +251,13 @@
                     <td class="col_hbase"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_cassandra"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_mongodb"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
-                    <td class="col_gae"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_json"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_amazons3"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_googlestorage"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_ldap"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_neo4j"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_neodatis"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                    <td class="col_gae"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                 </tr>
                 <tr>
                     <td>Backed object wrappers <a href="#2">[2]</a></td>
@@ -268,13 +269,13 @@
                     <td class="col_hbase"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_cassandra"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_mongodb"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
-                    <td class="col_gae"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_json"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_amazons3"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_googlestorage"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_ldap"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_neo4j"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_neodatis"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                    <td class="col_gae"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                 </tr>
                 <tr>
                     <td>Cascade Persist</td>
@@ -286,13 +287,13 @@
                     <td class="col_hbase"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_cassandra"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_mongodb"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
-                    <td class="col_gae"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_json"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_amazons3"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_googlestorage"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_ldap"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_neo4j"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_neodatis"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                    <td class="col_gae"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                 </tr>
                 <tr>
                     <td>Cascade Update</td>
@@ -304,13 +305,13 @@
                     <td class="col_hbase"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_cassandra"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_mongodb"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
-                    <td class="col_gae"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_json"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_amazons3"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_googlestorage"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_ldap"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_neo4j"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_neodatis"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                    <td class="col_gae"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                 </tr>
                 <tr>
                     <td>Cascade Delete</td>
@@ -322,13 +323,13 @@
                     <td class="col_hbase"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_cassandra"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_mongodb"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
-                    <td class="col_gae"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_json"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_amazons3"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_googlestorage"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_ldap"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_neo4j"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_neodatis"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                    <td class="col_gae"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                 </tr>
                 <tr>
                     <td>Schema Evolution - New fields <a href="#3">[3]</a></td>
@@ -340,13 +341,13 @@
                     <td class="col_hbase"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_cassandra"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_mongodb"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
-                    <td class="col_gae"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_json"><img src="../images/icon_warning_sml.gif" border="0" alt=""/></td>
                     <td class="col_amazons3"><img src="../images/icon_warning_sml.gif" border="0" alt=""/></td>
                     <td class="col_googlestorage"><img src="../images/icon_warning_sml.gif" border="0" alt=""/></td>
                     <td class="col_ldap"><img src="../images/icon_warning_sml.gif" border="0" alt=""/></td>
                     <td class="col_neo4j"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_neodatis"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                    <td class="col_gae"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                 </tr>
                 <tr>
                     <td></td>
@@ -366,13 +367,13 @@
                     <td class="col_hbase"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_cassandra"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_mongodb"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
-                    <td class="col_gae"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_json"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_amazons3"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_googlestorage"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_ldap"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_neo4j"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_neodatis"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                    <td class="col_gae"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                 </tr>
                 <tr>
                     <td>increment(JDO)/table(JPA)</td>
@@ -384,13 +385,13 @@
                     <td class="col_hbase"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_cassandra"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_mongodb"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
-                    <td class="col_gae"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_json"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_amazons3"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_googlestorage"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_ldap"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_neo4j"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_neodatis"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                    <td class="col_gae"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                 </tr>
                 <tr>
                     <td>identity(JDO/JPA)</td>
@@ -402,13 +403,13 @@
                     <td class="col_hbase"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_cassandra"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_mongodb"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
-                    <td class="col_gae"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_json"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_amazons3"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_googlestorage"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_ldap"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_neo4j"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_neodatis"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                    <td class="col_gae"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                 </tr>
                 <tr>
                     <td>sequence(JDO/JPA)</td>
@@ -420,13 +421,13 @@
                     <td class="col_hbase"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_cassandra"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_mongodb"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
-                    <td class="col_gae"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_json"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_amazons3"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_googlestorage"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_ldap"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_neo4j"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_neodatis"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                    <td class="col_gae"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                 </tr>
                 <tr>
                     <td>uuid-hex(JDO)</td>
@@ -438,13 +439,13 @@
                     <td class="col_hbase"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_cassandra"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_mongodb"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
-                    <td class="col_gae"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_json"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_amazons3"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_googlestorage"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_ldap"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_neo4j"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_neodatis"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                    <td class="col_gae"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                 </tr>
                 <tr>
                     <td>uuid-string(JDO)</td>
@@ -456,13 +457,13 @@
                     <td class="col_hbase"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_cassandra"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_mongodb"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
-                    <td class="col_gae"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_json"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_amazons3"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_googlestorage"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_ldap"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_neo4j"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_neodatis"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                    <td class="col_gae"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                 </tr>
                 <tr>
                     <td>uuid</td>
@@ -474,13 +475,13 @@
                     <td class="col_hbase"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_cassandra"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_mongodb"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
-                    <td class="col_gae"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_json"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_amazons3"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_googlestorage"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_ldap"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_neo4j"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_neodatis"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                    <td class="col_gae"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                 </tr>
                 <tr>
                     <td>timestamp</td>
@@ -492,13 +493,13 @@
                     <td class="col_hbase"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_cassandra"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_mongodb"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
-                    <td class="col_gae"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_json"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_amazons3"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_googlestorage"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_ldap"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_neo4j"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_neodatis"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                    <td class="col_gae"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                 </tr>
                 <tr>
                     <td>timestamp-value</td>
@@ -510,13 +511,13 @@
                     <td class="col_hbase"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_cassandra"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_mongodb"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
-                    <td class="col_gae"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_json"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_amazons3"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_googlestorage"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_ldap"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_neo4j"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_neodatis"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                    <td class="col_gae"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                 </tr>
                 <tr>
                     <td>max</td>
@@ -528,13 +529,13 @@
                     <td class="col_hbase"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_cassandra"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_mongodb"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
-                    <td class="col_gae"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_json"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_amazons3"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_googlestorage"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_ldap"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_neo4j"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_neodatis"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                    <td class="col_gae"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                 </tr>
                 <tr>
                     <td></td>
@@ -554,13 +555,13 @@
                     <td class="col_hbase"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_cassandra"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_mongodb"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
-                    <td class="col_gae"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_json"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_amazons3"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_googlestorage"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_ldap"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_neo4j"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_neodatis"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                    <td class="col_gae"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                 </tr>
                 <tr>
                     <td>Unique Keys</td>
@@ -572,13 +573,13 @@
                     <td class="col_hbase"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_cassandra"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_mongodb"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
-                    <td class="col_gae"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_json"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_amazons3"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_googlestorage"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_ldap"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_neo4j"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_neodatis"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                    <td class="col_gae"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                 </tr>
                 <tr>
                     <td>Foreign Keys</td>
@@ -590,13 +591,13 @@
                     <td class="col_hbase"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_cassandra"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_mongodb"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
-                    <td class="col_gae"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_json"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_amazons3"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_googlestorage"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_ldap"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_neo4j"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_neodatis"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                    <td class="col_gae"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                 </tr>
                 <tr>
                     <td>Primary Keys</td>
@@ -608,13 +609,13 @@
                     <td class="col_hbase"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_cassandra"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_mongodb"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
-                    <td class="col_gae"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_json"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_amazons3"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_googlestorage"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_ldap"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_neo4j"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_neodatis"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                    <td class="col_gae"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                 </tr>
                 <tr>
                     <td>Inheritance(complete-table) <a href="#4">[4]</a></td>
@@ -626,13 +627,13 @@
                     <td class="col_hbase"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_cassandra"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_mongodb"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
-                    <td class="col_gae"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_json"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_amazons3"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_googlestorage"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_ldap"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_neo4j"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_neodatis"><img src="../images/icon_warning_sml.gif" border="0" alt=""/></td>
+                    <td class="col_gae"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                 </tr>
                 <tr>
                     <td>Inheritance(new-table)</td>
@@ -644,13 +645,13 @@
                     <td class="col_hbase"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_cassandra"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_mongodb"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
-                    <td class="col_gae"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_json"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_amazons3"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_googlestorage"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_ldap"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_neo4j"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_neodatis"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                    <td class="col_gae"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                 </tr>
                 <tr>
                     <td>Inheritance(subclass-table)</td>
@@ -662,13 +663,13 @@
                     <td class="col_hbase"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_cassandra"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_mongodb"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
-                    <td class="col_gae"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_json"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_amazons3"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_googlestorage"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_ldap"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_neo4j"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_neodatis"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                    <td class="col_gae"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                 </tr>
                 <tr>
                     <td>Inheritance(superclass-table)</td>
@@ -680,13 +681,13 @@
                     <td class="col_hbase"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_cassandra"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_mongodb"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
-                    <td class="col_gae"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_json"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_amazons3"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_googlestorage"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_ldap"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_neo4j"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_neodatis"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                    <td class="col_gae"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                 </tr>
                 <tr>
                     <td>Discriminators</td>
@@ -698,13 +699,13 @@
                     <td class="col_hbase"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_cassandra"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_mongodb"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
-                    <td class="col_gae"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_json"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_amazons3"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_googlestorage"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_ldap"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_neo4j"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_neodatis"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                    <td class="col_gae"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                 </tr>
                 <tr>
                     <td>Secondary Tables</td>
@@ -716,13 +717,13 @@
                     <td class="col_hbase"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_cassandra"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_mongodb"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
-                    <td class="col_gae"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_json"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_amazons3"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_googlestorage"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_ldap"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_neo4j"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_neodatis"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                    <td class="col_gae"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                 </tr>
                 <tr>
                     <td>Join Tables</td>
@@ -734,13 +735,13 @@
                     <td class="col_hbase"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_cassandra"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_mongodb"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
-                    <td class="col_gae"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_json"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_amazons3"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_googlestorage"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_ldap"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_neo4j"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_neodatis"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                    <td class="col_gae"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                 </tr>
                 <tr>
                     <td>Embedded PC</td>
@@ -752,13 +753,13 @@
                     <td class="col_hbase"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_cassandra"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_mongodb"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
-                    <td class="col_gae"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_json"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_amazons3"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_googlestorage"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_ldap"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_neo4j"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_neodatis"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                    <td class="col_gae"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                 </tr>
                 <tr>
                     <td>Embedded Collection</td>
@@ -770,13 +771,13 @@
                     <td class="col_hbase"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_cassandra"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_mongodb"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
-                    <td class="col_gae"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_json"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_amazons3"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_googlestorage"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_ldap"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_neo4j"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_neodatis"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                    <td class="col_gae"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                 </tr>
                 <tr>
                     <td>Embedded Map</td>
@@ -788,13 +789,13 @@
                     <td class="col_hbase"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_cassandra"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_mongodb"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
-                    <td class="col_gae"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_json"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_amazons3"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_googlestorage"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_ldap"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_neo4j"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_neodatis"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                    <td class="col_gae"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                 </tr>
                 <tr>
                     <td>Embedded Array</td>
@@ -806,13 +807,13 @@
                     <td class="col_hbase"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_cassandra"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_mongodb"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
-                    <td class="col_gae"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_json"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_amazons3"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_googlestorage"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_ldap"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_neo4j"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_neodatis"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                    <td class="col_gae"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                 </tr>
                 <tr>
                     <td>Serialised PC</td>
@@ -824,13 +825,13 @@
                     <td class="col_hbase"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_cassandra"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_mongodb"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
-                    <td class="col_gae"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_json"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_amazons3"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_googlestorage"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_ldap"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_neo4j"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_neodatis"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                    <td class="col_gae"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                 </tr>
                 <tr>
                     <td>Serialised Collection</td>
@@ -842,13 +843,13 @@
                     <td class="col_hbase"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_cassandra"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_mongodb"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
-                    <td class="col_gae"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_json"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_amazons3"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_googlestorage"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_ldap"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_neo4j"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_neodatis"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                    <td class="col_gae"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                 </tr>
                 <tr>
                     <td>Serialised Map</td>
@@ -860,13 +861,13 @@
                     <td class="col_hbase"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_cassandra"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_mongodb"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
-                    <td class="col_gae"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_json"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_amazons3"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_googlestorage"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_ldap"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_neo4j"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_neodatis"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                    <td class="col_gae"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                 </tr>
                 <tr>
                     <td>1-1</td>
@@ -878,13 +879,13 @@
                     <td class="col_hbase"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_cassandra"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_mongodb"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
-                    <td class="col_gae"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_json"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_amazons3"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_googlestorage"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_ldap"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_neo4j"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_neodatis"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                    <td class="col_gae"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                 </tr>
                 <tr>
                     <td>1-N</td>
@@ -896,13 +897,13 @@
                     <td class="col_hbase"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_cassandra"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_mongodb"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
-                    <td class="col_gae"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_json"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_amazons3"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_googlestorage"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_ldap"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_neo4j"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_neodatis"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                    <td class="col_gae"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                 </tr>
                 <tr>
                     <td>M-N</td>
@@ -914,13 +915,13 @@
                     <td class="col_hbase"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_cassandra"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_mongodb"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
-                    <td class="col_gae"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_json"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_amazons3"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_googlestorage"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_ldap"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_neo4j"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_neodatis"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                    <td class="col_gae"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                 </tr>
                 <tr>
                     <td>SchemaTool</td>
@@ -932,13 +933,13 @@
                     <td class="col_hbase"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_cassandra"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_mongodb"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
-                    <td class="col_gae"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_json"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_amazons3"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_googlestorage"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_ldap"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_neo4j"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_neodatis"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                    <td class="col_gae"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                 </tr>
                 <tr>
                     <td>Multitenancy by discriminator</td>
@@ -950,13 +951,13 @@
                     <td class="col_hbase"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_cassandra"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_mongodb"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
-                    <td class="col_gae"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_json"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_amazons3"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_googlestorage"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_ldap"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_neo4j"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_neodatis"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                    <td class="col_gae"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                 </tr>
                 <tr>
                     <td></td>
@@ -976,13 +977,13 @@
                     <td class="col_hbase"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_cassandra"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_mongodb"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
-                    <td class="col_gae"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_json"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_amazons3"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_googlestorage"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_ldap"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_neo4j"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_neodatis"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                    <td class="col_gae"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                 </tr>
                 <tr>
                     <td>java.lang.String etc</td>
@@ -994,13 +995,13 @@
                     <td class="col_hbase"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_cassandra"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_mongodb"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
-                    <td class="col_gae"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_json"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_amazons3"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_googlestorage"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_ldap"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_neo4j"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_neodatis"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                    <td class="col_gae"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                 </tr>
                 <tr>
                     <td>java.lang.Enum</td>
@@ -1012,13 +1013,13 @@
                     <td class="col_hbase"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_cassandra"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_mongodb"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
-                    <td class="col_gae"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_json"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_amazons3"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_googlestorage"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_ldap"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_neo4j"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_neodatis"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                    <td class="col_gae"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                 </tr>
                 <tr>
                     <td>java.util.Date etc</td>
@@ -1030,13 +1031,13 @@
                     <td class="col_hbase"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_cassandra"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_mongodb"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
-                    <td class="col_gae"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_json"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_amazons3"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_googlestorage"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_ldap"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_neo4j"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_neodatis"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                    <td class="col_gae"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                 </tr>
                 <tr>
                     <td>java.lang.Object</td>
@@ -1048,13 +1049,13 @@
                     <td class="col_hbase"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_cassandra"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_mongodb"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
-                    <td class="col_gae"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_json"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_amazons3"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_googlestorage"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_ldap"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_neo4j"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_neodatis"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                    <td class="col_gae"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                 </tr>
                 <tr>
                     <td>java.io.Serializable</td>
@@ -1066,13 +1067,13 @@
                     <td class="col_hbase"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_cassandra"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_mongodb"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
-                    <td class="col_gae"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_json"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_amazons3"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_googlestorage"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_ldap"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_neo4j"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_neodatis"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                    <td class="col_gae"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                 </tr>
                 <tr>
                     <td>java.util.Collection</td>
@@ -1084,13 +1085,13 @@
                     <td class="col_hbase"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_cassandra"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_mongodb"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
-                    <td class="col_gae"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_json"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_amazons3"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_googlestorage"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_ldap"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_neo4j"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_neodatis"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                    <td class="col_gae"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                 </tr>
                 <tr>
                     <td>java.util.Map</td>
@@ -1102,13 +1103,13 @@
                     <td class="col_hbase"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_cassandra"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_mongodb"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
-                    <td class="col_gae"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_json"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_amazons3"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_googlestorage"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_ldap"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_neo4j"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_neodatis"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                    <td class="col_gae"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                 </tr>
                 <tr>
                     <td>Arrays</td>
@@ -1120,13 +1121,13 @@
                     <td class="col_hbase"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_cassandra"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_mongodb"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
-                    <td class="col_gae"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_json"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_amazons3"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_googlestorage"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_ldap"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_neo4j"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_neodatis"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                    <td class="col_gae"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                 </tr>
                 <tr>
                     <td>Interfaces</td>
@@ -1138,13 +1139,13 @@
                     <td class="col_hbase"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_cassandra"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_mongodb"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
-                    <td class="col_gae"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_json"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_amazons3"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_googlestorage"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_ldap"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_neo4j"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_neodatis"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                    <td class="col_gae"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                 </tr>
                 <tr>
                     <td>Type Converters</td>
@@ -1156,13 +1157,13 @@
                     <td class="col_hbase"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_cassandra"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_mongodb"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
-                    <td class="col_gae"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_json"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_amazons3"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_googlestorage"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_ldap"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_neo4j"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_neodatis"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                    <td class="col_gae"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                 </tr>
                 <tr>
                     <td>Type Converter : auto-apply</td>
@@ -1174,13 +1175,13 @@
                     <td class="col_hbase"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_cassandra"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_mongodb"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
-                    <td class="col_gae"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_json"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_amazons3"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_googlestorage"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_ldap"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_neo4j"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_neodatis"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                    <td class="col_gae"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                 </tr>
                 <tr>
                     <td>Type Converters : multicolumn</td>
@@ -1192,13 +1193,13 @@
                     <td class="col_hbase"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_cassandra"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_mongodb"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
-                    <td class="col_gae"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_json"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_amazons3"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_googlestorage"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_ldap"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_neo4j"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_neodatis"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                    <td class="col_gae"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                 </tr>
                 <tr>
                     <td></td>
@@ -1218,13 +1219,13 @@
                     <td class="col_hbase"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_cassandra"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_mongodb"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
-                    <td class="col_gae"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_json"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_amazons3"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_googlestorage"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_ldap"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_neo4j"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_neodatis"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                    <td class="col_gae"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                 </tr>
                 <tr>
                     <td>JDOQL evaluated in datastore <a href="#5">[5]</a></td>
@@ -1236,13 +1237,13 @@
                     <td class="col_hbase"><img src="../images/icon_warning_sml.gif" border="0" alt=""/></td>
                     <td class="col_cassandra"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_mongodb"><img src="../images/icon_warning_sml.gif" border="0" alt=""/></td>
-                    <td class="col_gae"><img src="../images/icon_warning_sml.gif" border="0" alt=""/></td>
                     <td class="col_json"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_amazons3"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_googlestorage"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_ldap"><img src="../images/icon_warning_sml.gif" border="0" alt=""/></td>
                     <td class="col_neo4j"><img src="../images/icon_warning_sml.gif" border="0" alt=""/></td>
                     <td class="col_neodatis"><img src="../images/icon_warning_sml.gif" border="0" alt=""/></td>
+                    <td class="col_gae"><img src="../images/icon_warning_sml.gif" border="0" alt=""/></td>
                 </tr>
                 <tr>
                     <td>JDOQL of candidate interface</td>
@@ -1254,13 +1255,13 @@
                     <td class="col_hbase"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_cassandra"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_mongodb"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
-                    <td class="col_gae"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_json"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_amazons3"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_googlestorage"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_ldap"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_neo4j"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_neodatis"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                    <td class="col_gae"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                 </tr>
                 <tr>
                     <td>JDOQL Polymorphic queries</td>
@@ -1272,13 +1273,13 @@
                     <td class="col_hbase"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_cassandra"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_mongodb"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
-                    <td class="col_gae"><img src="../images/icon_warning_sml.gif" border="0" alt=""/></td>
                     <td class="col_json"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_amazons3"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_googlestorage"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_ldap"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_neo4j"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_neodatis"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                    <td class="col_gae"><img src="../images/icon_warning_sml.gif" border="0" alt=""/></td>
                 </tr>
                 <tr>
                     <td>JPQL evaluated in memory</td>
@@ -1290,13 +1291,13 @@
                     <td class="col_hbase"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_cassandra"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_mongodb"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
-                    <td class="col_gae"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_json"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_amazons3"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_googlestorage"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_ldap"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_neo4j"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td class="col_neodatis"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                    <td class="col_gae"><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                 </tr>
                 <tr>
                     <td>JPQL evaluated in datastore <a href="#5">[5]</a></td>
@@ -1308,13 +1309,13 @@
                     <td class="col_hbase"><img src="../images/icon_warning_sml.gif" border="0" alt=""/></td>
                     <td class="col_cassandra"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_mongodb"><img src="../images/icon_warning_sml.gif" border="0" alt=""/></td>
-                    <td class="col_gae"><img src="../images/icon_warning_sml.gif" border="0" alt=""/></td>
                     <td class="col_json"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_amazons3"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_googlestorage"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_ldap"><img src="../images/icon_warning_sml.gif" border="0" alt=""/></td>
                     <td class="col_neo4j"><img src="../images/icon_warning_sml.gif" border="0" alt=""/></td>
                     <td class="col_neodatis"><img src="../images/icon_warning_sml.gif" border="0" alt=""/></td>
+                    <td class="col_gae"><img src="../images/icon_warning_sml.gif" border="0" alt=""/></td>
                 </tr>
                 <tr>
                     <td>SQL <a href="#6">[6]</a></td>
@@ -1326,13 +1327,13 @@
                     <td class="col_hbase"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_cassandra"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_mongodb"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
-                    <td class="col_gae"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_json"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_amazons3"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_googlestorage"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_ldap"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_neo4j"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_neodatis"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                    <td class="col_gae"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                 </tr>
                 <tr>
                     <td>Stored Procedures</td>
@@ -1344,13 +1345,13 @@
                     <td class="col_hbase"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_cassandra"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_mongodb"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
-                    <td class="col_gae"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_json"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_amazons3"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_googlestorage"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_ldap"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_neo4j"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     <td class="col_neodatis"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                    <td class="col_gae"><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                 </tr>
             </table>
             </div>
