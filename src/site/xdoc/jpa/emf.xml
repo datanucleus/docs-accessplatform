@@ -337,9 +337,10 @@ EntityManagerFactory emf = new JPAEntityManagerFactory(pumd, null);]]></source>
                         <td>Alias for <a href="../persistence_properties.html#schema">datanucleus.generateSchema.scripts.drop.source</a></td>
                     </tr>
                     <tr>
-                        <td>javax.persistence.sql.load-script-source</td>
+                        <td>javax.persistence.sql-load-script-source</td>
                         <td>{filename}</td>
-                        <td>Alias for <a href="../persistence_properties.html#schema">datanucleus.generateSchema.scripts.load</a></td>
+                        <td>Alias for <a href="../persistence_properties.html#schema">datanucleus.generateSchema.scripts.load</a>. Note that
+                            all versions up to and including 4.0.0.m2 used <i>javax.persistence.sql.load-script-source</i> as the property name</td>
                     </tr>
                 </table>
                 <br/>
