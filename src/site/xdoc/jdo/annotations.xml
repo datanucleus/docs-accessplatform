@@ -265,7 +265,7 @@
             <subsection name="@PersistenceCapable">
                 <p>
                     This annotation is used when you want to mark a class as persistent.
-                    It equates to the &lt;class&gt; MetaData element (though with only some of its attributes).
+                    It equates to the &lt;class&gt; XML element (though with only some of its attributes).
                     Specified on the <b>class</b>.
                 </p>
                 <table>
@@ -637,7 +637,7 @@ public class MyClass
             <subsection name="@PrimaryKey">
                 <p>
                     Annotation used to define the primary key constraint for a class.
-                    Maps across to the &lt;primary-key&gt; MetaData element. Specified on the <b>class</b>.
+                    Maps across to the &lt;primary-key&gt; XML element. Specified on the <b>class</b>.
                 </p>
                 <table>
                     <tr>
@@ -713,7 +713,7 @@ public class MyClass
             <subsection name="@FetchPlan">
                 <p>
                     Annotation used to define a fetch plan
-                    Is equivalent to the &lt;fetch-plan&gt; metadata element.
+                    Is equivalent to the &lt;fetch-plan&gt; XML element.
                     Specified on the <b>class</b>. Used by named queries
                 </p>
                 <table>
@@ -805,7 +805,7 @@ public class MyClass
             <subsection name="@FetchGroup">
                 <p>
                     Annotation used to define a fetch group.
-                    Is equivalent to the &lt;fetch-group&gt; metadata element.
+                    Is equivalent to the &lt;fetch-group&gt; XML element.
                     Specified on the <b>class</b>.
                 </p>
                 <table>
@@ -855,7 +855,7 @@ public class MyClass
             <subsection name="@Sequence">
                 <p>
                     Annotation used to define a sequence generator.
-                    Is equivalent to the &lt;sequence&gt; metadata element.
+                    Is equivalent to the &lt;sequence&gt; XML element.
                     Specified on the <b>class</b>.
                 </p>
                 <table>
@@ -955,7 +955,7 @@ public class Person
             <subsection name="@Query">
                 <p>
                     Annotation used to define a named query.
-                    Is equivalent to the &lt;query&gt; metadata element.
+                    Is equivalent to the &lt;query&gt; XML element.
                     Specified on the <b>class</b>.
                 </p>
                 <table>
@@ -1067,7 +1067,7 @@ public class Person
                 <p>
                     Annotation used to define an index for the class as a whole typically being a composite index across
                     multiple columns or fields/properties. 
-                    Is equivalent to the &lt;index&gt; metadata element when specified under class.
+                    Is equivalent to the &lt;index&gt; XML element when specified under class.
                     Specified on the <b>class</b>.
                 </p>
                 <table>
@@ -1163,7 +1163,7 @@ public class Person
                 <p>
                     Annotation used to define a unique constraints for the class as a whole typically being a composite constraint across
                     multiple columns or fields/properties. 
-                    Is equivalent to the &lt;unique&gt; metadata element when specified under class.
+                    Is equivalent to the &lt;unique&gt; XML element when specified under class.
                     Specified on the <b>class</b>.
                 </p>
                 <table>
@@ -1443,7 +1443,7 @@ public class MyClass
             <subsection name="@Persistent">
                 <p>
                     Annotation used to define the fields/properties to be persisted.
-                    Is equivalent to the &lt;field&gt; and &lt;property&gt; metadata elements.
+                    Is equivalent to the &lt;field&gt; and &lt;property&gt; XML elements.
                     Specified on the <b>field/method</b>.
                 </p>
                 <table>
@@ -1757,7 +1757,7 @@ public class MyClass
             <subsection name="@Element">
                 <p>
                     Annotation used to define the element for any collection/array to be persisted.
-                    Maps across to the &lt;collection&gt;, &lt;array&gt; and &lt;element&gt; MetaData elements.
+                    Maps across to the &lt;collection&gt;, &lt;array&gt; and &lt;element&gt; XML elements.
                     Specified on the <b>field/method</b>.
                 </p>
                 <table>
@@ -1893,7 +1893,7 @@ public class MyClass
             <subsection name="@Order">
                 <p>
                     Annotation used to define the ordering of an order-based Collection/array to be persisted.
-                    Maps across to the &lt;order&gt; MetaData element.
+                    Maps across to the &lt;order&gt; XML element.
                     Specified on the <b>field/method</b>.
                 </p>
                 <table>
@@ -1945,7 +1945,7 @@ public class MyClass
             <subsection name="@Key">
                 <p>
                     Annotation used to define the key for any map to be persisted.
-                    Maps across to the &lt;map&gt; and &lt;key&gt; MetaData elements.
+                    Maps across to the &lt;map&gt; and &lt;key&gt; XML elements.
                     Specified on the <b>field/method</b>.
                 </p>
                 <table>
@@ -2080,7 +2080,7 @@ public class MyClass
             <subsection name="@Value">
                 <p>
                     Annotation used to define the value for any map to be persisted.
-                    Maps across to the &lt;map&gt; and &lt;value&gt; MetaData elements.
+                    Maps across to the &lt;map&gt; and &lt;value&gt; XML elements.
                     Specified on the <b>field/method</b>.
                 </p>
                 <table>
@@ -2316,7 +2316,7 @@ public class MyClass
             <subsection name="@Embedded">
                 <p>
                     Annotation used to define that the field contents is embedded into the same table as this field
-                    Maps across to the &lt;embedded&gt; MetaData element.
+                    Maps across to the &lt;embedded&gt; XML element.
                     Specified on the <b>field/method</b>.
                 </p>
                 <table>
@@ -2416,7 +2416,7 @@ public class MyClass
             <subsection name="@Column">
                 <p>
                     Annotation used to define that the colum where a field is persisted.
-                    Is equivalent to the &lt;column&gt; metadata element when specified under field.
+                    Is equivalent to the &lt;column&gt; XML element when specified under field.
                     Specified on the <b>field/method</b> (and within other annotations).
                 </p>
                 <table>
@@ -2519,7 +2519,7 @@ public class MyClass
             <subsection name="@Index">
                 <p>
                     Annotation used to define that this field is indexed. 
-                    Is equivalent to the &lt;index&gt; metadata element when specified under field.
+                    Is equivalent to the &lt;index&gt; XML element when specified under field.
                     Specified on the <b>field/method</b>.
                 </p>
                 <table>
@@ -2565,7 +2565,7 @@ public class MyClass
             <subsection name="@Unique">
                 <p>
                     Annotation used to define that this field has a unique constraint.
-                    Is equivalent to the &lt;unique&gt; metadata element when specified under field.
+                    Is equivalent to the &lt;unique&gt; XML element when specified under field.
                     Specified on the <b>field/method</b>.
                 </p>
                 <table>
@@ -2607,7 +2607,7 @@ public class MyClass
             <subsection name="@ForeignKey">
                 <p>
                     Annotation used to define the foreign key for a relationship field.
-                    Is equivalent to the &lt;foreign-key&gt; metadata element when specified under field.
+                    Is equivalent to the &lt;foreign-key&gt; XML element when specified under field.
                     Specified on the <b>field/method</b>.
                 </p>
                 <table>
@@ -2699,7 +2699,7 @@ public class Person
             <subsection name="@Extension">
                 <p>
                     Annotation used to define an extension specific to a particular JDO implementation.
-                    Is equivalent to the &lt;extension&gt; metadata element.
+                    Is equivalent to the &lt;extension&gt; XML element.
                     Specified on the <b>class</b> or <b>field</b>.
                 </p>
                 <table>
