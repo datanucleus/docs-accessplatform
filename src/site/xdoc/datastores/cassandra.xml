@@ -37,6 +37,8 @@
                 <li>Cassandra doesn't use transactions, so any JDO/JPA transaction operation is a no-op (i.e will be ignored).</li>
                 <li>This uses Cassandra 2.x (and CQL v3.x), not Thrift (like the previous unofficial attempts at a datanucleus-cassandra plugin used)</li>
                 <li>You need to specify the "schema" (<i>datanucleus.mapping.Schema</i>)</li>
+                <li>Queries are evaluated in-datastore when they only have (indexed) members and literals and using the operators ==, !=, &gt;, &gt;=, &lt;, &lt;=, &amp;&amp;, ||.</li>
+                <li>You can also use CQL and get the results back as List&lt;Object[]&gt;</li>
             </ul>
 
         </section>
