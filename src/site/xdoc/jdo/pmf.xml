@@ -183,27 +183,14 @@ PersistenceManagerFactory pmf = JDOHelper.getPersistenceManagerFactory("myPersis
                         <td>Alias for <a href="../persistence_properties.html#RestoreValues">datanucleus.RestoreValues</a></td>
                     </tr>
                     <tr>
-                        <td>javax.jdo.option.Mapping</td>
-                        <td></td>
-                        <td>Alias for <a href="../persistence_properties.html#Mapping">datanucleus.Mapping</a>
-                            <i>RDBMS datastores only</i></td>
-                    </tr>
-                    <tr>
-                        <td>javax.jdo.mapping.Catalog</td>
-                        <td></td>
-                        <td>Alias for <a href="../persistence_properties.html#Catalog">datanucleus.Catalog</a>
-                            <i>RDBMS datastores only</i></td>
-                    </tr>
-                    <tr>
-                        <td>javax.jdo.mapping.Schema</td>
-                        <td></td>
-                        <td>Alias for <a href="../persistence_properties.html#Schema">datanucleus.Schema</a>
-                            <i>RDBMS datastores only</i></td>
-                    </tr>
-                    <tr>
                         <td>javax.jdo.option.DetachAllOnCommit</td>
                         <td>true | <b>false</b></td>
                         <td>Alias for <a href="../persistence_properties.html#DetachAllOnCommit">datanucleus.DetachAllOnCommit</a></td>
+                    </tr>
+                    <tr>
+                        <td>javax.jdo.option.CopyOnAttach</td>
+                        <td><b>true</b> | false</td>
+                        <td>Alias for <a href="../persistence_properties.html#CopyOnAttach">datanucleus.CopyOnAttach</a></td>
                     </tr>
                     <tr>
                         <td>javax.jdo.option.TransactionType</td>
@@ -226,11 +213,6 @@ PersistenceManagerFactory pmf = JDOHelper.getPersistenceManagerFactory("myPersis
                         <td>Name of the named PMF to use. Refers to a PMF defined in "META-INF/jdoconfig.xml".</td>
                     </tr>
                     <tr>
-                        <td>javax.jdo.option.CopyOnAttach</td>
-                        <td><b>true</b> | false</td>
-                        <td>Alias for <a href="../persistence_properties.html#CopyOnAttach">datanucleus.CopyOnAttach</a></td>
-                    </tr>
-                    <tr>
                         <td>javax.jdo.option.ReadOnly</td>
                         <td>true | <b>false</b></td>
                         <td>Alias for <a href="../persistence_properties.html#ReadOnlyDatastore">datanucleus.readOnlyDatastore</a></td>
@@ -249,6 +231,24 @@ PersistenceManagerFactory pmf = JDOHelper.getPersistenceManagerFactory("myPersis
                         <td>javax.jdo.option.DatastoreWriteTimeoutMillis</td>
                         <td></td>
                         <td>Alias for <a href="../persistence_properties.html#DatastoreWriteTimeoutMillis">datanucleus.datastoreWriteTimeout</a></td>
+                    </tr>
+                    <tr>
+                        <td>javax.jdo.option.Mapping</td>
+                        <td></td>
+                        <td>Alias for <a href="../persistence_properties.html#Mapping">datanucleus.Mapping</a>
+                            <i>Only for datastores with a "schema"</i></td>
+                    </tr>
+                    <tr>
+                        <td>javax.jdo.mapping.Catalog</td>
+                        <td></td>
+                        <td>Alias for <a href="../persistence_properties.html#Catalog">datanucleus.Catalog</a>
+                            <i>Only for datastores with a "schema"</i></td>
+                    </tr>
+                    <tr>
+                        <td>javax.jdo.mapping.Schema</td>
+                        <td></td>
+                        <td>Alias for <a href="../persistence_properties.html#Schema">datanucleus.Schema</a>
+                            <i>Only for datastores with a "schema"</i></td>
                     </tr>
                 </table>
                 <br/>
