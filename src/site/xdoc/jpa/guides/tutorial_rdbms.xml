@@ -231,7 +231,6 @@ target/classes/org/datanucleus/samples/jpa/tutorial/Product.class
 
 [when using Ant]
 lib/persistence-api.jar
-lib/jdo-api.jar
 lib/datanucleus-core.jar
 lib/datanucleus-api-jpa.jar</source>
 				<p>
@@ -258,13 +257,13 @@ mvn datanucleus:enhance
 
 Manually on Linux/Unix :
 java -cp target/classes:lib/datanucleus-core.jar:
-         lib/datanucleus-api-jpa.jar:lib/persistence-api.jar;lib/jdo-api.jar
+         lib/datanucleus-api-jpa.jar:lib/persistence-api.jar
      org.datanucleus.enhancer.DataNucleusEnhancer 
      -api JPA -pu Tutorial
 
 Manually on Windows :
 java -cp target\classes;lib\datanucleus-core.jar;
-         lib\datanucleus-api-jpa.jar;lib\persistence-api.jar;lib\jdo-api.jar
+         lib\datanucleus-api-jpa.jar;lib\persistence-api.jar
      org.datanucleus.enhancer.DataNucleusEnhancer 
      -api JPA -pu Tutorial
 
@@ -400,7 +399,6 @@ finally
                     <li>The "persistence.xml" file (stored under META-INF/)</li>
                     <li>Any ORM MetaData files for your persistable classes</li>
                     <li>Any JDBC driver classes needed for accessing your datastore</li>
-                    <li>The JDO API JAR (defining the JDO bytecode enhancement contract)</li>
                     <li>The JPA API JAR (defining the JPA interface)</li>
                     <li>The <b>DataNucleus Core</b>, <b>DataNucleus JPA API</b> and <b>DataNucleus RDBMS</b> JARs</li>
                 </ul>
@@ -420,13 +418,13 @@ mvn exec:java
 
 
 Manually on Linux/Unix :
-java -cp lib/persistence-api.jar:lib/jdo-api.jar:lib/datanucleus-core.jar:lib/datanucleus-rdbms.jar:
+java -cp lib/persistence-api.jar:lib/datanucleus-core.jar:lib/datanucleus-rdbms.jar:
          lib/datanucleus-api-jpa.jar:lib/{jdbc-driver}.jar:target/classes/:. 
      org.datanucleus.samples.jpa.tutorial.Main
 
 
 Manually on Windows :
-java -cp lib\persistence-api.jar;lib\jdo-api.jar;lib\datanucleus-core.jar;lib\datanucleus-rdbms.jar;
+java -cp lib\persistence-api.jar;lib\datanucleus-core.jar;lib\datanucleus-rdbms.jar;
          lib\datanucleus-api-jpa.jar;lib\{jdbc-driver}.jar;target\classes\;.
      org.datanucleus.samples.jpa.tutorial.Main
 
@@ -569,13 +567,13 @@ mvn datanucleus:schema-create
 
 
 Manually on Linux/Unix :
-java -cp target/classes:lib/jdo-api.jar:lib/persistence-api.jar:lib/datanucleus-core.jar:
+java -cp target/classes:lib/persistence-api.jar:lib/datanucleus-core.jar:
          lib/datanucleus-rdbms.jar:lib/datanucleus-api-jpa.jar:lib/{jdbc_driver.jar}
      org.datanucleus.store.schema.SchemaTool
      -create -api JPA -pu Tutorial
 
 Manually on Windows :
-java -cp target\classes;lib\jdo-api.jar;lib\persistence-api.jar;lib\datanucleus-core.jar;
+java -cp target\classes;lib\persistence-api.jar;lib\datanucleus-core.jar;
          lib\datanucleus-rdbms.jar;lib\datanucleus-api-jpa.jar;lib\{jdbc_driver.jar}
      org.datanucleus.store.schema.SchemaTool
      -create -api JPA -pu Tutorial
