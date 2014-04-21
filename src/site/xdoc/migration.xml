@@ -9,14 +9,23 @@
     <body>
         <section name="AccessPlatform : Migration between versions">
             <p>
-                This version of DataNucleus AccessPlatform builds on the 3.3 releases and includes significant refactoring to the
-                internal APIs to allow future flexibility.
-                All releases are checked regularly against the JDO/JPA TCKs, meaning that DataNucleus is 
-                always stable in terms of functionality.
-                Occasionally, due to unknown bugs, or due to new functionality being introduced we need to 
-                change some aspects of DataNucleus. As a result sometimes users will have to make some 
-                changes to move between versions of DataNucleus. We aim to keep this to a minimum.
+                This version of DataNucleus AccessPlatform builds on the 3.3 releases and includes significant refactoring to the internal APIs to allow future flexibility.
+                All releases are checked regularly against the JDO/JPA TCKs, meaning that DataNucleus is always stable in terms of functionality.
+                Occasionally, due to unknown bugs, or due to new functionality being introduced we need to change some aspects of DataNucleus. 
+                As a result sometimes users will have to make some changes to move between versions of DataNucleus. We aim to keep this to a minimum.
             </p>
+
+            <a name="4_0_0_M3_FROM_4_0_0_M2"/>
+            <subsection name="Migration from 4.0.0.M2 to 4.0.0.M3">
+                <p>
+                    Migrating will require the following changes
+                </p>
+                <ul>
+                    <li>The EclipsePluginRegistry is now removed, and anyone using OSGi should use OSGiPluginRegistry. Should this not provide for your requirements
+                        the EclipsePluginRegistry class is in DataNucleus GitHub for earlier releases so you could simply include it.</li>
+                    <li>The bytecode enhancement contract has changed, so you should re-enhance any classes for use with this version of DataNucleus</li>
+                </ul>
+            </subsection>
 
             <a name="4_0_0_M2_FROM_4_0_0_M1"/>
             <subsection name="Migration from 4.0.0.M1 to 4.0.0.M2">

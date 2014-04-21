@@ -31,12 +31,9 @@
                     when trying to load its classes.</li>
                 <li>Use <i>jdo-api.jar</i> v3.0.1 or later since those are OSGi-enabled</li>
                 <li>The Geronimo "jpa" jar that is included in the DataNucleus distribution is OSGi enabled.</li>
-                <li>When using DataNucleus in an Eclipse Equinox OSGi environment set the persistence property
-                    <b>datanucleus.plugin.pluginRegistryClassName</b> as <i>org.datanucleus.plugin.EclipsePluginRegistry</i></li>
-                <li>When using DataNucleus in other OSGi environments set the persistence property
+                <li>When using DataNucleus in an OSGi environments set the persistence property
                     <b>datanucleus.plugin.pluginRegistryClassName</b> to <i>org.datanucleus.plugin.OSGiPluginRegistry</i></li>
-                <li>If you redeploy a JDO-enabled OSGi application, likely you will need to <i>refresh</i> the javax.jdo and maybe
-                    other bundles.</li>
+                <li>If you redeploy a JDO-enabled OSGi application, likely you will need to <i>refresh</i> the javax.jdo and maybe other bundles.</li>
             </ul>
         </section>
     </body>

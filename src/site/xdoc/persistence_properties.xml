@@ -1126,13 +1126,9 @@
                     </tr>
                     <tr>
                         <td width="120">Description</td>
-                        <td>Name of a class that acts as registry of plug-ins.
-                            When used outside of OSGi this will be auto set to
-                            <i>org.datanucleus.plugin.NonManagedPluginRegistry</i>.
-                            If used within an Eclipse OSGi environment it will auto set this to
-                            <i>org.datanucleus.plugin.EclipsePluginRegistry</i>. 
-                            If you are within a non-Eclipse OSGi environment you can set this to 
-                            <i>org.datanucleus.plugin.OSGiPluginRegistry</i></td>
+                        <td>Name of a class that acts as registry for plug-ins.
+                            This defaults to <i>org.datanucleus.plugin.NonManagedPluginRegistry</i> (for when not using OSGi).
+                            If you are within an OSGi environment you can set this to  <i>org.datanucleus.plugin.OSGiPluginRegistry</i></td>
                     </tr>
                     <tr>
                         <td>Range of Values</td>
