@@ -14,6 +14,8 @@
             </p>
             <ul>
                 <li>Upgrade to ASM v5 to allow for Java 1.8 bytecode changes</li>
+                <li>Changed the bytecode enhancement contract to use an internal definition rather than the JDO contract</li>
+                <li>JPA : no longer needs to have <i>jdo-api.jar</i> present</li>
                 <li>Cassandra : support for Cassandra 1.2+</li>
                 <li>Support for multicolumn TypeConverters (used by RDBMS, Cassandra)</li>
                 <li>SchemaTool : support for create/delete of a schema (where the datastore supports it)</li>
