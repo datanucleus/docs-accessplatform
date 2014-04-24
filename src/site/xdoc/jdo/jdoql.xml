@@ -179,6 +179,14 @@ List<ComputerPeripheral> results = (List<ComputerPeripheral>)q.execute();]]></so
                     Where you are using "public static final" fields you can either fully-qualify the class name
                     or you can include it in the "imports" section of the query (see later).
                 </p>
+                <p>
+                    <b>An important thing to remember with JDOQL is that you do not do explicit joins. You instead use the fields/properties
+                    and navigate to the object you want to make use of in your query</b>. With 1-1/N-1 relations this is simply a reference to
+                    the field/property, and with 1-N/M-N relations you would use something like
+                </p>
+                <source><![CDATA[containerField.contains(elemVar)]]></source>
+                <p>
+                    and thereafter refer to <i>elemVar</i> for the element in the collection.
                 <br/>
             </subsection>
 
