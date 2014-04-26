@@ -523,7 +523,6 @@ lib/log4j.jar                (optional, for Log4J logging)
 lib/datanucleus-core.jar
 lib/datanucleus-api-jpa.jar
 lib/datanucleus-rdbms.jar, lib/datanucleus-hbase.jar,  etc
-lib/jdo-api.jar
 lib/persistence-api.jar
 lib/mysql-connector-java.jar (driver for our database)
 log4j.properties</source>
@@ -532,13 +531,12 @@ log4j.properties</source>
                     <b>DataNucleus SchemaTool</b> to do this, from the top level of our project. 
                     In this example we're using Linux (change the CLASSPATH definition to suit for Windows)</p>
                 <source><![CDATA[
-java -cp target/classes:lib/log4j.jar:lib/jdo-api.jar:lib/datanucleus-core.jar:lib/datanucleus-{datastore}.jar:
-                lib/mysql-connector-java.jar
+java -cp target/classes:lib/log4j.jar:lib/datanucleus-core.jar:lib/datanucleus-{datastore}.jar:lib/mysql-connector-java.jar
       -Dlog4j.configuration=file:log4j.properties
       org.datanucleus.store.schema.SchemaTool -create
       -api JPA -pu MyUnit
 
-DataNucleus SchemaTool (version 3.3.0.m1) : Creation of the schema
+DataNucleus SchemaTool (version 4.0.0.m2) : Creation of the schema
 
 DataNucleus SchemaTool : Classpath
 >>  /home/andy/work/DataNucleus/samples/packofcards/target/classes
@@ -546,7 +544,6 @@ DataNucleus SchemaTool : Classpath
 >>  /home/andy/work/DataNucleus/samples/packofcards/lib/datanucleus-core.jar
 >>  /home/andy/work/DataNucleus/samples/packofcards/lib/datanucleus-api-jpa.jar
 >>  /home/andy/work/DataNucleus/samples/packofcards/lib/datanucleus-rdbms.jar
->>  /home/andy/work/DataNucleus/samples/packofcards/lib/jdo-api.jar
 >>  /home/andy/work/DataNucleus/samples/packofcards/lib/persistence-api.jar
 >>  /home/andy/work/DataNucleus/samples/packofcards/lib/mysql-connector-java.jar
 

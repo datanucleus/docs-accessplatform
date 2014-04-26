@@ -326,7 +326,6 @@ public class MyClass {...}]]></source>
                 </table>
                 <p>
                     So to give an example, I add the following to my <i>pom.xml</i>
-                    (note : in 3.2.0.m1 it is "maven-datanucleus-plugin")
                 </p>
                 <source><![CDATA[
     <build>
@@ -335,7 +334,7 @@ public class MyClass {...}]]></source>
             <plugin>
                 <groupId>org.datanucleus</groupId>
                 <artifactId>datanucleus-maven-plugin</artifactId>
-                <version>4.0.0-m1</version>
+                <version>4.0.0-m2</version>
                 <configuration>
                     <props>${basedir}/datanucleus.properties</props>
                     <log4jConfiguration>${basedir}/log4j.properties</log4jConfiguration>
@@ -570,7 +569,7 @@ java -cp target/classes:lib/log4j.jar:lib/jdo-api.jar:lib/datanucleus-core.jar:l
       target/classes/org/datanucleus/examples/inverse/package.jdo
 
 
-DataNucleus SchemaTool (version 4.0.0.m1) : Creation of the schema
+DataNucleus SchemaTool (version 4.0.0.m2) : Creation of the schema
 
 DataNucleus SchemaTool : Classpath
 >>  /home/andy/work/DataNucleus/samples/packofcards/target/classes
