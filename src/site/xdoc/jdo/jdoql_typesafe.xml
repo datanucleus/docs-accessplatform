@@ -29,34 +29,34 @@
             <subsection name="Preparation">
                 <p>
                     To set up your environment to use this typesafe query API you need to enable annotation
-                    processing (JDK1.6), place some DataNucleus jars in your build path, and specify an
+                    processing (JDK1.7+), place some DataNucleus jars in your build path, and specify an
                     <i>@PersistenceCapable</i> annotation on your classes to be used in queries (you can still
                     provide the remaining information in XML metadata if you wish to).
                 </p>
                 <p>
-                    With Maven2 you need to have the following in your POM
+                    With Maven you need to have the following in your POM
                 </p>
                 <source><![CDATA[
     <dependencies>
         <dependency>
             <groupId>org.datanucleus</groupId>
             <artifactId>datanucleus-core</artifactId>
-            <version>[2.9, )</version>
+            <version>(3.9, )</version>
         </dependency>
         <dependency>
             <groupId>org.datanucleus</groupId>
             <artifactId>datanucleus-api-jdo</artifactId>
-            <version>[2.9, )</version>
+            <version>(3.9, )</version>
         </dependency>
         <dependency>
             <groupId>org.datanucleus</groupId>
             <artifactId>datanucleus-jdo-query</artifactId>
-            <version>[2.9, )</version>
+            <version>(3.9, )</version>
         </dependency>
         <dependency>
             <groupId>javax.jdo</groupId>
             <artifactId>jdo-api</artifactId>
-            <version>3.1-SNAPSHOT</version>
+            <version>[3.0, )</version>
         </dependency>
         ...
      </dependencies>
@@ -64,8 +64,8 @@
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
-                    <source>1.6</source>
-                    <target>1.6</target>
+                    <source>1.7</source>
+                    <target>1.7</target>
                 </configuration>
             </plugin>
 ]]></source>
@@ -73,13 +73,12 @@
                     With Eclipse you need to
                 </p>
                 <ul>
-                    <li>Go to <i>Java Compiler</i> and make sure the compiler compliance level is 1.6 or above</li>
+                    <li>Go to <i>Java Compiler</i> and make sure the compiler compliance level is 1.7 or above (needed for DN 4.0+ anyway)</li>
                     <li>Go to <i>Java Compiler -> Annotation Processing</i> and enable the project specific settings
                         and enable annotation processing</li>
                     <li>Go to <i>Java Compiler -> Annotation Processing -> Factory Path</i>, enable the project 
                         specific settings and then add the following jars to the list:
-                        "datanucleus-jdo-query.jar", "datanucleus-api-jdo.jar", "datanucleus-core.jar", 
-                        "jdo-api.jar"</li>
+                        "datanucleus-jdo-query.jar", "datanucleus-api-jdo.jar", "datanucleus-core.jar", "jdo-api.jar"</li>
                 </ul>
                 <br/>
             </subsection>
