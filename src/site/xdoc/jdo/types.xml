@@ -24,10 +24,9 @@
                     following Java types as FCO
                 </p>
                 <ul>
-                    <li><b>PersistenceCapable</b> : any class marked for persistence can be persisted
-                        with its own identity in the datastore</li>
-                    <li><b>interface</b> where the field represents a <i>PersistenceCapable</i> object</li>
-                    <li><b>java.lang.Object</b> where the field represents a <i>PersistenceCapable</i> object</li>
+                    <li><b>persistable</b> : any class marked for persistence can be persisted with its own identity in the datastore</li>
+                    <li><b>interface</b> where the field represents a <i>persistable</i> object</li>
+                    <li><b>java.lang.Object</b> where the field represents a <i>persistable</i> object</li>
                 </ul>
                 <br/>
             </subsection>
@@ -819,7 +818,7 @@
                     </tr>
 
                     <tr>
-                        <td>javax.jdo.spi.PersistenceCapable</td>
+                        <td>Persistable</td>
                         <td></td>
                         <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                         <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
@@ -828,7 +827,7 @@
                         <td>datanucleus-core</td>
                     </tr>
                     <tr>
-                        <td>javax.jdo.spi.PersistenceCapable[]</td>
+                        <td>Persistable[]</td>
                         <td></td>
                         <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                         <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
