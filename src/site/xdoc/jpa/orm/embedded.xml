@@ -180,7 +180,7 @@ public class ComputerCard
                 <table><tr><td>Applicable to RDBMS, Excel, OOXML, ODF, HBase, MongoDB, Neo4j.</td></tr></table>
                 <p>
                     In the above example we had an embedded Entity within a persisted object. What 
-                    if our embedded PersistenceCapable object also contain another Entity object. So, 
+                    if our embedded Persistable object also contain another Entity object. So, 
                     using the above example what if <b>ComputerCard</b> contains an object of type <b>Connector</b> ?
                 </p>
                 <source>
@@ -280,9 +280,9 @@ public class Connector
                         retrieve all initially.</li>
                 </ul>
                 <p>
-                    It should be noted that where the collection "element" is not <i>PersistenceCapable</i> or of a 
+                    It should be noted that where the collection "element" is not <i>Persistable</i> or of a 
                     "reference" type (Interface or Object) it will <u>always</u> be embedded, and this functionality 
-                    here applies to <i>PersistenceCapable</i> elements only. DataNucleus doesn't support the embedding 
+                    here applies to <i>Persistable</i> elements only. DataNucleus doesn't support the embedding 
                     of reference type objects currently.
                 </p>
                 <p>

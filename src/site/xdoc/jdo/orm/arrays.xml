@@ -19,10 +19,8 @@
                 <li><a href="#serialised">Serialised</a> - the array is serialised into single column in the 
                     table of the containing object.</li>
                 <li><a href="#join">Using a Join Table</a> - where the array relation is persisted into the 
-                    join table, with foreign-key links to an element table where the elements of the array are 
-                    <i>PersistenceCapable</i></li>
-                <li><a href="#fk">Using a Foreign-Key in the element</a> - only available where the array is of 
-                    a <i>PersistenceCapable</i> type</li>
+                    join table, with foreign-key links to an element table where the elements of the array are <i>persistable</i></li>
+                <li><a href="#fk">Using a Foreign-Key in the element</a> - only available where the array is of a <i>persistable</i> type</li>
             </ul>
             <table>
                 <tr>
@@ -131,7 +129,7 @@
                 <img src="../../images/orm/array_jointable_class.gif" border="0" alt=""/>
                 <p>
                     So an <b>Account</b> has an array of <b>Permission</b>s, and both of these objects are 
-                    <i>PersistenceCapable</i>. We want to persist the relationship using a join table. We define 
+                    <i>persistable</i>. We want to persist the relationship using a join table. We define 
                     the MetaData as follows
                 </p>
                 <source><![CDATA[
@@ -173,13 +171,13 @@
             <subsection name="Arrays persisted using Foreign-Keys">
                 <p>
                     DataNucleus will support arrays persisted via a foreign-key in the element table. This is only 
-                    applicable when the array is of a <i>PersistenceCapable</i> type. Let's take the same example 
+                    applicable when the array is of a <i>persistable</i> type. Let's take the same example 
                     above. So we have
                 </p>
                 <img src="../../images/orm/array_foreignkey_class.gif" border="0" alt=""/>
                 <p>
                     So an <b>Account</b> has an array of <b>Permission</b>s, and both of these objects are 
-                    <i>PersistenceCapable</i>. We want to persist the relationship using a foreign-key in the table 
+                    <i>persistable</i>. We want to persist the relationship using a foreign-key in the table 
                     for the Permission class. We define the MetaData as follows
                 </p>
                 <source><![CDATA[

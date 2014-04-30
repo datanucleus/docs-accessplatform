@@ -28,7 +28,7 @@
                     single "BLOB" column</li>
                 <li><a href="#MapKeysValues">Serialised Map keys/values</a> - where you want to serialise the 
                     map keys and/or values into single column(s) in a join table.</li>
-                <li><a href="#PC">Serialised PersistenceCapable fields</a> - where you want to serialise a PC 
+                <li><a href="#PC">Serialised persistable fields</a> - where you want to serialise a PC 
                     object into a single "BLOB" column.</li>
                 <li><a href="#Reference">Serialised Reference (Interface/Object) fields</a> - where you want 
                     to serialise a reference field into a single "BLOB" column.</li>
@@ -85,12 +85,12 @@
                     collection in the same way. These are as follows
                 </p>
                 <ul>
-                    <li><b>Collection of non-<i>PersistenceCapable</i> elements, and no &lt;join&gt; is 
+                    <li><b>Collection of non-<i>persistable</i> elements, and no &lt;join&gt; is 
                         specified.</b>
                         Since the elements don't have a table of their own, the only option is to serialise 
                         the whole collection and it appears as a single BLOB field in the table of the main 
                         class.</li>
-                    <li><b>Collection of <i>PersistenceCapable</i> elements, with "embedded-element" set to 
+                    <li><b>Collection of <i>persistable</i> elements, with "embedded-element" set to 
                         <u>true</u> and no &lt;join&gt; is specified.</b>
                         Since the elements are embedded and there is no join table, then the whole collection 
                         is serialised as above.</li>
@@ -191,11 +191,11 @@
                     map in the same way. These are as follows
                 </p>
                 <ul>
-                    <li><b>Map&lt;non-<i>PersistenceCapable</i>, non-<i>PersistenceCapable</i>&gt;, and 
+                    <li><b>Map&lt;non-<i>persistable</i>, non-<i>persistable</i>&gt;, and 
                         no &lt;join&gt; is specified.</b>
                         Since the keys/values don't have a table of their own, the only option is to serialise 
                         the whole map and it appears as a single BLOB field in the table of the main class.</li>
-                    <li><b>Map&lt;non-<i>PersistenceCapable</i>, <i>PersistenceCapable</i>&gt;, with 
+                    <li><b>Map&lt;non-<i>persistable</i>, <i>persistable</i>&gt;, with 
                         "embedded-value" set to <u>true</u>
                         and no &lt;join&gt; is specified.</b> Since the keys/values are embedded and there is 
                         no join table, then the whole map is serialised as above.</li>
@@ -258,10 +258,10 @@
             </subsection>
 
             <a name="PC"/>
-            <subsection name="Serialised PersistenceCapable Fields">
+            <subsection name="Serialised persistable Fields">
                 <table><tr><td>Applicable to RDBMS, HBase, MongoDB</td></tr></table>
                 <p>
-                    A field that is a <i>PersistenceCapable</i> object is typically stored as a foreign-key 
+                    A field that is a <i>persistable</i> object is typically stored as a foreign-key 
                     relation between the container object and the contained object. In some situations it is 
                     not necessary that the contained object has an identity of its own, and for efficiency of 
                     access the contained object is required to be stored in a BLOB column in the containing 
@@ -290,7 +290,7 @@
                     Provisos to bear in mind are
                 </p>
                 <ul>
-                    <li>Queries cannot be performed on PersistenceCapable objects stored as serialised.</li>
+                    <li>Queries cannot be performed on persistable objects stored as serialised.</li>
                 </ul>
             </subsection>
 

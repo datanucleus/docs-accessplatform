@@ -415,10 +415,10 @@ public class Address
             </subsection>
         </section>
 
-        <section name="1-N Collection of non-PersistenceCapable objects">
+        <section name="1-N Collection of non-persistable objects">
             <a name="join_nonpc"/>
             <p>
-                All of the examples above show a 1-N relationship between 2 <i>PersistenceCapable</i> classes. DataNucleus can
+                All of the examples above show a 1-N relationship between 2 <i>persistable</i> classes. DataNucleus can
                 also cater for a Collection of primitive or Object types. For example, when you have a Collection of Strings.
                 This will be persisted in the same way as the "Join Table" examples above. A join table is created to
                 hold the collection elements. Let's take our example. We have an <b>Account</b> that stores a Collection

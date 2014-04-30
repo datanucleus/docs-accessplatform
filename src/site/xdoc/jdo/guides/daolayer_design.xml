@@ -20,8 +20,7 @@
                 <p>
                     A typical DAO provides an interface that defines its contract with the outside world. 
                     This takes the form of a series of data access and data update methods. In this tutorial we 
-                    follow this and describe how to implement a DAO using DataNucleus and JDO using some of the new 
-                    features introduced in JDO 2.0
+                    follow this and describe how to implement a DAO using DataNucleus and JDO.
                 </p>
                 <p>
                     <b>While this guide demonstrates how to write a DAO layer, it does not propose use of the DAO 
@@ -170,7 +169,7 @@ public class MyDAO implements ClinicDAO
                     So here we've seen the typical DAO and how, for each method, we retrieve a 
                     <i>PersistenceManager</i>, obtain a transaction, and perform our operation(s). Notice above there 
                     are a couple of places where we have left "TODO" comments. These will be populated in the next 
-                    section, using the JDO 2.0 feature <b>attach/detach</b>.
+                    section, using the JDO feature <b>attach/detach</b>.
                 </p>
             </subsection>
             
@@ -179,7 +178,7 @@ public class MyDAO implements ClinicDAO
                     We saw in the previous section our process for the DAO methods. The problem we have with JDO 1.0 is 
                     that as soon as we leave the transaction our object would move back to "Hollow" state (hence losing 
                     its field values, and hence the object would have been unusable in the rest of our application. 
-                    With JDO 2.0 we have a feature called <b>attach/detach</b> that allows us to detach objects for use 
+                    With JDO we have a feature called <b>attach/detach</b> that allows us to detach objects for use 
                     elsewhere, and then attach them when we want to persist any changed data within the object. So 
                     we now go back to our DataNucleus DAO and add the necessary code to use this
                 </p>
@@ -247,10 +246,10 @@ public class MyDAO implements ClinicDAO
                 <p>In the previous section we have described how to design our basic DAO layer. We have an interface to 
                     this layer and provide a DataNucleus implementation. The DataNucleus/JDO calls are restricted to the DAO layer. 
                     What we haven't yet considered is what actually is made usable in the rest of the application when 
-                    we do our <b>detach</b>. By default with this feature PersistenceCapable fields will not be 
+                    we do our <b>detach</b>. By default with this feature persistable fields will not be 
                     detached with the owning object. This means that our "pets" field of our detached "owner" object 
                     will not be available for use. In many situations we would want to give access to other parts of 
-                    our object. To do this we make use of another JDO 2.0 feature, called <b>fetch-groups</b>. This is 
+                    our object. To do this we make use of another JDO feature, called <b>fetch-groups</b>. This is 
                     defined both in the Meta-Data for our classes, and in the DAO layer where we perform the 
                     detaching. Let's start with the MetaData for our 3 classes.</p>
                 <source><![CDATA[

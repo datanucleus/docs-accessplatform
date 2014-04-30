@@ -446,7 +446,7 @@ q.setSerializeRead(true);]]></source>
                     method for accessing the version of an object. You can call <i>JDOHelper.getVersion(object)</i> 
                     and this returns the version as an Object (typically Long or Timestamp). This will return null 
                     for a transient object, and will return the version for a persistent object. If the object is 
-                    not <i>PersistenceCapable</i> then it will also return null.
+                    not <i>persistable</i> then it will also return null.
                 </p>
                 <p>
                     In terms of the process of optimistic locking, we demonstrate this below.

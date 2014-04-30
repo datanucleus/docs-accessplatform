@@ -306,8 +306,8 @@ DataNucleus Enhancer : Classpath
 >>  /home/andy/work/myproject/lib/datanucleus-core.jar
 >>  /home/andy/work/myproject/lib/datanucleus-api-jpa.jar
 
-ENHANCED (PersistenceCapable): org.mydomain.mypackage1.Pack
-ENHANCED (PersistenceCapable): org.mydomain.mypackage1.Card
+ENHANCED (persistable): org.mydomain.mypackage1.Pack
+ENHANCED (persistable): org.mydomain.mypackage1.Card
 DataNucleus Enhancer completed with success for 2 classes. Timings : input=422 ms, enhance=490 ms, total=912 ms.
      ... Consult the log for full details</source>
                 <p>
@@ -504,10 +504,9 @@ public class B
             <subsection name="Decompilation">
                 <p>
                     Many people will wonder what actually happens to a class upon bytecode enhancement. In
-                    simple terms the necessary methods and fields are added so as to implement
-                    <i>PersistenceCapable</i>. If you want to check this, just use a Java decompiler such as
-                    <a href="http://jd.benow.ca/" target="_blank">JD</a>. It has a nice GUI allowing
-                    you to just select your class to decompile and shows you the source.
+                    simple terms the necessary methods and fields are added so as to implement <i>Persistable</i>. 
+                    If you want to check this, just use a Java decompiler such as <a href="http://jd.benow.ca/" target="_blank">JD</a>. 
+                    It has a nice GUI allowing you to just select your class to decompile and shows you the source.
                 </p>
             </subsection>
         </section>

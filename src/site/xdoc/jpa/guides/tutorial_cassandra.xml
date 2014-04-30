@@ -203,9 +203,9 @@ public class Book extends Product
             <subsection name="Step 3 : Enhance your classes">
                 <p>
                     DataNucleus relies on the classes that you want to persist be enhanced to implement the interface
-                    <i>PersistenceCapable</i>. You could write your classes manually to do this but this would be 
+                    <i>Persistable</i>. You could write your classes manually to do this but this would be 
                     laborious. Alternatively you can use a post-processing step to compilation that "enhances" your 
-                    compiled classes, adding on the necessary extra methods to make them <i>PersistenceCapable</i>. 
+                    compiled classes, adding on the necessary extra methods to make them <i>Persistable</i>. 
                     There are several ways to do this, most notably at post-compile, or at runtime. We use the 
                     post-compile step in this tutorial. <b>DataNucleus JPA</b> provides its own byte-code enhancer for 
                     instrumenting/enhancing your classes (in <i>datanucleus-core</i>) and this is included in the 
@@ -266,7 +266,7 @@ java -cp target\classes;lib\datanucleus-core.jar;
                 <p>
                     This command enhances all class files specified in the persistence-unit "Tutorial".
                     If you accidentally omitted this step, at the point of running your application and 
-                    trying to persist an object, you would get a <i>ClassNotPersistenceCapableException</i>
+                    trying to persist an object, you would get a <i>ClassNotPersistableException</i>
                     thrown. The use of the enhancer is documented in more detail in the 
                     <a href="../enhancer.html">Enhancer Guide</a>. The output of this step are a set of 
                     class files that represent persistable classes.

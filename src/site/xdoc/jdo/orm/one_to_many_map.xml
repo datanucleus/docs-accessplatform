@@ -47,13 +47,13 @@
         <section name="1-N Map using Join Table">
             <p>
                 We have a class <b>Account</b> that contains a Map. With a Map we store values using keys. As a result we have
-                3 main combinations of key and value, bearing in mind whether the key or value is <i>PersistenceCapable</i>.
+                3 main combinations of key and value, bearing in mind whether the key or value is <i>persistable</i>.
             </p>
 
             <a name="join_pc_pc"/>
             <subsection name="Map[PC, PC]">
                 <p>
-                    Here both the keys and the values are <i>PersistenceCapable</i>. Like this
+                    Here both the keys and the values are <i>persistable</i>. Like this
                 </p>
                 <img src="../../images/orm/relationship_1_N_uni_map_pc_pc_class.jpg" border="0" alt=""/>
                 
@@ -131,7 +131,7 @@
             <a name="join_simple_pc"/>
             <subsection name="Map[Simple, PC]">
                 <p>
-                    Here our key is a simple type (in this case a String) and the values are <i>PersistenceCapable</i>. Like this
+                    Here our key is a simple type (in this case a String) and the values are <i>persistable</i>. Like this
                 </p>
                 <img src="../../images/orm/relationship_1_N_uni_map_simple_pc_class.jpg" border="0" alt=""/>
 
@@ -217,7 +217,7 @@
 
             <subsection name="Embedded">
                 <p>
-                    The above relationship types assume that all PersistenceCapable classes in the 1-N relation will have their 
+                    The above relationship types assume that all persistable classes in the 1-N relation will have their 
                     own table. A variation on this is where you have a join table but you embed the keys, the values, or the keys and
                     the values of the map into this join table. This is described in <a href="embedded.html#Map">Embedded Maps</a>.
                 </p>

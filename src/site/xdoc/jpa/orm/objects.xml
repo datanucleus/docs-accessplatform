@@ -121,8 +121,8 @@ public class ParkingSpace
             <subsection name="Serialised Objects">
                 <p>
                     By default a field of type <i>java.lang.Object</i> is stored as an instance of the underlying 
-                    PersistenceCapable in the table of that object. If either your Object field represents 
-                    non-PersistenceCapable objects or you simply wish to serialise the Object into the same table as 
+                    persistable in the table of that object. If either your Object field represents 
+                    non-persistable objects or you simply wish to serialise the Object into the same table as 
                     the owning object, you need to specify the "serialized" attribute, like this
                 </p>
                 <source><![CDATA[

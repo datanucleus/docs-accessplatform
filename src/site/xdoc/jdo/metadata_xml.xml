@@ -332,7 +332,7 @@
                         <td>persistence-capable-superclass</td>
                         <td>Class name of superclass that is persistent capable.
                             This is deprecated in JDO2 and you no longer need to specify it, leaving it to DataNucleus
-                            to determine if there is a superclass that is <i>PersistenceCapable</i>.</td>
+                            to determine if there is a superclass that is <i>persistable</i>.</td>
                         <td/>
                     </tr>
                     <tr class="c">
@@ -793,7 +793,7 @@
                         <td>embedded</td>
                         <td>Whether this field should be stored, if possible, as part of the object instead as its own object in 
                             the datastore. This defaults to true for primitive types, java.util.Date, java.lang.*, java.math.* etc and
-                            false for PersistenceCapable, reference (Object, Interface) and container types.</td>
+                            false for persistable, reference (Object, Interface) and container types.</td>
                         <td>true, false</td>
                     </tr>
                     <tr>
@@ -907,7 +907,7 @@
                     </tr>
                     <tr>
                         <td>cascade-update</td>
-                        <td>JDO defines that when an object is updated then all fields containing PersistenceCapable objects will also 
+                        <td>JDO defines that when an object is updated then all fields containing persistable objects will also 
                             be updated using "persistence-by-reachability". This extension allows you to turn off the update
                             of a field relation.</td>
                         <td><b>true</b> | false</td>
@@ -1161,7 +1161,7 @@
                         <td>embedded</td>
                         <td>Whether this property should be stored, if possible, as part of the object instead as its 
                             own object in the datastore. This defaults to true for primitive types, java.util.Date, 
-                            java.lang.*, java.math.* etc and false for PersistenceCapable, reference (Object, Interface)
+                            java.lang.*, java.math.* etc and false for persistable, reference (Object, Interface)
                             and container types.</td>
                         <td>true, false</td>
                     </tr>
@@ -1278,7 +1278,7 @@
                     </tr>
                     <tr>
                         <td>cascade-update</td>
-                        <td>JDO defines that when an object is updated then all fields containing PersistenceCapable objects will also 
+                        <td>JDO defines that when an object is updated then all fields containing persistable objects will also 
                             be updated using "persistence-by-reachability". This extension allows you to turn off the update
                             of a field relation.</td>
                         <td><b>true</b> | false</td>
@@ -1508,7 +1508,7 @@
             <subsection name="Metadata for embedded tag">
                 <p>
                     These are attributes within the <b>&lt;embedded&gt;</b> tag (jdo/package/class/embedded). It is used when this
-                    field is a PersistenceCapable and is embedded into the same table as the class.
+                    field is a persistable and is embedded into the same table as the class.
                 </p>
                 <table>
                     <tr>
@@ -1523,7 +1523,7 @@
                     </tr>
                     <tr>
                         <td>owner-field</td>
-                        <td>Name of the field in the embedded PersistenceCapable that is the link back to the owning object (if any).</td>
+                        <td>Name of the field in the embedded persistable that is the link back to the owning object (if any).</td>
                         <td></td>
                     </tr>
                     <tr>
@@ -1560,7 +1560,7 @@
                     </tr>
                     <tr>
                         <td>mapped-by</td>
-                        <td>When the map is formed by a foreign-key, the key can be a field in a value PersistenceCapable class.
+                        <td>When the map is formed by a foreign-key, the key can be a field in a value persistable class.
                             This attribute defines which field in the value class is used as the key</td>
                         <td></td>
                     </tr>
@@ -1606,7 +1606,7 @@
                     </tr>
                     <tr>
                         <td>mapped-by</td>
-                        <td>When the map is formed by a foreign-key, the value can be a field in a key PersistenceCapable class.
+                        <td>When the map is formed by a foreign-key, the value can be a field in a key persistable class.
                             This attribute defines which field in the key class is used as the value.</td>
                         <td></td>
                     </tr>
@@ -1663,7 +1663,7 @@
                     <tr>
                         <td>mapped-by</td>
                         <td>When a List is formed by a foreign-key, the ordering can be a field in the element 
-                            PersistenceCapable class. This attribute defines which field in the element class is used as 
+                            persistable class. This attribute defines which field in the element class is used as 
                             the ordering. The field must be of type <i>int</i>, <i>Integer</i>, <i>long</i>, <i>Long</i>.
                             DataNucleus will write the index positions to this field (starting at 0 for the first item in the List)</td>
                         <td></td>
@@ -2320,7 +2320,7 @@
                     <tr>
                         <td>embedded-element</td>
                         <td>Whether the array elements should be stored embedded (default = true for primitives, wrappers etc
-                            and false for PersistenceCapable objects).</td>
+                            and false for persistable objects).</td>
                         <td>true, false</td>
                     </tr>
                     <tr>

@@ -393,8 +393,8 @@ DataNucleus Enhancer : Classpath
 >>  /home/andy/work/myproject/lib/datanucleus-core.jar
 >>  /home/andy/work/myproject/lib/datanucleus-api-jdo.jar
 
-ENHANCED (PersistenceCapable): org.mydomain.mypackage1.Pack
-ENHANCED (PersistenceCapable): org.mydomain.mypackage1.Card
+ENHANCED (persistable): org.mydomain.mypackage1.Pack
+ENHANCED (persistable): org.mydomain.mypackage1.Card
 DataNucleus Enhancer completed with success for 2 classes. Timings : input=422 ms, enhance=490 ms, total=912 ms.
      ... Consult the log for full details</source>
                 <p>
@@ -497,7 +497,7 @@ enhancer.enhance();</source>
                 of bytecode enhancement, and proxies. It gives a clear enough comparison of the relative benefits.
             </p>
             <p>
-                In a JDO-enabled application there are 3 categories of classes. These are <i>PersistenceCapable</i>, 
+                In a JDO-enabled application there are 3 categories of classes. These are <i>persistable</i>, 
                 <i>PersistenceAware</i> and normal classes. The Meta-Data defines which classes fit into these 
                 categories. To give an example for JDO, we have 3 classes. The class <i>A</i> is to be persisted in 
                 the datastore. The class <i>B</i> directly updates the fields of class <i>A</i> but doesn't need 
@@ -514,7 +514,7 @@ enhancer.enhance();</source>
 <class name="B" persistence-modifier="persistence-aware">
 </class>]]></source>
             <p>
-                So our MetaData is mainly for those classes that are <i>PersistenceCapable</i> and are to be persisted 
+                So our MetaData is mainly for those classes that are <i>persistable</i> and are to be persisted 
                 to the datastore (we don't really need the <i>persistence-modifier</i> for thse classes since this is 
                 the default). For <i>PersistenceAware</i> classes we simply notate that the class knows about 
                 persistence. We don't define MetaData for any class that has no knowledge of persistence.
@@ -583,10 +583,9 @@ enhancer.enhance();</source>
             <subsection name="Decompilation">
                 <p>
                     Many people will wonder what actually happens to a class upon bytecode enhancement. In
-                    simple terms the necessary methods and fields are added so as to implement
-                    <i>PersistenceCapable</i>. If you want to check this, just use a Java decompiler such as
-                    <a href="http://jd.benow.ca/" target="_blank">JD</a>. It has a nice GUI allowing
-                    you to just select your class to decompile and shows you the source.
+                    simple terms the necessary methods and fields are added so as to implement <i>Persistable</i>. 
+                    If you want to check this, just use a Java decompiler such as <a href="http://jd.benow.ca/" target="_blank">JD</a>. 
+                    It has a nice GUI allowing you to just select your class to decompile and shows you the source.
                 </p>
             </subsection>
 

@@ -18,11 +18,11 @@
             <a name="callbacks"/>
             <subsection name="Instance Callbacks">
                 <p>
-                    JDO defines an interface for PersistenceCapable classes so that they can be notified 
+                    JDO defines an interface for persistable classes so that they can be notified 
                     of events in their own lifecycle and perform any additional operations that are needed at these
                     checkpoints. This is a complement to the <a href="#listeners">Lifecycle Listeners</a>
                     interface which provides listeners for all objects of particular classes, with the events sent 
-                    to a listener. With <b>InstanceCallbacks</b> the <i>PersistenceCapable</i> class is the 
+                    to a listener. With <b>InstanceCallbacks</b> the <i>persistable</i> class is the 
                     destination of the lifecycle events. As a result the <b>Instance Callbacks</b> method is more 
                     intrusive than the method of <i>Lifecycle Listeners</i> in that it requires methods adding
                     to each class that wishes to receive the callbacks.
@@ -114,37 +114,37 @@ public class LoggingLifecycleListener implements CreateLifecycleListener,
     public void postCreate(InstanceLifecycleEvent event)
     {
         log.info("Lifecycle : create for " + 
-            ((PersistenceCapable)event.getSource()).jdoGetObjectId());
+            ((Persistable)event.getSource()).dnGetObjectId());
     }
 
     public void preDelete(InstanceLifecycleEvent event)
     {
         log.info("Lifecycle : preDelete for " + 
-            ((PersistenceCapable)event.getSource()).jdoGetObjectId());
+            ((Persistable)event.getSource()).dnGetObjectId());
     }
 
     public void postDelete(InstanceLifecycleEvent event)
     {
         log.info("Lifecycle : postDelete for " + 
-            ((PersistenceCapable)event.getSource()).jdoGetObjectId());
+            ((Persistable)event.getSource()).dnGetObjectId());
     }
 
     public void postLoad(InstanceLifecycleEvent event)
     {
         log.info("Lifecycle : load for " + 
-            ((PersistenceCapable)event.getSource()).jdoGetObjectId());
+            ((Persistable)event.getSource()).dnGetObjectId());
     }
 
     public void preStore(InstanceLifecycleEvent event)
     {
         log.info("Lifecycle : preStore for " + 
-            ((PersistenceCapable)event.getSource()).jdoGetObjectId());
+            ((Persistable)event.getSource()).dnGetObjectId());
     }
 
     public void postStore(InstanceLifecycleEvent event)
     {
         log.info("Lifecycle : postStore for " + 
-            ((PersistenceCapable)event.getSource()).jdoGetObjectId());
+            ((Persistable)event.getSource()).dnGetObjectId());
     }
 }</source>
                 <p>

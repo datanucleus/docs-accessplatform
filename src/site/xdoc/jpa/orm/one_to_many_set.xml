@@ -428,7 +428,7 @@ public class Address
             <a name="join_nonpc"/>
             <p>
                 In JPA1 you cannot have a 1-N set of non-Entity objects. This is available in JPA2.
-                All of the examples above show a 1-N relationship between 2 <i>PersistenceCapable</i> classes. 
+                All of the examples above show a 1-N relationship between 2 <i>persistable</i> classes. 
                 If you want the element to be primitive or Object types then follow this section. For example, when you 
                 have a Set of Strings. This will be persisted in the same way as the "Join Table" 
                 examples above. A join table is created to hold the collection elements. 

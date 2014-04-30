@@ -38,10 +38,10 @@
                 JDO's definition of embedding encompasses several types of fields. These are described below
             </p>
             <ul>
-                <li><a href="#PC">Embedded PersistenceCapable objects</a> - where you have a 1-1 relationship and you 
-                    want to embed the other PersistenceCapable into the same table as the your object.</li>
-                <li><a href="#NestedPC">Embedded Nested PersistenceCapable objects</a> - like the first example except 
-                    that the other object also has another PersistenceCapable object that also should be embedded</li>
+                <li><a href="#PC">Embedded persistable objects</a> - where you have a 1-1 relationship and you 
+                    want to embed the other persistable into the same table as the your object.</li>
+                <li><a href="#NestedPC">Embedded Nested persistable objects</a> - like the first example except 
+                    that the other object also has another persistable object that also should be embedded</li>
                 <li><a href="#Collection">Embedded Collection elements</a> - where you want to embed the elements of a 
                     collection into a join table (instead of persisting them into their own table)</li>
                 <li><a href="#Map">Embedded Map keys/values</a> - where you want to embed the keys/values of a map 
@@ -50,12 +50,12 @@
             <br/>
 
             <a name="PC"/>
-            <subsection name="Embedding PersistenceCapable objects">
+            <subsection name="Embedding persistable objects">
                 <table><tr><td>Applicable to RDBMS, Excel, OOXML, ODF, HBase, MongoDB, Neo4j.</td></tr></table>
                 <p>
                     In a typical 1-1 relationship between 2 classes, the 2 classes in the relationship are persisted 
                     to their own table, and a foreign key is managed between them. With JDO and DataNucleus you can 
-                    persist the related PersistenceCapable object as embedded into the same table. This results in a 
+                    persist the related persistable object as embedded into the same table. This results in a 
                     single table in the datastore rather than one for each of the 2 classes.
                 </p>
                 <p>
@@ -186,11 +186,11 @@ public class ComputerCard
             </subsection>
 
             <a name="NestedPC"/>
-            <subsection name="Embedding Nested PersistenceCapable objects">
+            <subsection name="Embedding Nested persistable objects">
                 <table><tr><td>Applicable to RDBMS, Excel, OOXML, ODF, HBase, MongoDB, Neo4j.</td></tr></table>
                 <p>
-                    In the above example we had an embedded PersistenceCapable object within a persisted object. What 
-                    if our embedded PersistenceCapable object also contain another PersistenceCapable object. So, 
+                    In the above example we had an embedded persistable object within a persisted object. What 
+                    if our embedded persistable object also contain another persistable object. So, 
                     using the above example what if <b>ComputerCard</b> contains an object of type <b>Connector</b> ?
                 </p>
                 <source>
@@ -287,9 +287,9 @@ public class Connector
                         retrieve all initially.</li>
                 </ul>
                 <p>
-                    It should be noted that where the collection "element" is not <i>PersistenceCapable</i> or of a 
+                    It should be noted that where the collection "element" is not <i>persistable</i> or of a 
                     "reference" type (Interface or Object) it will <u>always</u> be embedded, and this functionality 
-                    here applies to <i>PersistenceCapable</i> elements only. DataNucleus doesn't support the embedding 
+                    here applies to <i>persistable</i> elements only. DataNucleus doesn't support the embedding 
                     of reference type objects currently.
                 </p>
                 <p>
@@ -440,9 +440,9 @@ public class Device
                         we have to retrieve all initially.</li>
                 </ul>
                 <p>
-                    It should be noted that where the map "key"/"value" is not <i>PersistenceCapable</i> or of a 
+                    It should be noted that where the map "key"/"value" is not <i>persistable</i> or of a 
                     "reference" type (Interface or Object) it will <u>always</u> be embedded, and this functionality 
-                    here applies to <i>PersistenceCapable</i> keys/values only. DataNucleus doesn't support embedding 
+                    here applies to <i>persistable</i> keys/values only. DataNucleus doesn't support embedding 
                     reference type elements currently.
                 </p>
                 <p>
