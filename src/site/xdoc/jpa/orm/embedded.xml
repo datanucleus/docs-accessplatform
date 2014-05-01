@@ -54,7 +54,7 @@ public class MyClass
 
             <a name="PC"/>
             <subsection name="Embedding entities (1-1)">
-                <table><tr><td>Applicable to RDBMS, Excel, OOXML, ODF, HBase, MongoDB, Neo4j</td></tr></table>
+                <table><tr><td>Applicable to RDBMS, Excel, OOXML, ODF, HBase, MongoDB, Neo4j, Cassandra, JSON.</td></tr></table>
                 <p>
                     In a typical 1-1 relationship between 2 classes, the 2 classes in the relationship are 
                     persisted to their own table, and a foreign key is managed between them. With JPA and 
@@ -177,7 +177,7 @@ public class ComputerCard
 
             <a name="NestedPC"/>
             <subsection name="Embedding Nested Entities">
-                <table><tr><td>Applicable to RDBMS, Excel, OOXML, ODF, HBase, MongoDB, Neo4j.</td></tr></table>
+                <table><tr><td>Applicable to RDBMS, Excel, OOXML, ODF, HBase, MongoDB, Neo4j, Cassandra, JSON.</td></tr></table>
                 <p>
                     In the above example we had an embedded Entity within a persisted object. What 
                     if our embedded Persistable object also contain another Entity object. So, 
