@@ -18,7 +18,60 @@
             </p>
             <br/>
 
-            <subsection name="Unidirectional">
+            <a name="fk"/>
+            <subsection name="Unidirectional with ForeignKey">
+                <p>
+                    For this case you could have 2 classes, <b>User</b> and <b>Account</b>, as below.
+                    <br/>
+                    <img src="../../images/orm/relationship_1_1_uni_class.jpg" border="0" alt=""/>
+                    <br/>
+                    so the <b>Account</b> class ("N" side) knows about the <b>User</b> class ("1" side), but not 
+                    vice-versa. A particular user could be related to several accounts. 
+                    If you define the Meta-Data for these classes as follows
+                </p>
+                <source><![CDATA[
+<entity-mappings>
+    <entity class="User">
+        <table name="USER"/>
+        <attributes>
+            <id name="id">
+                <column name="USER_ID"/>
+            </id>
+            ...
+        </attributes>
+    </entity>
+
+    <entity class="Account">
+        <table name="ACCOUNT"/>
+        <attributes>
+            <id name="id">
+                <column name="ACCOUNT_ID"/>
+            </id>
+            ...
+            <many-to-one name="user"/>
+        </attributes>
+    </entity>
+</entity-mappings>]]></source>
+            <p>alternatively using annotations</p>
+<source><![CDATA[
+public class Account
+{
+    ...
+
+    @ManyToOne
+    User user;
+}]]></source>
+                <p>
+                    This will create 2 tables in the database, one for <b>User</b> (with name <i>USER</i>), and one for <b>Account</b> (with name <i>ACCOUNT</i>), 
+                    and a foreign-key in the <i>ACCOUNT</i> table, just like for the case of a <a href="one_to_one.html#uni">OneToOne relation</a>.
+                    <br/>
+                    <b>Note that in the case of non-RDBMS datastores there is simply a "column" in the <i>ACCOUNT</i> "table", storing the "id" of the related object</b>
+                </p>
+                <br/>
+            </subsection>
+
+            <a name="join"/>
+            <subsection name="Unidirectional with JoinTable">
                 <p>
                     For this case you could have 2 classes, <b>User</b> and <b>Account</b>, as below.
                     <br/>
