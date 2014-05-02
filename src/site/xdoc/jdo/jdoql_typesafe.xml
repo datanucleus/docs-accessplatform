@@ -9,18 +9,17 @@
     <body>
         <section name="JDO : Typesafe JDOQL Queries">
             <p>
-                In JPA2 there is a query API referred to as "criteria". This is really an API allowing
+                In JPA there is a query API referred to as "criteria". This is really an API allowing
                 the construction of queries expression by expression, and optionally making it type safe
                 so that if you refactor a field name then it is changed in the queries.
                 JDO has no such feature currently, but there exist third party extensions providing this.
                 One is called <a href="http://source.mysema.com/static/querydsl/2.0.0/reference/html/ch02.html#jdoql_integration">QueryDSL</a>.
                 DataNucleus now provides its own typesafe JDOQL query API, inspired by the ideas in QueryDSL 
-                (and some others), and is proposed for inclusion in JDO3.1.
+                (and some others), and is proposed for inclusion after JDO3.1.
             </p>
             <p>
                 <b>With this API you can express your queries in a typesafe way and allow easier refactoring.
-                This API produces queries that are much more elegant and simpler than the equivalent
-                "Criteria" API in JPA, or the Hibernate Criteria API.</b>
+                This API produces queries that are much more elegant and simpler than the equivalent "Criteria" API in JPA, or the Hibernate Criteria API.</b>
                 See this
                 <a href="http://datanucleus.blogspot.com/2010/11/jdo-typesafe-vs-jpa-criteria.html">comparison of JPA Criteria and JDO Typesafe</a>
             </p>
@@ -38,11 +37,6 @@
                 </p>
                 <source><![CDATA[
     <dependencies>
-        <dependency>
-            <groupId>org.datanucleus</groupId>
-            <artifactId>datanucleus-core</artifactId>
-            <version>(3.9, )</version>
-        </dependency>
         <dependency>
             <groupId>org.datanucleus</groupId>
             <artifactId>datanucleus-api-jdo</artifactId>
@@ -74,11 +68,9 @@
                 </p>
                 <ul>
                     <li>Go to <i>Java Compiler</i> and make sure the compiler compliance level is 1.7 or above (needed for DN 4.0+ anyway)</li>
-                    <li>Go to <i>Java Compiler -> Annotation Processing</i> and enable the project specific settings
-                        and enable annotation processing</li>
+                    <li>Go to <i>Java Compiler -> Annotation Processing</i> and enable the project specific settings and enable annotation processing</li>
                     <li>Go to <i>Java Compiler -> Annotation Processing -> Factory Path</i>, enable the project 
-                        specific settings and then add the following jars to the list:
-                        "datanucleus-jdo-query.jar", "datanucleus-api-jdo.jar", "datanucleus-core.jar", "jdo-api.jar"</li>
+                        specific settings and then add the following jars to the list: "datanucleus-jdo-query.jar", "datanucleus-api-jdo.jar", "jdo-api.jar"</li>
                 </ul>
                 <br/>
             </subsection>

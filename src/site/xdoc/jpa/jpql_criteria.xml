@@ -325,15 +325,14 @@ public class Person_
                     all classes (original + metamodel) are compiled.
                 </p>
                 <p>
-                    To enable this in Maven2 you would need the above jar, plus <i>datanucleus-core</i> and
-                    <i>datanucleus-api-jpa</i> (as well as persistence-api.jar) to be in the CLASSPATH at compile
+                    To enable this in Maven2 you would need the above jar, plus persistence-api.jar to be in the CLASSPATH at compile
                 </p>
                 <source><![CDATA[
 <plugin>
     <artifactId>maven-compiler-plugin</artifactId>
     <configuration>
-        <source>1.6</source>
-        <target>1.6</target>
+        <source>1.7</source>
+        <target>1.7</target>
     </configuration>
 </plugin>]]></source>
                 <br/>
@@ -341,13 +340,10 @@ public class Person_
                     To enable this in Eclipse you would need to do the following
                 </p>
                 <ul>
-                    <li>Go to <i>Java Compiler</i> and make sure the compiler compliance level is 1.6 or above</li>
-                    <li>Go to <i>Java Compiler -> Annotation Processing</i> and enable the project specific 
-                            settings and enable annotation processing</li>
+                    <li>Go to <i>Java Compiler</i> and make sure the compiler compliance level is 1.7 or above (needed for DN 4.0+ anyway)</li>
+                    <li>Go to <i>Java Compiler -> Annotation Processing</i> and enable the project specific settings and enable annotation processing</li>
                     <li>Go to <i>Java Compiler -> Annotation Processing -> Factory Path</i>, enable the project 
-                            specific settings and then add the following jars to the list:
-                            <i>datanucleus-jpa-query.jar</i>, <i>datanucleus-api-jpa.jar</i>, <i>datanucleus-core.jar</i>,
-                            <i>jpa-api.jar</i>, <i>jdo-api.jar</i>
+                        specific settings and then add the following jars to the list: <i>datanucleus-jpa-query.jar</i>, <i>persistence-api.jar</i>
                     </li>
                 </ul>
             </subsection>
