@@ -252,13 +252,11 @@ Using Maven : (this is usually done automatically after the "compile" goal)
 mvn datanucleus:enhance
 
 Manually on Linux/Unix :
-java -cp target/classes:lib/datanucleus-core.jar:
-         lib/datanucleus-api-jdo.jar:lib/jdo-api.jar
+java -cp target/classes:lib/datanucleus-core.jar:lib/datanucleus-api-jdo.jar:lib/jdo-api.jar
      org.datanucleus.enhancer.DataNucleusEnhancer -pu Tutorial
 
 Manually on Windows :
-java -cp target\classes;lib\datanucleus-core.jar;
-         lib\datanucleus-api-jdo.jar;lib\jdo-api.jar
+java -cp target\classes;lib\datanucleus-core.jar;lib\datanucleus-api-jdo.jar;lib\jdo-api.jar
      org.datanucleus.enhancer.DataNucleusEnhancer -pu Tutorial
 
 [Command shown on many lines to aid reading - should be on single line]</source>

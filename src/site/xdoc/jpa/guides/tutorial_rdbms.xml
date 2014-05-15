@@ -256,14 +256,12 @@ Using Maven : (this is usually done automatically after the "compile" goal)
 mvn datanucleus:enhance
 
 Manually on Linux/Unix :
-java -cp target/classes:lib/datanucleus-core.jar:
-         lib/datanucleus-api-jpa.jar:lib/persistence-api.jar
+java -cp target/classes:lib/datanucleus-core.jar:lib/datanucleus-api-jpa.jar:lib/persistence-api.jar
      org.datanucleus.enhancer.DataNucleusEnhancer 
      -api JPA -pu Tutorial
 
 Manually on Windows :
-java -cp target\classes;lib\datanucleus-core.jar;
-         lib\datanucleus-api-jpa.jar;lib\persistence-api.jar
+java -cp target\classes;lib\datanucleus-core.jar;lib\datanucleus-api-jpa.jar;lib\persistence-api.jar
      org.datanucleus.enhancer.DataNucleusEnhancer 
      -api JPA -pu Tutorial
 
