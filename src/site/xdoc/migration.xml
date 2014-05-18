@@ -15,6 +15,18 @@
                 As a result sometimes users will have to make some changes to move between versions of DataNucleus. We aim to keep this to a minimum.
             </p>
 
+            <a name="4_0_0_M4_FROM_4_0_0_M3"/>
+            <subsection name="Migration from 4.0.0.M3 to 4.0.0.M4">
+                <p>
+                    Migrating will require the following changes
+                </p>
+                <ul>
+                    <li>Fields of type Calendar were previously persisted using 2 columns (millisecs, timezone) by default. The default is now changed to
+                    use a single column (Timestamp). If you want 2 columns then either specify 2 column metadata for the field, or set the extension metadata
+                    <b>calendar-one-column</b> as <i>false</i></li>
+                </ul>
+            </subsection>
+
             <a name="4_0_0_M3_FROM_4_0_0_M2"/>
             <subsection name="Migration from 4.0.0.M2 to 4.0.0.M3">
                 <p>
