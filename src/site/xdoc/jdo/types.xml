@@ -1032,13 +1032,10 @@
                         BigDecimal, and will store to the precision of the object to be persisted. On reading back 
                         the object will be returned typically as a BigDecimal since there is no mechanism for 
                         determing the type of the object that was stored.</li>
-                    <li><b>[5]</b> - <i>java.util.LinkedHashMap</i> treated as a Map currently. No List-ordering
-                        is supported.</li>
-                    <li><b>[6]</b> - <i>java.util.LinkedHashSet</i> treated as a Set currently. No List-ordering
-                        is supported.</li>
-                    <li><b>[7]</b> - <i>java.util.Calendar</i> can be stored into two columns (millisecs, Timezone)
-                        or into a single column (Timestamp). The single column option is not guaranteed to
-                        preserve the TimeZone of the input Calendar.</li>
+                    <li><b>[5]</b> - <i>java.util.LinkedHashMap</i> treated as a Map currently. No List-ordering is supported.</li>
+                    <li><b>[6]</b> - <i>java.util.LinkedHashSet</i> treated as a Set currently. No List-ordering is supported.</li>
+                    <li><b>[7]</b> - <i>java.util.Calendar</i> is, by default, stored in one column (Timestamp - assumes that this stores the TimeZone) but can be stored into 
+                        two columns (millisecs, Timezone) if requested.</li>
                     <li><b>[8]</b> - available only for RDBMS, persisted into LONGVARBINARY, and retrieved as streamable
                         so as not to adversely affect memory utilisation, hence suitable for large files. New in 3.2.8 of datanucleus-rdbms</li>
                 </ul>
