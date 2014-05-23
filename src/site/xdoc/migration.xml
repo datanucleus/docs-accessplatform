@@ -24,6 +24,8 @@
                     <li>Fields of type Calendar were previously persisted using 2 columns (millisecs, timezone) by default. The default is now changed to
                     use a single column (Timestamp). If you want 2 columns then either specify 2 column metadata for the field, or set the extension metadata
                     <b>calendar-one-column</b> as <i>false</i></li>
+                    <li>The persistence properties <i>datanucleus.localisation.language</i> and <i>datanucleus.localisation.messageCodes</i> are removed.
+                        You can now specify either of these as Java system properties since they apply for the JVM as a whole.</li>
                 </ul>
             </subsection>
 
