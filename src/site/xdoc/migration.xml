@@ -26,6 +26,9 @@
                     <b>calendar-one-column</b> as <i>false</i></li>
                     <li>The persistence properties <i>datanucleus.localisation.language</i> and <i>datanucleus.localisation.messageCodes</i> are removed.
                         You can now specify either of these as Java system properties since they apply for the JVM as a whole.</li>
+                    <li>All 'boolean' fields with JPA (when using annotations) were previously defaulted to use <i>jdbc-type</i> of SMALLINT for some reason. This is now changed to
+                        just use the DataNucleus default, and you can get the old behaviour by either specifying @JdbcType or by setting the persistence property
+                        <b>datanucleus.jpa.legacy.mapBooleanToSmallint</b> to <i>true</i></li>
                 </ul>
             </subsection>
 
