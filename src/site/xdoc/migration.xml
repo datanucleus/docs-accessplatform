@@ -18,8 +18,13 @@
             <a name="4_0_0_REL_FROM_4_0_0_M4"/>
             <subsection name="Migration from 4.0.0.M4 to 4.0.0.RELEASE">
                 <p>
-                    Migrating will require no changes.
+                    Migrating will require the following changes.
                 </p>
+                <ul>
+                    <li>For MongoDB, JSON, Neo4J the process for table/column naming has changed, particularly for embedded fields. This may result in slightly
+                    different default table/column names (for example, the case of the name). To avoid problems use the metadata to explicitly set the column names (or
+                    check that the new behaviour matches your expectations).</li>
+                </ul>
             </subsection>
 
             <a name="4_0_0_M4_FROM_4_0_0_M3"/>
