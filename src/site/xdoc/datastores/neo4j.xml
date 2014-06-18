@@ -40,6 +40,9 @@
                 Things to bear in mind with Neo4j usage :-
             </p>
             <ul>
+                <li>Creation of a PMF/EMF will create a <i>GraphDatabaseService</i> and this is shared by all PM/EM instances.
+                    Since this is for an embedded graph datastore then this is the only logical way to provide this. 
+                    Should this plugin be updated to connect to a Neo4J server then this will change.</li>
                 <li>Querying can be performed using JDOQL or JPQL. Some components of a filter are handled in the datastore, 
                 and the remainder in-memory. Currently any expression of a field (in the same 'table'), or a literal are 
                 handled in-datastore, as are the operators &amp;&amp;, ||, &gt;, &gt;=, &lt;, &lt;=, ==, and !=. Also

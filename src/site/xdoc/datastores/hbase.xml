@@ -38,6 +38,8 @@ datanucleus.ConnectionPassword=</source>
                 Things to bear in mind with HBase usage :-
             </p>
             <ul>
+                <li>Creation of a PMF/EMF will create an internal <i>HBaseConnectionPool</i></li>
+                <li>Creation of a PM/EM will create/use a <i>HConnection</i>.</li>
                 <li>Querying can be performed using JDOQL or JPQL. 
                     Some components of a filter are handled in the datastore, and the remainder in-memory.
                     Currently any expression of a field (in the same table), or a literal are handled in-datastore,
