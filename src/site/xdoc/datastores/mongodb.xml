@@ -40,6 +40,10 @@
                 Things to bear in mind with MongoDB usage :-
             </p>
             <ul>
+                <li>Creation of a PMF/EMF will create a <i>MongoClient</i>. This will be closed then the PMF/EMF is closed.</li>
+                <li>Creation of a PM/EM and performing an operation will obtain a <i>DB</i> object from the <i>MongoClient</i>.
+                    This is pooled by the MongoClient so is managed by MongoDB. Closing the PM/EM will stop using that <i>DB</i></li>
+                <li>You can set the number of connections per host with the persistence property <b>datanucleus.mongodb.connectionsPerHost</b></li>
                 <li>Querying can be performed using JDOQL or JPQL. 
                     Some components of a filter are handled in the datastore, and the remainder in-memory.
                     Currently any expression of a field (in the same table), or a literal are handled in-datastore, 
