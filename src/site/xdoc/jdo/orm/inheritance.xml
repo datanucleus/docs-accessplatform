@@ -47,6 +47,16 @@
             </p>
             <table>
                 <tr>
+                    <td>
+                    Please note that at runtime, when you start up your PMF and PM, JDO will only <i>know about</i>
+                    the classes that the PM has been introduced to via method calls. To alleviate this, particularly
+                    for subclasses of classes in an inheritance relationship, you should make use of one of the many available
+                    <a href="../autostart.html">Auto Start Mechanisms</a>.
+                    </td>
+                </tr>
+            </table>
+            <table>
+                <tr>
                     <td>Please note that <b>you must specify the identity of objects in the root persistable class
                         of the inheritance hierarchy</b>. You cannot redefine it down the inheritance tree</td>
                 </tr>
