@@ -323,6 +323,16 @@ public class Payment
                     on any inserts) and "MANAGER_NAME" (VARCHAR-based and will be given a value of "N/A" on any inserts).
                 </p>
             </subsection>
+
+            <a name="columnposition"/>
+            <subsection name="columnposition">
+                <p>
+                    With some datastores it is desirable to be able to specify the relative position of a column in the table schema. 
+                    The default (for DataNucleus) is just to put them in ascending alphabetical order.
+                    JDO allows definition of this using the <i>position</i> attribute on a <b>column</b>.
+                    See <a href="../fields_properties.html#columnposition">fields/properties column positioning docs</a> for details.
+                </p>
+            </subsection>
 		</section>
 	</body>
 </document>
