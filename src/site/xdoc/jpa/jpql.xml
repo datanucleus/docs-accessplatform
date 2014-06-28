@@ -161,10 +161,9 @@ SELECT [&lt;result&gt;]
             <a name="literals"/>
             <subsection name="Literals">
                 <p>
-                    JPQL supports the following literals: IntegerLiteral, FloatingPointLiteral, BooleanLiteral, 
-                    CharacterLiteral, StringLiteral, TemporalLiteral and NullLiteral. When String literals are specified using
-                    single-string format they should be surrounded by single-quotes <i>'</i>. 
-                    Please note that TemporalLiterals are specified using JDBC escape syntax in String form, namely
+                    JPQL supports literals of the following types : Number, boolean, character, String, <i>NULL</i> and temporal.
+                    When String literals are specified using single-string format they should be surrounded by single-quotes <i>'</i>. 
+                    Please note that temporal literals are specified using <i>JDBC escape syntax</i> in String form, namely
                 </p>
                 <source>
 {d 'yyyy-mm-dd'}                 - a Date
