@@ -879,6 +879,26 @@ Query query = pm.newQuery("SELECT FROM mydomain.Supplier " +
                 <br/>
             </subsection>
 
+            <a name="ifelse"/>
+            <subsection name="IF ELSE expressions">
+                <p>
+                    For particular use in the <i>result</i> clause, you can make use of a <B>IF ELSE</B> expression where you want to
+                    return different things based on some condition(s). Like this
+                </p>
+<source><![CDATA[
+SELECT p.personNum, IF (p.age < 18) 'Youth' ELSE IF (p.age >= 18 && p.age < 65) 'Adult' ELSE 'Old' FROM mydomain.Person p");
+]]></source>
+                <p>
+                    So in this case the second result value will be a String, either "Youth", "Adult" or "Old" depending on the age of the person.
+                    <b>Note that this is not in any JDO spec yet, but should be soon</b>.
+                    The BNF structure of the JDOQL IF ELSE expression is
+                </p>
+                <pre>
+IF (conditional_expression) scalar_expression {ELSE IF (conditional_expression) scalar_expression}* ELSE scalar_expression
+                </pre>
+                <br/>
+            </subsection>
+
             <a name="operators"/>
             <subsection name="Operators">
                 <p>
