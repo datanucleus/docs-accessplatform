@@ -198,6 +198,26 @@ q.setParameter(2, theForename);</source>
                 <br/>
             </subsection>
 
+            <a name="case"/>
+            <subsection name="CASE expressions">
+                <p>
+                    For particular use in the <i>result</i> clause, you can make use of a <B>CASE</B> expression where you want to
+                    return different things based on some condition(s). Like this
+                </p>
+<source><![CDATA[
+Query q = em.createQuery(
+    "SELECT p.personNum, CASE WHEN p.age < 18 THEN 'Youth' WHEN p.age >= 18 AND p.age < 65 THEN 'Adult' ELSE 'Old' END FROM Person p");
+]]></source>
+                <p>
+                    So in this case the second result value will be a String, either "Youth", "Adult" or "Old" depending on the age of the person.
+                    The BNF structure of the JPQL CASE expression is
+                </p>
+                <pre>
+CASE WHEN conditional_expression THEN scalar_expression {WHEN conditional_expression THEN scalar_expression}* ELSE scalar_expression END
+                </pre>
+                <br/>
+            </subsection>
+
             <a name="functions"/>
             <subsection name="JPQL Functions">
                 <p>
