@@ -20,6 +20,10 @@
                 <p>
                     Migrating will require the following changes.
                 </p>
+                <ul>
+                    <li>For Cassandra plugin default data type for UUID.class has changed from text to uuid. If you have used UUID.class on 4_0_0_REL, to avoid problems
+                    specify jdbctype as varchar on column metadata when migrating to 4_0_1.</li>
+                </ul>
             </subsection>
 
             <a name="4_0_0_REL_FROM_4_0_0_M4"/>
