@@ -15,14 +15,25 @@
                 As a result sometimes users will have to make some changes to move between versions of DataNucleus. We aim to keep this to a minimum.
             </p>
 
+            <a name="4_0_2_FROM_4_0_1"/>
+            <subsection name="Migration from 4.0.1 to 4.0.2">
+                <p>
+                    Migrating will require the following changes.
+                </p>
+                <ul>
+                    <li>JPA plugin handling of nulls allowed was not very predictable before and the code has been changed to work simpler. If you get a field that is now 
+                    different to 4.0.1 or earlier then you should explicitly specify "allows-null".</li>
+                </ul>
+            </subsection>
+
             <a name="4_0_1_FROM_4_0_0_REL"/>
             <subsection name="Migration from 4.0.0.RELEASE to 4.0.1">
                 <p>
                     Migrating will require the following changes.
                 </p>
                 <ul>
-                    <li>For Cassandra plugin default data type for UUID.class has changed from text to uuid. If you have used UUID.class on 4_0_0_REL, to avoid problems
-                    specify jdbctype as varchar on column metadata when migrating to 4_0_1.</li>
+                    <li>For the Cassandra plugin, the default data type for UUID fields has changed from "text" to "uuid". If you have used UUID fields on v4.0.0-release you should
+                    specify jdbc-type as "varchar" in column metadata when migrating to 4.0.1.</li>
                 </ul>
             </subsection>
 
