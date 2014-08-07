@@ -14,30 +14,18 @@
                 in the future. In this section you can find the specifics for particular supported datastores
                 over and above what was already addressed for JDO and JPA persistence.
             </p>
-            <ul>
-                <li>Relational
-                    <ul>
-                    <li><a href="rdbms.html">RDBMS</a> : tried and tested since the 1970s, relational
+            <table>
+                <tr>
+                    <td><img src="../images/datastore/datastore_rdbms.png" border="0" alt="RDBMS"/></td>
+                    <td><a href="rdbms.html">RDBMS</a> : tried and tested since the 1970s, relational
                     databases form an integral component of many systems. They incorporate optimised querying
                     mechanisms, yet also can suffer from object-relational impedance mismatch in some
                     situations. They also require an extra level of configuration to map from objects
-                    across to relational tables/columns.</li>
-                    </ul>
-                </li>
-                <li>Documents
-                    <ul>
-                    <li><a href="odf.html">Open Document Format (ODF)</a> : ODF is an international 
-                    standard document format, and its spreadsheets provide a widely used form for publishing of
-                    data, making it available to other groups.</li>
-                    <li><a href="excel.html">Excel (XLS)</a> : Excel spreadsheets provide a widely used
-                    format allowing publishing of data, making it available to other groups (XLS format).</li>
-                    <li><a href="ooxml.html">Excel (OOXML)</a> : Excel spreadsheets provide a widely used
-                    format allowing publishing of data, making it available to other groups (OOXML format).</li>
-                    <li><a href="xml.html">XML</a> : XML defines a document format and, as such, is
-                    a key data transfer medium.</li>
-                    </ul>
-                </li>
-                <li>Map-Based
+                    across to relational tables/columns.</td>
+                </tr>
+                <tr>
+                    <td><img src="../images/datastore/datastore_mapbased.png" alt="Map-Based" border="0"/></td>
+                    <td>
                     <ul>
                     <li><a href="hbase.html">HBase</a> : HBase is a map-based datastore originated within Hadoop, following
                         the model of BigTable.</li>
@@ -50,41 +38,67 @@
                         There is currently no plugin usable with DN 4.x</i>.
                     </li>
                     </ul>
-                </li>
-                <li>Document-Based
+                    </td>
+                </tr>
+                <tr>
+                    <td><img src="../images/datastore/datastore_graphbased.png" alt="Graph-Based" border="0"/></td>
+                    <td>
                     <ul>
-                    <li><a href="mongodb.html" target="_blank">MongoDB</a> : plugin providing persistence to the MongoDB NoSQL datastore</li>
+                    <li><a href="neo4j.html" target="_blank">Neo4J</a> : plugin providing persistence to the Neo4j graph store</li>
                     </ul>
-                </li>
-                <li>Graph-Based
+                    </td>
+                </tr>
+                <tr>
+                    <td><img src="../images/datastore/datastore_document.png" border="0" alt="Documents"/></td>
+                    <td>
                     <ul>
-                    <li><a href="neo4j.html">Neo4j</a> : plugin providing persistence to the Neo4j graph store</li>
+                    <li><a href="odf.html">Open Document Format (ODF)</a> : ODF is an international 
+                    standard document format, and its spreadsheets provide a widely used form for publishing of
+                    data, making it available to other groups.</li>
+                    <li><a href="excel.html">Excel (XLS)</a> : Excel spreadsheets provide a widely used
+                    format allowing publishing of data, making it available to other groups (XLS format).</li>
+                    <li><a href="ooxml.html">Excel (OOXML)</a> : Excel spreadsheets provide a widely used
+                    format allowing publishing of data, making it available to other groups (OOXML format).</li>
+                    <li><a href="xml.html">XML</a> : XML defines a document format and, as such, is
+                    a key data transfer medium.</li>
                     </ul>
-                </li>
-                <li>Web-Based
+                    </td>
+                </tr>
+                <tr>
+                    <td><img src="../images/datastore/datastore_webbased.png" alt="Web-Based" border="0"/></td>
+                    <td>
                     <ul>
                     <li><a href="json.html">JSON</a> : another format of document for exchange, in this
                     case with particular reference to web contexts.</li>
                     <li><a href="amazons3.html">Amazon S3</a> : Amazon Simple Storage Service.</li>
                     <li><a href="googlestorage.html">Google Storage</a> : Google Storage.</li>
                     </ul>
-                </li>
-                <li>Object-Based
+                    </td>
+                </tr>
+                <tr>
+                    <td><img src="../images/datastore/datastore_docbased.png" alt="Doc-Based" border="0"/></td>
+                    <td>
+                    <ul>
+                    <li><a href="mongodb.html" target="_blank">MongoDB</a> : plugin providing persistence to the MongoDB NoSQL datastore</li>
+                    </ul>
+                    </td>
+                </tr>
+                <tr>
+                    <td><img src="../images/datastore/datastore_others.png" alt="Others" border="0"/></td>
+                    <td>
                     <ul>
                     <li><a href="neodatis.html">NeoDatis</a> : an open source object datastore. This provides
                     fast persistence of large object graphs, without the necessity of any object-relational
                     mapping.</li>
+                    <li><a href="ldap.html">LDAP</a> : an internet standard datastore for indexed data that is not changing significantly.</li>
                     <li><i>DB4O : an open source object datastore. DataNucleus (upto and including v3.0) provided a plugin
                         for db4o. This is now discontinued. Uses DataNucleus v3.0 if you wish to use this, or look in
                         our SVN for the plugin (no longer developed, so may not run against latest code)</i></li>
                     </ul>
-                </li>
-                <li>Other
-                    <ul>
-                    <li><a href="ldap.html">LDAP</a> : an internet standard datastore for indexed data that is not changing significantly.</li>
-                    </ul>
-                </li>
-            </ul>
+                    </td>
+                </tr>
+            </table>
+
             <p>
                 <a href="http://www.datanucleus.org/extensions/store_manager.html"><img src="../images/nucleus_plugin.gif" border="0" alt=""/></a>
                 If you have a requirement for persistence to some other datastore, then it would likely be 
