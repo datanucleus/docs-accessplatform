@@ -91,7 +91,7 @@ public class Printer
             </p>
             <source><![CDATA[
 @PersistenceCapable
-@Join(name="PRINTER_TONER", column="PRINTER_REFID")
+@Join(table="PRINTER_TONER", column="PRINTER_REFID")
 public class Printer
 {
     @Persistent(primaryKey="true", column="PRINTER_ID")
