@@ -449,12 +449,12 @@ public class Device
                     Let's take an example. We are modelling a <b>FilmLibrary</b>, and in our simple model our 
                     <b>FilmLibrary</b> has map of <b>Film</b>s, keyed by a String alias. So we define our classes as
                 </p>
-                <source>
+                <source><![CDATA[
 public class FilmLibrary
 {
     private String owner;
 
-    private Map films = new HashMap();
+    private Map<String, Film> films = new HashMap();
 
     public FilmLibrary(String owner)
     {
@@ -477,7 +477,7 @@ public class Film
     }
 
     ...
-}</source>
+}]]></source>
                 <p>
                     We decide that instead of <b>Film</b> having its own table, we want to persist them into the join
                     table of its map relationship with the <b>FilmLibrary</b> since they are only used by the library 
@@ -491,7 +491,7 @@ public class Film
                 <column name="OWNER" length="40" jdbc-type="VARCHAR"/>
             </field>
             <field name="films" persistence-modifier="persistent" table="FILM_LIBRARY_FILMS">
-                <map key-type="java.lang.String" value-type="com.mydomain.samples.embedded.Film"/>
+                <map/>
                 <join>
                     <column name="FILM_LIBRARY_ID"/>
                 </join>

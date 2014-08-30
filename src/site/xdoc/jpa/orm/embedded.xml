@@ -75,9 +75,7 @@ public class Computer
 
     private ComputerCard soundCard;
 
-    public Computer(String osName,
-                    ComputerCard graphics,
-                    ComputerCard sound)
+    public Computer(String osName, ComputerCard graphics, ComputerCard sound)
     {
         this.operatingSystem = osName;
         this.graphicsCard = graphics;
@@ -97,8 +95,7 @@ public class ComputerCard
 
     private int type;
 
-    public ComputerCard(String manufacturer,
-                        int type)
+    public ComputerCard(String manufacturer, int type)
     {
         this.manufacturer = manufacturer;
         this.type = type;
@@ -192,9 +189,7 @@ public class ComputerCard
     @Embedded
     Connector connector;
 
-    public ComputerCard(String manufacturer,
-                        int type,
-                        Connector conn)
+    public ComputerCard(String manufacturer, int type, Connector conn)
     {
         this.manufacturer = manufacturer;
         this.type = type;
@@ -289,7 +284,7 @@ public class Connector
                     Let's take an example. We are modelling a <b>Network</b>, and in our simple model our 
                     <b>Network</b> has collection of <b>Device</b>s. So we define our classes as
                 </p>
-                <source>
+                <source><![CDATA[
 @Entity
 public class Network
 {
@@ -297,7 +292,7 @@ public class Network
 
     @Embedded
     @ElementCollection
-    private Collection devices = new HashSet();
+    private Collection<Device> devices = new HashSet();
 
     public Network(String name)
     {
@@ -314,15 +309,14 @@ public class Device
 
     private String ipAddress;
 
-    public Device(String name,
-                  String addr)
+    public Device(String name, String addr)
     {
         this.name = name;
         this.ipAddress = addr;
     }
 
     ...
-}</source>
+}]]></source>
                 <p>
                     We decide that instead of <b>Device</b> having its own table, we want to persist them into the join
                     table of its relationship with the <b>Network</b> since they are only used by the network itself.
