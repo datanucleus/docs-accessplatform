@@ -74,6 +74,55 @@
                 </p>
                 <br/>
             </subsection>
+
+            <subsection name="User Connection">
+                <p>
+                    DataNucleus provides a mechanism for users to access the native connection to the datastore, so that 
+                    they can perform other operations as necessary. You obtain a connection as follows
+                </p>
+                <source>
+// Obtain the connection from the JDO implementation
+ExecutionContext ec = em.unwrap(ExecutionContext.class);
+NucleusConnection conn = ec.getStoreManager().getNucleusConnection(ec);
+try
+{
+    Object native = conn.getNativeConnection();
+    // Cast "native" to the required type for the datastore, see below
+    
+    ... use the connection to perform some operations.
+}
+finally
+{
+    // Hand the connection back to JPA
+    conn.close();
+}</source>
+                <p>
+                    For the datastores supported by DataNucleus, the "native" object is of the following types
+                </p>
+                <ul>
+                    <li>RDBMS : java.sql.Connection</li>
+                    <li>Excel : org.apache.poi.hssf.usermodel.HSSFWorkbook</li>
+                    <li>OOXML : org.apache.poi.hssf.usermodel.XSSFWorkbook</li>
+                    <li>ODF : org.odftoolkit.odfdom.doc.OdfDocument</li>
+                    <li>LDAP : javax.naming.ldap.LdapContext</li>
+                    <li>MongoDB : com.mongodb.DB</li>
+                    <li>HBase : NOT SUPPORTED</li>
+                    <li>JSON : NOT SUPPORTED</li>
+                    <li>XML : org.w3c.dom.Document</li>
+                    <li>NeoDatis : org.neodatis.odb.ODB</li>
+                    <li>GAE Datastore : com.google.appengine.api.datastore.DatastoreService</li>
+                    <li>Neo4j : org.neo4j.graphdb.GraphDatabaseService</li>
+                    <li>Cassandra : com.datastax.driver.core.Session</li>
+                </ul>
+                <p>
+                    Things to bear in mind with this connection
+                </p>
+                <ul>
+                    <li>You <b>must</b> return the connection back to the EntityManager before performing any EntityManager operation. You do this by calling <i>conn.close()</i></li>
+                    <li>If you don't return the connection and try to perform an EntityManager operation which requires the connection then an Exception is thrown.</li>
+                </ul>
+                <br/>
+            </subsection>
         </section>
 
         <section name="Connection Pooling">
