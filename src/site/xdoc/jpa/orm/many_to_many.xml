@@ -79,7 +79,7 @@ public class Product
     @ManyToMany(mappedBy="products")
     @JoinTable(name="PRODUCTS_SUPPLIERS",
         joinColumns={@JoinColumn(name="PRODUCT_ID")},
-        inverseJoinColumns={@InverseJoinColumn(name="SUPPLIER_ID")})
+        inverseJoinColumns={@JoinColumn(name="SUPPLIER_ID")})
     Collection<Supplier> suppliers
 }
 
