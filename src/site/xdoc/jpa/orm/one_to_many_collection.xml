@@ -38,8 +38,7 @@
                     use these to determine equality and whether an element is <i>contained</i> in the Collection.
                     Note also that the hashCode() should be consistent throughout the lifetime of a persistable
                     object. By that we mean that it should <b>not</b> use some basis before persistence and then use 
-                    some other basis (such as the object identity) after persistence, for this reason we do not
-                    recommend usage of <i>JDOHelper.getObjectId(obj)</i> in the equals/hashCode methods.
+                    some other basis (such as the object identity) after persistence in the equals/hashCode methods.
                 </p>
             </subsection>
         </section>

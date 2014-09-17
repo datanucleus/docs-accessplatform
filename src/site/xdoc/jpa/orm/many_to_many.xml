@@ -36,6 +36,17 @@
                 <li><a href="#set">M-N Set relation</a></li>
                 <li><a href="#list_ordered">M-N Ordered List relation</a></li>
             </ul>
+            <subsection name="equals() and hashCode()">
+                <p>
+                    <b>Important : The element of a Collection ought to define the methods <i>equals</i> and 
+                    <i>hashCode</i> so that updates are detected correctly.</b> This is because any Java Collection will
+                    use these to determine equality and whether an element is <i>contained</i> in the Collection.
+                    Note also that the hashCode() should be consistent throughout the lifetime of a persistable
+                    object. By that we mean that it should <b>not</b> use some basis before persistence and then use 
+                    some other basis (such as the object identity) after persistence in the equals/hashCode methods.
+                </p>
+            </subsection>
+            <br/>
         </section>
 
         <section name="Using Set">
