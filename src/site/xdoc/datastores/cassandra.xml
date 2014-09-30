@@ -44,6 +44,43 @@
                 <li>You can also use CQL and get the results back as List&lt;Object[]&gt; or even as List&lt;T&gt; where T is the type which you declare with setResultClass before executing the query.</li>
             </ul>
 
+            <a name="native"/>
+            <subsection name="Queries : Cassandra Native Queries">
+                <table>
+                    <tr>
+                        <td>Note that if you choose to use Cassandra CQL Queries then these are not portable
+                            to any other datastore. Use JDOQL/JPQL for portability</td>
+                    </tr>
+                </table>
+                <p>
+                    Cassandra provides CQL query language, and if you are using the JDO API you can
+                    utilize this for querying.
+                    To take a simple example
+                </p>
+                <source><![CDATA[
+// Find all employees
+PersistenceManager persistenceManager = pmf.getPersistenceManager();
+Query q = pm.newQuery("CQL", "SELECT * FROM schema1.Employee");
+// Fetch 10 Employee rows at a time
+query.getFetchPlan().setFetchSize(10);
+query.setResultClass(Employee.class);
+List<Employee> results = (List)q.execute();]]></source>
+                <p>
+                    You can also query results as List&lt;Object[]&gt; without specifying a specific result type as shown below.
+                </p>
+                <source><![CDATA[
+// Find all employees
+PersistenceManager persistenceManager = pmf.getPersistenceManager();
+Query q = pm.newQuery("CQL", "SELECT * FROM schema1.Employee");
+// Fetch all Employee rows as Object[] at a time.
+query.getFetchPlan().setFetchSize(-1);
+List<Object[]> results = (List)q.execute();]]></source>
+                <p>
+                    So we are utilising the JDO API to generate a query and passing in the Cassandra "CQL".
+                </p>
+                <br/>
+            </subsection>
+
         </section>
     </body>
 </document>
