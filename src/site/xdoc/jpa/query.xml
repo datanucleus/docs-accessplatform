@@ -13,7 +13,7 @@
                 representing an online store, the user asks to see all products of a particular type, ordered by 
                 the price. This requires you to query the datastore for these products. JPA specifies support for 
                 <a href="jpql.html">a pseudo-OO query language (JPQL)</a>, 
-                <a href="sql.html">a relational query language (SQL)</a> and
+                <a href="native_query.html">"native" query language for the datastore</a> (for RDBMS this is SQL, for Cassandra it is CQL), and
                 <a href="stored_procedures.html">(RDBMS) Stored Procedures</a> (JPA2.1+).
             </p>
             <p>
@@ -27,13 +27,13 @@
             </p>
             <p>
                 There are 2 categories of queries with JPA :-
-                <ul>
-                    <li><b>Programmatic Query</b> where the query is defined using the JPA Query API.</li>
-                    <li><b>Named Query</b> where the query is defined in MetaData and referred 
-                        to by its name at runtime(for <a href="jpql.html#named">JPQL</a>, <a href="sql.html#named">SQL</a>
-                        and <a href="stored_procedures.html#named">Stored Procedures</a>).</li>
-                </ul>
             </p>
+            <ul>
+                <li><b>Programmatic Query</b> where the query is defined using the JPA Query API.</li>
+                <li><b>Named Query</b> where the query is defined in MetaData and referred 
+                    to by its name at runtime(for <a href="jpql.html#named">JPQL</a>, <a href="sql.html#named">SQL</a>
+                    and <a href="stored_procedures.html#named">Stored Procedures</a>).</li>
+            </ul>
 
             <p>
                 Let's now try to understand the Query API in JPA
