@@ -60,29 +60,25 @@ datanucleus.ConnectionURL=neodatis:{neodatis_host}:{neodatis_port}/{identifier}
 datanucleus.ConnectionUserName=
 datanucleus.ConnectionPassword=</source>
                 <p>
-                    Neodatis doesn't itself use such URLs so it was necessary to define this DataNucleus-specific way 
-                    of addressing Neodatis.
+                    Neodatis doesn't itself use such URLs so it was necessary to define this DataNucleus-specific way of addressing Neodatis.
                 </p>
                 <p>
                     So you create your <a href="../jdo/pmf.html">PersistenceManagerFactory</a> or
                     <a href="../jpa/emf.html">EntityManagerFactory</a> with these properties. 
-                    Thereafter you have the full power of the JDO or JPA APIs at your disposal, for your 
-                    NeoDatis datastore.
+                    Thereafter you have the full power of the JDO or JPA APIs at your disposal, for your NeoDatis datastore.
                 </p>
                 <br/>
             </subsection>
 
             <subsection name="Queries">
                 <p>
-                    Access Platform allows you to query the objects in the datastore using the following
+                    AccessPlatform allows you to query the objects in the datastore using the following
                 </p>
                 <ul>
-                    <li><a href="../jdo/jdoql.html">JDOQL</a> - language based around the objects that are persisted and 
-                        using Java-type syntax</li>
-                    <li><a href="../jpa/jpql.html">JPQL</a> - language based around the objects that are persisted and 
-                        using SQL-like syntax</li>
-                <li><a href="#native">Native</a> - NeoDatis' own type-safe query language</li>
-                <li><a href="#criteria">Criteria</a> - NeoDatis' own Criteria query language</li>
+                    <li><a href="../jdo/jdoql.html">JDOQL</a> - language based around the objects that are persisted and using Java-type syntax</li>
+                    <li><a href="../jpa/jpql.html">JPQL</a> - language based around the objects that are persisted and using SQL-like syntax</li>
+                    <li><a href="#native">Native</a> - NeoDatis' own type-safe query language</li>
+                    <li><a href="#criteria">Criteria</a> - NeoDatis' own Criteria query language</li>
                 </ul>
                 <br/>
             </subsection>

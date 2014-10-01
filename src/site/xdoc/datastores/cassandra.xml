@@ -41,21 +41,19 @@
                 <li>This uses Cassandra 2.x (and CQL v3.x), not Thrift (like the previous unofficial attempts at a datanucleus-cassandra plugin used)</li>
                 <li>You need to specify the "schema" (<i>datanucleus.mapping.Schema</i>)</li>
                 <li>Queries are evaluated in-datastore when they only have (indexed) members and literals and using the operators ==, !=, &gt;, &gt;=, &lt;, &lt;=, &amp;&amp;, ||.</li>
-                <li>You can also use CQL and get the results back as List&lt;Object[]&gt; or even as List&lt;T&gt; where T is the type which you declare with setResultClass before executing the query.</li>
+                <li>You can query the datastore using <a href="../jdo/jdoql.html">JDOQL</a>, <a href="../jpa/jpql.html">JPQL</a>, or <a href="#native">CQL</a></li>
             </ul>
 
             <a name="native"/>
-            <subsection name="Queries : Cassandra Native Queries">
+            <subsection name="Queries : Cassandra CQL Queries">
                 <table>
                     <tr>
-                        <td>Note that if you choose to use Cassandra CQL Queries then these are not portable
-                            to any other datastore. Use JDOQL/JPQL for portability</td>
+                        <td>Note that if you choose to use Cassandra CQL Queries then these are not portable to any other datastore. Use JDOQL/JPQL for portability</td>
                     </tr>
                 </table>
                 <p>
-                    Cassandra provides CQL query language, and if you are using the JDO API you can
-                    utilize this for querying.
-                    To take a simple example
+                    Cassandra provides the CQL query language.
+                    To take a simple example using the JDO API
                 </p>
                 <source><![CDATA[
 // Find all employees
@@ -77,6 +75,16 @@ query.getFetchPlan().setFetchSize(-1);
 List<Object[]> results = (List)q.execute();]]></source>
                 <p>
                     So we are utilising the JDO API to generate a query and passing in the Cassandra "CQL".
+                </p>
+                <p>
+                    If you wanted to use CQL with the JPA API, you would do
+                </p>
+                <source><![CDATA[
+// Find all employees
+Query q = em.createNativeQuery("SELECT * FROM schema1.Employee", Employee.class);
+List<Employee> results = q.getResultList();]]></source>
+                <p>
+                    Note that the last argument to <i>createNativeQuery</i> is optional and you would get <i>List&lt;Object[]&gt;</i> returned otherwise.
                 </p>
                 <br/>
             </subsection>
