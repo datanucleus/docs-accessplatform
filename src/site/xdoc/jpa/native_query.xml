@@ -3,14 +3,14 @@
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
     <properties>
-        <title>JPA Queries - SQL</title>
+        <title>JPA Queries - Native</title>
     </properties>
 
     <body>
-        <section name="JPA : SQL Queries">
+        <section name="JPA : Native Queries">
             <p>
-                The JPA specification defines its interpretation of SQL, for selecting objects from the datastore. To provide a simple example, 
-                this is what you would do
+                The JPA specification defines its interpretation of native queries, for selecting objects from the datastore. 
+                To provide a simple example for RDBMS (i.e using SQL), this is what you would do
             </p>
             <source>
 Query q = em.createNativeQuery("SELECT p.id, o.firstName, o.lastName FROM Person p, Job j " +
@@ -26,7 +26,7 @@ List results = (List)q.getResultsList();</source>
             <a name="parameters"/>
             <subsection name="Input Parameters">
                 <p>
-                    In JPQL queries it is convenient to pass in parameters so we dont have to define the same query for 
+                    In JPQL queries it is convenient to pass in parameters so we don't have to define the same query for 
                     different values. Here's an example
                 </p>
                 <source>
