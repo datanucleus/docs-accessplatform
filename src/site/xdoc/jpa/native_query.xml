@@ -13,8 +13,7 @@
                 To provide a simple example for RDBMS (i.e using SQL), this is what you would do
             </p>
             <source>
-Query q = em.createNativeQuery("SELECT p.id, o.firstName, o.lastName FROM Person p, Job j " +
-                "WHERE (p.job = j.id) AND j.name = 'Cleaner'");
+Query q = em.createNativeQuery("SELECT p.id, o.firstName, o.lastName FROM Person p, Job j WHERE (p.job = j.id) AND j.name = 'Cleaner'");
 List results = (List)q.getResultsList();</source>
 			<p>
                 This finds all "Person" objects that do the job of "Cleaner". The syntax chosen has to be runnable on the RDBMS
@@ -32,23 +31,21 @@ List results = (List)q.getResultsList();</source>
                 <source>
 Numbered Parameters :
 Query q = em.createQuery("SELECT p FROM Person p WHERE p.lastName = ?1 AND p.firstName = ?2");
-q.setParameter(1, theSurname);
-q.setParameter(2, theForename);</source>
+q.setParameter(1, theSurname).setParameter(2, theForename);</source>
                 <p>
                     So we have parameters that are prefixed by <b>?</b> (question mark) and are numbered starting at 1.
-                    We then use the numbered position when calling <i>Query.setParameter()</i>. With SQL queries we can't use named
-                    parameters. This is known as <i>numbered</i> parameters.
+                    We then use the numbered position when calling <i>Query.setParameter()</i>. This is known as <i>numbered</i> parameters.
+                    With JPA native queries we can't use named parameters officially.
                 </p>
                 <p>
-                    DataNucleus also supports use of <i>named</i> parameters where you assign names just like in JPQL.
+                    DataNucleus also actually supports use of <i>named</i> parameters where you assign names just like in JPQL.
                     This is not defined by the JPA specification so dont expect other JPA implementations to support it.
                     Let's take the previous example and rewrite it using <i>named</i> parameters, like this
                 </p>
                 <source>
 Named Parameters :
 Query q = em.createQuery("SELECT p FROM Person p WHERE p.lastName = :firstParam AND p.firstName = :otherParam");
-q.setParameter("firstParam", theSurname);
-q.setParameter("otherParam", theForename);</source>
+q.setParameter("firstParam", theSurname).setParameter("otherParam", theForename);</source>
                 <br/>
             </subsection>
 
@@ -60,8 +57,7 @@ q.setParameter("otherParam", theForename);</source>
                 </p>
                 <source><![CDATA[
 Query q = em.createNativeQuery("SELECT p FROM Person p WHERE p.age &gt; 20");
-q.setFirstResult(0);
-q.setMaxResults(20);]]></source>
+q.setFirstResult(0).setMaxResults(20);]]></source>
                 <p>
                     So with this query we get results 0 to 19 inclusive.
                 </p>
@@ -70,7 +66,7 @@ q.setMaxResults(20);]]></source>
 
             <subsection name="Query Execution">
                 <p>
-                    There are two ways to execute a SQL query. When you know it will return 0 or 1 results you call
+                    There are two ways to execute a native query. When you know it will return 0 or 1 results you call
                 </p>
                 <source>Object result = query.getSingleResult();</source>
                 <p>
@@ -234,14 +230,13 @@ while (iter.hasNext())
 @NamedNativeQuery(name="PriceBelowValue", query="SELECT NAME FROM PRODUCT WHERE PRICE < ?1")
 public class Product {...}]]></source>
             <p>
-                So here we have an SQL query that will return the names of all Products that have a price less 
+                So here we have a native query that will return the names of all Products that have a price less 
                 than a specified value. This leaves us the flexibility to specify the value at runtime. So here we 
-                run our named query, asking for the names of all Products with price below 20 euros.
+                run our named native query, asking for the names of all Products with price below 20 euros.
             </p>
 <source>
-Query query = em.createNamedQuery("PriceBelowValue"); 
-query.setParameter(1, new Double(20.0));
-List results = query.getResultList();</source>
+Query query = em.createNamedQuery("PriceBelowValue");
+List results = query.setParameter(1, new Double(20.0)).getResultList();</source>
             <br/>
         </section>
 
