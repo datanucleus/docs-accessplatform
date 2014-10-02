@@ -297,6 +297,11 @@
                     <td>Defines the datastore type for the map key when it is a temporal type</td>
                 </tr>
                 <tr>
+                    <td><a href="#MapKeyColumn">@MapKeyColumn</a></td>
+                    <td>Field/Method</td>
+                    <td>Defines the column details for the map key when stored in a join table</td>
+                </tr>
+                <tr>
                     <td><a href="#OrderBy">@OrderBy</a></td>
                     <td>Field/Method</td>
                     <td>Defines the field(s) used for ordering the elements in this collection</td>
@@ -2657,6 +2662,39 @@ public class Person
     @ElementCollection
     @MapKeyEnumerated(EnumType.STRING)
     Map&lt;MyEnum, String&gt; dateMap;
+    ...
+}</source>
+                <br/>
+                <br/>
+            </subsection>
+
+            <a name="MapKeyColumn"/>
+            <subsection name="@MapKeyColumn">
+                <p>
+                    This annotation is used to define the column details for a key of a Map when stored in a join table.
+                    Specified on the <b>field/method</b>.
+                </p>
+                <table>
+                    <tr>
+                        <th>Attribute</th>
+                        <th>Type</th>
+                        <th>Description</th>
+                        <th>Default</th>
+                    </tr>
+                    <tr>
+                        <td>name</td>
+                        <td>String</td>
+                        <td>Name of the column for the key</td>
+                        <td></td>
+                    </tr>
+                </table>
+                <source>
+@Entity
+public class Person
+{
+    @OneToMany
+    @MapKeyColumn(name="FRIEND_NAME")
+    Map&lt;String, Person&gt; friends;
     ...
 }</source>
                 <br/>
