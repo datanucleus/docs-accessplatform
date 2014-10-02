@@ -15,6 +15,24 @@
                 As a result sometimes users will have to make some changes to move between versions of DataNucleus. We aim to keep this to a minimum.
             </p>
 
+            <a name="4_0_4_FROM_4_0_3"/>
+            <subsection name="Migration from 4.0.3 to 4.0.4">
+                <p>
+                    Migrating will require the following changes.
+                </p>
+                <ul>
+                    <li>The default naming for JPA "element collection" tables has changed to make it consistent with the spec. If you had a table generated using the earlier
+                    default naming and want to keep that name then you should explicitly specify the table name in annoations/XML to avoid problems.</li>
+                </ul>
+            </subsection>
+
+            <a name="4_0_3_FROM_4_0_2"/>
+            <subsection name="Migration from 4.0.2 to 4.0.3">
+                <p>
+                    Migrating should require no changes.
+                </p>
+            </subsection>
+
             <a name="4_0_2_FROM_4_0_1"/>
             <subsection name="Migration from 4.0.1 to 4.0.2">
                 <p>
