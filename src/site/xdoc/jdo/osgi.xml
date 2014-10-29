@@ -30,11 +30,16 @@
                     the packages required by DataNucleus. Failure to have this will result in <i>ClassNotFoundException</i>
                     when trying to load its classes.</li>
                 <li>Use <i>jdo-api.jar</i> v3.0.1 or later since those are OSGi-enabled</li>
-                <li>The Geronimo "jpa" jar that is included in the DataNucleus distribution is OSGi enabled.</li>
+                <li>The <i>javax.persistence</i> jar that is included in the DataNucleus distribution is OSGi-enabled.</li>
                 <li>When using DataNucleus in an OSGi environments set the persistence property
                     <b>datanucleus.plugin.pluginRegistryClassName</b> to <i>org.datanucleus.plugin.OSGiPluginRegistry</i></li>
                 <li>If you redeploy a JDO-enabled OSGi application, likely you will need to <i>refresh</i> the javax.jdo and maybe other bundles.</li>
             </ul>
+            <p>
+                Please make use of the <a href="https://github.com/datanucleus/samples-jdo/tree/master/osgi_basic">OSGi sample for JDO</a> in case it is of use.
+                Use of OSGi is notorious for class loading oddities, so it may be necessary to refine this sample for your situation. 
+                We welcome any feedback to improve it.
+            </p>
         </section>
     </body>
 </document>
