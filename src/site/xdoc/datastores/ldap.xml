@@ -175,9 +175,7 @@ public class Person
                 </p>
                 <source>
 @Entity
-@Extensions({
-    @Extension(key="dn", value="ou=Groups,dc=example,dc=com"),
-    @Extension(key="objectClass", value="groupOfNames,top")})
+@Table(name="ou=Groups,dc=example,dc=com", schema="top,groupOfNames")
 public class Group
 {
     @Id
@@ -190,9 +188,7 @@ public class Group
 }
 
 @Entity
-@Extensions({
-    @Extension(key="dn", value="ou=Groups,dc=example,dc=com"),
-    @Extension(key="objectClass", value="person,top,organizationalPerson,inetOrgPerson")})
+@Table(name="ou=Groups,dc=example,dc=com", schema="top,person,organizationalPerson,inetOrgPerson")
 public class Person
 {
     @Id
