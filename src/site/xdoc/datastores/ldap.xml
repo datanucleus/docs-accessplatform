@@ -74,16 +74,18 @@ datanucleus.ConnectionPassword=secret</source>
 
             <subsection name="Mapping : Relationships">
                 <p>
-                    By default PersistenceCapable objects are stored as separate LDAP entries. There are some options how to 
-                    persist relationship references between PersistenceCapable objects:
+                    By default persistable objects are stored as separate LDAP entries. There are some options how to 
+                    persist relationship references between persistable objects:
                 </p>
                 <ul>
                     <li><a href="ldap_dn.html">DN matching</a></li>
                     <li><a href="ldap_attribute.html">Attribute matching</a></li>
-                    <li><a href="ldap_hierarchical.html">LDAP hierarchies</a></li>
+                    <li><a href="ldap_hierarchical.html">LDAP hierarchies (deprecated)</a></li>
                 </ul>
                 <p>
-                    It is also possible to store PersistenceCapable objects <a href="ldap_embedded.html">embedded</a>.
+                    It is also possible to store persistable objects <a href="ldap_embedded.html">embedded</a>.
+                    Note that there is inbuilt logic for deciding which of these mapping strategies to use for a relationship. You can explicitly set this with the 
+                    metadata extension for the field/property <i>mapping-strategy</i> and it can be set to <b>dn</b> or <b>attribute</b>.
                 </p>
                 <br/>
             </subsection>
@@ -146,7 +148,7 @@ sn: Bunny]]></source>
                     Here's the same example using JDO Annotations:
                 </p>
                 <source>
-@PersistenceCapable(table = "ou=Groups,dc=example,dc=com", schema = "top,groupOfNames")
+@PersistenceCapable(table="ou=Groups,dc=example,dc=com", schema="top,groupOfNames")
 public class Group
 {
     @PrimaryKey
@@ -157,7 +159,7 @@ public class Group
     protected Set&lt;Person&gt; users = new HashSet&lt;Person&gt;();
 }
 
-@PersistenceCapable(table = "ou=Users,dc=example,dc=com", schema = "top,person,organizationalPerson,inetOrgPerson")
+@PersistenceCapable(table="ou=Users,dc=example,dc=com", schema="top,person,organizationalPerson,inetOrgPerson")
 public class Person
 {
     @PrimaryKey
