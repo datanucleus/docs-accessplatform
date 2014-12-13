@@ -18,15 +18,15 @@
                 The various possible relationships are described below.
             </p>
             <ul>
-                <li><a href="#join_simple_pc">Map[Simple, PC] using join table</a></li>
+                <li><a href="#join_simple_pc">Map[Simple, Entity] using join table</a></li>
                 <li><a href="#join_simple_simple">Map[Simple, Simple] using join table</a></li>
+                <li><a href="#join_pc_simple">Map[Entity, Simple] using join table</a></li>
                 <li><a href="#fk_uni_key">1-N Unidirectional using Foreign-Key (key stored in the value class)</a></li>
                 <li><a href="#fk_bi_key">1-N Bidirectional using Foreign-Key (key stored in the value class)</a></li>
             </ul>
             <p>
                 This page is aimed at Map fields and so applies to fields of Java type
-                <i>java.util.HashMap, java.util.Hashtable, java.util.LinkedHashMap, java.util.Map, java.util.SortedMap, 
-                java.util.TreeMap, java.util.Properties</i>
+                <i>java.util.HashMap, java.util.Hashtable, java.util.LinkedHashMap, java.util.Map, java.util.SortedMap, java.util.TreeMap, java.util.Properties</i>
             </p>
             <p>
                 <b>Please note that RDBMS supports the full range of options on this page, whereas other datastores
@@ -44,7 +44,7 @@
             </p>
 
             <a name="join_simple_pc"/>
-            <subsection name="Map[Simple, PC]">
+            <subsection name="Map[Simple, Entity">
                 <p>
                     Here our key is a simple type (in this case a String) and the values are <i>persistable</i>. Like this
                 </p>
@@ -121,6 +121,39 @@ public class Account
                 </p>
                 <br/>
             </subsection>
+            
+            <a name="join_pc_simple"/>
+            <subsection name="Map[Entity, Simple]">
+                <p>
+                    Here our key is an entity type and the value is a simple type (in this case a String)
+                </p>
+                <p>
+                    If you define the Meta-Data for these classes as follows
+                </p>
+                <source><![CDATA[
+@Entity
+public class Account
+{
+    @ElementCollection
+    @JoinTable
+    Map<Address, String> addressLookup;
+
+    ...
+}
+
+@Entity
+public class Address {...}]]></source>
+                <br/>
+                <p>
+                    This will create 3 tables in the datastore, one for <b>Account</b>, one for <b>Address</b>
+                    and a join table also containing the value.
+                </p>
+                <p>
+                    You can configure the names of the columns in the join table using the <i>joinColumns</i> attributes of the various annotations.
+                </p>
+                <br/>
+            </subsection>
+            
         </section>
 
         <section name="1-N Map using Foreign-Key">
