@@ -125,7 +125,10 @@ public class Account
             <a name="join_pc_simple"/>
             <subsection name="Map[Entity, Simple]">
                 <p>
-                    Here our key is an entity type and the value is a simple type (in this case a String)
+                    Here our key is an entity type and the value is a simple type (in this case a String).
+                    <b>Please note that JPA does NOT properly allow for this in its specification. Other implementations introduced the following hack so we also provide it</b>.
+                    Note that there is no OneToMany annotation here so this is seemingly not a relation to JPA (hence our description of this as a hack). Anyway use it to
+                    workaround JPA's lack of feature.
                 </p>
                 <p>
                     If you define the Meta-Data for these classes as follows
