@@ -954,11 +954,12 @@
                     </tr>
                     <tr>
                         <td width="120">Description</td>
-                        <td>Class name for the ObjectProvider to use when managing object state. From v3.2.2</td>
+                        <td>Class name for the ObjectProvider to use when managing object state.
+                            The default for RDBMS is ReferentialStateManagerImpl, and is StateManagerImpl for all other datastores.</td>
                     </tr>
                     <tr>
                         <td>Range of Values</td>
-                        <td><b>org.datanucleus.state.JDOStateManager</b> | {user-provided class-name}</td>
+                        <td>{user-provided class-name}</td>
                     </tr>
                 </table>
                 <br/>
