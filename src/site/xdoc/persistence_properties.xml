@@ -481,11 +481,13 @@
                         <td>When you call EM.merge with a transient object (with PK fields set), if you enable this 
 							feature then it will first check for existence of an object in the datastore with the
 						    same identity and, if present, will merge into that object (rather than just trying
-						    to persist a new object).</td>
+						    to persist a new object).
+						    The default for JDO is false, and for JPA is true.
+						</td>
                     </tr>
                     <tr>
                         <td>Range of Values</td>
-                        <td>true | <b>false</b></td>
+                        <td>true | false</td>
                     </tr>
                 </table>
                 <br/>
