@@ -7,26 +7,14 @@
     </properties>
 
     <body>
-        <section name="AccessPlatform : What's New in 4.0">
+        <section name="AccessPlatform : What's New in 4.1">
             <p>
-                DataNucleus AccessPlatform version 4.0 extends the 3.3 capabilities with significant internal refactoring.
-                Below are some of the new features you can find in DataNucleus AccessPlatform 4.0.
+                DataNucleus AccessPlatform version 4.1 extends the 4.0 capabilities with some internal refactoring.
+                Below are some of the new features you can find in DataNucleus AccessPlatform 4.1.
             </p>
             <ul>
-                <li>Upgrade to ASM v5 to allow for Java 1.8 bytecode changes</li>
-                <li>Changed the bytecode enhancement contract to use an internal definition rather than the JDO contract</li>
-                <li>JPA : no longer needs to have <i>jdo-api.jar</i> present</li>
-                <li>JPA : allow "native" query for Cassandra</li>
-                <li>Cassandra : support for Cassandra 1.2+</li>
-                <li>Cassandra : support for native CQL queries via JDO or JPA</li>
-                <li>Support for multicolumn TypeConverters (used by RDBMS, Cassandra, Excel, ODF, Neo4j, MongoDB, JSON, HBase)</li>
-                <li>SchemaTool : support for create/delete of a schema (where the datastore supports it)</li>
-                <li>RDBMS : support for HikariCP and DBCP2 connection pools</li>
-                <li>RDBMS : ability to use single connection per PM/EM (rather than 1 for transactional operations, and 1 for non-transactional operations)</li>
-                <li>RDBMS : removed the need to create JavaTypeMapping classes when the user type has a TypeConverter</li>
-                <li>JSON : support for embedded 1-1 relation fields/properties</li>
-                <li>Excel/ODF/JSON/MongoDB/Neo4j/HBase/Cassandra : move to using "core" definition of table/columns meaning access to generalised features tested on other datastores</li>
-                <li>Java 8 : support for the majority of <i>java.time</i> types</li>
+                <li>Minor upgrade to bytecode enhancement contract to allow for separation of enhancement API</li>
+                <li>Rewrite of handling of container field update code.</li>
             </ul>
         </section>
 

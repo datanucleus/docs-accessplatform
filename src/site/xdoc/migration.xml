@@ -9,11 +9,22 @@
     <body>
         <section name="AccessPlatform : Migration between versions">
             <p>
-                This version of DataNucleus AccessPlatform builds on the 3.3 releases and includes significant refactoring to the internal APIs to allow future flexibility.
+                This version of DataNucleus AccessPlatform builds on the 4.0 releases and includes some refactoring to the internal APIs to allow future flexibility.
                 All releases are checked regularly against the JDO/JPA TCKs, meaning that DataNucleus is always stable in terms of functionality.
                 Occasionally, due to unknown bugs, or due to new functionality being introduced we need to change some aspects of DataNucleus. 
                 As a result sometimes users will have to make some changes to move between versions of DataNucleus. We aim to keep this to a minimum.
             </p>
+
+            <a name="4_1_0_M1_FROM_4_0_4"/>
+            <subsection name="Migration from 4.0.4 to 4.1.0.M1">
+                <p>
+                    Migrating will require the following changes.
+                </p>
+                <ul>
+                    <li>The bytecode enhancement contract has been revised slightly, so all classes will need re-enhancement for use with this release.</li>
+                    <li>A query hint has been added "datanucleus.useIsNullWhenEqualsNullParameter" for particular use by JPA for compatibility. It defaults to false.</li>
+                </ul>
+            </subsection>
 
             <a name="4_0_4_FROM_4_0_3"/>
             <subsection name="Migration from 4.0.3 to 4.0.4">
