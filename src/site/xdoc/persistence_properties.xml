@@ -3203,6 +3203,23 @@
                 <table>
                     <tr>
                         <th colspan="2">
+                            <b>datanucleus.rdbms.query.multivaluedFetch</b>
+                        </th>
+                    </tr>
+                    <tr>
+                        <td width="120">Description</td>
+                        <td>How any multi-valued field should be fetched in a query. 'exists' means use an EXISTS statement hence retrieving all elements for the
+                            queried objects in one SQL with EXISTS to select the affected owner objects. 'none' means don't fetch container elements.</td>
+                    </tr>
+                    <tr>
+                        <td>Range of Values</td>
+                        <td><b>exists</b> | none</td>
+                    </tr>
+                </table>
+                <br/>
+                <table>
+                    <tr>
+                        <th colspan="2">
                             <b>datanucleus.rdbms.oracleNlsSortOrder</b>
                         </th>
                     </tr>
