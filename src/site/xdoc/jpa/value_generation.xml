@@ -25,6 +25,7 @@
                     the datastore (if supported by the datastore)</li>
                 <li><a href="#increment"><b>TABLE</b></a> - this is datastore neutral and increments
                     a sequence value using a table.</li>
+                <li><a href="#custom"><b>Custom generators</b> - these are beyond the scope of the JPA spec but provided by DataNucleus</a></li>
             </ul>
             <p>See also :-</p>
             <ul>
@@ -335,6 +336,40 @@ public class MyClass
                 </p>
                 <br/>
             </subsection>
+
+            <a name="custom"/>
+            <subsection name="Custom Value generators">
+                <img src="../images/nucleus_extension.gif" border="0" alt=""/>
+                <p>
+                    JPA only provides a very restricted set of value generators. DataNucleus provides various others internally. To access these you need to 
+                    use a custom annotation as follows
+                </p>
+                <source><![CDATA[
+<entity class="MyClass">
+    <attributes>
+        <id name="myId">
+            <generated-value strategy="uuid"/>
+        </id>
+    </attributes>
+</entity>]]></source>
+                <p>or using annotations</p>
+                <source><![CDATA[
+@Entity
+public class MyClass
+{
+    @Id
+    @ValueGenerator(strategy="uuid")
+    private String myId;
+    ...
+}]]></source>
+                <p>
+                    This will generate java UUID strings in the "myId" field.
+                    You can also set the "strategy" to "timestamp", "auid", "uuid-string", "uuid-hex", and "timestamp_value". Please read the 
+                    <a href=../jdo/value_generation.html">JDO documentation</a> for full details of these generators.
+                </p>
+                <br/>
+            </subsection>
+
         </section>
     </body>
 </document>
