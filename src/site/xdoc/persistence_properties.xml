@@ -3209,7 +3209,8 @@
                     <tr>
                         <td width="120">Description</td>
                         <td>How any multi-valued field should be fetched in a query. 'exists' means use an EXISTS statement hence retrieving all elements for the
-                            queried objects in one SQL with EXISTS to select the affected owner objects. 'none' means don't fetch container elements.</td>
+                            queried objects in one SQL with EXISTS to select the affected owner objects. 'none' means don't fetch container elements.
+                            <b>Applicable for RDBMS only</b></td>
                     </tr>
                     <tr>
                         <td>Range of Values</td>
@@ -3435,7 +3436,7 @@
                     <tr>
                         <td width="120">Description</td>
                         <td>Whether we are using SERIAL for identity columns (instead of SERIAL8).
-                            <b>Applicable for RDBMS only</b></td>
+                            <b>Applicable for RDBMS only.</b></td>
                     </tr>
                     <tr>
                         <td>Range of Values</td>
@@ -3453,7 +3454,7 @@
                     <tr>
                         <td width="120">Description</td>
                         <td>This is a mandatory property that allows you to supply the bucket name to store your data.
-                            <b>Applicable for Google Storage, and AmazonS3</b></td>
+                            <b>Applicable for Google Storage, and AmazonS3 only.</b></td>
                     </tr>
                     <tr>
                         <td>Range of Values</td>
@@ -3472,7 +3473,7 @@
                         <td>Setting this property to true means that when a new object is persisted (and its identity
                             is assigned), no check will be made as to whether it exists in the datastore and that the
                             user takes responsibility for such checks.
-                            <b>Applicable for HBase</b></td>
+                            <b>Applicable for HBase only.</b></td>
                     </tr>
                     <tr>
                         <td>Range of Values</td>
@@ -3489,7 +3490,7 @@
                     <tr>
                         <td width="120">Description</td>
                         <td>Type of compression to use for the Cassandra cluster.
-                            <b>Applicable for Cassandra only</b></td>
+                            <b>Applicable for Cassandra only.</b></td>
                     </tr>
                     <tr>
                         <td>Range of Values</td>
@@ -3506,7 +3507,7 @@
                     <tr>
                         <td width="120">Description</td>
                         <td>Whether metrics are enabled for the Cassandra cluster.
-                            <b>Applicable for Cassandra only</b></td>
+                            <b>Applicable for Cassandra only.</b></td>
                     </tr>
                     <tr>
                         <td>Range of Values</td>
@@ -3523,7 +3524,7 @@
                     <tr>
                         <td width="120">Description</td>
                         <td>Whether SSL is enabled for the Cassandra cluster.
-                            <b>Applicable for Cassandra only</b></td>
+                            <b>Applicable for Cassandra only.</b></td>
                     </tr>
                     <tr>
                         <td>Range of Values</td>
@@ -3540,7 +3541,7 @@
                     <tr>
                         <td width="120">Description</td>
                         <td>Socket read timeout for the Cassandra cluster.
-                            <b>Applicable for Cassandra only</b></td>
+                            <b>Applicable for Cassandra only.</b></td>
                     </tr>
                     <tr>
                         <td>Range of Values</td>
@@ -3557,7 +3558,7 @@
                     <tr>
                         <td width="120">Description</td>
                         <td>Socket connect timeout for the Cassandra cluster.
-                            <b>Applicable for Cassandra only</b></td>
+                            <b>Applicable for Cassandra only.</b></td>
                     </tr>
                     <tr>
                         <td>Range of Values</td>
