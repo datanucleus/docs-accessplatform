@@ -1075,8 +1075,7 @@
                     (the ordinal). You control which form by specifying the column <i>jdbc-type</i>.
                 </p>
                 <p>
-                    An extension to this <b>for RDBMS</b> is where you have an Enum that defines its own "value"s for the 
-                    different enum options.
+                    An extension to this <b>for RDBMS</b> is where you have an Enum that defines its own "value"s for the different enum options.
                 </p>
                 <source><![CDATA[
 public enum MyColour 
@@ -1135,8 +1134,8 @@ MyColour colour;]]></source>
                     for the java type and for the datastore. The user can, however, change that by making use of a
                     <i>TypeConverter</i>. You firstly need to define the <i>TypeConverter</i> class (assuming
                     you aren't going to use an 
-                    <a href="https://sourceforge.net/p/datanucleus/code/HEAD/tree/platform/core/trunk/src/java/org/datanucleus/store/types/converters/">internal DataNucleus converter</a>, and
-                    for this you should refer to the
+                    <a href="http://www.datanucleus.org/javadocs/core/latest/org/datanucleus/store/types/converters/">internal DataNucleus converter</a>,
+                    and for this you should refer to the
                     <a href="http://www.datanucleus.org/extensions/type_converter.html">TypeConverter plugin-point</a>.
                     Once you have the converter defined, and registered in a <i>plugin.xml</i> under a name you then
                     mark the field/property to use it
