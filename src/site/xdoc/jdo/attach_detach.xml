@@ -121,6 +121,16 @@ finally
                 To read more about <b>attach/detach</b> and how to use it with <a href="fetchgroup.html"><b>fetch-groups</b></a> 
                 you can look at our <a href="guides/daolayer_design.html">Tutorial on DAO Layer design</a>.
             </p>
+            <table>
+                <tr>
+                    <th>
+                        If you try to access a field in a detached object that was not detached when the object was detached then you will likely
+                        have a <i>JDODetachedFieldAccessException</i> thrown. To avoid this you should detach the field when detaching the object, so either 
+                        you didn't specify a large enough value for "maxFetchDepth" (pm.getFetchPlan().setMaxFetchDepth(val)), or you didn't have a large 
+                        enough value of "recursionDepth" for that field (where the field is recursive), or maybe the FetchPlan simply didn't include that field.
+                    </th>
+                </tr>
+            </table>
 
             <a name="detach_all_on_commit"/>
             <subsection name="Detach All On Commit">
