@@ -33,29 +33,29 @@
                 <p>
                     DataNucleus uses a series of <b>categories</b>, and logs all messages to these <b>categories</b>. 
 					Currently DataNucleus uses the following
-                    <ul>
-                        <li><b>DataNucleus.Persistence</b> - All messages relating to the persistence process</li>
-                        <li><b>DataNucleus.Transaction</b> - All messages relating to transactions</li>
-                        <li><b>DataNucleus.Connection</b> - All messages relating to Connections.</li>
-                        <li><b>DataNucleus.Query</b> - All messages relating to queries</li>
-                        <li><b>DataNucleus.Cache</b> - All messages relating to the DataNucleus Cache</li>
-                        <li><b>DataNucleus.MetaData</b> - All messages relating to MetaData</li>
-                        <li><b>DataNucleus.Datastore</b> - All general datastore messages</li>
-                        <li><b>DataNucleus.Datastore.Schema</b> - All schema related datastore log messages</li>
-                        <li><b>DataNucleus.Datastore.Persist</b> - All datastore persistence messages</li>
-                        <li><b>DataNucleus.Datastore.Retrieve</b> - All datastore retrieval messages</li>
-                        <li><b>DataNucleus.Datastore.Native</b> - Log of all 'native' statements sent to the datastore</li>
-                        <li><b>DataNucleus.General</b> - All general operational messages</li>
-                        <li><b>DataNucleus.Lifecycle</b> - All messages relating to object lifecycle changes</li>
-                        <li><b>DataNucleus.ValueGeneration</b> - All messages relating to value generation</li>
-                        <li><b>DataNucleus.Enhancer</b> - All messages from the DataNucleus Enhancer.</li>
-                        <li><b>DataNucleus.SchemaTool</b> - All messages from DataNucleus SchemaTool</li>
-                        <li><b>DataNucleus.JDO</b> - All messages general to JDO</li>
-                        <li><b>DataNucleus.JPA</b> - All messages general to JPA</li>
-                        <li><b>DataNucleus.JCA</b> - All messages relating to Connector JCA.</li>
-                        <li><b>DataNucleus.IDE</b> - Messages from the DataNucleus IDE.</li>
-                    </ul>
                 </p>
+                <ul>
+                    <li><b>DataNucleus.Persistence</b> - All messages relating to the persistence process</li>
+                    <li><b>DataNucleus.Transaction</b> - All messages relating to transactions</li>
+                    <li><b>DataNucleus.Connection</b> - All messages relating to Connections.</li>
+                    <li><b>DataNucleus.Query</b> - All messages relating to queries</li>
+                    <li><b>DataNucleus.Cache</b> - All messages relating to the DataNucleus Cache</li>
+                    <li><b>DataNucleus.MetaData</b> - All messages relating to MetaData</li>
+                    <li><b>DataNucleus.Datastore</b> - All general datastore messages</li>
+                    <li><b>DataNucleus.Datastore.Schema</b> - All schema related datastore log messages</li>
+                    <li><b>DataNucleus.Datastore.Persist</b> - All datastore persistence messages</li>
+                    <li><b>DataNucleus.Datastore.Retrieve</b> - All datastore retrieval messages</li>
+                    <li><b>DataNucleus.Datastore.Native</b> - Log of all 'native' statements sent to the datastore</li>
+                    <li><b>DataNucleus.General</b> - All general operational messages</li>
+                    <li><b>DataNucleus.Lifecycle</b> - All messages relating to object lifecycle changes</li>
+                    <li><b>DataNucleus.ValueGeneration</b> - All messages relating to value generation</li>
+                    <li><b>DataNucleus.Enhancer</b> - All messages from the DataNucleus Enhancer.</li>
+                    <li><b>DataNucleus.SchemaTool</b> - All messages from DataNucleus SchemaTool</li>
+                    <li><b>DataNucleus.JDO</b> - All messages general to JDO</li>
+                    <li><b>DataNucleus.JPA</b> - All messages general to JPA</li>
+                    <li><b>DataNucleus.JCA</b> - All messages relating to Connector JCA.</li>
+                    <li><b>DataNucleus.IDE</b> - Messages from the DataNucleus IDE.</li>
+                </ul>
             </subsection>
 
             <subsection name="Using Log4J">
@@ -197,6 +197,41 @@ java.util.logging.FileHandler.formatter=java.util.logging.SimpleFormatter</sourc
                 </p>
             </subsection>
 
+            <subsection name="HOWTO : Log with log4j and DataNucleus under OSGi">
+                <p>
+                    <i>This guide was provided by Marco Lopes, when using DataNucleus v2.2</i>.
+                    All the bundles which use log4j should have <i>org.apache.log4j</i> in their Import-Package attribute!
+                    (use: <i>org.apache.log4j;resolution:=optional</i> if you don't want to be stuck with log4j whenever you use an edited bundle in your project!).
+                </p>
+                <p>
+                    Method 1
+                </p>
+                <ul>
+                    <li>Create a new "Fragment Project". Call it whatever you want (ex: log4j-fragment)</li>
+                    <li>You have to define a "Plugin-ID", that's the plugin where DN will run</li>
+                    <li>Edit the MANIFEST</li>
+                    <li>Under RUNTIME add log4j JAR to the Classpath</li>
+                    <li>Under Export-Packages add org.apache.log4j</li>
+                    <li>Save MANIFEST</li>
+                    <li>PASTE the log4j PROPERTIES file into the SRC FOLDER of the Project</li>
+                </ul>
+                <p>
+                    Method 2
+                </p>
+                <ul>
+                    <li>Get an "OSGI Compliant" log4j bundle (you can get it from the SpringSource Enterprise Bundle Repository at [http://ebr.springsource.com/repository/app/])</li>
+                    <li>Open the Bundle JAR with WINRAR (others might work)</li>
+                    <li>PASTE the log4j PROPERTIES file into the ROOT of the bundle</li>
+                    <li>Exit. Winrar will ask to UPDATE the JAR. Say YES.</li>
+                    <li>Add the updated OSGI compliant Log4j bundle to your Plugin Project Dependencies (Required-Plugins)</li>
+                </ul>
+                <p>
+                    Each method has it's own advantages.
+                    Use method 1 if you need to EDIT the log4j properties file ON-THE-RUN. The disadvantage: it can only "target" one project at a time (but very easy to edit the 
+                    MANIFEST and select a new Host Plugin!). Use method 2 if you want to have log4j support in every project with only one file. The disadvantage: it's not very 
+                    practical to edit the log4j PROPERTIES file (not because of the bundle EDIT, but because you have to restart eclipse in order for the new bundle to be recognized).
+                </p>
+            </subsection>
         </section>
 
     </body>
