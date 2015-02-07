@@ -31,10 +31,10 @@
             <a name="genericCompilation"/>
             <subsection name="Generic Query Compilation Cache">
                 <p>
-                    This cache is by default set to <i>weak</i>, meaning that the generic query compilation
-                    is cached using weak references. This is set using the persistence property
+                    This cache is by default set to <i>soft</i>, meaning that the generic query compilation
+                    is cached using soft references. This is set using the persistence property
                     <b>datanucleus.cache.queryCompilation.type</b>. You can also set it to <i>strong</i>
-                    meaning that strong references are used, or <i>soft</i> meaning that soft references
+                    meaning that strong references are used, or <i>weak</i> meaning that weak references
                     are used, or finally to <i>none</i> meaning that there is no caching of generic query
                     compilation information
                 </p>
@@ -48,10 +48,10 @@
             <a name="datastoreCompilation"/>
             <subsection name="Datastore Query Compilation Cache">
                 <p>
-                    This cache is by default set to <i>weak</i>, meaning that the datastore query compilation
-                    is cached using weak references. This is set using the persistence property
+                    This cache is by default set to <i>soft</i>, meaning that the datastore query compilation
+                    is cached using soft references. This is set using the persistence property
                     <b>datanucleus.cache.queryCompilationDatastore.type</b>. You can also set it to <i>strong</i>
-                    meaning that strong references are used, or <i>soft</i> meaning that soft references
+                    meaning that strong references are used, or <i>weak</i> meaning that weak references
                     are used, or finally to <i>none</i> meaning that there is no caching of datastore-specific 
                     query compilation information
                 </p>
@@ -68,10 +68,10 @@
             <a name="results"/>
             <subsection name="Query Results Cache">
                 <p>
-                    This cache is by default set to <i>weak</i>, meaning that the datastore query results
-                    are cached using weak references. This is set using the persistence property
+                    This cache is by default set to <i>soft</i>, meaning that the datastore query results
+                    are cached using soft references. This is set using the persistence property
                     <b>datanucleus.cache.queryResult.type</b>. You can also set it to <i>strong</i>
-                    meaning that strong references are used, or <i>soft</i> meaning that soft references
+                    meaning that strong references are used, or <i>weak</i> meaning that weak references
                     are used, or finally to <i>none</i> meaning that there is no caching of query results
                     information. You can also specify <b>datanucleus.cache.queryResult.cacheName</b> to define
                     the name of the cache used for the query results cache.
