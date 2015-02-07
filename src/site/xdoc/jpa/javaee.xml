@@ -41,7 +41,7 @@
                 <ul>
                     <li>JBoss : At the time I am writing this "How To", the latest JBoss AS available from the main <a href="http://www.jboss.org/as7">JBoss community site</a> 
                     is 7.1.1.Final aka Brontes. In this guide, the latest 7.x SNAPSHOT was used but the steps will work with any JBoss 7.x version.</li>
-                    <li>DataNucleus : Version 3.2.0 was used, from <a href="http://sourceforge.net/projects/datanucleus/files/datanucleus-accessplatform/">SourceForge</a>.</li>
+                    <li>DataNucleus : Version 4.0.0 was used, from <a href="http://sourceforge.net/projects/datanucleus/files/datanucleus-accessplatform/">SourceForge</a>.</li>
                 </ul>
             </subsection>
 
@@ -203,8 +203,7 @@ $JBOSS_HOME/bin$ add-user.bat
                 <ul>
                     <li>Create a directory to store the DataNucleus libraries, as <b>$JBOSS_HOME/modules/org/datanucleus/main</b></li>
                     <li>Add the following jars from the lib directory of the <i>datanucleus-accessplatform-full-deps</i> ZIP file <i>lib</i> directory :
-                        <i>datanucleus-api-jpa-XXX.jar</i>, <i>datanucleus-core-XXX.jar</i>, <i>datanucleus-rdbms-XXX.jar</i>, <i>datanucleus-jpa-query-XXX.jar</i>,
-                        and <i>jdo-api-3.1-rc1.jar</i></li>
+                        <i>datanucleus-api-jpa-XXX.jar</i>, <i>datanucleus-core-XXX.jar</i>, <i>datanucleus-rdbms-XXX.jar</i>, <i>datanucleus-jpa-query-XXX.jar</i></li>
                     <li>Add a "module.xml" file in the $JBOSS_HOME/modules/org/datanucleus/main directory like this
 <source><![CDATA[
 <module xmlns="urn:jboss:module:1.1" name="org.datanucleus">
@@ -215,11 +214,10 @@ $JBOSS_HOME/bin$ add-user.bat
         <module name="javax.validation.api"/>
     </dependencies>
     <resources>
-        <resource-root path="datanucleus-api-jpa-3.2.7.jar"/>
-        <resource-root path="datanucleus-core-3.2.11.jar"/>
-        <resource-root path="datanucleus-rdbms-3.2.10.jar"/>
-        <resource-root path="datanucleus-jpa-query-3.0.3.jar"/>
-        <resource-root path="jdo-api-3.1-rc1.jar"/>
+        <resource-root path="datanucleus-api-jpa-4.0.5.jar"/>
+        <resource-root path="datanucleus-core-4.0.4.jar"/>
+        <resource-root path="datanucleus-rdbms-4.0.6.jar"/>
+        <resource-root path="datanucleus-jpa-query-4.0.4.jar"/>
     </resources>
 </module>
 ]]></source></li>
