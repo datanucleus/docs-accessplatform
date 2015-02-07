@@ -12,15 +12,11 @@
                 DataNucleus utilises datastore connections as follows
             </p>
             <ul>
-                <li>PMF : single connection at any one time for datastore-based value generation. Obtained just
-                    for the operation, then released</li>
-                <li>PMF : single connection at any one time for schema-generation. Obtained just for the
-                    operation, then released</li>
-                <li>PM  : single connection at any one time. When in a transaction the connection is held
-                    from the point of retrieval until the transaction commits or rolls back; the exact point at
-                    which the connection is obtained is defined more fully below.
-                    When used for non-transactional operations the connection is obtained just for the
-                    specific operation (unless configured to retain it).</li>
+                <li>PMF : single connection at any one time for datastore-based value generation. Obtained just for the operation, then released</li>
+                <li>PMF : single connection at any one time for schema-generation. Obtained just for the operation, then released</li>
+                <li>PM  : single connection at any one time. When in a transaction the connection is held from the point of retrieval until the transaction 
+                    commits or rolls back; the exact point at which the connection is obtained is defined more fully below.
+                    When used for non-transactional operations the connection is obtained just for the specific operation (unless configured to retain it).</li>
             </ul>
             <p>
                 If you have multiple threads using the same PersistenceManager then you can get "ConnectionInUse"
@@ -354,7 +350,10 @@ properties.setProperty("datanucleus.connectionPoolingType", "HikariCP");</source
                 </p>
                 <source>
 # Pooling of Connections
-datanucleus.connectionPool.maxPoolSize=5</source>
+datanucleus.connectionPool.maxPoolSize=5
+datanucleus.connectionPool.maxIdle=5
+datanucleus.connectionPool.leakThreshold=1
+datanucleus.connectionPool.maxLifetime=240</source>
                 <br/>
             </subsection>
 
