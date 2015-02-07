@@ -24,9 +24,244 @@
                 Individual guides for specific JavaEE servers are listed below. If you have a guide for
                 some other server, please notify us via the DataNucleus forum and it will be added to this list.
             </p>
-            <ul>
-                <li><a href="http://www.datanucleus.org/servlet/wiki/pages/viewpage.action?pageId=27688962">JBoss 7.1</a></li>
-            </ul>
+        </section>
+
+        <section name="JBoss AS7">
+            <a name="jboss"/>
+            <p>
+                <i>This guide was provided by Nicolas Seyvet.</i>
+            </p>
+            <p>
+                JBoss AS7 is the latest JavaEE server from JBoss. Despite searching in multiple locations, I could not find a comprehensive guide on how to switch from 
+                the default JBoss Hibernate JPA provider to Datanucleus 3. If you try this guide, please PM the author (or add a comment) and let me know how it worked out. 
+                Your feedback will be used to improve this guide. This guide is cross-referenced as part of the JBoss JPA Reference Guide.
+            </p>
+            <subsection name="Download JBoss AS 7 and DataNucleus 3.2+">
+                <ul>
+                    <li>JBoss : At the time I am writing this "How To", the latest JBoss AS available from the main <a href="http://www.jboss.org/as7">JBoss community site</a> 
+                    is 7.1.1.Final aka Brontes. In this guide, the latest 7.x SNAPSHOT was used but the steps will work with any JBoss 7.x version.</li>
+                    <li>DataNucleus : Version 3.2.0 was used, from <a href="http://sourceforge.net/projects/datanucleus/files/datanucleus-accessplatform/">SourceForge</a>.</li>
+                </ul>
+            </subsection>
+
+            <subsection name="Install JBoss AS 7">
+                <p>
+                    Install JBoss AS 7 by unzipping the downloaded JBoss zip file in the wanted folder to be used as the JBoss home root folder (example: /local/jboss).  
+                    From this point, the path where JBoss is unzipped will be referred to as *$JBOSS_HOME*.
+                </p>
+                <p>
+                    Note: JBoss AS 7 configuration is controlled by either standalone.xml (<i>$JBOSS_HOME/standalone/configuration</i>) or domain.xml (<i>$JBOSS_HOME/domain/configuration</i>) 
+                    depending on the operation mode (standalone or domain) of the application server.  The domain mode is typically used for cases where the AS is deployed in a 
+                    cluster environment. In this tutorial, a single AS instance is used, as such, the standalone mode is selected and all  configuration changes will be applied 
+                    to the "standalone.xlm" file.
+                </p>
+                <h4>Start JBoss</h4>
+                <p>
+                    To start the server, use:
+                </p>
+<pre>
+On Linux:
+
+$ cd $JBOSS_HOME/bin/
+$ ./standalone.sh
+
+On Windows:
+
+$ cd $JBOSS_HOME/bin/
+$ standalone.bat
+</pre>
+                <p>
+                    After a few seconds, a message should indicate the server is started.
+                </p>
+<pre>
+17:23:00,251 INFO  [org.jboss.as] (Controller Boot Thread) JBAS015874: JBoss AS 7.2.0.Alpha1-SNAPSHOT "Steropes" started
+ in 3717ms - Started 198 of 257 services (56 services are passive or on-demand)
+</pre>
+                <p>
+                    To verify, access the administration GUI located at <a href="http://localhost:9990/">http://localhost:9990/</a>, and expect to see a "Welcome to AS 7" banner. 
+                    On the first start up, a console will show that an admin user must first be created in order to be able to access the management UI. Follow the steps and create a user.
+                </p>
+<pre>
+On Linux:
+
+$JBOSS_HOME/bin$ add-user.sh
+
+
+On Windows:
+
+$JBOSS_HOME/bin$ add-user.bat
+</pre>
+                <h4>Add a JDBC DataSource (Optional)</h4>
+                <p>
+                    This step is only necessary if an RDBMS solution is used as a data store, or if external drivers are required. This tutorial will use MySQL as the RDBMS storage, 
+                    and the required drivers and data source will be added.
+                    For more information, about data sources under JBoss AS 7, refer to <a href="https://community.jboss.org/wiki/DataSourceConfigurationInAS7">the JBoss docs</a>
+                </p>
+
+                <h4>Add MySQL drivers</h4>
+                <p>
+                    For MySQL, it is recommended to use Connector/J, which can be found <a href="http://dev.mysql.com/downloads/connector/j/">here</a>. 
+                    Note that this tutorial uses version 5.1.20.
+                    Note: JBoss uses OSGI to define a set of modules, further info about <a href="https://docs.jboss.org/author/display/AS71/Class+Loading+in+AS7">class loading in JBoss</a>.  
+                    In short, the configuration files binds the services and the modules, defining what is available in the class loader for a specific service or application.
+                </p>
+                <p>
+                    While dropping the drivers in the $JBOSS_HOME/standalone/deployments directory works, this approach is not recommended. The proper approach is to add the drivers 
+                    by defining a new module containing the required libraries.
+                    The full instructions are available under <a href="https://community.jboss.org/wiki/DataSourceConfigurationInAS7#Installing_a_JDBC_driver_as_a_module">here</a>.
+                </p>
+                <p>
+                    Short walk through for MySQL:
+                </p>
+                <ul>
+                <li>Get the drivers</li>
+                <li>create a "mysql" directory under <i>$JBOSS_HOME/modules/com/</i></li>
+                <li>create a "main" directory under <i>$JBOSS_HOME/modules/com/mysql</i></li>
+                <li>Copy the "mysql-connector-java-5.1.20-bin.jar" drivers under <i>$JBOSS_HOME/modules/com/mysql/main</i></li>
+                <li>Add a "module.xml" file under <i>$JBOSS_HOME/modules/com/mysql/main</i> <source><![CDATA[
+<?xml version="1.0" encoding="UTF-8"?>
+<module xmlns="urn:jboss:module:1.0" name="com.mysql">
+    <resources>
+        <resource-root path="mysql-connector-java-5.1.20-bin.jar"/>
+    </resources>
+    <dependencies>
+        <module name="javax.api"/>
+    </dependencies>
+</module>
+]]></source></li>
+                </ul>
+                <p>
+                    The <b>name</b> is important as it defines the module name and is used in the "standalone.xml" configuration file. Now, let's say the URL to the MySQL database 
+                    to be used is "jdbc:mysql://localhost:3306/simple", there are three ways to add that to the server, either through the 
+                    <a href="http://localhost:9990/console/App.html#datasources">management console at localhost</a> or, by modifying the "standalone.xml" configuration file, or by using 
+                    the <a href="https://community.jboss.org/wiki/CommandLineInterface">Command Line Interface (CLI)</a>.
+                </p>
+                <p>
+                    Let's modify the "standalone.xml" file. Verify the AS is stopped. Open "standalone.xml" for editing. Search for 
+                    "subsystem xmlns="urn:jboss:domain:datasources:1.1", the section defines data sources and driver references.  Let's add our data source and drivers. 
+                    Add the following in the <b>datasources</b> section:
+                </p>
+<source><![CDATA[
+<datasource jndi-name="java:/jdbc/simple" pool-name="MySQL-DS" enabled="true">
+    <connection-url>jdbc:mysql://localhost:3306/simple</connection-url>
+      <driver>com.mysql</driver>
+      <transaction-isolation>TRANSACTION_READ_COMMITTED</transaction-isolation>
+      <pool>
+        <min-pool-size>10</min-pool-size>
+        <max-pool-size>100</max-pool-size>
+        <prefill>true</prefill>
+      </pool>
+      <security>
+        <user-name>[A valid DB user name]</user-name>
+        <password>[A valid DB password]</password>
+      </security>
+      <statement>
+        <prepared-statement-cache-size>32</prepared-statement-cache-size>
+        <share-prepared-statements>true</share-prepared-statements>
+      </statement>
+  </datasource>
+  <datasource jta="false" jndi-name="java:/jdbc/simple-nonjta" pool-name="MySQL-DS-NonJTA" enabled="true">
+    <connection-url>jdbc:mysql://localhost:3306/simple</connection-url>
+      <driver>com.mysql</driver>
+      <transaction-isolation>TRANSACTION_READ_COMMITTED</transaction-isolation>
+      <security>
+        <user-name>[A valid DB user name]</user-name>
+        <password>[A valid DB password]</password>
+      </security>
+      <statement>
+        <share-prepared-statements>false</share-prepared-statements>
+      </statement>
+  </datasource>
+]]></source>
+                <p>
+                    The above defines two data sources (MySQL-DS and MySQL-DS-NonJTA) referring to the same database. The difference between the two is that MySQL-DS 
+                    has JTA enabled while MySQL-DS-NonJTA does not. This is useful to separate operations during the database automated schema generation phase. 
+                    Any change to a schema should be made outside the scope of JTA. Many JDBC drivers (for example) will fall apart (assorted type of SQLException) 
+                    if you try to commit a connection with DDL and SQL mixed, or SQL first then DDL after. Consequently it is recommended to have a separate data source 
+                    for such operations, hence using the non-jta-data-source.
+                </p>
+                <p>
+                    In the <b>drivers</b> section, add:
+                </p>
+<source><![CDATA[
+<driver name="com.mysql" module="com.mysql">
+    <xa-datasource-class>com.mysql.jdbc.jdbc2.optional.MysqlXADataSource</xa-datasource-class>
+  </driver>
+]]></source>
+                <p>
+                    The above defines which drivers to use for the data sources MySQL-DS and MySQL-DS-NonJTA.
+                    More info is available as part of the JBoss documentation, refer to the section describing 
+                    <a href="https://community.jboss.org/wiki/DataSourceConfigurationInAS7">how to setup a new data source</a>.
+                </p>
+            </subsection>
+
+            <subsection name="Add DataNucleus to JBoss">
+                <p>
+                    This step adds the DataNucleus libraries as a JBoss module.
+                </p>
+                <ul>
+                    <li>Create a directory to store the DataNucleus libraries, as <b>$JBOSS_HOME/modules/org/datanucleus/main</b></li>
+                    <li>Add the following jars from the lib directory of the <i>datanucleus-accessplatform-full-deps</i> ZIP file <i>lib</i> directory :
+                        <i>datanucleus-api-jpa-XXX.jar</i>, <i>datanucleus-core-XXX.jar</i>, <i>datanucleus-rdbms-XXX.jar</i>, <i>datanucleus-jpa-query-XXX.jar</i>,
+                        and <i>jdo-api-3.1-rc1.jar</i></li>
+                    <li>Add a "module.xml" file in the $JBOSS_HOME/modules/org/datanucleus/main directory like this
+<source><![CDATA[
+<module xmlns="urn:jboss:module:1.1" name="org.datanucleus">
+    <dependencies>
+        <module name="javax.api"/>
+        <module name="javax.persistence.api"/>
+        <module name="javax.transaction.api"/>
+        <module name="javax.validation.api"/>
+    </dependencies>
+    <resources>
+        <resource-root path="datanucleus-api-jpa-3.2.7.jar"/>
+        <resource-root path="datanucleus-core-3.2.11.jar"/>
+        <resource-root path="datanucleus-rdbms-3.2.10.jar"/>
+        <resource-root path="datanucleus-jpa-query-3.0.3.jar"/>
+        <resource-root path="jdo-api-3.1-rc1.jar"/>
+    </resources>
+</module>
+]]></source></li>
+                </ul>
+                <p>
+                    At this point, all the JPA dependencies are resolved.
+                </p>
+            </subsection>
+
+            <subsection name="A simple example using DataNucleus JPA and JBoss AS7">
+                <p>
+                    Now you simply need to define <i>persistence.xml</i> and use JPA as you normally would.
+                    In order to use DataNucleus as a persistence provider, the "persistence.xml" file must contain the "jboss.as.jpa.providerModule" property.
+                    Using the datasources defined above, an example of a "persistence.xml" file could be:
+                </p>
+<source><![CDATA[
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence xmlns="http://java.sun.com/xml/ns/persistence" version="1.0">
+    <persistence-unit name="[Persistence Unit Name]" transaction-type="JTA">
+        <provider>org.datanucleus.api.jpa.PersistenceProviderImpl</provider>
+        <!-- MySQL DS -->
+        <jta-data-source>java:/jdbc/simple</jta-data-source>
+        <non-jta-data-source>java:/jdbc/simple-nonjta</non-jta-data-source>
+
+        <class>[Entities must be listed here]</class>
+
+        <properties>
+            <!-- Magic JBoss property for specifying the persistence provider -->
+            <property name="jboss.as.jpa.providerModule" value="org.datanucleus"/>
+
+            <!-- following is probably not useful... but it ensures we bind to the JTA transaction manager...-->
+            <property name="datanucleus.jtaLocator" value="custom_jndi"/>
+            <property name="datanucleus.jtaJndiLocation" value="java:/TransactionManager"/>
+
+            <property name="datanucleus.autoCreateSchema" value="true"/>
+            <property name="datanucleus.metadata.validate" value="false"/>
+            <property name="datanucleus.validateTables" value="false"/>
+            <property name="datanucleus.validateConstraints" value="false"/>
+        </properties>
+    </persistence-unit>
+</persistence>
+]]></source>
+            </subsection>
         </section>
     </body>
 </document>
