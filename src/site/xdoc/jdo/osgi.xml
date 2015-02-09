@@ -12,11 +12,10 @@
                 DataNucleus jars are OSGi bundles, and as such, can be deployed in an OSGi environment.
                 Being an OSGi environment care must be taken with respect to class-loading. In particular
                 the persistence property <b>datanucleus.primaryClassLoader</b> will need setting.
-                Please refer to the following guide(s) for assistance until a definitive guide can be
-                provided
+                Please refer to the following guide(s) for assistance until a definitive guide can be provided
             </p>
             <ul>
-                <li><a href="http://www.datanucleus.org/servlet/wiki/display/USERS/HOWTO+Use+Datanucleus+with+OSGi+and+Spring+DM">Guide to use of DataNucleus with OSGi and Spring dmServer</a></li>
+                <li><a href="#springdm">Guide to use of DataNucleus with OSGi and Spring dmServer</a></li>
                 <li><a href="http://www.datanucleus.org/servlet/wiki/pages/viewpage.action?pageId=1179712">Guide to JPOX inside Eclipse RCP</a></li>
                 <li><a href="http://www.datanucleus.org/servlet/wiki/pages/viewpage.action?pageId=1179721">Guide to JPOX with Spring and Eclipse RCP</a></li>
                 <li><a href="http://www.datanucleus.org/servlet/wiki/pages/viewpage.action?pageId=16842780">Guide to using Log4J with DataNucleus under OSGi</a></li>
@@ -40,6 +39,377 @@
                 Use of OSGi is notorious for class loading oddities, so it may be necessary to refine this sample for your situation. 
                 We welcome any feedback to improve it.
             </p>
+        </section>
+
+        <section name="HOWTO Use Datanucleus with OSGi and Spring DM">
+            <a name="springdm"/>
+            <p>
+                <i>This guide was written by Jasper Siepkes.</i>
+            </p>
+            <p>
+                This guide is based on my personal experience and is not the authoritative guide to using DataNucleus with OSGi and Spring DM.
+                I've updated this guide to use DataNucleus 3.0.2 and Eclipse Gemini (formerly Spring DM). I haven't extensively tested it yet.
+                For a DataNucleus 3.0.x-specific Spring JPA LocalContainerEntityManagerFactoryBean class, see 
+                [LocalContainterEntityManagerFactoryBean class for use in Virgo 3.0.x OSGi environment (Eclipse Equinox + Spring dm Server + Spring Framework)]
+                This guide explains how to use DataNucleus, Spring, OSGi and the OSGi blueprint specification together.
+                This guide assumes the reader is familiar with concepts like OSGi, Spring, JDO, DataNucleus etc. This guide only explains how to wire these technologies 
+                together and not how they work. Now there have been a lot of (name) changes in over a short course of time. Some webpages might not have been updated yet 
+                so to undo some of the confusion created here is the deal with Eclipse Gemini. Eclipse Gemini started out as Spring OSGi, which was later renamed to Spring 
+                Dynamic Modules or Spring DM for short. Spring DM is _NOT_ to be confused with Spring DM Server. Spring DM Server is a complete server product with management 
+                UI and tons of other features. Spring DM is the core of Spring DM Server and provides only the service / dependency injection part. At some point in time the 
+                Spring team decided to donate their OSGi efforts to the Eclipse foundation. Spring DM became Eclipse Gemini and Spring DM Server became Eclipse Virgo. 
+                The whole Spring OSGi / Spring DM / Eclipse Gemini later became standardised as the OSGi Blueprint specification.
+                To summarise: Spring OSGi = Spring DM = Eclipse Gemini, Spring DM Server = Eclipse Virgo.
+            </p>
+            <p>
+                Technologies used in this guide are:
+            </p>
+            <ul>
+                <li>IDE (Eclipse 3.7)</li>
+                <li>OSGi (Equinox 3.7.1)</li>
+                <li>JDO (DataNucleus 3.0.2)</li>
+                <li>Dependency Injection (Spring 3.0.6)</li>
+                <li>OSGi Blueprint (Eclipse Gemini BluePrint 1.0.0)</li>
+                <li>Datastore (PostgreSQL 8.3, altough any datastore supported by DataNucleus can be used)</li>
+            </ul>
+            <p>
+                We are going to start by creating a clean OSGi target platform. Start by creating an empty directory which is going to house all the bundles for our target platform.
+            </p>
+
+            <subsection name="Step 1 : Adding OSGi">
+                <p>
+                    The first ingredient we are adding to our platform is the OSGi implementation. In this guide we will use Eclipse Equinox as our OSGi implementation. 
+                    However one could also use Apache Felix, Knoplerfish, Concierge or any other compatible OSGi implementation for this purpose. 
+                    Download the "org.eclipse.osgi_3.7.1.R37x_v20110808-1106.jar" ("Framework Only" download) from the Eclipse Equinox website and put in the target platform.
+                </p>
+            </subsection>
+
+            <subsection name="Step 2 - Adding DI">
+                <p>
+                    We are now going to add the Spring, Spring ORM, Spring JDBC, Spring Transaction and Spring DM bundles to our target platform. 
+                    Download the Spring Community distribution from their website "spring-framework-3.0.6.RELEASE.zip". Extract the following files to our target platform directory:
+                </p>
+                <ul>
+                    <li>org.springframework.aop-3.0.6.RELEASE.jar</li>
+                    <li>org.springframework.asm-3.0.6.RELEASE.jar</li>
+                    <li>org.springframework.aspects-3.0.6.RELEASE.jar</li>
+                    <li>org.springframework.beans-3.0.6.RELEASE.jar</li>
+                    <li>org.springframework.context.support-3.0.6.RELEASE.jar</li>
+                    <li>org.springframework.context-3.0.6.RELEASE.jar</li>
+                    <li>org.springframework.core-3.0.6.RELEASE.jar</li>
+                    <li>org.springframework.expression-3.0.6.RELEASE.jar</li>
+                    <li>org.springframework.jdbc-3.0.6.RELEASE.jar</li>
+                    <li>org.springframework.orm-3.0.6.RELEASE.jar</li>
+                    <li>org.springframework.spring-library-3.0.6.RELEASE.libd</li>
+                    <li>org.springframework.transaction-3.0.6.RELEASE.jar</li>
+                </ul>
+            </subsection>
+
+            <subsection name="Step 3 - Adding OSGi Blueprint">
+                <p>
+                    Download the Eclipse Gemini release from their website ("gemini-blueprint-1.0.0.RELEASE.zip") and extract the following files to our target platform:
+                </p>
+                <ul>
+                    <li>gemini-blueprint-core-1.0.0.RELEASE.jar</li>
+                    <li>gemini-blueprint-extender-1.0.0.RELEASE.jar</li>
+                    <li>gemini-blueprint-io-1.0.0.RELEASE.jar</li>
+                </ul>
+            </subsection>
+
+            <subsection name="Step 4 - Adding ORM">
+                <p>
+                    We are now going to add JDO and DataNucleus to our target platform.
+                </p>
+                <ul>
+                    <li>datanucleus-core-3.0.2.jar</li>
+                    <li>datanucleus-api-jdo-3.0.2.jar</li>
+                    <li>datanucleus-rdbms-3.0.2.jar</li>
+                    <li>jdo-api-3.1-rc1.jar</li>                
+                </ul>
+            </subsection>
+
+            <subsection name="Step 5 - Adding miscellaneous bundles">
+                <p>
+                    The following bundles are dependencies of our core bundles and can be downloaded from the 
+                    <a href="http://www.springsource.com/repository/app/">Spring Enterprise Bundle Repository</a>
+                </p>
+                <ul>
+                    <li>com.springsource.org.aopalliance-1.0.0.jar (Dependency of Spring AOP, the core AOP bundle. )</li>
+                    <li>com.springsource.org.apache.commons.logging-1.1.1.jar (Dependency of various Spring bundles, logging abstraction library.)</li>
+                    <li>com.springsource.org.postgresql.jdbc4-8.3.604.jar (PostgreSQL JDBC driver, somewhat dated.)</li>
+                </ul>
+                <p>
+                    We now have a basic target platform. This is how the directory housing the target platform looks on my PC:
+                </p>
+<source><![CDATA[$ ls -las
+   4 drwxrwxr-x 2 siepkes siepkes    4096 Oct 22 15:28 .
+   4 drwxrwxr-x 3 siepkes siepkes    4096 Oct 22 15:29 ..
+   8 -rw-r----- 1 siepkes siepkes    4615 Oct 22 15:27 com.springsource.org.aopalliance-1.0.0.jar
+  68 -rw-r----- 1 siepkes siepkes   61464 Oct 22 15:28 com.springsource.org.apache.commons.logging-1.1.1.jar
+ 472 -rw-r----- 1 siepkes siepkes  476053 Oct 22 15:28 com.springsource.org.postgresql.jdbc4-8.3.604.jar
+ 312 -rw-r----- 1 siepkes siepkes  314358 Oct  2 11:36 datanucleus-api-jdo-3.0.2.jar
+1624 -rw-r----- 1 siepkes siepkes 1658797 Oct  2 11:36 datanucleus-core-3.0.2.jar
+1400 -rw-r----- 1 siepkes siepkes 1427439 Oct  2 11:36 datanucleus-rdbms-3.0.2.jar
+ 572 -rw-r----- 1 siepkes siepkes  578205 Aug 22 22:37 gemini-blueprint-core-1.0.0.RELEASE.jar
+ 180 -rw-r----- 1 siepkes siepkes  178525 Aug 22 22:37 gemini-blueprint-extender-1.0.0.RELEASE.jar
+  32 -rw-r----- 1 siepkes siepkes   31903 Aug 22 22:37 gemini-blueprint-io-1.0.0.RELEASE.jar
+ 208 -rw-r--r-- 1 siepkes siepkes  208742 Oct  2 11:36 jdo-api-3.1-rc1.jar
+1336 -rw-r----- 1 siepkes siepkes 1363464 Oct 22 14:26 org.eclipse.osgi_3.7.1.R37x_v20110808-1106.jar
+ 320 -rw-r----- 1 siepkes siepkes  321428 Aug 18 16:50 org.springframework.aop-3.0.6.RELEASE.jar
+  56 -rw-r----- 1 siepkes siepkes   53082 Aug 18 16:50 org.springframework.asm-3.0.6.RELEASE.jar
+  36 -rw-r----- 1 siepkes siepkes   35557 Aug 18 16:50 org.springframework.aspects-3.0.6.RELEASE.jar
+ 548 -rw-r----- 1 siepkes siepkes  556590 Aug 18 16:50 org.springframework.beans-3.0.6.RELEASE.jar
+ 660 -rw-r----- 1 siepkes siepkes  670258 Aug 18 16:50 org.springframework.context-3.0.6.RELEASE.jar
+ 104 -rw-r----- 1 siepkes siepkes  101450 Aug 18 16:50 org.springframework.context.support-3.0.6.RELEASE.jar
+ 380 -rw-r----- 1 siepkes siepkes  382184 Aug 18 16:50 org.springframework.core-3.0.6.RELEASE.jar
+ 172 -rw-r----- 1 siepkes siepkes  169752 Aug 18 16:50 org.springframework.expression-3.0.6.RELEASE.jar
+ 384 -rw-r----- 1 siepkes siepkes  386033 Aug 18 16:50 org.springframework.jdbc-3.0.6.RELEASE.jar
+ 332 -rw-r----- 1 siepkes siepkes  334743 Aug 18 16:50 org.springframework.orm-3.0.6.RELEASE.jar
+   4 -rw-r----- 1 siepkes siepkes    1313 Aug 18 16:50 org.springframework.spring-library-3.0.6.RELEASE.libd
+ 232 -rw-r----- 1 siepkes siepkes  231913 Aug 18 16:50 org.springframework.transaction-3.0.6.RELEASE.jar
+]]></source>
+            </subsection>
+
+            <subsection name="Step 6 - Set up Eclipse">
+                <p>
+                    Here I will show how one can create a base for an application with our newly created target platform.
+                </p>
+                <p>
+                    Create a Target Platform in Eclipse by going to 'Window' -> 'Preferences' -> 'Plugin Development' -> 'Target Platform' and press the 'Add' button. 
+                    Select 'Nothing: Start with an empty target platform', give the platform a name and point it to the directory we put all the jars/bundles in. 
+                    When you are done press the 'Finish' button. Indicate to Eclipse we want to use this new platform by ticking the checkbox in front of our newly created 
+                    platform in the 'Target Platform' window of the 'Preferences' screen.
+                </p>
+                <p>
+                    Create a new project in Eclipse by going to 'File' -> 'New...' -> 'Project' and Select 'Plug-in Project' under the 'Plugin development' leaf. 
+                    Give the project a name (I'm going to call it 'nl.siepkes.test.project.a' in this example). In the radiobox options 'This plugin is targetted to run with:' 
+                    select 'An OSGi framework' -> 'standard'. Click 'Next'. Untick the 'Generate an activator, a Java class that....' and press 'Finish'.
+                </p>
+                <p>
+                    <i>Obviously Eclipse is not the mandatory IDE for the steps described above. Other technologies can be used instead. 
+                    For this guide I used Eclipse because it is easy to explain, but for most of my projects I use Maven.</i>
+                    If you have the Spring IDE plugin installed (which is advisable if you use Spring) you can add a Spring Nature to your project by right clicking your 
+                    project and then clicking 'Spring Tools' -> 'Add Spring Nature'. This will enable error detection in your Spring bean configuration file.
+                </p>
+                <p>
+                    Create a directory called 'spring' in your 'META-INF' directory. In this directory create a Spring bean configuration file by right clicking the 
+                    directory and click 'New...' -> 'Other...'. A menu called 'New' will popup, select 'Spring Bean Configuration File'. Call the file beans.xml.
+                </p>
+                <p>
+                    It is important to realize that the Datanucleus plugin system uses the Eclipse extensions system and NOT the plain OSGi facilities. 
+                    There are two ways to make the DataNucleus plugin system work in a plain OSGi environment:
+                </p>
+                <ul>
+                    <li>Tell DataNucleus to use a simplified plugin manager which does not use the Eclipse plugin system (called "OSGiPluginRegistry").</li>
+                    <li>Add the Eclipse plugin system to the OSGi platform.</li>
+                </ul>
+                <p>
+                    We are going to use the simplified plugin manager. The upside is that its easy to setup. The downside is that is less flexible then the Eclipse plugin system. 
+                    The Eclipse plugin system allowes you to manage different version of DataNucleus plugins. With the simplified plugin manager you can have only _one_ version of 
+                    a DataNucleus plugin in your OSGi platform at any given time.
+                </p>
+                <p>
+                    Declare a Persistence Manager Factory Bean inside the beans.xml:
+                </p>
+<source><![CDATA[
+<bean id="pmf" class="nl.siepkes.util.DatanucleusOSGiLocalPersistenceManagerFactoryBean">
+    <property name="jdoProperties">
+        <props>
+            <prop key="javax.jdo.PersistenceManagerFactoryClass">org.datanucleus.api.jdo.JDOPersistenceManagerFactory</prop>
+			<!-- PostgreSQL DB connection settings. Add '?loglevel=2' to Connection URL for JDBC Connection debugging. -->
+            <prop key="javax.jdo.option.ConnectionURL">jdbc:postgresql://localhost/testdb</prop>
+            <prop key="javax.jdo.option.ConnectionDriverName">org.postgresql.Driver</prop>
+            <prop key="javax.jdo.option.ConnectionUserName">foo</prop>
+            <prop key="javax.jdo.option.ConnectionPassword">bar</prop>
+
+            <prop key="datanucleus.storeManagerType">rdbms</prop>
+            <prop key="datanucleus.autoCreateSchema">true</prop>
+            <prop key="datanucleus.validateTables">true</prop>
+            <prop key="datanucleus.validateColumns">true</prop>
+            <prop key="datanucleus.validateConstraints">true</prop>
+            <prop key="datanucleus.rdbms.CheckExistTablesOrViews">true</prop>
+
+            <prop key="datanucleus.plugin.pluginRegistryClassName">org.datanucleus.plugin.OSGiPluginRegistry</prop>
+        </props>
+    </property>
+</bean>
+
+<osgi:service ref="pmf" interface="javax.jdo.PersistenceManagerFactory" />
+]]></source>
+                <p>
+                    You can specify all the JDO/DataNucleus options you need following the above <i>prop</i>, <i>key</i> pattern.
+                    Notice the <i>osgi:service</i> line. This exports our persistence manager as an OSGi sevice and makes it possible for other bundles to access it.
+                    Also notice that the Persistence Manager Factory is not the normal <i>LocalPersistenceManagerFactoryBean</i> class, but instead the 
+                    _OSGiLocalPersistenceManagerFactoryBean_ class. The <i>OSGiLocalPersistenceManagerFactoryBean</i> is *NOT* part of the default DataNucleus distribution. 
+                    So why do we need to use the <i>OSGiLocalPersistenceManagerFactoryBean</i> instead of the default <i>LocalPersistenceManagerFactoryBean</i> ? 
+                    The default <i>LocalPersistenceManagerFactoryBean</i> is not aware of the OSGi environment and expects all classes to be loaded by one single classloader 
+                    (this is the case in a normal Java environment without OSGi). This makes the <i>LocalPersistenceManagerFactoryBean</i> unable to locate its plugins.
+                    The <i>OSGiLocalPersistenceManagerFactoryBean</i> is a subclass of the <i>LocalPersistenceManagerFactoryBean</i> and is aware of the OSGi environment:
+                </p>
+                <p>
+                    <i>For a DataNucleus 3.0.x-specific Spring JPA LocalContainerEntityManagerFactoryBean class, see 
+                    [LocalContainterEntityManagerFactoryBean class for use in Virgo 3.0.x OSGi environment (Eclipse Equinox + Spring dm Server + Spring Framework)]</i>
+                </p>
+<source><![CDATA[
+public class OSGiLocalPersistenceManagerFactoryBean extends LocalPersistenceManagerFactoryBean implements BundleContextAware {
+
+    private BundleContext bundleContext;
+    private DataSource dataSource;
+
+    public DatanucleusOSGiLocalPersistenceManagerFactoryBean() 
+    {
+    }
+
+    @Override
+    protected PersistenceManagerFactory newPersistenceManagerFactory(String name) 
+    {
+        return JDOHelper.getPersistenceManagerFactory(name, getClassLoader());
+    }
+
+    @Override
+    protected PersistenceManagerFactory newPersistenceManagerFactory(Map props) 
+    {
+        ClassLoader classLoader = getClassLoader();
+        props.put("datanucleus.primaryClassLoader", classLoader);
+        return JDOHelper.getPersistenceManagerFactory(props, classLoader);
+    }
+
+    private ClassLoader getClassLoader() 
+    {
+        ClassLoader classloader = null;
+        Bundle[] bundles = bundleContext.getBundles();
+        for (int x = 0; x < bundles.length; x++) 
+        {
+            if ("org.datanucleus.store.rdbms".equals(bundles[x].getSymbolicName())) 
+            {
+                try 
+                {
+                    classloader = bundles[x].loadClass("org.datanucleus.JDOClassLoaderResolver").getClassLoader();
+                } 
+                catch (ClassNotFoundException e)
+                {
+                    e.printStackTrace();
+                }
+                break;
+            }
+        }
+        return classloader;
+    }
+
+    @Override
+    public void setBundleContext(BundleContext bundleContext) 
+    {
+        this.bundleContext = bundleContext;
+    }
+}
+]]></source>
+                <p>
+                    If we create an new, similear (Plug-in) project, for example 'nl.siepkes.test.project.b' we can import/use our Persistance Manager Factory service by 
+                    specifying the following in its beans.xml:
+                </p>
+<source><![CDATA[
+<osgi:reference id="pmf" interface="javax.jdo.PersistenceManagerFactory" />
+]]></source>
+                <p>
+                    The Persistance Manager Factory (pmf) bean can then be injected into other beans as you normally would do when using Spring and JDO/DataNucleus together.
+                </p>
+            </subsection>
+
+            <subsection name="Step 7 - Accessing your services from another bundle">
+                <p>
+                    The reason why you are probably using OSGi is because you want to separate/modularize all kinds of code. A common use case is that you have your service layer in 
+                    bundle A and another bundle, bundle B, who invokes methods in your service layer. Bundle B knows absolutely nothing about  DataNucleus (ie. no imports and dependencies 
+                    on DataNucleus or Datastore JDBC drivers) and will just call methods with signatures like 'public FooRecord getFooRecord(long fooId)'.
+                    
+                    When you create such a setup and access a method in bundle A from bundle B you might be surprised to find out a ClassNotFound Exception is being thrown. 
+                    The ClassNotFound exception will probably be about some DataNucleus or Datastore JDBC driver class not being found. How can bundle B complain about not 
+                    finding implementation classes which only belong in bundle A (which has the correct imports) ? The reason for this is that when you invoke the method in bundle A 
+                    from bundle B the classloader from bundle B is used to execute the method in bundle A. And since the classloader of bundle B does not have DataNucleus imports things go awry.
+                </p>
+                <p>
+                    To solve this we need to change the ClassLoader in the ThreadContext which invokes the method in Bundle A. We could of course do this manually in every method in 
+                    Bundle A but since we are already using Spring and AOP its much easier to do it that way.
+                    Create the following class (which is our aspect that is going to do the heavy lifting) in bundle A:
+                </p>
+<source><![CDATA[
+package nl.siepkes.util;
+
+/**
+ * <p>
+ * Aspect for setting the correct class loader when invoking a method in the
+ * service layer.
+ * </p>
+ * <p>
+ * When invoking a method from a bundle in the service layer of another bundle
+ * the classloader of the invoking bundle is used. This poses the problem that
+ * the invoking class loader needs to know about classes in the service layer of
+ * the other bundle. This aspect sets the <tt>ContextClassLoader</tt> of the
+ * invoking thread to that of the other bundle, the bundle that owns the method
+ * in the service layer which is being invoked. After the invoke is completed
+ * the aspect sets the <tt>ContextClassLoader</tt> back to the original
+ * classloader of the invoker.
+ * </p>
+ *
+ * @author Jasper Siepkes <jasper@siepkes.nl>
+ *
+ */
+public class BundleClassLoaderAspect implements Ordered {
+
+    private static final int ASPECT_PRECEDENCE = 0;
+
+    public Object setClassLoader(ProceedingJoinPoint pjp) throws Throwable {
+	// Save a reference to the classloader of the caller
+	ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
+	// Get a reference to the classloader of the owning bundle
+	ClassLoader serviceLoader = pjp.getTarget().getClass().getClassLoader();
+	// Set the class loader of the current thread to the class loader of the
+	// owner of the bundle
+	Thread.currentThread().setContextClassLoader(serviceLoader);
+
+	Object returnValue = null;
+
+	try {
+	    // Make the actual call to the method.
+	    returnValue = pjp.proceed();
+	} finally {
+	    // Reset the classloader of this Thread to the original
+	    // classloader of the method invoker.
+	    Thread.currentThread().setContextClassLoader(oldLoader);
+	}
+
+	return returnValue;
+    }
+
+    @Override
+    public int getOrder() {
+        return ASPECT_PRECEDENCE;
+    }
+}
+]]></source>
+                <p>
+                    Add the following to you Spring configuration in bundle A:
+                </p>
+<source><![CDATA[
+<tx:advice id="txAdvice" transaction-manager="txManager">
+    <tx:attributes>
+	<tx:method name="get*" read-only="true" />
+	<tx:method name="*" />
+    </tx:attributes>
+</tx:advice>
+
+<aop:pointcut id="fooServices" expression="execution(* nl.siepkes.service.*.*(..))" />
+    <aop:advisor advice-ref="txAdvice" pointcut-ref="fooServices" />
+
+    <!-- Ensures the class loader of this bundle is used to invoke public methods in the service layer of this bundle. -->
+    <aop:aspect id="bundleLoaderAspect" ref="bundleLoaderAspectBean">
+	<aop:around pointcut-ref="fooServices" method="setClassLoader"/>
+    </aop:aspect>
+</aop:config>
+]]></source>
+                <p>
+                    Now all methods in classes in the package 'nl.siepkes.service' will always use the class loader of bundle A.
+                </p>
+            </subsection>
         </section>
     </body>
 </document>
