@@ -16,7 +16,7 @@
             </p>
             <ul>
                 <li><a href="#springdm">Guide to use of DataNucleus with OSGi and Spring dmServer</a></li>
-                <li><a href="http://www.datanucleus.org/servlet/wiki/pages/viewpage.action?pageId=1179712">Guide to JPOX inside Eclipse RCP</a></li>
+                <li><a href="#eclipse_rcp">Guide to DataNucleus inside Eclipse RCP</a></li>
                 <li><a href="http://www.datanucleus.org/servlet/wiki/pages/viewpage.action?pageId=1179721">Guide to JPOX with Spring and Eclipse RCP</a></li>
                 <li><a href="http://www.datanucleus.org/servlet/wiki/pages/viewpage.action?pageId=16842780">Guide to using Log4J with DataNucleus under OSGi</a></li>
             </ul>
@@ -409,6 +409,137 @@ public class BundleClassLoaderAspect implements Ordered {
                 <p>
                     Now all methods in classes in the package 'nl.siepkes.service' will always use the class loader of bundle A.
                 </p>
+            </subsection>
+        </section>
+
+        <section name="Using DataNucleus with Eclipse RCP">
+            <a name="eclipse_rcp"/>
+            <p>
+                <i>This guide was written by Stuart Robertson</i>.
+            </p>
+            <p>
+                Using DataNucleus inside an Eclipse plugin (that is, Eclipse's Equinox OSGi runtime) should be simple, because DataNucleus is implemented as a collection of 
+                OSGi bundles. My early efforts to use DataNucleus from within my Eclipse plugins all ran into problems. First classloader problems of various kinds began to show 
+                themselves. See <a href="http://www.datanucleus.org/servlet/forum/viewthread?thread=4846">this post</a> on the DataNucleus Forum for details. 
+                My initial faulty configuration was as follows:
+            </p>
+<source><![CDATA[
+model
+  src/main/java/...*.java    (persistent POJO classes, enhanced using Maven DataNucleus plugin)
+  src/main/resources/datanucleus.properties* (PMF properties)
+
+rcp.jars
+  plugin.xml
+  META-INF/
+    MANIFEST.MF   (OSGi bundle manifest)
+  lib/
+    datanucleus-core-XXX.jar
+    ...
+    spring-2.5.jar
+
+rcp.ui
+  plugin.xml
+  META-INF/
+    MANIFEST.MF   (OSGi bundle manifest)
+]]></source>
+            <p>
+                Using the standard pattern, I had created a "jars" plugin whose only purpose in life was to provide a way to bring all of the 3rd party jars that my "model" 
+                depends on into the Eclipse plugin world. Each of the jars in the "jars" project's lib directory were also added to the MANIFEST.MF "Bundle-ClassPath" section as follows:
+            </p>
+<source><![CDATA[
+Bundle-ClassPath:* lib\asm-3.0.jar,
+lib\aspectjtools-1.5.3.jar,
+lib\commons-dbcp-1.2.2.jar,
+lib\commons-logging-1.1.1.jar,
+lib\commons-pool-1.3.jar,
+lib\geronimo-spec-jta-1.0.1B-rc2.jar,
+lib\h2-1.0.63.jar,
+lib\jdo2-api-2.1-SNAPSHOT.jar,
+lib\datanucleus-core-XXX.jar,
+lib\datanucleus-rdbms-XXX.jar,
+lib\...*
+lib\log4j-1.2.14.jar,
+lib\model-1.0.0-SNAPSHOT.jar,
+lib\persistence-api-1.0.jar,
+lib\spring-2.5.jar
+]]></source>
+            <p>
+                Notice that the <i>rcp.jars</i> plugin's lib directory contains <b>model-1.0.0-SNAPSHOT.jar</b> - this is the jar containing my enhanced persistent classes and 
+                PMF properties file (which I called <i>datanucleus.properties</i>). Also, <i>all</i> of the packages from <i>all</i> of the jars listed in the Bundle-Classpath were 
+                exported using the Export-Package bundle-header.
+            </p>
+            <p>
+                Note, that the plugin.xml file in the "jars" project is an empty plugin.xml file containing only &lt;plugin&gt;&lt;/plugin&gt;, used only to trick Eclipse into using the 
+                Plugin Editor to open the MANIFEST.MF file so the bundle info can be edited in style.
+            </p>
+            <p>
+                The <i>rcp.ui plugin</i> depends on the <i>rcp.jars</i> so that it can "see" all of the necessary classes. Inside the Bundle Activator class in my UI plugin I 
+                initialized DataNucleus as normal, creating a PersistenceManagerFactory from the embedded datanucleus.properties file.
+            </p>
+            <p>
+                It all looks really promising, but doesn't work due to all kinds of classloading issues.
+            </p>
+
+            <subsection name="DataNucleus jars as plugins">
+                <p>
+                    The first part of the solution was to use the DataNucleus as a set of Eclipse plugins. Initially I wasn't sure where to get MANIFEST.MF and plugin.xml files to do 
+                    this, but I later discovered that each of the datanucleus jar files are <u>already</u> packaged as Eclipse plugins. Open any of the datanucleus jar files up and 
+                    you'll see an OSGi manifest and Eclipse plugin.xml. All that was needed was to copy datanucleus-XXX.jar into $ECLIPSE_HOME/plugins directory and restart Eclipse.
+                </p>
+                <p>
+                    Once this was done, I removed the datanucleus jar files from my lib/ directory and instead modified my jars plugin, removing the datanucleus jars and all 
+                    datanucleus packages from Bundle-Classpath and Export-Package. Next, I modified my <i>rcp.ui plugin</i> to depend not only on <i>rcp.jars</i>, but also on 
+                    all of the <b>datanucleus</b> plugins. The relevant section of my rcp.ui plugin's manifest were changed to:
+                </p>
+<source><![CDATA[
+Require-Bundle: org.eclipse.core.runtime,
+org.datanucleus,
+org.datanucleus.enhancer,
+org.datanucleus.store.rdbms,
+]]></source>
+                <p>
+                    This moved things along, resulting in the following message:
+                </p>
+<source><![CDATA[
+javax.jdo.JDOException: Class org.datanucleus.store.rdbms.RDBMSManager was not found in the CLASSPATH. Please check your specification and your CLASSPATH.
+]]></source>
+                <p>
+                    Turns out that the class that could not be found was not org.datanucleus.store.rdbms.RDBMSManager, but rather my H2 database driver class. I figured the solution 
+                    might lie in using Eclipse's buddy-loading mechanism to allow the *org.datanucleus.store.rdbms* plugin to see my JDBC driver, which is was packaged into my 
+                    'jars' plugin. Thus, I added the following to <i>rcp.ui</i>'s MANIFEST.MF:
+                </p>
+<source><![CDATA[
+Eclipse-RegisterBuddy: org.datanucleus.store.rdbms
+]]></source>
+                <p>
+                    That too, didn't work. Checking the org.datanucleus.store.rdbms MANIFEST.MF showed no 'Eclipse-BuddyPolicy: registered' entry, so 
+                    <i>Eclipse-RegisterBuddy: org.datanucleus.store.rdbms</i> wouldn't have helped anyway. If you are new to Eclipse's classloading ways, I can highly recommend you 
+                    read <a href="http://www.eclipsezone.com/articles/eclipse-vms/">""A Tale of Two VMs"</a>, as you'll likely run into the need for buddy-loading sooner or later.
+                </p>
+            </subsection>
+
+            <subsection name="PrimaryClassLoader saves the day">
+                <p>
+                    Returning to <a href="http://www.datanucleus.org/servlet/forum/viewthread?thread=3910">Erik Bengtson's example</a> (about half-way down the post) gave me inspiration:
+                </p>
+<source><![CDATA[
+//set classloader for driver (using classloader from the "rcp.jars" bundle)
+ClassLoader clrDriver = Platform.getBundle("rcp.jars").loadClass("org.h2.Driver").getClassLoader();
+map.put("org.datanucleus.primaryClassLoader", clrDriver);
+
+//set classloader for DataNucleus (using classloader from the "org.datanucleus" bundle)
+ClassLoader clrDN = Platform.getBundle("org.datanucleus").loadClass("org.datanucleus.api.jdo.JDOPersistenceManagerFactory").getClassLoader()
+
+PersistenceManagerFactory pmf = JDOHelper.getPersistenceManagerFactory(map, clrDN);
+]]></source>
+                <p>
+                    With the above change made, things worked. So, in summary
+                </p>
+                <ul>
+                    <li>Don't embed DataNucleus jars inside your plugin</li>
+                    <li>Do install DataNucleus jars into Eclipse/plugins and add dependencies to them from your plugin's MANIFEST</li>
+                    <li>Do tell DataNucleus which classloader to use for both its primaryClassLoader and for its own implementation</li>
+                </ul>
             </subsection>
         </section>
     </body>
