@@ -12,14 +12,8 @@
                 DataNucleus jars are OSGi bundles, and as such, can be deployed in an OSGi environment.
                 Being an OSGi environment care must be taken with respect to class-loading. In particular
                 the persistence property <b>datanucleus.primaryClassLoader</b> will need setting.
-                Please refer to the following guide(s) for assistance until a definitive guide can be
-                provided
+                Please refer to the <a href="../jdo/osgi.html">associated guides for JDO</a> to assist you further.
             </p>
-            <ul>
-                <li><a href="http://www.datanucleus.org/servlet/wiki/display/USERS/HOWTO+Use+Datanucleus+with+OSGi+and+Spring+DM">Guide to use of DataNucleus with OSGi and Spring dmServer</a></li>
-                <li><a href="http://www.datanucleus.org/servlet/wiki/pages/viewpage.action?pageId=1179712">Guide to JPOX inside Eclipse RCP</a></li>
-                <li><a href="http://www.datanucleus.org/servlet/wiki/pages/viewpage.action?pageId=1179721">Guide to JPOX with Spring and Eclipse RCP</a></li>
-            </ul>
             <p>
                 An important thing to note : any dependent jar that is required by DataNucleus needs to be OSGi enabled.
                 By this we mean the jar needs to have the MANIFEST.MF file including <i>ExportPackage</i> for
@@ -95,6 +89,151 @@
                     start the JPA "application".
                 </p>
             </subsection>
+        </section>
+
+        <section name="LocalContainerEntityManagerFactoryBean class for use in Virgo 3.0 OSGi environment">
+            <p>
+                When using DataNucleus 3.x in a Virgo 3.0.x OSGi environment, which is essentially Eclipse Equinox + Spring dm Server with Spring 3.0.5.RELEASE included, 
+                the following class is working for me to use in your Spring configuration. You can use this class as a drop-in replacement for Spring's 
+                <i>org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean</i>. It was inspired by the code-ish sample at 
+                <a href="../jdo/osgi.html#springdm">HOWTO Use Datanucleus with OSGi and Spring DM</a>.
+            </p>
+<source><![CDATA[
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.PersistenceException;
+import javax.persistence.spi.PersistenceUnitInfo;
+
+import org.datanucleus.util.StringUtils;
+import org.osgi.framework.Bundle;
+import org.osgi.framework.BundleContext;
+import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
+import org.springframework.osgi.context.BundleContextAware;
+
+public class DataNucleusOsgiLocalContainerEntityManagerFactoryBean extends
+    LocalContainerEntityManagerFactoryBean implements BundleContextAware
+{
+
+    public static final String DEFAULT_JPA_API_BUNDLE_SYMBOLIC_NAME = "org.datanucleus.api.jpa";
+    public static final String DEFAULT_PERSISTENCE_PROVIDER_CLASS_NAME = "org.datanucleus.api.jpa.PersistenceProviderImpl";
+
+    public static final String DEFAULT_OSGI_PLUGIN_REGISTRAR_CLASS_NAME = "org.datanucleus.plugin.OSGiPluginRegistry";
+    public static final String DEFAULT_OSGI_PLUGIN_REGISTRAR_PROPERTY_NAME = "datanucleus.plugin.pluginRegistryClassName";
+
+    protected BundleContext bundleContext;
+    protected ClassLoader classLoader;
+
+    protected String jpaApiBundleSymbolicName = DEFAULT_JPA_API_BUNDLE_SYMBOLIC_NAME;
+    protected String persistenceProviderClassName = DEFAULT_PERSISTENCE_PROVIDER_CLASS_NAME;
+    protected String osgiPluginRegistrarClassName = DEFAULT_OSGI_PLUGIN_REGISTRAR_CLASS_NAME;
+    protected String osgiPluginRegistrarPropertyName = DEFAULT_OSGI_PLUGIN_REGISTRAR_PROPERTY_NAME;
+
+    @Override
+    public void setBundleContext(BundleContext bundleContext) {
+	this.bundleContext = bundleContext;
+    }
+
+    @Override
+    protected EntityManagerFactory createNativeEntityManagerFactory() throws PersistenceException 
+    {
+        ClassLoader original = getBeanClassLoader(); // save for later
+        try 
+        {
+            if (bundleContext != null) 
+            {
+                // default
+                String name = getPersistenceProviderClassName();
+                PersistenceUnitInfo info = getPersistenceUnitInfo();
+                if (info != null && !StringUtils.isEmpty(info.getPersistenceProviderClassName())) 
+                {
+                    // use class name of PU
+                    name = info.getPersistenceProviderClassName();
+                }
+
+                if (StringUtils.isEmpty(getJpaApiBundleSymbolicName())) 
+                {
+                    throw new IllegalStateException("no DataNucleus JPA API bundle symbolic name given");
+                }
+
+                // set the bean class loader to use it so that Spring can find the persistence provider class
+                setBeanClassLoader(getBundleClassLoader(getJpaApiBundleSymbolicName(), name));
+
+                // since we're in an OSGi environment by virtue of the use of this class, ensure a plugin registration mechanism is being used
+                if (info == null || (info.getProperties() != null && !info.getProperties().containsKey(getOsgiPluginRegistrarPropertyName()))) 
+                {
+                    Map<String, Object> map = getJpaPropertyMap();
+                    map = map == null ? new HashMap<String, Object>() : map;
+                    if (map.get(getOsgiPluginRegistrarPropertyName()) == null) {
+                        map.put(getOsgiPluginRegistrarPropertyName(), getOsgiPluginRegistrarClassName());
+                    }
+                }
+            }
+
+            // now let Springy do its thingy
+            return super.createNativeEntityManagerFactory();
+        } 
+        finally 
+        {
+            setBeanClassLoader(original); // revert bean classloader
+        }
+    }
+
+    protected ClassLoader getBundleClassLoader(String bundleSymbolicName,String classNameToLoad) 
+    {
+        ClassLoader classloader = null;
+        Bundle[] bundles = bundleContext.getBundles();
+        for (int x = 0; x < bundles.length; x++) 
+        {
+            if (bundleSymbolicName.equals(bundles[x].getSymbolicName())) {
+                try 
+                {
+                    classloader = bundles[x].loadClass(classNameToLoad).getClassLoader();
+                }
+                catch (ClassNotFoundException e) 
+                {
+                    e.printStackTrace();
+                }
+                break;
+            }
+        }
+        return classloader;
+    }
+
+    public String getJpaApiBundleSymbolicName() {
+        return jpaApiBundleSymbolicName;
+    }
+
+    public void setJpaApiBundleSymbolicName(String jpaApiBundleSymbolicName) {
+        this.jpaApiBundleSymbolicName = jpaApiBundleSymbolicName;
+    }
+
+    public String getPersistenceProviderClassName() {
+        return persistenceProviderClassName;
+    }
+
+    public void setPersistenceProviderClassName(String persistenceProviderClassName) {
+        this.persistenceProviderClassName = persistenceProviderClassName;
+    }
+
+    public String getOsgiPluginRegistrarClassName() {
+        return osgiPluginRegistrarClassName;
+    }
+
+    public void setOsgiPluginRegistrarClassName(String osgiPluginRegistrarClassName) {
+        this.osgiPluginRegistrarClassName = osgiPluginRegistrarClassName;
+    }
+
+    public String getOsgiPluginRegistrarPropertyName() {
+        return osgiPluginRegistrarPropertyName;
+    }
+
+    public void setOsgiPluginRegistrarPropertyName(String osgiPluginRegistrarPropertyName) {
+        this.osgiPluginRegistrarPropertyName = osgiPluginRegistrarPropertyName;
+    }
+}
+]]></source>
         </section>
     </body>
 </document>
