@@ -17,8 +17,8 @@
             <ul>
                 <li><a href="#springdm">Guide to use of DataNucleus with OSGi and Spring dmServer</a></li>
                 <li><a href="#eclipse_rcp">Guide to DataNucleus inside Eclipse RCP</a></li>
-                <li><a href="http://www.datanucleus.org/servlet/wiki/pages/viewpage.action?pageId=1179721">Guide to JPOX with Spring and Eclipse RCP</a></li>
-                <li><a href="http://www.datanucleus.org/servlet/wiki/pages/viewpage.action?pageId=16842780">Guide to using Log4J with DataNucleus under OSGi</a></li>
+                <li><a href="#eclipse_rcp_spring">Guide to DataNucleus with Spring and Eclipse RCP</a></li>
+                <li><a href="logging.html#osgi">Guide to using Log4J with DataNucleus under OSGi</a></li>
             </ul>
             <p>
                 Some key points around integration with OSGi are as follows :-
@@ -48,9 +48,7 @@
             </p>
             <p>
                 This guide is based on my personal experience and is not the authoritative guide to using DataNucleus with OSGi and Spring DM.
-                I've updated this guide to use DataNucleus 3.0.2 and Eclipse Gemini (formerly Spring DM). I haven't extensively tested it yet.
-                For a DataNucleus 3.0.x-specific Spring JPA LocalContainerEntityManagerFactoryBean class, see 
-                [LocalContainterEntityManagerFactoryBean class for use in Virgo 3.0.x OSGi environment (Eclipse Equinox + Spring dm Server + Spring Framework)]
+                I've updated this guide to use DataNucleus 3.x and Eclipse Gemini (formerly Spring DM). I haven't extensively tested it yet.
                 This guide explains how to use DataNucleus, Spring, OSGi and the OSGi blueprint specification together.
                 This guide assumes the reader is familiar with concepts like OSGi, Spring, JDO, DataNucleus etc. This guide only explains how to wire these technologies 
                 together and not how they work. Now there have been a lot of (name) changes in over a short course of time. Some webpages might not have been updated yet 
@@ -67,7 +65,7 @@
             <ul>
                 <li>IDE (Eclipse 3.7)</li>
                 <li>OSGi (Equinox 3.7.1)</li>
-                <li>JDO (DataNucleus 3.0.2)</li>
+                <li>JDO (DataNucleus 3.x)</li>
                 <li>Dependency Injection (Spring 3.0.6)</li>
                 <li>OSGi Blueprint (Eclipse Gemini BluePrint 1.0.0)</li>
                 <li>Datastore (PostgreSQL 8.3, altough any datastore supported by DataNucleus can be used)</li>
@@ -246,10 +244,6 @@
                     (this is the case in a normal Java environment without OSGi). This makes the <i>LocalPersistenceManagerFactoryBean</i> unable to locate its plugins.
                     The <i>OSGiLocalPersistenceManagerFactoryBean</i> is a subclass of the <i>LocalPersistenceManagerFactoryBean</i> and is aware of the OSGi environment:
                 </p>
-                <p>
-                    <i>For a DataNucleus 3.0.x-specific Spring JPA LocalContainerEntityManagerFactoryBean class, see 
-                    [LocalContainterEntityManagerFactoryBean class for use in Virgo 3.0.x OSGi environment (Eclipse Equinox + Spring dm Server + Spring Framework)]</i>
-                </p>
 <source><![CDATA[
 public class OSGiLocalPersistenceManagerFactoryBean extends LocalPersistenceManagerFactoryBean implements BundleContextAware {
 
@@ -284,7 +278,7 @@ public class OSGiLocalPersistenceManagerFactoryBean extends LocalPersistenceMana
             {
                 try 
                 {
-                    classloader = bundles[x].loadClass("org.datanucleus.JDOClassLoaderResolver").getClassLoader();
+                    classloader = bundles[x].loadClass("org.datanucleus.ClassLoaderResolverImpl").getClassLoader();
                 } 
                 catch (ClassNotFoundException e)
                 {
@@ -540,6 +534,349 @@ PersistenceManagerFactory pmf = JDOHelper.getPersistenceManagerFactory(map, clrD
                     <li>Do install DataNucleus jars into Eclipse/plugins and add dependencies to them from your plugin's MANIFEST</li>
                     <li>Do tell DataNucleus which classloader to use for both its primaryClassLoader and for its own implementation</li>
                 </ul>
+            </subsection>
+        </section>
+
+        <section name="DataNucleus + Eclipse RCP + Spring">
+            <a name="eclipse_rcp_spring"/>
+            <p>
+                <i>This guide was written by Stuart Robertson</i>.
+            </p>
+            <p>
+                In my application, I have used <a href="http://www.springframework.org/">Spring</a>'s elegant JdoDaoSupport class to implement my DAOs, have used Spring's BeanFactory 
+                to instantiate PersistenceManagerFactory and DAO instances and have set up declarative transaction management. 
+                See the <a href="http://static.springframework.org/spring/docs/2.5.x/reference/orm.html#orm-jdo">Spring documentation section 12.3</a> if you are unfamiliar with Spring's 
+                JDO support. I assumed, naively, that since my code all worked when built and unit-tested in a plain Java world (with Maven 2 building my jars and running my unit-tests), 
+                that it would work inside Eclipse. I found out above that using DataNucleus inside Eclipse RCP application needs a little special attention to classloading.
+                Once this has been taken care of, you'll know that you need to provide your PersistenceManagerFactory with the correct classloader to use as "primaryClassLoader".
+                However, since everything is going to be instantiated by the Spring bean container, it somehow has to know what "the correct classloader" is. The recipe is fairly simple.
+            </p>
+
+            <subsection name="Add a Factory-bean and factory-method">
+                <p>
+                    At first I wasn't sure what needed doing, but a little browsing of the Spring documentation revealed what I needed (see 
+                    <a href="http://static.springframework.org/spring/docs/2.5.x/reference/beans.html#beans-factory-collaborators">section 3.2.3.2.3. Instantiation using an instance factory method</a>).
+                    Spring provides a mechanism whereby a Spring beans definition file (beans.xml, in my case) can defer the creation of an object to either a static method on 
+                    some factory class, or a non-static (instance) method one some factory bean. The following quote from the Spring documentation describes how things are meant to work:
+                </p>
+                <p>
+                    <i>In a fashion similar to instantiation via a static factory method, instantiation using an instance factory method is where a non-static method of an existing bean 
+                    from the container is invoked to create a new bean. To use this mechanism, the 'class' attribute must be left empty, and the 'factory-bean' attribute must specify the 
+                    name of a bean in the current (or parent/ancestor) container that contains the instance method that is to be invoked to create the object. The name of the factory method 
+                    itself must be set using the 'factory-method' attribute.</i>
+                </p>
+                <p>
+                    The example bean definitions below show how a bean can be created using this pattern:
+                </p>
+<source><![CDATA[
+<!-- the factory bean, which contains a method called createService() -->
+<bean id="serviceLocator" class="com.foo.DefaultServiceLocator">
+    <!-- inject any dependencies required by this locator bean -->
+</bean>
+
+<!-- the bean to be created via the factory bean -->
+<bean id="exampleBean" factory-bean="serviceLocator" factory-method="createService"/>
+]]></source>
+            </subsection>
+
+            <subsection name="Add a little ClassLoaderFactory">
+                <p>
+                    In my case, I replaced the "serviceLocator" factory bean with a "classloaderFactory" bean with factory-methods that return Classloader instances, as shown below:
+                </p>
+<source><![CDATA[
+/**
+ * Used as a bean inside the Spring config so that the correct classloader can be "wired" into the PersistenceManagerFactory bean.
+ */
+public class ClassLoaderFactory 
+{
+    /** Used in beans.xml to set the PMF's primaryClassLoaderResolver property. */
+    public ClassLoader jdbcClassloader() 
+    {
+        return getClassloaderFromClass("org.h2.Driver");
+    }
+
+    public ClassLoader dnClassloader() 
+    {
+        return getClassloaderFromClass("org.datanucleus.api.jdo.JDOPersistenceManagerFactory");
+    }
+
+    private ClassLoader getClassloaderFromClass(String className) 
+    {
+        try 
+        {
+            ClassLoader classLoader = Activator.class.getClassLoader().loadClass(className).getClassLoader();
+            return classLoader;
+        }
+        catch (Exception e)
+        {
+            System.out.println(e.getMessage());
+            throw new RuntimeException(e.getMessage(), e);
+        }
+    }
+}
+]]></source>
+                <p>
+                    The two public methods, jdbcClassloader() and dnClassloader(), ask the bundle Activator to load a particular class, and then return the Classloader that was used 
+                    to load the class. Note that Activator is the standard bundle activator created by Eclipse. OSGi classloading is based on a setup where each bundle has its own 
+                    classloader. For example, if bundle A depends on bundles B and C, attempting to load a class (ClassC, say) provided by bundle C will result in bundle A's 
+                    classloader delegating the class-load to bundle C. Calling getClassLoader() on the loaded ClassC will return bundle C's classloader, not bundle A's classloader.
+                    And this is exactly the behaviour we need. Thus, asking Activator's classloader to load "org.h2.Driver" will ultimately delegate the loading to the classloader 
+                    associated with the bundle that contains the JDBC driver classes. Likewise with "org.datanucleus.api.jdo.JDOPersistenceManagerFactory".
+                </p>
+            </subsection>
+
+            <subsection name="Mix well">
+                <p>
+                    Now we have all of the pieces needed to configure our Spring beans. The bean definitions below are a part of a larger beans.xml file, but show the relevant setup. 
+                    The list below describes each of the beans working from top to bottom, where the text in bold is the bean id:
+                </p>
+                <ul>
+                    <li><b>placeholderConfigurer</b> : This is a standard Spring property configuration mechanism that loads a properties file from the classpath location 
+                    "classpath:/config/jdbc.${datanucleus.profile}.properties", where ${datanucleus.profile} represents the value of the "datanucleus.profile" environment variable 
+                    which I set externally so that I can switch between in-memory, on-disk embedded or on-disk server DB configurations.</li>
+                    <li><b>dataSource</b> : A JDBC DataSource (using Apache DBCP's connection pooling DataSource). Values for the properties ${jdbc.driverClassName}, ${jdbc.url}, etc
+                    are obtained from the properties file that was loaded by <b>placeholderConfigurer</b>.</li>
+                    <li><b>pmf</b> : The DataNucleus PersistenceManagerFactory (implementation) that underpins the entire persistence layer.  It's a fairly standard setup, with a 
+                    reference to *dataSource* being stored in connectionFactory.  The important part for this discussion is the <i>primaryClassLoaderResolver</i> part, which stores a 
+                    reference to a Classloader instance (a Classloader "bean", that is).</li>
+                    <li><b>classloaderFactory</b> and <b>jdbcClassloader</b> : Here we pull in the factory-bean pattern discussed above. When asked for the <b>jdbcClassloader</b> bean 
+                    (which is a Classloader instance), Spring will defer to <b>classloaderFactory</b>, creating an instance of ClassLoaderFactory and then calling its jdbcClassloader() 
+                    method to obtain the Classloader that is to become the <b>jdbcClassloader</b> bean. This works, because the the Spring jar is able to "see" my ClassLoaderFactory class.  
+                    If the Spring jar is contained in one bundle, A, say, and your factory class is in some other bundle, B, say, then you may encounter ClassNotFoundException if bundle 
+                    A doesn't depend on bundle B.  This is normally the case if you follow the "jars plugin" pattern, creating a single plugin to house all third-party jars.
+                    In this case, you will need to add "Eclipse-BuddyPolicy: registered" to the "jars" plugin's manifest, and then add "Eclipse-RegisterBuddy: 
+                    &lt;jars.bundle.symbolicname&gt;" to the manifest of the bundle that houses your factory class (where &lt;jars.bundle.symbolicname&gt; must be replaced with the 
+                    actual symbolic name of the bundle). See <a href="http://www.eclipsezone.com/articles/eclipse-vms/">A Tale of Two VMs</a> if this is Greek to you.</li>
+                </ul>
+<source><![CDATA[
+<!-- ====== JDO PERSISTENCE INFRASTRUCTURE ====== -->
+<bean id="placeholderConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer"
+    p:location="classpath:/config/jdbc.${datanucleus.profile}.properties" />
+
+<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource"
+    destroy-method="close"
+    p:driverClassName="${jdbc.driverClassName}"
+    p:url="${jdbc.url}"
+    p:username="${jdbc.username}"
+    p:password="${jdbc.password}" />
+
+<bean id="pmf" class="org.datanucleus.api.jdo.JDOPersistenceManagerFactory"
+    destroy-method="close"
+    p:connectionFactory-ref="dataSource"
+    p:attachSameDatastore="true"
+    p:autoCreateColumns="true"
+    p:autoCreateSchema="true"
+    p:autoStartMechanism="None"
+    p:detachAllOnCommit="true"
+    p:detachOnClose="false"
+    p:nontransactionalRead="true"
+    p:stringDefaultLength="255"
+    p:primaryClassLoaderResolver-ref="jdbcClassloader" />
+
+<bean id="classloaderFactory" class="rcp.model.ClassLoaderFactory" />
+
+<!-- the bean to be created via the factory bean -->
+<bean id="jdbcClassloader"
+    factory-bean="classloaderFactory"
+    factory-method="jdbcClassloader" />
+]]></source>
+            </subsection>
+
+            <subsection name="Enjoy">
+                <p>
+                    Now that the hard-work is done, we can ask Spring to do its magic:
+                </p>
+<source><![CDATA[
+private void loadSpringBeans() 
+{
+    if (beanFactory == null) 
+    {
+        beanFactory = new ClassPathXmlApplicationContext("/config/beans.xml", Activator.class);
+    }
+    this.daoFactory = (IDAOFactory) beanFactory.getBean("daoFactory");
+}
+
+private void testDAO() 
+{
+    IAccountDAO accountsDAO = this.daoFactory.accounts();
+    accountsDAO.persist(entities.newAccount("Account A", AccountType.Asset));
+    accountsDAO.persist(entities.newAccount("Account B", AccountType.Bank));
+    List<IAccount> accounts = accountsDAO.findAll();
+}
+]]></source>
+                <p>
+                    Finally, I should clarify things by mentioning that in my code, my bundle Activator provides the loadSpringBeans() method and calls it when the bundle is started.
+                    Other classes, such as the main application, then use Activator.getDefault().getDAOFactory() to obtain a reference to IDAOFactory, which is another Spring bean 
+                    that provides a central point of reference to all of the DAOs in the system. All of the DAOs themselves are Spring beans too.
+                </p>
+            </subsection>
+
+            <subsection name="Postscript">
+                <p>
+                    Someone asked to see the complete applicationContext.xml (referred to as /config/beans.xml in the loadSpringBeans() method above), so here it is:
+                </p>
+<source><![CDATA[
+<?xml version="1.0" encoding="UTF-8"?>
+<beans
+	xmlns="http://www.springframework.org/schema/beans"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+	http://www.springframework.org/schema/aop      http://www.springframework.org/schema/aop/spring-aop-2.5.xsd
+    http://www.springframework.org/schema/beans    http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+    http://www.springframework.org/schema/context  http://www.springframework.org/schema/context/spring-context-2.1.xsd
+    http://www.springframework.org/schema/tx       http://www.springframework.org/schema/tx/spring-tx-2.5.xsd">
+
+
+	<!-- Enable the use of @Autowired annotations. -->
+	<context:annotation-config />
+
+	<!-- ====== MAIN ENTRY-POINTS ====== -->
+	<bean
+		id="daoFactory"
+		class="ca.eulogica.bb.model.dao.impl.DAOFactory"
+		p:accountDAO-ref="accountDAO"
+		p:budgetDAO-ref="budgetDAO"
+		p:budgetItemDAO-ref="budgetItemDAO"
+		p:commodityDAO-ref="commodityDAO"
+		p:institutionDAO-ref="institutionDAO"
+		p:splitDAO-ref="splitDAO"
+		p:transactionDAO-ref="transactionDAO" />
+
+	<bean
+		id="entityFactory"
+		class="ca.eulogica.bb.model.entities.impl.EntityFactory" />
+
+	<bean
+		id="servicesFactory"
+		class="ca.eulogica.bb.model.services.impl.ServicesFactory"
+		p:accountService-ref="accountService"
+		p:transactionService-ref="transactionService" />
+
+	<!-- ====== BUSINESS SERVICES ====== -->
+	<bean
+		id="accountService"
+		class="ca.eulogica.bb.model.services.impl.AccountService"
+		p:DAOFactory-ref="daoFactory"
+		p:entityFactory-ref="entityFactory" />
+
+	<bean
+		id="transactionService"
+		class="ca.eulogica.bb.model.services.impl.TransactionService"
+		p:DAOFactory-ref="daoFactory"
+		p:entityFactory-ref="entityFactory" />
+
+	<!-- ====== DAO ====== -->
+	<bean
+		id="accountDAO"
+		class="ca.eulogica.bb.model.dao.impl.AccountDAO"
+		p:persistenceManagerFactory-ref="pmf" />
+
+	<bean
+		id="budgetDAO"
+		class="ca.eulogica.bb.model.dao.impl.BudgetDAO"
+		p:persistenceManagerFactory-ref="pmf" />
+
+	<bean
+		id="budgetItemDAO"
+		class="ca.eulogica.bb.model.dao.impl.BudgetItemDAO"
+		p:persistenceManagerFactory-ref="pmf" />
+
+	<bean
+		id="commodityDAO"
+		class="ca.eulogica.bb.model.dao.impl.CommodityDAO"
+		p:persistenceManagerFactory-ref="pmf" />
+
+	<bean
+		id="institutionDAO"
+		class="ca.eulogica.bb.model.dao.impl.InstitutionDAO"
+		p:persistenceManagerFactory-ref="pmf" />
+
+	<bean
+		id="splitDAO"
+		class="ca.eulogica.bb.model.dao.impl.SplitDAO"
+		p:persistenceManagerFactory-ref="pmf" />
+
+	<bean
+		id="transactionDAO"
+		class="ca.eulogica.bb.model.dao.impl.TransactionDAO"
+		p:persistenceManagerFactory-ref="pmf" />
+
+	<!-- ====== TRANSACTION MANAGEMENT ====== -->
+	<bean
+		id="txManager"
+		class="org.springframework.orm.jdo.JdoTransactionManager"
+		p:persistenceManagerFactory-ref="pmf" />
+
+	<tx:advice
+		id="txAdvice"
+		transaction-manager="txManager">
+		<tx:attributes>
+			<tx:method
+				name="get*"
+				propagation="REQUIRED"
+				read-only="true" />
+			<tx:method
+				name="*"
+				propagation="REQUIRED" />
+		</tx:attributes>
+	</tx:advice>
+
+	<aop:config>
+		<aop:pointcut
+			id="daoMethodsPointcut"
+			expression="execution(* ca.eulogica.bb.model.dao.impl.*.*(..))" />
+		<aop:advisor
+			id="daoMethodsAdvisor"
+			advice-ref="txAdvice"
+			pointcut-ref="daoMethodsPointcut" />
+	</aop:config>
+	<aop:config>
+		<aop:pointcut
+			id="serviceMethodsPointcut"
+			expression="execution(* ca.eulogica.bb.model.services.*.*(..))" />
+		<aop:advisor
+			id="serviceMethodsAdvisor"
+			advice-ref="txAdvice"
+			pointcut-ref="serviceMethodsPointcut" />
+	</aop:config>
+
+	<!-- ====== JDO PERSISTENCE INFRASTRUCTURE ====== -->
+	<bean id="placeholderConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer"
+		p:location="classpath:/config/jdbc.${datanucleus.profile}.properties" />
+
+	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource"
+		destroy-method="close"
+		p:driverClassName="${jdbc.driverClassName}"
+		p:url="${jdbc.url}"
+		p:username="${jdbc.username}"
+		p:password="${jdbc.password}" />
+
+	<bean id="pmf" class="org.datanucleus.api.jdo.JDOPersistenceManagerFactory"
+		destroy-method="close"
+		p:connectionFactory-ref="dataSource"
+		p:attachSameDatastore="true"
+		p:autoCreateColumns="true"
+		p:autoCreateSchema="true"
+		p:autoStartMechanism="None"
+		p:detachAllOnCommit="true"
+		p:detachOnClose="false"
+		p:nontransactionalRead="true"
+		p:stringDefaultLength="255"
+		p:primaryClassLoaderResolver-ref="jdbcClassloader" />
+
+	<bean id="classloaderFactory" class="budgetbuddy.rcp.model.ClassLoaderFactory" />
+
+	<!-- the bean to be created via the factory bean -->
+	<bean id="jdbcClassloader"
+		factory-bean="classloaderFactory"
+		factory-method="jdbcClassloader" />
+
+</beans>
+]]></source>
             </subsection>
         </section>
     </body>
