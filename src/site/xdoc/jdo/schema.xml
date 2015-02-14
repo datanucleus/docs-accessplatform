@@ -305,8 +305,7 @@ public class MyClass {...}]]></source>
                         <td>true</td>
                         <td>Whether to fork the SchemaTool process.
                             Note that if you don't fork the process, DataNucleus will likely struggle to determine class 
-                            names from the input filenames, so you need to use a persistence.xml file defining the class
-                            names directly.</td>
+                            names from the input filenames, so you need to use a persistence.xml file defining the class names directly.</td>
                     </tr>
                     <tr>
                         <td>ddlFile</td>
@@ -365,8 +364,7 @@ mvn datanucleus:schema-dbinfo              Output info for the datastore</source
             <subsection name="Ant">
                 <p>
                     An Ant task is provided for using <b>DataNucleus SchemaTool</b>. It has classname 
-                    <b>org.datanucleus.store.schema.SchemaToolTask</b>,
-                    and accepts the following parameters
+                    <b>org.datanucleus.store.schema.SchemaToolTask</b>, and accepts the following parameters
                 </p>
                 <table>
                     <tr>
@@ -473,8 +471,7 @@ mvn datanucleus:schema-dbinfo              Output info for the datastore</source
                     So you could define something <i>like</i> the following, setting up the parameters 
                     <b>schematool.classpath</b>, 
                     <b>datanucleus.ConnectionDriverName</b>, <b>datanucleus.ConnectionURL</b>, 
-                    <b>datanucleus.ConnectionUserName</b>, and <b>datanucleus.ConnectionPassword</b> to suit your
-                    situation.
+                    <b>datanucleus.ConnectionUserName</b>, and <b>datanucleus.ConnectionPassword</b> to suit your situation.
                 </p>
                 <p>
                     You define the jdo files to create the tables using <b>fileset</b>.
@@ -489,16 +486,11 @@ mvn datanucleus:schema-dbinfo              Output info for the datastore</source
     <fileset dir="${classes.dir}">
         <include name="**/*.jdo"/>
     </fileset>
-    <sysproperty key="datanucleus.ConnectionDriverName" 
-                 value="${datanucleus.ConnectionDriverName}"/>
-    <sysproperty key="datanucleus.ConnectionURL" 
-                 value="${datanucleus.ConnectionURL}"/>
-    <sysproperty key="datanucleus.ConnectionUserName" 
-                 value="${datanucleus.ConnectionUserName}"/>
-    <sysproperty key="datanucleus.ConnectionPassword" 
-                 value="${datanucleus.ConnectionPassword}"/>
-    <sysproperty key="datanucleus.Mapping" 
-                 value="${datanucleus.Mapping}"/>
+    <sysproperty key="datanucleus.ConnectionDriverName" value="${datanucleus.ConnectionDriverName}"/>
+    <sysproperty key="datanucleus.ConnectionURL" value="${datanucleus.ConnectionURL}"/>
+    <sysproperty key="datanucleus.ConnectionUserName" value="${datanucleus.ConnectionUserName}"/>
+    <sysproperty key="datanucleus.ConnectionPassword" value="${datanucleus.ConnectionPassword}"/>
+    <sysproperty key="datanucleus.Mapping" value="${datanucleus.Mapping}"/>
 </schematool>]]></source>
             </subsection>
 
@@ -527,10 +519,8 @@ java [-cp classpath] [system_props] org.datanucleus.store.schema.SchemaTool [mod
         -dbinfo : Detailed information about the database
         -schemainfo : Detailed information about the database schema
     where options can be
-        -ddlFile {filename} : RDBMS - only for use with "create"/"delete" mode to dump the DDL to the 
-                              specified file
-        -completeDdl : RDBMS - when using "ddlFile" in "create" mode to get all DDL output and not 
-                              just missing tables/constraints
+        -ddlFile {filename} : RDBMS - only for use with "create"/"delete" mode to dump the DDL to the specified file
+        -completeDdl : RDBMS - when using "ddlFile" in "create" mode to get all DDL output and not just missing tables/constraints
         -includeAutoStart : whether to include any auto-start mechanism in SchemaTool usage
         -api : The API that is being used (default is JDO, but can be set to JPA)
         -pu {persistence-unit-name} : Name of the persistence unit to manage the schema for
@@ -569,7 +559,7 @@ java -cp target/classes:lib/log4j.jar:lib/jdo-api.jar:lib/datanucleus-core.jar:l
       target/classes/org/datanucleus/examples/inverse/package.jdo
 
 
-DataNucleus SchemaTool (version 4.0.0.m2) : Creation of the schema
+DataNucleus SchemaTool (version 4.0.4) : Creation of the schema
 
 DataNucleus SchemaTool : Classpath
 >>  /home/andy/work/DataNucleus/samples/packofcards/target/classes
@@ -608,11 +598,9 @@ package org.datanucleus.store.schema;
 public interface SchemaAwareStoreManager
 {
      public int createSchema(String schemaName, Properties props);
-
-     public int deleteSchema(String schemaName, Properties props);
-
      public int createSchemaForClasses(Set<String> classNames, Properties props);
 
+     public int deleteSchema(String schemaName, Properties props);
      public int deleteSchemaForClasses(Set<String> classNames, Properties props);
 
      public int validateSchemaForClasses(Set<String> classNames, Properties props);
@@ -622,8 +610,7 @@ public interface SchemaAwareStoreManager
                     you would do something like this
                 </p>
                 <source>
-JDOPersistenceManagerFactory pmf = 
-    (JDOPersistenceManagerFactory)JDOHelper.getPersistenceManagerFactory("datanucleus.properties");
+JDOPersistenceManagerFactory pmf = (JDOPersistenceManagerFactory)JDOHelper.getPersistenceManagerFactory("datanucleus.properties");
 NucleusContext ctx = pmf.getNucleusContext();
 ...
 List classNames = new ArrayList();

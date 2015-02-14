@@ -466,14 +466,10 @@ mvn datanucleus:schema-dbinfo              Output info for the datastore</source
     <fileset dir="${classes.dir}">
         <include name="**/*.jdo"/>
     </fileset>
-    <sysproperty key="datanucleus.ConnectionURL" 
-                 value="${datanucleus.ConnectionURL}"/>
-    <sysproperty key="datanucleus.ConnectionDriverName" 
-                 value="${datanucleus.ConnectionDriverName}"/>
-    <sysproperty key="datanucleus.ConnectionUserName" 
-                 value="${datanucleus.ConnectionUserName}"/>
-    <sysproperty key="datanucleus.ConnectionPassword" 
-                 value="${datanucleus.ConnectionPassword}"/>
+    <sysproperty key="datanucleus.ConnectionURL" value="${datanucleus.ConnectionURL}"/>
+    <sysproperty key="datanucleus.ConnectionDriverName" value="${datanucleus.ConnectionDriverName}"/>
+    <sysproperty key="datanucleus.ConnectionUserName" value="${datanucleus.ConnectionUserName}"/>
+    <sysproperty key="datanucleus.ConnectionPassword" value="${datanucleus.ConnectionPassword}"/>
 </schematool>]]></source>
             </subsection>
 
@@ -502,10 +498,8 @@ java [-cp classpath] [system_props] org.datanucleus.store.schema.SchemaTool [mod
     where options can be
         -api : The API that is being used (default is JDO, but set this to JPA)
         -pu {persistence-unit-name} : Name of the persistence unit to manage the schema for
-        -ddlFile {filename} : RDBMS - only for use with "create"/"delete" mode to dump the DDL to the 
-                              specified file
-        -completeDdl : RDBMS - when using "ddlFile" in "create" mode to get all DDL output and not 
-                              just missing tables/constraints
+        -ddlFile {filename} : RDBMS - only for use with "create"/"delete" mode to dump the DDL to the specified file
+        -completeDdl : RDBMS - when using "ddlFile" in "create" mode to get all DDL output and not just missing tables/constraints
         -includeAutoStart : whether to include any auto-start mechanism in SchemaTool usage
         -v : verbose output
 </source>
@@ -570,15 +564,16 @@ package org.datanucleus.store.schema;
 
 public interface SchemaAwareStoreManager
 {
-     public int createSchema(Set<String> classNames, Properties props);
+    void createSchema(String schemaName, Properties props);
+    void createSchemaForClasses(Set<String> classNames, Properties props);
 
-     public int deleteSchema(Set<String> classNames, Properties props);
+    void deleteSchema(String schemaName, Properties props);
+    void deleteSchemaForClasses(Set<String> classNames, Properties props);
 
-     public int validateSchema(Set<String> classNames, Properties props);
+    void validateSchemaForClasses(Set<String> classNames, Properties props);
 }]]></source>
                 <p>
-                    So for example to create the schema for classes <i>mydomain.A</i> and <i>mydomain.B</i> 
-                    you would do something like this
+                    So for example to create the schema for classes <i>mydomain.A</i> and <i>mydomain.B</i> you would do something like this
                 </p>
 <source>
 EntityManagerFactory emf = Persistence.createEntityManagerFactory("MyUnit");
@@ -591,7 +586,7 @@ try
 {
     Properties props = new Properties();
     // Set any properties for schema generation
-    ((SchemaAwareStoreManager)nucCtx.getStoreManager()).createSchema(classNames, props);
+    ((SchemaAwareStoreManager)nucCtx.getStoreManager()).createSchemaForClasses(classNames, props);
 }
 catch(Exception e)
 {
