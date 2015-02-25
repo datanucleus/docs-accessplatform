@@ -149,9 +149,7 @@ public class Address
                     <li>The join table will, by default, be given a primary key. If you want to omit this then you can turn it off
                         using the DataNucleus metadata extension "primary-key" (within &lt;join&gt;) set to false.</li>
                     <li>The column "ADPT_PK_IDX" is added by DataNucleus so that duplicates can be stored. You can control this by
-                        adding an &lt;order&gt; element and specifying the column name for the order column, or you can override
-                        the default naming of this column by specifying the DataNucleus extension "adapter-column-name" 
-                        (within &lt;field&gt;).</li>
+                        adding an &lt;order&gt; element and specifying the column name for the order column (within &lt;field&gt;).</li>
                     <li>If you want the set to include nulls, you can turn on this behaviour by adding the DataNucleus extension
                         metadata "allow-nulls" to the &lt;field&gt; set to true</li>
                 </ul>
@@ -325,9 +323,7 @@ public class Address
                     <li>The join table will, by default, be given a primary key. If you want to omit this then you can turn it off
                         using the DataNucleus metadata extension "primary-key" (within &lt;join&gt;) set to false.</li>
                     <li>The column "ADPT_PK_IDX" is added by DataNucleus so that duplicates can be stored. You can control this by
-                        adding an &lt;order&gt; element and specifying the column name for the order column, or you can override
-                        the default naming of this column by specifying the DataNucleus extension "adapter-column-name" 
-                        (within &lt;field&gt;).</li>
+                        adding an &lt;order&gt; element and specifying the column name for the order column (within &lt;field&gt;).</li>
                     <li>When forming the relation please make sure that <b>you set the relation at BOTH sides</b> since DataNucleus
 					    would have no way of knowing which end is correct if you only set one end.</li>
                     <li>If you want the set to include nulls, you can turn on this behaviour by adding the extension
@@ -458,8 +454,7 @@ public class Account
             </p>
             <p>
                 Please note that the column ADPT_PK_IDX is added by DataNucleus so that duplicates can be stored.
-                You can override the default naming of this column by specifying the DataNucleus extension "adapter-column-name" within 
-                the &lt;field&gt; for the Collection.
+                You can control the name of this column by adding an &lt;order&gt; element and specifying the column name for the order column (within &lt;field&gt;).
             </p>
         </section>
 

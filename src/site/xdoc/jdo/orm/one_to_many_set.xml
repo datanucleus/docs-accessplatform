@@ -441,8 +441,7 @@ public class Account
                 Please note that the column ADPT_PK_IDX is added by DataNucleus when the column type of the element is not valid to be
                 part of a primary key (with the RDBMS being used). If the column type of your element is acceptable for use as part
                 of a primary key then you will not have this "ADPT_PK_IDX" column.
-                You can override the default naming of this column by specifying the DataNucleus extension "adapter-column-name" within 
-                the &lt;field&gt; for the Collection.
+                You can control the name of this column by adding an &lt;order&gt; element and specifying the column name for the order column (within &lt;field&gt;).
             </p>
         </section>
 
