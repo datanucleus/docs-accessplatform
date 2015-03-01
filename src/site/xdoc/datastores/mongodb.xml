@@ -48,7 +48,7 @@
                     Some components of a filter are handled in the datastore, and the remainder in-memory.
                     Currently any expression of a field (in the same table), or a literal are handled <b>in-datastore</b>, 
                     as are the operators &amp;&amp;, ||, &gt;, &gt;=, &lt;, &lt;=, ==, and !=.
-                    Note that if something falls back to being evaluated in-datastore then it can be much slower, and this will be noted in the log, so
+                    Note that if something falls back to being evaluated <b>in-memory</b> then it can be much slower, and this will be noted in the log, so
                     people are advised to design their models and queries to avoid that happening if performance is a top priority.</li>
                 <li>If you want a query to be runnable on a slave MongoDB instance then you should set the query extension (JDO) / hint (JPA) 
                     <b>slave-ok</b> as <i>true</i>, and when executed it can be run on a slave instance.</li>
