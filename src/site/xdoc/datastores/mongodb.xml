@@ -46,8 +46,10 @@
                 <li>You can set the number of connections per host with the persistence property <b>datanucleus.mongodb.connectionsPerHost</b></li>
                 <li>Querying can be performed using JDOQL or JPQL. 
                     Some components of a filter are handled in the datastore, and the remainder in-memory.
-                    Currently any expression of a field (in the same table), or a literal are handled in-datastore, 
-                    as are the operators &amp;&amp;, ||, &gt;, &gt;=, &lt;, &lt;=, ==, and !=.</li>
+                    Currently any expression of a field (in the same table), or a literal are handled <b>in-datastore</b>, 
+                    as are the operators &amp;&amp;, ||, &gt;, &gt;=, &lt;, &lt;=, ==, and !=.
+                    Note that if something falls back to being evaluated in-datastore then it can be much slower, and this will be noted in the log, so
+                    people are advised to design their models and queries to avoid that happening if performance is a top priority.</li>
                 <li>If you want a query to be runnable on a slave MongoDB instance then you should set the query extension (JDO) / hint (JPA) 
                     <b>slave-ok</b> as <i>true</i>, and when executed it can be run on a slave instance.</li>
                 <li>All objects of a class are persisted to a particular "document" (specifiable with the "table" in metadata), 
@@ -66,7 +68,7 @@
             <subsection name="Mapping : Embedded Persistable fields">
                 <p>
                     When you have a field in a class that is of a persistable type you sometimes want to store
-                    it with the owning object. In this case you can use <a href="../jdo/orm/embedded.html#PC">JDO</a>/
+                    it with the owning object. In this case you can use <a href="../jdo/orm/embedded.html#PC">JDO</a> /
                     <a href="../jpa/orm/embedded.html#PC">JPA</a> embedding of the field. 
                     DataNucleus offers two ways of performing this embedding
                 </p>
@@ -78,6 +80,9 @@
                             owning document (flat embedding). Similarly if that sub-object has a field of a
                             persistable type then it can be flat embedded in the same way</li>
                 </ul>
+                <p>
+                    For JDO this would be defined as follows (for JPA just swap @PersistenceCapable for @Entity)
+                </p>
                 <source><![CDATA[
 @PersistenceCapable
 public class A
@@ -98,7 +103,7 @@ public class A
           "description" : "the description"}
 }]]></source>
                 <p>
-                    The alternative would be
+                    The alternative for JDO would be as follows (for JPA just swap @PersistenceCapable for @Entity)
                 </p>
                 <source><![CDATA[
 @PersistenceCapable
