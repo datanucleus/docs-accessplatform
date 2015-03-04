@@ -26,6 +26,7 @@
                     <li>The metadata extension "adapter-column-name" for overriding the order column name in join tables has been removed - just use the column name within "order"</li>
                     <li>MongoDB : any fields of type java.sql.Time/java.sql.Date were previously defaulted to storing as String, yet now default to the internal MongoDB date type. Set
                         "jdbcType" to "varchar" on all fields that need to be stored as String for backwards compatibility.</li>
+                    <li>MongoDB : now require v2.11+ driver (but not v3.x)</li>
                 </ul>
             </subsection>
 
