@@ -351,7 +351,7 @@
                         <td>datanucleus-core</td>
                     </tr>
                     <tr>
-                        <td>java.lang.Number [4]</td>
+                        <td>java.lang.Number [2]</td>
                         <td><img src="../images/nucleus_extension.gif" border="0" alt=""/></td>
                         <td><img src="../images/icon_warning_sml.gif" border="0" alt=""/></td>
                         <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
@@ -378,7 +378,7 @@
                         <td>datanucleus-core</td>
                     </tr>
                     <tr>
-                        <td>java.lang.StringBuffer [3]</td>
+                        <td>java.lang.StringBuffer [1]</td>
                         <td><img src="../images/nucleus_extension.gif" border="0" alt=""/></td>
                         <td><img src="../images/icon_warning_sml.gif" border="0" alt=""/></td>
                         <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
@@ -492,7 +492,7 @@
                         <td>datanucleus-core</td>
                     </tr>
                     <tr>
-                        <td>java.util.Calendar</td>
+                        <td>java.util.Calendar [5]</td>
                         <td></td>
                         <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                         <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
@@ -537,7 +537,7 @@
                         <td>datanucleus-core</td>
                     </tr>
                     <tr>
-                        <td>java.util.GregorianCalendar [7]</td>
+                        <td>java.util.GregorianCalendar [5]</td>
                         <td></td>
                         <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                         <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
@@ -573,7 +573,7 @@
                         <td>datanucleus-core</td>
                     </tr>
                     <tr>
-                        <td>java.util.LinkedHashMap [5]</td>
+                        <td>java.util.LinkedHashMap [3]</td>
                         <td></td>
                         <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                         <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
@@ -582,7 +582,7 @@
                         <td>datanucleus-core</td>
                     </tr>
                     <tr>
-                        <td>java.util.LinkedHashSet [6]</td>
+                        <td>java.util.LinkedHashSet [4]</td>
                         <td></td>
                         <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                         <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
@@ -672,7 +672,7 @@
                         <td>datanucleus-core</td>
                     </tr>
                     <tr>
-                        <td>java.util.SortedMap [2]</td>
+                        <td>java.util.SortedMap</td>
                         <td><img src="../images/nucleus_extension.gif" border="0" alt=""/></td>
                         <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                         <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
@@ -681,7 +681,7 @@
                         <td>datanucleus-core</td>
                     </tr>
                     <tr>
-                        <td>java.util.SortedSet [1]</td>
+                        <td>java.util.SortedSet</td>
                         <td><img src="../images/nucleus_extension.gif" border="0" alt=""/></td>
                         <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                         <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
@@ -708,7 +708,7 @@
                         <td>datanucleus-core</td>
                     </tr>
                     <tr>
-                        <td>java.util.TreeMap [2]</td>
+                        <td>java.util.TreeMap</td>
                         <td></td>
                         <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                         <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
@@ -717,7 +717,7 @@
                         <td>datanucleus-core</td>
                     </tr>
                     <tr>
-                        <td>java.util.TreeSet [1]</td>
+                        <td>java.util.TreeSet</td>
                         <td></td>
                         <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                         <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
@@ -809,7 +809,7 @@
                         <td>datanucleus-core</td>
                     </tr>
                     <tr>
-                        <td>java.io.File [8]</td>
+                        <td>java.io.File [6]</td>
                         <td><img src="../images/nucleus_extension.gif" border="0" alt=""/></td>
                         <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                         <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
@@ -1018,38 +1018,28 @@
                     </tr>
                 </table>
                 <ul>
-                    <li><b>[1]</b> - <i>java.util.SortedSet</i>, <i>java.util.TreeSet</i> allow the specification of 
-                        comparators via the "comparator-name" DataNucleus extension MetaData element 
-                        (within &lt;collection&gt;). The headSet, tailSet, subSet methods are only supported when 
-                        using cached collections.</li>
-                    <li><b>[2]</b> - <i>java.util.SortedMap</i>, <i>java.util.TreeMap</i> allow the specification of 
-                        comparators via the "comparator-name" DataNucleus extension MetaData element 
-                        (within &lt;map&gt;). The headMap, tailMap, subMap methods are only supported when
-                        using cached containers.</li>
-                    <li><b>[3]</b> - <i>java.lang.StringBuffer</i> dirty check mechanism is limited to immutable mode, 
+                    <li><b>[1]</b> - <i>java.lang.StringBuffer</i> dirty check mechanism is limited to immutable mode, 
                         it means, if you change a StringBuffer object field, you must reassign it to the owner object
                         field to make sure changes are propagated to the database.</li>
-                    <li><b>[4]</b> - <i>java.lang.Number</i> will be stored in a column capable of storing a 
+                    <li><b>[2]</b> - <i>java.lang.Number</i> will be stored in a column capable of storing a 
                         BigDecimal, and will store to the precision of the object to be persisted. On reading back 
                         the object will be returned typically as a BigDecimal since there is no mechanism for 
                         determing the type of the object that was stored.</li>
-                    <li><b>[5]</b> - <i>java.util.LinkedHashMap</i> treated as a Map currently. No List-ordering is supported.</li>
-                    <li><b>[6]</b> - <i>java.util.LinkedHashSet</i> treated as a Set currently. No List-ordering is supported.</li>
-                    <li><b>[7]</b> - <i>java.util.Calendar</i> is, by default, stored in one column (Timestamp - assumes that this stores the TimeZone) but can be stored into 
+                    <li><b>[3]</b> - <i>java.util.LinkedHashMap</i> treated as a Map currently. No List-ordering is supported.</li>
+                    <li><b>[4]</b> - <i>java.util.LinkedHashSet</i> treated as a Set currently. No List-ordering is supported.</li>
+                    <li><b>[5]</b> - <i>java.util.Calendar</i> is, by default, stored in one column (Timestamp - assumes that this stores the TimeZone) but can be stored into 
                         two columns (millisecs, Timezone) if requested.</li>
-                    <li><b>[8]</b> - available only for RDBMS, persisted into LONGVARBINARY, and retrieved as streamable
+                    <li><b>[6]</b> - available only for RDBMS, persisted into LONGVARBINARY, and retrieved as streamable
                         so as not to adversely affect memory utilisation, hence suitable for large files. New in 3.2.8 of datanucleus-rdbms</li>
                 </ul>
                 <p>
-                    Note that support is available for persisting other types depending on the datastore to which
-                    you are persisting
+                    Note that support is available for persisting other types depending on the datastore to which you are persisting
                 </p>
                 <ul>
                     <li><a href="../rdbms/spatial_types.html">RDBMS GeoSpatial types</a> via the DataNucleus RDBMS Spatial plugin</li>
                 </ul>
                 <p>
-                    If you have support for any additional types and would either like to contribute them, or
-                    have them listed here, let us know
+                    If you have support for any additional types and would either like to contribute them, or have them listed here, let us know
                 </p>
                 <br/>
                 <p>
@@ -1061,6 +1051,24 @@
                     <a href="http://www.datanucleus.org/extensions/rdbms_java_types.html">See the RDBMS Java Types plugin-point</a>
                 </p>
                 <br/>
+            </subsection>
+
+            <subsection name="SortedSet/SortedMap">
+                <p>
+                    SortedSet (and implementations) allow the user to have a comparator to order the elements of the set. When an object is pulled back from the datastore
+                    via query JPA would need to know the class name of the comparator to use. You specify it like this
+                </p>
+<source><![CDATA[
+    @OneToMany
+    @Extension(vendorName="datanucleus", key="comparator-name", value="mydomain.model.MyComparator")
+    SortedSet<MyElementType> elements; 
+]]></source>
+                <p>
+                    and when instantiating the SortedSet field will create it with a comparator of the specified class (which must have a default constructor).
+                </p>
+                <p>
+                    The same applies to a SortedMap.
+                </p>
             </subsection>
 
             <a name="typeconverter"/>
