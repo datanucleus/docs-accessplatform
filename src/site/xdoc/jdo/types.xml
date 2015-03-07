@@ -1058,7 +1058,7 @@
                 <br/>
             </subsection>
 
-            <subsection name="SortedSet/SortedMap">
+            <subsection name="SortedSet/SortedMap/Queue/PriorityQueue">
                 <p>
                     SortedSet (and implementations) allow the user to have a comparator to order the elements of the set. When an object is pulled back from the datastore
                     via query JDO would need to know the class name of the comparator to use. You specify it like this
@@ -1070,9 +1070,7 @@
 ]]></source>
                 <p>
                     and when instantiating the SortedSet field will create it with a comparator of the specified class (which must have a default constructor).
-                </p>
-                <p>
-                    The same applies to a SortedMap.
+                    Same for Queue, PriorityQueue and SortedMap.
                 </p>
             </subsection>
 
