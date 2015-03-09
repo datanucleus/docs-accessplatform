@@ -27,6 +27,7 @@
                     <li>MongoDB : any fields of type java.sql.Time/java.sql.Date were previously defaulted to storing as String, yet now default to the internal MongoDB date type. Set
                         "jdbcType" to "varchar" on all fields that need to be stored as String for backwards compatibility.</li>
                     <li>MongoDB : now require Mongo driver v2.11 or above (including v3)</li>
+                    <li>Jodatime : now requires Jodatime v2.0+ (if using LocalDateTime support)</li>
                 </ul>
             </subsection>
 
