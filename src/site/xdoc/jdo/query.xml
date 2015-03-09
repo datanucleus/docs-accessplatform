@@ -214,6 +214,25 @@ Collection results = (Collection)q.execute(20.0);</source>
                 <br/>
             </subsection>
 
+            <a name="save_as_named"/>
+            <subsection name="Saving a Query as a Named Query">
+                <img src="../images/nucleus_extension.gif" border="0" alt=""/>
+                <p>
+                    DataNucleus also allows you to create a query, and then save it as a "named" query for later reuse. You do this as follows
+                </p>
+<source><![CDATA[
+Query q = pm.newQuery("SELECT FROM Product p WHERE ...");
+((org.datanucleus.api.jdo.JDOQuery)q).saveAsNamedQuery("MyQuery");
+]]></source>
+                <p>
+                    and you can thereafter access the query via
+                </p>
+                <source><![CDATA[
+Query q = pm.newNamedQuery(Product.class, "MyQuery");
+]]></source>
+                <br/>
+            </subsection>
+
             <a name="FetchPlan"/>
             <subsection name="Controlling the execution : FetchPlan">
                 <p>
