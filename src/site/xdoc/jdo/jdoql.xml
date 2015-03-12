@@ -900,7 +900,7 @@ SELECT p.personNum, IF (p.age < 18) 'Youth' ELSE IF (p.age >= 18 && p.age < 65) 
 ]]></source>
                 <p>
                     So in this case the second result value will be a String, either "Youth", "Adult" or "Old" depending on the age of the person.
-                    <b>Note that this is not in any JDO spec yet, but should be soon</b>.
+                    <b>Note that this is new in JDO3.1</b>.
                     The BNF structure of the JDOQL IF ELSE expression is
                 </p>
                 <pre>
@@ -1140,11 +1140,9 @@ q.addSubquery(averageHoursQuery, "double averageWeeklyhours", "this.department.e
                 </p>
                 <ul>
                     <li>Can be one of Integer, Long, Short, Float, Double, Character, Byte, Boolean, String, 
-                        java.math.BigInteger, java.math.BigDecimal, java.util.Date, java.sql.Date, java.sql.Time,
-                        java.sql.Timestamp, or Object[]</li>
+                        java.math.BigInteger, java.math.BigDecimal, java.util.Date, java.sql.Date, java.sql.Time, java.sql.Timestamp, or Object[]</li>
                     <li>Can be a user defined class, that has either a constructor taking arguments of the same type
-                        as those returned by the query (in the same order), or has a public put(Object, Object) method, 
-                        or public setXXX() methods, or public fields.</li>
+                        as those returned by the query (in the same order), or has a public put(Object, Object) method, or public setXXX() methods, or public fields.</li>
                 </ul>
                 <p>
                     In terms of how the <i>Result Class</i> looks, you have two options
@@ -1209,11 +1207,8 @@ public class Price
                     which will sort primarily by <i>field1</i> in ascending order, then secondarily by
                     <i>field2</i> in descending order.
                 </p>
-                <img src="../images/nucleus_extension.gif" border="0" alt=""/>
                 <p>
-                    Although it is not (yet) standard JDOQL, DataNucleus also supports specifying a directive
-                    for where NULL values of the ordered field/property go in the order, so the full syntax
-                    supported is
+                    JDO3.1 introduces a directive for where NULL values of the ordered field/property go in the order, so the full syntax supported is
                 </p>
                 <source><![CDATA[fieldName [ASC|DESC] [NULLS FIRST|NULLS LAST]]]></source>
                 <p>
