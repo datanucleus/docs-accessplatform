@@ -37,8 +37,7 @@
                 <p>
                     Maven operates from a series of plugins. There is a DataNucleus plugin for Maven that 
                     allows enhancement of classes. Go to the Download section of the website and download this.
-                    Once you have the Maven plugin, you then need to set any properties for the plugin in 
-                    your <i>pom.xml</i> file. 
+                    Once you have the Maven plugin, you then need to set any properties for the plugin in your <i>pom.xml</i> file. 
                     Some properties that you may need to change are below
                 </p>
                 <table>
@@ -51,6 +50,22 @@
                         <td>persistenceUnitName</td>
                         <td></td>
                         <td>Name of the persistence-unit to enhance. <b>Mandatory</b></td>
+                    </tr>
+                    <tr>
+                        <td>metadataDirectory</td>
+                        <td>${project.build.outputDirectory}</td>
+                        <td>Directory to use for enhancement files (classes/mappings)
+                            For example, you could set this to ${project.build.testOutputDirectory} when enhancing Maven test classes</td>
+                    </tr>
+                    <tr>
+                        <td>metadataIncludes</td>
+                        <td>**/*.jdo, **/*.class</td>
+                        <td>Fileset to include for enhancement (if not using persistence-unit)</td>
+                    </tr>
+                    <tr>
+                        <td>metadataExcludes</td>
+                        <td></td>
+                        <td>Fileset to exclude for enhancement (if not using persistence-unit)</td>
                     </tr>
                     <tr>
                         <td>log4jConfiguration</td>
