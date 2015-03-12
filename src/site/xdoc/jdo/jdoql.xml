@@ -837,7 +837,7 @@ List results = (List)query.execute(150.00);]]></source>
                 </p>
 <source><![CDATA[
 Query query = pm.newQuery("SELECT FROM mydomain.Supplier " +
-    "WHERE products.contains(prod) && prod.name == 'Beans' VARIABLES mydomain.Product prod");
+    "WHERE this.products.contains(prod) && prod.name == 'Beans' VARIABLES mydomain.Product prod");
 ]]></source>
                 <p>
                     So we have a variable in our query called <i>prod</i> that connects the two parts.
@@ -846,14 +846,16 @@ Query query = pm.newQuery("SELECT FROM mydomain.Supplier " +
                     (<b>explicit</b>), or you can leave them for the query compilation to determine (<b>implicit</b>).
                 </p>
                 <p>
-                    Another example, in this case our candidate (Product) has no relation, but a class (Inventory) has a relation (1-N) to it and we want to query
+                    Another example, in this case our candidate (Product) has no relation, but a class (Inventory) has a relation (1-N) to it (field "products") and we want to query
                     based on that relation, returning the product name for a particular inventory.
                 </p>
 <source><![CDATA[
-Query q = pm.newQuery("SELECT this.name FROM mydomain.Product WHERE inv.contains(this) AND inv.name == 'Sale' VARIABLES mydomain.Inventory inv");
+Query q = pm.newQuery("SELECT this.name FROM mydomain.Product WHERE inv.products.contains(this) AND inv.name == 'Sale' VARIABLES mydomain.Inventory inv");
 ]]></source>
                 <p>
                     Note that if declaring multiple variables then they should be semicolon-separated.
+                    See also <a href="https://datanucleus.wordpress.com/2015/03/12/jdo-querying-between-classes-without-relation/">this blog post</a> which demonstrates
+                    variables across 1-1 "relations" where you only have the "id" stored rather than a real relation.
                 </p>
                 <br/>
             </subsection>
