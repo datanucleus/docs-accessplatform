@@ -488,6 +488,37 @@ CASE WHEN conditional_expression THEN scalar_expression {WHEN conditional_expres
                 <br/>
             </subsection>
 
+            <a name="collections"/>
+            <subsection name="Collection Fields">
+                <p>
+                    Where you have a collection field, often you want to navigate it to query based on some filter for the element. To achieve this, you can clearly 
+                    <a href="#from">JOIN to the element in the FROM clause</a>. Alternatively you can use the <i>MEMBER OF</i> keyword. Let's take an example, you have
+                    a field which is a Collection of Strings, and want to return the owner object that has an element that is <i>"Freddie"</i>.
+                </p>
+<source><![CDATA[
+Query q = em.createQuery("SELECT p.firstName, p.lastName FROM Person p WHERE 'Freddie' MEMBER OF p.nicknames");
+]]></source>
+                <p>
+                    Beyond this, you can also make use of the <a href="#functions_collection">Collection functions</a> and use the size of the collection for example.
+                </p>
+                <br/>
+            </subsection>
+
+            <a name="maps"/>
+            <subsection name="Map Fields">
+                <p>
+                    Where you have a map field, often you want to navigate it to query based on some filter for the key or value. 
+                    Let's take an example, you want to return the value for a particular key in the map of an owner.
+                </p>
+<source><![CDATA[
+Query q = em.createQuery("SELECT VALUE(p.addresses) FROM Person p WHERE KEY(p.addresses) = 'London Flat'");
+]]></source>
+                <p>
+                    Beyond this, you can also make use of the <a href="#functions_collection">Collection functions</a> and use the size of the map for example.
+                </p>
+                <br/>
+            </subsection>
+
             <a name="ordering"/>
             <subsection name="Ordering of Results">
                 <p>
