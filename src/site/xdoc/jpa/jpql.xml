@@ -819,6 +819,8 @@ Query q = em.createNamedQuery("MyQuery");
         <section name="JPQL DELETE Queries">
             <p>
                 The JPA specification defines a mode of JPQL for deleting objects from the datastore.
+                <b>Note that this will not invoke any cascading defined on a field basis, with only datastore-defined Foreign Keys cascading. Additionally
+                    related objects already in-memory will not be updated.</b>
             </p>
 			<a name="delete-syntax"/>
             <subsection name="DELETE Syntax">
@@ -841,6 +843,8 @@ int numRowsDeleted = query.executeUpdate();]]></source>
         <section name="JPQL UPDATE Queries">
             <p>
                 The JPA specification defines a mode of JPQL for updating objects in the datastore. 
+                <b>Note that this will not invoke any cascading defined on a field basis, with only datastore-defined Foreign Keys cascading. Additionally
+                    related objects already in-memory will not be updated.</b>
             </p>
 			<a name="update-syntax"/>
             <subsection name="UPDATE Syntax">
