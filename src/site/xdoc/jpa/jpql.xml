@@ -66,11 +66,29 @@ SELECT [&lt;result&gt;]
             <a name="from"/>
             <subsection name="From Clause">
                 <p>
-                    The FROM clause allows a user to add some explicit joins to related entities, and assign aliases
-                    to the joined entities. These are then usable in the filter/ordering/result etc. If you don't
-                    add any joins DataNucleus will add joins where they are implicit from the filter expression for
-                    example
+                    The FROM clause allows a user to add some explicit joins to related entities, and assign aliases to the joined entities. 
+                    These are then usable in the filter/ordering/result etc. If you don't add any joins DataNucleus will add joins where they are 
+                    implicit from the filter expression for example. The FROM clause is of the following structure
                 </p>
+<source><![CDATA[
+FROM {candidate_entity} {candidate_alias}
+    [[[ LEFT [OUTER] | INNER ] JOIN] join_spec [join_alias] *
+]]></source>
+                <p>
+                    So you are explicitly stating that the join across <i>join_spec</i> is performed as "LEFT OUTER" or "INNER" (rather than just leaving it to DataNucleus
+                    to decide which to use). Note that the <i>join_spec</i> can be a relation field, or alternately if you have a Map of non-Entity keys/values then also
+                    the Map field. If you provide the <i>join_alias</i> then you can use it thereafter in other clauses of the query. 
+                </p>
+                <p>
+                    Some examples of FROM clauses.
+                </p>
+<source><![CDATA[
+Join across 2 relations, allowing referral to Address (a) and Owner (o)
+SELECT p FROM Person p JOIN p.address a JOIN a.owner o WHERE o.name = 'Fred'
+
+Join to a Map relation field and access to the key/value of the Map.
+SELECT VALUE(om) FROM Company c INNER JOIN c.officeMap om ON KEY(om) = 'London'
+]]></source>
             </subsection>
 
             <a name="fetchplan"/>
@@ -420,15 +438,46 @@ CASE WHEN conditional_expression THEN scalar_expression {WHEN conditional_expres
                         <th width="70">In-Memory</th>
                     </tr>
                     <tr>
-                        <td>INDEX(field)</td>
-                        <td>Returns index number of the field element when that is the element of an indexed
-                            List field.</td>
+                        <td>INDEX(collection_field)</td>
+                        <td>Returns index number of the field element when that is the element of an indexed List field.</td>
                         <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                         <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     </tr>
                     <tr>
                         <td>SIZE(collection_field)</td>
                         <td>Returns the size of the collection field. Empty collection will return 0</td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                    </tr>
+                </table>
+
+                <a name="functions_map"/>
+                <h4>Map Functions</h4>
+                <p>
+                    There are a series of functions for use with maps
+                </p>
+                <table>
+                    <tr>
+                        <th width="280">Function Name</th>
+                        <th>Description</th>
+                        <th width="70">Standard</th>
+                        <th width="70">In-Memory</th>
+                    </tr>
+                    <tr>
+                        <td>KEY(map_field)</td>
+                        <td>Returns the key of the map</td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                    </tr>
+                    <tr>
+                        <td>VALUE(map_field)</td>
+                        <td>Returns the value of the map</td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                    </tr>
+                    <tr>
+                        <td>SIZE(map_field)</td>
+                        <td>Returns the size of the map field. Empty map will return 0</td>
                         <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                         <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     </tr>
@@ -514,7 +563,7 @@ Query q = em.createQuery("SELECT p.firstName, p.lastName FROM Person p WHERE 'Fr
 Query q = em.createQuery("SELECT VALUE(p.addresses) FROM Person p WHERE KEY(p.addresses) = 'London Flat'");
 ]]></source>
                 <p>
-                    Beyond this, you can also make use of the <a href="#functions_collection">Collection functions</a> and use the size of the map for example.
+                    Beyond this, you can also make use of the <a href="#functions_map">Map functions</a> and use the size of the map for example.
                 </p>
                 <br/>
             </subsection>
