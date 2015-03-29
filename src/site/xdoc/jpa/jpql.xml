@@ -640,6 +640,9 @@ WHERE EXISTS (SELECT emp2 FROM Employee emp2 WHERE emp2 = emp.spouse)]]></source
                 <p>
                     So this returns the employees that have a partner also employed.
                 </p>
+                <p>
+                    <b>Note that you can only have subqueries in WHERE or HAVING clauses.</b>
+                </p>
                 <br/>
             </subsection>
 
