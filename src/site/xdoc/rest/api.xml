@@ -200,6 +200,26 @@ POST http://localhost/dn/mydomain.Greeting
                 <br/>
             </subsection>
 
+            <subsection name="Insert a new object with related (new) object">
+                <p>
+                    This inserts a User object and an Account object (for that user).
+                </p>
+<source>
+POST http://localhost/dn/mydomain.User
+{"id":"bert",
+ "name":"Bert Smith",
+ "account":{"class":"mydomain.model.SimpleAccount",
+        "id":1,
+        "type":"Basic"}
+}</source>
+                <p>
+                    Note that the "class" attribute specified for the related object is an artificial discriminator so that DataNucleus REST
+                    knows what type to persist on the server. If the Account type (referred to by User.account) has no subclasses then "class" is not required
+                    and it will persist an Account object.
+                </p>
+                <br/>
+            </subsection>
+
             <subsection name="Insert a new object of class using datastore identity">
                 <p>
                     This inserts a Person object. The returned object will have the "_id" property set.
