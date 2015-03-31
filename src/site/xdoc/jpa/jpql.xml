@@ -565,6 +565,12 @@ Query q = em.createQuery("SELECT VALUE(p.addresses) FROM Person p WHERE KEY(p.ad
                 <p>
                     Beyond this, you can also make use of the <a href="#functions_map">Map functions</a> and use the size of the map for example.
                 </p>
+                <p>
+                    <b>Note that in the JPA spec they allow a user to interchangeably use "p.addresses" to refer to the <i>value</i> of the Map. 
+                    DataNucleus doesn't support that since that primary expression is a Map field, and the Map can equally be represented as a join table,
+                    key stored in value, or value stored in key. Hence you should always use VALUE(...) if you mean to refer to the Map value - besides
+                    it is a damn sight clearer the intent by doing that.</b>
+                </p>
                 <br/>
             </subsection>
 
