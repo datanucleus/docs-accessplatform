@@ -610,17 +610,16 @@ WHERE e.salary > (SELECT avg(f.salary) FROM org.datanucleus.Employee f)]]></sour
                     the subquery with an alias of "f", whereas in the outer query the alias is "e".
                 </p>
 
-                <h4>ALL/ANY Expressions</h4>
+                <h4>ALL/ANY/SOME Expressions</h4>
                 <p>
-                    One use of subqueries with JPQL is where you want to compare with some or all of a
-                    particular expression. To give an example
+                    One use of subqueries with JPQL is where you want to compare with some or all of a particular expression. To give an example
                 </p>
                 <source><![CDATA[
 SELECT emp FROM Employee emp 
 WHERE emp.salary > ALL (SELECT m.salary FROM Manager m WHERE m.department = emp.department)]]></source>
                 <p>
                     So this returns all employees that earn more than all managers in the same department!
-                    You can also compare with some/any, like this
+                    You can also compare with SOME/ANY, like this
                 </p>
                 <source><![CDATA[
 SELECT emp FROM Employee emp 
