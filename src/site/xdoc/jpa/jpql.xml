@@ -646,7 +646,7 @@ WHERE EXISTS (SELECT emp2 FROM Employee emp2 WHERE emp2 = emp.spouse)]]></source
                     So this returns the employees that have a partner also employed.
                 </p>
                 <p>
-                    <b>Note that you can only have subqueries in WHERE or HAVING clauses.</b>
+                    <b>Note that in strict JPQL you can only have subqueries in WHERE or HAVING clauses. DataNucleus additionally allows them in the SELECT clause.</b>
                 </p>
                 <br/>
             </subsection>

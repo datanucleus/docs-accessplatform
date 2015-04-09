@@ -1060,6 +1060,9 @@ q.addSubquery(averageHoursQuery, "double averageWeeklyhours", "this.department.e
                 <p>
                     so now our subquery has a candidate related to the outer query candidate.
                 </p>
+                <p>
+                    <b>In strict JDOQL you can only have the subquery in the "filter" (WHERE) clause. DataNucleus additionally allows it in the "result" (SELECT) clause.</b>
+                </p>
                 <br/>
             </subsection>
 
