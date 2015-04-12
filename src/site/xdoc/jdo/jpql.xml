@@ -62,66 +62,32 @@ SELECT [&lt;result&gt;]
                     DataNucleus?
                 </p>
             </subsection>
+            <a name="from"/>
+            <subsection name="From Clause">
+                <p>
+                    The FROM clause allows a user to add some explicit joins to related entities, and assign aliases to the joined entities. 
+                    These are then usable in the filter/ordering/result etc. If you don't add any joins DataNucleus will add joins where they are 
+                    implicit from the filter expression for example. The FROM clause is of the following structure
+                </p>
+<source><![CDATA[
+FROM {candidate_entity} {candidate_alias}
+    [[[ LEFT [OUTER] | INNER ] JOIN] join_spec [join_alias] *
+]]></source>
+                <p>
+                    So you are explicitly stating that the join across <i>join_spec</i> is performed as "LEFT OUTER" or "INNER" (rather than just leaving it to DataNucleus
+                    to decide which to use). Note that the <i>join_spec</i> can be a relation field, or alternately if you have a Map of non-Entity keys/values then also
+                    the Map field. If you provide the <i>join_alias</i> then you can use it thereafter in other clauses of the query. 
+                </p>
+                <p>
+                    Some examples of FROM clauses.
+                </p>
+<source><![CDATA[
+Join across 2 relations, allowing referral to Address (a) and Owner (o)
+SELECT p FROM Person p JOIN p.address a JOIN a.owner o WHERE o.name = 'Fred'
 
-            <a name="unique"/>
-            <subsection name="Unique Results">
-                <p>
-                    When you know that there will be only a single result, you can set the query as unique.
-                    This simplifies the process of getting the result
-                </p>
-                <source><![CDATA[
-Query query = pm.newQuery("JPQL", 
-    "SELECT p FROM Person p WHERE p.lastName = 'Obama' AND o.firstName = 'Barak'");
-query.setUnique(true);
-Person pers = (Person) query.execute();]]></source>
-                <br/>
-            </subsection>
-
-            <a name="resultclass"/>
-            <subsection name="Result Class">
-                <p>
-                    If you are defining the result of the JPQL query and want to obtain each row of the results as an
-                    object of a particular type, then you can set the result class.
-                </p>
-                <source><![CDATA[
-Query query = pm.newQuery("JPQL", "SELECT p.firstName, p.lastName FROM Person p");
-query.setResultClass(Name.class);
-List<Name> names = (List<Name>) query.execute();]]></source>
-                <p>
-                    The <i>Result Class</i> has to meet certain requirements. These are
-                </p>
-                <ul>
-                    <li>Can be one of Integer, Long, Short, Float, Double, Character, Byte, Boolean, String, 
-                        java.math.BigInteger, java.math.BigDecimal, java.util.Date, java.sql.Date, java.sql.Time,
-                        java.sql.Timestamp, or Object[]</li>
-                    <li>Can be a user defined class, that has either a constructor taking arguments of the same type
-                        as those returned by the query (in the same order), or has a public put(Object, Object) method, 
-                        or public setXXX() methods, or public fields.</li>
-                </ul>
-                <p>
-                    So in our example, we are returning 2 String fields, and we define our 
-                    <i>Result Class</i> <b>Name</b> as follows
-                </p>
-                <source>
-public class Name
-{
-    protected String firstName = null;
-    protected String lastName = null;
-
-    public Name(String first, String last)
-    {
-        this.firstName = first;
-        this.lastName = last;
-    }
-
-    ...
-}</source>
-                <p>
-                    So here we have a result class using the constructor arguments. We could equally have provided 
-                    a class with public fields instead, or provided <i>setXXX</i> methods or a <i>put</i> method. 
-                    They all work in the same way.
-                </p>
-                <br/>
+Join to a Map relation field and access to the key/value of the Map.
+SELECT VALUE(om) FROM Company c INNER JOIN c.officeMap om ON KEY(om) = 'London'
+]]></source>
             </subsection>
 
             <a name="fetchplan"/>
@@ -241,6 +207,26 @@ List<Person> results = (List<Person>)q.execute(theSurname, theForename);]]></sou
                     In the second case we have parameters that are prefixed by <b>?</b> (question mark) and are 
                     numbered starting at 1. We then pass the parameters in to execute in that order.
                 </p>
+                <br/>
+            </subsection>
+
+            <a name="case"/>
+            <subsection name="CASE expressions">
+                <p>
+                    For particular use in the <i>result</i> clause, you can make use of a <b>CASE</b> expression where you want to
+                    return different things based on some condition(s). Like this
+                </p>
+<source><![CDATA[
+Query q = em.createQuery(
+    "SELECT p.personNum, CASE WHEN p.age < 18 THEN 'Youth' WHEN p.age >= 18 AND p.age < 65 THEN 'Adult' ELSE 'Old' END FROM Person p");
+]]></source>
+                <p>
+                    So in this case the second result value will be a String, either "Youth", "Adult" or "Old" depending on the age of the person.
+                    The BNF structure of the JPQL CASE expression is
+                </p>
+                <pre>
+CASE WHEN conditional_expression THEN scalar_expression {WHEN conditional_expression THEN scalar_expression}* ELSE scalar_expression END
+                </pre>
                 <br/>
             </subsection>
 
@@ -446,15 +432,46 @@ List<Person> results = (List<Person>)q.execute(theSurname, theForename);]]></sou
                         <th width="70">In-Memory</th>
                     </tr>
                     <tr>
-                        <td>INDEX(field)</td>
-                        <td>Returns index number of the field element when that is the element of an indexed
-                            List field.</td>
+                        <td>INDEX(collection_field)</td>
+                        <td>Returns index number of the field element when that is the element of an indexed List field.</td>
                         <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                         <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     </tr>
                     <tr>
                         <td>SIZE(collection_field)</td>
                         <td>Returns the size of the collection field. Empty collection will return 0</td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                    </tr>
+                </table>
+
+                <a name="functions_map"/>
+                <h4>Map Functions</h4>
+                <p>
+                    There are a series of functions for use with maps
+                </p>
+                <table>
+                    <tr>
+                        <th width="280">Function Name</th>
+                        <th>Description</th>
+                        <th width="70">Standard</th>
+                        <th width="70">In-Memory</th>
+                    </tr>
+                    <tr>
+                        <td>KEY(map_field)</td>
+                        <td>Returns the key of the map</td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                    </tr>
+                    <tr>
+                        <td>VALUE(map_field)</td>
+                        <td>Returns the value of the map</td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                    </tr>
+                    <tr>
+                        <td>SIZE(map_field)</td>
+                        <td>Returns the size of the map field. Empty map will return 0</td>
                         <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                         <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     </tr>
@@ -486,8 +503,80 @@ List<Person> results = (List<Person>)q.execute(theSurname, theForename);]]></sou
                     </tr>
                     <tr>
                         <td>MOD(num_field1, num_field2)</td>
-                        <td>Returns the modulus of the two numeric fields (<i>num_field1 % num_field2</i></td>
+                        <td>Returns the modulus of the two numeric fields (<i>num_field1 % num_field2)</i></td>
                         <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                    </tr>
+                    <tr>
+                        <td>ACOS(num_field)</td>
+                        <td>Returns the arc-cosine of a numeric field</td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                    </tr>
+                    <tr>
+                        <td>ASIN(num_field)</td>
+                        <td>Returns the arc-sine of a numeric field</td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                    </tr>
+                    <tr>
+                        <td>ATAN(num_field)</td>
+                        <td>Returns the arc-tangent of a numeric field</td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                    </tr>
+                    <tr>
+                        <td>COS(num_field)</td>
+                        <td>Returns the cosine of a numeric field</td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                    </tr>
+                    <tr>
+                        <td>SIN(num_field)</td>
+                        <td>Returns the sine of a numeric field</td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                    </tr>
+                    <tr>
+                        <td>TAN(num_field)</td>
+                        <td>Returns the tangent of a numeric field</td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                    </tr>
+                    <tr>
+                        <td>DEGREES(num_field)</td>
+                        <td>Returns the degrees of a numeric field</td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                    </tr>
+                    <tr>
+                        <td>RADIANS(num_field)</td>
+                        <td>Returns the radians of a numeric field</td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                    </tr>
+                    <tr>
+                        <td>CEIL(num_field)</td>
+                        <td>Returns the ceiling of a numeric field</td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                    </tr>
+                    <tr>
+                        <td>FLOOR(num_field)</td>
+                        <td>Returns the floor of a numeric field</td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                    </tr>
+                    <tr>
+                        <td>LOG(num_field)</td>
+                        <td>Returns the natural logarithm of a numeric field</td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                    </tr>
+                    <tr>
+                        <td>EXP(num_field)</td>
+                        <td>Returns the exponent of a numeric field</td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                         <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     </tr>
                 </table>
@@ -511,6 +600,43 @@ List<Person> results = (List<Person>)q.execute(theSurname, theForename);]]></sou
                         <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                     </tr>
                 </table>
+                <br/>
+            </subsection>
+
+            <a name="collections"/>
+            <subsection name="Collection Fields">
+                <p>
+                    Where you have a collection field, often you want to navigate it to query based on some filter for the element. To achieve this, you can clearly 
+                    <a href="#from">JOIN to the element in the FROM clause</a>. Alternatively you can use the <i>MEMBER OF</i> keyword. Let's take an example, you have
+                    a field which is a Collection of Strings, and want to return the owner object that has an element that is <i>"Freddie"</i>.
+                </p>
+<source><![CDATA[
+Query q = pm.newQuery("JPQL", "SELECT p.firstName, p.lastName FROM Person p WHERE 'Freddie' MEMBER OF p.nicknames");
+]]></source>
+                <p>
+                    Beyond this, you can also make use of the <a href="#functions_collection">Collection functions</a> and use the size of the collection for example.
+                </p>
+                <br/>
+            </subsection>
+
+            <a name="maps"/>
+            <subsection name="Map Fields">
+                <p>
+                    Where you have a map field, often you want to navigate it to query based on some filter for the key or value. 
+                    Let's take an example, you want to return the value for a particular key in the map of an owner.
+                </p>
+<source><![CDATA[
+Query q = pm.newQuery("JPQL", "SELECT VALUE(p.addresses) FROM Person p WHERE KEY(p.addresses) = 'London Flat'");
+]]></source>
+                <p>
+                    Beyond this, you can also make use of the <a href="#functions_map">Map functions</a> and use the size of the map for example.
+                </p>
+                <p>
+                    <b>Note that in the JPA spec they allow a user to interchangeably use "p.addresses" to refer to the <i>value</i> of the Map. 
+                    DataNucleus doesn't support that since that primary expression is a Map field, and the Map can equally be represented as a join table,
+                    key stored in value, or value stored in key. Hence you should always use VALUE(...) if you mean to refer to the Map value - besides
+                    it is a damn sight clearer the intent by doing that.</b>
+                </p>
                 <br/>
             </subsection>
 
@@ -600,6 +726,67 @@ Query q = pm.newQuery("JPQL", "SELECT p FROM Person p WHERE p.age > 20");
 q.setRange(0, 20);]]></source>
                 <p>
                     So with this query we get results 0 to 19 inclusive.
+                </p>
+                <br/>
+            </subsection>
+
+            <a name="unique"/>
+            <subsection name="Unique Results">
+                <p>
+                    When you know that there will be only a single result, you can set the query as unique.
+                    This simplifies the process of getting the result
+                </p>
+                <source><![CDATA[
+Query query = pm.newQuery("JPQL", 
+    "SELECT p FROM Person p WHERE p.lastName = 'Obama' AND o.firstName = 'Barak'");
+query.setUnique(true);
+Person pers = (Person) query.execute();]]></source>
+                <br/>
+            </subsection>
+
+            <a name="resultclass"/>
+            <subsection name="Result Class">
+                <p>
+                    If you are defining the result of the JPQL query and want to obtain each row of the results as an
+                    object of a particular type, then you can set the result class.
+                </p>
+                <source><![CDATA[
+Query query = pm.newQuery("JPQL", "SELECT p.firstName, p.lastName FROM Person p");
+query.setResultClass(Name.class);
+List<Name> names = (List<Name>) query.execute();]]></source>
+                <p>
+                    The <i>Result Class</i> has to meet certain requirements. These are
+                </p>
+                <ul>
+                    <li>Can be one of Integer, Long, Short, Float, Double, Character, Byte, Boolean, String, 
+                        java.math.BigInteger, java.math.BigDecimal, java.util.Date, java.sql.Date, java.sql.Time,
+                        java.sql.Timestamp, or Object[]</li>
+                    <li>Can be a user defined class, that has either a constructor taking arguments of the same type
+                        as those returned by the query (in the same order), or has a public put(Object, Object) method, 
+                        or public setXXX() methods, or public fields.</li>
+                </ul>
+                <p>
+                    So in our example, we are returning 2 String fields, and we define our 
+                    <i>Result Class</i> <b>Name</b> as follows
+                </p>
+                <source>
+public class Name
+{
+    protected String firstName = null;
+    protected String lastName = null;
+
+    public Name(String first, String last)
+    {
+        this.firstName = first;
+        this.lastName = last;
+    }
+
+    ...
+}</source>
+                <p>
+                    So here we have a result class using the constructor arguments. We could equally have provided 
+                    a class with public fields instead, or provided <i>setXXX</i> methods or a <i>put</i> method. 
+                    They all work in the same way.
                 </p>
                 <br/>
             </subsection>
