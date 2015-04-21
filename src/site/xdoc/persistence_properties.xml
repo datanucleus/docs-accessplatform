@@ -2998,6 +2998,26 @@
                 <table>
                     <tr>
                         <th colspan="2">
+                            <b>datanucleus.rdbms.useDefaultSqlType</b>
+                        </th>
+                    </tr>
+                    <tr>
+                        <td width="120">Description</td>
+                        <td>This property applies for schema generation in terms of setting the default column "sql-type" (when you haven't defined it) and where
+                            the JDBC driver has multiple possible "sql-type" for a "jdbc-type".
+                            If the property is set to false, it will take the first provided "sql-type" from the JDBC driver.
+                            If the property is set to true, it will take the "sql-type" that matches what the DataNucleus "plugin.xml" implies.
+                            <b>Applicable for RDBMS only</b></td>
+                    </tr>
+                    <tr>
+                        <td>Range of Values</td>
+                        <td><b>true</b> | false</td>
+                    </tr>
+                </table>
+                <br/>
+                <table>
+                    <tr>
+                        <th colspan="2">
                             <b>datanucleus.rdbms.initializeColumnInfo</b>
                         </th>
                     </tr>

@@ -22,6 +22,8 @@
                 </p>
                 <ul>
                     <li>RDBMS : if persisting java.sql.Timestamp field as VARCHAR, the conversion method has changed slightly to pass a String to JDBC and not rely on JDBC drivers</li>
+                    <li>RDBMS : new persistence property added "datanucleus.rdbms.useDefaultSqlType" with default value of <i>true</i>. This could impact on schema generation
+                        if your JDBC driver has multiple possible "sql-type" for a specific "jdbc-type". Set it to <i>false</i> if you want the previous (4.0, 4.1) behaviour.</li>
                 </ul>
             </subsection>
 
