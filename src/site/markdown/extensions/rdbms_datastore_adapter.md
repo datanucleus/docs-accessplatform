@@ -15,7 +15,7 @@ extend DataNucleus to make the support to a specific database fit better to Data
 The [RDBMS](http://www.datanucleus.org/products/accessplatform/datastores/rdbms.html) page lists 
 all RDBMS databases that have been tested with DataNucleus, and some of these databases has been 
 adapted internally to get a good fit. 
-You can extend DataNucleus's capabilities using the plugin extension *org.datanucleus.store_datastoreadapter*.
+You can extend DataNucleus's capabilities using the plugin extension *org.datanucleus.store.rdbms.datastoreadapter*.
 
 <table>
     <tr>
@@ -25,103 +25,103 @@ You can extend DataNucleus's capabilities using the plugin extension *org.datanu
         <th width="80">Location</th>
     </tr>
     <tr>
-        <td>org.datanucleus.store_datastoreadapter</td>
+        <td>org.datanucleus.store.rdbms.datastoreadapter</td>
         <td>derby</td>
         <td>Adapter for Apache Derby/Cloudscape</td>
         <td>datanucleus-rdbms</td>
     </tr>
     <tr>
-        <td>org.datanucleus.store_datastoreadapter</td>
+        <td>org.datanucleus.store.rdbms.datastoreadapter</td>
         <td>db2</td>
         <td>Adapter for IBM DB2</td>
         <td>datanucleus-rdbms</td>
     </tr>
     <tr>
-        <td>org.datanucleus.store_datastoreadapter</td>
+        <td>org.datanucleus.store.rdbms.datastoreadapter</td>
         <td>as/400</td>
         <td>Adapter for IBM DB2 AS/400</td>
         <td>datanucleus-rdbms</td>
     </tr>
     <tr>
-        <td>org.datanucleus.store_datastoreadapter</td>
+        <td>org.datanucleus.store.rdbms.datastoreadapter</td>
         <td>firebird</td>
         <td>Adapter for Firebird/Interbase</td>
         <td>datanucleus-rdbms</td>
     </tr>
     <tr>
-        <td>org.datanucleus.store_datastoreadapter</td>
+        <td>org.datanucleus.store.rdbms.datastoreadapter</td>
         <td>microsoft</td>
         <td>Adapter for MSSQL server</td>
         <td>datanucleus-rdbms</td>
     </tr>
     <tr>
-        <td>org.datanucleus.store_datastoreadapter</td>
+        <td>org.datanucleus.store.rdbms.datastoreadapter</td>
         <td>h2</td>
         <td>Adapter for H2</td>
         <td>datanucleus-rdbms</td>
     </tr>
     <tr>
-        <td>org.datanucleus.store_datastoreadapter</td>
+        <td>org.datanucleus.store.rdbms.datastoreadapter</td>
         <td>hsql</td>
         <td>Adapter for HSQLDB</td>
         <td>datanucleus-rdbms</td>
     </tr>
     <tr>
-        <td>org.datanucleus.store_datastoreadapter</td>
+        <td>org.datanucleus.store.rdbms.datastoreadapter</td>
         <td>mckoi</td>
         <td>Adapter for McKoi DB</td>
         <td>datanucleus-rdbms</td>
     </tr>
     <tr>
-        <td>org.datanucleus.store_datastoreadapter</td>
+        <td>org.datanucleus.store.rdbms.datastoreadapter</td>
         <td>mysql</td>
         <td>Adapter for MySQL</td>
         <td>datanucleus-rdbms</td>
     </tr>
     <tr>
-        <td>org.datanucleus.store_datastoreadapter</td>
+        <td>org.datanucleus.store.rdbms.datastoreadapter</td>
         <td>sybase</td>
         <td>Adapter for Sybase</td>
         <td>datanucleus-rdbms</td>
     </tr>
     <tr>
-        <td>org.datanucleus.store_datastoreadapter</td>
+        <td>org.datanucleus.store.rdbms.datastoreadapter</td>
         <td>oracle</td>
         <td>Adapter for Oracle</td>
         <td>datanucleus-rdbms</td>
     </tr>
     <tr>
-        <td>org.datanucleus.store_datastoreadapter</td>
+        <td>org.datanucleus.store.rdbms.datastoreadapter</td>
         <td>pointbase</td>
         <td>Adapter for Pointbase</td>
         <td>datanucleus-rdbms</td>
     </tr>
     <tr>
-        <td>org.datanucleus.store_datastoreadapter</td>
+        <td>org.datanucleus.store.rdbms.datastoreadapter</td>
         <td>postgresql</td>
         <td>Adapter for PostgreSQL</td>
         <td>datanucleus-rdbms</td>
     </tr>
     <tr>
-        <td>org.datanucleus.store_datastoreadapter</td>
+        <td>org.datanucleus.store.rdbms.datastoreadapter</td>
         <td>sapdb</td>
         <td>Adapter for SAPDB/MaxDB</td>
         <td>datanucleus-rdbms</td>
     </tr>
     <tr>
-        <td>org.datanucleus.store_datastoreadapter</td>
+        <td>org.datanucleus.store.rdbms.datastoreadapter</td>
         <td>sqlite</td>
         <td>Adapter for SQLite</td>
         <td>datanucleus-rdbms</td>
     </tr>
     <tr>
-        <td>org.datanucleus.store_datastoreadapter</td>
+        <td>org.datanucleus.store.rdbms.datastoreadapter</td>
         <td>timesten</td>
         <td>Adapter for Timesten</td>
         <td>datanucleus-rdbms</td>
     </tr>
     <tr>
-        <td>org.datanucleus.store_datastoreadapter</td>
+        <td>org.datanucleus.store.rdbms.datastoreadapter</td>
         <td>informix</td>
         <td>Adapter for Informix</td>
         <td>datanucleus-rdbms</td>
@@ -249,7 +249,7 @@ The file should look like this
 
 	<?xml version="1.0"?>
 	<plugin id="mydomain" name="MyCompany DataNucleus plug-in" provider-name="MyCompany">
-    	<extension point="org.datanucleus.store_datastoreadapter">
+    	<extension point="org.datanucleus.store.rdbms.datastoreadapter">
         	<datastore-adapter vendor-id="myname" class-name="mydomain.MyDatastoreAdapter" priority="10"/>
     	</extension>
 	</plugin>
