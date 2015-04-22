@@ -128,13 +128,13 @@ To do this we create a <i>plugin.xml</i> (at the root of our CLASSPATH) to conta
 
 	<?xml version="1.0"?>
 	<plugin>
-    	<extension point="org.datanucleus.store_mapping">
+    	<extension point="org.datanucleus.store.rdbms.java_mapping">
         	<mapping java-type="java.awt.Color" mapping-class="org.mydomain.MyColorMapping"/>
     	</extension>
 	</plugin>
 
 Note that we also require a MANIFEST.MF file as per the [Extensions Guide](index.html).
-When using the DataNucleus Enhancer, SchemaTool or Core, DataNucleus automatically searches for the _mapping definition_ at __/plugin.xml__ files in the CLASSPATH.
+When using the DataNucleus Enhancer, SchemaTool or runtime, DataNucleus automatically searches for the _mapping definition_ at __/plugin.xml__ files in the CLASSPATH.
 
 Obviously, since DataNucleus already supports _java.awt.Color_ there is no need to add this particular mapping to DataNucleus yourself, 
 but this demonstrates the way you should do it for any type you wish to add.
