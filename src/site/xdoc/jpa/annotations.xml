@@ -37,7 +37,7 @@
                 Annotations supported by DataNucleus are shown below. Not all have their documentation written yet.
                 The annotations/attributes coloured in pink are ORM and really should be placed in XML rather than directly
                 in the class using annotations. The annotations coloured in blue are DataNucleus extensions and should be used
-                only where you dont mind losing implementation-independence.
+                only where you don't mind losing implementation-independence.
             </p>
             <table>
                 <tr>
@@ -63,7 +63,7 @@
                 <tr class="d">
                     <td><a href="#PersistenceAware">@PersistenceAware</a></td>
                     <td>Class</td>
-                    <td>Specifies that the class is not persistent but needs to be able to access fields of persistent classes</td>
+                    <td>Specifies that the class is not persistent but needs to be able to access fields of persistent classes (DataNucleus extension).</td>
                 </tr>
                 <tr>
                     <td><a href="#IdClass">@IdClass</a></td>
@@ -276,6 +276,11 @@
                     <td>Field/Method</td>
                     <td>Specifies the column position to use on this field/property (DataNucleus extension).</td>
                 </tr>
+                <tr class="d">
+                    <td><a href="#ValueGenerator">@ValueGenerator</a></td>
+                    <td>Field/Method</td>
+                    <td>Specifies a non-JPA-standard value generator to use on this field/property (DataNucleus extension).</td>
+                </tr>
                 <tr>
                     <td><a href="#GeneratedValue">@GeneratedValue</a></td>
                     <td>Field/Method</td>
@@ -405,12 +410,12 @@
                 <tr class="d">
                     <td><a href="#Extensions">@Extensions</a></td>
                     <td>Class/Field/Method</td>
-                    <td>Defines a series of DataNucleus extensions</td>
+                    <td>Defines a series of DataNucleus extensions (DataNucleus extension).</td>
                 </tr>
                 <tr class="d">
                     <td><a href="#Extension">@Extension</a></td>
                     <td>Class/Field/Method</td>
-                    <td>Defines a DataNucleus extension</td>
+                    <td>Defines a DataNucleus extension (DataNucleus extension).</td>
                 </tr>
             </table>
             <br/>
@@ -2548,6 +2553,38 @@ public class MyClass
 {
     @ColumnPosition(0)
     boolean enabled;
+    ...
+}</source>
+                <br/>
+                <br/>
+            </subsection>
+
+            <a name="ValueGenerator"/>
+            <subsection name="@ValueGenerator">
+                <p>
+                    This DataNucleus-extension annotation is used to allow use of non-JPA-standard value generators on a field/property.
+                    Specified on the <b>field/property</b>.
+                </p>
+                <table>
+                    <tr class="d">
+                        <th>Attribute</th>
+                        <th>Type</th>
+                        <th>Description</th>
+                        <th>Default</th>
+                    </tr>
+                    <tr class="d">
+                        <td>strategy</td>
+                        <td>String</td>
+                        <td>Name of the strategy e.g "uuid"</td>
+                        <td></td>
+                    </tr>
+                </table>
+                <source>
+@Entity
+public class MyClass
+{
+    @ValueGenerator(strategy="uuid")
+    String id;
     ...
 }</source>
                 <br/>
