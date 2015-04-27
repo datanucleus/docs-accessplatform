@@ -9,8 +9,8 @@
     <body>
         <section name="JPA : JPQL Criteria Queries">
             <p>
-                In JPA2 there is a query API referred to as "criteria". This is really an API allowing
-                the construction of queries expression by expression, and optionally making it type safe.
+                In JPA there is a query API referred to as "criteria". This is really an API allowing
+                the construction of queries expression by expression, and optionally making it type-safe.
                 It provides two ways of specifying a field/property. The first way is using Strings, and the second
                 using a <a href="#metamodel">MetaModel</a>. The advantage of the MetaModel is that it means that 
                 your queries are refactorable if you rename a field. Each example will be expressed in both ways 
@@ -249,7 +249,7 @@ int num = q.executeUpdate();]]></source>
                     with name with suffix "_". This is a metamodel class. It is defined below.
                 </p>
                 <p>
-                    The JPA2 spec contains the following description of the static metamodel.
+                    The JPA spec contains the following description of the static metamodel.
                     <br/>
                     <i>For every managed class in the persistence unit, a corresponding metamodel class is produced
                     as follows:</i>
@@ -325,7 +325,7 @@ public class Person_
                     all classes (original + metamodel) are compiled.
                 </p>
                 <p>
-                    To enable this in Maven2 you would need the above jar, plus persistence-api.jar to be in the CLASSPATH at compile
+                    To enable this in Maven you would need the above jar, plus <i>persistence-api.jar</i> to be in the CLASSPATH at compile
                 </p>
                 <source><![CDATA[
 <plugin>
