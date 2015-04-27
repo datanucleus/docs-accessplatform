@@ -112,7 +112,7 @@ public class Address
                     </tr>
                 </table>
                 <p>
-                    This will create 3 tables in the database, one for <u>Address</u>, one for <u>Account</u>, 
+                    This will create 3 tables in the database, one for <b>Address</b>, one for <b>Account</b>, 
                     and a join table, as shown below.
                 </p>
                 <br/>
@@ -151,9 +151,9 @@ public class Address
             <a name="fk_uni"/>
             <subsection name="Using Foreign-Key">
                 <p>
-                    In this relationship, the <u>Account</u> class has a List of <u>Address</u> objects, yet the <u>Address</u>
-                    knows nothing about the <u>Account</u>. In this case we don't have a field in the Address to link back to the
-                    Account and so DataNucleus has to use columns in the datastore representation of the <u>Address</u> class. So we define
+                    In this relationship, the <b>Account</b> class has a List of <b>Address</b> objects, yet the <b>Address</b>
+                    knows nothing about the <b>Account</b>. In this case we don't have a field in the Address to link back to the
+                    Account and so DataNucleus has to use columns in the datastore representation of the <b>Address</b> class. So we define
                     the XML metadata like this
                 </p>
                 <source><![CDATA[
@@ -193,7 +193,7 @@ public class Address
                 <p> 
                     Again there will be 2 tables, one for <b>Address</b>, and one for <b>Account</b>.
                     Note that we have no "mapped-by" attribute specified, and also no "join" element. If you wish to specify
-                    the names of the columns used in the schema for the foreign key in the <u>Address</u> table you should use
+                    the names of the columns used in the schema for the foreign key in the <b>Address</b> table you should use
                     the <i>element</i> element within the field of the collection.
                 </p>
                 <br/>
@@ -201,10 +201,10 @@ public class Address
                 <br/>
                 <p>
                     In terms of operation within your classes of assigning the objects in the relationship. You have to take your 
-                    <u>Account </u>object and add the <u>Address</u> to the <u>Account</u> collection field since the <u>Address</u> 
-                    knows nothing about the <u>Account</u>. Also be aware that each <u>Address</u> object can have only one owner, 
-                    since it has a single foreign key to the <u>Account</u>. If you wish to have an <u>Address</u> assigned to multiple 
-                    <u>Accounts</u> then you should use the "Join Table" relationship above.
+                    <b>Account</b> object and add the <b>Address</b> to the <b>Account</b> collection field since the <b>Address</b> 
+                    knows nothing about the <b>Account</b>. Also be aware that each <b>Address</b> object can have only one owner, 
+                    since it has a single foreign key to the <b>Account</b>. If you wish to have an <b>Address</b> assigned to multiple 
+                    <b>Accounts</b> then you should use the "Join Table" relationship above.
                 </p>
                 <p>
                     If you wish to fully define the schema table and column names etc, follow these tips
@@ -283,7 +283,7 @@ public class Address
                     </tr>
                 </table>
                 <p>
-                    This will create 3 tables in the database, one for <u>Address</u>, one for <u>Account</u>, 
+                    This will create 3 tables in the database, one for <b>Address</b>, one for <b>Account</b>, 
                     and a join table, as shown below.
                 </p>
                 <br/>
@@ -369,12 +369,12 @@ public class Address
                     <tr>
                         <td>The crucial part is the <i>mapped-by</i> attribute of the field on the "1" side of the 
                             relationship. This tells the JDO implementation to look for a field called 
-                            <i>account</i> on the <u>Address</u> class.</td>
+                            <i>account</i> on the <b>Address</b> class.</td>
                     </tr>
                 </table>
                 <p>
-                    This will create 2 tables in the database, one for <u>Address</u> (including an 
-                    <i>ACCOUNT_ID</i> to link to the <i>ACCOUNT</i> table), and one for <u>Account</u>. 
+                    This will create 2 tables in the database, one for <b>Address</b> (including an 
+                    <i>ACCOUNT_ID</i> to link to the <i>ACCOUNT</i> table), and one for <b>Account</b>. 
                     Notice the subtle difference to this set-up to that of the <b>Join Table</b> relationship earlier.
                 </p>
                 <br/>

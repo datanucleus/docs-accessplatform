@@ -106,7 +106,7 @@ public class Address
                     </tr>
                 </table>
                 <p>
-                    There will be 3 tables, one for <u>Address</u>, one for <u>Account</u>, and the join table. 
+                    There will be 3 tables, one for <b>Address</b>, one for <b>Account</b>, and the join table. 
                     The difference from Set is in the contents of the join table. An index column (INTEGER_IDX)
                     is added to keep track of the position of objects in the List.
                     The name of this column can be controlled using the &lt;order&gt; MetaData element.
@@ -148,9 +148,9 @@ public class Address
             <a name="fk_uni"/>
             <subsection name="Using Foreign-Key">
                 <p>
-                    In this relationship, the <u>Account</u> class has a List of <u>Address</u> objects, yet the <u>Address</u>
-                    knows nothing about the <u>Account</u>. In this case we don't have a field in the Address to link back to the
-                    Account and so DataNucleus has to use columns in the datastore representation of the <u>Address</u> class. So we define
+                    In this relationship, the <b>Account</b> class has a List of <b>Address</b> objects, yet the <b>Address</b>
+                    knows nothing about the <b>Account</b>. In this case we don't have a field in the Address to link back to the
+                    Account and so DataNucleus has to use columns in the datastore representation of the <b>Address</b> class. So we define
                     the XML metadata like this
                 </p>
                 <source><![CDATA[
@@ -184,7 +184,7 @@ public class Address
                 <p> 
                     Again there will be 2 tables, one for <b>Address</b>, and one for <b>Account</b>.
                     Note that we have no "mapped-by" attribute specified, and also no "join" element. If you wish to specify
-                    the names of the columns used in the schema for the foreign key in the <u>Address</u> table you should use
+                    the names of the columns used in the schema for the foreign key in the <b>Address</b> table you should use
                     the <i>element</i> element within the field of the collection.
                 </p>
                 <br/>
@@ -192,8 +192,8 @@ public class Address
                 <br/>
                 <p>
                     In terms of operation within your classes of assigning the objects in the relationship. With DataNucleus and List-based 
-                    containers you have to take your <u>Account </u>object and add the <u>Address</u> to the <u>Account</u> collection 
-                    field since the <u>Address</u> knows nothing about the <u>Account</u>.
+                    containers you have to take your <b>Account</b> object and add the <b>Address</b> to the <b>Account</b> collection 
+                    field since the <b>Address</b> knows nothing about the <b>Account</b>.
                 </p>
                 <p>
                     If you wish to fully define the schema table and column names etc, follow these tips
@@ -265,8 +265,8 @@ public class Address
                 <br/>
                 <p>
                     In terms of operation within your classes of assigning the objects in the relationship. 
-                    With DataNucleus and List-based containers you have to take your <u>Account </u>object and add the <u>Address</u> 
-                    to the <u>Account</u> collection field since the <u>Address</u> knows nothing about the <u>Account</u>.
+                    With DataNucleus and List-based containers you have to take your <b>Account</b> object and add the <b>Address</b> 
+                    to the <b>Account</b> collection field since the <b>Address</b> knows nothing about the <b>Account</b>.
                 </p>
                 <p>
                     <b>Limitations</b>
@@ -334,7 +334,7 @@ public class Address
                     </tr>
                 </table>
                 <p>
-                    There will be 3 tables, one for <u>Address</u>, one for <u>Account</u>, and the join table. 
+                    There will be 3 tables, one for <b>Address</b>, one for <b>Account</b>, and the join table. 
                     The difference from Set is in the contents of the join table. An index column (INTEGER_IDX) 
                     is added to keep track of the position of objects in the List.
                     The name of this column can be controlled using the &lt;order&gt; MetaData element.
@@ -377,9 +377,9 @@ public class Address
             <a name="fk_bi"/>
             <subsection name="Using Foreign-Key">
                 <p>Here we have the 2 classes with both knowing about the relationship with the other.</p>
-                <p><b>Please note that an <b><u>Foreign-Key</u></b> List will NOT, by default, allow duplicates. This is because it stores 
+                <p><b>Please note that an <i>Foreign-Key</i> List will NOT, by default, allow duplicates. This is because it stores 
                     the element position in the element table. If you need a List with duplicates we recommend that you use the 
-                    <b><u>Join Table</u></b> List implementation above.</b> If you have an application identity element class then you 
+                    <i>Join Table</i> List implementation above.</b> If you have an application identity element class then you 
                     <i>could</i> in principle add the element position to the primary key to allow duplicates, but this would imply 
                     changing your element class identity.
                 </p>
@@ -422,7 +422,7 @@ public class Address
                     <tr>
                         <td>The crucial part is the <i>mapped-by</i> attribute of the field on the "1" side of 
                             the relationship. This tells the JDO implementation to look for a field called 
-                            <i>account</i> on the <u>Address</u> class.</td>
+                            <i>account</i> on the <b>Address</b> class.</td>
                     </tr>
                 </table>
                 <p>
@@ -435,9 +435,9 @@ public class Address
                 <br/>
                 <p>
                     In terms of operation within your classes of assigning the objects in the relationship. <b>With DataNucleus and List-based 
-                    containers you have to take your <u>Account </u>object and add the <u>Address</u> to the <u>Account</u> collection 
-                    field (you can't just take the <u>Address</u> object and set its <u>Account</u> field since the position of the 
-                    <u>Address</u> in the List needs setting, and this is done by adding the <u>Address</u> to the <u>Account</u>)</b>.
+                    containers you have to take your <b>Account</b> object and add the <b>Address</b> to the <b>Account</b> collection 
+                    field (you can't just take the <b>Address</b> object and set its <b>Account</b> field since the position of the 
+                    <b>Address</b> in the List needs setting, and this is done by adding the <b>Address</b> to the <b>Account</b>)</b>.
                     In addition, if you are removing an object from a List, <b>you cannot simply set the owner on the element to "null".
                     You have to remove it from the List end of the relationship.</b>
                 </p>

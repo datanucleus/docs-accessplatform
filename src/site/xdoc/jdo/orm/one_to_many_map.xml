@@ -258,8 +258,8 @@
     </class>
 </package>]]></source>
                 <p>
-                    This will create 2 tables in the datastore. One for <u>Account</u>, and one for <u>Address</u>. 
-                    The table for <u>Address</u> will contain the key field as well as an index to the <u>Account</u> record 
+                    This will create 2 tables in the datastore. One for <b>Account</b>, and one for <b>Address</b>. 
+                    The table for <b>Address</b> will contain the key field as well as an index to the <b>Account</b> record 
                     (notated by the <i>mapped-by</i> tag).
                 </p>
                 <br/>
@@ -276,9 +276,9 @@
                 </p>
                 <img src="../../images/orm/relationship_1_N_uni_map_fk_simple_pc_class.jpg" border="0" alt=""/>
                 <p>
-                    In this relationship, the <u>Account</u> class has a Map of <u>Address</u> objects, yet the <u>Address</u>
-                    knows nothing about the <u>Account</u>. In this case we don't have a field in the Address to link back to the
-                    Account and so DataNucleus has to use columns in the datastore representation of the <u>Address</u> class. So we define
+                    In this relationship, the <b>Account</b> class has a Map of <b>Address</b> objects, yet the <b>Address</b>
+                    knows nothing about the <b>Account</b>. In this case we don't have a field in the Address to link back to the
+                    Account and so DataNucleus has to use columns in the datastore representation of the <b>Address</b> class. So we define
                     the MetaData like this
                 </p>
                 <source><![CDATA[
@@ -302,7 +302,7 @@
                 <p>
                     Again there will be 2 tables, one for <b>Address</b>, and one for <b>Account</b>.
                     Note that we have no "mapped-by" attribute specified on the "field" element, and also no "join" element. 
-                    If you wish to specify the names of the columns used in the schema for the foreign key in the <u>Address</u> table 
+                    If you wish to specify the names of the columns used in the schema for the foreign key in the <b>Address</b> table 
                     you should use the <i>value</i> element within the field of the map.
                 </p>
                 <br/>
@@ -310,10 +310,10 @@
                 <br/>
                 <p>
                     In terms of operation within your classes of assigning the objects in the relationship. You have to take your 
-                    <u>Account </u>object and add the <u>Address</u> to the <u>Account</u> map field since the <u>Address</u> 
-                    knows nothing about the <u>Account</u>. Also be aware that each <u>Address</u> object can have only one owner, 
-                    since it has a single foreign key to the <u>Account</u>. If you wish to have an <u>Address</u> assigned to multiple 
-                    <u>Accounts</u> then you should use the "Join Table" relationship above.
+                    <b>Account</b> object and add the <b>Address</b> to the <b>Account</b> map field since the <b>Address</b> 
+                    knows nothing about the <b>Account</b>. Also be aware that each <b>Address</b> object can have only one owner, 
+                    since it has a single foreign key to the <b>Account</b>. If you wish to have an <b>Address</b> assigned to multiple 
+                    <b>Accounts</b> then you should use the "Join Table" relationship above.
                 </p>
                 <br/>
             </subsection>
@@ -326,9 +326,9 @@
                 </p>
                 <img src="../../images/orm/relationship_1_N_uni_map_fk_simple_pc_class.jpg" border="0" alt=""/>
                 <p>
-                    In this relationship, the <u>Account</u> class has a Map of <u>Address</u> objects, yet the <u>Address</u>
-                    knows nothing about the <u>Account</u>. We don't have a field in the Address to link back to the
-                    Account and so DataNucleus has to use columns in the datastore representation of the <u>Address</u> class. So we define
+                    In this relationship, the <b>Account</b> class has a Map of <b>Address</b> objects, yet the <b>Address</b>
+                    knows nothing about the <b>Account</b>. We don't have a field in the Address to link back to the
+                    Account and so DataNucleus has to use columns in the datastore representation of the <b>Address</b> class. So we define
                     the MetaData like this
                 </p>
                 <source><![CDATA[
@@ -353,7 +353,7 @@
                     There will be 2 tables, one for <b>Address</b>, and one for <b>Account</b>. The key thing here is that we have
                     specified a "mapped-by" on the "value" element.
                     Note that we have no "mapped-by" attribute specified on the "field" element, and also no "join" element. 
-                    If you wish to specify the names of the columns used in the schema for the foreign key in the <u>Address</u> table 
+                    If you wish to specify the names of the columns used in the schema for the foreign key in the <b>Address</b> table 
                     you should use the <i>key</i> element within the field of the map.
                 </p>
                 <br/>
@@ -361,10 +361,10 @@
                 <br/>
                 <p>
                     In terms of operation within your classes of assigning the objects in the relationship. You have to take your 
-                    <u>Account </u>object and add the <u>Address</u> to the <u>Account</u> map field since the <u>Address</u> 
-                    knows nothing about the <u>Account</u>. Also be aware that each <u>Address</u> object can have only one owner, 
-                    since it has a single foreign key to the <u>Account</u>. If you wish to have an <u>Address</u> assigned to multiple 
-                    <u>Accounts</u> then you should use the "Join Table" relationship above.
+                    <b>Account</b> object and add the <b>Address</b> to the <b>Account</b> map field since the <b>Address</b> 
+                    knows nothing about the <b>Account</b>. Also be aware that each <b>Address</b> object can have only one owner, 
+                    since it has a single foreign key to the <b>Account</b>. If you wish to have an <b>Address</b> assigned to multiple 
+                    <b>Accounts</b> then you should use the "Join Table" relationship above.
                 </p>
                 <br/>
             </subsection>

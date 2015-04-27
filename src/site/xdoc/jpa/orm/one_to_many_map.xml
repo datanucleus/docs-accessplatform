@@ -169,10 +169,10 @@ public class Address {...}]]></source>
                 </p>
                 <img src="../../images/orm/relationship_1_N_uni_map_fk_simple_pc_class.jpg" border="0" alt=""/>
                 <p>
-                    In this relationship, the <u>Account</u> class has a Map of <u>Address</u> objects, yet the 
-                    <u>Address</u> knows nothing about the <u>Account</u>. In this case we don't have a field in the 
+                    In this relationship, the <b>Account</b> class has a Map of <b>Address</b> objects, yet the 
+                    <b>Address</b> knows nothing about the <b>Account</b>. In this case we don't have a field in the 
                     Address to link back to the Account and so DataNucleus has to use columns in the datastore representation of 
-                    the <u>Address</u> class. So we define the MetaData like this
+                    the <b>Address</b> class. So we define the MetaData like this
                 </p>
                 <source><![CDATA[
 <entity-mappings>
@@ -206,16 +206,16 @@ public class Address {...}]]></source>
                 <p>
                     Again there will be 2 tables, one for <b>Address</b>, and one for <b>Account</b>.
                     If you wish to specify the names of the columns used in the schema for the foreign key in the 
-                    <u>Address</u> table you should use the <i>join-column</i> element within the field of the map.
+                    <b>Address</b> table you should use the <i>join-column</i> element within the field of the map.
                 </p>
                 <br/>
                 <img src="../../images/orm/relationship_1_N_map_key_in_value_db.gif" border="0" alt=""/>
                 <br/>
                 <p>
                     In terms of operation within your classes of assigning the objects in the relationship. You have to 
-                    take your <u>Account </u>object and add the <u>Address</u> to the <u>Account</u> map field since the 
-                    <u>Address</u> knows nothing about the <u>Account</u>. Also be aware that each <u>Address</u> object 
-                    can have only one owner, since it has a single foreign key to the <u>Account</u>.
+                    take your <b>Account</b> object and add the <b>Address</b> to the <b>Account</b> map field since the 
+                    <b>Address</b> knows nothing about the <b>Account</b>. Also be aware that each <b>Address</b> object 
+                    can have only one owner, since it has a single foreign key to the <b>Account</b>.
                 </p>
                 <br/>
             </subsection>
@@ -263,8 +263,8 @@ public class Address {...}]]></source>
     </entity>
 </entity-mappings>]]></source>
                 <p>
-                    This will create 2 tables in the datastore. One for <u>Account</u>, and one for <u>Address</u>. 
-                    The table for <u>Address</u> will contain the key field as well as an index to the <u>Account</u> 
+                    This will create 2 tables in the datastore. One for <b>Account</b>, and one for <b>Address</b>. 
+                    The table for <b>Address</b> will contain the key field as well as an index to the <b>Account</b> 
                     record (notated by the <i>mapped-by</i> tag).
                 </p>
                 <br/>
