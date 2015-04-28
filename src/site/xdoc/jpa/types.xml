@@ -1156,13 +1156,24 @@ public class URLStringConverter implements AttributeConverter<URL, String>
     ...
 }]]></source>
                 <p>
-                    The only other point to make is that if you have some java type with a @Converter registered
-                    to "autoApply", you can turn it off on a field-by-field basis with                
+                    Note that if you have some java type with a @Converter registered to "autoApply", you can turn it off on a field-by-field basis with                
                 </p>
 <source><![CDATA[
     @Convert(disableConversion=true)
     URL url;
 ]]></source>
+                <p>
+                    A further use of AttributeConverter is where you want to apply type conversion to the key/value of a Map field, or to the element of a Collection
+                    field. The Collection element case is simple, you just specify the @Convert against the field and it will be applied to the element.
+                    If you want to apply type conversion to a key/value of a map do this.
+                </p>
+<source><![CDATA[
+    @Convert(attributeName="key", converter=URLStringConverter.class)
+    Map<URL, OtherEntity> myMap;
+]]></source>
+                <p>
+                    So we specify the <i>attributeName</i> to be <b>key</b>, and to use it on the value we would set it to <b>value</b>.
+                </p>
                 <br/>
             </subsection>
 
