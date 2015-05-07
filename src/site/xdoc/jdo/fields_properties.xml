@@ -28,6 +28,10 @@
                     Requirement : you have a field in the class. This can be public, protected, private or package
                     access, but cannot be static or final.
                 </b>
+                <b>
+                    Almost all Java field types are default persistent (if DataNucleus knows how to persist a type then it defaults to persistent) 
+                    so there is no real need to specify @Persistent to make the field persistent.
+                </b>
                 <p>
                     An example of how to define the persistence of a field is shown below
                 </p>
