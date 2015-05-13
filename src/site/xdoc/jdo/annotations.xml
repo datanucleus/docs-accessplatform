@@ -2359,7 +2359,7 @@ public class MyClass
     @Embedded(members={
             @Persistent(name="field1", columns=@Column(name="OTHER_FLD_1")),
             @Persistent(name="field2", columns=@Column(name="OTHER_FLD_2"))
-        }
+        })
     MyOtherClass myField;
     ...
 }
