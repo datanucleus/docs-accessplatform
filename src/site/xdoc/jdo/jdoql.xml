@@ -836,7 +836,7 @@ List results = (List)query.execute(150.00);]]></source>
                     in question doesn't need all parameters. Normal JDO execution would throw an exception
                     here since they are inconsistent with the query. You can omit this check by setting
                 </p>
-                <source>q.addExtension("datanucleus.query.ignoreParameterCountCheck", "true");</source>
+                <source>q.addExtension("datanucleus.query.checkUnusedParameters", "false");</source>
                 <br/>
             </subsection>
 
