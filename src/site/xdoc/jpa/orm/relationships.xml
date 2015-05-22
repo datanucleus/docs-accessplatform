@@ -82,10 +82,10 @@ em.persist(a);</source>
                     If they dont and object A knows about B, but B doesnt know about A then what is the persistence solution
                     to do ? It doesnt know which side of the relation is correct.
                     JPA doesnt define the behaviour currently for this situation.
-					DataNucleus has two ways of handling this situation. If you have the persistence property
-                    "datanucleus.manageRelationships" set to true then it will make sure that the other side of
-                    the relation is set correctly, correcting obvious omissions, and giving exceptions for
-                    obvious errors. If you set that persistence property to false then it will assume that your
+					DataNucleus has two ways of handling this situation. 
+					If you have the persistence property <b>datanucleus.manageRelationships</b> set to true then it will make sure that 
+					the other side of the relation is set correctly, correcting obvious omissions, and giving exceptions for obvious errors.
+                    If you set that persistence property to false then it will assume that your
                     objects have their bidirectional relationships consistent and will just persist what it finds.
                 </p>
                 <table>

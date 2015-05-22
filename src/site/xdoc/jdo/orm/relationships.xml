@@ -111,9 +111,8 @@ b1.setA(a); // "b1" knows about "a"</source>
                     will be populated at commit/flush to make them consistent.
                 </p>
                 <p>
-                    This management of relations can be turned on/off using a PMF property
-                    <i>datanucleus.manageRelationships</i>. If you always set both sides of a relation at persist
-                    or update then you could safely turn it off.
+                    This management of relations can be turned on/off using a persistence property <b>datanucleus.manageRelationships</b>. 
+                    If you always set both sides of a relation at persist/update then you could safely turn it off.
                 </p>
                 <table>
                     <tr>
