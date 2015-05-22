@@ -61,27 +61,36 @@ b1.setA(a); // "b1" knows about "a"</source>
 
             <subsection name="Persisting Relationships - Reachability">
                 <p>
-                    To persist an object with JPA you call the <i>EntityManager</i> method <i>persist</i>.
-                    The object passed in will be persisted. By default all related objects will <b>not</b> be persisted with that
-                    object. You can however change this by specifying the cascade PERSIST property for that field. With this the related
-                    object(s) would also be persisted (or updated with any new values if they are already persistent).
-                    This process is called <b>persistence-by-reachability</b>. With JPA you have to explicitly set this behaviour.
-                    For example we have classes A and B and class A has a field of type B and this field has the cascade property PERSIST set.
+                    To persist an object with JPA you call the <i>EntityManager</i> method <i>persist</i> (or <i>merge</i> if wanting to update a detached object).
+                    The object passed in will be persisted. By default all related objects will <b>not</b> be persisted with that object. 
+                    You can however change this by specifying the <i>cascade</i> PERSIST (and/or MERGE) property for that field. 
+                    With this the related object(s) would also be persisted (or updated with any new values if they are already persistent).
+                    This process is called <b>persistence-by-reachability</b>.
+                    For example we have classes A and B and class A has a field of type B and this field has the <i>cascade</i> property PERSIST set.
                     To persist them we could do
                 </p>
-                <source>
+<source>
 A a = new A();
 B b = new B();
-a.setB(b); // "a" knows about "b"
-em.persist(a);</source>
+a.setB(b);
+em.persist(a); // "a" and "b" are provisionally persistent</source>
+                <p>
+                    A further example where you don't have the <i>cascade</i> PERSIST set, but still want to persist both ends of a relation.
+                </p>
+<source>
+A a = new A();
+B b = new B();
+a.setB(b);
+em.persist(a); // "a" is provisionally persistent
+em.persist(b); // "b" is provisionally persistent</source>
+                <br/>
             </subsection>
 
             <subsection name="Managed Relationships">
                 <p>
                     As we have mentioned above, it is for the user to set both sides of a bidirectional relation.
-                    If they dont and object A knows about B, but B doesnt know about A then what is the persistence solution
-                    to do ? It doesnt know which side of the relation is correct.
-                    JPA doesnt define the behaviour currently for this situation.
+                    If they don't and object A knows about B, but B doesnt know about A then what is the persistence solution to do ? 
+                    It doesn't know which side of the relation is correct. JPA doesn't define the behaviour for this situation.
 					DataNucleus has two ways of handling this situation. 
 					If you have the persistence property <b>datanucleus.manageRelationships</b> set to true then it will make sure that 
 					the other side of the relation is set correctly, correcting obvious omissions, and giving exceptions for obvious errors.
@@ -91,9 +100,8 @@ em.persist(a);</source>
                 <table>
                     <tr>
                         <td>When performing management of relations there are some checks implemented to
-                        spot typical errors in user operations e.g add an element to a collection and then
-                        remove it (why?!). You can disable these checks using 
-                        <b>datanucleus.manageRelationshipsChecks</b>, set to false.</td>
+                        spot typical errors in user operations e.g add an element to a collection and then remove it (why?!).
+                        You can disable these checks using <b>datanucleus.manageRelationshipsChecks</b>, set to false.</td>
                     </tr>
                 </table>
             </subsection>
