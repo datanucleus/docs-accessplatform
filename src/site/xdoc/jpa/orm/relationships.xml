@@ -29,6 +29,8 @@
                 <li><a href="many_to_many.html">M-N relationships</a> - this is where you have objects of type A that
                     have a collection of objects of type B and the objects of type B also have a collection of objects of type A.
                     The relation is always <i>bidirectional</i> by definition</li>
+                <li><a href="compound_identity.html">Compound Identity relationships</a> when you have a relation and part of the
+                    primary key of the related object is the other persistent object.</li>
             </ul>
 
             <subsection name="Assigning Relationships">
@@ -63,8 +65,7 @@ b1.setA(a); // "b1" knows about "a"</source>
                     The object passed in will be persisted. By default all related objects will <b>not</b> be persisted with that
                     object. You can however change this by specifying the cascade PERSIST property for that field. With this the related
                     object(s) would also be persisted (or updated with any new values if they are already persistent).
-                    This process is called <b>persistence-by-reachability</b>. With JDO the default is to persist all reachables, whereas
-                    with JPA you have to explicitly set this behaviour.
+                    This process is called <b>persistence-by-reachability</b>. With JPA you have to explicitly set this behaviour.
                     For example we have classes A and B and class A has a field of type B and this field has the cascade property PERSIST set.
                     To persist them we could do
                 </p>

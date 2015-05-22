@@ -30,7 +30,7 @@
                     have a collection of objects of type B and the objects of type B also have a collection of objects of type A.
                     The relation is always <i>bidirectional</i> by definition</li>
                 <li><a href="compound_identity.html">Compound Identity relationships</a> when you have a relation and part of the
-                    primary key of the related object is the other persistent object. This is only available in JDO</li>
+                    primary key of the related object is the other persistent object.</li>
             </ul>
 
             <subsection name="Assigning Relationships">
@@ -55,6 +55,29 @@ b1.setA(a); // "b1" knows about "a"</source>
                 <p>
                     So it is really simple, with only 1 general rule.
                     <b>With a <i>bidirectional</i> relation you should set both sides of the relation</b>
+                </p>
+                <br/>
+            </subsection>
+
+            <a name="Reachability"/>
+            <subsection name="Reachability">
+                <p>
+                    With JDO, when you persist an object, all related objects (reachable from the fields of the object being persisted) will be persisted
+                    at the same time (unless already persistent). This is called <i>persistence-by-reachability</i>.
+                </p>
+                <p>
+                    One additional feature of JDO is the ability to re-run the <i>persistence-by-reachability</i> algorithm at commit so as to check whether
+                    the objects being made persistent should definitely be persisted. This is for the following situation.
+                    <ul>
+                        <li>Start a transaction</li>
+                        <li>Persist object A. This persists related object B.</li>
+                        <li>Delete object A from persistence</li>
+                        <li>Commit the transaction.</li>
+                    </ul>
+                    If you have property <b>datanucleus.persistenceByReachabilityAtCommit</b> set to true (default) then this will recheck the persisted objects
+                    should remain persistent. In this case it will find B and realise that it was only persisted due to A (which has since been deleted), hence B
+                    will not remain persistent after the transaction.
+                    If you had property <b>datanucleus.persistenceByReachabilityAtCommit</b> set to false then B will remain persistent after the transaction. 
                 </p>
                 <br/>
             </subsection>
