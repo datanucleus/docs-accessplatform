@@ -63,10 +63,12 @@ b1.setA(a); // "b1" knows about "a"</source>
             <subsection name="Reachability">
                 <p>
                     With JDO, when you persist an object, all related objects (reachable from the fields of the object being persisted) will be persisted
-                    at the same time (unless already persistent). This is called <i>persistence-by-reachability</i>.
+                    at the same time (unless already persistent). This is called <i>persistence-by-reachability</i>. This additionally applies when you have
+                    an object managed by the PersistenceManager, and you set a field to refer to a related object - this will make the related object provisionally
+                    persistent also.
                 </p>
                 <p>
-                    One additional feature of JDO is the ability to re-run the <i>persistence-by-reachability</i> algorithm at commit so as to check whether
+                    One additional feature of JDO is the ability to re-run the <i>persistence-by-reachability</i> algorithm <b>at commit</b> so as to check whether
                     the objects being made persistent should definitely be persisted. This is for the following situation.
                     <ul>
                         <li>Start a transaction</li>
