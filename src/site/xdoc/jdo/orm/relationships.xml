@@ -63,13 +63,28 @@ b1.setA(a); // "b1" knows about "a"</source>
             <subsection name="Reachability">
                 <p>
                     With JDO, when you persist an object, all related objects (reachable from the fields of the object being persisted) will be persisted
-                    at the same time (unless already persistent). This is called <i>persistence-by-reachability</i>. This additionally applies when you have
-                    an object managed by the PersistenceManager, and you set a field to refer to a related object - this will make the related object provisionally
-                    persistent also.
+                    at the same time (unless already persistent). This is called <i>persistence-by-reachability</i>. For example
                 </p>
+<source>
+A a = new A();
+B b = new B();
+a.setB(b);
+pm.makePersistent(a); // "a" and "b" are now provisionally persistent
+</source>
                 <p>
-                    One additional feature of JDO is the ability to re-run the <i>persistence-by-reachability</i> algorithm <b>at commit</b> so as to check whether
-                    the objects being made persistent should definitely be persisted. This is for the following situation.
+                    This additionally applies when you have an object managed by the PersistenceManager, and you set a field to refer to a related object - 
+                    this will make the related object provisionally persistent also. For example
+                </p>
+<source>
+A a = new A();
+pm.makePersistent(a); // "a" is now provisionally persistent
+B b = new B();
+a.setB(b); // "b" is now provisionally persistent
+</source>
+                <p>
+                    <b>Persistence-By-Reachability-At-Commit</b> : One additional feature of JDO is the ability to re-run the <i>persistence-by-reachability</i> 
+                    algorithm <b>at commit</b> so as to check whether the objects being made persistent should definitely be persisted. 
+                    This is for the following situation.
                     <ul>
                         <li>Start a transaction</li>
                         <li>Persist object A. This persists related object B.</li>
@@ -78,7 +93,7 @@ b1.setA(a); // "b1" knows about "a"</source>
                     </ul>
                     If you have property <b>datanucleus.persistenceByReachabilityAtCommit</b> set to true (default) then this will recheck the persisted objects
                     should remain persistent. In this case it will find B and realise that it was only persisted due to A (which has since been deleted), hence B
-                    will not remain persistent after the transaction.
+                    will not remain persistent after the transaction.<br/>
                     If you had property <b>datanucleus.persistenceByReachabilityAtCommit</b> set to false then B will remain persistent after the transaction. 
                 </p>
                 <br/>
@@ -88,18 +103,18 @@ b1.setA(a); // "b1" knows about "a"</source>
             <subsection name="Managed Relationships">
                 <p>
                     As previously mentioned, users should really set both sides of a bidirectional relation.
-                    DataNucleus provides a good level of <b>managed relations</b> in that it
-                    will attempt to correct any missing information in relations to make both sides consistent.
-                    This is defined below
+                    DataNucleus provides a good level of <i>managed relations</i> in that it
+                    will <i>attempt</i> to correct any missing information in relations to make both sides consistent.
+                    What it provides is defined below
                 </p>
                 <p>
-                    For a <b>1-1 bidirectional relation</b>, at persist you should set one side of the relation and 
+                    For a <i>1-1 bidirectional relation</i>, at persist you should set one side of the relation and 
                     the other side will be set to make it consistent. If the respective sides are set to inconsistent
                     objects then an exception will be thrown at persist. 
                     At update of owner/non-owner side the other side will also be updated to make them consistent.
                 </p>
                 <p>
-                    For a <b>1-N bidirectional relation</b> and you only specify the element owner then the
+                    For a <i>1-N bidirectional relation</i> and you only specify the element owner then the
                     collection must be Set-based since DataNucleus cannot generate indexing information for you in that
                     situation (you must position the elements).
                     At update of element or owner the other side will also be updated to make them consistent.
@@ -107,7 +122,7 @@ b1.setA(a); // "b1" knows about "a"</source>
                     <b>If you are using a List you MUST set both sides of the relation</b>
                 </p>
                 <p>
-                    For an <b>M-N bidirectional relation</b>, at persist you MUST set the one side and the other side
+                    For an <i>M-N bidirectional relation</i>, at persist you MUST set one side and the other side
                     will be populated at commit/flush to make them consistent.
                 </p>
                 <p>
