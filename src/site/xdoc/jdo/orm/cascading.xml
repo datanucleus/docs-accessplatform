@@ -69,7 +69,7 @@ public class Car
             <a name="persistence"/>
             <subsection name="Persistence">
                 <p>
-                    JDO2 defines a concept called <b>persistence-by-reachability</b>. This means that when you
+                    JDO defines a concept called <b>persistence-by-reachability</b>. This means that when you
                     persist an object and it has a related persistable object then this other object is also
                     persisted. So using our example if we do
                 </p>
@@ -108,7 +108,7 @@ pm.makePersistent(bob); // "bob" knows about "license"
             <a name="update"/>
             <subsection name="Update">
                 <p>
-                    As mentioned above JDO2 defines a concept called <b>persistence-by-reachability</b>. This 
+                    As mentioned above JDO defines a concept called <b>persistence-by-reachability</b>. This 
                     applies not just to persist but also to update of objects, so when you update an object and 
                     its updated field has a persistable object then that will be persisted. 
                     So using our example if we do
@@ -153,8 +153,7 @@ bob.setLicense(license2); // "bob" knows about "license2"
                     in this particular case we want to define that the when the <i>owner</i> is deleted, then 
                     his <i>license</i> will also be deleted (since it is for him only), but that his <i>cars</i> 
                     will continue to exist, because his daughter will inherit them. 
-                    In JDO2 this is called <b>Dependent Fields</b>.
-                    To utilise this concept to achieve our end goal we change the Meta-Data to be
+                    In JDO this is called <b>Dependent Fields</b>. To utilise this concept to achieve our end goal we change the Meta-Data to be
                 </p>
                 <source><![CDATA[
 <?xml version="1.0" encoding="UTF-8"?>
@@ -250,34 +249,6 @@ bob.setLicense(license2); // "bob" knows about "license2"
                 </p>
                 <br/>
             </subsection>
-
-            <subsection name="Persisting Relationships - Reachability At Commit">
-                <p>
-                    One further complication is that with JDO there is also a process called 
-                    <b>persistence-by-reachability at commit</b>. When objects are persisted, other objects are 
-                    persisted with them. If some relations are changed <i>before</i> commit and some of these 
-                    related objects are no longer required to be persistent then they will not be persisted.
-                    For example, using our classes above
-                </p>
-                <source><![CDATA[
-Owner bob = new Owner("Bob Smith");
-DrivingLicense license = new DrivingLicense("233424BX4J");
-bob.setLicense(license); // "bob" knows about "license"
-pm.makePersistent(bob);
-
-DrivingLicense license2 = new DrivingLicense("344566A99XH");
-bob.setLicense(license2); // "bob" doesnt know about "license" now. It knows about "license2" now.
-
-// "bob" and "license2" will be persisted but "license" wont be since not persisted explicitly
-// and at commit it is no longer reachable from a persisted object
-tx.commit();]]></source>
-                <p>
-                    With DataNucleus you can turn off <b>persistence-by-reachability at commit</b> by setting the 
-                    <i>PersistenceManagerFactory</i> property <i>datanucleus.persistenceByReachabilityAtCommit</i> 
-                    to false.
-                </p>
-            </subsection>
-
         </section>
     </body>
 </document>
