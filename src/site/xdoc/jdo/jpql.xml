@@ -715,6 +715,21 @@ WHERE EXISTS (SELECT emp2 FROM Employee emp2 WHERE emp2 = emp.spouse)]]></source
                 <br/>
             </subsection>
 
+            <a name="candidates"/>
+            <subsection name="Specify candidates to query over">
+                <img src="../images/nucleus_extension.gif" border="0" alt=""/>
+                <p>
+                    With JPA you always query objects of the candidate type in the datastore. DataNucleus extends this and allows you to provide
+                    a Collection of candidate objects that will be queried (rather than going to the datastore), and it will perform the querying
+                    "in-memory". You set the candidates like this
+                </p>
+                <source><![CDATA[
+Query query = em.createQuery("SELECT p FROM Products p WHERE ...");
+((org.datanucleus.api.jpa.JPAQuery)query).getInternalQuery().setCandidates(myCandidates);
+List<Product> results = query.getResultList();]]></source>
+                <br/>
+            </subsection>
+
             <subsection name="Range of Results">
                 <p>
                     With JPQL you can select the range of results to be returned. For example if you have a web page and you are paginating
