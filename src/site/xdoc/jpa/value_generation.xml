@@ -17,14 +17,10 @@
                 choose the strategy that best suits your target datastore. The available strategies are :-
             </p>
             <ul>
-                <li><a href="#native"><b>AUTO</b></a> - this is the default and allows DataNucleus
-                    to choose the most suitable for the datastore</li>
-                <li><a href="#sequence"><b>SEQUENCE</b></a> - this uses a datastore sequence (if supported
-                    by the datastore)</li>
-                <li><a href="#identity"><b>IDENTITY</b></a> - these use autoincrement/identity/serial features in 
-                    the datastore (if supported by the datastore)</li>
-                <li><a href="#increment"><b>TABLE</b></a> - this is datastore neutral and increments
-                    a sequence value using a table.</li>
+                <li><a href="#native"><b>AUTO</b></a> - this is the default and allows DataNucleus to choose the most suitable for the datastore</li>
+                <li><a href="#sequence"><b>SEQUENCE</b></a> - this uses a datastore sequence (if supported by the datastore)</li>
+                <li><a href="#identity"><b>IDENTITY</b></a> - these use autoincrement/identity/serial features in the datastore (if supported by the datastore)</li>
+                <li><a href="#increment"><b>TABLE</b></a> - this is datastore neutral and increments a sequence value using a table.</li>
                 <li><a href="#custom"><b>Custom generators</b> - these are beyond the scope of the JPA spec but provided by DataNucleus</a></li>
             </ul>
             <p>See also :-</p>
@@ -103,7 +99,7 @@ public class MyClass
                     <li>NuoDB</li>
                 </ul>
                 <p>
-                    To configure a class to use either of these generation methods using <u>application identity</u> 
+                    To configure a class to use either of these generation methods using <b>application identity</b> 
                     you would add the following to the class' Meta-Data
                 </p>
                 <source><![CDATA[
@@ -156,6 +152,10 @@ public class MyClass
                     </tr>
 				</table>
                 <p>
+                    To configure a class to use this generation using <b>datastore identity</b> you need to look at the 
+                    @DatastoreIdentity extension annotation or the XML &lt;datastore-identity&gt; tag
+                </p>
+                <p>
                     This value generator will generate values unique across different JVMs
                 </p>
                 <br/>
@@ -190,7 +190,7 @@ public class MyClass
                     then you should choose a different generation strategy</b>
                 </p>
                 <p>
-                    For a class using <u>application identity</u> you need to set the <i>value-strategy</i> attribute 
+                    For a class using <b>application identity</b> you need to set the <i>value-strategy</i> attribute 
                     on the primary key field. You can configure the Meta-Data for the class something like this 
                 </p>
                 <source><![CDATA[
@@ -223,6 +223,10 @@ public class MyClass
                     is only set when the object is actually persisted (i.e at flush() or commit())</b>
                 </p>
                 <p>
+                    To configure a class to use this generation using <b>datastore identity</b> you need to look at the 
+                    @DatastoreIdentity extension annotation or the XML &lt;datastore-identity&gt; tag
+                </p>
+                <p>
                     This value generator will generate values unique across different JVMs
                 </p>
                 <br/>
@@ -237,7 +241,7 @@ public class MyClass
                     one if doesn't exist.
                 </p>
                 <p>
-                    To configure an <u>application identity</u> class to use this generation method you simply add this to the
+                    To configure an <b>application identity</b> class to use this generation method you simply add this to the
                     class' Meta-Data. If your class is in an inheritance tree you should define this for the base class only.
                 </p>
                 <source><![CDATA[
@@ -331,6 +335,10 @@ public class MyClass
                         <td>No.</td>
                     </tr>
                 </table>
+                <p>
+                    To configure a class to use this generation using <b>datastore identity</b> you need to look at the 
+                    @DatastoreIdentity extension annotation or the XML &lt;datastore-identity&gt; tag
+                </p>
                 <p>
                     This value generator will generate values unique across different JVMs
                 </p>
