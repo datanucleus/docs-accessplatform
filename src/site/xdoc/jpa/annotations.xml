@@ -76,7 +76,7 @@
                     <td>Specifies that instances of this class can be cached in the L2 cache</td>
                 </tr>
                 <tr class="d">
-                    <td><a href="#DatastoreIdentity">@DatastoreIdentity</a></td>
+                    <td><a href="#DatastoreId">@DatastoreId</a></td>
                     <td>Class</td>
                     <td>Defines a class as using datastore-identity (DataNucleus extension).</td>
                 </tr>
@@ -710,8 +710,8 @@ public class MyClass
                 <br/>
             </subsection>
 
-            <a name="DatastoreIdentity"/>
-            <subsection name="@DatastoreIdentity">
+            <a name="DatastoreId"/>
+            <subsection name="@DatastoreId">
                 <p>
                     This DataNucleus-extension annotation is used to define that the class uses datastore-identity.
                     Specified on the <b>class</b>.
@@ -745,7 +745,7 @@ public class MyClass
                 </table>
                 <source>
 @Entity
-@DatastoreIdentity(column="MY_ID")
+@DatastoreId(column="MY_ID")
 public class MyClass
 {
     ...

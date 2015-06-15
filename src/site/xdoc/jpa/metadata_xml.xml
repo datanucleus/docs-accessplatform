@@ -122,6 +122,7 @@
                         <li><a href="#primary-key-join-column">primary-key-join-column</a></li>
                         <li><a href="#foreign-key">primary-key-foreign-key</a></li>
                         <li><a href="#id-class">id-class</a></li>
+                        <li><a href="#datastore-id">datastore-id</a></li>
                         <li><a href="#inheritance">inheritance</a></li>
                         <li><a href="#discriminator-value">discriminator-value</a></li>
                         <li><a href="#discriminator-column">discriminator-column</a></li>
@@ -1353,6 +1354,35 @@
                             strategy. 
                             Please refer to the <a href="#sequence-generator">&lt;sequence-generator&gt;</a> and
                             <a href="#table-generator">&lt;table-generator&gt;</a></td>
+                        <td></td>
+                    </tr>
+                </table>
+                <br/>
+                <br/>
+            </subsection>
+
+            <!-- DATASTORE-ID ELEMENT -->
+            <a name="datastore-id"/>
+            <subsection name="Metadata for datastore-id tag">
+                <p>
+                    These are attributes within the <b>&lt;datastore-id&gt;</b> tag (under &lt;id&gt;).
+                    This is used to define the entity is using datastore identity (DataNucleus extension).
+                </p>
+                <table>
+                    <tr>
+                        <th>Attribute</th>
+                        <th>Description</th>
+                        <th>Values</th>
+                    </tr>
+                    <tr>
+                        <td>column</td>
+                        <td>Name of the surrogate column to add for the datastore identity.</td>
+                        <td/>
+                    </tr>
+                    <tr>
+                        <td>generated-value</td>
+                        <td>Details of the generated value strategy and generator.
+                            Please refer to the <a href="#generated-value">&lt;generated-value&gt;</a></td>
                         <td></td>
                     </tr>
                 </table>
