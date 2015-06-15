@@ -54,9 +54,10 @@
                     If you define the field as String-based then it will choose <a href="#uuidhex">uuid-hex</a>. Otherwise
                     the field is numeric in which case it chooses <a href="#identity">identity</a> if supported, otherwise
                     <a href="#sequence">sequence</a> if supported, otherwise <a href="#increment">increment</a> if supported
-                    otherwise throws an exception. On RDBMS you can get the behaviour used up until DN v3.0 by specifying
-                    the persistence property <b>datanucleus.rdbms.useLegacyNativeValueStrategy</b> as <i>true</i>
-                    For a class using <u>application identity</u> you need to set the <i>value-strategy</i> attribute 
+                    otherwise throws an exception. 
+                    On RDBMS you can get the behaviour used up until DN v3.0 by specifying the persistence property 
+                    <b>datanucleus.rdbms.useLegacyNativeValueStrategy</b> as <i>true</i>.
+                    For a class using <b>application identity</b> you need to set the <i>value-strategy</i> attribute 
                     on the primary key field. You can configure the Meta-Data for the class something like this 
                 </p>
                 <source><![CDATA[
@@ -77,6 +78,10 @@ public class MyClass
     private long myId;
     ...
 }]]></source>
+                <p>
+                    To configure a class to use this generation using <b>datastore identity</b> you need to look at the 
+                    @DatastoreId extension annotation or the XML &lt;datastore-id&gt; tag
+                </p>
             </subsection>
 
             <a name="sequence"/>
