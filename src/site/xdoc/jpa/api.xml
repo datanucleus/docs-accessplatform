@@ -9,14 +9,14 @@
     <body>
         <section name="JPA : API">
             <p>
-                JPA defines an interface (or API) to persist normal Java objects (or POJO's in some peoples 
-                terminology) to an <b>RDBMS datastore</b>. While DataNucleus allows you to use JPA against any of its 
-                supported datastores <b>if you are intent on using JPA for persistence to a non-RDBMS datastore we highly
-                recommend that you think deeply about that decision, and consider <a href="../jdo/api.html">JDO</a> 
-                instead</b> since the design of JPA and in particular JPQL force assumptions to be made in how the 
-                persistence/query process operates.
+                JPA defines an interface (or API) to persist normal Java objects (or POJO's in some peoples terminology) to an <b>RDBMS datastore</b>. 
+                The JPA API itself is provided by the <i>persistence-api</i> (or <i>javax.persistence</i>) JAR.
+                DataNucleus provides an implementation of JPA, embodied in the <i>datanucleus-api-jpa</i> JAR.
+                While DataNucleus allows you to use JPA against any of its supported datastores <b>if you are intent on using JPA for persistence 
+                to a non-RDBMS datastore we highly recommend that you think deeply about that decision, and consider <a href="../jdo/api.html">JDO</a> 
+                instead</b> since the design of JPA and in particular JPQL force assumptions to be made in how the persistence/query process operates.
             </p>
-            <p><b>Note that this version of DataNucleus requires JPA 2.1 API</b></p>
+            <p><b>Note that this version of DataNucleus requires the JPA 2.1 API</b></p>
             <p>
                 JPA uses a definition of how the users Java objects map to the chosen datastore structure. This mapping 
                 can be provided by way of XML metadata, or alternatively by having Java annotations in the code.

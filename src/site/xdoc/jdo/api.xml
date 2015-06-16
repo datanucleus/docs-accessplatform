@@ -11,13 +11,14 @@
             <p>
                 <img align="right" alt="jdo" src="../images/jdo.gif"/>
                 Java Data Objects (JDO) defines an interface (or API) to persist normal Java objects (or POJO's in some
-                peoples terminology) to a datastore. JDO doesn't define the type of datastore; it is 
-                <b>datastore-agnostic</b>. You would use the same interface to persist your Java object to RDBMS, or 
-                OODBMS, or XML, or whatever form of data storage. 
-                The whole point of using such a <i>standard</i> interface is that users can, in principle, swap 
-                between implementations of JDO without changing their code.
-                Make sure you have <i>datanucleus-api-jdo.jar</i> in your CLASSPATH for this API.
+                peoples terminology) to a datastore. JDO doesn't define the type of datastore; it is <b>datastore-agnostic</b>. 
+                You would use the same interface to persist your Java object to RDBMS, or OODBMS, or XML, or whatever form of data storage.
+                The JDO API itself is provided by the <i>jdo-api</i> (or <i>javax.jdo</i>) JAR.
+                The whole point of using such a <i>standard</i> interface is that users can, in principle, swap between implementations of JDO without changing their code.
+                DataNucleus provides an implementation of JDO, embodied in the <i>datanucleus-api-jdo</i> JAR,
+                so make sure you have <i>datanucleus-api-jdo.jar</i> in your CLASSPATH for using this API.
             </p>
+            <p><b>Note that this version of DataNucleus requires the JDO 3.1 API</b></p>
             <p>
                 The process of mapping a class can be split into the following areas
             </p>
