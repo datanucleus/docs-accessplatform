@@ -9,8 +9,8 @@
     <body>
         <section name="JDO : Annotations">
             <p>
-                One of the things that JDK 1.5 provides that can be of some use is annotations, and JDO provides its
-                own set. When selecting to use annotations please bear in mind the following :-
+                Java provides the ability to use annotations, and JDO provides its own set. 
+                When selecting to use annotations please bear in mind the following :-
             </p>
             <ul>
                 <li>You must have the <b>datanucleus-api-jdo</b> jar available in your CLASSPATH.</li>
@@ -22,8 +22,7 @@
                 <li>You can annotate fields or getters with field-level information. If you annotate fields then the
                     fields are processed for persistence. If you annotate the methods (getters) then the methods (properties)
                     are processed for persistence.</li>
-                <li>Annotations are prefixed by the @ symbol and can take properties (in brackets after the name, 
-                    comma-separated)</li>
+                <li>Annotations are prefixed by the @ symbol and can take properties (in brackets after the name, comma-separated)</li>
             </ul>
 
             <p>
@@ -325,7 +324,7 @@
                     <tr>
                         <td>cacheable</td>
                         <td>String</td>
-                        <td>Whether the class can be L2 cached. <b>From JDO2.2</b></td>
+                        <td>Whether the class can be L2 cached.</td>
                         <td><b>true</b> | false</td>
                     </tr>
                     <tr>
@@ -355,7 +354,7 @@ public class MyClass
             <subsection name="@PersistenceAware">
                 <p>
                     This annotation is used when you want to mark a class as being used in persistence but not being persistable.
-                    That is "persistence-aware" in JDO2 terminology. It has no attributes.
+                    That is "persistence-aware" in JDO terminology. It has no attributes.
                     Specified on the <b>class</b>.
                 </p>
                 <source>
@@ -1604,7 +1603,7 @@ public class MyClass
                     <tr>
                         <td>cacheable</td>
                         <td>String</td>
-                        <td>Whether the field/property can be L2 cached. <b>From JDO2.2</b></td>
+                        <td>Whether the field/property can be L2 cached.</td>
                         <td><b>true</b> | false</td>
                     </tr>
                     <tr>
@@ -2665,7 +2664,7 @@ public class MyClass
             <a name="Extensions"/>
             <subsection name="@Extensions">
                 <p>
-                    Annotation used to define a set of extensions specific to the JDO2 implementation being used.
+                    Annotation used to define a set of extensions specific to the JDO implementation being used.
                     Specified on the <b>class</b> or <b>field</b>.
                 </p>
                 <table>
