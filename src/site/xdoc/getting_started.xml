@@ -30,8 +30,7 @@
                 <p>
                     <b>Decide which persistence API you want to use.</b> 
                     If you're not familiar with these APIs then the next thing to do is to learn about 
-                    <a href="jdo/api.html">JDO</a> and <a href="jpa/api.html">JPA</a>, or alternatively 
-                    <a href="rest/api.html">REST</a>. 
+                    <a href="jdo/api.html">JDO</a> and <a href="jpa/api.html">JPA</a>, or alternatively <a href="rest/api.html">REST</a>. 
                     You need to understand the basic concepts involved. There is plenty of reading on the internet, 
                     starting with the JDO or JPA specifications of course. 
                 </p>
@@ -65,6 +64,7 @@
                     <area href="rest/api.html" alt="" shape="rect" coords="549,65,610,86"/>
                     <area href="datastores/rdbms.html" alt="" shape="rect" coords="25,143,88,164"/>
                     <area href="datastores/hbase.html" alt="" shape="rect" coords="112,143,156,164"/>
+                    <area href="datastores/cassandra.html" alt="" shape="rect" coords="163,143,202,164"/>
                     <area href="datastores/neo4j.html" alt="" shape="rect" coords="241,143,285,164"/>
                     <area href="datastores/excel.html" alt="" shape="rect" coords="315,143,350,164"/>
                     <area href="datastores/odf.html" alt="" shape="rect" coords="356,143,384,164"/>
@@ -97,6 +97,10 @@
                         and you ought to be aware of what they are</li>
                     <li>You retrieve objects either by their identity, or using a query. With JDO you can
                         use JDOQL, SQL or JPQL query languages. With JPA you can use JPQL or SQL query languages</li>
+                    <li>For JDO usage you will need <i>jdo-api</i>/<i>javax.jdo</i> as well as <i>datanucleus-api-jdo</i>, <i>datanucleus-core</i>
+                        and the <i>datanucleus-XXX</i> jar for whichever datastore you are using.</li>
+                    <li>For JPA usage you will need <i>persistence-api</i>/<i>javax.persistence</i> as well as <i>datanucleus-api-jpa</i>, <i>datanucleus-core</i>
+                        and the <i>datanucleus-XXX</i> jar for whichever datastore you are using.</li>
                 </ul>
             </subsection>
         </section>
