@@ -127,6 +127,10 @@
                             <li><a href="#column">column</a></li>
                             <li><a href="#generated-value">generated-value</a></li>
                         </ul></li>
+                        <li><a href="#surrogate-version">surrogate-version</a>
+                        <ul>
+                            <li><a href="#column">column</a></li>
+                        </ul></li>
                         <li><a href="#inheritance">inheritance</a></li>
                         <li><a href="#discriminator-value">discriminator-value</a></li>
                         <li><a href="#discriminator-column">discriminator-column</a></li>
@@ -1388,6 +1392,34 @@
                         <td>Details of the generated value strategy and generator.
                             Please refer to the <a href="#generated-value">&lt;generated-value&gt;</a></td>
                         <td></td>
+                    </tr>
+                </table>
+                <br/>
+                <br/>
+            </subsection>
+
+            <!-- SURROGATE-VERSION ELEMENT -->
+            <a name="surrogate-version"/>
+            <subsection name="Metadata for surrogate-version tag">
+                <p>
+                    These are attributes within the <b>&lt;surrogate-version&gt;</b> tag (under &lt;id&gt;).
+                    This is used to define the entity has a surrogate version column (DataNucleus extension).
+                </p>
+                <table>
+                    <tr>
+                        <th>Attribute</th>
+                        <th>Description</th>
+                        <th>Values</th>
+                    </tr>
+                    <tr>
+                        <td>column</td>
+                        <td>Name of the surrogate column to add for the version.</td>
+                        <td/>
+                    </tr>
+                    <tr>
+                        <td>indexed</td>
+                        <td>Whether the surrogate version column should be indexed.</td>
+                        <td>true | <b>false</b></td>
                     </tr>
                 </table>
                 <br/>

@@ -56,6 +56,14 @@ public class User
                     You do this as follows.
                 </p>
 <source><![CDATA[
+<entity name="mydomain.User">
+    <surrogate-version column="version"/>
+    <attributes>
+        <id name="id"/>
+    </attributes>
+</entity>]]></source>
+                <p>or alternatively using annotations</p>
+<source><![CDATA[
 import org.datanucleus.api.jpa.annotations.SurrogateVersion;
 
 @Entity
