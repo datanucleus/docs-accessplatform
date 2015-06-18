@@ -75,6 +75,14 @@ public class User
 
     ...
 }]]></source>
+                <p>
+                    To access the "surrogate" version, you can make use of the following method
+                </p>
+<source>
+import org.datanucleus.api.jpa.NucleusJPAHelper;
+
+Object version = NucleusJPAHelper.getSurrogateVersionForEntity(obj);
+</source>
             </subsection>
         </section>
 

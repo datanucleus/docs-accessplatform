@@ -107,14 +107,17 @@ This is made up of :-
 
             <subsection name="Accessing objects by Identity">
                 <p>
-                    You can also access the object from the object class name and the toString() form of the
-                    datastore identity (e.g "101[OID]mydomain.MyClass") like this
+                    To access the "id" assigned when using "datastore identity" you can call
                 </p>
-                <source>Object obj = em.find(MyClass.class, mykey);</source>
+<source>
+import org.datanucleus.api.jpa.NucleusJPAHelper;
+
+Object idKey = NucleusJPAHelper.getDatastoreIdForEntity(obj);
+</source>
                 <p>
-                    or in "datanucleus-api-jpa" 3.0.7+ you can also just pass in the "key" value, like this
+                    From this you can use the "find" method to retrieve the object
                 </p>
-                <source>Object obj = em.find(MyClass.class, 101);</source>
+                <source>Object obj = em.find(MyClass.class, idKey);</source>
                 <br/>
             </subsection>
         </section>
