@@ -74,41 +74,6 @@ public class MyClass
                     There are, however, ways to get the identity for the datastore identity case, if you have the
                     object.
                 </p>
-                <source>Object id = JDOHelper.getObjectId(obj);</source>
-                <p>
-                    You should be aware however that the "identity" is in a complicated form, and is not available as 
-                    a simple integer value for example. Again, if you want an identity of that form then you should use 
-                    <a href="application_identity.html">application identity</a>
-                </p>
-                <br/>
-            </subsection>
-
-            <subsection name="DataNucleus Implementation">
-                <p>
-                    When implementing <b>datastore identity</b> DataNucleus provides a public class that represents
-                    this identity. If you call <i>JDOHelper.getObjectId(...)</i> for a class using 
-                    datastore identity you will be passed an object which, in the case of DataNucleus will be of 
-                    type <i>org.datanucleus.identity.OIDImpl</i>. If you were to call "toString()" on this object 
-                    you would get something like 
-                </p>
-                <source>
-1[OID]mydomain.myclass
-This is made up of :-
-    1 = identity number of this object
-    class-name</source>
-                <p>
-                    <img src="../images/nucleus_plugin.gif" border="0" alt=""/>
-                    DataNucleus allows you the luxury of being able to 
-                    <a href="http://www.datanucleus.org/documentation/extensions/datastoreidentity.html">provide your own datastore identity class</a> 
-                    so you can have whatever formatting you want for identities.
-                </p>
-                <br/>
-            </subsection>
-
-            <subsection name="Accessing objects by Identity">
-                <p>
-                    To access the "id" assigned when using "datastore identity" you can call
-                </p>
 <source>
 import org.datanucleus.api.jpa.NucleusJPAHelper;
 
