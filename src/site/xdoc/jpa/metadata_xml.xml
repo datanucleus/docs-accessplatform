@@ -70,6 +70,15 @@
                     <ul>
                         <li><a href="#entity-description">description</a></li>
                         <li><a href="#id-class">id-class</a></li>
+                        <li><a href="#datastore-id">datastore-id</a>
+                        <ul>
+                            <li><a href="#column">column</a></li>
+                            <li><a href="#generated-value">generated-value</a></li>
+                        </ul></li>
+                        <li><a href="#surrogate-version">surrogate-version</a>
+                        <ul>
+                            <li><a href="#column">column</a></li>
+                        </ul></li>
                         <li><a href="#exclude-default-listeners">exclude-default-listeners</a></li>
                         <li><a href="#exclude-superclass-listeners">exclude-superclass-listeners</a></li>
                         <li>entity-listeners
@@ -1373,7 +1382,7 @@
             <a name="datastore-id"/>
             <subsection name="Metadata for datastore-id tag">
                 <p>
-                    These are attributes within the <b>&lt;datastore-id&gt;</b> tag (under &lt;id&gt;).
+                    These are attributes within the <b>&lt;datastore-id&gt;</b> tag (under &lt;entity&gt;).
                     This is used to define the entity is using datastore identity (DataNucleus extension).
                 </p>
                 <table>
@@ -1402,7 +1411,7 @@
             <a name="surrogate-version"/>
             <subsection name="Metadata for surrogate-version tag">
                 <p>
-                    These are attributes within the <b>&lt;surrogate-version&gt;</b> tag (under &lt;id&gt;).
+                    These are attributes within the <b>&lt;surrogate-version&gt;</b> tag (under &lt;entity&gt;).
                     This is used to define the entity has a surrogate version column (DataNucleus extension).
                 </p>
                 <table>
