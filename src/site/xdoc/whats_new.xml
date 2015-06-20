@@ -7,32 +7,14 @@
     </properties>
 
     <body>
-        <section name="AccessPlatform : What's New in 4.1">
+        <section name="AccessPlatform : What's New in 4.2">
             <p>
-                DataNucleus AccessPlatform version 4.1 extends the 4.0 capabilities with some internal refactoring.
-                Below are some of the new features you can find in DataNucleus AccessPlatform 4.1.
+                DataNucleus AccessPlatform version 4.2 extends the 4.1 capabilities supporting JDO 3.2.
+                Below are some of the new features you can find in DataNucleus AccessPlatform 4.2.
             </p>
             <ul>
-                <li>Minor upgrade to bytecode enhancement contract to allow for separation of enhancement API</li>
-                <li>Rewrite of handling of container field update code.</li>
-                <li>Types : support for Jodatime LocalDateTime</li>
-                <li>JDO : PersistenceManager and Query implementations now implement AutoCloseable</li>
-                <li>JDO : Ability to <a href="jdo/query.html#save_as_named">save a query as a "named" query</a>, for later access</li>
-                <li>JDO : support for JDOQL subqueries in SELECT clause</li>
-                <li>JPA : support for non-standard value generators</li>
-                <li>JPA : support for <a href="jpa/jpql.html#maps">"KEY", "VALUE" keywords</a> in JPQL</li>
-                <li>JPA : support for parameters in FROM "ON" clause of JPQL</li>
-                <li>JPA : support for JPQL subqueries in SELECT and HAVING clauses</li>
-                <li>JPA : support for JPQL ordering by result alias</li>
-                <li>JPA : support for JPQL "RIGHT OUTER JOIN"</li>
-                <li>JPA : support for AttributeConverters on map key/value and collection element</li>
-                <li>JPA : Ability to <a href="jpa/jpql.html#save_as_named">save a query as a "named" query</a>, for later access</li>
-                <li>REST : support for map/array fields</li>
-                <li>REST : support for maxFetchDepth on GET requests</li>
-                <li>REST : support for GZIP compression on GET requests</li>
-                <li>MongoDB : much improved relation handling, and support for date and interface fields.</li>
-                <li>RDBMS : support for some HikariCP connection pool properties</li>
-                <li>Persistent Properties : you can now use inheritance in persistent properties, overriding getters etc</li>
+                <li>JDO : Support for JDO 3.2 JDOQLTypedQuery replacing DataNucleus JDO Typesafe Query</li>
+                <li>JDO : Support for JDO 3.2 AttributeConverter</li>
             </ul>
         </section>
 
