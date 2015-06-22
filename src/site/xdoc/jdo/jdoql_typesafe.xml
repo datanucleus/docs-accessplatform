@@ -7,30 +7,21 @@
     </properties>
 
     <body>
-        <section name="JDO : Typesafe JDOQL Queries">
+        <section name="JDO : JDOQL Typed Queries">
             <p>
-                In JPA there is a query API referred to as "criteria". This is really an API allowing
-                the construction of queries expression by expression, and optionally making it type safe
-                so that if you refactor a field name then it is changed in the queries.
-                JDO has no such feature currently, but there exist third party extensions providing this.
-                One is called <a href="http://source.mysema.com/static/querydsl/2.0.0/reference/html/ch02.html#jdoql_integration">QueryDSL</a>.
-                DataNucleus now provides its own typesafe JDOQL query API, inspired by the ideas in QueryDSL 
-                (and some others), and is proposed for inclusion after JDO3.1.
-            </p>
-            <p>
-                <b>With this API you can express your queries in a typesafe way and allow easier refactoring.
-                This API produces queries that are much more elegant and simpler than the equivalent "Criteria" API in JPA, or the Hibernate Criteria API.</b>
+                JDO 3.2 introduces a way of performing queries using a typesafe API, that copes with refactoring of classes/fields.
+                This API produces queries that are much more elegant and simpler than the equivalent "Criteria" API in JPA, or the Hibernate Criteria API.
                 See this
-                <a href="http://datanucleus.wordpress.com/2010/11/jdo-typesafe-vs-jpa-criteria.html">comparison of JPA Criteria and JDO Typesafe</a>
+                <a href="http://datanucleus.wordpress.com/2010/11/jdo-typesafe-vs-jpa-criteria.html">comparison of JPA Criteria and JDO Typesafe</a> which
+                compares a prototype of this JDO query api with JPA Criteria.
             </p>
             <br/>
 
             <subsection name="Preparation">
                 <p>
-                    To set up your environment to use this typesafe query API you need to enable annotation
-                    processing (JDK1.7+), place some DataNucleus jars in your build path, and specify an
-                    <i>@PersistenceCapable</i> annotation on your classes to be used in queries (you can still
-                    provide the remaining information in XML metadata if you wish to).
+                    To set up your environment to use this typesafe query API you need to enable annotation processing, place some DataNucleus jars in your 
+                    build path, and specify a <i>@PersistenceCapable</i> annotation on your classes to be used in queries (you can still provide the
+                    remaining information in XML metadata if you wish to).
                 </p>
                 <p>
                     With Maven you need to have the following in your POM
@@ -40,17 +31,17 @@
         <dependency>
             <groupId>org.datanucleus</groupId>
             <artifactId>datanucleus-api-jdo</artifactId>
-            <version>(4.0.99, )</version>
+            <version>(4.1.99, )</version>
         </dependency>
         <dependency>
             <groupId>org.datanucleus</groupId>
             <artifactId>datanucleus-jdo-query</artifactId>
-            <version>(4.0.99, )</version>
+            <version>(4.1.99, )</version>
         </dependency>
         <dependency>
-            <groupId>javax.jdo</groupId>
-            <artifactId>jdo-api</artifactId>
-            <version>[3.1, )</version>
+            <groupId>org.datanucleus</groupId>
+            <artifactId>javax.jdo</artifactId>
+            <version>3.2.0-m1-SNAPSHOT</version>
         </dependency>
         ...
      </dependencies>
@@ -67,7 +58,7 @@
                     With Eclipse you need to
                 </p>
                 <ul>
-                    <li>Go to <i>Java Compiler</i> and make sure the compiler compliance level is 1.7 or above (needed for DN 4.0+ anyway)</li>
+                    <li>Go to <i>Java Compiler</i> and make sure the compiler compliance level is 1.7 or above</li>
                     <li>Go to <i>Java Compiler -> Annotation Processing</i> and enable the project specific settings and enable annotation processing</li>
                     <li>Go to <i>Java Compiler -> Annotation Processing -> Factory Path</i>, enable the project 
                         specific settings and then add the following jars to the list: "datanucleus-jdo-query.jar", "datanucleus-api-jdo.jar", "jdo-api.jar"</li>
@@ -141,14 +132,12 @@ public class QProduct
                 </p>
                 <source><![CDATA[
 pm = pmf.getPersistenceManager();
-JDOPersistenceManager jdopm = (JDOPersistenceManager)pm;
 
-TypesafeQuery<Product> tq = jdopm.newTypesafeQuery(Product.class);
+JDOQLTypedQuery<Product> tq = pm.newJDOQLTypedQuery(Product.class);
 QProduct cand = QProduct.candidate();
 List<Product> results = 
     tq.filter(cand.value.lt(40.00).and(cand.name.startsWith("Wal")))
-        .orderBy(cand.name.asc())
-        .executeList();]]></source>
+        .orderBy(cand.name.asc()).executeList();]]></source>
                 <p>
                     This equates to the single-string query
                 </p>
@@ -170,13 +159,14 @@ SELECT FROM mydomain.Product
                     Let's take the query in the above example and return the name and value of the Products only
                 </p>
                 <source><![CDATA[
-TypesafeQuery<Product> tq = jdopm.newTypesafeQuery(Product.class);
+JDOQLTypedQuery<Product> tq = pm.newJDOQLTypedQuery(Product.class);
 QProduct cand = QProduct.candidate();
 List<Object[]> results = 
     tq.filter(cand.value.lt(40.00).and(cand.name.startsWith(tq.stringParameter("prefix"))))
         .orderBy(cand.name.asc())
+        .result(false, cand.name, cand.value)
         .setParameter("prefix", "Wal")
-        .executeResultList(false, cand.name, cand.value);]]></source>
+        .executeResultList();]]></source>
                 <p>
                     This equates to the single-string query
                 </p>
@@ -188,9 +178,10 @@ SELECT this.name,this.value FROM mydomain.Product
                     A further example using aggregates
                 </p>
                 <source><![CDATA[
-TypesafeQuery<Product> tq = jdopm.newTypesafeQuery(Product.class);
-QProduct cand = QProduct.candidate();
-Object[] results = tq.executeResultUnique(false, cand.max(), cand.min());]]></source>
+JDOQLTypedQuery<Product> tq = pm.newJDOQLTypedQuery(Product.class);
+Object results = 
+    tq.result(false, QProduct.candidate().max(), QProduct.candidate().min())
+        .executeResultUnique();]]></source>
                 <p>
                     This equates to the single-string query
                 </p>
@@ -204,7 +195,7 @@ SELECT max(this.value), min(this.value) FROM mydomain.Product]]></source>
                     Let's take the query in the above example and specify the "Wal" in a parameter.
                 </p>
                 <source><![CDATA[
-TypesafeQuery<Product> tq = jdopm.newTypesafeQuery(Product.class);
+JDOQLTypedQuery<Product> tq = pm.newJDOQLTypedQuery(Product.class);
 QProduct cand = QProduct.candidate();
 List<Product> results = 
     tq.filter(cand.value.lt(40.00).and(cand.name.startsWith(tq.stringParameter("prefix"))))
@@ -227,7 +218,7 @@ SELECT FROM mydomain.Product
                     This means we need to use a variable.
                 </p>
                 <source><![CDATA[
-TypesafeQuery<Inventory> tq = jdopm.newTypesafeQuery(Inventory.class);
+JDOQLTypedQuery<Inventory> tq = pm.newJDOQLTypedQuery(Inventory.class);
 QProduct var = QProduct.variable("var");
 QInventory cand = QInventory.candidate();
 List<Inventory> results = 
@@ -248,7 +239,7 @@ SELECT FROM mydomain.Inventory
                     This means we need to use a subquery
                 </p>
                 <source><![CDATA[
-TypesafeQuery<Product> tq = jdopm.newTypesafeQuery(Product.class);
+JDOQLTypedQuery<Product> tq = pm.newJDOQLTypedQuery(Product.class);
 QProduct cand = QProduct.candidate();
 TypesafeSubquery<Product> tqsub = tq.subquery(Product.class, "p");
 QProduct candsub = QProduct.candidate("p");
@@ -271,7 +262,7 @@ SELECT FROM mydomain.Product
                     candidate instances, you can do this by setting the candidates, like this
                 </p>
                 <source><![CDATA[
-TypesafeQuery<Product> tq = jdopm.newTypesafeQuery(Product.class);
+JDOQLTypedQuery<Product> tq = pm.newJDOQLTypedQuery(Product.class);
 QProduct cand = QProduct.candidate();
 List<Product> results = 
     tq.filter(cand.value.lt(40.00)).setCandidates(myCandidates).executeList();]]></source>
