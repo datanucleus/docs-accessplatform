@@ -46,15 +46,15 @@ It provides a Store Manager plugin for many datastores (see below). You can exte
     <tr>
         <td>org.datanucleus.store_manager</td>
         <td>excel</td>
-        <td>Store Manager for Excel documents</td>
         <td>excel</td>
+        <td>Store Manager for Excel spreadsheets</td>
         <td>datanucleus-excel</td>
     </tr>
     <tr>
         <td>org.datanucleus.store_manager</td>
         <td>odf</td>
         <td>odf</td>
-        <td>Store Manager for ODF datastores</td>
+        <td>Store Manager for ODF spreadsheets</td>
         <td>datanucleus-odf</td>
     </tr>
     <tr>
