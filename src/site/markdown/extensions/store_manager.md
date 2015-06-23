@@ -24,10 +24,10 @@ It provides a Store Manager plugin for many datastores (see below). You can exte
     </tr>
     <tr>
         <td>org.datanucleus.store_manager</td>
-        <td>db4o</td>
-        <td>db4o</td>
-        <td>Store Manager for DB4O datastore</td>
-        <td>datanucleus-db4o</td>
+        <td>cassandra</td>
+        <td>cassandra</td>
+        <td>Store Manager for Cassandra datastore</td>
+        <td>datanucleus-cassandra</td>
     </tr>
     <tr>
         <td>org.datanucleus.store_manager</td>
@@ -91,6 +91,13 @@ It provides a Store Manager plugin for many datastores (see below). You can exte
         <td>hbase</td>
         <td>Store Manager for HBase datastores</td>
         <td>datanucleus-hbase</td>
+    </tr>             
+    <tr>
+        <td>org.datanucleus.store_manager</td>
+        <td>mongodb</td>
+        <td>mongodb</td>
+        <td>Store Manager for MongoDB datastores</td>
+        <td>datanucleus-mongodb</td>
     </tr>
 </table>
 
