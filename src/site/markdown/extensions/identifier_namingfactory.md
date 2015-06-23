@@ -1,0 +1,212 @@
+<head><title>Extensions : Identifier Naming Factories</title></head>
+
+## Extensions : Identifier Naming Factories
+![Plugin](../images/nucleus_plugin.gif)
+
+DataNucleus is developed as a plugin-driven framework and one of the components that is pluggable is the naming of datastore identifiers. 
+DataNucleus provides its own internal identifier factories, but also allows you to plugin your own factory. Identifiers are required to define 
+the name of components in the datastore, such as table/columns/indexes.
+
+DataNucleus provides the mechanism to generate datastore identifiers (table/column names) when none 
+are defined by the users metadata/annotations. In addition to the default JDO factory there is also 
+an identifier factory that generates identifiers consistent with the JPA specification.
+__Note that currently RDBMS doesn't use this extension and instead uses the [RDBMS Identifier Factory](rdbms_identifier_factory.html) extension__.
+You can extend DataNucleus's capabilities using the plugin extension *org.datanucleus.identifier_namingfactory*.
+
+<table>
+    <tr>
+        <th>Plugin extension-point</th>
+        <th>Key</th>
+        <th>Description</th>
+        <th width="80">Location</th>
+    </tr>
+    <tr>
+        <td>org.datanucleus.identifier_namingfactory</td>
+        <td>datanucleus2</td>
+        <td>Identifier Factory providing DataNucleus 2+ namings</td>
+        <td>datanucleus-core</td>
+    </tr>
+    <tr>
+        <td>org.datanucleus.identifier_namingfactory</td>
+        <td>jpa</td>
+        <td>Identifier Factory providing JPA-compliant namings</td>
+        <td>datanucleus-core</td>
+    </tr>
+</table>
+
+
+### Interface
+
+Any identifier factory plugin will need to implement _org.datanucleus.store.schema.naming.NamingFactory_
+[![Javadoc](../images/javadoc.gif)](http://www.datanucleus.org/javadocs/core/latest/org/datanucleus/store/schema/naming/NamingFactory.html).
+So you need to implement the following interface
+
+	package org.datanucleus.store;
+	
+	public interface IdentifierFactory
+	{
+        /**
+         * Method to set the provided list of keywords as names that identifiers have to surround by quotes to use.
+         * @param keywords The keywords
+         * @return This naming factory
+         */
+        NamingFactory setReservedKeywords(Set<String> keywords);
+
+    /**
+     * Method to set the maximum length of the name of the specified schema component.
+     * @param cmpt The component
+     * @param max The maximum it accepts
+     * @return This naming factory
+     */
+    NamingFactory setMaximumLength(SchemaComponent cmpt, int max);
+
+    /**
+     * Method to set the quote string to use (when the identifiers need to be quoted).
+     * See <pre>setIdentifierCase</pre>.
+     * @param quote The quote string
+     * @return This naming factory
+     */
+    NamingFactory setQuoteString(String quote);
+
+    /**
+     * Method to set the word separator of the names.
+     * @param sep Separator
+     * @return This naming factory
+     */
+    NamingFactory setWordSeparator(String sep);
+
+    /**
+     * Method to set the required case of the names.
+     * @param nameCase Required case
+     * @return This naming factory
+     */
+    NamingFactory setNamingCase(NamingCase nameCase);
+
+    /**
+     * Method to return the name of the table for the specified class.
+     * @param cmd Metadata for the class
+     * @return Name of the table
+     */
+    String getTableName(AbstractClassMetaData cmd);
+
+    /**
+     * Method to return the name of the (join) table for the specified field.
+     * @param mmd Metadata for the field/property needing a join table
+     * @return Name of the table
+     */
+    String getTableName(AbstractMemberMetaData mmd);
+
+    /**
+     * Method to return the name of the column for the specified class (version, datastore-id, discriminator etc).
+     * @param cmd Metadata for the class
+     * @param type Column type
+     * @return Name of the column
+     */
+    String getColumnName(AbstractClassMetaData cmd, ColumnType type);
+
+    /**
+     * Method to return the name of the column for the specified field.
+     * If you have multiple columns for a field then call the other <pre>getColumnName</pre> method.
+     * @param mmd Metadata for the field
+     * @param type Type of column
+     * @return The column name
+     */
+    String getColumnName(AbstractMemberMetaData mmd, ColumnType type);
+
+    /**
+     * Method to return the name of the column for the position of the specified field.
+     * Normally the position will be 0 since most fields map to a single column, but where you have a FK
+     * to an object with composite id, or where the Java type maps to multiple columns then the position is used.
+     * @param mmd Metadata for the field
+     * @param type Type of column
+     * @param position Position of the column
+     * @return The column name
+     */
+    String getColumnName(AbstractMemberMetaData mmd, ColumnType type, int position);
+
+    /**
+     * Method to return the name of the column for the position of the specified EMBEDDED field, within the specified owner field.
+     * For example, say we have a class Type1 with field "field1" that is marked as embedded, and this is of type Type2. 
+     * In turn Type2 has a field "field2" that is also embedded, of type Type3. Type3 has a field "name". So to get the column name for
+     * Type3.name in the table for Type1 we call "getColumnName({mmdForField1InType1, mmdForField2InType2, mmdForNameInType3}, 0)".
+     * @param mmds MetaData for the field(s) with the column. The first value is the original field that is embedded, followed by fields of the embedded object(s).
+     * @param position The position of the column (where this field has multiple columns)
+     * @return The column name
+     */
+    String getColumnName(List<AbstractMemberMetaData> mmds, int position);
+
+    /**
+     * Method to return the name of an index specified at class level.
+     * @param cmd Metadata for the class
+     * @param idxmd The index metadata
+     * @param position Number of the index at class level (first is 0)
+     * @return Name of the index
+     */
+    String getIndexName(AbstractClassMetaData cmd, IndexMetaData idxmd, int position);
+
+    /**
+     * Method to return the name of an index specified at member level.
+     * @param mmd Metadata for the member
+     * @param idxmd The index metadata
+     * @return Name of the index
+     */
+    String getIndexName(AbstractMemberMetaData mmd, IndexMetaData idxmd);
+
+    // TODO Support foreign-key naming
+
+    /**
+     * Method to return the name of sequence.
+     * @param seqmd Metadata for the sequence
+     * @return Name of the sequence
+     */
+    String getSequenceName(SequenceMetaData seqmd);
+}
+
+Be aware that you can extend _org.datanucleus.store.schema.naming.AbstractNamingFactory_
+[![Javadoc](../images/javadoc.gif)](http://www.datanucleus.org/javadocs/core/org/datanucleus/store/schema/naming/AbstractNamingFactory.html).
+
+
+### Implementation
+
+Let's assume that you want to provide your own identifier factory _MyNamingFactory_
+
+	package mydomain;
+	
+	import org.datanucleus.store.schema.naming.AbstractNamingFactory
+	
+	public class MyIdentifierFactory extends AbstractNamingFactory
+	{
+    	/**
+    	 * Constructor.
+    	 * @param nucCtx NucleusContext
+    	 */
+    	public MyNamingFactory(NucleusContext nucCtx)
+    	{
+        	super(nucCtx);
+        	...
+    	}
+	
+    	.. (implement the rest of the interface)
+	}
+
+### Plugin Specification
+
+When we have defined our "NamingFactory" we just need to make it into a DataNucleus plugin. To do this you simply add a file 
+_plugin.xml_ to your JAR at the root. The file _plugin.xml_ should look like this
+
+    <?xml version="1.0"?>
+    <plugin id="mydomain" name="DataNucleus plug-ins" provider-name="My Company">
+        <extension point="org.datanucleus.identifier_namingfactory">
+            <identifierfactory name="myfactory" class-name="mydomain.MyNamingFactory"/>
+        </extension>
+    </plugin>]]></source>
+
+Note that you also require a MANIFEST.MF file as per the [Extensions Guide](index.html).
+
+
+### Plugin Usage
+
+The only thing remaining is to use your new _NamingFactory_ plugin. You do this by having your plugin
+in the CLASSPATH at runtime, and setting the PMF property __datanucleus.identifier.namingFactory__ to _myfactory_
+(the name you specified in the plugin.xml file).
+
