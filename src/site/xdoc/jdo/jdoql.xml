@@ -992,7 +992,7 @@ List results = (List)query.execute();]]></source>
                 </p>
 <source><![CDATA[
 SELECT FROM org.datanucleus.Employee WHERE salary > 
-    (SELECT avg(salary) FROM org.datanucleus.Employee e)]]></source>
+    (SELECT avg(e.salary) FROM org.datanucleus.Employee e)]]></source>
                 <p>
                     So we want to find all Employees that have a salary greater than the average salary.
                     In single-string JDOQL the subquery must be in parentheses (brackets). Note that we have defined
@@ -1022,7 +1022,7 @@ List results = (List)q.execute();]]></source>
                 </p>
                 <source><![CDATA[
 SELECT FROM org.datanucleus.Employee WHERE salary > 
-    (SELECT avg(salary) FROM org.datanucleus.Employee e WHERE e.lastName == this.lastName)
+    (SELECT avg(e.salary) FROM org.datanucleus.Employee e WHERE e.lastName == this.lastName)
 ]]></source>
                 <p>
                     So with single-string JDOQL we make use of the alias identifier "this" to link back to
@@ -1223,7 +1223,7 @@ public class Price
                     <i>field2</i> in descending order.
                 </p>
                 <p>
-                    JDO3.1 introduces a directive for where NULL values of the ordered field/property go in the order, so the full syntax supported is
+                    In the ordering you can also define where NULL values of the ordered field/property go in the order, so the full syntax supported is
                 </p>
                 <source><![CDATA[fieldName [ASC|DESC] [NULLS FIRST|NULLS LAST]]]></source>
                 <p>
