@@ -136,14 +136,12 @@ pm = pmf.getPersistenceManager();
 JDOQLTypedQuery<Product> tq = pm.newJDOQLTypedQuery(Product.class);
 QProduct cand = QProduct.candidate();
 List<Product> results = 
-    tq.filter(cand.value.lt(40.00).and(cand.name.startsWith("Wal")))
-        .orderBy(cand.name.asc()).executeList();]]></source>
+    tq.filter(cand.value.lt(40.00).and(cand.name.startsWith("Wal"))).orderBy(cand.name.asc()).executeList();]]></source>
                 <p>
                     This equates to the single-string query
                 </p>
                 <source><![CDATA[
-SELECT FROM mydomain.Product 
-    WHERE this.value < 40.0 && this.name.startsWith("Wal") 
+SELECT FROM mydomain.Product WHERE this.value < 40.0 && this.name.startsWith("Wal") 
     ORDER BY this.name ASCENDING]]></source>
                 <p>
                     As you see, we create a parametrised query, and then make use of the <b>query class</b>
@@ -163,16 +161,13 @@ JDOQLTypedQuery<Product> tq = pm.newJDOQLTypedQuery(Product.class);
 QProduct cand = QProduct.candidate();
 List<Object[]> results = 
     tq.filter(cand.value.lt(40.00).and(cand.name.startsWith(tq.stringParameter("prefix"))))
-        .orderBy(cand.name.asc())
-        .result(false, cand.name, cand.value)
-        .setParameter("prefix", "Wal")
-        .executeResultList();]]></source>
+        .orderBy(cand.name.asc()).result(false, cand.name, cand.value)
+        .setParameter("prefix", "Wal").executeResultList();]]></source>
                 <p>
                     This equates to the single-string query
                 </p>
                 <source><![CDATA[
-SELECT this.name,this.value FROM mydomain.Product 
-    WHERE this.value < 40.0 && this.name.startsWith(:prefix) 
+SELECT this.name,this.value FROM mydomain.Product WHERE this.value < 40.0 && this.name.startsWith(:prefix) 
     ORDER BY this.name ASCENDING]]></source>
                 <p>
                     A further example using aggregates
@@ -180,8 +175,7 @@ SELECT this.name,this.value FROM mydomain.Product
                 <source><![CDATA[
 JDOQLTypedQuery<Product> tq = pm.newJDOQLTypedQuery(Product.class);
 Object results = 
-    tq.result(false, QProduct.candidate().max(), QProduct.candidate().min())
-        .executeResultUnique();]]></source>
+    tq.result(false, QProduct.candidate().max(), QProduct.candidate().min()).executeResultUnique();]]></source>
                 <p>
                     This equates to the single-string query
                 </p>
@@ -192,6 +186,8 @@ SELECT max(this.value), min(this.value) FROM mydomain.Product]]></source>
 
             <subsection name="Query API - Parameters">
                 <p>
+                    It is important to note that JDOQLTypedQuery only accepts <b>named</b> parameters. You obtain a named parameter from the
+                    JDOQLTypedQuery, and then use it in the specification of the filter, ordering, grouping etc.
                     Let's take the query in the above example and specify the "Wal" in a parameter.
                 </p>
                 <source><![CDATA[
@@ -200,14 +196,13 @@ QProduct cand = QProduct.candidate();
 List<Product> results = 
     tq.filter(cand.value.lt(40.00).and(cand.name.startsWith(tq.stringParameter("prefix"))))
         .orderBy(cand.name.asc())
-        .setParameter("prefix", "Wal")
-        .executeList();]]></source>
+        .setParameter("prefix", "Wal").executeList();]]></source>
                 <p>
                     This equates to the single-string query
                 </p>
                 <source><![CDATA[
 SELECT FROM mydomain.Product
-    WHERE this.value < 40.0 && this.name.startsWith("Wal") 
+    WHERE this.value < 40.0 && this.name.startsWith(:prefix) 
     ORDER BY this.name ASCENDING]]></source>
                 <br/>
             </subsection>
@@ -221,9 +216,7 @@ SELECT FROM mydomain.Product
 JDOQLTypedQuery<Inventory> tq = pm.newJDOQLTypedQuery(Inventory.class);
 QProduct var = QProduct.variable("var");
 QInventory cand = QInventory.candidate();
-List<Inventory> results = 
-    tq.filter(cand.products.contains(var).and(var.name.startsWith("Wal")))
-        .executeList();]]></source>
+List<Inventory> results = tq.filter(cand.products.contains(var).and(var.name.startsWith("Wal"))).executeList();]]></source>
                 <p>
                     This equates to the single-string query
                 </p>
@@ -243,10 +236,9 @@ JDOQLTypedQuery<Product> tq = pm.newJDOQLTypedQuery(Product.class);
 QProduct cand = QProduct.candidate();
 TypesafeSubquery<Product> tqsub = tq.subquery(Product.class, "p");
 QProduct candsub = QProduct.candidate("p");
-List<Product> results = 
-    tq.filter(cand.value.lt(tqsub.selectUnique(candsub.value.avg())))
-        .executeList();]]></source>
+List<Product> results = tq.filter(cand.value.lt(tqsub.selectUnique(candsub.value.avg()))).executeList();]]></source>
                 <p>
+                    Note that where we want to refer to the candidate of the subquery, we specify the alias explicitly.
                     This equates to the single-string query
                 </p>
                 <source><![CDATA[
@@ -264,8 +256,7 @@ SELECT FROM mydomain.Product
                 <source><![CDATA[
 JDOQLTypedQuery<Product> tq = pm.newJDOQLTypedQuery(Product.class);
 QProduct cand = QProduct.candidate();
-List<Product> results = 
-    tq.filter(cand.value.lt(40.00)).setCandidates(myCandidates).executeList();]]></source>
+List<Product> results = tq.filter(cand.value.lt(40.00)).setCandidates(myCandidates).executeList();]]></source>
                 <p>
                     This will process the query <a href="jdoql.html#inmemory">in-memory</a>.
                 </p>
