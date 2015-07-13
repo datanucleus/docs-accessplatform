@@ -894,16 +894,24 @@ List<Product> results = query.getResultList();
 
             <a name="save_as_named"/>
             <subsection name="Saving a Query as a Named Query">
+                <p>
+                    You can save a query as a named query like this
+                </p>
+<source><![CDATA[
+Query q = em.createQuery("SELECT p FROM Product p WHERE ...");
+...
+emf.addNamedQuery("MyQuery", q);
+]]></source>
                 <img src="../images/nucleus_extension.gif" border="0" alt=""/>
                 <p>
-                    DataNucleus also allows you to create a query, and then save it as a "named" query for later reuse. You do this as follows
+                    DataNucleus also allows you to create a query, and then save it as a "named" query directly with the query. You do this as follows
                 </p>
 <source><![CDATA[
 Query q = em.createQuery("SELECT p FROM Product p WHERE ...");
 ((org.datanucleus.api.jpa.JPAQuery)q).saveAsNamedQuery("MyQuery");
 ]]></source>
                 <p>
-                    and you can thereafter access the query via
+                    With both methods you can thereafter access the query via
                 </p>
 <source><![CDATA[
 Query q = em.createNamedQuery("MyQuery");
