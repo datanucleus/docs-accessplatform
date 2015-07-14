@@ -1140,6 +1140,84 @@ MyColour colour;]]></source>
                 <br/>
             </subsection>
 
+            <a name="attributeconverter"/>
+            <subsection name="JDO Attribute Converters">
+                <p>
+                    JDO3.2 introduces an API for conversion of an attribute of a PersistenceCapable object to its datastore value.
+                    You can define a "converter" that will convert to the datastore value and back from it, implementing
+                    this interface.
+                </p>
+<source><![CDATA[
+public interface AttributeConverter<X,Y>
+{
+    public Y convertToDatastore(X attributeValue);
+
+    public X convertToAttribute (Y datastoreValue);
+}]]></source>
+                <p>
+                    so if we have a simple converter to allow us to persist fields of type URL in a String form in the
+                    datastore, like this
+                </p>
+<source><![CDATA[
+public class URLStringConverter implements AttributeConverter<URL, String>
+{
+    public URL convertToAttribute(String str)
+    {
+        if (str == null)
+        {
+            return null;
+        }
+
+        URL url = null;
+        try
+        {
+            url = new java.net.URL(str.trim());
+        }
+        catch (MalformedURLException mue)
+        {
+            throw new IllegalStateException("Error converting the URL", mue);
+        }
+        return url;
+    }
+
+    public String convertToDatastore(URL url)
+    {
+        return url != null ? url.toString() : null;
+    }
+}
+]]></source>
+                <p>
+                    and now in our PersistenceCapable class we mark any URL field as being converted using this converter
+                </p>
+<source><![CDATA[
+@PersistenceCapable
+public class MyClass
+{
+    @PrimaryKey
+    long id;
+
+    @Convert(converter=URLStringConverter.class)
+    URL url;
+
+    ...
+}]]></source>
+                <p>
+                    Note that you can register converters as the default handler for a java type when constructing the PMF via persistence properties. 
+                    These properties should be of the form <b>javax.jdo.option.typeconverter.{javatype}</b> and the value is the class name of the 
+                    AttributeConverter.
+                </p>
+                <p>
+                    A further use of AttributeConverter is where you want to apply type conversion to the key/value of a Map field, or to the element of a Collection
+                    field. The Collection element case is simple, you just specify the @Convert against the field and it will be applied to the element.
+                    If you want to apply type conversion to a key/value of a map do this.
+                </p>
+<source><![CDATA[
+    @Key(converter=URLStringConverter.class)
+    Map<URL, OtherEntity> myMap;
+]]></source>
+                <br/>
+            </subsection>
+
             <a name="typeconverter"/>
             <subsection name="TypeConverters">
                 <img src="../images/nucleus_plugin.gif" border="0" alt=""/>
