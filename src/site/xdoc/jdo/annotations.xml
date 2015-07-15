@@ -246,6 +246,11 @@
                     <td>Field/Method</td>
                     <td>ORM : Defines a foreign key for the field</td>
                 </tr>
+                <tr class="c">
+                    <td><a href="#Convert">@Convert</a></td>
+                    <td>Field/Method</td>
+                    <td>Specify an AttributeConverter for this field/method</td>
+                </tr>
                 <tr>
                     <td><a href="#Extensions">@Extensions</a></td>
                     <td>Class/Field/Method</td>
@@ -1627,6 +1632,18 @@ public class MyClass
                             Better to use @FetchGroup and define your groups</td>
                         <td></td>
                     </tr>
+                    <tr>
+                        <td>converter</td>
+                        <td>Class</td>
+                        <td>Converter class that implements javax.jdo.AttributeConverter</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>useDefaultConversion</td>
+                        <td>boolean</td>
+                        <td>Whether we should disable any default conversion for this field</td>
+                        <td>false</td>
+                    </tr>
                 </table>
                 <source>
 @PersistenceCapable
@@ -1868,6 +1885,18 @@ public class MyClass
                         <td>ORM : Column definition for the column(s) of this element</td>
                         <td></td>
                     </tr>
+                    <tr class="c">
+                        <td>converter</td>
+                        <td>Class</td>
+                        <td>Converter class that implements javax.jdo.AttributeConverter</td>
+                        <td></td>
+                    </tr>
+                    <tr class="c">
+                        <td>useDefaultConversion</td>
+                        <td>boolean</td>
+                        <td>Whether we should disable any default conversion for this element</td>
+                        <td>false</td>
+                    </tr>
                     <tr>
                         <td>extensions</td>
                         <td><a href="#Extension">Extension</a>[]</td>
@@ -2055,6 +2084,18 @@ public class MyClass
                         <td>ORM : Column definition for the column(s) of this key</td>
                         <td></td>
                     </tr>
+                    <tr class="c">
+                        <td>converter</td>
+                        <td>Class</td>
+                        <td>Converter class that implements javax.jdo.AttributeConverter</td>
+                        <td></td>
+                    </tr>
+                    <tr class="c">
+                        <td>useDefaultConversion</td>
+                        <td>boolean</td>
+                        <td>Whether we should disable any default conversion for this key</td>
+                        <td>false</td>
+                    </tr>
                     <tr>
                         <td>extensions</td>
                         <td><a href="#Extension">Extension</a>[]</td>
@@ -2189,6 +2230,18 @@ public class MyClass
                         <td><a href="#Column">Column</a>[]</td>
                         <td>ORM : Column definition for the column(s) of this value</td>
                         <td></td>
+                    </tr>
+                    <tr class="c">
+                        <td>converter</td>
+                        <td>Class</td>
+                        <td>Converter class that implements javax.jdo.AttributeConverter</td>
+                        <td></td>
+                    </tr>
+                    <tr class="c">
+                        <td>useDefaultConversion</td>
+                        <td>boolean</td>
+                        <td>Whether we should disable any default conversion for this value</td>
+                        <td>false</td>
                     </tr>
                     <tr>
                         <td>extensions</td>
@@ -2657,6 +2710,46 @@ public class MyClass
     ...
 }</source>
                 <p>See the documentation for <a href="orm/constraints.html">Schema Constraints</a></p>
+                <br/>
+                <br/>
+            </subsection>
+
+            <a name="Convert"/>
+            <subsection name="@Convert">
+                <p>
+                    Annotation used to mark a field for conversion using an AttributeConverter
+                    Specified on the <b>field/method</b>.
+                </p>
+                <table>
+                    <tr>
+                        <th>Attribute</th>
+                        <th>Type</th>
+                        <th>Description</th>
+                        <th>Default</th>
+                    </tr>
+                    <tr class="c">
+                        <td>value</td>
+                        <td>Class</td>
+                        <td>Class for the AttributeConverter to use for this field</td>
+                        <td></td>
+                    </tr>
+                    <tr class="c">
+                        <td>enabled</td>
+                        <td>boolean</td>
+                        <td>Setting this to false allows us to disable (default) conversion (for this type) that was defined at PMF level</td>
+                        <td>true</td>
+                    </tr>
+                </table>
+                <source>
+@PersistenceCapable
+public class MyClass
+{
+    @Persistent
+    @Convert(MyURLConverter.class)
+    URL url;
+
+    ...
+}</source>
                 <br/>
                 <br/>
             </subsection>
