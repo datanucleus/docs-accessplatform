@@ -918,6 +918,17 @@ Query q = em.createNamedQuery("MyQuery");
 ]]></source>
                 <br/>
             </subsection>
+
+            <subsection name="JPQL Strictness">
+                <p>
+                    By default DataNucleus allows some extensions in syntax over strict JPQL (as defined by the JPA spec).
+                    To allow only strict JPQL you can do as follows
+                </p>
+<source><![CDATA[
+Query query = em.createQuery(...);
+query.setHint("datanucleus.strictJPQL", "true");
+]]></source>
+            </subsection>
         </section>
 
         <section name="JPQL DELETE Queries">

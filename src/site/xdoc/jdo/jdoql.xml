@@ -1354,6 +1354,17 @@ Long number = (Long)query.execute();
                 </p>
                 <br/>
             </subsection>
+
+            <subsection name="JDOQL Strictness">
+                <p>
+                    By default DataNucleus allows some extensions in syntax over strict JDOQL (as defined by the JDO spec).
+                    To allow only strict JDOQL you can do as follows
+                </p>
+<source><![CDATA[
+Query query = pm.newQuery(...);
+query.addExtension("datanucleus.strictJDOQL", "true");
+]]></source>
+            </subsection>
         </section>
 
     </body>
