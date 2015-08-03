@@ -868,6 +868,17 @@ public class PersonName
                 </p>
                 <br/>
             </subsection>
+
+            <subsection name="JPQL Strictness">
+                <p>
+                    By default DataNucleus allows some extensions in syntax over strict JPQL (as defined by the JPA spec).
+                    To allow only strict JPQL you can do as follows
+                </p>
+<source><![CDATA[
+Query query = pm.newQuery(...);
+query.addExtension("datanucleus.jpql.strict", "true");
+]]></source>
+            </subsection>
         </section>
 
         <section name="JPQL In-Memory queries">
