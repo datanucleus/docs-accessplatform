@@ -928,36 +928,38 @@
                 class from the test suite. Here's the source code for reference:
             </p>
             <source><![CDATA[package org.datanucleus.samples.pggeometry;
-                
 import org.postgis.LineString;
                 
-public class SampleLineString {			
+public class SampleLineString 
+{			
     private long id;
     private String name;
     private LineString geom;
                 
-    public SampleLineString(long id, String name, LineString lineString) {
+    public SampleLineString(long id, String name, LineString lineString) 
+    {
         this.id = id;
         this.name = name;
         this.geom = lineString;
     }
                 
-    public long getId() {
-       return id;
+    public long getId() 
+    {
+        return id;
     }
     ....
 }]]></source>
             <source><![CDATA[<jdo>
     <package name="org.datanucleus.samples.pggeometry">	
         <extension vendor-name="datanucleus" key="spatial-dimension" value="2"/>
-		<extension vendor-name="datanucleus" key="spatial-srid" value="4326"/>
-		
-		<class name="SampleLineString" table="samplepglinestring" detachable="true">
-			<field name="id"/>
-			<field name="name"/>
-			<field name="geom" persistence-modifier="persistent"/>
-		</class>
-	</package>
+        <extension vendor-name="datanucleus" key="spatial-srid" value="4326"/>
+
+        <class name="SampleLineString" table="samplepglinestring" detachable="true">
+            <field name="id"/>
+            <field name="name"/>
+            <field name="geom" persistence-modifier="persistent"/>
+        </class>
+    </package>
 </jdo>]]></source>            
             <br/>
             <subsection name="Example 1 - Spatial Function in the Filter of a Query">
