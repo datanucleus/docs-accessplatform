@@ -503,7 +503,9 @@
                         <td>When attaching an object DataNucleus by default assumes that you're attaching to the same
                         datastore as you detached from. DataNucleus does though allow you to attach to a different
                         datastore (for things like replication). Set this to <i>false</i> if you want to attach
-                        to a different datastore to what you detached from</td>
+                        to a different datastore to what you detached from.
+                        This property is also useful if you are attaching and want it to check for existence of the object in the datastore
+                        before attaching, and create it if not present (<i>true</i> assumes that the object exists).</td>
                     </tr>
                     <tr>
                         <td>Range of Values</td>
