@@ -936,6 +936,23 @@
                 <table>
                     <tr>
                         <th colspan="2">
+                            <b>datanucleus.executionContext.closeActiveTxAction</b>
+                        </th>
+                    </tr>
+                    <tr>
+                        <td width="120">Description</td>
+                        <td>Defines the action if a PM/EM is closed and there is an active transaction present.
+                            JDO (3.2+) defaults to rollback, whereas JPA defaults to exception</td>
+                    </tr>
+                    <tr>
+                        <td>Range of Values</td>
+                        <td>rollback | exception</td>
+                    </tr>
+                </table>
+                <br/>
+                <table>
+                    <tr>
+                        <th colspan="2">
                             <b>datanucleus.executionContext.reaperThread</b>
                         </th>
                     </tr>
