@@ -1692,7 +1692,7 @@
                         <td width="120">Description</td>
                         <td>Whether we permit a reference field (1-1 relation) or collection of references
                             where there are no defined implementations of the reference. False means that an
-                            exception will be thrown</td>
+                            exception will be thrown during schema generation for the field</td>
                     </tr>
                     <tr>
                         <td>Range of Values</td>
@@ -2758,16 +2758,14 @@
                         <td>How to initialise DataNucleus at startup. This allows DataNucleus to read in from 
                             some source the classes that it was persisting for this data store the previous 
                             time. 
-                            "XML" stores the information in an XML file for this purpose.
-                            "SchemaTable" (only for RDBMS) stores a table in the RDBMS for this purpose. 
-                            "Classes" looks at the property <i>datanucleus.autoStartClassNames</i> for a list 
-                            of classes.
-                            "MetaData" looks at the property <i>datanucleus.autoStartMetaDataFiles</i> for a 
-                            list of metadata files
-                            The other option is "None" (start from scratch each time). 
-                            Please refer to the <a href="jdo/autostart.html">Auto-Start Mechanism Guide</a> 
-                            for more details.
-                            The default is "None".
+                            <i>XML</i> stores the information in an XML file for this purpose.
+                            <i>SchemaTable</i> (only for RDBMS) stores a table in the RDBMS for this purpose. 
+                            <i>Classes</i> looks at the property <i>datanucleus.autoStartClassNames</i> for a list of classes.
+                            <i>MetaData</i> looks at the property <i>datanucleus.autoStartMetaDataFiles</i> for a list of metadata files
+                            The other option (default) is <i>None</i> (start from scratch each time). 
+                            Please refer to the <a href="jdo/autostart.html">Auto-Start Mechanism Guide</a> for more details.
+                            <b>Alternatively just use <i>persistence.xml</i> to specify the classes and/or mapping files to load at startup.</b>
+                            Note also that "Auto-Start" is for RUNTIME use only (not during SchemaTool).
                         </td>
                     </tr>
                     <tr>
