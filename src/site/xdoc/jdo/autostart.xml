@@ -30,8 +30,8 @@
             <ul>
                 <li>Define your classes/MetaData in a <a href="pmf.html#persistenceunit">Persistence Unit</a>
                     and when the <i>PersistenceManagerFactory</i> is initialised it loads the persistence
-                    unit, and hence the MetaData for the defined classes and mapping files.
-                    This is described on the linked page</li>
+                    unit, and hence the MetaData for the defined classes and mapping files. It is described on the linked page.
+                    <b>This is standardised, and hence is the recommended way.</b></li>
                 <li>Put the <i>package.jdo</i> at the root of the CLASSPATH, containing all classes, and when the 
                     first class is encountered it searches for its metadata, encounters and parses the root 
                     <i>package.jdo</i>, and consequently loads the metadata for all classes</li>
