@@ -3,11 +3,11 @@
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
     <properties>
-        <title>JDO Spatial Sample</title>
+        <title>JDO Geospatial Sample</title>
     </properties>
 
     <body>
-        <section name="Persistence of Spatial Data using JDO">
+        <section name="Persistence of Geospatial Data using JDO">
             <a href="https://sourceforge.net/projects/datanucleus/files/datanucleus-samples/">
                 <img src="../../images/download.png" alt="Download" border="0"/>
             </a>
@@ -17,17 +17,17 @@
 
             <subsection name="Background">
                 <p>
-                    <i>dataNucleus-spatial</i> allows the use of DataNucleus as persistence layer 
+                    <i>dataNucleus-geospatial</i> allows the use of DataNucleus as persistence layer 
                     for geospatial applications in an environment that supports the OGC SFA specification. 
                     It allows the persistence of the Java geometry types from the JTS topology suite as well as 
                     those from the PostGIS project.
                 </p>
                 <p>
-                    In this tutorial, we perform the basic persistence operations over spatial types using MySQL/MariaDB 
+                    In this tutorial, we perform the basic persistence operations over geospatial types using MySQL/MariaDB 
                     and Postgis products.
                 </p>
                 <ol>
-                    <li><a href="#step1">Step 1</a> : Install the database server and spatial extensions.</li>
+                    <li><a href="#step1">Step 1</a> : Install the database server and geospatial extensions.</li>
                     <li><a href="#step2">Step 2</a> : Download DataNucleus and PostGis libraries.</li>
                     <li><a href="#step3">Step 3</a> : Design and implement the persistent data model.</li> 
                     <li><a href="#step4">Step 4</a> : Design and implement the persistent code.</li>
@@ -37,12 +37,12 @@
             </subsection>
 
             <a name="step1"/>
-            <subsection name="Step 1 : Install the database server and spatial extensions">
+            <subsection name="Step 1 : Install the database server and geospatial extensions">
                 <p>
                     Download <a href="http://www.mariadb.org/">MySQL/MariaDB</a> database and 
                     <a href="http://postgis.refractions.net/">PostGIS</a>.
                     Install MySQL/MariaDB and PostGis. During PostGis installation, you will be asked to select the 
-                    database schema where the spatial extensions will be enabled. You will use this schema to run the 
+                    database schema where the geospatial extensions will be enabled. You will use this schema to run the 
                     tutorial application.
                 </p>
                 <br/>
@@ -52,7 +52,7 @@
             <subsection name="Step 2 : Download DataNucleus and PostGis libraries">
                 <p>
                     <a href="http://www.datanucleus.org/download.html">Download</a> the DataNucleus core, 
-                    RDBMS and Spatial jars and any dependencies. Configure your development environment by adding 
+                    RDBMS and Geospatial jars and any dependencies. Configure your development environment by adding 
                     the PostGIS and JDO jars to the classpath.
                 </p>
             </subsection>
@@ -106,7 +106,7 @@ public class Position
 </jdo>]]></source>
                 <p>
                     The above JDO metadata has two extensions <i>spatial-dimension</i> and <i>spatial-srid</i>. These
-                    settings specifies the format of the spatial data. <i>SRID</i> stands for spatial referencing system
+                    settings specifies the format of the geospatial data. <i>SRID</i> stands for spatial referencing system
                     identifier and <i>Dimension</i> the number of coordinates.
                 </p>
                 <br/>
