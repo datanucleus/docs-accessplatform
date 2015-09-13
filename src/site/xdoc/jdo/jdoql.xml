@@ -491,7 +491,7 @@ class Product
 }]]></source>
  
                 <a name="methods_temporal"/>
-                <h4>Temporal Methods</h4>
+                <h4>java.util.Date Temporal Methods</h4>
                 <table>
                     <tr>
                         <th width="220">Method</th>
@@ -533,6 +533,76 @@ class Product
                         <td>getSecond()</td>
                         <td>Returns the second for the time (java.util.Date types)</td>
                         <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                    </tr>
+                </table>
+
+                <a name="methods_javatime"/>
+                <h4>java.time Temporal Methods</h4>
+                <table>
+                    <tr>
+                        <th width="220">Method</th>
+                        <th>Description</th>
+                        <th width="70">Standard</th>
+                        <th width="70">In-Memory</th>
+                    </tr>
+                    <tr>
+                        <td>getDayOfMonth()</td>
+                        <td>Returns the day (of the month) for the date (java.time.LocalXXX types)</td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                    </tr>
+                    <tr>
+                        <td>getMonthValue()</td>
+                        <td>Returns the month for the date (java.time.LocalXXX types)</td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                    </tr>
+                    <tr>
+                        <td>getYear()</td>
+                        <td>Returns the year for the date (java.util.Date types)</td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                    </tr>
+                    <tr>
+                        <td>getHour()</td>
+                        <td>Returns the hour for the time (java.time.LocalXXX types)</td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                    </tr>
+                    <tr>
+                        <td>getMinute()</td>
+                        <td>Returns the minute for the time (java.time.LocalXXX types)</td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                    </tr>
+                    <tr>
+                        <td>getSecond()</td>
+                        <td>Returns the second for the time (java.time.LocalXXX types)</td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                    </tr>
+                </table>
+
+                <a name="methods_jodatime"/>
+                <h4>Jodatime Temporal Methods</h4>
+                <table>
+                    <tr>
+                        <th width="220">Method</th>
+                        <th>Description</th>
+                        <th width="70">Standard</th>
+                        <th width="70">In-Memory</th>
+                    </tr>
+                    <tr>
+                        <td>getStart()</td>
+                        <td>Returns the start of an org.joda.time.Interval</td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                    </tr>
+                    <tr>
+                        <td>getEnd()</td>
+                        <td>Returns the end of an org.joda.time.Interval</td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                         <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     </tr>
                 </table>
@@ -616,22 +686,6 @@ class Product
                         <td>java.awt.Rectangle</td>
                         <td>getHeight()</td>
                         <td>Returns the height.
-                            <b>Only on RDBMS</b></td>
-                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
-                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
-                    </tr>
-                    <tr>
-                        <td>org.joda.time.Interval</td>
-                        <td>getStart()</td>
-                        <td>Returns the start date/time object.
-                            <b>Only on RDBMS</b></td>
-                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
-                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
-                    </tr>
-                    <tr>
-                        <td>org.joda.time.Interval</td>
-                        <td>getEnd()</td>
-                        <td>Returns the end date/time object.
                             <b>Only on RDBMS</b></td>
                         <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                         <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
