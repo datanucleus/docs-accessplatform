@@ -1215,6 +1215,10 @@ public class MyClass
     @Key(converter=URLStringConverter.class)
     Map<URL, OtherEntity> myMap;
 ]]></source>
+                <p>
+                    <b>You CANNOT use an AttributeConverter for a <i>PersistenceCapable</i> type</b>. This is because a <i>PersistenceCapable</i> type requires special
+                    treatment, such as attaching a StateManager etc. 
+                </p>
                 <br/>
             </subsection>
 
@@ -1222,15 +1226,13 @@ public class MyClass
             <subsection name="TypeConverters">
                 <img src="../images/nucleus_plugin.gif" border="0" alt=""/>
                 <p>
-                    By default DataNucleus will store the value using its own internal configuration/default
-                    for the java type and for the datastore. The user can, however, change that by making use of a
-                    <i>TypeConverter</i>. You firstly need to define the <i>TypeConverter</i> class (assuming
-                    you aren't going to use an 
+                    By default DataNucleus will store the value using its own internal configuration/default for the java type and for the datastore. 
+                    The user can, however, change that by making use of a <i>TypeConverter</i>. You firstly need to define the <i>TypeConverter</i> class 
+                    (assuming you aren't going to use an 
                     <a href="https://github.com/datanucleus/datanucleus-core/tree/master/src/main/java/org/datanucleus/store/types/converters">internal DataNucleus converter</a>,
                     and for this you should refer to the
                     <a href="../extensions/type_converter.html">TypeConverter plugin-point</a>.
-                    Once you have the converter defined, and registered in a <i>plugin.xml</i> under a name you then
-                    mark the field/property to use it
+                    Once you have the converter defined, and registered in a <i>plugin.xml</i> under a name you then mark the field/property to use it
                 </p>
 <source><![CDATA[
     @Extension(vendorName="datanucleus", key="type-converter-name", value="kryo-serialise")
@@ -1241,6 +1243,10 @@ public class MyClass
                     but using the "Kryo" library. When it is stored it will be converted into a serialised form
                     and when read back in will be deserialised. You can see the example Kryo TypeConverter over
                     on <a href="https://github.com/datanucleus/datanucleus-typeconverter-kryo">GitHub</a>.
+                </p>
+                <p>
+                    <b>You CANNOT use a TypeConverter for a <i>PersistenceCapable</i> type</b>. This is because a <i>PersistenceCapable</i> type requires special
+                    treatment, such as attaching a StateManager etc. 
                 </p>
             </subsection>
 
