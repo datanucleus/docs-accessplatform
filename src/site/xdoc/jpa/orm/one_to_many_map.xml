@@ -74,8 +74,8 @@ public class Address {...}]]></source>
                 <img src="../../images/orm/relationship_1_N_uni_map_simple_pc_db.gif" border="0" alt=""/>
                 <br/>
                 <p>
-                    You can configure the names of the columns in the join table using the <i>joinColumns</i>
-                    attributes of the various annotations.
+                    You can configure the names of the key column(s) in the join table using the <i>joinColumns</i> attribute of @CollectionTable, 
+                    or the names of the value column(s) using @Column for the field/method.
                 </p>
                 <p>
                     Please note that the column ADPT_PK_IDX is added by DataNucleus when the column type of the key is not valid to be
@@ -111,8 +111,8 @@ public class Account
                 <img src="../../images/orm/relationship_1_N_uni_map_simple_simple_db.gif" border="0" alt=""/>
                 <br/>
                 <p>
-                    You can configure the names of the columns in the join table using the <i>joinColumns</i>
-                    attributes of the various annotations.
+                    You can configure the names of the key column(s) in the join table using the <i>joinColumns</i> attribute of @CollectionTable, 
+                    or the names of the value column(s) using @Column for the field/method.
                 </p>
                 <p>
                     Please note that the column ADPT_PK_IDX is added by DataNucleus when the column type of the key is not valid to be
