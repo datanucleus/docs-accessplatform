@@ -43,8 +43,9 @@
                 <p>
                     You have some additional control over whether to actually create the schema, or whether to just
                     output DDL for the schema (which you could apply yourself) - see the persistence property
-                    <b>javax.persistence.schema-generation-target</b> which can be set to <i>scripts</i> to just create 
-                    the DDL.
+                    <b>javax.persistence.schema-generation.scripts.create-target</b> which can be set to the filename for the DDL to just create the DDL.
+                    Similarly if wanting the DDL for dropping the schema, the persistence property
+                    <b>javax.persistence.schema-generation.scripts.drop-target</b> can be set to the filename for the DDL.
                 </p>
                 <p>
                     For RDBMS there are a few extensions here that are also worthy of mention, in that you can define 
@@ -218,6 +219,8 @@ public class MyClass {...}]]></source>
                     <a href="emf.html#persistenceunit">persistence-unit</a> name defines all classes, metadata 
                     files, and jars that make up that unit. Consequently, running DataNucleus SchemaTool
                     with a persistence unit name will create the schema for all classes that are part of that unit.
+                    <b>Important : if using SchemaTool with a persistence-unit make sure you omit <i>javax.persistence.schema-generation</i> properties
+                    from your persistence-unit.</b>
                 </li>
             </ul>
             <p>
