@@ -110,9 +110,12 @@ datanucleus.ConnectionPassword='password'</source>
                     following provisos
                 </p>
                 <ul>
-                    <li><b>INNODB</b> tables must be used since it is the only table type that allows foreign keys etc at 
-                        the moment. You can however define what type your table uses by setting the &lt;class&gt;
-                        extension "mysql-engine-type" to be MyISAM or whatever for the class being persisted.</li>
+                    <li>You can set the table (engine) type for any created tables via persistence property <b>datanucleus.rdbms.mysql.engineType</b>
+                        or by setting the extension metadata on a class with key <i>mysql-engine-type</i>. The default is INNODB</li>
+                    <li>You can set the collation type for any created tables via persistence property <b>datanucleus.rdbms.mysql.collation</b>
+                        or by setting the extension metadata on a class with key <i>mysql-collation</i></li>
+                    <li>You can set the character set for any created tables via persistence property <b>datanucleus.rdbms.mysql.characterSet</b>
+                        or by setting the extension metadata on a class with key <i>mysql-character-set</i></li>
                     <li>JDOQL.isEmpty()/contains() will not work in MySQL 4.0 (or earlier) since the query uses EXISTS 
                         and that is only available from MySQL 4.1</li>
                     <li>MySQL on Windows MUST specify <i>datanucleus.identifier.case</i> as "LowerCase" since the MySQL server 
