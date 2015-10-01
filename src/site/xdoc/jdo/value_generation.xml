@@ -371,6 +371,7 @@ public class MyClass
                     This generator creates identities with 16 characters in string format. The identity contains the IP 
                     address of the local machine where DataNucleus is running, as well as other necessary components to provide 
                     uniqueness across time.
+                    <b>Note that this 'string' contains non-standard characters so is not usable on all datastores. You are better off with a standard UUID in most situations</b>
                 </p>
                 <p>
                     This generator can be used in concurrent applications. It is especially useful in situations where large 
