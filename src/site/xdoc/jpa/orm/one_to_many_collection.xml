@@ -469,7 +469,7 @@ public class Account
 {
     ...
 
-    @Persistent
+    @ElementCollection
     @Convert(CollectionStringToStringConverter.class)
     @Column(name="ADDRESSES")
     Collection<String> addresses;
