@@ -9,28 +9,24 @@
     <body>
         <section name="JDO : 1-N Relationships with Collections">
             <p>
-				You have a 1-N (one to many) or N-1 (many to one) when you have one object of a class that has a Collection of objects of 
-                another class. <b>Please note that Collections allow duplicates, and so the persistence process reflects this with the
-                choice of primary keys</b>. There are two ways in which you can represent this in a datastore : 
-			    <b>Join Table</b> (where a join table is used to provide the relationship mapping between the objects), and 
-				<b>Foreign-Key</b> (where a foreign key is placed in the table of the object contained in the Collection.
+				You have a 1-N (one to many) or N-1 (many to one) when you have one object of a class that has a Collection of objects of another class. 
+				<b>Please note that Collections allow duplicates whilst Sets don't allow duplicates, and so the persistence process reflects this with the choice of primary keys.</b>. 
 		    </p>
             <p>
-                The various possible relationships are described below.
+                Various possible relationships are described below.
             </p>
             <ul>
                 <li><a href="#join_uni">1-N Unidirectional using Join Table</a></li>
                 <li><a href="#fk_uni">1-N Unidirectional using Foreign-Key</a></li>
                 <li><a href="#join_bi">1-N Bidirectional using Join Table</a></li>
                 <li><a href="#fk_bi">1-N Bidirectional using Foreign-Key</a></li>
-                <li><a href="#join_nonpc">1-N Unidirectional of non-PC using Join Table</a></li>
-                <li><a href="#converter_nonpc">1-N Unidirectional of non-PC using converter into single column</a></li>
+                <li><a href="#join_nonpc">Collection of non-PC using Join Table</a></li>
+                <li><a href="#converter_nonpc">Collection of non-PC using converter into single column</a></li>
                 <li><a href="embedded.html#Collection">1-N embedded elements using Join Table</a></li>
                 <li><a href="serialised.html#Collection">1-N Serialised collection</a></li>
                 <li><a href="#shared_join">1-N using shared join table</a></li>
                 <li><a href="#shared_fk">1-N using shared foreign key</a></li>
-                <li><a href="compound_identity.html#1_N_coll_bi">1-N Bidirectional "Compound Identity" (owner object 
-                as part of PK in element)</a></li>
+                <li><a href="compound_identity.html#1_N_coll_bi">1-N Bidirectional "Compound Identity" (owner object as part of PK in element)</a></li>
             </ul>
             <p>
                 <b>Important : If you declare a field as a Collection, you can instantiate it as either Set-based
@@ -133,20 +129,14 @@ public class Address
                     If you wish to fully define the schema table and column names etc, follow these tips
                 </p>
                 <ul>
-                    <li>To specify the name of the table where a class is stored, specify the <i>table</i> attribute on the <b>class</b>
-                        element</li>
-                    <li>To specify the names of the columns where the fields of a class are stored, specify the <i>column</i> attribute
-                        on the <b>field</b> element.</li>
-                    <li>To specify the name of the join table, specify the <i>table</i> attribute on the <b>field</b> element
-                        with the collection.</li>
-                    <li>To specify the names of the join table columns, use the <i>column</i> attribute of <i>join</i>, <i>element</i>
-                        elements.</li>
-                    <li>To specify the foreign-key between container table and join table, specify &lt;foreign-key&gt; below
-                        the &lt;join&gt; element.</li>
+                    <li>To specify the name of the table where a class is stored, specify the <i>table</i> attribute on the <b>class</b> element</li>
+                    <li>To specify the names of the columns where the fields of a class are stored, specify the <i>column</i> attribute on the <b>field</b> element.</li>
+                    <li>To specify the name of the join table, specify the <i>table</i> attribute on the <b>field</b> element with the collection.</li>
+                    <li>To specify the names of the join table columns, use the <i>column</i> attribute of <i>join</i>, <i>element</i> elements.</li>
+                    <li>To specify the foreign-key between container table and join table, specify &lt;foreign-key&gt; below the &lt;join&gt; element.</li>
                     <li>To specify the foreign-key between join table and element table, specify &lt;foreign-key&gt; below
                         either the &lt;field&gt; element or the &lt;element&gt; element.</li>
-                    <li>If you wish to share the join table with another relation then use the 
-                        <a href="#shared_join">DataNucleus "shared join table" extension</a></li>
+                    <li>If you wish to share the join table with another relation then use the <a href="#shared_join">DataNucleus "shared join table" extension</a></li>
                     <li>The join table will, by default, be given a primary key. If you want to omit this then you can turn it off
                         using the DataNucleus metadata extension "primary-key" (within &lt;join&gt;) set to false.</li>
                     <li>The column "ADPT_PK_IDX" is added by DataNucleus so that duplicates can be stored. You can control this by
@@ -217,10 +207,8 @@ public class Address
                     If you wish to fully define the schema table and column names etc, follow these tips
                 </p>
                 <ul>
-                    <li>To specify the name of the table where a class is stored, specify the <i>table</i> attribute on the <b>class</b>
-                        element</li>
-                    <li>To specify the names of the columns where the fields of a class are stored, specify the <i>column</i> attribute
-                        on the <b>field</b> element.</li>
+                    <li>To specify the name of the table where a class is stored, specify the <i>table</i> attribute on the <b>class</b> element</li>
+                    <li>To specify the names of the columns where the fields of a class are stored, specify the <i>column</i> attribute on the <b>field</b> element.</li>
                     <li>To specify the foreign-key between container table and element table, specify &lt;foreign-key&gt; below
                         either the &lt;field&gt; element or the &lt;element&gt; element.</li>
                 </ul>
@@ -288,8 +276,7 @@ public class Address
 }]]></source>
                 <table>
                     <tr>
-                        <td>The crucial part is the <i>join</i> element on the field element - this signals to 
-                            JDO to use a join table.</td>
+                        <td>The crucial part is the <i>join</i> element on the field element - this signals to JDO to use a join table.</td>
                     </tr>
                 </table>
                 <p>
@@ -307,20 +294,14 @@ public class Address
                     If you wish to fully define the schema table and column names etc, follow these tips
                 </p>
                 <ul>
-                    <li>To specify the name of the table where a class is stored, specify the <i>table</i> attribute on the <b>class</b>
-                        element</li>
-                    <li>To specify the names of the columns where the fields of a class are stored, specify the <i>column</i> attribute
-                        on the <b>field</b> element.</li>
-                    <li>To specify the name of the join table, specify the <i>table</i> attribute on the <b>field</b> element
-                        with the collection.</li>
-                    <li>To specify the names of the join table columns, use the <i>column</i> attribute of <i>join</i>, <i>element</i>
-                        elements.</li>
-                    <li>To specify the foreign-key between container table and join table, specify &lt;foreign-key&gt; below
-                        the &lt;join&gt; element.</li>
+                    <li>To specify the name of the table where a class is stored, specify the <i>table</i> attribute on the <b>class</b> element</li>
+                    <li>To specify the names of the columns where the fields of a class are stored, specify the <i>column</i> attribute on the <b>field</b> element.</li>
+                    <li>To specify the name of the join table, specify the <i>table</i> attribute on the <b>field</b> element with the collection.</li>
+                    <li>To specify the names of the join table columns, use the <i>column</i> attribute of <i>join</i>, <i>element</i> elements.</li>
+                    <li>To specify the foreign-key between container table and join table, specify &lt;foreign-key&gt; below the &lt;join&gt; element.</li>
                     <li>To specify the foreign-key between join table and element table, specify &lt;foreign-key&gt; below
                         either the &lt;field&gt; element or the &lt;element&gt; element.</li>
-                    <li>If you wish to share the join table with another relation then use the
-                        <a href="#shared_join">DataNucleus "shared join table" extension</a></li>
+                    <li>If you wish to share the join table with another relation then use the <a href="#shared_join">DataNucleus "shared join table" extension</a></li>
                     <li>The join table will, by default, be given a primary key. If you want to omit this then you can turn it off
                         using the DataNucleus metadata extension "primary-key" (within &lt;join&gt;) set to false.</li>
                     <li>The column "ADPT_PK_IDX" is added by DataNucleus so that duplicates can be stored. You can control this by
@@ -412,7 +393,7 @@ public class Address
             </subsection>
         </section>
 
-        <section name="1-N Collection of non-persistable objects">
+        <section name="Collection of non-persistable objects">
             <a name="join_nonpc"/>
             <p>
                 All of the examples above show a 1-N relationship between 2 <i>persistable</i> classes. DataNucleus can
@@ -459,7 +440,7 @@ public class Account
             </p>
         </section>
 
-        <section name="1-N Collection of non-persistable objects using AttributeConverter">
+        <section name="Collection of non-persistable objects using AttributeConverter">
             <a name="converter_nonpc"/>
             <p>
                 Just like in the above example, here we have a Collection of simple types. In this case we are wanting to store this Collection into

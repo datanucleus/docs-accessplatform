@@ -9,21 +9,20 @@
     <body>
         <section name="JPA : 1-N Relationships with Collections">
             <p>
-				You have a 1-N (one to many) when you have one object of a class that has a Collection of objects of 
-                another class. <b>Please note that Collections allow duplicates, and so the persistence process reflects 
-                this with the choice of primary keys</b>. There are two ways in which you can represent this in a datastore
-			    : <b>Join Table</b> (where a join table is used to provide the relationship mapping between the objects), 
+                You have a 1-N (one to many) when you have one object of a class that has a Collection of objects of another class. 
+				<b>Please note that Collections allow duplicates whilst Sets don't allow duplicates, and so the persistence process reflects this with the choice of primary keys</b>.
+				There are two ways in which you can represent this in a datastore : <b>Join Table</b> (where a join table is used to provide the relationship mapping between the objects), 
                 and <b>Foreign-Key</b> (where a foreign key is placed in the table of the object contained in the Collection.
             </p>
             <p>
-                The various possible relationships are described below.
+                Various possible relationships are described below.
             </p>
             <ul>
                 <li><a href="#join_uni">1-N Unidirectional using Join Table</a></li>
                 <li><a href="#fk_uni">1-N Unidirectional using Foreign-Key</a></li>
                 <li><a href="#join_bi">1-N Bidirectional using Join Table</a></li>
                 <li><a href="#fk_bi">1-N Bidirectional using Foreign-Key</a></li>
-                <li><a href="#join_nonpc">1-N Unidirectional of non-persistable using Join Table</a></li>
+                <li><a href="#join_nonpc">Collection of non-persistable using Join Table</a></li>
             </ul>
             <p>
                 <b>Please note that RDBMS supports the full range of options on this page, whereas other datastores
@@ -135,7 +134,8 @@ public class Address
                         element with the collection.</li>
                     <li>To specify the names of the join table columns, use the <i>join-column</i> and 
                         <i>inverse-join-column</i> elements below the <i>join-table</i> element.</li>
-                    <li>The join table will NOT be given a primary key (since a Collection can have duplicates).</li>
+                    <li>If the field type is a Set the join table will be given a primary key (since a Set can't have duplicates), whilst for other Collection
+                        types a primary key is not assigned (since they can have duplicates).</li>
                 </ul>
                 <br/>
             </subsection>
@@ -320,7 +320,8 @@ public class Address
                         <b>one-to-many</b> element with the collection.</li>
                     <li>To specify the names of the join table columns, use the <i>join-column</i> and 
                         <i>inverse-join-column</i> elements below the <i>join-table</i> element.</li>
-                    <li>The join table will NOT be given a primary key (since a Collection can have duplicates).</li>
+                    <li>If the field type is a Set the join table will be given a primary key (since a Set can't have duplicates), whilst for other Collection
+                        types a primary key is not assigned (since they can have duplicates).</li>
                     <li>When forming the relation please make sure that <b>you set the relation at BOTH sides</b> since 
                         DataNucleus would have no way of knowing which end is correct if you only set one end.</li>
                 </ul>
@@ -416,10 +417,9 @@ public class Address
             </subsection>
         </section>
 
-        <section name="1-N Collection of non-Entity objects">
+        <section name="Collection of non-Entity objects">
             <a name="join_nonpc"/>
             <p>
-                In JPA1 you cannot have a 1-N collection of non-Entity objects. 
                 All of the examples above show a 1-N relationship between 2 persistable classes. 
                 If you want the element to be primitive or Object types then follow this section. For example, when you 
                 have a Collection of Strings. This will be persisted in the same way as the "Join Table" 
