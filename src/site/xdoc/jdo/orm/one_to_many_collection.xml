@@ -24,6 +24,7 @@
                 <li><a href="#join_bi">1-N Bidirectional using Join Table</a></li>
                 <li><a href="#fk_bi">1-N Bidirectional using Foreign-Key</a></li>
                 <li><a href="#join_nonpc">1-N Unidirectional of non-PC using Join Table</a></li>
+                <li><a href="#converter_nonpc">1-N Unidirectional of non-PC using converter into single column</a></li>
                 <li><a href="embedded.html#Collection">1-N embedded elements using Join Table</a></li>
                 <li><a href="serialised.html#Collection">1-N Serialised collection</a></li>
                 <li><a href="#shared_join">1-N using shared join table</a></li>
@@ -456,6 +457,64 @@ public class Account
                 Please note that the column ADPT_PK_IDX is added by DataNucleus so that duplicates can be stored.
                 You can control the name of this column by adding an &lt;order&gt; element and specifying the column name for the order column (within &lt;field&gt;).
             </p>
+        </section>
+
+        <section name="1-N Collection of non-persistable objects using AttributeConverter">
+            <a name="converter_nonpc"/>
+            <p>
+                Just like in the above example, here we have a Collection of simple types. In this case we are wanting to store this Collection into
+                a single column in the owning table. We do this by using a JDO AttributeConverter.
+            </p>
+<source><![CDATA[
+public class Account
+{
+    ...
+
+    @Persistent
+    @Convert(CollectionStringToStringConverter.class)
+    @Column(name="ADDRESSES")
+    Collection<String> addresses;
+}]]></source>
+            <p>
+                and then define our converter. You can clearly define your conversion process how you want it. You could, for example, convert the
+                Collection into comma-separated strings, or could use JSON, or XML, or some other format.
+            </p>
+<source><![CDATA[
+
+public class CollectionToStringConverter implements AttributeConverter<Collection<String>, String>
+{
+    /* (non-Javadoc)
+     * @see javax.jdo.AttributeConverter#convertToDatastore(java.lang.Object)
+     */
+    @Override
+    public String convertToDatastore(Collection<String> attribute)
+    {
+        if (attribute == null)
+        {
+            return null;
+        }
+
+        StringBuilder str = new StringBuilder();
+        ... convert Collection to String
+        return str.toString();
+    }
+
+    /* (non-Javadoc)
+     * @see javax.jdo.AttributeConverter#convertToAttribute(java.lang.Object)
+     */
+    @Override
+    public Collection<String> convertToAttribute(String columnValue)
+    {
+        if (columnValue == null)
+        {
+            return null;
+        }
+
+        Collection<String> coll = new HashSet<String>();
+        ... convert String to Collection
+        return coll;
+    }
+}]]></source>
         </section>
 
         <section name="Embedded into a Join Table">
