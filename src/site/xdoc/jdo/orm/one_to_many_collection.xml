@@ -462,12 +462,8 @@ public class Account
             </p>
 <source><![CDATA[
 
-public class CollectionToStringConverter implements AttributeConverter<Collection<String>, String>
+public class CollectionStringToStringConverter implements AttributeConverter<Collection<String>, String>
 {
-    /* (non-Javadoc)
-     * @see javax.jdo.AttributeConverter#convertToDatastore(java.lang.Object)
-     */
-    @Override
     public String convertToDatastore(Collection<String> attribute)
     {
         if (attribute == null)
@@ -480,10 +476,6 @@ public class CollectionToStringConverter implements AttributeConverter<Collectio
         return str.toString();
     }
 
-    /* (non-Javadoc)
-     * @see javax.jdo.AttributeConverter#convertToAttribute(java.lang.Object)
-     */
-    @Override
     public Collection<String> convertToAttribute(String columnValue)
     {
         if (columnValue == null)
