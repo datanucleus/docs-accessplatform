@@ -24,6 +24,7 @@
                 <li><a href="#join_bi">1-N Bidirectional using Join Table</a></li>
                 <li><a href="#fk_bi">1-N Bidirectional using Foreign-Key</a></li>
                 <li><a href="#join_nonpc">1-N Unidirectional of non-persistable using Join Table</a></li>
+                <li><a href="#converter_nonpc">Collection of non-persistable using AttributeConverter into single column</a></li>
             </ul>
             <p>
                 <b>Please note that RDBMS supports the full range of options on this page, whereas other datastores
@@ -456,6 +457,56 @@ public class Account
                 The ACCOUNT table is as before, but this time we only have the "join table".
                 Use @Column on the field/method to define the column details of the element in the join table.
             </p>
+        </section>
+
+        <section name="Collection of non-persistable objects using AttributeConverter">
+            <a name="converter_nonpc"/>
+            <p>
+                Just like in the above example, here we have a Collection of simple types. In this case we are wanting to store this Collection into
+                a single column in the owning table. We do this by using a JPA AttributeConverter.
+            </p>
+<source><![CDATA[
+public class Account
+{
+    ...
+
+    @ElementCollection
+    @Convert(CollectionStringToStringConverter.class)
+    @Column(name="ADDRESSES")
+    Collection<String> addresses;
+}]]></source>
+            <p>
+                and then define our converter. You can clearly define your conversion process how you want it. You could, for example, convert the
+                Collection into comma-separated strings, or could use JSON, or XML, or some other format.
+            </p>
+<source><![CDATA[
+
+public class CollectionStringToStringConverter implements AttributeConverter<Collection<String>, String>
+{
+    public String convertToDatabaseColumn(Collection<String> attribute)
+    {
+        if (attribute == null)
+        {
+            return null;
+        }
+
+        StringBuilder str = new StringBuilder();
+        ... convert Collection to String
+        return str.toString();
+    }
+
+    public Collection<String> convertToEntityAttribute(String columnValue)
+    {
+        if (columnValue == null)
+        {
+            return null;
+        }
+
+        Collection<String> coll = new HashSet<String>();
+        ... convert String to Collection
+        return coll;
+    }
+}]]></source>
         </section>
     </body>
 </document>
