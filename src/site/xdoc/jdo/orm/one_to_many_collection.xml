@@ -436,7 +436,7 @@ public class Account
             </p>
         </section>
 
-        <section name="1-N Collection of non-persistable objects using AttributeConverter">
+        <section name="Collection of non-persistable objects using AttributeConverter">
             <a name="converter_nonpc"/>
             <p>
                 Just like in the above example, here we have a Collection of simple types. In this case we are wanting to store this Collection into
@@ -460,10 +460,6 @@ public class Account
 
 public class CollectionStringToStringConverter implements AttributeConverter<Collection<String>, String>
 {
-    /* (non-Javadoc)
-     * @see javax.jdo.AttributeConverter#convertToDatastore(java.lang.Object)
-     */
-    @Override
     public String convertToDatastore(Collection<String> attribute)
     {
         if (attribute == null)
@@ -476,10 +472,6 @@ public class CollectionStringToStringConverter implements AttributeConverter<Col
         return str.toString();
     }
 
-    /* (non-Javadoc)
-     * @see javax.jdo.AttributeConverter#convertToAttribute(java.lang.Object)
-     */
-    @Override
     public Collection<String> convertToAttribute(String columnValue)
     {
         if (columnValue == null)

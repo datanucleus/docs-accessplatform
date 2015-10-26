@@ -23,7 +23,8 @@
                 <li><a href="#fk_ordered">1-N Ordered List using Foreign-Key</a></li>
                 <li><a href="#join_bi">1-N Bidirectional using Join Table</a></li>
                 <li><a href="#fk_bi">1-N Bidirectional using Foreign-Key</a></li>
-                <li><a href="#join_nonpc">1-N Unidirectional of non-PC using Join Table</a></li>
+                <li><a href="#join_nonpc">List of non-PC using Join Table</a></li>
+                <li><a href="#converter_nonpc">List of non-PC using AttributeConverter into single column</a></li>
                 <li><a href="embedded.html#Collection">1-N embedded elements using Join Table</a></li>
                 <li><a href="serialised.html#Collection">1-N Serialised List</a></li>
                 <li><a href="one_to_many_collection.html#shared_join">1-N using shared join table</a></li>
@@ -463,7 +464,7 @@ public class Address
             </subsection>
         </section>
 
-        <section name="1-N List of non-persistable objects">
+        <section name="List of non-persistable objects">
             <a name="join_nonpc"/>
             <p>
                 All of the examples above show a 1-N relationship between 2 <i>persistable</i> classes. DataNucleus can
@@ -502,6 +503,56 @@ public class Account
                 part of the primary key (along with the FK back to the ACCOUNT table). You can override the default naming of this column
                 by specifying the &lt;order&gt; tag.
             </p>
+        </section>
+
+        <section name="List of non-persistable objects using AttributeConverter">
+            <a name="converter_nonpc"/>
+            <p>
+                Just like in the above example, here we have a List of simple types. In this case we are wanting to store this List into
+                a single column in the owning table. We do this by using a JDO AttributeConverter.
+            </p>
+<source><![CDATA[
+public class Account
+{
+    ...
+
+    @Persistent
+    @Convert(ListStringToStringConverter.class)
+    @Column(name="ADDRESSES")
+    List<String> addresses;
+}]]></source>
+            <p>
+                and then define our converter. You can clearly define your conversion process how you want it. You could, for example, convert the
+                Collection into comma-separated strings, or could use JSON, or XML, or some other format.
+            </p>
+<source><![CDATA[
+
+public class ListStringToStringConverter implements AttributeConverter<List<String>, String>
+{
+    public String convertToDatastore(List<String> attribute)
+    {
+        if (attribute == null)
+        {
+            return null;
+        }
+
+        StringBuilder str = new StringBuilder();
+        ... convert List to String
+        return str.toString();
+    }
+
+    public List<String> convertToAttribute(String columnValue)
+    {
+        if (columnValue == null)
+        {
+            return null;
+        }
+
+        List<String> coll = new ArrayList<String>();
+        ... convert String to List
+        return coll;
+    }
+}]]></source>
         </section>
 
         <section name="Embedded into a Join Table">
