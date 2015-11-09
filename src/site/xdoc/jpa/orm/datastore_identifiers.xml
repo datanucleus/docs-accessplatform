@@ -12,23 +12,26 @@
                 A datastore identifier is a simple name of a database object, such as a column, table, index, or view, and is composed of a
                 sequence of letters, digits, and underscores ( _ ) that represents it's name. DataNucleus allows users to specify the names of tables, 
                 columns, indexes etc but if the user doesn't specify these DataNucleus will generate names.
-                With RDBMS the generation of identifier names is controlled by an IdentifierFactory, and DataNucleus provides a default implementation depending
-                on the API in use. With non-RDBMS the generation of identifier names is controlled by a NamingFactory and again a default implementation is
-                assigned dependent on the API in use.
             </p>
             <p>
-                Generation of identifier names is controlled by an IdentifierFactory, and DataNucleus provides a default implementation. 
+                With RDBMS the generation of identifier names is controlled by an IdentifierFactory, and DataNucleus provides a default implementation for JPA.
                 You can <a href="../../extensions/rdbms_identifier_factory.html">provide your own RDBMS IdentifierFactory plugin</a> 
-                or your own <a href="../..n/extensions/identifier_namingfactory.html">provide your own NamingFactory plugin</a> 
                 to give your own preferred naming if so desired.
                 For RDBMS you set the <i>RDBMS IdentifierFactory</i> by setting the persistence property <i>datanucleus.identifierFactory</i>. 
-                For non-RDBMS you set the <i>NamingFactory</i> by setting the persistence property <i>datanucleus.identifier.namingFactory</i>. 
-                Set it to the symbolic name of the factory you want to use. JDO doesn't define what the names of datastore identifiers should be but DataNucleus 
-                provides the following factories for your use.
+                Set it to the symbolic name of the factory you want to use.
+            </p>
+            <ul>
+                <li><a href="#rdbms_jpa">jpa</a> RDBMS IdentifierFactory (default for JPA persistence for RDBMS)</li>
+            </ul>
+            <p>
+                With non-RDBMS the generation of identifier names is controlled by a NamingFactory and again a default implementation for JPA.
+                You can <a href="../../extensions/identifier_namingfactory.html">provide your own NamingFactory plugin</a> 
+                to give your own preferred naming if so desired.
+                You set the <i>NamingFactory</i> by setting the persistence property <i>datanucleus.identifier.namingFactory</i>. 
+                to give your own preferred naming if so desired. Set it to the symbolic name of the factory you want to use.
             </p>
             <ul>
                 <li><a href="#jpa">jpa</a> NamingFactory (default for JPA persistence for non-RDBMS)</li>
-                <li><a href="#rdbms_jpa">jpa</a> RDBMS IdentifierFactory (default for JPA persistence for RDBMS)</li>
             </ul>
             <p>
                 In describing the different possible naming conventions available out of the box with DataNucleus we'll use the
