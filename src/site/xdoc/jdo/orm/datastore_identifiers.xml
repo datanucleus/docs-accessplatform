@@ -15,10 +15,11 @@
             </p>
             <p>
                 Generation of identifier names for RDBMS is controlled by an IdentifierFactory, and DataNucleus provides a default implementation. 
-                You can <a href="../..//extensions/rdbms_identifier_factory.html">provide your own RDBMS IdentifierFactory plugin</a> 
-                or your own <a href="../../extensions/identifier_namingfactory.html">provide your own NamingFactory plugin</a> 
+                You can <a href="../../extensions/rdbms_identifier_factory.html">provide your own RDBMS IdentifierFactory plugin</a> 
                 to give your own preferred naming if so desired.
-                For RDBMS you set the <i>RDBMS IdentifierFactory</i> by setting the persistence property <i>datanucleus.identifierFactory</i>. 
+                You set the <i>RDBMS IdentifierFactory</i> by setting the persistence property <i>datanucleus.identifierFactory</i>. 
+                Set it to the symbolic name of the factory you want to use. JDO doesn't define what the names of datastore identifiers should be but DataNucleus 
+                provides the following factories for your use.
             </p>
             <ul>
                 <li><a href="#rdbms_datanucleus2">datanucleus2</a> RDBMS IdentifierFactory (default for JDO persistence)</li>
@@ -30,7 +31,7 @@
                 Generation of identifier names for non-RDBMS datastores is controlled by an NamingFactory, and DataNucleus provides a default implementation. 
                 You can <a href="../../extensions/identifier_namingfactory.html">provide your own NamingFactory plugin</a>
                 to give your own preferred naming if so desired.
-                For non-RDBMS you set the <i>NamingFactory</i> by setting the persistence property <i>datanucleus.identifier.namingFactory</i>. 
+                You set the <i>NamingFactory</i> by setting the persistence property <i>datanucleus.identifier.namingFactory</i>. 
                 Set it to the symbolic name of the factory you want to use. JDO doesn't define what the names of datastore identifiers should be but DataNucleus 
                 provides the following factories for your use.
             </p>
