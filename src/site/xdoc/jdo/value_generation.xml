@@ -28,7 +28,9 @@
                     a sequence value using a table.</li>
                 <li><a href="#uuidstring"><b>uuid-string</b></a> - this is a UUID in string form</li>
                 <li><a href="#uuidhex"><b>uuid-hex</b></a> - this is a UUID in hexadecimal form</li>
-                <li><a href="#uuid"><b>uuid</b></a> - provides a pure UUID utilising the JDK1.5 UUID class
+                <li><a href="#uuid"><b>uuid</b></a> - provides a pure UUID String utilising the JDK1.5 UUID class
+                    <img src="../images/nucleus_extension.gif" border="0" alt=""/></li>
+                <li><a href="#uuid-object"><b>uuid-object</b></a> - provides a pure UUID object utilising the JDK1.5 UUID class
                     <img src="../images/nucleus_extension.gif" border="0" alt=""/></li>
                 <li><a href="#auid"><b>auid</b></a> - provides a pure UUID following the 
                     OpenGroup standard <img src="../images/nucleus_extension.gif" border="0" alt=""/></li>
@@ -389,8 +391,7 @@ public class MyClass
     ...
 </class>]]></source>
                 <p>
-                    To configure an <u>application identity</u> class to use this generation method you simply add this to the 
-                    class' JDO Meta-Data.
+                    To configure an <u>application identity</u> class to use this generation method you simply add this to the class' JDO Meta-Data.
                 </p>
                 <source><![CDATA[
 <class name="myclass" ... >
@@ -423,8 +424,7 @@ public class MyClass
     ...
 </class>]]></source>
                 <p>
-                    To configure an <u>application identity</u> class to use this generation method you simply add this to the 
-                    class' JDO Meta-Data.
+                    To configure an <u>application identity</u> class to use this generation method you simply add this to the class' JDO Meta-Data.
                 </p>
                 <source><![CDATA[
 <class name="myclass" ... >
@@ -453,8 +453,7 @@ public class MyClass
     ...
 </class>]]></source>
                 <p>
-                    To configure an <u>application identity</u> class to use this generation method you simply add this to the 
-                    class' JDO Meta-Data.
+                    To configure an <u>application identity</u> class to use this generation method you simply add this to the class' JDO Meta-Data.
                 </p>
                 <source><![CDATA[
 <class name="myclass" ... >
@@ -484,8 +483,7 @@ public class MyClass
     ...
 </class>]]></source>
                 <p>
-                    To configure an <u>application identity</u> class to use this generation method you simply add this to the
-                    class' JDO Meta-Data.
+                    To configure an <u>application identity</u> class to use this generation method you simply add this to the class' JDO Meta-Data.
                 </p>
                 <source><![CDATA[
 <class name="myclass" ... >
@@ -494,8 +492,7 @@ public class MyClass
 </class>]]></source>
                 <p>
                     This value generator will <b>NOT</b> guarantee to generate values unique across different JVMs.
-                    This is because it will select the "max+1" and before creating the record another thread may come in
-                    and insert one.
+                    This is because it will select the "max+1" and before creating the record another thread may come in and insert one.
                 </p>
                 <br/>
             </subsection>
@@ -504,7 +501,7 @@ public class MyClass
             <subsection name="uuid">
                 <img src="../images/nucleus_extension.gif" border="0" alt=""/>
                 <p>
-                    This generator uses the JDK1.5 UUID class to generate values. The values are 128-bit 
+                    This generator uses the JDK1.5 UUID class to generate String values. The values are 128-bit 
                     (36 character) of the form "0e400c2c-b3a0-4786-a0c6-f2607bf643eb"
                 </p>
                 <p>
@@ -514,8 +511,7 @@ public class MyClass
                     database would break performance limits.
                 </p>
                 <p>
-                    For a class using <u>datastore identity</u> you need to add metadata something like the 
-                    following
+                    For a class using <u>datastore identity</u> you need to add metadata something like the following
                 </p>
                 <source><![CDATA[
 <class name="myclass" ... >
@@ -538,6 +534,41 @@ public class MyClass
 {
     @Persistent(customValueStrategy="uuid")
     String myField;
+}]]></source>
+                <p>
+                    This value generator will generate values unique across different JVMs
+                </p>
+                <br/>
+            </subsection>
+
+            <a name="uuid-object"/>
+            <subsection name="uuid-object">
+                <img src="../images/nucleus_extension.gif" border="0" alt=""/>
+                <p>
+                    This generator uses the JDK1.5 UUID class to generate UUID values. The values are 128-bit 
+                    (36 character) of the form "0e400c2c-b3a0-4786-a0c6-f2607bf643eb"
+                </p>
+                <p>
+                    This generator can be used in concurrent applications. It is especially useful in situations 
+                    where large numbers of transactions within a certain amount of time have to be made, and the 
+                    additional overhead of synchronizing the concurrent creation of unique identifiers through the 
+                    database would break performance limits.
+                </p>
+                <p>
+                    To configure an <u>application identity</u> class to use this generation method you simply add this to the class' JDO Meta-Data.
+                </p>
+                <source><![CDATA[
+<class name="myclass" ... >
+    <field name="myfield" primary-key="true" value-strategy="uuid-object"/>
+    ...
+</class>
+
+Or using annotations
+
+public class MyClass
+{
+    @Persistent(customValueStrategy="uuid-object")
+    UUID myField;
 }]]></source>
                 <p>
                     This value generator will generate values unique across different JVMs
