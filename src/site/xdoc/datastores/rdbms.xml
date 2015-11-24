@@ -65,6 +65,7 @@
                 <li><a href="#derby">Apache Derby</a></li>
                 <li><a href="#sqlserver">Microsoft SQLServer</a></li>
                 <li><a href="#sybase">Sybase</a></li>
+                <li><a href="#sqlanywhere">SQL Anywhere</a></li>
                 <li><a href="#oracle">Oracle</a></li>
                 <li><a href="#db2">IBM DB2</a></li>
                 <li><a href="#informix">IBM Informix</a></li>
@@ -202,6 +203,20 @@ datanucleus.ConnectionPassword='password'
                 <source>
 datanucleus.ConnectionDriverName=com.sybase.jdbc2.jdbc.SybDriver
 datanucleus.ConnectionURL=jdbc:sybase:Tds:'host':'port'/'db-name'
+datanucleus.ConnectionUserName='user-name'
+datanucleus.ConnectionPassword='password'
+                </source>
+            </subsection>
+
+            <a name="sqlanywhere"/>
+            <subsection name="SAP SQL Anywhere">
+                <p>
+                    To specify <a href="http://www.sap.com/pc/tech/database/software/sybase-sql-anywhere/index.html">Sybase</a> as your datastore, 
+                    you will need something like the following specifying (replacing 'db-name' with name of your database etc)
+                </p>
+                <source>
+datanucleus.ConnectionDriverName=sybase.jdbc4.sqlanywhere.IDriver
+datanucleus.ConnectionURL=jdbc:sqlanywhere:uid=DBA;pwd=sql;eng=demo
 datanucleus.ConnectionUserName='user-name'
 datanucleus.ConnectionPassword='password'
                 </source>
