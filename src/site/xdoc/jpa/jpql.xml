@@ -809,11 +809,30 @@ public class PersonName
 
     ...
 }</source></li>
+                    <li>Default constructor, and a method <i>void put(Object aliasName, Object value)</i></li>
                 </ul>
                 <p>
                     Note that if the setter property name doesn't match the query result component name, you should 
                     use <i>AS {alias}</i> in the query so they are the same.
                 </p>
+                <p>
+                    A special case, where you don't have a result class but want to easily extract multiple columns in the form of a <b>Tuple</b>
+                    JPA provides a special class <i>javax.persistence.Tuple</i> to supply as the result class in the above call. From that you
+                    can get hold of the column aliases, and their values.
+                </p>
+<source><![CDATA[
+Query<PersonName> q = em.createQuery(
+    "SELECT p.firstName, p.lastName FROM Person p WHERE p.age > 20", Tuple.class);
+List<Tuple> results = q.getResultList();
+for (Tuple t : results)
+{
+    List<TupleElement> cols = t.getElements();
+    for (TupleElement col : cols)
+    {
+        String colName = col.getAlias();
+        Object value = t.get(colname);
+    }
+}]]></source>
                 <br/>
             </subsection>
 
