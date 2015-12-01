@@ -17,37 +17,34 @@
             </p>
             <br/>
 
-            <subsection name="First-Class (FCO) Types">
+            <subsection name="Primary Types">
                 <p>
                     An object that can be <i>referred to</i> (object reference, providing a relation) and that
-                    has an "identity" is termed a <b>First Class Object (FCO)</b>. DataNucleus supports the
-                    following Java types as FCO
+                    has an "identity" is termed a <b>primary type</b>. DataNucleus supports the following Java types as <b>primary</b>
                 </p>
                 <ul>
-                    <li><b>persistable</b> : any class marked for persistence (annotations or XML) can be 
-                        persisted with its own identity in the datastore</li>
-                    <li><b>interface</b> where the field represents a <i>persistable</i> object</li>
-                    <li><b>java.lang.Object</b> where the field represents a <i>persistable</i> object</li>
+                    <li><b>persistable</b> : any <i>Entity</i> that can be persisted with its own identity in the datastore</li>
+                    <li><b>interface</b> where the interface field represents an <i>Entity</i></li>
+                    <li><b>java.lang.Object</b> where the field represents an <i>Entity</i></li>
                 </ul>
                 <br/>
             </subsection>
 
-            <subsection name="Supported Second-Class (SCO) Types">
+            <subsection name="Secondary Types">
                 <p>
-                    An object that does not have an "identity" is termed a <b>Second Class Object (SCO)</b>. 
+                    An object that does not have an "identity" is termed a <b>secondary type</b>. 
                     This is something like a String or Date field in a class, or alternatively a Collection (that 
-                    contains other objects). The table below shows the currently supported <b>SCO</b> java types 
-                    in DataNucleus. The table shows 
+                    contains other objects), or an embedded <i>Entity</i>. 
+                    The table below shows the currently supported <b>secondary</b> java types in DataNucleus. The table shows 
                 </p>
                 <ul>
                     <li><b>Extension?</b> : whether the type is JPA standard, or is a DataNucleus extension</li>
-                    <li><b>EAGER</b> : whether the field is retrieved by default when
-                        retrieving the object itself (this equates to the "default-fetch-group" concept in JDO)</li>
-                    <li><b>persistence-modifier</b> : whether the field is persisted by default, or whether
+                    <li><b>EAGER</b> : whether the field is retrieved by default when retrieving the object itself.</li>
+                    <li><b>Persistent</b> : whether the field is persisted by default, or whether
                         the user has to mark the field as persistent in XML/annotations to persist it</li>
-                    <li><b>proxied</b> : whether the field is represented by a "proxy" that intercepts
-                        any operations to detect whether it has changed internally.</li>
-                    <li><b>primary-key</b> : whether the field can be used as part of the primary-key</li>
+                    <li><b>Proxied</b> : whether the field is represented by a "proxy" that intercepts
+                        any operations to detect whether it has changed internally (such as a Collection, Map).</li>
+                    <li><b>PK</b> : whether the field can be used as part of the primary-key</li>
                 </ul>
                 <br/>
                 <table>
@@ -1180,7 +1177,7 @@ public class URLStringConverter implements AttributeConverter<URL, String>
             <subsection name="Enums">
                 <p>
                     By default an Enum is persisted as either a String form (the name), or as an integer form 
-                    (the ordinal). You control which form by specifying the @Enumerated annotation (or equivalent XML).
+                    (the ordinal). You control which form by specifying the <b>@Enumerated</b> annotation (or equivalent XML).
                 </p>
                 <p>
                     An extension to this <b>for RDBMS</b> is where you have an Enum that defines its own "value"s for the different enum options.
@@ -1236,8 +1233,7 @@ MyColour colour;]]></source>
 
             <subsection name="Eclipse EMF models">
                 <p>
-                    You could try to persist Eclipse EMF models using 
-                    <a href="http://wiki.eclipse.org/Texo">the Texo project</a> to generate POJOs
+                    You could try to persist Eclipse EMF models using  <a href="http://wiki.eclipse.org/Texo">the Texo project</a> to generate POJOs
                 </p>
             </subsection>
         </section>
