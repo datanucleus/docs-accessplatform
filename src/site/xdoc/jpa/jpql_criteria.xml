@@ -168,6 +168,18 @@ crit.where(nameEquals);]]></source>
                 <br/>
             </subsection>
 
+            <subsection name="Criteria API : Result as Tuple">
+                <p>
+                    You sometimes need to define a result for a query.
+                    You can define a result class just like with normal JPQL, but a special case is where you don't have a particular
+                    result class and want to use the <i>built-in</i> JPA standard <b>Tuple</b> class.
+                </p>
+                <source><![CDATA[
+CriteriaQuery<Tuple> crit = cb.createTupleQuery();
+]]></source>
+                <br/>
+            </subsection>
+
             <subsection name="Executing a Criteria query">
                 <p>
                     Ok, so we've seen how to generate a Criteria query. So how can we execute it ?
