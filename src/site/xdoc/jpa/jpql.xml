@@ -31,8 +31,7 @@ List results = (List)q.getResultList();</source>
 SELECT [&lt;result&gt;]
     [FROM &lt;candidate-class(es)&gt;]
     [WHERE &lt;filter&gt;]
-    [GROUP BY &lt;grouping&gt;]
-    [HAVING &lt;having&gt;]
+    [GROUP BY &lt;grouping&gt;] [HAVING &lt;having&gt;]
     [ORDER BY &lt;ordering&gt;]</source> 
                 <p>
                     The "keywords" in the query are shown in UPPER CASE are case-insensitive.
@@ -40,33 +39,44 @@ SELECT [&lt;result&gt;]
                 <br/>
             </subsection>
 
-            <a name="entities"/>
-            <subsection name="Entity Name">
+            <a name="from"/>
+            <subsection name="FROM Clause">
                 <p>
-                    In the example shown you note that we did not specify the full class name. We used 
-                    <i>Person p</i> and thereafter could refer to <i>p</i> as the alias. The <i>Person</i> is 
-                    called the <b>entity name</b> and in JPA MetaData this can be defined against each class 
-                    in its definition. For example
+                    The FROM clause defines the <i>candidate</i> entity for the query. You can specify the candidate fully-qualified, or you can specify just the 
+                    <b>entity name</b>. Using our example
                 </p>
-                <source><![CDATA[
-<entity class="org.datanucleus.company.Person" name="Person">
+<source><![CDATA[
+Using candidate name fully qualified
+SELECT p FROM org.datanucleus.company.Person p
+
+
+Using entity name
+SELECT p FROM Person p
+]]></source>
+                <p>
+                    By default the <b>entity name</b> is the last part of the class name (without the package), but you can specify it in metadata
+                </p>
+<source><![CDATA[
+Using XML
+<entity class="org.datanucleus.company.Person" name="ThePerson">
     ...
-</entity>]]></source>
+</entity>
+
+
+Using annotations
+@Entity(name="ThePerson")
+public class Person ...
+]]></source>
                 <img src="../images/nucleus_extension.gif" border="0" alt=""/>
                 <p>
-                    In strict JPA the entity name cannot be a <i>MappedSuperclass</i> entity name. That is, if
-                    you have an abstract superclass that is persistable, you cannot query for instances of that
-                    superclass and its subclasses. We consider this a significant shortcoming of the querying
-                    capability, and allow the entity name to also be of a <i>MappedSuperclass</i>. You are unlikely
-                    to find this supported in other JPA implementations, but then maybe that's why you chose
-                    DataNucleus?
+                    In strict JPA the entity name cannot be a <i>MappedSuperclass</i> entity name. That is, if you have an abstract superclass that is persistable, 
+                    you cannot query for instances of that superclass and its subclasses. We consider this a significant shortcoming of the querying capability,
+                    and allow the entity name to also be of a <i>MappedSuperclass</i>. 
+                    You are unlikely to find this supported in other JPA implementations, but then maybe that's why you chose DataNucleus?
                 </p>
-            </subsection>
-
-            <a name="from"/>
-            <subsection name="From Clause">
+                <br/>
                 <p>
-                    The FROM clause allows a user to add some explicit joins to related entities, and assign aliases to the joined entities. 
+                    The FROM clause also allows a user to add some explicit joins to related entities, and assign aliases to the joined entities. 
                     These are then usable in the filter/ordering/result etc. If you don't add any joins DataNucleus will add joins where they are 
                     implicit from the filter expression for example. The FROM clause is of the following structure
                 </p>
@@ -91,6 +101,88 @@ SELECT VALUE(om) FROM Company c INNER JOIN c.officeMap om ON KEY(om) = 'London'
 ]]></source>
             </subsection>
 
+            <a name="filter"/>
+            <subsection name="WHERE clause (filter)">
+                <p>
+                    The most important thing to remember when defining the <i>filter</i> for JPQL is that
+                    <b>think how you would write it in SQL, and its likely the same except for FIELD names instead of COLUMN names</b>. 
+                    The <i>filter</i> has to be a boolean expression, and can include 
+                    <a href="#entities">the candidate entity</a>,
+                    <a href="#fields_properties">fields/properties</a>,
+                    <a href="#literals">literals</a>, <a href="#functions">functions</a>, 
+                    <a href="#parameters">parameters</a>,
+                    <a href="#operators">operators</a>
+                    and <a href="#subqueries">subqueries</a>
+                </p>
+            </subsection>
+
+            <a name="grouping"/>
+            <subsection name="GROUP BY/HAVING clauses">
+                <p>
+                    The GROUP BY construct enables the aggregation of values according to a set of properties. 
+                    The HAVING construct enables conditions to be specified that further restrict the query result. 
+                    Such conditions are restrictions upon the groups. The syntax of the GROUP BY and HAVING clauses is as follows:
+                </p>
+<source><![CDATA[
+    groupby_clause ::= GROUP BY groupby_item {, groupby_item}*
+
+    groupby_item ::= single_valued_path_expression | identification_variable
+
+    having_clause ::= HAVING conditional_expression
+]]></source>
+                <p>
+                     If a query contains both a WHERE clause and a GROUP BY clause, the effect is that of first applying the where clause, 
+                     and then forming the groups and filtering them according to the HAVING clause. 
+                     The HAVING clause causes those groups to be retained that satisfy the condition of the HAVING clause. 
+                     The requirements for the SELECT clause when GROUP BY is used follow those of SQL: namely, any item that appears in the SELECT clause 
+                     (other than as an argument to an aggregate function) must also appear in the GROUP BY clause. In forming the groups, null values are 
+                     treated as the same for grouping purposes. Grouping by an entity is permitted. In this case, the entity must contain no serialized 
+                     state fields or lob-valued state fields. The HAVING clause must specify search conditions over the grouping items or aggregate functions that apply to grouping items.
+                     If there is no GROUP BY clause and the HAVING clause is used, the result is treated as a single group, and the select list can only 
+                     consist of aggregate functions. When a query declares a HAVING clause, it must always also declare a GROUP BY clause. 
+                </p>
+                <p>
+                    Some examples
+                </p>
+<source><![CDATA[
+SELECT p.firstName, p.lastName FROM Person p GROUP BY p.lastName
+
+SELECT p.firstName, p.lastName FROM Person p GROUP BY p.lastName HAVING COUNT(p.lastName) > 1
+]]></source>
+                <br/>
+            </subsection>
+
+            <a name="ordering"/>
+            <subsection name="ORDER clause">
+                <p>
+                    The ORDER BY clause allows the objects or values that are returned by the query to be ordered. The syntax of the ORDER BY clause is 
+                </p>
+<source><![CDATA[
+orderby_clause ::= ORDER BY orderby_item {, orderby_item}*
+orderby_item ::= state_field_path_expression | result_variable [ ASC | DESC ]
+]]></source>
+                <p>
+                    By default your results will be returned in the order determined by the datastore, so don't rely
+                    on any particular order. You can, of course, specify the order yourself. You do this
+                    using field/property names and <i>ASC</i>/<i>DESC</i> keywords. For example
+                </p>
+                <source><![CDATA[field1 ASC, field2 DESC]]></source>
+                <p>
+                    which will sort primarily by <i>field1</i> in ascending order, then secondarily by
+                    <i>field2</i> in descending order.
+                </p>
+                <img src="../images/nucleus_extension.gif" border="0" alt=""/>
+                <p>
+                    Although it is not (yet) standard JPQL, DataNucleus also supports specifying a directive
+                    for where NULL values of the ordered field/property go in the order, so the full syntax supported is
+                </p>
+                <source><![CDATA[fieldName [ASC|DESC] [NULLS FIRST|NULLS LAST]]]></source>
+                <p>
+                    Note that this is only supported for a few RDBMS including H2, HSQLDB, PostgreSQL, DB2, Oracle, Derby, Firebird, SQLServer v11+.
+                </p>
+                <br/>
+            </subsection>
+
             <a name="fetchplan"/>
             <subsection name="Fetched Fields">
                 <p>
@@ -109,22 +201,6 @@ SELECT VALUE(om) FROM Company c INNER JOIN c.officeMap om ON KEY(om) = 'London'
                 <p>
                     Note that you can also make use of <a href="entity_graphs.html">Entity Graphs</a> to have fuller 
                     control over what is retrieved from each query.
-                </p>
-            </subsection>
-
-            <a name="filter"/>
-            <subsection name="Filter">
-                <p>
-                    The most important thing to remember when defining the <i>filter</i> for JPQL is that
-                    <b>think how you would write it in SQL, and its likely the same except for field names instead
-                    of column names</b>. 
-                    The <i>filter</i> has to be a boolean expression, and can include 
-                    <a href="#entities">the candidate entity</a>,
-                    <a href="#fields_properties">fields/properties</a>,
-                    <a href="#literals">literals</a>, <a href="#functions">functions</a>, 
-                    <a href="#parameters">parameters</a>,
-                    <a href="#operators">operators</a>
-                    and <a href="#subqueries">subqueries</a>
                 </p>
             </subsection>
 
@@ -646,8 +722,44 @@ Query q = em.createQuery("SELECT VALUE(p.addresses) FROM Person p WHERE KEY(p.ad
                 <br/>
             </subsection>
 
+            <a name="grouping"/>
+            <subsection name="GROUP BY/HAVING clauses">
+                <p>
+                    The GROUP BY construct enables the aggregation of values according to a set of properties. 
+                    The HAVING construct enables conditions to be specified that further restrict the query result. 
+                    Such conditions are restrictions upon the groups. The syntax of the GROUP BY and HAVING clauses is as follows:
+                </p>
+<source><![CDATA[
+    groupby_clause ::= GROUP BY groupby_item {, groupby_item}*
+
+    groupby_item ::= single_valued_path_expression | identification_variable
+
+    having_clause ::= HAVING conditional_expression
+]]></source>
+                <p>
+                     If a query contains both a WHERE clause and a GROUP BY clause, the effect is that of first applying the where clause, 
+                     and then forming the groups and filtering them according to the HAVING clause. 
+                     The HAVING clause causes those groups to be retained that satisfy the condition of the HAVING clause. 
+                     The requirements for the SELECT clause when GROUP BY is used follow those of SQL: namely, any item that appears in the SELECT clause 
+                     (other than as an argument to an aggregate function) must also appear in the GROUP BY clause. In forming the groups, null values are 
+                     treated as the same for grouping purposes. Grouping by an entity is permitted. In this case, the entity must contain no serialized 
+                     state fields or lob-valued state fields. The HAVING clause must specify search conditions over the grouping items or aggregate functions that apply to grouping items.
+                     If there is no GROUP BY clause and the HAVING clause is used, the result is treated as a single group, and the select list can only 
+                     consist of aggregate functions. When a query declares a HAVING clause, it must always also declare a GROUP BY clause. 
+                </p>
+                <p>
+                    Some examples
+                </p>
+<source><![CDATA[
+SELECT p.firstName, p.lastName FROM Person p GROUP BY p.lastName
+
+SELECT p.firstName, p.lastName FROM Person p GROUP BY p.lastName HAVING COUNT(p.lastName) > 1
+]]></source>
+                <br/>
+            </subsection>
+
             <a name="ordering"/>
-            <subsection name="Ordering of Results">
+            <subsection name="ORDER clause">
                 <p>
                     By default your results will be returned in the order determined by the datastore, so don't rely
                     on any particular order. You can, of course, specify the order yourself. You do this
