@@ -29,7 +29,7 @@ List results = (List)q.getResultList();</source>
                 </p>
                 <source>
 SELECT [&lt;result&gt;]
-    [FROM &lt;candidate-class(es)&gt;]
+    FROM &lt;from_entities_and_variables&gt;
     [WHERE &lt;filter&gt;]
     [GROUP BY &lt;grouping&gt;] [HAVING &lt;having&gt;]
     [ORDER BY &lt;ordering&gt;]</source> 
@@ -42,7 +42,25 @@ SELECT [&lt;result&gt;]
             <a name="from"/>
             <subsection name="FROM Clause">
                 <p>
-                    The FROM clause defines the <i>candidate</i> entity for the query. You can specify the candidate fully-qualified, or you can specify just the 
+                    The FROM clause declares query identification variables that represent iteration over objects in the database. 
+                    The syntax of the FROM clause is as follows:
+                </p>
+<source><![CDATA[
+from_clause ::= FROM identification_variable_declaration {, {identification_variable_declaration | collection_member_declaration}}*
+identification_variable_declaration ::= range_variable_declaration { join | fetch_join }*
+range_variable_declaration ::= entity_name [AS] identification_variable
+
+join ::= join_spec join_association_path_expression [AS] identification_variable
+fetch_join ::= join_spec FETCH join_association_path_expression
+join_spec::= [ LEFT [OUTER] | INNER ] JOIN
+join_association_path_expression ::= join_collection_valued_path_expression | join_single_valued_path_expression
+join_collection_valued_path_expression::=
+    identification_variable.{single_valued_embeddable_object_field.}*collection_valued_field
+join_single_valued_path_expression::=
+    identification_variable.{single_valued_embeddable_object_field.}*single_valued_object_field
+]]></source>
+                <p>
+                    The FROM clause firstly defines the <i>candidate</i> entity for the query. You can specify the candidate fully-qualified, or you can specify just the 
                     <b>entity name</b>. Using our example
                 </p>
 <source><![CDATA[
@@ -124,11 +142,10 @@ SELECT VALUE(om) FROM Company c INNER JOIN c.officeMap om ON KEY(om) = 'London'
                     Such conditions are restrictions upon the groups. The syntax of the GROUP BY and HAVING clauses is as follows:
                 </p>
 <source><![CDATA[
-    groupby_clause ::= GROUP BY groupby_item {, groupby_item}*
+groupby_clause ::= GROUP BY groupby_item {, groupby_item}*
+groupby_item ::= single_valued_path_expression | identification_variable
 
-    groupby_item ::= single_valued_path_expression | identification_variable
-
-    having_clause ::= HAVING conditional_expression
+having_clause ::= HAVING conditional_expression
 ]]></source>
                 <p>
                      If a query contains both a WHERE clause and a GROUP BY clause, the effect is that of first applying the where clause, 
@@ -153,7 +170,7 @@ SELECT p.firstName, p.lastName FROM Person p GROUP BY p.lastName HAVING COUNT(p.
             </subsection>
 
             <a name="ordering"/>
-            <subsection name="ORDER clause">
+            <subsection name="ORDER BY clause">
                 <p>
                     The ORDER BY clause allows the objects or values that are returned by the query to be ordered. The syntax of the ORDER BY clause is 
                 </p>
