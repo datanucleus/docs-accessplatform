@@ -46,25 +46,25 @@ The following sections describe how to create your own datastore identity plugin
 
 ### Interface
 
-Any datastore identity plugin will need to implement _org.datanucleus.identity.OID_
-[![Javadoc](../images/javadoc.gif)](http://www.datanucleus.org/javadocs/core/latest/org/datanucleus/identity/OID.html)
+Any datastore identity plugin will need to implement _org.datanucleus.identity.DatastoreId_
+[![Javadoc](../images/javadoc.gif)](http://www.datanucleus.org/javadocs/core/latest/org/datanucleus/identity/DatastoreId.html)
 So you need to implement the following interface
 
     import org.datanucleus.identity;
     
-    public interface OID
+    public interface DatastoreId
     {
         /**
-         * Provides the OID in a form that can be used by the database as a key.
+         * Provides the datastore id in a form that can be used by the database as a key.
          * @return The key value
          */
-        public abstract Object getKeyValue();
+        public Object getKeyAsObject();
 
         /**
          * Accessor for the PC class name 
          * @return the PC Class
          */
-        public abstract String getPcClass();
+        public String getTargetClassName();
     
         /**
          * Equality operator.
@@ -80,10 +80,10 @@ So you need to implement the following interface
         public abstract int hashCode();
 
         /**
-         * Returns the string representation of the OID.
+         * Returns the string representation of the datastore id.
          * The string representation should contain enough information to be usable as input to a String constructor
-         * to create the OID.
-         * @return the string representation of the OID.
+         * to create the datastore id.
+         * @return the string representation of the datastore id.
          */
         public abstract String toString();
     }
@@ -91,24 +91,21 @@ So you need to implement the following interface
 
 ### Implementation
 
-DataNucleus provides an abstract base class _org.datanucleus.identity.OIDImpl_ as a guideline.
+DataNucleus provides an abstract base class _org.datanucleus.identity.DatastoreIdImpl_ as a guideline.
 The DataNucleus internal implementation is defined as
 
 
-	package org.datanucleus.identity;
-	
-	public class OIDImpl implements java.io.Serializable, OID
-	{
+    package org.datanucleus.identity;
+    
+    public class DatastoreIdImpl implements java.io.Serializable, DatastoreId
+    {
         /** Separator to use between fields. */
-        private transient static final String oidSeparator = "[OID]";
+        private transient static final String STRING_DELIMITER = "[OID]";
     
         // JDO spec 5.4.3 - serializable fields required to be public.
     
-        /** The key value. */
-        public final Object oid;
-    
-        /** The PersistenceCapable class name */
-        public final String pcClass;
+        public final Object keyAsObject;
+        public final String targetClassName;
     
         /** pre-created toString to improve performance **/ 
         public final String toString;
@@ -116,94 +113,77 @@ The DataNucleus internal implementation is defined as
         /** pre-created hasCode to improve performance **/ 
         public final int hashCode;
     
-        /**
-        * Creates an OID with no value. Required by the JDO spec
-        */
-        public OIDImpl()
+        public DatastoreIdImpl()
         {
-            oid = null;
-            pcClass = null; 
+            keyAsObject = null;
+            targetClassName = null; 
             toString = null;
             hashCode = -1;
         }
     
-        /**
-         * Create a string datastore identity.
-         * @param pcClass The PersistenceCapable class that this represents
-         * @param object The value
-         */
-        public OIDImpl(String pcClass, Object object)
+        public DatastoreIdImpl(String pcClass, Object object)
         {
-            this.pcClass = pcClass;
-            this.oid = object;
+            this.targetClassName = pcClass;
+            this.keyAsObject = object;
     
-            StringBuffer s = new StringBuffer();
-            s.append(this.oid.toString());
-            s.append(oidSeparator);
-            s.append(this.pcClass);
+            StringBuilder s = new StringBuilder();
+            s.append(this.keyAsObject.toString());
+            s.append(STRING_DELIMITER);
+            s.append(this.targetClassName);
             toString = s.toString();
             hashCode = toString.hashCode();        
         }
     
         /**
-         * Constructs an OID from its string representation that is consistent with the output of toString().
-         * @param str the string representation of an OID
+         * Constructs an identity from its string representation that is consistent with the output of toString().
+         * @param str the string representation of a datastore id
          * @exception IllegalArgumentException if the given string representation is not valid.
          * @see #toString
          */
-        public OIDImpl(String str)
+        public DatastoreIdImpl(String str)
         throws IllegalArgumentException
         {
             if (str.length() < 2)
             {
-                throw new IllegalArgumentException(Localiser.msg("OID.InvalidValue", str));
+                throw new IllegalArgumentException(Localiser.msg("038000", str));
+            }
+            else if (str.indexOf(STRING_DELIMITER) < 0)
+            {
+                throw new IllegalArgumentException(Localiser.msg("038000", str));
             }
     
             int start = 0;
-            int end = str.indexOf(oidSeparator, start);
+            int end = str.indexOf(STRING_DELIMITER, start);
             String oidStr = str.substring(start, end);
             Object oidValue = null;
             try
             {
                 // Use Long if possible, else String
-                oidValue = new Long(oidStr);
+                oidValue = Long.valueOf(oidStr);
             }
             catch (NumberFormatException nfe)
             {
                 oidValue = oidStr;
             }
-            oid = oidValue;
-
-            start = end + oidSeparator.length();
-            this.pcClass = str.substring(start, str.length());
+            keyAsObject = oidValue;
+    
+            start = end + STRING_DELIMITER.length();
+            this.targetClassName = str.substring(start, str.length());
             
             toString = str;
             hashCode = toString.hashCode();
         }
     
-        /**
-         * Accessor for the key value.
-         * @return The key value
-         */
-        public Object getKeyValue()
+        public Object getKeyAsObject()
         {
-            return oid;
-        }
-
-        /**
-         * Accessor for the PersistenceCapable class name.
-         * @return PC class name
-         */
-        public String getPcClass()
-        {
-            return pcClass;
+            return keyAsObject;
         }
     
-        /**
-         * Equality operator.
-         * @param obj Object to compare against
-         * @return Whether they are equal
-         */
+        public String getTargetClassName()
+        {
+            return targetClassName;
+        }
+    
         public boolean equals(Object obj)
         {
             if (obj == null)
@@ -214,7 +194,7 @@ The DataNucleus internal implementation is defined as
             {
                 return true;
             }
-            if (!(obj.getClass().getName().equals(ClassNameConstants.OIDImpl)))
+            if (!(obj.getClass().getName().equals(ClassNameConstants.IDENTITY_OID_IMPL)))
             {
                 return false;
             }
@@ -222,21 +202,35 @@ The DataNucleus internal implementation is defined as
             {
                 return false;
             }
+            if (!((DatastoreId)obj).toString().equals(toString))
+            {
+                // Hashcodes are the same but the values aren't
+                return false;
+            }
             return true;
         }
     
-        /**
-         * Accessor for the hashcode
-         * @return Hashcode for this object
-         */
+        public int compareTo(Object o)
+        {
+            if (o instanceof DatastoreIdImpl)
+            {
+                DatastoreIdImpl c = (DatastoreIdImpl)o;
+                return this.toString.compareTo(c.toString);
+            }
+            else if (o == null)
+            {
+                throw new ClassCastException("object is null");
+            }
+            throw new ClassCastException(this.getClass().getName() + " != " + o.getClass().getName());
+        }
+    
         public int hashCode()
         {
             return hashCode;
         }
     
         /**
-         * Creates a String representation of the datastore identity, formed from the PC class name
-         * and the key value. This will be something like
+         * Creates a String representation of the datastore identity, formed from the target class name and the key value. This will be something like
          * <pre>3254[OID]mydomain.MyClass</pre>
          * @return The String form of the identity
          */
@@ -256,12 +250,12 @@ of the toString() method). The other takes the PC class name and the key value.
 So once we have our custom "datastore identity" we just need to make this into a DataNucleus plugin. To do this
 you simply add a file _plugin.xml_ to your JAR at the root. The file _plugin.xml_ should look like this
 
-	<?xml version="1.0"?>
-	<plugin id="mydomain" name="DataNucleus plug-ins" provider-name="My Company">
-    	<extension point="org.datanucleus.store_datastoreidentity">
-        	<datastoreidentity name="myoid" class-name="mydomain.MyOIDImpl" unique="true"/>
-    	</extension>
-	</plugin>
+    <?xml version="1.0"?>
+    <plugin id="mydomain" name="DataNucleus plug-ins" provider-name="My Company">
+        <extension point="org.datanucleus.store_datastoreidentity">
+            <datastoreidentity name="myoid" class-name="mydomain.MyOIDImpl" unique="true"/>
+        </extension>
+    </plugin>
 
 Note that you also require a MANIFEST.MF file as per the [Extensions Guide](index.html).
 
