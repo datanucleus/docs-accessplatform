@@ -97,7 +97,7 @@ The DataNucleus internal implementation is defined as
 
     package org.datanucleus.identity;
     
-    public class OIDImpl implements java.io.Serializable, OID
+    public class DatastoreIdImpl implements java.io.Serializable, DatastoreId
     {
         /** Separator to use between fields. */
         private transient static final String STRING_DELIMITER = "[OID]";
