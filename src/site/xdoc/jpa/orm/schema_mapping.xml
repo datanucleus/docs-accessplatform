@@ -9,13 +9,12 @@
     <body>
         <section name="JPA : Schema Mapping">
             <p>
-                You saw in our <a href="../class_mapping.html">basic class mapping guide</a> how you define a classes
-                basic persistence, notating which fields are persisted. The next step is to define how it maps to the
-                schema of the datastore (in this case RDBMS). The simplest way of mapping is to map each class to its own table. 
-                This is the default model in JDO persistence (with the exception of inheritance). 
+                You saw in our <a href="../class_mapping.html">basic class mapping guide</a> how you define a classes basic persistence, notating which fields are persisted. 
+                The next step is to define how it maps to the datastore. Fields of a class are mapped to <i>columns</i> of a <i>table</i> (note that with some datastores it is not called
+                a 'table' or 'column', but the concept is similar and we use 'table' and 'column' here to represent the mapping). 
                 If you don't specify the table and column names, then DataNucleus will generate table and column names for you.
-                <b>You should specify your table and column names if you have an existing schema.</b> Failure to do so will mean
-                that DataNucleus uses its own names and these will almost certainly not match what you have in the datastore.
+                <b>You should specify your table and column names if you have an existing schema.</b> 
+                Failure to do so will mean that DataNucleus uses its own names and these will almost certainly not match what you have in the datastore.
             </p>
 
             <subsection name="Tables and Column names">
@@ -24,7 +23,7 @@
                     tables and columns used for storing the classes and fields. This is an essential step when mapping to an existing schema,
                     because it is necessary to map the classes onto the existing database entities. Let's take an example
                 </p>
-                <source>
+<source>
 public class Hotel
 {
     private String name;
@@ -36,7 +35,7 @@ public class Hotel
                 <p>In our case we want to map this class to a table called <b>ESTABLISHMENT</b>, and has columns <i>NAME</i>, 
                     <i>DIRECTION</i>, <i>PHONE</i> and <i>NUMBER_OF_ROOMS</i> (amongst other things). So 
                     we define our Meta-Data like this</p>
-                <source><![CDATA[
+<source><![CDATA[
 <entity class="Hotel">
     <table name="ESTABLISHMENT"/>
     <attributes>
@@ -178,6 +177,116 @@ public class Payment
                     The default (for DataNucleus) is just to put them in ascending alphabetical order.
                     DataNucleus allows an extension to JPA providing definition of this using the <i>position</i> of a <b>column</b>.
                     See <a href="../fields_properties.html#columnposition">fields/properties column positioning docs</a> for details.
+                </p>
+            </subsection>
+
+            <subsection name="RDBMS : Views">
+                <img src="../images/nucleus_extension.gif" alt=""/>
+                <p>
+                    The standard situation with an RDBMS datastore is to map classes to <b>Tables</b>. 
+                    The majority of RDBMS also provide support for <b>Views</b>, providing the equivalent of a read-only SELECT across various tables. 
+                    DataNucleus also provides support for querying such Views. This provides more flexibility to the user where they have data and need to display it in their application. 
+                    Support for Views is described below.
+                </p>
+                <p>
+                    When you want to access data according to a View, you are required to provide a class that will accept
+                    the values from the View when queried, and Meta-Data for the class that defines the View and how
+                    it maps onto the provided class. Let's take an example. We have a View SALEABLE_PRODUCT in our database 
+                    as follows, defined based on data in a PRODUCT table.
+                </p>
+<source><![CDATA[
+CREATE VIEW SALEABLE_PRODUCT (ID, NAME, PRICE, CURRENCY) AS
+    SELECT ID, NAME, CURRENT_PRICE AS PRICE, CURRENCY FROM PRODUCT
+    WHERE PRODUCT.STATUS_ID = 1]]></source>
+                <p>
+                    So we define a class to receive the values from this <b>View</b>.
+                </p>
+<source><![CDATA[
+package mydomain.views;
+public class SaleableProduct
+{
+    String id;
+    String name;
+    double price;
+    String currency;
+
+    public String getId()
+    {
+        return id;
+    }
+
+    public String getName()
+    {
+        return name;
+    }
+
+    public double getPrice()
+    {
+        return price;
+    }
+
+    public String getCurrency()
+    {
+        return currency;
+    }
+}]]></source>
+                <p>
+                    and then we define how this class is mapped to the <b>View</b>
+                </p>
+<source><![CDATA[
+<?xml version="1.0"?>
+<!DOCTYPE jdo SYSTEM "file:/javax/jdo/jdo.dtd">
+<jdo>
+    <package name="mydomain.views">
+        <class name="SaleableProduct" identity-type="nondurable" table="SALEABLE_PRODUCT">
+            <field name="id"/>
+            <field name="name"/>
+            <field name="price"/>
+            <field name="currency"/>
+
+            <!-- This is the "generic" SQL92 version of the view. -->
+            <extension vendor-name="datanucleus" key="view-definition" value="
+CREATE VIEW SALEABLE_PRODUCT
+(
+    {this.id},
+    {this.name},
+    {this.price},
+    {this.currency}
+) AS
+SELECT ID, NAME, CURRENT_PRICE AS PRICE, CURRENCY FROM PRODUCT
+WHERE PRODUCT.STATUS_ID = 1"/>
+        </class>
+    </package>
+</jdo>]]></source>
+                <p>
+                    Please note the following
+                </p>
+                <ul>
+                    <li>We've defined our class as using "nondurable" identity. This is an important step since rows of the <b>View</b>
+                        typically don't operate in the same way as rows of a <b>Table</b>, not mapping onto a persisted updateable object as such</li>
+                    <li>We've specified the "table", which in this case is the view name - otherwise DataNucleus would create a name
+                       for the view based on the class name.</li>
+                    <li>We've defined a DataNucleus extension <i>view-definition</i> that defines the view for this class. If the view
+                        doesn't already exist it doesn't matter since DataNucleus (when used with <i>autoCreateSchema</i>) will execute this construction definition.</li>
+                    <li>The <i>view-definition</i> can contain macros utilising the names of the fields in the class, and hence
+                        borrowing their column names (if we had defined column names for the fields of the class).</li>
+                    <li>You can also utilise other classes in the macros, and include them via a DataNucleus MetaData extension <i>view-imports</i> (not shown here)</li>
+                    <li>If your <b>View</b> already exists you are still required to provide a <i>view-definition</i> even though
+                        DataNucleus will not be utilising it, since it also uses this attribute as the flag for whether it is a <b>View</b>
+                        or a <b>Table</b> - just make sure that you specify the "table" also in the MetaData.</li>
+                </ul>
+                <p>
+                    We can now utilise this class within normal DataNucleus querying operation.
+                </p>
+<source><![CDATA[
+Extent e = pm.getExtent(SaleableProduct.class);
+Iterator iter = e.iterator();
+while (iter.hasNext())
+{
+    SaleableProduct product = (SaleableProduct)iter.next();
+}]]></source>
+                <p>
+                    Hopefully that has given enough detail on how to create and access views from with a DataNucleus-enabled application.
                 </p>
             </subsection>
 		</section>
