@@ -7,7 +7,7 @@
     </properties>
 
     <body>
-        <section name="Geopatial Types Support">
+        <section name="JPA : Geopatial Types Support">
             <p>
                 DataNucleus supports by default <a href="types.html">a large number of Java types</a>. 
                 <b>DataNucleus Geospatial</b> supports the storage and query of a number of different geospatial data 
@@ -463,72 +463,54 @@
 
             <subsection name="Metadata">
                 <p>
-                    DataNucleus-Geospatial has defined some metadata extensions that can be used to give additional information 
-                    about the geometry types in use. The position of these tags in the meta-data determines their scope. 
-                    If you use them inside a &lt;field&gt;-tag the values are only used for that field specifically, if 
-                    you use them inside the &lt;package&gt;-tag the values are in effect for all (geometry) fields of 
-                    all classes inside that package, etc.
-                    <b>This metadata is for JDO. Please request that it be updated for the JPA API</b>
+                    <b>datanucleus-geospatial</b> has defined some metadata extensions that can be used to give additional information about the geometry types in use. 
+                    You can specify these using XML (like below), or via annotations, and specify at class level for all fields in the class, and field/property level for that member.
                 </p>
-                <source><![CDATA[<package name="org.datanucleus.samples.jtsgeometry">
-    <extension vendor-name="datanucleus" key="spatial-dimension" value="2"/> [1]
-    <extension vendor-name="datanucleus" key="spatial-srid" value="4326"/> [1]
+<source><![CDATA[
+<entity-mappings>
+    <package>mydomain.samples.jtsgeometry</package>
 
-    <class name="SampleGeometry" detachable="true">
-        <field name="id"/>
-        <field name="name"/>
-        <field name="geom" persistence-modifier="persistent">
-            <extension vendor-name="datanucleus" key="mapping" value="no-userdata"/> [2]
-        </field>
-    </class>
+    <entity class="mydomain.samples.jtsgeometry.SampleGeometry">
+        <extension vendor-name="datanucleus" key="spatial-dimension" value="2"/>
+        <extension vendor-name="datanucleus" key="spatial-srid" value="4326"/>
+        <attributes>
+            <id name="id"/>
+            <basic name="name"/>
+            <basic name="geom">
+                <extension vendor-name="datanucleus" key="mapping" value="no-userdata"/> [2]
+            </basic>
+        </attributes>
+    </entity>
 
-    <class name="SampleGeometryCollectionM" table="samplejtsgeometrycollectionm" detachable="true">
+    <entity class="mydomain.samples.jtsgeometry.SampleGeometryCollectionM">
+        <extension vendor-name="datanucleus" key="spatial-dimension" value="2"/>
+        <extension vendor-name="datanucleus" key="spatial-srid" value="4326"/>
         <extension vendor-name="datanucleus" key="postgis-hasMeasure" value="true"/> [3]
-        <field name="id"/>
-        <field name="name"/>
-        <field name="geom" persistence-modifier="persistent"/>
-    </class>
+        <attributes>
+            <id name="id"/>
+            <basic name="name"/>
+            <basic name="geom"/>
+        </attributes>
+    </entity>
 
-    <class name="SampleGeometryCollection3D" table="samplejtsgeometrycollection3d" detachable="true">
-        <extension vendor-name="datanucleus" key="spatial-srid" value="-1"/> [1]
-        <extension vendor-name="datanucleus" key="spatial-dimension" value="3"/> [1]
-        <field name="id"/>
-        <field name="name"/>
-        <field name="geom" persistence-modifier="persistent"/>
-    </class>
-</package>]]></source>
+    <entity class="mydomain.samples.jtsgeometry.SampleGeometryCollection3D">
+        <extension vendor-name="datanucleus" key="spatial-dimension" value="3"/>
+        <extension vendor-name="datanucleus" key="spatial-srid" value="-1"/>
+        <attributes>
+            <id name="id"/>
+            <basic name="name"/>
+            <basic name="geom"/>
+        </attributes>
+    </entity>
+</entity-mappings>]]></source>
                 <ul>
-                    <li><b>[1]</b> - The srid &amp; dimension values are used in various places. One of them is schema 
-                    creation, when using PostGIS, another is when you query the SpatialHelper.</li>
-                    <li><b>[2]</b> - Every JTS geometry object can have a user data object attached to it. The default 
-                    behaviour is to serialize that object and store it in a separate column in the database. If for some 
-                    reason this isn't desired, the <code>mapping</code> extension can be used with value 
-                    &quot;no-mapping&quot; and DataNucleus-Geospatial will ignore the user data objects.</li>
-                    <li><b>[3]</b> - If you want to use measure types in PostGIS you have to define that using the 
-                    <code>postgis-hasMeasure</code> extension.</li>
+                    <li><b>[1]</b> - The srid &amp; dimension values are used in various places. One of them is schema creation, when using PostGIS, another is when you 
+                        query the SpatialHelper.</li>
+                    <li><b>[2]</b> - Every JTS geometry object can have a user data object attached to it. The default behaviour is to serialize that object and store it 
+                        in a separate column in the database. If for some reason this isn't desired, the <code>mapping</code> extension can be used with value 
+                        &quot;no-mapping&quot; and <b>datanucleus-geospatial</b> will ignore the user data objects.</li>
+                    <li><b>[3]</b> - If you want to use measure types in PostGIS you have to define that using the <code>postgis-hasMeasure</code> extension.</li>
                 </ul>
-            </subsection>
-
-            <subsection name="Querying Geospatial types">
-                <p>
-                    DataNucleus-Geospatial defines a set of functions that can be applied to geospatial types in JDOQL queries. These functions follow the definitions 
-                    in the <a href="http://www.opengeospatial.org/standards/sfa">OGC Simple Feature specification</a> and are translated into appropriate 
-                    SQL statements, provided the underlying database system implements the functions and the geometry object model accordingly. There are 
-                    also some additional functions that are not defined OGC SF, most of them are database specific.
-                </p>
-                <p>
-                    This set of more than eighty functions contains:
-                </p>
-                <ul>
-                    <li>Basic methods on geometry objects like <code>IsSimple()</code> and <code>Boundary()</code>.</li>
-                    <li>Methods for testing geospatial relations between geometric objects like <code>Intersects()</code> and <code>Touches()</code></li>
-                    <li>Methods that support geospatial analysis like <code>Union()</code> and <code>Difference()</code></li>
-                    <li>Methods to create geometries from WKB/WKT (Well Known Binary/Text) like <code>GeomFromText()</code> and <code>GeomFromWKB()</code></li>
-                </ul>
-                <p>
-                    For a compelete list of all supported functions and usage examples, please see 
-                    <a href="rdbms_jdoql_spatial_methods.html">JDOQL : Geospatial Methods</a>.
-                </p>
             </subsection>
         </section>
     </body>

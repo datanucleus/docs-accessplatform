@@ -916,16 +916,18 @@
                 </tr>
             </table>
             <br/>
+
             <p><b>Examples</b></p>
             <p>
-                The following sections provide some examples of what can be done using spatial methods in JDOQL queries. In the examples we use a
+                The following sections provide some examples of what can be done using spatial methods in JPQL queries. In the examples we use a
                 class from the test suite. Here's the source code for reference:
-                <b>TODO : Request that this metadata is converted to JPA</b>
             </p>
-            <source><![CDATA[package org.datanucleus.samples.pggeometry;
+<source><![CDATA[
+package mydomain.samples.pggeometry;
+
 import org.postgis.LineString;
-                
-public class SampleLineString 
+
+public class SampleLineString
 {			
     private long id;
     private String name;
@@ -944,18 +946,22 @@ public class SampleLineString
     }
     ....
 }]]></source>
-            <source><![CDATA[<jdo>
-    <package name="org.datanucleus.samples.pggeometry">	
+            <source><![CDATA[
+<entity-mappings>
+    <package>mydomain.samples.pggeometry</package>
+
+    <entity class="mydomain.samples.pggeometry.SampleLineString">
         <extension vendor-name="datanucleus" key="spatial-dimension" value="2"/>
         <extension vendor-name="datanucleus" key="spatial-srid" value="4326"/>
-
-        <class name="SampleLineString" table="samplepglinestring" detachable="true">
-            <field name="id"/>
-            <field name="name"/>
-            <field name="geom" persistence-modifier="persistent"/>
-        </class>
-    </package>
-</jdo>]]></source>            
+        <attributes>
+            <id name="id"/>
+            <basic name="name"/>
+            <basic name="geom">
+                <extension vendor-name="datanucleus" key="mapping" value="no-userdata"/> [2]
+            </basic>
+        </attributes>
+    </entity>
+</entity-mappings>]]></source>            
             <br/>
             <subsection name="Example 1 - Spatial Function in the Filter of a Query">
                 <p>
