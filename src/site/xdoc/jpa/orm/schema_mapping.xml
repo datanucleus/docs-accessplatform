@@ -829,26 +829,22 @@ List<MyViewClass> results = q.getResultList();]]></source>
                     </tr>
                 </table>
                 <ul>
-                    <li><b>[1]</b> - <i>java.awt.Color</i> - stored in 4 columns (red, green, blue, alpha). 
-                        ColorSpace is not persisted.</li>
+                    <li><b>[1]</b> - <i>java.awt.Color</i> - stored in 4 columns (red, green, blue, alpha). ColorSpace is not persisted.</li>
                     <li><b>[2]</b> - <i>java.awt.Point</i> - stored in 2 columns (x and y).</li>
                     <li><b>[3]</b> - <i>java.util.Calendar</i> - stored in 2 columns (milliseconds and timezone).</li>
                     <li><b>[4]</b> - <i>java.awt.image.BufferedImage</i> is stored using JPG image format</li>
                     <li><b>[5]</b> - Array types are queryable if not serialised, but stored to many rows</li>
                     <li><b>[6]</b> - DATALINK JDBC type supported on DB2 only. Uses the SQL function 
-                        DLURLCOMPLETEONLY to fetch from the datastore. You can override this using the 
-                        select-function extension. See the 
-                        <a href="../jdo/metadata_xml.html#field_select_function">JDO MetaData reference</a>.</li>
+                        DLURLCOMPLETEONLY to fetch from the datastore. You can override this using the select-function extension. See the 
+                        <a href="../metadata_xml.html#field_select_function">JDO MetaData reference</a>.</li>
                     <li><b>[7]</b> - UNIQUEIDENTIFIER JDBC type supported on MSSQL only.</li>
                     <li><b>[8]</b> - Oracle treats an empty string as the same as NULL. To workaround this limitation 
                         DataNucleus replaces the empty string with the character \u0001.</li>
-                    <li><b>[9]</b> - XMLTYPE JDBC type supported on Oracle only, and is included in the 
-                        "datanucleus-rdbms" plugin.</li>
+                    <li><b>[9]</b> - XMLTYPE JDBC type supported on Oracle only.</li>
                 </ul>
                 <p>
-                    <a href="../extensions/rdbms_datastore_types.html"><img src="../../images/nucleus_plugin.gif" border="0" alt=""/></a>
-                    If you need to extend the provided DataNucleus capabilities in terms of its datastore types support
-                    you can utilise a plugin point.
+                    <a href="../../extensions/rdbms_datastore_types.html"><img src="../../images/nucleus_plugin.gif" border="0" alt=""/></a>
+                    If you need to extend the provided DataNucleus capabilities in terms of its datastore types support you can utilise a plugin point.
                 </p>
                 <br/>
 
