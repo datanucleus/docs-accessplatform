@@ -879,6 +879,39 @@ Query query = pm.newQuery(...);
 query.addExtension("datanucleus.jpql.strict", "true");
 ]]></source>
             </subsection>
+
+            <subsection name="JPQL : SQL Generation for RDBMS">
+                <p>
+                    With a JPQL query running on an RDBMS the query is compiled into SQL. Here we give a few examples of what SQL is generated. 
+                    You can of course try this for yourself observing the content of the DataNucleus log.
+                </p>
+                <p>
+                    In JPQL you specify a candidate class and its alias (identifier). In addition you can specify joins with their respective alias. 
+                    The DataNucleus implementation of JPQL will preserve these aliases in the generated SQL.
+                </p>
+                <source><![CDATA[
+JPQL:
+SELECT Object(P) FROM mydomain.Person P INNER JOIN P.bestFriend AS B
+
+SQL:
+SELECT P.ID
+FROM PERSON P INNER JOIN PERSON B ON B.ID = P.BESTFRIEND_ID]]></source>
+                <p>
+                    With the JPQL <i>MEMBER OF</i> syntax this is typically converted into an EXISTS query.
+                </p>
+                <source><![CDATA[
+JPQL:
+SELECT DISTINCT Object(p) FROM mydomain.Person p WHERE :param MEMBER OF p.friends
+
+SQL:
+SELECT DISTINCT P.ID FROM PERSON P
+WHERE EXISTS (
+    SELECT 1 FROM PERSON_FRIENDS P_FRIENDS, PERSON P_FRIENDS_1 
+    WHERE P_FRIENDS.PERSON_ID = P.ID
+    AND P_FRIENDS_1.GLOBAL_ID = P_FRIENDS.FRIEND_ID 
+    AND 101 = P_FRIENDS_1.ID)]]></source>
+                <br/>
+            </subsection>
         </section>
 
         <section name="JPQL In-Memory queries">
