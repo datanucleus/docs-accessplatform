@@ -3,11 +3,11 @@
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
     <properties>
-        <title>JDOQL Spatial Methods</title>
+        <title>JPQL Spatial Functions</title>
     </properties>
 
     <body>
-        <section name="RDBMS : JDOQL Geospatial Methods">
+        <section name="JPQL Geospatial Functions : RDBMS">
             <img src="../images/nucleus_extension.gif" alt=""/>
             <p>
                 When querying spatial data you can make use of a set of spatial methods on the various Java geometry 
@@ -898,22 +898,19 @@
                 </tr>
                 <tr>
                     <td>
-                        Oracle.sdo_point_type(<br />
-                        Double x, Double y, Double z)
+                        Oracle.sdo_point_type(Double x, Double y, Double z)
                     </td>
                     <td>Creates a SDO_POINT geometry from the passed ordinates.</td>
                 </tr>
                 <tr>
                     <td>
-                        Oracle.sdo_elem_info_array(<br />
-                        String numbers)
+                        Oracle.sdo_elem_info_array(String numbers)
                     </td>
                     <td>Creates a SDO_ELEM_INFO_ARRAY from the passed comma-separeted integers.</td>
                 </tr>
                 <tr>
                     <td>
-                        Oracle.sdo_ordinate_array(<br />
-                        String ordinates)
+                        Oracle.sdo_ordinate_array(String ordinates)
                     </td>
                     <td>Creates a SDO_ORDINATE_ARRAY from the passed comma-separeted doubles.</td>
                 </tr>
@@ -923,6 +920,7 @@
             <p>
                 The following sections provide some examples of what can be done using spatial methods in JDOQL queries. In the examples we use a
                 class from the test suite. Here's the source code for reference:
+                <b>TODO : Request that this metadata is converted to JPA</b>
             </p>
             <source><![CDATA[package org.datanucleus.samples.pggeometry;
 import org.postgis.LineString;
@@ -964,9 +962,10 @@ public class SampleLineString
                     This example shows how to use spatial functions in the filter of a query. The query returns a list of
                     <code>SampleLineString</code>s whose line string has a length less than the given limit.
                 </p>
-                <source><![CDATA[Double limit = new Double(100.0);
-Query query = pm.newQuery(SampleLineString.class, "geom != null && Spatial.length(geom) < :limit");
-List list = (List) query.execute(limit);]]></source>
+<source><![CDATA[
+Query q = em.createQuery("SELECT s FROM SampleLineString s WHERE geom IS NOT NULL AND Spatial.length(geom) < :limit");
+q.setParameter("limit", new Double(100.0));
+List list = q.getResultList();]]></source>
                 <br/>
             </subsection>
             
@@ -975,10 +974,10 @@ List list = (List) query.execute(limit);]]></source>
                     This time we use a spatial function in the result part of a query. The query returns the length of the line string from the selected
                     <code>SampleLineString</code>
                 </p>
-                <source><![CDATA[query = pm.newQuery(SampleLineString.class, "id == :id");
-query.setResult("Spatial.pointN(geom, 2)");
-query.setUnique(true);
-Geometry point = (Geometry) query.execute(new Long(1001));]]></source>
+<source><![CDATA[
+q = em.createQuery("SELECT Spatial.pointN(geom, 2) FROM SampleLineString s WHERE id == :id");
+q.setParameter("id", new Long(1001));
+Geometry point = q.getSingleResult();]]></source>
                 <br/>
             </subsection>
             
@@ -987,9 +986,11 @@ Geometry point = (Geometry) query.execute(new Long(1001));]]></source>
                     You may want to use nested functions in your query. This example shows how to do that. The query returns a list of
                     <code>SampleLineString</code>s, whose end point spatially equals a given point.
                 </p>
-                <source><![CDATA[Point point = new Point("SRID=4326;POINT(110 45)");
-Query query = pm.newQuery(SampleLineString.class, "geom != null && Spatial.equals(Spatial.endPoint(geom), :point)");
-List list = (List) query.execute(point);
+                <source><![CDATA[
+Point point = new Point("SRID=4326;POINT(110 45)");
+Query q = em.createQuery("SELECT s FROM SampleLineString s WHERE geom IS NOT NULL AND Spatial.equals(Spatial.endPoint(geom), :point)");
+q.setParameter("point", point);
+List list = q.getResultList();
 ]]></source>
                 <br/>
             </subsection>
