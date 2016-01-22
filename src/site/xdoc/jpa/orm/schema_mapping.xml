@@ -245,19 +245,8 @@ public class SaleableProduct
                     and then we define how this class is mapped to the <b>View</b>
                 </p>
 <source><![CDATA[
-<?xml version="1.0"?>
-<!DOCTYPE jdo SYSTEM "file:/javax/jdo/jdo.dtd">
-<jdo>
-    <package name="mydomain.views">
-        <class name="SaleableProduct" identity-type="nondurable" table="SALEABLE_PRODUCT">
-            <field name="id"/>
-            <field name="name"/>
-            <field name="price"/>
-            <field name="currency"/>
-
-            <!-- This is the "generic" SQL92 version of the view. -->
-            <extension vendor-name="datanucleus" key="view-definition" value="
-CREATE VIEW SALEABLE_PRODUCT
+@Entity
+@Extension(vendorName="datanucleus", key="view-definition", value="CREATE VIEW SALEABLE_PRODUCT
 (
     {this.id},
     {this.name},
@@ -265,10 +254,15 @@ CREATE VIEW SALEABLE_PRODUCT
     {this.currency}
 ) AS
 SELECT ID, NAME, CURRENT_PRICE AS PRICE, CURRENCY FROM PRODUCT
-WHERE PRODUCT.STATUS_ID = 1"/>
-        </class>
-    </package>
-</jdo>]]></source>
+WHERE PRODUCT.STATUS_ID = 1")
+public class MyViewClass
+{
+    long id;
+    String name;
+    double price;
+    String currency;
+
+}]]></source>
                 <p>
                     Please note the following
                 </p>
@@ -287,15 +281,11 @@ WHERE PRODUCT.STATUS_ID = 1"/>
                         or a <b>Table</b> - just make sure that you specify the "table" also in the MetaData.</li>
                 </ul>
                 <p>
-                    We can now utilise this class within normal DataNucleus querying operation.
+                    We can now utilise this class within normal DataNucleus JPA querying operation.
                 </p>
 <source><![CDATA[
-Extent e = pm.getExtent(SaleableProduct.class);
-Iterator iter = e.iterator();
-while (iter.hasNext())
-{
-    SaleableProduct product = (SaleableProduct)iter.next();
-}]]></source>
+Query<MyViewClass> q = em.createTypedQuery("SELECT m FROM MyViewClass m", MyViewClass.class);
+List<MyViewClass> results = q.getResultList();]]></source>
                 <p>
                     Hopefully that has given enough detail on how to create and access views from with a DataNucleus-enabled application.
                 </p>
