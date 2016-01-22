@@ -256,7 +256,7 @@ public class SaleableProduct
 ) AS
 SELECT ID, NAME, CURRENT_PRICE AS PRICE, CURRENCY FROM PRODUCT
 WHERE PRODUCT.STATUS_ID = 1")
-public class MyViewClass
+public class SaleableProduct
 {
     long id;
     String name;
@@ -285,7 +285,7 @@ public class MyViewClass
                     We can now utilise this class within normal DataNucleus JPA querying operation.
                 </p>
 <source><![CDATA[
-Query<MyViewClass> q = em.createTypedQuery("SELECT m FROM MyViewClass m", MyViewClass.class);
+Query<MyViewClass> q = em.createQuery("SELECT p FROM SaleableProduct p", SaleableProduct.class);
 List<MyViewClass> results = q.getResultList();]]></source>
                 <p>
                     Hopefully that has given enough detail on how to create and access views from with a DataNucleus-enabled application.
