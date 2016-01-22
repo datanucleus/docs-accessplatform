@@ -211,10 +211,21 @@ CREATE VIEW SALEABLE_PRODUCT (ID, NAME, PRICE, CURRENCY) AS
     SELECT ID, NAME, CURRENT_PRICE AS PRICE, CURRENCY FROM PRODUCT
     WHERE PRODUCT.STATUS_ID = 1]]></source>
                 <p>
-                    So we define a class to receive the values from this <b>View</b>.
+                    So we define a class to receive the values from this <b>View</b>, and define how it is mapped to the view.
                 </p>
 <source><![CDATA[
 package mydomain.views;
+
+@Entity
+@Extension(vendorName="datanucleus", key="view-definition", value="CREATE VIEW SALEABLE_PRODUCT
+(
+    {this.id},
+    {this.name},
+    {this.price},
+    {this.currency}
+) AS
+SELECT ID, NAME, CURRENT_PRICE AS PRICE, CURRENCY FROM PRODUCT
+WHERE PRODUCT.STATUS_ID = 1")
 public class SaleableProduct
 {
     String id;
@@ -241,28 +252,6 @@ public class SaleableProduct
     {
         return currency;
     }
-}]]></source>
-                <p>
-                    and then we define how this class is mapped to the <b>View</b>
-                </p>
-<source><![CDATA[
-@Entity
-@Extension(vendorName="datanucleus", key="view-definition", value="CREATE VIEW SALEABLE_PRODUCT
-(
-    {this.id},
-    {this.name},
-    {this.price},
-    {this.currency}
-) AS
-SELECT ID, NAME, CURRENT_PRICE AS PRICE, CURRENCY FROM PRODUCT
-WHERE PRODUCT.STATUS_ID = 1")
-public class SaleableProduct
-{
-    long id;
-    String name;
-    double price;
-    String currency;
-
 }]]></source>
                 <p>
                     Please note the following
