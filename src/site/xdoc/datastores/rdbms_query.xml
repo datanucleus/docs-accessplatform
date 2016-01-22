@@ -13,15 +13,12 @@
                 following
             </p>
             <ul>
-                <li><a href="../jdo/jdoql.html">JDOQL</a> - language based around the objects that are persisted
-                    and using Java-type syntax</li>
+                <li><a href="../jdo/jdoql.html">JDOQL</a> - language based around the objects that are persisted and using Java-type syntax</li>
                 <li><a href="../jdo/sql.html">SQL</a> - language found on alomst all RDBMS.</li>
-                <li><a href="../jpa/jpql.html">JPQL</a> - language defined in the JPA1 specification for JPA 
-                    persistence which closely mirrors SQL.</li>
+                <li><a href="../jpa/jpql.html">JPQL</a> - language defined in the JPA1 specification for JPA persistence which closely mirrors SQL.</li>
             </ul>
             <p>
-                When using queries with RDBMS there are some specific situations where it can be useful to 
-                benefit from special treatment. These are listed here.
+                When using queries with RDBMS there are some specific situations where it can be useful to benefit from special treatment. These are listed here.
             </p>
 
             <a name="resultSetType"/>
@@ -32,14 +29,11 @@
                 </p>
                 <ul>
                     <li><i>forward-only</i> : the result set is navegable forwards only</li>
-                    <li><i>scroll-sensitive</i> : the result set is scrollable in both directions and is
-                        sensitive to changes in the datastore</li>
-                    <li><i>scroll-insensitive</i> : the result set is scrollable in both directions and is
-                        insensitive to changes in the datastore</li>
+                    <li><i>scroll-sensitive</i> : the result set is scrollable in both directions and is sensitive to changes in the datastore</li>
+                    <li><i>scroll-insensitive</i> : the result set is scrollable in both directions and is insensitive to changes in the datastore</li>
                 </ul>
                 <p>
-                    DataNucleus allows specification of this type as a query extension
-                    <b>datanucleus.rdbms.query.resultSetType</b>.
+                    DataNucleus allows specification of this type as a query extension <b>datanucleus.rdbms.query.resultSetType</b>.
                 </p>
                 <p>
                     To do this on a per query basis for JDO you would do
@@ -118,8 +112,7 @@ query.setHint("datanucleus.query.resultSizeMethod", "count");</source>
                 <p>
                     When a transaction is committed by default all remaining results for a query are loaded
                     so that the query is usable thereafter. With a large result set you clearly don't want this to
-                    happen. So in this case you should set the extension <b>datanucleus.query.loadResultsAtCommit</b>
-                    to false.
+                    happen. So in this case you should set the extension <b>datanucleus.query.loadResultsAtCommit</b> to false.
                 </p>
                 <p>
                     To do this on a per query basis for JDO you would do
@@ -161,10 +154,8 @@ query.setHint("datanucleus.rdbms.query.resultSetConcurrency", "read-only");</sou
                 </p>
                 <ul>
                     <li><b>datanucleus.rdbms.query.fetchDirection</b> - controls the direction that the 
-                        ResultSet is navigated. By default this is forwards only. Use this property to change 
-                        that.</li>
-                    <li><b>datanucleus.rdbms.query.resultSetConcurrency</b> - controls whether the ResultSet is
-                        read only or updateable.</li>
+                        ResultSet is navigated. By default this is forwards only. Use this property to change that.</li>
+                    <li><b>datanucleus.rdbms.query.resultSetConcurrency</b> - controls whether the ResultSet is read only or updateable.</li>
                 </ul>
                 <p>
                     Bear in mind that not all RDBMS support all of the possible values for these options. That
