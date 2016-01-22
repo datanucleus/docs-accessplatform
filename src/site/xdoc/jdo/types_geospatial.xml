@@ -507,27 +507,6 @@
                     <code>postgis-hasMeasure</code> extension.</li>
                 </ul>
             </subsection>
-            <subsection name="Querying Geospatial types">
-                <p>
-                    DataNucleus-Geospatial defines a set of functions that can be applied to geospatial types in JDOQL queries. These functions follow the definitions 
-                    in the <a href="http://www.opengeospatial.org/standards/sfa">OGC Simple Feature specification</a> and are translated into appropriate 
-                    SQL statements, provided the underlying database system implements the functions and the geometry object model accordingly. There are 
-                    also some additional functions that are not defined OGC SF, most of them are database specific.
-                </p>
-                <p>
-                    This set of more than eighty functions contains:
-                </p>
-                <ul>
-                    <li>Basic methods on geometry objects like <code>IsSimple()</code> and <code>Boundary()</code>.</li>
-                    <li>Methods for testing geospatial relations between geometric objects like <code>Intersects()</code> and <code>Touches()</code></li>
-                    <li>Methods that support geospatial analysis like <code>Union()</code> and <code>Difference()</code></li>
-                    <li>Methods to create geometries from WKB/WKT (Well Known Binary/Text) like <code>GeomFromText()</code> and <code>GeomFromWKB()</code></li>
-                </ul>
-                <p>
-                    For a compelete list of all supported functions and usage examples, please see 
-                    <a href="rdbms_jdoql_spatial_methods.html">JDOQL : Geospatial Methods</a>.
-                </p>
-            </subsection>
         </section>
     </body>
 </document>
