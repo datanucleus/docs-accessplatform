@@ -3,13 +3,13 @@
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
     <properties>
-        <title>RDBMS Geopatial Types</title>
+        <title>Geopatial Types</title>
     </properties>
 
     <body>
-        <section name="RDBMS : Geopatial Types Support">
+        <section name="Geopatial Types Support">
             <p>
-                DataNucleus supports by default <a href="../jdo/types.html">a large number of Java types</a>. 
+                DataNucleus supports by default <a href="types.html">a large number of Java types</a>. 
                 <b>DataNucleus Geospatial</b> supports the storage and query of a number of different geospatial data 
                 types, like points, polygons or lines. Geospatial types like these are used to store geographic 
                 information like locations, rivers, cities, roads, etc. The datanucleus-geospatial plugin allows using 
@@ -17,7 +17,7 @@
                 interface to read and manipulate any business data.
             </p>
             <p>
-                The table below shows the currently supported <b>Geospatial</b> SCO Java types in DataNucleus
+                The table below shows the currently supported <b>Geospatial</b> SCO Java types in DataNucleus for RDBMS
             </p>
             <table>
                 <tr>
@@ -467,7 +467,8 @@
                     about the geometry types in use. The position of these tags in the meta-data determines their scope. 
                     If you use them inside a &lt;field&gt;-tag the values are only used for that field specifically, if 
                     you use them inside the &lt;package&gt;-tag the values are in effect for all (geometry) fields of 
-                    all classes inside that package, etc. 
+                    all classes inside that package, etc.
+                    <b>This metadata is for JDO. Please request that it be updated for the JPA API</b>
                 </p>
                 <source><![CDATA[<package name="org.datanucleus.samples.jtsgeometry">
     <extension vendor-name="datanucleus" key="spatial-dimension" value="2"/> [1]
@@ -507,6 +508,7 @@
                     <code>postgis-hasMeasure</code> extension.</li>
                 </ul>
             </subsection>
+
             <subsection name="Querying Geospatial types">
                 <p>
                     DataNucleus-Geospatial defines a set of functions that can be applied to geospatial types in JDOQL queries. These functions follow the definitions 
@@ -526,11 +528,6 @@
                 <p>
                     For a compelete list of all supported functions and usage examples, please see 
                     <a href="rdbms_jdoql_spatial_methods.html">JDOQL : Geospatial Methods</a>.
-                </p>
-            </subsection>
-            <subsection name="Dependencies">
-                <p>
-                    Depending on the mapping scenario you want to use, there is a different set of JARs that need to be in your classpath.
                 </p>
             </subsection>
         </section>
