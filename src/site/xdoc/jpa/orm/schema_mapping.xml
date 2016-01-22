@@ -15,8 +15,17 @@
                 If you don't specify the table and column names, then DataNucleus will generate table and column names for you.
                 <b>You should specify your table and column names if you have an existing schema.</b> 
                 Failure to do so will mean that DataNucleus uses its own names and these will almost certainly not match what you have in the datastore.
+                There are several aspects to cover here
             </p>
+            <ul>
+                <li><a href="#names">Table and column names</a></li>
+                <li><a href="#nullsdefaults">Column nullability and default value</a></li>
+                <li><a href="#columntypes">Column Types</a></li>
+                <li><a href="#columnposition">Position of a column in a table</a></li>
+                <li><a href="#rdbmsviews">Mapping a class to an RDBMS View</a></li>
+            </ul>
 
+            <a name="names"/>
             <subsection name="Tables and Column names">
                 <p> 
                     The main thing that developers want to do when they set up the persistence of their data is to control the names of the 
@@ -68,6 +77,7 @@ public class Hotel
                 <br/>
             </subsection>
 
+            <a name="nullsdefaults"/>
             <subsection name="Column nullability and default values">
                 <p>
                     So we've seen how to specify the basic structure of a table, naming the table and its columns, and how to control the 
@@ -106,7 +116,7 @@ public class Payment
 </entity>]]></source>
                 <p>
                     So we make use of the <i>nullable</i> attribute. The table, when created by DataNucleus, will then provide the nullability 
-                    that we require. Unfortunately with JPA there is no way to specify a default value for a field when it hasnt been
+                    that we require. Unfortunately with JPA there is no way to specify a default value for a field when it hasn't been
                     set (unlike JDO where you can do that).
                 </p>
                 <p>See also :-</p>
@@ -116,6 +126,7 @@ public class Payment
                 <br/>
             </subsection>
 
+            <a name="columntypes"/>
             <subsection name="Column types">
                 <p>
                     DataNucleus will provide a default type for any columns that it creates, but it will allow users to 

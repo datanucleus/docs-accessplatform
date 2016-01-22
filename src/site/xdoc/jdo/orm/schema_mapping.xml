@@ -24,6 +24,8 @@
                 <li><a href="#nullsdefaults">Column nullability and default value</a></li>
                 <li><a href="#columntypes">Column Types</a></li>
                 <li><a href="#unmapped">Columns with no field in the class</a></li>
+                <li><a href="#columnposition">Position of a column in a table</a></li>
+                <li><a href="#rdbmsviews">Mapping a class to an RDBMS View</a></li>
             </ul>
 
             <a name="names"/>
@@ -324,7 +326,7 @@ public class Payment
             </subsection>
 
             <a name="columnposition"/>
-            <subsection name="columnposition">
+            <subsection name="Position of column in a table">
                 <p>
                     With some datastores it is desirable to be able to specify the relative position of a column in the table schema. 
                     The default (for DataNucleus) is just to put them in ascending alphabetical order.
@@ -333,6 +335,7 @@ public class Payment
                 </p>
             </subsection>
 
+            <a name="rdbmsviews"/>
             <subsection name="RDBMS : Views">
                 <img src="../images/nucleus_extension.gif" alt=""/>
                 <p>
