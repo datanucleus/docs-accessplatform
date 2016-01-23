@@ -36,12 +36,12 @@
         <dependency>
             <groupId>org.datanucleus</groupId>
             <artifactId>datanucleus-jdo-query</artifactId>
-            <version>(4.1.99, )</version>
+            <version>(4.9, )</version>
         </dependency>
         <dependency>
             <groupId>org.datanucleus</groupId>
             <artifactId>javax.jdo</artifactId>
-            <version>[3.2.0-m1, 3.9)</version>
+            <version>[3.2.0-m4, 3.9)</version>
         </dependency>
         ...
      </dependencies>
@@ -49,8 +49,8 @@
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
-                    <source>1.7</source>
-                    <target>1.7</target>
+                    <source>1.8</source>
+                    <target>1.8</target>
                 </configuration>
             </plugin>
 ]]></source>
@@ -58,7 +58,7 @@
                     With Eclipse you need to
                 </p>
                 <ul>
-                    <li>Go to <i>Java Compiler</i> and make sure the compiler compliance level is 1.7 or above</li>
+                    <li>Go to <i>Java Compiler</i> and make sure the compiler compliance level is 1.8 or above</li>
                     <li>Go to <i>Java Compiler -> Annotation Processing</i> and enable the project specific settings and enable annotation processing</li>
                     <li>Go to <i>Java Compiler -> Annotation Processing -> Factory Path</i>, enable the project 
                         specific settings and then add the following jars to the list: "datanucleus-jdo-query.jar", "datanucleus-api-jdo.jar", "jdo-api.jar"</li>
