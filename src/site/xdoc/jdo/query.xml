@@ -63,9 +63,9 @@ Query q = pm.newQuery(MyClass.class);
 q.setFilter("field2 < threshold");
 q.declareParameters("java.util.Date threshold");]]></source>
                     </li>
-                    <li>JDOQL : Use the <a href="jdoql_typesafe.html">typesafe API</a> to define the query
+                    <li>JDOQL : Use the <a href="jdoql_typesafe.html">Typed Query API</a> to define the query
                 <source><![CDATA[
-TypesafeQuery<MyClass> q = pm.newTypesafeQuery(MyClass.class);
+JDOQLTypedQuery<MyClass> q = pm.newJDOQLTypedQuery(MyClass.class);
 QMyClass cand = QMyClass.candidate();
 List<Product> results = 
     q.filter(cand.field2.lt(q.doubleParameter("threshold"))).executeList();]]></source>
