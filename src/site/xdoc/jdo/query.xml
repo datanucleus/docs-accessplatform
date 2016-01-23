@@ -42,33 +42,30 @@
                     <li>Specifying the query language, and using a single-string form of the query
 <source><![CDATA[
 Query q = pm.newQuery("javax.jdo.query.JDOQL", 
-    "SELECT FROM mydomain.MyClass WHERE field2 < threshold " +
-    "PARAMETERS java.util.Date threshold");]]></source>
+    "SELECT FROM mydomain.MyClass WHERE field2 < threshold PARAMETERS java.util.Date threshold");]]></source>
                     or alternatively
 <source><![CDATA[
 Query q = pm.newQuery("SQL", "SELECT * FROM MYTABLE WHERE COL1 == 25);]]></source>
                     </li>
                     <li>A <a href="#named">"named" query</a>, (pre-)defined in metadata (refer to metadata docs).
 <source><![CDATA[
-Query q = pm.newNamedQuery(MyClass.class, "MyQuery1");]]></source>
+Query<MyClass> q = pm.newNamedQuery(MyClass.class, "MyQuery1");]]></source>
                     </li>
                     <li>JDOQL : Use the <a href="jdoql.html#singlestring">single-string</a> form of the query
 <source><![CDATA[
-Query q = pm.newQuery("SELECT FROM mydomain.MyClass WHERE field2 < threshold " +
-    "PARAMETERS java.util.Date threshold");]]></source>
+Query q = pm.newQuery("SELECT FROM mydomain.MyClass WHERE field2 < threshold PARAMETERS java.util.Date threshold");]]></source>
                     </li>
                     <li>JDOQL : Use the <a href="jdoql_declarative.html">declarative API</a> to define the query
-                <source><![CDATA[
-Query q = pm.newQuery(MyClass.class);
+<source><![CDATA[
+Query<MyClass> q = pm.newQuery(MyClass.class);
 q.setFilter("field2 < threshold");
 q.declareParameters("java.util.Date threshold");]]></source>
                     </li>
                     <li>JDOQL : Use the <a href="jdoql_typesafe.html">typesafe API</a> to define the query
-                <source><![CDATA[
+<source><![CDATA[
 TypesafeQuery<MyClass> q = pm.newTypesafeQuery(MyClass.class);
 QMyClass cand = QMyClass.candidate();
-List<Product> results = 
-    q.filter(cand.field2.lt(q.doubleParameter("threshold"))).executeList();]]></source>
+List<Product> results = q.filter(cand.field2.lt(q.doubleParameter("threshold"))).executeList();]]></source>
                     </li>
                 </ul>
                 <p>
@@ -80,11 +77,9 @@ List<Product> results =
 
             <subsection name="Compiling a query">
                 <p>
-                    An intermediate step once you have your query defined, if you want to check its validity
-                    is to <i>compile</i> it. You do this as follows
+                    An intermediate step once you have your query defined, if you want to check its validity, is to <i>compile</i> it. You do this as follows
                 </p>
-                <source><![CDATA[
-q.compile();]]></source>
+<source><![CDATA[q.compile();]]></source>
                 <p>
                     If the query is invalid, then a JDO exception will be thrown.
                 </p>
@@ -155,7 +150,7 @@ ResultClass result = q.executeResultUnique(ResultClass.class);
                 <p>
                     To do this on a per query basis for JDO you would do
                 </p>
-                <source>query.addExtension("datanucleus.query.flushBeforeExecution","true");</source>
+                <source>query.extension("datanucleus.query.flushBeforeExecution","true");</source>
                 <p>
                     You can also specify this for all queries using a persistence property 
                     <b>datanucleus.query.flushBeforeExecution</b> which would then apply to ALL queries for that PMF.
@@ -321,7 +316,7 @@ q.getFetchPlan().setFetchSize(FetchPlan.FETCH_SIZE_OPTIMAL);</source>
                     then be accessed later (meaning that the query is still usable). Where you have a large result 
                     set and you don't want this behaviour you can turn it off by specifying a Query extension
                 </p>
-                <source>q.addExtension("datanucleus.query.loadResultsAtCommit", "false");</source>
+                <source>q.extension("datanucleus.query.loadResultsAtCommit", "false");</source>
                 <p>
                     so when the transaction is committed, no more results will be available from the query.
                 </p>
@@ -331,7 +326,7 @@ q.getFetchPlan().setFetchSize(FetchPlan.FETCH_SIZE_OPTIMAL);</source>
                     In some situations you don't want all <i>FetchPlan</i> fields retrieving, and DataNucleus provides 
                     an extension to turn this off, like this
                 </p>
-                <source>q.addExtension("datanucleus.query.useFetchPlan", "false");</source>
+                <source>q.extension("datanucleus.query.useFetchPlan", "false");</source>
                 <br/>
             </subsection>
 
@@ -345,8 +340,7 @@ q.getFetchPlan().setFetchSize(FetchPlan.FETCH_SIZE_OPTIMAL);</source>
 Query q = pm.newQuery(...);
 q.serializeRead(true);]]></source>
                 <p> 
-                    You can also specify this for all queries for all PMs using a PMF property 
-                    <b>datanucleus.SerializeRead</b>.
+                    You can also specify this for all queries for all PMs using a PMF property <b>datanucleus.SerializeRead</b>.
                     In addition you can perform this on a per-transaction basis by doing
                 </p>
                 <source>tx.setSerializeRead(true);</source>
