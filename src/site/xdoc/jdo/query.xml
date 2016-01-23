@@ -91,6 +91,30 @@ q.compile();]]></source>
                 <br/>
             </subsection>
 
+            <subsection name="Setting query parameters">
+                <p>
+                    Queries can be made flexible and reusable by defining parameters as part of the query, so that we can execute the same query
+                    with different sets of parameters and minimise resources.
+                </p>
+<source><![CDATA[
+// JDOQL Using named parameters
+Query<Product> q = pm.newQuery(Product.class);
+q.setFilter("this.name == :name && this.serialNo == :serial");
+
+Map params = new HashMap();
+params.put("name", "Walkman");
+params.put("serial", "123021");
+q.setNamedParameters(params);
+
+
+// JDOQL Using numbered parameters
+Query<Product> q = pm.newQuery(Product.class);
+q.setFilter("this.name == ?1 && this.serialNo == ?2");
+
+q.setParameters("Walkman", "123021");
+]]></source>
+            </subsection>
+
             <subsection name="Executing a query">
                 <p>
                     So we have set up our query. We now execute it. We have various methods to do this, depending on what result we are expecting etc
