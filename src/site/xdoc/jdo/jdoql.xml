@@ -28,8 +28,8 @@ q.setFilter("lastName == 'Jones' && age < age_limit");
 q.declareParameters("int age_limit");
 List<Person> results = (List<Person>)q.execute(20);
 
-Typesafe JDOQL (DataNucleus) :
-TypesafeQuery<Person> tq = pm.newTypesafeQuery(Person.class);
+Typed JDOQL :
+JDOQLTypedQuery<Person> tq = pm.newJDOQLTypedQuery(Person.class);
 QPerson cand = QPerson.candidate();
 List<Person> results = 
     tq.filter(cand.lastName.eq("Jones").and(cand.age.lt(tq.intParameter("age_limit"))))
