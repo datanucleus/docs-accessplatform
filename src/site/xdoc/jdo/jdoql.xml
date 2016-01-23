@@ -15,20 +15,19 @@
                 A typical JDOQL query may be created in several ways. 
                 Here's an example expressed in the 3 supported ways
             </p>
-            <source><![CDATA[
+<source><![CDATA[
 Single-String JDOQL :
 Query q = pm.newQuery(
-    "SELECT FROM mydomain.Person WHERE lastName == 'Jones' && " +
-    "age < age_limit PARAMETERS int age_limit");
+    "SELECT FROM mydomain.Person WHERE lastName == 'Jones' && age < age_limit PARAMETERS int age_limit");
 List<Person> results = (List<Person>)q.execute(20);
 
 Declarative JDOQL :
 Query q = pm.newQuery(Person.class);
 q.setFilter("lastName == 'Jones' && age < age_limit");
 q.declareParameters("int age_limit");
-List<Person> results = (List<Person>)q.execute(20);
+List<Person> results = q.setParameters(20).executeList();
 
-Typesafe JDOQL (DataNucleus) :
+Typed JDOQL :
 TypesafeQuery<Person> tq = pm.newTypesafeQuery(Person.class);
 QPerson cand = QPerson.candidate();
 List<Person> results = 
@@ -122,8 +121,8 @@ public class Keyboard implements ComputerPeripheral
                     To query it we simply do
                 </p>
 <source><![CDATA[
-Query q = pm.newQuery("SELECT FROM " + ComputerPeripheral.class.getName());
-List<ComputerPeripheral> results = (List<ComputerPeripheral>)q.execute();]]></source>
+Query q = pm.newQuery(ComputerPeripheral.class);
+List<ComputerPeripheral> results = q.executeList();]]></source>
                 <p>
                     The key rules are
                 </p>
@@ -350,17 +349,16 @@ List<ComputerPeripheral> results = (List<ComputerPeripheral>)q.execute();]]></so
                     Here's an example using a Product class, looking for objects which their abbreviation is the 
                     beginning of a trade name. The trade name is provided as parameter.
                 </p>
-                <source><![CDATA[
+<source><![CDATA[
 Declarative JDOQL :
-Query query = pm.newQuery(mydomain.Product.class);
+Query query = pm.newQuery(Product.class);
 query.setFilter(":tradeName.startsWith(this.abbreviation)");
-List results = (List)query.execute("Workbook Advanced");
+List<Product> results = query.setParameters("Workbook Advanced").executeList();
 
 Single-String JDOQL :
-Query query = pm.newQuery(
-    "SELECT FROM mydomain.Product " +
-    "WHERE :tradeName.startsWith(this.abbreviation)");
-List results = (List)query.execute("Workbook Advanced");]]></source>
+Query query = pm.newQuery("SELECT FROM mydomain.Product WHERE :tradeName.startsWith(this.abbreviation)");
+List results = (List)query.execute("Workbook Advanced");
+]]></source>
 
                 <a name="methods_collection"/>
                 <h4>Collection Methods</h4>
@@ -402,15 +400,14 @@ List results = (List)query.execute("Workbook Advanced");]]></source>
                     Products in it. Here we make use of a variable (<i>prd</i> to represent the Product being 
                     contained
                 </p>
-                <source><![CDATA[
+<source><![CDATA[
 Declarative JDOQL :
-Query query = pm.newQuery(mydomain.Inventory.class);
+Query query = pm.newQuery(Inventory.class);
 query.setFilter("products.contains(prd) && (prd.name=='product 1' || prd.name=='product 2')");
-List results = (List)query.execute();
+List<Inventory> results = query.executeList();
 
 Single-String JDOQL:
-Query query = pm.newQuery(
-    "SELECT FROM mydomain.Inventory " + 
+Query query = pm.newQuery("SELECT FROM mydomain.Inventory " + 
     "WHERE products.contains(prd) && (prd.name=='product 1' || prd.name=='product 2')");
 List results = (List)query.execute();]]></source>
 
@@ -466,20 +463,20 @@ List results = (List)query.execute();]]></source>
                     using a Map, keyed by the Product name. The query searches for all Inventories that contain a 
                     product with the name "product 1".
                 </p>
-                <source>
+<source><![CDATA[
 Declarative JDOQL :
 Query query = pm.newQuery(mydomain.Inventory.class, "products.containsKey('product 1')");
-List results = (List)query.execute();
+List<Inventory> results = query.execute();
 
 Single-String JDOQL :
-Query query = pm.newQuery(
-    "SELECT FROM mydomain.Inventory " +
+Query query = pm.newQuery("SELECT FROM mydomain.Inventory " +
     "WHERE products.containsKey('product 1')");
-List results = (List)query.execute();</source>
+List results = (List)query.execute();
+]]></source>
                 <p>
                     Here's the source code for reference
                 </p>
-                <source><![CDATA[
+<source><![CDATA[
 class Inventory
 {
     Map<String, Product> products;
@@ -871,7 +868,7 @@ class Product
                     This sets the type of the parameter, and when you pass the value in at <i>execute</i> it has to 
                     be of that type. For example
                 </p>
-                <source><![CDATA[
+<source><![CDATA[
 Query query = pm.newQuery(
     "SELECT FROM mydomain.Product WHERE price < limit PARAMETERS double limit");
 List results = (List)query.execute(150.00);]]></source>
@@ -883,7 +880,7 @@ List results = (List)query.execute(150.00);]]></source>
                     If you don't declare the parameters when defining the query but instead prefix identifiers in 
                     the query with <b>:</b> (colon) then these are <b>implicit</b> parameters. For example
                 </p>
-                <source><![CDATA[
+<source><![CDATA[
 Query query = pm.newQuery(
     "SELECT FROM mydomain.Product WHERE price < :limit");
 List results = (List)query.execute(150.00);]]></source>
@@ -1025,11 +1022,11 @@ IF (conditional_expression) scalar_expression {ELSE IF (conditional_expression) 
                     B1, B2, B3. Clearly the field "b" of A can be of type B, B1, B2, B3 etc, and we want to find 
                     all objects of type A that have the field "b" that is of type B2. We do it like this
                 </p>
-                <source><![CDATA[
+<source><![CDATA[
 Declarative JDOQL :
 Query query = pm.newQuery(A.class);
 query.setFilter("b instanceof mydomain.B2");
-List results = (List)query.execute();
+List<A> results = query.executeList();
 
 Single-String JDOQL :
 Query query = pm.newQuery("SELECT FROM mydomain.A WHERE b instanceof mydomain.B2");
@@ -1078,11 +1075,10 @@ averageSalaryQuery.setResult("avg(this.salary)");
 Query q = pm.newQuery(Employee.class, "salary > averageSalary");
 q.declareVariables("double averageSalary");
 q.addSubquery(averageSalaryQuery, "double averageSalary", null, null);
-List results = (List)q.execute();]]></source>
+List<Employee> results = q.executeList();]]></source>
                 <p>
                     So we define a subquery as its own Query (that could be executed just like any query if so desired),
-                    and the in the main query have an implicit variable that we define as being represented by the
-                    subquery.
+                    and the in the main query have an implicit variable that we define as being represented by the subquery.
                 </p>
 
                 <h4>Referring to the outer query in the subquery</h4>
@@ -1095,13 +1091,12 @@ SELECT FROM org.datanucleus.Employee WHERE salary >
     (SELECT avg(e.salary) FROM org.datanucleus.Employee e WHERE e.lastName == this.lastName)
 ]]></source>
                 <p>
-                    So with single-string JDOQL we make use of the alias identifier "this" to link back to
-                    the outer query.
+                    So with single-string JDOQL we make use of the alias identifier "this" to link back to the outer query.
                 </p>
                 <p>
                     Using the Declarative API, to achieve the same thing we would do
                 </p>
-                <source><![CDATA[
+<source><![CDATA[
 Query averageSalaryQuery = pm.newQuery(Employee.class);
 averageSalaryQuery.setResult("avg(this.salary)");
 averageSalaryQuery.setFilter("this.lastName == :lastNameParam");
@@ -1109,7 +1104,7 @@ averageSalaryQuery.setFilter("this.lastName == :lastNameParam");
 Query q = pm.newQuery(Employee.class, "salary > averageSalary");
 q.declareVariables("double averageSalary");
 q.addSubquery(averageSalaryQuery, "double averageSalary", null, "this.lastName");
-List results = (List)q.execute();]]></source>
+List<Employee> results = q.executeList();]]></source>
                 <p>
                     So with the Declarative API we make use of parameters, and the last argument to <i>addSubquery</i>
                     is the value of the parameter <i>lastNameParam</i>.
@@ -1121,7 +1116,7 @@ List results = (List)q.execute();]]></source>
                     outer query, so JDOQL subqueries has the notion of a <i>candidate expression</i>.
                     This is an expression relative to the candidate of the outer query. An example
                 </p>
-                <source><![CDATA[
+<source><![CDATA[
 SELECT FROM org.datanucleus.Employee WHERE this.weeklyhours > 
     (SELECT AVG(e.weeklyhours) FROM this.department.employees e)]]></source>
                 <p>
@@ -1131,14 +1126,14 @@ SELECT FROM org.datanucleus.Employee WHERE this.weeklyhours >
                 <p>
                     You can do the same with the Declarative API. Like this
                 </p>
-                <source><![CDATA[
+<source><![CDATA[
 Query averageHoursQuery = pm.newQuery(Employee.class);
 averageHoursQuery.setResult("avg(this.weeklyhours)");
 
 Query q = pm.newQuery(Employee.class);
 q.setFilter("this.weeklyhours > averageWeeklyhours");
 q.addSubquery(averageHoursQuery, "double averageWeeklyhours", "this.department.employees", null);
-                ]]></source>
+]]></source>
                 <p>
                     so now our subquery has a candidate related to the outer query candidate.
                 </p>
@@ -1353,7 +1348,7 @@ public class Price
                 <source><![CDATA[
 Query query = pm.newQuery(...);
 query.setCandidates(myCandidates);
-List<Product> results = (List<Product>)query.execute();]]></source>
+List<Product> results = query.executeList();]]></source>
                 <br/>
             </subsection>
         </section>
@@ -1369,7 +1364,7 @@ List<Product> results = (List<Product>)query.execute();]]></source>
             <subsection name="Deletion by Query">
                 <p>
                     If you want to delete instances of a candidate using a query, you simply define
-                    the query candidate/filter in the normal way, and then instead of calling <i>query.execute()</i>
+                    the query candidate/filter in the normal way, and then instead of calling <i>query.executeXXX</i>
                     you call <i>query.deletePersistentAll()</i>. Like this
                 </p>
                 <source><![CDATA[
