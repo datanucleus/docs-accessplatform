@@ -93,52 +93,64 @@ q.compile();]]></source>
 
             <subsection name="Executing a query">
                 <p>
-                    So we have set up our query. We now execute it
+                    So we have set up our query. We now execute it. We have various methods to do this, depending on what result we are expecting etc
                 </p>
-                <source><![CDATA[
+<source><![CDATA[
 Object result = q.execute();
-]]></source>
-                <p>
-                    If we have parameters to pass in we can also do any of
-                </p>
-                <source><![CDATA[
-Object result = q.execute(paramVal1);
 
+Object result = q.execute(paramVal1);
 
 Object result = q.execute(paramVal1, paramVal2);
 
-
 Object result = q.executeWithArray(new Object[]{paramVal1, paramVal2});
 
-
-Map paramMap = new HashMap();
-paramMap("param1", paramVal1);
-paramMap("param2", paramVal2);
 Object result = q.executeWithMap(paramMap);
+
+
+List results = q.executeList();
+
+Object result = q.executeUnique();
+
+List<ResultClass> results = q.executeResultList(ResultClass.class);
+
+ResultClass result = q.executeResultUnique(ResultClass.class);
 ]]></source>
+                <br/>
+            </subsection>
+
+            <a name="flushBeforeExecution"/>
+            <subsection name="Flush changes before execution">
+                <img src="../images/nucleus_extension.gif" border="0" alt=""/>
                 <p>
-                    By default, when a query is executed, it will execute in the datastore with what is present
-                    in the datastore at that time. If there are outstanding changes waiting to be flushed then these
-                    will not feature in the results. To flush these changes before execution, set the following
-                    query "extension" before calling <i>execute</i>
+                    When using optimistic transactions all updates to data are held until flush()/commit(). 
+                    This means that executing a query may not take into account changes made during that 
+                    transaction in some objects. DataNucleus allows a convenience of calling flush() just 
+                    before execution of queries so that all updates are taken into account.
+                    The property name is <b>datanucleus.query.flushBeforeExecution</b> and defaults to "false".
                 </p>
-                <source><![CDATA[
-q.addExtension("datanucleus.query.flushBeforeExecution","true");]]></source>
+                <p>
+                    To do this on a per query basis for JDO you would do
+                </p>
+                <source>query.addExtension("datanucleus.query.flushBeforeExecution","true");</source>
+                <p>
+                    You can also specify this for all queries using a persistence property 
+                    <b>datanucleus.query.flushBeforeExecution</b> which would then apply to ALL queries for that PMF.
+                </p>
                 <br/>
             </subsection>
 
             <a name="Extensions"/>
             <subsection name="Controlling the execution : Vendor extensions">
                 <p>
-                    JDO's query API allows implementations to support extensions and provides a simple interface
-                    for enabling the use of such extensions on queries.
+                    JDO's query API allows implementations to support extensions and provides a simple interface for enabling the use of such extensions on queries.
+                    You can set extensions one by one, or via a map.
                 </p>
-                <source>q.addExtension("extension_name", "value");</source>
-                <source><![CDATA[
-HashMap exts = new HashMap();
+                <source>q.extension("extension1", "value1").extension("extension2", "value2");</source>
+<source><![CDATA[
+Map exts = new HashMap();
 exts.put("extension1", value1);
 exts.put("extension2", value2);
-q.setExtensions(exts);]]></source>
+q.extensions(exts);]]></source>
                 <br/>
             </subsection>
 
@@ -152,7 +164,7 @@ q.setExtensions(exts);]]></source>
                     for the class in the normal way, but we also have some query that we know we will require, 
                     so we define the following in the Meta-Data.
                 </p>
-                <source>
+<source>
 &lt;jdo&gt;
     &lt;package name="mydomain"&gt;
         &lt;class name="Product"&gt;
@@ -168,9 +180,9 @@ q.setExtensions(exts);]]></source>
                     Products (and subclasses) that have a <i>status</i> of "Sold Out". Out of interest, what we would 
                     then do in our application to execute this query woule be
                 </p>
-                <source>
-Query q = pm.newNamedQuery(mydomain.Product.class,"SoldOut");
-Collection results = (Collection)q.execute();</source>
+<source><![CDATA[
+Query<Product> q = pm.newNamedQuery(mydomain.Product.class,"SoldOut");
+List<Product> results = q.executeList();]]></source>
                 <p>
                     The above example was for the JDOQL object-based query language. We can do a similar thing using 
                     SQL, so we define the following in our MetaData for our <i>Product</i> class
@@ -191,9 +203,10 @@ Collection results = (Collection)q.execute();</source>
                     than a specified value. This leaves us the flexibility to specify the value at runtime. So here we 
                     run our named query, asking for the names of all Products with price below 20 euros.
                 </p>
-                <source>
-Query q = pm.newNamedQuery(mydomain.Product.class,"PriceBelowValue");
-Collection results = (Collection)q.execute(20.0);</source>
+<source><![CDATA[
+Query<Product> q = pm.newNamedQuery(mydomain.Product.class, "PriceBelowValue");
+q.setParameters(20.0);
+List<Product> results = q.executeList();]]></source>
                 <br/>
                 <p>
                     All of the examples above have been specifed within the &lt;class&gt; element of the MetaData. 
@@ -216,13 +229,12 @@ Collection results = (Collection)q.execute(20.0);</source>
 
             <a name="save_as_named"/>
             <subsection name="Saving a Query as a Named Query">
-                <img src="../images/nucleus_extension.gif" border="0" alt=""/>
                 <p>
-                    DataNucleus also allows you to create a query, and then save it as a "named" query for later reuse. You do this as follows
+                    DataNucleus JDO also allows you to create a query, and then save it as a "named" query for later reuse. You do this as follows
                 </p>
 <source><![CDATA[
 Query q = pm.newQuery("SELECT FROM Product p WHERE ...");
-((org.datanucleus.api.jdo.JDOQuery)q).saveAsNamedQuery("MyQuery");
+q.saveAsNamedQuery("MyQuery");
 ]]></source>
                 <p>
                     and you can thereafter access the query via
@@ -307,7 +319,7 @@ q.getFetchPlan().setFetchSize(FetchPlan.FETCH_SIZE_OPTIMAL);</source>
                 </p>
                 <source><![CDATA[
 Query q = pm.newQuery(...);
-q.setSerializeRead(true);]]></source>
+q.serializeRead(true);]]></source>
                 <p> 
                     You can also specify this for all queries for all PMs using a PMF property 
                     <b>datanucleus.SerializeRead</b>.
@@ -320,36 +332,13 @@ q.setSerializeRead(true);]]></source>
                 <br/>
             </subsection>
 
-            <a name="flushBeforeExecution"/>
-            <subsection name="Flush changes before execution">
-                <img src="../images/nucleus_extension.gif" border="0" alt=""/>
-                <p>
-                    When using optimistic transactions all updates to data are held until flush()/commit(). 
-                    This means that executing a query may not take into account changes made during that 
-                    transaction in some objects. DataNucleus allows a convenience of calling flush() just 
-                    before execution of queries so that all updates are taken into account.
-                    The property name is <b>datanucleus.query.flushBeforeExecution</b> and defaults to "false".
-                </p>
-                <p>
-                    To do this on a per query basis for JDO you would do
-                </p>
-                <source>query.addExtension("datanucleus.query.flushBeforeExecution","true");</source>
-                <p>
-                    You can also specify this for all queries using a persistence property 
-                    <b>datanucleus.query.flushBeforeExecution</b> which would then apply to ALL queries for 
-                    that PMF.
-                </p>
-                <br/>
-            </subsection>
-
             <a name="Timeout"/>
             <subsection name="Controlling the execution : timeout on datastore reads">
                 <source><![CDATA[
-q.setDatastoreReadTimeout(1000);]]></source>
+q.datastoreReadTimeoutMillis(1000);]]></source>
                 <p>
                     <i>Sets the timeout for this query (in milliseconds).</i> 
-                    Will throw a JDOUnsupportedOperationException if the query implementation doesn't support
-                    timeouts.
+                    Will throw a JDOUnsupportedOperationException if the query implementation doesn't support timeouts.
                 </p>
                 <br/>
             </subsection>
@@ -357,11 +346,10 @@ q.setDatastoreReadTimeout(1000);]]></source>
             <a name="WriteTimeout"/>
             <subsection name="Controlling the execution : timeout on datastore writes">
                 <source><![CDATA[
-q.setDatastoreWriteTimeout(1000);]]></source>
+q.datastoreWriteTimeoutMillis(1000);]]></source>
                 <p>
                     <i>Sets the timeout for this query (in milliseconds) when it is a delete/update.</i> 
-                    Will throw a JDOUnsupportedOperationException if the query implementation doesn't support
-                    timeouts.
+                    Will throw a JDOUnsupportedOperationException if the query implementation doesn't support timeouts.
                 </p>
                 <br/>
             </subsection>
