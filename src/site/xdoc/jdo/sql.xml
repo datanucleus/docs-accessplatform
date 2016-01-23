@@ -42,10 +42,11 @@
                 <p>
                     If you want to return instances of persistable types, then you can set the candidate class.
                 </p>
-                <source><![CDATA[
+<source><![CDATA[
 Query query = pm.newQuery("javax.jdo.query.SQL", "SELECT MY_ID, MY_NAME FROM MYTABLE");
 query.setClass(MyClass.class);
-List<MyClass> results = (List<MyClass>) query.execute();]]></source>
+List<MyClass> results = query.executeList();
+]]></source>
                 <br/>
             </subsection>
 
@@ -58,11 +59,18 @@ List<MyClass> results = (List<MyClass>) query.execute();]]></source>
                 <p>
                     Sometimes you know that the query can only every return 0 or 1 objects. In this case you can simplify your job by adding
                 </p>
-                <source><![CDATA[
+<source><![CDATA[
+Using traditional JDO Query API
 Query query = pm.newQuery("javax.jdo.query.SQL", "SELECT MY_ID, MY_NAME FROM MYTABLE");
 query.setClass(MyClass.class);
 query.setUnique(true);
-MyClass obj = (MyClass) query.execute();]]></source>
+MyClass obj = (MyClass) query.execute();
+
+Using JDO3.2 Query API
+Query query = pm.newQuery("javax.jdo.query.SQL", "SELECT MY_ID, MY_NAME FROM MYTABLE");
+query.setClass(MyClass.class);
+MyClass obj = query.executeUnique();
+]]></source>
                 <br/>
             </subsection>
 
@@ -71,10 +79,17 @@ MyClass obj = (MyClass) query.execute();]]></source>
                 <p>
                     If you want to dump each row of the SQL query results into an object of a particular type then you can set the result class. 
                 </p>
-                <source><![CDATA[
+<source><![CDATA[
+Using traditional JDO Query API
 Query query = pm.newQuery("javax.jdo.query.SQL", "SELECT MY_ID, MY_NAME FROM MYTABLE");
 query.setResultClass(MyResultClass.class);
-List<MyResultClass> results = (List<MyClass>) query.execute();]]></source>
+List<MyResultClass> results = (List<MyClass>) query.execute();
+
+
+Using JDO3.2 Query API
+Query query = pm.newQuery("javax.jdo.query.SQL", "SELECT MY_ID, MY_NAME FROM MYTABLE");
+List<MyResultClass> results = query.executeResultList(MyResultClass.class);
+]]></source>
                 <p>
                     The <i>Result Class</i> has to meet certain requirements. These are
                 </p>
@@ -87,7 +102,7 @@ List<MyResultClass> results = (List<MyClass>) query.execute();]]></source>
                 <p>
                     For example, if we are returning two columns like above, an <i>int</i> and a <i>String</i> then we define our result class like this
                 </p>
-                <source>
+<source>
 public class MyResultClass
 {
     protected int id = 0;
@@ -115,9 +130,9 @@ public class MyResultClass
                     In DataNucleus we have an extension that allows this to be overridden; to enable this you should pass the property <b>datanucleus.query.sql.allowAll</b> as true when 
                     creating the PersistenceManagerFactory and thereafter you just invoke your statements like this
                 </p>
-<source>
+<source><![CDATA[
 Query q = pm.newQuery("javax.jdo.query.SQL", "UPDATE MY_TABLE SET MY_COLUMN = ? WHERE MY_ID = ?");
-</source>
+]]></source>
                 <p>
                     you then pass any parameters in as normal for an SQL query.
                     If your query starts with "SELECT" then it is invoked using <i>preparedStatement.executeQuery(...)</i>.
@@ -134,10 +149,10 @@ Query q = pm.newQuery("javax.jdo.query.SQL", "UPDATE MY_TABLE SET MY_COLUMN = ? 
                 <p>
                     In JDO SQL queries can have parameters but must be <i>positional</i>. This means that you do as follows
                 </p>
-                <source>
-Query q = pm.newQuery("javax.jdo.query.SQL",
-    "SELECT col1, col2 FROM MYTABLE WHERE col3 = ? AND col4 = ? and col5 = ?");
-List results = (List) q.execute(val1, val2, val3);</source>
+<source><![CDATA[
+Query q = pm.newQuery("javax.jdo.query.SQL", "SELECT col1, col2 FROM MYTABLE WHERE col3 = ? AND col4 = ? and col5 = ?");
+List results = q.setParameters(val1, val2, val3).executeList();
+]]></source>
                 <p>
                     So we used traditional JDBC form of parametrisation, using "?".
                 </p>
@@ -147,21 +162,21 @@ List results = (List) q.execute(val1, val2, val3);</source>
                     DataNucleus also supports two further variations. The first is called <i>numbered</i> parameters
                     where we assign numbers to them, so the previous example could have been written like this
                 </p>
-                <source>
-Query q = pm.newQuery("javax.jdo.query.SQL",
-    "SELECT col1, col2 FROM MYTABLE WHERE col3 = ?1 AND col4 = ?2 and col5 = ?1");
-List results = (List) q.execute(val1, val2);</source>
+<source><![CDATA[
+Query q = pm.newQuery("javax.jdo.query.SQL", "SELECT col1, col2 FROM MYTABLE WHERE col3 = ?1 AND col4 = ?2 and col5 = ?1");
+List results = q.setParameters(val1, val2).executeList();
+]]></source>
                 <p>
                     so we can reuse parameters in this variation.
                     The second variation  is called <i>named</i> parameters where we assign names to them, and so the example can be further rewritten like this
                 </p>
-                <source>
-Query q = pm.newQuery("javax.jdo.query.SQL",
-    "SELECT col1, col2 FROM MYTABLE WHERE col3 = :firstVal AND col4 = :secondVal and col5 = :firstVal");
+<source><![CDATA[
+Query q = pm.newQuery("javax.jdo.query.SQL", "SELECT col1, col2 FROM MYTABLE WHERE col3 = :firstVal AND col4 = :secondVal and col5 = :firstVal");
 Map params = new HashMap();
 params.put("firstVal", val1);
 params.put("secondVal", val1);
-List results = (List) q.executeWithMap(params);</source>
+List results = q.setNamedParameters(params).executeList();
+]]></source>
                 <br/>
             </subsection>
 
@@ -171,19 +186,21 @@ List results = (List) q.executeWithMap(params);</source>
                 <p>
                     Here's an example for getting the size of a table without a candidate class.
                 </p>
-                <source>
+<source><![CDATA[
 Query query = pm.newQuery("javax.jdo.query.SQL", "SELECT count(*) FROM MYTABLE");
-List results = (List) query.execute();
-Integer tableSize = (Integer) result.iterator().next();</source>
+List results = query.executeList();
+Integer tableSize = (Integer) result.iterator().next();
+]]></source>
                 <p>
                     Here's an example for getting the maximum and miminum of a parameter without a candidate class.
                 </p>
-                <source>
+<source><![CDATA[
 Query query = pm.newQuery("javax.jdo.query.SQL", "SELECT max(PARAM1), min(PARAM1) FROM MYTABLE");
-List results = (List) query.execute();
+List results = query.executeList();
 Object[] measures = (Object[])result.iterator().next();
 Double maximum = (Double)measures[0];
-Double minimum = (Double)measures[1];</source>
+Double minimum = (Double)measures[1];
+]]></source>
                 <br/>
             </subsection>
 
@@ -191,21 +208,21 @@ Double minimum = (Double)measures[1];</source>
                 <p>
                     Here's an example for getting the size of a table with a result class. So we have a result class of
                 </p>
-                <source>
+<source><![CDATA[
 public class TableStatistics
 {
     private int total;
 
     public setTotal(int total);
-}</source>
+}]]></source>
                 <p>
                     So we define our query to populate this class
                 </p>
-                <source>
+<source><![CDATA[
 Query query = pm.newQuery("javax.jdo.query.SQL", "SELECT count(*) AS total FROM MYTABLE");
-query.setResultClass(TableStatistics.class);
-List results = (List) query.execute();
-TableStatistics tableStats = (TableStatistics) result.iterator().next();</source>
+List<TableStatistics> results = query.executeResultList(TableStatistics.class);
+TableStatistics tableStats = result.iterator().next();
+]]></source>
                 <p>
                     Each row of the results is of the type of our result class. Since our query is for an aggregate, there is actually only 1 row.
                 </p>
@@ -217,16 +234,17 @@ TableStatistics tableStats = (TableStatistics) result.iterator().next();</source
                     When we want to retrieve objects of a particular persistable class we specify the candidate class. Here we need to select, as a minimum, 
                     the identity columns for the class.
                 </p>
-                <source>
+<source><![CDATA[
 Query query = pm.newQuery("javax.jdo.query.SQL", "SELECT MY_ID, MY_NAME FROM MYTABLE");
 query.setClass(MyClass.class);
-List results = (List) query.execute();
+List<MyClass> results = query.executeList();
 Iterator resultsIter = results.iterator();
 while (resultsIter.hasNext())
 {
-    MyClass obj = (MyClass)resultsIter.next();
-}</source>
-                <source><![CDATA[
+    MyClass obj = resultsIter.next();
+}
+]]></source>
+<source><![CDATA[
 class MyClass
 {
     String name;
@@ -253,10 +271,11 @@ class MyClass
                     Here's an example for getting the number of people with a particular email address.
                     You simply add a "?" for all parameters that are passed in, and these are substituted at execution time.
                 </p>
-                <source>
+<source><![CDATA[
 Query query = pm.newQuery("javax.jdo.query.SQL", "SELECT count(*) FROM PERSON WHERE EMAIL_ADDRESS = ?");
-List results = (List) query.execute("nobody@datanucleus.org");
-Integer tableSize = (Integer) result.iterator().next();</source>
+List results = query.setParameters("nobody@datanucleus.org").executeList();
+Integer tableSize = (Integer) result.iterator().next();
+]]></source>
                 <br/>
             </subsection>
 
@@ -265,7 +284,7 @@ Integer tableSize = (Integer) result.iterator().next();</source>
                     While "named" queries were introduced primarily for JDOQL queries, we can define "named" queries for SQL also. 
                     So let's take a <i>Product</i> class, and we want to define a query for all products that are "sold out". We firstly add this to our MetaData
                 </p>
-                <source><![CDATA[
+<source><![CDATA[
 <jdo>
     <package name="org.datanucleus.samples.store">
         <class name="Product" identity-type="datastore" table="PRODUCT">
@@ -288,9 +307,9 @@ Integer tableSize = (Integer) result.iterator().next();</source>
                 <p>
                     And then in our application code we utilise the query
                 </p>
-                <source>
+<source><![CDATA[
 Query q = pm.newNamedQuery(Product.class, "SoldOut");
-List results = (List)q.execute();</source>
+List<Product> results = q.executeList();]]></source>
                 <br/>
             </subsection>
 
