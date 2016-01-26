@@ -131,7 +131,7 @@ EntityManager em;
                 <li><b>provider</b> - the JPA persistence provider to be used.
                     The JPA persistence "provider" for DataNucleus is 
                     <b>org.datanucleus.api.jpa.PersistenceProviderImpl</b></li>
-                <li><b>jta-data-source</b> - JNDI name for JTA connections</li>
+                <li><b>jta-data-source</b> - JNDI name for JTA connections (make sure you set <i>transaction-type</i> as <b>JTA</b> on the persistence-unit for this)</li>
                 <li><b>non-jta-data-source</b> - JNDI name for non-JTA connections.
                     Note that if using a JTA datasource as the primary connection, you ought to provide a
                     <i>non-jta-data-source</i> also since any schema generation and/or sequence handling will

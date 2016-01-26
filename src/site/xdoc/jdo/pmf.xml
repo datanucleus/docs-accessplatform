@@ -24,8 +24,7 @@
             </p>
             <source>
 Properties properties = new Properties();
-properties.setProperty("javax.jdo.PersistenceManagerFactoryClass", 
-    "org.datanucleus.api.jdo.JDOPersistenceManagerFactory");
+properties.setProperty("javax.jdo.PersistenceManagerFactoryClass", "org.datanucleus.api.jdo.JDOPersistenceManagerFactory");
 properties.setProperty("javax.jdo.option.ConnectionURL","jdbc:mysql://localhost/myDB");
 properties.setProperty("javax.jdo.option.ConnectionDriverName","com.mysql.jdbc.Driver");
 properties.setProperty("javax.jdo.option.ConnectionUserName","login");
@@ -103,8 +102,7 @@ PersistenceManagerFactory pmf = JDOHelper.getPersistenceManagerFactory("myPersis
                     <tr>
                         <td>javax.jdo.PersistenceManagerFactoryClass</td>
                         <td></td>
-                        <td>The name of the PMF implementation.
-                            <i>org.datanucleus.api.jdo.JDOPersistenceManagerFactory</i>
+                        <td>The name of the PMF implementation. <i>org.datanucleus.api.jdo.JDOPersistenceManagerFactory</i>
                             <b>Only required if you have more than one JDO implementation in the CLASSPATH</b></td>
                     </tr>
                     <tr>
@@ -323,10 +321,12 @@ PersistenceManagerFactory pmf = JDOHelper.getPersistenceManagerFactory("myPersis
             <p>There are several sub-elements of this <i>persistence.xml</i> file</p>
             <ul>
                 <li><b>provider</b> - Not used by JDO</li>
-                <li><b>jta-data-source</b> - JNDI name for JTA connections</li>
-                <li><b>non-jta-data-source</b> - JNDI name for non-JTA connections</li>
-                <li><b>jar-file</b> - name of a JAR file to scan for annotated classes to include in this
-                persistence-unit.</li>
+                <li><b>jta-data-source</b> - JNDI name for JTA connections (make sure you set <i>transaction-type</i> as <b>JTA</b> on the persistence-unit for this).
+                    You can alternatively specify JDO standard <b>javax.jdo.option.ConnectionFactoryName</b> to the same end.
+                </li>
+                <li><b>non-jta-data-source</b> - JNDI name for non-JTA connections.
+                    You can alternatively specify JDO standard <b>javax.jdo.option.ConnectionFactory2Name</b> to the same end.</li>
+                <li><b>jar-file</b> - name of a JAR file to scan for annotated classes to include in this persistence-unit.</li>
                 <li><b>mapping-file</b> - name of an XML "mapping" file containing persistence information
                 to be included in this persistence-unit. This is the "JDO" mapping file (<b>not</b> the ORM)</li>
                 <li><b>class</b> - name of an annotated class to include in this persistence-unit</li>
@@ -349,8 +349,7 @@ PersistenceManagerFactory pmf = JDOHelper.getPersistenceManagerFactory("MyPersis
                 <img src="../images/nucleus_extension.gif" border="0" alt=""/>
                 <p>
                     DataNucleus allows an extension to JDO to dynamically create persistence-units at runtime.
-                    Use the following code sample as a guide. Obviously any classes defined in the persistence-unit
-                    need to have been enhanced.
+                    Use the following code sample as a guide. Obviously any classes defined in the persistence-unit need to have been enhanced.
                 </p>
                 <source><![CDATA[
 import org.datanucleus.metadata.PersistenceUnitMetaData;
@@ -367,8 +366,7 @@ pumd.addProperty("datanucleus.schema.autoCreateAll", "true");
 
 PersistenceManagerFactory pmf = new JDOPersistenceManagerFactory(pumd, null);]]></source>
                 <p>
-                    It should be noted that if you call <i>pumd.toString();</i> then this returns the text that
-                    would have been found in a <i>persistence.xml</i> file.
+                    It should be noted that if you call <i>pumd.toString();</i> then this returns the text that would have been found in a <i>persistence.xml</i> file.
                 </p>
             </subsection>
         </section>
@@ -421,8 +419,7 @@ PersistenceManagerFactory pmf = new JDOPersistenceManagerFactory(pumd, null);]]>
             <source>
 PersistenceManagerFactory pmf = JDOHelper.getPersistenceManagerFactory("Optimistic");</source>
             <p>
-                That's it. The PMF we are returned from JDOHelper will have all of the properties
-                defined in <i>META-INF/jdoconfig.xml</i> under the name of "Optimistic".
+                That's it. The PMF we are returned from JDOHelper will have all of the properties defined in <i>META-INF/jdoconfig.xml</i> under the name of "Optimistic".
             </p>
         </section>
     </body>
