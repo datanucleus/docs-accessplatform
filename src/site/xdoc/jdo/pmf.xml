@@ -318,13 +318,11 @@ PersistenceManagerFactory pmf = JDOHelper.getPersistenceManagerFactory("myPersis
                 "package.jdo" in a particular package (which will define the classes being part of that unit). This means
                 that once we have defined this we can reference these <i>persistence-unit</i>s in our persistence 
                 operations. You can find the XSD for <i>persistence.xml</i>
-                <a href="http://http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd">here</a>.
+                <a href="http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">here</a>.
             </p>
             <p>There are several sub-elements of this <i>persistence.xml</i> file</p>
             <ul>
                 <li><b>provider</b> - Not used by JDO</li>
-                <li><b>jta-data-source</b> - JNDI name for JTA connections</li>
-                <li><b>non-jta-data-source</b> - JNDI name for non-JTA connections</li>
                 <li><b>jar-file</b> - name of a JAR file to scan for annotated classes to include in this
                 persistence-unit.</li>
                 <li><b>mapping-file</b> - name of an XML "mapping" file containing persistence information
@@ -336,8 +334,7 @@ PersistenceManagerFactory pmf = JDOHelper.getPersistenceManagerFactory("myPersis
 
             <subsection name="Use with JDO">
                 <p>
-                    JDO accepts the "persistence-unit" name to be specified when creating the
-                    <i>PersistenceManagerFactory</i>, like this
+                    JDO accepts the "persistence-unit" name to be specified when creating the <i>PersistenceManagerFactory</i>, like this
                 </p>
                 <source>
 PersistenceManagerFactory pmf = JDOHelper.getPersistenceManagerFactory("MyPersistenceUnit");</source>
