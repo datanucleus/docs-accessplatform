@@ -1028,9 +1028,9 @@ Query q = pm.newQuery("SELECT this.name FROM mydomain.Product WHERE inv.products
                 <p>
                     <b>RDBMS : </b>In all situations we aim for DataNucleus JDOQL implementation to work out the right way of linking a variable into the query, 
                     whether this is via a join (INNER, LEFT OUTER), or via a subquery. As you can imagine this can be complicated to work out the optimum for all situations
-                    so with that in mine we allow (for a limited number of situations) the option of specifying the join type. This is achieved by setting the query extension 
-                    <b>datanucleus.query.jdoql.{varName}.join</b> to the required type. For 1-1 relations this would
-                    be either "INNERJOIN" or "LEFTOUTERJOIN", and for 1-N relations this would be either "INNERJOIN" or "SUBQUERY".<br/>
+                    so with that in mind we allow (for a limited number of situations) the option of specifying the join type. This is achieved by setting the query extension 
+                    <b>datanucleus.query.jdoql.{varName}.join</b> to the required type. 
+                    For 1-1 relations this would be either "INNERJOIN" or "LEFTOUTERJOIN", and for 1-N relations this would be either "INNERJOIN" or "SUBQUERY".<br/>
                     <b>Please, if you find a situation where the optimum join type is not chosen then report it
                     in JIRA for project "NUCRDBMS" as priority "Minor" so it can be registered for future work</b>
                 </p>
