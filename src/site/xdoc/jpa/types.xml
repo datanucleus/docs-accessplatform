@@ -679,7 +679,7 @@
                         <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                         <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                         <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
-                        <td></td>
+                        <td>The comparator is specifiable via the metadata extension <i>comparator-name</i> (see below).</td>
                     </tr>
                     <tr>
                         <td>java.util.Queue</td>
@@ -688,7 +688,7 @@
                         <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                         <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                         <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
-                        <td></td>
+                        <td>The comparator is specifiable via the metadata extension <i>comparator-name</i> (see below).</td>
                     </tr>
                     <tr>
                         <td>java.util.Set</td>
@@ -706,7 +706,7 @@
                         <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                         <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                         <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
-                        <td></td>
+                        <td>The comparator is specifiable via the metadata extension <i>comparator-name</i> (see below).</td>
                     </tr>
                     <tr>
                         <td>java.util.SortedSet</td>
@@ -715,7 +715,7 @@
                         <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                         <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                         <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
-                        <td></td>
+                        <td>The comparator is specifiable via the metadata extension <i>comparator-name</i> (see below).</td>
                     </tr>
                     <tr>
                         <td>java.util.Stack</td>
@@ -733,7 +733,7 @@
                         <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                         <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                         <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
-                        <td></td>
+                        <td>The comparator is specifiable via the metadata extension <i>comparator-name</i> (see below).</td>
                     </tr>
                     <tr>
                         <td>java.util.TreeSet</td>
@@ -742,7 +742,7 @@
                         <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                         <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                         <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
-                        <td></td>
+                        <td>The comparator is specifiable via the metadata extension <i>comparator-name</i> (see below).</td>
                     </tr>
                     <tr>
                         <td>java.util.Vector</td>
@@ -763,19 +763,17 @@
                         <td>Requires <b>datanucleus-guava</b> plugin.</td>
                     </tr>
                 </table>
+                <p><b>Comparators</b></p>
                 <p>
-                    java.util.SortedSet/SortedMap/Queue/PriorityQueue : allow the user to specifiy a comparator to order the elements of the set. 
-                    When an object is pulled back from the datastore via query JDO would need to know the class name of the comparator to use.
-                    You specify it like this
+                    Containers that support a Comparator to order the elements of the set can specify it in metadata like this.
                 </p>
 <source><![CDATA[
-    @Element
-    @Extension(vendorName="datanucleus", key="comparator-name", value="mydomain.model.MyComparator")
+    @OneToMany
+    @Extension(key="comparator-name", value="mydomain.model.MyComparator")
     SortedSet<MyElementType> elements; 
 ]]></source>
                 <p>
-                    and when instantiating the SortedSet field will create it with a comparator of the specified class (which must have a default constructor).
-                    Same for Queue, PriorityQueue and SortedMap.
+                    When instantiating the SortedSet field, it will create it with a comparator of the specified class (which must have a default constructor).
                 </p>
                 <br/>
             </subsection>
@@ -847,8 +845,8 @@ public enum MyColour
                 </p>
                 <source><![CDATA[
 @Extensions({
-    @Extension(vendorName="datanucleus", key="enum-getter-by-value", value="getEnumByValue"),
-    @Extension(vendorName="datanucleus", key="enum-value-getter", value="getValue")
+    @Extension(key="enum-getter-by-value", value="getEnumByValue"),
+    @Extension(key="enum-value-getter", value="getValue")
    })
 MyColour colour;]]></source>
                 <p>
@@ -1125,7 +1123,7 @@ MyColour colour;]]></source>
                         <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                         <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                         <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
-                        <td></td>
+                        <td>See <a href="orm/arrays.html">the Arrays Guide</a></td>
                     </tr>
                     <tr>
                         <td>byte[]</td>
@@ -1134,7 +1132,7 @@ MyColour colour;]]></source>
                         <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                         <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                         <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
-                        <td></td>
+                        <td>See <a href="orm/arrays.html">the Arrays Guide</a></td>
                     </tr>
                     <tr>
                         <td>char[]</td>
@@ -1143,7 +1141,7 @@ MyColour colour;]]></source>
                         <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                         <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                         <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
-                        <td></td>
+                        <td>See <a href="orm/arrays.html">the Arrays Guide</a></td>
                     </tr>
                     <tr>
                         <td>double[]</td>
@@ -1152,7 +1150,7 @@ MyColour colour;]]></source>
                         <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                         <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                         <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
-                        <td></td>
+                        <td>See <a href="orm/arrays.html">the Arrays Guide</a></td>
                     </tr>
                     <tr>
                         <td>float[]</td>
@@ -1161,7 +1159,7 @@ MyColour colour;]]></source>
                         <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                         <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                         <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
-                        <td></td>
+                        <td>See <a href="orm/arrays.html">the Arrays Guide</a></td>
                     </tr>
                     <tr>
                         <td>int[]</td>
@@ -1170,7 +1168,7 @@ MyColour colour;]]></source>
                         <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                         <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                         <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
-                        <td></td>
+                        <td>See <a href="orm/arrays.html">the Arrays Guide</a></td>
                     </tr>
                     <tr>
                         <td>long[]</td>
@@ -1179,7 +1177,7 @@ MyColour colour;]]></source>
                         <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                         <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                         <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
-                        <td></td>
+                        <td>See <a href="orm/arrays.html">the Arrays Guide</a></td>
                     </tr>
                     <tr>
                         <td>short[]</td>
@@ -1188,7 +1186,7 @@ MyColour colour;]]></source>
                         <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                         <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                         <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
-                        <td></td>
+                        <td>See <a href="orm/arrays.html">the Arrays Guide</a></td>
                     </tr>
                     <tr>
                         <td>java.lang.Boolean[]</td>
@@ -1197,7 +1195,7 @@ MyColour colour;]]></source>
                         <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                         <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                         <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
-                        <td></td>
+                        <td>See <a href="orm/arrays.html">the Arrays Guide</a></td>
                     </tr>
                     <tr>
                         <td>java.lang.Byte[]</td>
@@ -1206,7 +1204,7 @@ MyColour colour;]]></source>
                         <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                         <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                         <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
-                        <td></td>
+                        <td>See <a href="orm/arrays.html">the Arrays Guide</a></td>
                     </tr>
                     <tr>
                         <td>java.lang.Character[]</td>
@@ -1215,7 +1213,7 @@ MyColour colour;]]></source>
                         <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                         <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                         <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
-                        <td></td>
+                        <td>See <a href="orm/arrays.html">the Arrays Guide</a></td>
                     </tr>
                     <tr>
                         <td>java.lang.Double[]</td>
@@ -1224,7 +1222,7 @@ MyColour colour;]]></source>
                         <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                         <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                         <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
-                        <td></td>
+                        <td>See <a href="orm/arrays.html">the Arrays Guide</a></td>
                     </tr>
                     <tr>
                         <td>java.lang.Float[]</td>
@@ -1233,7 +1231,7 @@ MyColour colour;]]></source>
                         <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                         <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                         <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
-                        <td></td>
+                        <td>See <a href="orm/arrays.html">the Arrays Guide</a></td>
                     </tr>
                     <tr>
                         <td>java.lang.Integer[]</td>
@@ -1242,7 +1240,7 @@ MyColour colour;]]></source>
                         <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                         <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                         <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
-                        <td></td>
+                        <td>See <a href="orm/arrays.html">the Arrays Guide</a></td>
                     </tr>
                     <tr>
                         <td>java.lang.Long[]</td>
@@ -1251,7 +1249,7 @@ MyColour colour;]]></source>
                         <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                         <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                         <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
-                        <td></td>
+                        <td>See <a href="orm/arrays.html">the Arrays Guide</a></td>
                     </tr>
                     <tr>
                         <td>java.lang.Short[]</td>
@@ -1260,7 +1258,7 @@ MyColour colour;]]></source>
                         <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                         <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                         <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
-                        <td></td>
+                        <td>See <a href="orm/arrays.html">the Arrays Guide</a></td>
                     </tr>
                     <tr>
                         <td>java.lang.String[]</td>
@@ -1269,7 +1267,7 @@ MyColour colour;]]></source>
                         <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                         <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                         <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
-                        <td></td>
+                        <td>See <a href="orm/arrays.html">the Arrays Guide</a></td>
                     </tr>
                     <tr>
                         <td>java.util.Date[]</td>
@@ -1278,7 +1276,7 @@ MyColour colour;]]></source>
                         <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                         <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                         <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
-                        <td></td>
+                        <td>See <a href="orm/arrays.html">the Arrays Guide</a></td>
                     </tr>
                     <tr>
                         <td>java.math.BigDecimal[]</td>
@@ -1287,7 +1285,7 @@ MyColour colour;]]></source>
                         <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                         <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                         <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
-                        <td></td>
+                        <td>See <a href="orm/arrays.html">the Arrays Guide</a></td>
                     </tr>
                     <tr>
                         <td>java.math.BigInteger[]</td>
@@ -1296,7 +1294,7 @@ MyColour colour;]]></source>
                         <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                         <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                         <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
-                        <td></td>
+                        <td>See <a href="orm/arrays.html">the Arrays Guide</a></td>
                     </tr>
                     <tr>
                         <td>java.lang.Enum[]</td>
@@ -1305,7 +1303,7 @@ MyColour colour;]]></source>
                         <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                         <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                         <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
-                        <td></td>
+                        <td>See <a href="orm/arrays.html">the Arrays Guide</a></td>
                     </tr>
                     <tr>
                         <td>java.util.Locale[]</td>
@@ -1314,7 +1312,7 @@ MyColour colour;]]></source>
                         <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                         <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                         <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
-                        <td></td>
+                        <td>See <a href="orm/arrays.html">the Arrays Guide</a></td>
                     </tr>
                     <tr>
                         <td>Entity[]</td>
@@ -1323,7 +1321,7 @@ MyColour colour;]]></source>
                         <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                         <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                         <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
-                        <td></td>
+                        <td>See <a href="orm/arrays.html">the Arrays Guide</a></td>
                     </tr>
                 </table>
             </subsection>
