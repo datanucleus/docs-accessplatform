@@ -815,43 +815,6 @@
                 <br/>
             </subsection>
 
-            <subsection name="Geospatial Types">
-                <p>
-                    DataNucleus has extensive support for Geospatial types. Here we present the core Java geospatial types, but you can find more specialised Geospatial
-                    types covered on the <a href="types_geospatial.html">GeoSpatial types</a> page.
-                </p>
-                <table>
-                    <tr>
-                        <th>Java Type</th>
-                        <th width="75">Extension?</th>
-                        <th width="50">DFG?</th>
-                        <th width="70">Persistent?</th>
-                        <th width="70">Proxied?</th>
-                        <th width="40">PK?</th>
-                        <th width="170">Plugin</th>
-                    </tr>
-                    <tr>
-                        <td>java.awt.Point</td>
-                        <td><img src="../images/nucleus_extension.gif" border="0" alt=""/></td>
-                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
-                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
-                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
-                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
-                        <td>datanucleus-geospatial</td>
-                    </tr>
-                    <tr>
-                        <td>java.awt.Rectangle</td>
-                        <td><img src="../images/nucleus_extension.gif" border="0" alt=""/></td>
-                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
-                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
-                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
-                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
-                        <td>datanucleus-geospatial</td>
-                    </tr>
-                </table>
-                <br/>
-            </subsection>
-
             <subsection name="Enums">
                 <p>
                     DataNucleus supports persisting Enums, and they can be stored as either the <i>ordinal</i> (numeric column) or <i>name</i> (String column).
@@ -926,6 +889,124 @@ MyColour colour;]]></source>
                 <p>
                     this will now persist 1, 3, 5, 8, being the "value" of each of the enum options.
                 </p>
+                <br/>
+            </subsection>
+
+            <subsection name="Geospatial Types">
+                <p>
+                    DataNucleus has extensive support for Geospatial types. Here we present the core Java geospatial types, but you can find more specialised Geospatial
+                    types covered on the <a href="types_geospatial.html">GeoSpatial types</a> page.
+                </p>
+                <table>
+                    <tr>
+                        <th>Java Type</th>
+                        <th width="75">Extension?</th>
+                        <th width="50">DFG?</th>
+                        <th width="70">Persistent?</th>
+                        <th width="70">Proxied?</th>
+                        <th width="40">PK?</th>
+                        <th width="170">Plugin</th>
+                    </tr>
+                    <tr>
+                        <td>java.awt.Point</td>
+                        <td><img src="../images/nucleus_extension.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td>datanucleus-geospatial</td>
+                    </tr>
+                    <tr>
+                        <td>java.awt.Rectangle</td>
+                        <td><img src="../images/nucleus_extension.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td>datanucleus-geospatial</td>
+                    </tr>
+                    <tr>
+                        <td>java.awt.Polygon</td>
+                        <td><img src="../images/nucleus_extension.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td>datanucleus-geospatial</td>
+                    </tr>
+                    <tr>
+                        <td>java.awt.geom.Line2D</td>
+                        <td><img src="../images/nucleus_extension.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td>datanucleus-geospatial</td>
+                    </tr>
+                    <tr>
+                        <td>java.awt.geom.Point2D</td>
+                        <td><img src="../images/nucleus_extension.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td>datanucleus-geospatial</td>
+                    </tr>
+                    <tr>
+                        <td>java.awt.geom.Rectangle2D</td>
+                        <td><img src="../images/nucleus_extension.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td>datanucleus-geospatial</td>
+                    </tr>
+                    <tr>
+                        <td>java.awt.geom.Arc2D</td>
+                        <td><img src="../images/nucleus_extension.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td>datanucleus-geospatial</td>
+                    </tr>
+                    <tr>
+                        <td>java.awt.geom.CubicCurve2D</td>
+                        <td><img src="../images/nucleus_extension.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td>datanucleus-geospatial</td>
+                    </tr>
+                    <tr>
+                        <td>java.awt.geom.Ellipse2D</td>
+                        <td><img src="../images/nucleus_extension.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td>datanucleus-geospatial</td>
+                    </tr>
+                    <tr>
+                        <td>java.awt.geom.QuadCurve2D</td>
+                        <td><img src="../images/nucleus_extension.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td>datanucleus-geospatial</td>
+                    </tr>
+                    <tr>
+                        <td>java.awt.geom.RoundRectangle2D</td>
+                        <td><img src="../images/nucleus_extension.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td>datanucleus-geospatial</td>
+                    </tr>
+                </table>
                 <br/>
             </subsection>
 
@@ -1047,6 +1128,7 @@ MyColour colour;]]></source>
                     Things to note
                 </p>
                 <ul>
+                    <li>java.lang.Object here is either <a href="orm/serialised.html">serialised</a>, or represents <a href="orm/objects.html">multiple possible types</a></li>
                     <li>java.io.File : available only for RDBMS, persisted into LONGVARBINARY, and retrieved as streamable
                         so as not to adversely affect memory utilisation, hence suitable for large files.</li>
                     <li>java.awt.Color can be persisted as <b>String</b> or as (Integer,Integer,Integer,Integer) storing red,green,blue,alpha respectively.</li>
