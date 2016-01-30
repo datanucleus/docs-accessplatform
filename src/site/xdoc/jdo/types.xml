@@ -28,19 +28,20 @@
                 <li>
                     <b>Second-Class (SCO) Types</b> : An object that does not have an "identity" is termed a <b>Second Class Object (SCO)</b>. 
                     This is something like a String or Date field in a class, or alternatively a Collection (that contains other objects). 
-                    The sections below shows the currently supported <b>SCO</b> java types in DataNucleus. The tables in these sections show
+                    The sections below shows the currently supported SCO java types in DataNucleus. The tables in these sections show
                     <ul>
                     <li><b>Extension?</b> : whether the type is JDO standard, or is a DataNucleus extension</li>
-                    <li><b>default-fetch-group (DFG)</b> : whether the field is retrieved by default when
-                        retrieving the object itself</li>
-                    <li><b>persistence-modifier</b> : whether the field is persisted by default, or whether
-                        the user has to mark the field as persistent in XML/annotations to persist it</li>
-                    <li><b>proxied</b> : whether the field is represented by a "proxy" that intercepts
-                        any operations to detect whether it has changed internally.</li>
+                    <li><b>default-fetch-group (DFG)</b> : whether the field is retrieved by default when retrieving the object itself</li>
+                    <li><b>persistence-modifier</b> : whether the field is persisted by default, or whether the user has to mark the field as persistent in XML/annotations to persist it</li>
+                    <li><b>proxied</b> : whether the field is represented by a "proxy" that intercepts any operations to detect whether it has changed internally.</li>
                     <li><b>primary-key</b> : whether the field can be used as part of the primary-key</li>
                     </ul>
                 </li>
             </ul>
+            <p>
+                Where you have a secondary type that can be persisted in multiple possible ways you select which column type(s) by using the <i>jdbc-type</i> for the field, or alternatively
+                you find the name of the internal DataNucleus <i>TypeConverter</i> and use that via the metadata extension "type-converter-name".
+            </p>
             <br/>
             <p>
                 <img src="../images/nucleus_plugin.gif" border="0" alt=""/>
@@ -1062,7 +1063,7 @@ MyColour colour;]]></source>
                     </tr>
                     <tr>
                         <td>java.util.Optional</td>
-                        <td><img src="../images/nucleus_extension.gif" border="0" alt=""/></td>
+                        <td></td>
                         <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                         <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                         <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
@@ -1132,6 +1133,8 @@ MyColour colour;]]></source>
                     <li>java.io.File : available only for RDBMS, persisted into LONGVARBINARY, and retrieved as streamable
                         so as not to adversely affect memory utilisation, hence suitable for large files.</li>
                     <li>java.awt.Color can be persisted as <b>String</b> or as (Integer,Integer,Integer,Integer) storing red,green,blue,alpha respectively.</li>
+                    <li>java.util.UUID is persisted as <b>String</b> by default, but can be persisted as native type <i>uuid</i> for PostgreSQL datastores.</li>
+                    <li>java.net.URI, java.net.URL, java.util.Currency, java.util.Locale are all persisted as <b>String</b></li>
                 </ul>
                 <br/>
             </subsection>

@@ -1130,6 +1130,8 @@ MyColour colour;]]></source>
                     <li>java.io.File : available only for RDBMS, persisted into LONGVARBINARY, and retrieved as streamable
                         so as not to adversely affect memory utilisation, hence suitable for large files.</li>
                     <li>java.awt.Color can be persisted as <b>String</b> or as (Integer,Integer,Integer,Integer) storing red,green,blue,alpha respectively.</li>
+                    <li>java.util.UUID is persisted as <b>String</b> by default, but can be persisted as native type <i>uuid</i> for PostgreSQL datastores.</li>
+                    <li>java.net.URI, java.net.URL, java.util.Currency, java.util.Locale are all persisted as <b>String</b></li>
                 </ul>
                 <br/>
             </subsection>
