@@ -28,14 +28,12 @@
                 <li>
                     <b>Secondary Types</b> : An object that does not have an "identity" is termed a <b>secondary type</b>. 
                     This is something like a String or Date field in a class, or alternatively a Collection (that contains other objects), or an embedded <i>Entity</i>. 
-                    The sections below shows the currently supported <b>secondary</b> java types in DataNucleus. The tables in these sections show 
+                    The sections below shows the currently supported secondary java types in DataNucleus. The tables in these sections show 
                     <ul>
                     <li><b>Extension?</b> : whether the type is JPA standard, or is a DataNucleus extension</li>
                     <li><b>EAGER</b> : whether the field is retrieved by default when retrieving the object itself.</li>
-                    <li><b>Persistent</b> : whether the field is persisted by default, or whether
-                        the user has to mark the field as persistent in XML/annotations to persist it</li>
-                    <li><b>Proxied</b> : whether the field is represented by a "proxy" that intercepts
-                        any operations to detect whether it has changed internally (such as a Collection, Map).</li>
+                    <li><b>Persistent</b> : whether the field is persisted by default, or whether the user has to mark the field as persistent in XML/annotations to persist it</li>
+                    <li><b>Proxied</b> : whether the field is represented by a "proxy" that intercepts any operations to detect whether it has changed internally (such as Collection, Map).</li>
                     <li><b>PK</b> : whether the field can be used as part of the primary-key</li>
                     </ul>
                 </li>
@@ -1427,12 +1425,6 @@ public class URLStringConverter implements AttributeConverter<URL, String>
                     So we specify the <i>attributeName</i> to be <b>key</b>, and to use it on the value we would set it to <b>value</b>.
                 </p>
                 <br/>
-            </subsection>
-
-            <subsection name="Eclipse EMF models">
-                <p>
-                    You could try to persist Eclipse EMF models using  <a href="http://wiki.eclipse.org/Texo">the Texo project</a> to generate POJOs
-                </p>
             </subsection>
         </section>
     </body>
