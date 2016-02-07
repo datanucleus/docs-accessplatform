@@ -488,6 +488,12 @@ CASE WHEN conditional_expression THEN scalar_expression {WHEN conditional_expres
                     </tr>
                     <tr>
                         <td>MONTH(dateField)</td>
+                        <td>Returns the month of the specified date (1-12) in timezone it was stored. Previous to 5.0.0.M2 this was (0-11).</td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                        <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
+                    </tr>
+                    <tr>
+                        <td>MONTH_JAVA(dateField)</td>
                         <td>Returns the month of the specified date (0-11) in timezone it was stored</td>
                         <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
                         <td><img src="../images/icon_error_sml.gif" border="0" alt=""/></td>
