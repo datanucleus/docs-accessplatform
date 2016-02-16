@@ -24,6 +24,8 @@
                     <li>The internal conversion mechanism for some java.time types has changed to improve timezone handling. If this causes issues with existing
                         data, then extract the internal TypeConverter for DN 5.0.0.M1 and use that in your application.</li>
                     <li>JPQL "MONTH" function was changed to return (1, 12) rather than (0, 11). To obtain previous handling use the JPQL function "MONTH_JAVA".</li>
+                    <li>REST : "/jdoql" URL now takes parameter "query={the_query}" rather than assuming the query string starts with it.</li>
+                    <li>REST : "/jpql" URL now takes parameter "query={the_query}" rather than assuming the query string starts with it.</li>
                 </ul>
             </subsection>
 
