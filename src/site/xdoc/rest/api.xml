@@ -147,22 +147,21 @@
              	<tr>
             		<td>GET</td>
             		<td>Query objects via a filter. Returns a JSON Array of objects</td>
-            		<td>/{full-class-name}?{filter}[&amp;fetchGroup={fetchGroupName}][&amp;maxFetchDepth={depth}]</td>
+            		<td>/{full-class-name}?[filter={filter}][&amp;fetchGroup={fetchGroupName}][&amp;maxFetchDepth={depth}]</td>
             		<td>JSON Array of JSON objects</td>
             		<td>Filter component of a JDOQL query</td>
             	</tr>
              	<tr>
             		<td>GET</td>
             		<td>Query objects via JDOQL. Returns a JSON Array of objects</td>
-            		<td>/jdoql?{JDOQL-single-string-query}[&amp;fetchGroup={fetchGroupName}][&amp;maxFetchDepth={depth}]<br/>
-                        /query?{JDOQL-single-string-query}[&amp;fetchGroup={fetchGroupName}][&amp;maxFetchDepth={depth}]</td>
+            		<td>/jdoql?query={JDOQL-single-string-query}[&amp;fetchGroup={fetchGroupName}][&amp;maxFetchDepth={depth}]</td>
             		<td>JSON Array of JSON objects</td>
             		<td>JDOQL single string query</td>
             	</tr>
              	<tr>
             		<td>GET</td>
                     <td>Query objects via JPQL. Returns a JSON Array of objects</td>
-            		<td>/jpql?{JPQL-single-string-query}[&amp;fetchGroup={fetchGroupName}][&amp;maxFetchDepth={depth}]</td>
+            		<td>/jpql?query={JPQL-single-string-query}[&amp;fetchGroup={fetchGroupName}][&amp;maxFetchDepth={depth}]</td>
             		<td>JSON Array of JSON objects</td>
             		<td>JPQL single string query</td>
             	</tr>
@@ -172,6 +171,13 @@
             		<td>/{full-class-name}/{primary key}</td>
             		<td></td>
             		<td>The primary key fields are passed in the HTTP Content (JSONObject) if the PK uses multiple PK fields, otherwise in the URL</td>
+            	</tr>
+             	<tr>
+            		<td>HEAD</td>
+            		<td>Validates if an object exists</td>
+            		<td>/{full-class-name}?filter={filter}</td>
+            		<td></td>
+            		<td>Object is uniquely defined using the filter.</td>
             	</tr>
             </table>
             <br/>
