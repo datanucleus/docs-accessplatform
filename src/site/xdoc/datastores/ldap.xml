@@ -29,8 +29,7 @@ datanucleus.ConnectionPassword=secret</source>
                 <p>
                     So you create your <a href="../jdo/pmf.html">PersistenceManagerFactory</a> or
                     <a href="../jpa/emf.html">EntityManagerFactory</a> with these properties. 
-                    Thereafter you have the full power of the JDO or JPA APIs at your disposal, for your 
-                    LDAP datastore.
+                    Thereafter you have the full power of the JDO or JPA APIs at your disposal, for your LDAP datastore.
                 </p>
             </subsection>
 
@@ -39,10 +38,8 @@ datanucleus.ConnectionPassword=secret</source>
                     Access Platform allows you to query the objects in the datastore using the following
                 </p>
                 <ul>
-                    <li><a href="../jdo/jdoql.html">JDOQL</a> - language based around the objects that are persisted and 
-                        using Java-type syntax</li>
-                    <li><a href="../jpa/jpql.html">JPQL</a> - language based around the objects that are persisted and 
-                        using SQL-like syntax</li>
+                    <li><a href="../jdo/jdoql.html">JDOQL</a> - language based around the objects that are persisted and using Java-type syntax</li>
+                    <li><a href="../jpa/jpql.html">JPQL</a> - language based around the objects that are persisted and using SQL-like syntax</li>
                 </ul>
                 <p>
                     Queries are evaluated in-memory.
@@ -61,8 +58,7 @@ datanucleus.ConnectionPassword=secret</source>
                     The following Java types are supported and stored as single-valued attribute to the LDAP entry:
                 </p>
                 <ul>
-                    <li>String, primitives (like int and double), wrappers of primitives (like java.util.Long), 
-                            java.util.BigDecimal, java.util.BigInteger, java.util.UUID</li>
+                    <li>String, primitives (like int and double), wrappers of primitives (like java.util.Long), java.util.BigDecimal, java.util.BigInteger, java.util.UUID</li>
                     <li>boolean and java.lang.Boolean are converted to RFC 4517 "boolean" syntax (TRUE or FALSE)</li>
                     <li>java.util.Date and java.util.Calendar are converted to RFC 4517 "generalized time" syntax</li>
                 </ul>
@@ -78,12 +74,12 @@ datanucleus.ConnectionPassword=secret</source>
                     persist relationship references between persistable objects:
                 </p>
                 <ul>
-                    <li><a href="ldap_dn.html">DN matching</a></li>
-                    <li><a href="ldap_attribute.html">Attribute matching</a></li>
-                    <li><a href="ldap_hierarchical.html">LDAP hierarchies (deprecated)</a></li>
+                    <li><a href="#mapping_by_dn">DN matching</a></li>
+                    <li><a href="#mapping_by_attribute">Attribute matching</a></li>
+                    <li><a href="#mapping_by_hierarchy">LDAP hierarchies (DEPRECATED)</a></li>
                 </ul>
                 <p>
-                    It is also possible to store persistable objects <a href="ldap_embedded.html">embedded</a>.
+                    It is also possible to store persistable objects <a href="mapping_as_embedded">embedded</a>.
                     Note that there is inbuilt logic for deciding which of these mapping strategies to use for a relationship. You can explicitly set this with the 
                     metadata extension for the field/property <i>mapping-strategy</i> and it can be set to <b>dn</b> or <b>attribute</b>.
                 </p>
@@ -217,6 +213,716 @@ public class Person
                     <li>Cannot map inherited classes to the same LDAP type</li>
                 </ul>
             </subsection>
+        </section>
+
+        <section name="LDAP : Relationship Mapping by DN">
+            <a name="mapping_by_dn"/>
+            <p>
+                A common way to model relationships between LDAP entries is to put the LDAP distinguished name of the referenced LDAP
+                entry to an attribute of the referencing LDAP entry. For example entries with object class groupOfNames use the attribute
+                <i>member</i> which contains distinguished names of the group members.
+            </p>
+            <p>
+                We just describe 1-N relationship mapping here and distinguish between unidirectional and bidirectional relationships. 
+                The metadata for 1-1, N-1 and M-N relationship mapping looks identical, the only difference is whether single-valued or
+                multi-valued attributes are used in LDAP to store the relationships. 
+            </p>
+            <ul>
+                <li><a href="#dn_unidirectional">Unidirectional</a></li>
+                <li><a href="#dn_bidirectional">Bidirectional</a></li>
+            </ul>
+        
+            <a name="dn_unidirectional"/>
+            <subsection name="Mapping by DN : 1-N Unidirectional">
+                <p>
+                    We use the following example LDAP tree and Java classes:
+                </p>
+<source><![CDATA[
+dc=example,dc=com                                       public class Department {
+|                                                           String name;
+|-- ou=Departments                                          Set<Employee> employees;
+|   |-- cn=Sales                                        }
+|   |-- cn=Engineering                                  
+|   |-- ...                                             public class Employee {
+|                                                           String firstName;
+|-- ou=Employees                                            String lastName;
+|   |-- cn=Bugs Bunny                                       String fullName;
+|   |-- cn=Daffy Duck                                   }
+|   |-- cn=Speedy Gonzales                              
+|   |-- ...                                             ]]></source>
+                <p>
+                    We have a flat LDAP tree with one container for all the departments and one container for all the employees.
+                    We have two Java classes, <b>Department</b> and <b>Employee</b>. The <b>Department</b> class contains a
+                    Collection of type <b>Employee</b>. The <b>Employee</b> knows nothing about the <b>Department</b> it 
+                    belongs to.
+                </p>
+                <p>
+                    There are 2 ways that we can persist this relationship in LDAP because the DN reference could be stored at the one
+                    or at the other LDAP entry.
+                </p>
+                <h5>Owner Object Side</h5>
+                <p>
+                    The obvious way is to store the reference at the owner object side, in our case at the department entry. This is possible since 
+                    LDAP allows multi-valued attributes. The example department entry looks like this:
+                </p>
+<source><![CDATA[
+dn: cn=Sales,ou=Departments,dc=example,dc=com
+objectClass: top
+objectClass: groupOfNames
+cn: Sales
+member: cn=Bugs Bunny,ou=Employees,dc=example,dc=com
+member: cn=Daffy Duck,ou=Employees,dc=example,dc=com]]></source>
+                <p>
+                     Our JDO metadata looks like this:
+                </p>
+<source><![CDATA[
+<jdo>
+    <package name="com.example">
+        <class name="Department" table="ou=Departments,dc=example,dc=com" schema="top,groupOfNames">
+            <field name="name" primary-key="true" column="cn" />
+            <field name="employees" column="member">
+                <extension vendor-name="datanucleus" key="empty-value" value="uid=admin,ou=system"/>
+            </field>
+        </class>
+        <class name="Employee" table="ou=Employees,dc=example,dc=com" schema="top,person,organizationalPerson,inetOrgPerson">
+            <field name="fullName" primary-key="true column="cn" />
+            <field name="firstName" column="givenName" />
+            <field name="lastName" column="sn" />
+        </class>
+    </package>
+</jdo>]]></source>
+                <p>
+                    So we define that the attribute <i>member</i> should be used to persist the relationship of field <i>employees</i>.
+                </p>
+                <p>
+                    Note: We use the extension <i>empty-value</i> here. The groupOfNames object class defines the member
+                    attribute as mandatory attribute. In case where you remove all the employees from a department would
+                    delete all member attributes which isn't allowed. In that case DataNucleus adds this empty value
+                    to the member attribute. This value is also filtered when DataNucleus reads the object from LDAP.
+                </p>
+
+                <h5>Non-Owner Object Side</h5>
+                <p>
+                    Another possible way is to store the reference at the non-owner object side, in our case at the employee entry.
+                    The example employee entry looks like this:
+                </p>
+<source><![CDATA[
+dn: cn=Bugs Bunny,ou=Employees,dc=example,dc=com
+objectClass: top
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+cn: Bugs Bunny
+givenName: Bugs
+sn: Bunny
+departmentNumber: cn=Sales,ou=Departments,dc=example,dc=com]]></source>
+                <p>
+                     Our JDO metadata looks like this:
+                </p>
+<source><![CDATA[
+<jdo>
+    <package name="com.example">
+        <class name="Department" table="ou=Departments,dc=example,dc=com" schema="top,groupOfNames">
+            <field name="name" primary-key="true" column="cn" />
+            <field name="employees">
+                <element column="departmentNumber" />
+            </field>
+        </class>
+        <class name="Employee" table="ou=Employees,dc=example,dc=com" schema="top,person,organizationalPerson,inetOrgPerson">
+            <field name="fullName" primary-key="true column="cn" />
+            <field name="firstName" column="givenName" />
+            <field name="lastName" column="sn" />
+        </class>
+    </package>
+</jdo>]]></source>
+                <p>
+                    We need to define the relationship at the department metadata because the employee doesn't know about
+                    the department it belongs to. 
+                    With the <i>&lt;element&gt;</i> tag we specify that the relationship should be persisted at the other
+                    side, the <i>column</i> attribute defines the LDAP attribute to use. 
+                    In this case the relationship is persisted in the <i>departmentNumber</i> attribute at the employee entry.
+                </p>
+            </subsection>
+
+            <a name="dn_bidirectional"/>
+            <subsection name="Mapping by DN : 1-N Bidirectional">
+                <p>
+                    We use the following example LDAP tree and Java classes:
+                </p>
+<source><![CDATA[
+dc=example,dc=com                                       public class Department {
+|                                                           String name;
+|-- ou=Departments                                          Set<Employee> employees;
+|   |-- cn=Sales                                        }
+|   |-- cn=Engineering                                  
+|   |-- ...                                             public class Employee {
+|                                                           String firstName;
+|-- ou=Employees                                            String lastName;
+|   |-- cn=Bugs Bunny                                       String fullName;
+|   |-- cn=Daffy Duck                                       Department department;
+|   |-- cn=Speedy Gonzales                              }
+|   |-- ...                                             ]]></source>
+                <p>
+                    We have a flat LDAP tree with one container for all the departments and one container for all the employees.
+                    We have two Java classes, <b>Department</b> and <b>Employee</b>. The <b>Department</b> class contains a
+                    Collection of type <b>Employee</b>. Now each <b>Employee</b> has a reference to its <b>Department</b>.
+                </p>
+                <p>
+                    It is possible to persist this relationship on both sides.
+                </p>
+<source><![CDATA[
+dn: cn=Sales,ou=Departments,dc=example,dc=com
+objectClass: top
+objectClass: groupOfNames
+cn: Sales
+member: cn=Bugs Bunny,ou=Employees,dc=example,dc=com
+member: cn=Daffy Duck,ou=Employees,dc=example,dc=com]]></source>
+<source><![CDATA[
+<jdo>
+    <package name="com.example">
+        <class name="Department" table="ou=Departments,dc=example,dc=com" schema="top,groupOfNames">
+            <field name="name" primary-key="true" column="cn" />
+            <field name="employees" column="member">
+                <extension vendor-name="datanucleus" key="empty-value" value="uid=admin,ou=system"/>
+            </field>
+        </class>
+        <class name="Employee" table="ou=Employees,dc=example,dc=com" schema="top,person,organizationalPerson,inetOrgPerson">
+            <field name="fullName" primary-key="true column="cn" />
+            <field name="firstName" column="givenName" />
+            <field name="lastName" column="sn" />
+            <field name="department" mapped-by="employees" />
+        </class>
+    </package>
+</jdo>]]></source>
+                <p>
+                    In this case we store the relation at the department entry side in a multi-valued attribute <i>member</i>.
+                    Now the employee metadata contains a department field that is <i>mapped-by</i> the employees field
+                    of department.
+                </p>
+                <p>
+                    Note: We use the extension <i>empty-value</i> here. The groupOfNames object class defines the member
+                    attribute as mandatory attribute. In case where you remove all the employees from a department would
+                    delete all member attributes which isn't allowed. In that case DataNucleus adds this empty value
+                    to the member attribute. This value is also filtered when DataNucleus reads the object from LDAP.
+                </p>
+            </subsection>
+        </section>
+
+        <section name="LDAP : Relationship Mapping by Attribute">
+            <a name="mapping_by_attribute"/>
+            <p>
+                Another way to model relationships between LDAP entries is to use attribute matching. This means two entries have the same
+                attribute values. An example of this type of relationship is used by posixGroup and posixAccount object classes were 
+                posixGroup.memberUid points to posicAccount.uid.
+            </p>
+            <p>
+                We just describe 1-N relationship mapping here and distinguish between unidirectional and bidirectional relationships. 
+                The metadata for 1-1, N-1 and M-N relationship mapping looks identical, the only difference is whether single-valued or
+                multi-valued attributes are used in LDAP to store the relationships. 
+            </p>
+            <ul>
+                <li><a href="#attribute_unidirectional">Unidirectional</a></li>
+                <li><a href="#attribute_bidirectional">Bidirectional</a></li>
+            </ul>
+
+            <a name="attribute_unidirectional"/>
+            <subsection name="Mapping by Attribute: 1-N Unidirectional">
+                <p>
+                    We use the following example LDAP tree and Java classes:
+                </p>
+<source><![CDATA[
+dc=example,dc=com                                       public class Department {
+|                                                           String name;
+|-- ou=Departments                                          Set<Employee> employees;
+|   |-- ou=Sales                                        }
+|   |-- ou=Engineering                                  
+|   |-- ...                                             public class Employee {
+|                                                           String firstName;
+|-- ou=Employees                                            String lastName;
+|   |-- uid=bbunny                                          String fullName;
+|   |-- uid=dduck                                           String uid;
+|   |-- uid=sgonzales                                   }
+|   |-- ...                                             ]]></source>
+                <p>
+                    We have a flat LDAP tree with one container for all the departments and one container for all the employees.
+                    We have two Java classes, <b>Department</b> and <b>Employee</b>. The <b>Department</b> class contains a
+                    Collection of type <b>Employee</b>. The <b>Employee</b> knows nothing about the <b>Department</b> it belongs to.
+                </p>
+                <p>
+                    There are 2 ways that we can persist this relationship in LDAP because the reference could be stored at the one or at the other LDAP entry.
+                </p>
+
+                <h5>Owner Object Side</h5>
+                <p>
+                    One way is to store the reference at the owner object side, in our case at the department entry. This is possible since 
+                    LDAP allows multi-valued attributes. The example department entry looks like this:
+                </p>
+<source><![CDATA[
+dn: ou=Sales,ou=Departments,dc=example,dc=com
+objectClass: top
+objectClass: organizationalUnit
+objectClass: extensibleObject
+ou: Sales
+memberUid: bbunny
+memberUid: dduck]]></source>
+                <p>
+                     Our JDO metadata looks like this:
+                </p>
+<source><![CDATA[
+<jdo>
+    <package name="com.example">
+        <class name="Department" table="ou=Departments,dc=example,dc=com" schema="top,organizationalUnit,extensibleObject">
+            <field name="name" primary-key="true" column="ou" />
+            <field name="employees" column="memberUid">
+                <join column="uid" />
+            </field>
+        </class>
+        <class name="Employee" table="ou=Employees,dc=example,dc=com" schema="top,person,organizationalPerson,inetOrgPerson">
+        
+            <field name="fullName" primary-key="true column="cn" />
+            <field name="firstName" column="givenName" />
+            <field name="lastName" column="sn" />
+            <field name="uid" column="uid" />
+        </class>
+    </package>
+</jdo>]]></source>
+                <p>
+                    So we define that the attribute <i>memberUid</i> at the department entry should be used to persist the 
+                    relationship of field <i>employees</i> 
+                </p>
+                <p>
+                    The important thing here is the <i>&lt;join&gt;</i> tag and its <i>column</i>.
+                    Firstly it signals DataNucleus to use attribute mapping. 
+                    Secondly it specifies the attribute at the other side that should be used for relationship mapping.
+                    In our case, when we establish a relationship between a <b>Department</b> and an <b>Employee</b>,
+                    the <i>uid</i> value of the employee entry is stored in the <i>memberUid</i> attribute of the department entry.
+                </p>
+
+                <h5>Non-Owner Object Side</h5>
+                <p>
+                    Another possible way is to store the reference at the non-owner object side, in our case at the employee entry.
+                    The example employee entry looks like this:
+                </p>
+<source><![CDATA[
+dn: uid=bbunny,ou=Employees,dc=example,dc=com
+objectClass: top
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+uid: bbunny
+cn: Bugs Bunny
+givenName: Bugs
+sn: Bunny
+departmentNumber: Sales]]></source>
+                <p>
+                     Our JDO metadata looks like this:
+                </p>
+<source><![CDATA[
+<jdo>
+    <package name="com.example">
+        <class name="Department" table="ou=Departments,dc=example,dc=com" schema="top,organizationalUnit">
+            <field name="name" primary-key="true" column="ou" />
+            <field name="employees">
+                <element column="departmentNumber" />
+                <join column="ou" />
+            </field>
+        </class>
+        <class name="Employee" table="ou=Employees,dc=example,dc=com" schema="top,person,organizationalPerson,inetOrgPerson">
+            <field name="fullName" primary-key="true column="cn" />
+            <field name="firstName" column="givenName" />
+            <field name="lastName" column="sn" />
+            <field name="uid" column="uid" />
+        </class>
+    </package>
+</jdo>]]></source>
+                <p>
+                    We need to define the relationship at the department metadata because the employee doesn't know about
+                    the department it belongs to.
+                </p>
+                <p>
+                    With the <i>&lt;element&gt;</i> tag we specify that the relationship should be persisted at the other
+                    side and the <i>column</i> attribute defines the LDAP attribute to use. 
+                    In this case the relationship is persisted in the <i>departmentNumber</i> attribute at the employee entry.
+                </p>
+                <p>
+                    The important thing here is the <i>&lt;join&gt;</i> tag and its <i>column</i>.
+                    As before it signals DataNucleus to use attribute mapping.
+                    Now, as the relation is persisted at the <u>other</u> side, it specifies the attribute at <u>this</u> side
+                    that should be used for relationship mapping.
+                    In our case, when we establish a relationship between a <b>Department</b> and an <b>Employee</b>,
+                    the <i>ou</i> value of the department entry is stored in the <i>departmentNumber</i> attribute of the employee entry.
+                </p>
+            </subsection>
+
+            <a name="attribute_bidirectional"/>
+            <subsection name="Mapping by Attribute : 1-N Bidirectional">
+                <p>
+                    We use the following example LDAP tree and Java classes:
+                </p>
+<source><![CDATA[
+dc=example,dc=com                                       public class Department {
+|                                                           String name;
+|-- ou=Departments                                          Set<Employee> employees;
+|   |-- ou=Sales                                        }
+|   |-- ou=Engineering                                  
+|   |-- ...                                             public class Employee {
+|                                                           String firstName;
+|-- ou=Employees                                            String lastName;
+|   |-- uid=bbunny                                          String fullName;
+|   |-- uid=dduck                                           String uid;
+|   |-- uid=sgonzales                                       Department department;
+|   |-- ...                                             }]]></source>
+                <p>
+                    We have a flat LDAP tree with one container for all the departments and one container for all the employees.
+                    We have two Java classes, <b>Department</b> and <b>Employee</b>. The <b>Department</b> class contains a
+                    Collection of type <b>Employee</b>. Now each <b>Employee</b> has a reference to its <b>Department</b>.
+                </p>
+                <p>
+                    It is possible to persist this relationship on both sides.
+                </p>
+<source><![CDATA[
+dn: uid=bbunny,ou=Employees,dc=example,dc=com
+objectClass: top
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+uid: bbunny
+cn: Bugs Bunny
+givenName: Bugs
+sn: Bunny
+departmentNumber: Sales]]></source>
+<source><![CDATA[
+<jdo>
+    <package name="com.example">
+        <class name="Department" table="ou=Departments,dc=example,dc=com" schema="top,organizationalUnit">
+            <field name="name" primary-key="true" column="ou" />
+            <field name="employees" mapped-by="department" />
+        </class>
+        <class name="Employee" table="ou=Employees,dc=example,dc=com" schema="top,person,organizationalPerson,inetOrgPerson">
+            <field name="fullName" primary-key="true column="cn" />
+            <field name="firstName" column="givenName" />
+            <field name="lastName" column="sn" />
+            <field name="uid" column="uid" />
+            <field name="department" column="departmentNumber">
+                <join column="ou" />
+            </field>
+        </class>
+    </package>
+</jdo>]]></source>
+                <p>
+                    In this case we store the relation at the employee entry side in a single-valued attribute <i>departmentNumber</i>. 
+                    With the <i>&lt;join&gt;</i> tag and its <i>column</i> we specify that the <i>ou</i>
+                    value of the department entry should be used as join value. 
+                    Also note that <i>employee</i> field of <b>Department</b> is <i>mapped-by</i> the <i>department</i> field of the <b>Employee</b>.
+                </p>
+            </subsection>
+        </section>
+
+        <section name="LDAP : Relationship Mapping by Hierarchy (DEPRECATED)">
+            <a name="mapping_by_hierarchy"/>
+            <p> 
+                As LDAP is a hierarchical data store it is possible to model relationships between LDAP entries using
+                hierarchies. For example organisational structures like departments and their employees are often modeled
+                hierarchical in LDAP. It is possible to map 1-1 and N-1/1-N relationships using LDAP hierarchies.
+            </p>
+            <p>
+                The main challenge with hierarchical mapping is that the distinguished name (DN) of children depends 
+                on the DN of their parent. Therefore each child class needs a reference to the parent class. 
+                The parent class metadata defines a (fixed) LDAP DN that is used as container for all objects of the parent type.
+                The child class metadata contains a dynamic part in its DN definition. This dynamic part contains the name of 
+                the field holding the reference to the parent object, the name is surrounded by curly braces.
+                This dynamic DN is the indicator for DataNucleus to use hierarchical mapping.
+                The reference field itself won't be persisted as attribute because it is used as dynamic parameter.
+                If you query for child objects DataNucleus starts a larger LDAP search to find the objects 
+                (the container DN of the parent class as search base and subtree scope).
+            </p>
+            <p>
+                <b>Note:</b> Child objects are automatically dependent. If you delete the parent object all child objects are 
+                automatically deleted. If you null out the child object reference in the parent object or if you 
+                remove the child object from the parents collection, the child object is automatically deleted.
+            </p>
+
+            <subsection name="Mapping by Hierarchy : N-1 Unidirectional (DEPRECATED)">
+                <p>
+                    This kind of mapping could be used if your LDAP tree has a huge number of child objects and you only work 
+                    with these child objects. 
+                </p>
+                <p>
+                    We use the following example LDAP tree and Java classes:
+                </p>
+                <source><![CDATA[
+dc=example,dc=com                                       public class Department {
+|                                                           String name;
+|-- ou=Sales                                            }
+|   |-- cn=Bugs Bunny                                   
+|   |-- cn=Daffy Duck                                   public class Employee {
+|   |-- ...                                                 String firstName;
+|                                                           String lastName;
+|-- ou=Engineering                                          String fullName;
+|   |-- cn=Speedy Gonzales                                  Department department;
+|   |-- ...                                             }
+|                                                       
+|-- ...                                                 ]]></source>
+                <p>
+                     In the LDAP tree we have departments (Sales and Engineering) and each department holds 
+                     some associated employees. In our Java classes each <b>Employee</b> object knows its 
+                     <b>Department</b> but not vice-versa.
+                </p>
+                <p>
+                    The JDO metadata looks like this:
+                </p>
+<source><![CDATA[
+<jdo>
+    <package name="com.example">
+        <class name="Department" table="dc=example,dc=com" schema="top,organizationalUnit">
+            <field name="name" primary-key="true" column="ou" />
+        </class>
+
+        <class name="Employee" table="{department}" schema="top,person,organizationalPerson,inetOrgPerson">
+            <field name="fullName" primary-key="true column="cn" />
+            <field name="firstName" column="givenName" />
+            <field name="lastName" column="sn" />
+            <field name="department"/>
+        </class>
+    </package>
+</jdo>]]></source>
+                <p>
+                    The <b>Department</b> objects are persisted directly under <i>dc=example,dc=com</i>.
+                    The <b>Employee</b> class has a dynamic DN definition <i>{department}</i>. So the DN of the 
+                    Department instance is used as container for Employee objects.
+                </p>
+            </subsection>
+
+            <subsection name="Mapping by Hierarchy : N-1 (1-N) Bidirectional (DEPRECATED)">
+                <p>
+                    If you need a reference from the parent object to the child objects you need to define a bidirectional relationship.
+                </p>
+                <p>
+                    The example LDAP tree and Java classes looks like this:
+                </p>
+<source><![CDATA[
+dc=example,dc=com                                       public class Department {
+|                                                           String name;
+|-- ou=Sales                                                Set<Employee> employees;
+|   |-- cn=Bugs Bunny                                   }
+|   |-- cn=Daffy Duck                                   
+|   |-- ...                                             public class Employee {
+|                                                           String firstName;
+|-- ou=Engineering                                          String lastName;
+|   |-- cn=Speedy Gonzales                                  String fullName;
+|   |-- ...                                                 Department department;
+|                                                       }
+|-- ...                                                 ]]></source>
+                <p>
+                    Now the <b>Department</b> class has a Collection containing references to its <b>Employee</b>s.
+                </p>
+                <p>
+                    The JDO metadata looks like this:
+                </p>
+<source><![CDATA[
+<jdo>
+    <package name="com.example">
+        <class name="Department" table="dc=example,dc=com" schema="top,organizationalUnit">
+            <field name="name" primary-key="true" column="ou" />
+            <field name="employees" mapped-by="department"/>
+        </class>
+
+        <class name="Employee" table="{department}" schema="top,person,organizationalPerson,inetOrgPerson">
+            <field name="fullName" primary-key="true column="cn" />
+            <field name="firstName" column="givenName" />
+            <field name="lastName" column="sn" />
+            <field name="department"/>
+        </class>
+    </package>
+</jdo>]]></source>
+                <p>
+                    We added a new <i>employees</i> field to the Department class that is <i>mapped-by</i> the department field 
+                    of the Employee class. 
+                </p>
+                <p>
+                    Please note: When loading the parent object all child object are loaded immediately. 
+                    For a large number of child entries this may lead to performance and/or memory problems.
+                </p>
+            </subsection>
+            
+            <subsection name="Mapping by Hierarchy : 1-1 Unidirectional (DEPRECATED)">
+                <p>
+                    1-1 unidirectional mapping is very similar to N-1 unidirectional mapping. 
+                </p>
+                <p>
+                    We use the following example LDAP tree and Java classes:
+                </p>
+<source><![CDATA[
+dc=example,dc=com                                       public class Person {
+|                                                           String firstName;
+|-- ou=People                                               String lastName;
+|   |-- cn=Bugs Bunny                                       String fullName;
+|   |   |-- uid=bbunny                                  }
+|   |                                                   
+|   |-- cn=Daffy Duck                                   public class Account {
+|   |   |-- uid=dduck                                       String uid;
+|   |                                                       String password;
+|   |-- ...                                                 Person person;
+                                                        }]]></source>
+                <p>
+                     In the LDAP tree we have persons and each person has one account.
+                     Each <b>Account</b> object knows to which <b>Person</b> it belongs to, but not vice-versa.
+                </p>
+                <p>
+                    The JDO metadata looks like this:
+                </p>
+<source><![CDATA[
+<jdo>
+    <package name="com.example">
+        <class name="Person" table="ou=People,dc=example,dc=com" schema="top,person,organizationalPerson,inetOrgPerson">
+            <field name="fullName" primary-key="true column="cn" />
+            <field name="firstName" column="givenName" />
+            <field name="lastName" column="sn" />
+        </class>
+        
+        <class name="Account" table="{person}" schema="top,account,simpleSecurityObject">
+            <field name="uid" primary-key="true column="uid" />
+            <field name="password" column="userPasword" />
+            <field name="person" />
+        </class>
+    </package>
+</jdo>]]></source>
+                <p>
+                    The <b>Person</b> objects are persisted directly under <i>ou=People,dc=example,dc=com</i>.
+                    The <b>Account</b> class has a dynamic DN definition <i>{person}</i>. So the DN of the 
+                    Person instance is used as container for the Account object.
+                </p>
+            </subsection>
+
+            <subsection name="Mapping by Hierarchy : 1-1 Bidirectional (DEPRECATED)">
+                <p>
+                    If you need a reference from the parent class to the child class you need to define a bidirectional relationship.
+                </p>
+                <p>
+                    The example LDAP tree and Java classes looks like this:
+                </p>
+<source><![CDATA[
+dc=example,dc=com                                       public class Person {
+|                                                           String firstName;
+|-- ou=People                                               String lastName;
+|   |                                                       String fullName;
+|   |-- cn=Bugs Bunny                                       Account account;
+|   |   |-- uid=bbunny                                  }
+|   |                                                   
+|   |-- cn=Daffy Duck                                   public class Account {
+|   |   |-- uid=dduck                                       String uid;
+|   |                                                       String password;
+|   |-- ...                                                 Person person;
+                                                        }]]></source>
+                <p>
+                    Now the <b>Person</b> class has a reference to its <b>Account</b>.
+                </p>
+                <p>
+                    The JDO metadata looks like this:
+                </p>
+                <source><![CDATA[
+<jdo>
+    <package name="com.example">
+        <class name="Person" table="ou=People,dc=example,dc=com" schema="top,person,organizationalPerson,inetOrgPerson">
+            <field name="fullName" primary-key="true column="cn" />
+            <field name="firstName" column="givenName" />
+            <field name="lastName" column="sn" />
+            <field name="account" mapped-by="person" />
+        </class>
+        
+        <class name="Account" table="{person}" schema="top,account,simpleSecurityObject">
+            <field name="uid" primary-key="true column="uid" />
+            <field name="password" column="userPasword" />
+            <field name="person" />
+        </class>
+    </package>
+</jdo>]]></source>
+                 <p>
+                    We added a new <i>account</i> field to the Person class that is <i>mapped-by</i> the person field of the Account class. 
+                </p>
+            </subsection>
+        </section>
+
+        <section name="LDAP : Embedded Objects">
+            <a name="mapping_as_embedded"/>
+            <p>
+                With JDO it is possible to persist field(s) as embedded. This may be useful for LDAP datastores where often many attributes
+                are stored within one entry however logically they describe different objects.
+            </p>
+            <p>
+                Let's assume we have the following entry in our directory:
+            </p>
+<source><![CDATA[
+dn: cn=Bugs Bunny,ou=Employees,dc=example,dc=com
+objectClass: top
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+cn: Bugs Bunny
+givenName: Bugs
+sn: Bunny
+postalCode: 3578
+l: Hollywood
+street: Sunset Boulevard
+uid: bbunny
+userPassword: secret]]></source>
+            <p>
+                This entry contains multiple type of information: a person, its address and its account data. So we will create the following Java classes:
+            </p>
+<source><![CDATA[
+public class Employee {
+    String firstName;
+    String lastName;
+    String fullName;
+    Address address;
+    Account account;
+}
+
+public class Address {
+    int zip;
+    String city
+    String street;
+}
+
+public class Account {
+    String id;
+    String password;
+}]]></source>
+            <p>
+                The JDO metadata to map these objects to one LDAP entry would look like this:
+            </p>
+<source><![CDATA[
+<jdo>
+    <package name="com.example">
+        <class name="Person" table="ou=Employees,dc=example,dc=com" schema="top,person,organizationalPerson,inetOrgPerson">
+            <field name="fullName" primary-key="true" column="cn" />
+            <field name="firstName" column="givenName" />
+            <field name="lastName" column="sn" />
+            <field name="account">
+                <embedded null-indicator-column="uid">
+                    <field name="id" column="uid" />
+                    <field name="password" column="userPassword" />
+                </embedded>
+            </field>
+            <field name="address">
+                <embedded null-indicator-column="l">
+                    <field name="zip" column="postalCode" />
+                    <field name="city" column="l" />
+                    <field name="street" column="street" />
+                </embedded>
+            </field>
+        </class>
+        <class name="Account" embedded-only="true">
+            <field name="uid" />
+            <field name="password" />
+        </class>
+        <class name="Address" embedded-only="true">
+            <field name="zip" />
+            <field name="city" />
+            <field name="street" />
+        </class>
+    </package>
+</jdo>]]></source>
         </section>
     </body>
 </document>
