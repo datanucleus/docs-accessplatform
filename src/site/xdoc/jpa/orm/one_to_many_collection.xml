@@ -25,6 +25,8 @@
                 <li><a href="#fk_bi">1-N Bidirectional using Foreign-Key</a></li>
                 <li><a href="#join_nonpc">1-N Unidirectional of non-persistable using Join Table</a></li>
                 <li><a href="#converter_nonpc">Collection of non-persistable using AttributeConverter into single column</a></li>
+                <li><a href="#shared_join">1-N using shared join table</a> (DataNucleus Extension)</li>
+                <li><a href="#shared_fk">1-N using shared foreign key</a> (DataNucleus Extension)</li>
             </ul>
             <p>
                 <b>Please note that RDBMS supports the full range of options on this page, whereas other datastores
@@ -507,6 +509,165 @@ public class CollectionStringToStringConverter implements AttributeConverter<Col
         return coll;
     }
 }]]></source>
+        </section>
+
+        <section name="Shared Join Tables">
+        <a name="shared_join"/>
+            <img src="../../images/nucleus_extension.gif" border="0" alt=""/>
+            <p>
+                The relationships using join tables shown above rely on the join table relating to the relation in question.
+                DataNucleus allows the possibility of sharing a join table between relations. The example below
+                demonstrates this. We take the example as <a href="#join_uni">show above</a> (1-N Unidirectional 
+                Join table relation), and extend <b>Account</b> to have 2 collections of <b>Address</b> records. One for 
+                home addresses and one for work addresses, like this
+            </p>
+            <img src="../../images/orm/relationship_1_N_uni_join_shared_class.gif" border="0" alt=""/>
+            <p>
+                We now change the metadata we had earlier to allow for 2 collections, but sharing the join table
+            </p>
+            <source><![CDATA[
+<entity-mappings>
+    <entity class="Account">
+        <table name="ACCOUNT"/>
+        <attributes>
+            <id name="id">
+                <column name="ACCOUNT_ID"/>
+            </id>
+            ...
+            <one-to-many name="workAddresses" target-entity="com.mydomain.Address">
+                <join-table name="ACCOUNT_ADDRESSES">
+                    <join-column name="ACCOUNT_ID_OID"/>
+                    <inverse-join-column name="ADDRESS_ID_EID"/>
+                </join-table>
+                <extension key="relation-discriminator-column" value="ADDRESS_TYPE"/>
+                <extension key="relation-discriminator-pk" value="true"/>
+                <extension key="relation-discriminator-value" value="work"/>
+            </one-to-many>
+            <one-to-many name="homeAddresses" target-entity="com.mydomain.Address">
+                <join-table name="ACCOUNT_ADDRESSES">
+                    <join-column name="ACCOUNT_ID_OID"/>
+                    <inverse-join-column name="ADDRESS_ID_EID"/>
+                </join-table>
+                <extension key="relation-discriminator-column" value="ADDRESS_TYPE"/>
+                <extension key="relation-discriminator-pk" value="true"/>
+                <extension key="relation-discriminator-value" value="home"/>
+            </one-to-many>
+        </attributes>
+    </entity>
+    <entity class="Address">
+        <table name="ADDRESS"/>
+        <attributes>
+            <id name="id">
+                <column name="ADDRESS_ID"/>
+            </id>
+            ...
+        </attributes>
+    </entity>
+</entity-mappings>]]></source>
+            <p>or with annotations</p>
+<source><![CDATA[
+public class Account
+{
+    ...
+    @OneToMany
+    @Extensions({@Extension(key="relation-discriminator-column", value="ADDRESS_TYPE"),
+             @Extension(key="relation-discriminator-pk", value="true"),
+             @Extension(key="relation-discriminator-value", value="work")}
+    Collection<Address> workAddresses;
+    @OneToMany
+    @Extensions({@Extension(key="relation-discriminator-column", value="ADDRESS_TYPE"),
+             @Extension(key="relation-discriminator-pk", value="true"),
+             @Extension(key="relation-discriminator-value", value="home")}
+    Collection<Address> homeAddresses;
+    ...
+}]]></source>
+            <p>
+                So we have defined the same join table for the 2 collections "ACCOUNT_ADDRESSES", and the same columns
+                in the join table, meaning that we will be sharing the same join table to represent both relations. The
+                important step is then to define the 3 DataNucleus <i>extension</i> tags. These define a column in the join table
+                (the same for both relations), and the value that will be populated when a row of that collection is
+                inserted into the join table. In our case, all "home" addresses will have a value of "home" inserted into
+                this column, and all "work" addresses will have "work" inserted. This means we can now identify easily which
+                join table entry represents which relation field.
+            </p>
+            <p>
+                This results in the following database schema
+            </p>
+            <img src="../../images/orm/relationship_1_N_uni_join_shared_db.gif" border="0" alt=""/>
+        </section>
+
+        <section name="Shared Foreign Key">
+        <a name="shared_fk"/>
+            <img src="../../images/nucleus_extension.gif" border="0" alt=""/>
+            <p>
+                The relationships using foreign keys shown above rely on the foreign key relating to the relation in question.
+                DataNucleus allows the possibility of sharing a foreign key between relations between the same classes. 
+                The example below demonstrates this. We take the example as <a href="#fk_uni">show above</a> (1-N Unidirectional 
+                Foreign Key relation), and extend <b>Account</b> to have 2 collections of <b>Address</b> records. One for 
+                home addresses and one for work addresses, like this
+            </p>
+            <img src="../../images/orm/relationship_1_N_uni_fk_shared_class.gif" border="0" alt=""/>
+            <p>
+                We now change the metadata we had earlier to allow for 2 collections, but sharing the join table
+            </p>
+            <source><![CDATA[
+<entity-mappings>
+    <entity class="Account">
+        <table name="ACCOUNT"/>
+        <attributes>
+            <id name="id">
+                <column name="ACCOUNT_ID"/>
+            </id>
+            ...
+            <one-to-many name="workAddresses" target-entity="com.mydomain.Address">
+                <join-column name="ACCOUNT_ID_OID"/>
+                <extension key="relation-discriminator-column" value="ADDRESS_TYPE"/>
+                <extension key="relation-discriminator-value" value="work"/>
+            </one-to-many>
+            <one-to-many name="homeAddresses" target-entity="com.mydomain.Address">
+                <join-column name="ACCOUNT_ID_OID"/>
+                <extension key="relation-discriminator-column" value="ADDRESS_TYPE"/>
+                <extension key="relation-discriminator-value" value="home"/>
+            </one-to-many>
+        </attributes>
+    </entity>
+    <entity class="Address">
+        <table name="ADDRESS"/>
+        <attributes>
+            <id name="id">
+                <column name="ADDRESS_ID"/>
+            </id>
+            ...
+        </attributes>
+    </entity>
+</entity-mappings>]]></source>
+            <p>or with annotations</p>
+<source><![CDATA[
+public class Account
+{
+    ...
+    @OneToMany
+    @Extensions({@Extension(key="relation-discriminator-column", value="ADDRESS_TYPE"),
+             @Extension(key="relation-discriminator-value", value="work")}
+    Collection<Address> workAddresses;
+    @OneToMany
+    @Extensions({@Extension(key="relation-discriminator-column", value="ADDRESS_TYPE"),
+             @Extension(key="relation-discriminator-value", value="home")}
+    Collection<Address> homeAddresses;
+    ...
+}]]></source>
+            <p>
+                So we have defined the same foreign key for the 2 collections "ACCOUNT_ID_OID", The
+                important step is then to define the 2 DataNucleus <i>extension</i> tags. These define a column in the element table
+                (the same for both relations), and the value that will be populated when a row of that collection is
+                inserted into the element table. In our case, all "home" addresses will have a value of "home" inserted into
+                this column, and all "work" addresses will have "work" inserted. This means we can now identify easily which
+                element table entry represents which relation field.
+            </p>
+            <p>
+                This results in the following database schema
+            </p>
+            <img src="../../images/orm/relationship_1_N_uni_fk_shared_db.gif" border="0" alt=""/>
         </section>
     </body>
 </document>
