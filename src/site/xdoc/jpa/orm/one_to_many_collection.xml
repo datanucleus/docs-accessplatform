@@ -96,9 +96,9 @@ public class Account
     ...
 
     @OneToMany
-    @JoinTable(name="ACCOUNT_ADDRESSES")
-    @JoinColumn(name="ACCOUNT_ID_OID")
-    @InverseJoinColumn(name="ADDRESS_ID_EID")
+    @JoinTable(name="ACCOUNT_ADDRESSES", 
+        joinColumns={@JoinColumn(name="ACCOUNT_ID_OID")},
+        inverseJoinColumns={@JoinColumn(name="ADDRESS_ID_EID")})
     Collection<Address> addresses
 }
 
@@ -276,9 +276,9 @@ public class Account
     ...
 
     @OneToMany(mappedBy="account")
-    @JoinTable(name="ACCOUNT_ADDRESSES")
-    @JoinColumn(name="ACCOUNT_ID_OID")
-    @InverseJoinColumn(name="ADDRESS_ID_EID")
+    @JoinTable(name="ACCOUNT_ADDRESSES", 
+        joinColumns={@JoinColumn(name="ACCOUNT_ID_OID")},
+        inverseJoinColumns={@JoinColumn(name="ADDRESS_ID_EID")})
     Collection<Address> addresses
 }
 
