@@ -300,6 +300,7 @@
                                     <li>cascade-remove</li>
                                     <li>cascade-refresh</li>
                                 </ul></li>
+                                <li><a href="#shared-relation">shared-relation</a></li>
                             </ul></li>
                             <li><a href="#one-to-one">one-to-one</a>
                             <ul>
@@ -347,6 +348,7 @@
                                     <li>cascade-remove</li>
                                     <li>cascade-refresh</li>
                                 </ul></li>
+                                <li><a href="#shared-relation">shared-relation</a></li>
                             </ul></li>
                             <li><a href="#embedded">embedded</a>
                             <ul>
@@ -1224,6 +1226,41 @@
                         <td>table</td>
                         <td>Table for the column ?</td>
                         <td></td>
+                    </tr>
+                </table>
+                <br/>
+                <br/>
+            </subsection>
+
+            <!-- SHARED-RELATION ELEMENT -->
+            <a name="shared-relation"/>
+            <subsection name="Metadata for shared-relation tag">
+                <p>
+                    These are attributes within the <b>&lt;shared-relation&gt;</b> tag 
+                    (under &lt;one-to-many&gt; or &lt;many-to-many&gt;).
+                    <b>This is a DataNucleus Extension</b>.
+                    This is used to define a relation as being shared, with a distinguisher column.
+                </p>
+                <table>
+                    <tr>
+                        <th>Attribute</th>
+                        <th>Description</th>
+                        <th>Values</th>
+                    </tr>
+                    <tr class="c">
+                        <td>column</td>
+                        <td>Name of the distinguisher column</td>
+                        <td/>
+                    </tr>
+                    <tr class="c">
+                        <td>value</td>
+                        <td>Value to store in the distinguisher column for this field</td>
+                        <td/>
+                    </tr>
+                    <tr class="c">
+                        <td>primary-key</td>
+                        <td>Whether the distinguisher column is part of the primary key (when join table).</td>
+                        <td/>
                     </tr>
                 </table>
                 <br/>
