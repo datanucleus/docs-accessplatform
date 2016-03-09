@@ -539,7 +539,6 @@ public class CollectionStringToStringConverter implements AttributeConverter<Col
                     <inverse-join-column name="ADDRESS_ID_EID"/>
                 </join-table>
                 <extension key="relation-discriminator-column" value="ADDRESS_TYPE"/>
-                <extension key="relation-discriminator-pk" value="true"/>
                 <extension key="relation-discriminator-value" value="work"/>
             </one-to-many>
             <one-to-many name="homeAddresses" target-entity="com.mydomain.Address">
@@ -548,7 +547,6 @@ public class CollectionStringToStringConverter implements AttributeConverter<Col
                     <inverse-join-column name="ADDRESS_ID_EID"/>
                 </join-table>
                 <extension key="relation-discriminator-column" value="ADDRESS_TYPE"/>
-                <extension key="relation-discriminator-pk" value="true"/>
                 <extension key="relation-discriminator-value" value="home"/>
             </one-to-many>
         </attributes>
@@ -566,6 +564,8 @@ public class CollectionStringToStringConverter implements AttributeConverter<Col
 </entity-mappings>]]></source>
             <p>or with annotations</p>
 <source><![CDATA[
+import org.datanucleus.api.jpa.annotations.SharedRelation;
+
 public class Account
 {
     ...
@@ -574,18 +574,14 @@ public class Account
     @JoinTable(name="ACCOUNT_ADDRESSES", 
         joinColumns={@JoinColumn(name="ACCOUNT_ID_OID")},
         inverseJoinColumns={@JoinColumn(name="ADDRESS_ID_EID")})
-    @Extensions({@Extension(key="relation-discriminator-column", value="ADDRESS_TYPE"),
-             @Extension(key="relation-discriminator-pk", value="true"),
-             @Extension(key="relation-discriminator-value", value="work")}
+    @SharedRelation(column="ADDRESS_TYPE", value="work")
     Collection<Address> workAddresses;
 
     @OneToMany
     @JoinTable(name="ACCOUNT_ADDRESSES", 
         joinColumns={@JoinColumn(name="ACCOUNT_ID_OID")},
         inverseJoinColumns={@JoinColumn(name="ADDRESS_ID_EID")})
-    @Extensions({@Extension(key="relation-discriminator-column", value="ADDRESS_TYPE"),
-             @Extension(key="relation-discriminator-pk", value="true"),
-             @Extension(key="relation-discriminator-value", value="home")}
+    @SharedRelation(column="ADDRESS_TYPE", value="home")
     Collection<Address> homeAddresses;
 
     ...
@@ -653,18 +649,18 @@ public class Account
 </entity-mappings>]]></source>
             <p>or with annotations</p>
 <source><![CDATA[
+import org.datanucleus.api.jpa.annotations.SharedRelation;
+
 public class Account
 {
     ...
 
     @OneToMany
-    @Extensions({@Extension(key="relation-discriminator-column", value="ADDRESS_TYPE"),
-             @Extension(key="relation-discriminator-value", value="work")}
+    @SharedRelation(column="ADDRESS_TYPE", value="work")
     Collection<Address> workAddresses;
 
     @OneToMany
-    @Extensions({@Extension(key="relation-discriminator-column", value="ADDRESS_TYPE"),
-             @Extension(key="relation-discriminator-value", value="home")}
+    @SharedRelation(column="ADDRESS_TYPE", value="home")
     Collection<Address> homeAddresses;
 
     ...
