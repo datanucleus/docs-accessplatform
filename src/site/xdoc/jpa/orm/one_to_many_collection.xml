@@ -540,6 +540,7 @@ public class CollectionStringToStringConverter implements AttributeConverter<Col
                 </join-table>
                 <extension key="relation-discriminator-column" value="ADDRESS_TYPE"/>
                 <extension key="relation-discriminator-value" value="work"/>
+                <!--extension key="relation-discriminator-pk" value="true"/-->
             </one-to-many>
             <one-to-many name="homeAddresses" target-entity="com.mydomain.Address">
                 <join-table name="ACCOUNT_ADDRESSES">
@@ -548,6 +549,7 @@ public class CollectionStringToStringConverter implements AttributeConverter<Col
                 </join-table>
                 <extension key="relation-discriminator-column" value="ADDRESS_TYPE"/>
                 <extension key="relation-discriminator-value" value="home"/>
+                <!--extension key="relation-discriminator-pk" value="true"/-->
             </one-to-many>
         </attributes>
     </entity>
