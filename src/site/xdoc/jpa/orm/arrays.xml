@@ -55,13 +55,10 @@
 
             <a name="join_nonpc"/>
             <subsection name="Arrays stored in join table">
-            <p>
-                If you want an array of non-persistable objects be stored in a "join" table, you can follow this example.
-                If you want the element to be primitive or Object types then follow this section. For example, when you have a Collection of Strings. 
-                This will be persisted in the same way as the "Join Table" examples above. A join table is created to hold the collection elements. 
-                Let's take our example. We have an <b>Account</b> that stores a Collection of addresses. 
-                These addresses are simply Strings. We define the annotations like this
-            </p>
+                <p>
+                    If you want an array of non-persistable objects be stored in a "join" table, you can follow this example.
+                    We have an <b>Account</b> that stores a Collection of addresses. These addresses are simply Strings. We define the annotations like this
+                </p>
 <source><![CDATA[
 @Entity
 public class Account
@@ -72,7 +69,7 @@ public class Account
     @CollectionTable(name="ACCOUNT_ADDRESSES")
     String[] addresses;
 }]]></source>
-            <p>or using XML metadata</p>
+                <p>or using XML metadata</p>
 <source><![CDATA[
     <entity class="mydomain.Account">
         <attributes>
@@ -83,15 +80,14 @@ public class Account
         </attributes>
     </entity>
 ]]></source>
-            <p>
-                In the datastore the following is created
-            </p>
-            <img src="../../images/orm/relationship_1_N_primitive_collection_db.gif" border="0" alt=""/>
-            <p>
-                Use @Column on the field/method to define the column details of the element in the join table.
-            </p>
-        </section>
-
+                <p>
+                    In the datastore the following is created
+                </p>
+                <img src="../../images/orm/relationship_1_N_primitive_collection_db.gif" border="0" alt=""/>
+                <p>
+                    Use @Column on the field/method to define the column details of the element in the join table.
+                </p>
+            </subsection>
         </section>
 
     </body>
