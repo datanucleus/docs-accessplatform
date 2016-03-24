@@ -110,8 +110,7 @@ public class Address
 }]]></source>
                 <table>
                     <tr>
-                        <td>The crucial part is the <i>join-table</i> element on the field element - this signals
-                            to JPA to use a join table.</td>
+                        <td>The crucial part is the <i>join-table</i> element on the field element (@JoinTable annotation) - this signals to JPA to use a join table.</td>
                     </tr>
                 </table>
                 <p>
@@ -129,14 +128,10 @@ public class Address
                     If you wish to fully define the schema table and column names etc, follow these tips
                 </p>
                 <ul>
-                    <li>To specify the name of the table where a class is stored, specify the <i>table</i> element below 
-                        the <b>class</b> element</li>
-                    <li>To specify the names of the columns where the fields of a class are stored, specify the 
-                        <i>column</i> attribute on the <b>basic</b> element.</li>
-                    <li>To specify the name of the join table, specify the <i>join-table</i> element below the <b>one-to-many</b>
-                        element with the collection.</li>
-                    <li>To specify the names of the join table columns, use the <i>join-column</i> and 
-                        <i>inverse-join-column</i> elements below the <i>join-table</i> element.</li>
+                    <li>To specify the name of the table where a class is stored, specify the <i>table</i> element below the <b>class</b> element</li>
+                    <li>To specify the names of the columns where the fields of a class are stored, specify the  <i>column</i> attribute on the <b>basic</b> element.</li>
+                    <li>To specify the name of the join table, specify the <i>join-table</i> element below the <b>one-to-many</b> element with the collection.</li>
+                    <li>To specify the names of the join table columns, use the <i>join-column</i> and <i>inverse-join-column</i> elements below the <i>join-table</i> element.</li>
                     <li>If the field type is Set then the join table will be given a primary key (since a Set cannot have duplicates), whereas for other Collection
                         types it will not have a primary key (since duplicates are allowed).</li>
                 </ul>
@@ -296,13 +291,11 @@ public class Address
 }]]></source>
                 <table>
                     <tr>
-                        <td>The crucial part is the <i>join</i> element on the field element - this signals to 
-                            JPA to use a join table.</td>
+                        <td>The crucial part is the <i>join-table</i> element on the field element (or @JoinTable annotation) - this signals to JPA to use a join table.</td>
                     </tr>
                 </table>
                 <p>
-                    This will create 3 tables in the database, one for <b>Address</b>, one for <b>Account</b>, 
-                    and a join table, as shown below.
+                    This will create 3 tables in the database, one for <b>Address</b>, one for <b>Account</b>, and a join table, as shown below.
                 </p>
                 <br/>
                 <img src="../../images/orm/relationship_1_N_bi_set_join_db.gif" border="0" alt=""/>
@@ -315,14 +308,10 @@ public class Address
                     If you wish to fully define the schema table and column names etc, follow these tips
                 </p>
                 <ul>
-                    <li>To specify the name of the table where a class is stored, specify the <i>table</i> element below 
-                        the <b>class</b> element</li>
-                    <li>To specify the names of the columns where the fields of a class are stored, specify the 
-                        <i>column</i> attribute on the <b>basic</b> element.</li>
-                    <li>To specify the name of the join table, specify the <i>join-table</i> element below the 
-                        <b>one-to-many</b> element with the collection.</li>
-                    <li>To specify the names of the join table columns, use the <i>join-column</i> and 
-                        <i>inverse-join-column</i> elements below the <i>join-table</i> element.</li>
+                    <li>To specify the name of the table where a class is stored, specify the <i>table</i> element below the <b>class</b> element</li>
+                    <li>To specify the names of the columns where the fields of a class are stored, specify the <i>column</i> attribute on the <b>basic</b> element.</li>
+                    <li>To specify the name of the join table, specify the <i>join-table</i> element below the <b>one-to-many</b> element with the collection.</li>
+                    <li>To specify the names of the join table columns, use the <i>join-column</i> and <i>inverse-join-column</i> elements below the <i>join-table</i> element.</li>
                     <li>If the field type is a Set then the join table will be given a primary key (since a Set cannot have duplicates), whereas for other Collection
                         types no primary key is assigned.</li>
                     <li>When forming the relation please make sure that <b>you set the relation at BOTH sides</b> since 
@@ -388,8 +377,7 @@ public class Address
                 <table>
                     <tr>
                         <td>The crucial part is the <i>mapped-by</i> attribute of the field on the "1" side of
-                            the relationship. This tells the JPA implementation to look for a field called 
-                            <i>account</i> on the <b>Address</b> class.</td>
+                            the relationship. This tells the JPA implementation to look for a field called <i>account</i> on the <b>Address</b> class.</td>
                     </tr>
                 </table>
                 <p>
@@ -404,17 +392,14 @@ public class Address
                     If you wish to fully define the schema table and column names etc, follow these tips
                 </p>
                 <ul>
-                    <li>To specify the name of the table where a class is stored, specify the <i>table</i> element below the
-                        <b>class</b>element</li>
-                    <li>To specify the names of the columns where the fields of a class are stored, specify the 
-                        <i>column</i> attribute on the <b>basic</b> element.</li>
+                    <li>To specify the name of the table where a class is stored, specify the <i>table</i> element below the <b>class</b>element</li>
+                    <li>To specify the names of the columns where the fields of a class are stored, specify the <i>column</i> attribute on the <b>basic</b> element.</li>
                     <li>When forming the relation please make sure that <b>you set the relation at BOTH sides</b> since 
                         DataNucleus would have no way of knowing which end is correct if you only set one end.</li>
                 </ul>
                 <p>
-                    <b>Limitation : </b> Since each Address object can have at most one owner (due to the "Foreign Key") 
-                    this mode of persistence will not allow duplicate values in the Collection. If you want to allow 
-                    duplicate Collection entries, then use the "Join Table" variant above.
+                    <b>Limitation : </b> Since each Address object can have at most one owner (due to the "Foreign Key") this mode of persistence will not allow 
+                    duplicate values in the Collection. If you want to allow duplicate Collection entries, then use the "Join Table" variant above.
                 </p>
                 <br/>
             </subsection>
