@@ -14,8 +14,8 @@
                 to be byte-streamed. Namely
             </p>
             <ul>
-                <li><a href="#singlecolumn">Single Column</a> - the array is byte-streamed into a single column in 
-                    the table of the containing object.</li>
+                <li><a href="#singlecolumn">Single Column</a> - the array is byte-streamed into a single column in the table of the containing object.</li>
+                <li><a href="#join_nonpc">Join Table</a> - the array is stored in a "join" table, with the element in a column of that table</li>
             </ul>
             <br/>
 
@@ -54,6 +54,42 @@
                 <br/>
             </subsection>
 
+
+            <a name="join_nonpc"/>
+            <subsection name="Arrays stored in join table">
+                <p>
+                    If you want an array of non-persistable objects be stored in a "join" table, you can follow this example.
+                    We have an <b>Account</b> that stores a Collection of addresses. These addresses are simply Strings. We define the annotations like this
+                </p>
+<source><![CDATA[
+@Entity
+public class Account
+{
+    ...
+
+    @ElementCollection
+    @CollectionTable(name="ACCOUNT_ADDRESSES")
+    String[] addresses;
+}]]></source>
+                <p>or using XML metadata</p>
+<source><![CDATA[
+    <entity class="mydomain.Account">
+        <attributes>
+            ...
+            <element-collection name="addresses">
+                <collection-table name="ACCOUNT_ADDRESSES"/>
+            </element-collection>
+        </attributes>
+    </entity>
+]]></source>
+                <p>
+                    In the datastore the following is created
+                </p>
+                <img src="../../images/orm/relationship_1_N_primitive_collection_db.gif" border="0" alt=""/>
+                <p>
+                    Use @Column on the field/method to define the column details of the element in the join table.
+                </p>
+            </subsection>
         </section>
 
     </body>
