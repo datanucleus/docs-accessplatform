@@ -123,8 +123,7 @@ public class Address
 }]]></source>
                 <table>
                     <tr>
-                        <td>The crucial part is the <i>join-table</i> element on the field element - this signals
-                            to JPA to use a join table.</td>
+                        <td>The crucial part is the <i>join-table</i> element on the field element (@JoinColumn annotation) - this signals to JPA to use a join table.</td>
                     </tr>
                 </table>
                 <p>
@@ -327,8 +326,7 @@ public class Address
 }]]></source>
                 <table>
                     <tr>
-                        <td>The crucial part is the <i>join</i> element on the field element - this signals to 
-                            JPA to use a join table.</td>
+                        <td>The crucial part is the <i>join-table</i> element on the field element (@JoinTable annotation) - this signals to JPA to use a join table.</td>
                     </tr>
                 </table>
                 <p>
@@ -346,20 +344,15 @@ public class Address
                     If you wish to fully define the schema table and column names etc, follow these tips
                 </p>
                 <ul>
-                    <li>To specify the name of the table where a class is stored, specify the <i>table</i> 
-                        element below the <b>class</b> element</li>
-                    <li>To specify the names of the columns where the fields of a class are stored, specify 
-                        the <i>column</i> attribute on the <b>basic</b> element.</li>
-                    <li>To specify the name of the join table, specify the <i>join-table</i> element below 
-                        the <b>one-to-many</b> element with the collection.</li>
-                    <li>To specify the names of the join table columns, use the <i>join-column</i> and 
-                        <i>inverse-join-column</i> elements below the <i>join-table</i> element.</li>
+                    <li>To specify the name of the table where a class is stored, specify the <i>table</i> element below the <b>class</b> element</li>
+                    <li>To specify the names of the columns where the fields of a class are stored, specify the <i>column</i> attribute on the <b>basic</b> element.</li>
+                    <li>To specify the name of the join table, specify the <i>join-table</i> element below the <b>one-to-many</b> element with the collection.</li>
+                    <li>To specify the names of the join table columns, use the <i>join-column</i> and <i>inverse-join-column</i> elements below the <i>join-table</i> element.</li>
                     <li>The join table will NOT be given a primary key (so that duplicates can be stored).</li>
                     <li>When forming the relation please make sure that <b>you set the relation at BOTH sides</b> since 
                         DataNucleus would have no way of knowing which end is correct if you only set one end.</li>
                     <li>If you want to have a surrogate column added to contain the ordering you
-                        should specify <i>order-column</i> (@OrderColumn) instead of <i>order-by</i>.
-                        This is available from JPA2</li>
+                        should specify <i>order-column</i> (@OrderColumn) instead of <i>order-by</i>.</li>
                 </ul>
                 <br/>
             </subsection>
@@ -368,8 +361,7 @@ public class Address
             <subsection name="Using Foreign-Key">
                 <p>Here we have the 2 classes with both knowing about the relationship with the other.</p>
                 <p>
-                    <b>Please note that an <i>Foreign-Key</i> List will NOT, by default, allow 
-                        duplicates. This is because it stores the element position in the element table. 
+                    <b>Please note that an <i>Foreign-Key</i> List will NOT, by default, allow duplicates. This is because it stores the element position in the element table. 
                         If you need a List with duplicates we recommend that you use the <i>Join Table</i> List implementation above.</b> 
                     If you have an application identity element class then you <i>could</i> in principle add 
                     the element position to the primary key to allow duplicates, but this would imply
@@ -469,7 +461,6 @@ public class Address
         <section name="1-N Collection of non-Entity objects">
             <a name="join_nonpc"/>
             <p>
-                In JPA1 you cannot have a 1-N List of non-Entity objects. This is available in JPA2.
                 All of the examples above show a 1-N relationship between 2 persistable classes. 
                 If you want the element to be primitive or Object types then follow this section. For example, when you 
                 have a List of Strings. This will be persisted in the same way as the "Join Table" 
