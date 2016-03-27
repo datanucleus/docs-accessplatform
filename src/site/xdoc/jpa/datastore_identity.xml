@@ -15,10 +15,17 @@
                 you are leaving the assignment of id's to DataNucleus and your class will <b>not</b> have a field 
                 for this identity - it will be added to the datastore representation by DataNucleus. 
                 It is, to all extents and purposes a <i>surrogate key</i> that will have its own column in the 
-                datastore. To specify that a class is to use <b>datastore identity</b> with JPA, you define the
-                following annotations on your class
+                datastore. To specify that a class is to use <b>datastore identity</b> with JPA, you define the metadata as follows
             </p>
-            <source><![CDATA[
+<source><![CDATA[
+<entity class="org.mydomain.MyClass">
+    <datastore-id/>
+    ...
+</entity>]]></source>
+                <p>
+                    or using annotations, for example
+                </p>
+<source><![CDATA[
 @Entity
 @org.datanucleus.api.jpa.annotations.DatastoreIdentity
 public class MyClass
@@ -26,8 +33,7 @@ public class MyClass
     ...
 }]]></source>
             <p>
-                <i>Please note that since the JPA XML metadata is poorly designed it is not possible to specify
-                datastore identity using XML, you have to use the annotations.</i>
+                <i>Please note that since the JPA XML metadata is poorly designed it is not possible to specify datastore identity using XML, you have to use the annotations.</i>
             </p>
             <table>
                 <tr>

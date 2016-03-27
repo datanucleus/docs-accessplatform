@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<document xmlns="http://maven.apache.org/XDOC/2.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+    <properties>
+        <title>Nondurable Identity</title>
+    </properties>
+
+    <body>
+        <section name="JPA : Nondurable Identity">
+            <p>
+                JPA requires that all objects have an identity. DataNucleus provides a vendor extension that allows objects of a class to not have a unique identity in the datastore. 
+                This type of identity is typically for log files, history files etc where you aren't going to access the object by key, but instead by a different parameter. 
+                In the datastore the table will typically not have a primary key. 
+                To specify that a class is to use <b>nondurable identity</b> with DataNucleus you would add the following to the MetaData for the class.
+            </p>
+<source><![CDATA[
+<entity class="org.mydomain.MyClass">
+    <nondurable-id/>
+    ...
+</entity>]]></source>
+                <p>
+                    or using annotations, for example
+                </p>
+                <source>
+@Entity
+@org.datanucleus.api.jpa.annotations.NonDurableId
+public class MyClass
+{
+    ...
+}</source>
+            <p>
+                DataNucleus provides support for "nondurable" identity for some datastores only currently (RDBMS, Excel, ODF, MongoDB, HBase). 
+                What this means for something like RDBMS is that the table of the class will not have a primary-key.
+            </p>
+        </section>
+    </body>
+</document>
