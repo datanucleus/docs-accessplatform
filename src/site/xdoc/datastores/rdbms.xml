@@ -552,6 +552,7 @@ datanucleus.ConnectionPassword='password'
         </section>
 
         <section name="RDBMS : Statement Batching">
+            <a name="statement_batching"/>
             <img src="../images/nucleus_extension.gif" alt=""/>
             <p>
                 When changes are required to be made to an underlying RDBMS datastore, statements are sent via JDBC.
@@ -599,6 +600,7 @@ SELECT ID, NAME FROM MYOTHERTABLE WHERE VALUE=?</source>
         </section>
 
         <section name="RDBMS : Failover">
+            <a name="failover"/>
             <p>
                 In the majority of production situations it is desirable to have a level of failover between 
                 the underlying datastores used for persistence. You have at least 2 options available to you
@@ -680,6 +682,7 @@ SELECT ID, NAME FROM MYOTHERTABLE WHERE VALUE=?</source>
         </section>
 
         <section name="RDBMS : Datastore Schema API">
+            <a name="schema_api"/>
             <img src="../images/nucleus_extension.gif" border="0" alt=""/>
             <p>
                 JDO/JPA are APIs for persisting and retrieving objects to/from datastores. They don't
