@@ -550,5 +550,313 @@ datanucleus.ConnectionPassword='password'
                 <br/>
             </subsection>
         </section>
+
+        <section name="RDBMS : Statement Batching">
+            <img src="../images/nucleus_extension.gif" alt=""/>
+            <p>
+                When changes are required to be made to an underlying RDBMS datastore, statements are sent via JDBC.
+                A statement is, in general, a single SQL command, and is then executed. In some circumstances
+                the statements due to be sent to the datastore are the same JDBC statement several times. In this case
+                the statement can be <i>batched</i>. This means that a statement is created for the SQL, and it is
+                passed to the datastore with multiple sets of values before being executed. When it is executed
+                the SQL is executed for each of the sets of values. DataNucleus allows statement batching under certain
+                circumstances.
+            </p>
+            <p>
+                The maximum number of statements that can be included in a <i>batch</i> can be set via a persistence
+                property <b>datanucleus.rdbms.statementBatchLimit</b>. This defaults to 50. If you set it to -1 then there is
+                no maximum limit imposed. Setting it to 0 means that batching is turned off.
+            </p>
+            <p>
+                <b>It should be noted that while batching sounds essential, it is only of any possible use
+                when the exact same SQL is required to be executed more than 1 times in a row. If a different SQL
+                needs executing between 2 such statements then no batching is possible anyway.</b>. Let's take an example
+            </p>
+            <source>
+INSERT INTO MYTABLE VALUES(?,?,?,?)
+INSERT INTO MYTABLE VALUES(?,?,?,?)
+SELECT ID, NAME FROM MYOTHERTABLE WHERE VALUE=?
+INSERT INTO MYTABLE VALUES(?,?,?,?)
+SELECT ID, NAME FROM MYOTHERTABLE WHERE VALUE=?</source>
+            <p>
+                In this example the first two statements can be batched together since they are identical and nothing
+                else separates them. All subsequent statements cannot be batched since no two identical statements
+                follow each other.
+            </p>
+            <p>
+                The statements that DataNucleus currently allows for batching are
+            </p>
+            <ul>
+                <li>Insert of objects. This is not enabled when objects being inserted are using <i>identity</i> value generation strategy</li>
+                <li>Delete of objects</li>
+                <li>Insert of container elements/keys/values</li>
+                <li>Delete of container elements/keys/values</li>
+            </ul>
+            <p>
+                <b>Please note that if using MySQL, you should also specify the connection URL with the argument <i>rewriteBatchedStatements=true</i>
+                since MySQL won't actually batch without this</b>
+            </p>
+        </section>
+
+        <section name="RDBMS : Failover">
+            <p>
+                In the majority of production situations it is desirable to have a level of failover between 
+                the underlying datastores used for persistence. You have at least 2 options available to you
+                here. These are shown below
+            </p>
+            <subsection name="Sequoia">
+                <img src="../images/thirdparty/continuent.jpg" border="0" alt=""/>
+                <p>
+                    <a href="http://sequoia.continuent.org/" target="_blank">Sequoia</a> is a transparent 
+                    middleware solution offering clustering, load balancing and failover services for any 
+                    database. Sequoia is the continuation of the C-JDBC project. The database is distributed 
+                    and replicated among several nodes and Sequoia balances the queries among these nodes. 
+                    Sequoia handles node and network failures with transparent failover. It also provides 
+                    support for hot recovery, online maintenance operations and online upgrades.
+                </p>
+                <p>
+                    Sequoia can be used with DataNucleus by just providing the Sequoia datastore URLs as input 
+                    to DataNucleus. <b>There is a problem outstanding in Sequoia itself in that its JDBC driver
+                    doesnt provide DataNucleus with the correct major/minor versions of the underlying 
+                    datastore. Until Sequoia fix this issue, use of Sequoia will be unreliable</b>
+                </p>
+                <br/>
+            </subsection>
+
+            <subsection name="DataNucleus Failover capability">
+                <img src="../images/nucleus_extension.gif" border="0" alt=""/>
+                <p>
+                    DataNucleus has the capability to switch to between DataSources upon failure of one while 
+                    obtaining a datastore connection. The failover mechanism is useful for applications with 
+                    multiple database nodes when the data is actually replicated/synchronized by the underlying 
+                    database. There are 2 things to be aware of before utilising this functionality.
+                </p>
+                <ul>
+                    <li>DataNucleus doesn't replicate changes to all database nodes, and for this reason, this 
+                        feature is suggested to be used only for reading objects or if the database is capable 
+                        to replicate the changes to all nodes.</li>
+                    <li>If a connection breaks while in use the failover mechanism will not handle it, thus the 
+                        user application must take care of restarting the transaction and execute the operations.</li>
+                </ul>
+                <p>
+                    Several failover algorithm are allowed to be used, one at time, as for example 
+                    <i>round-robin</i>, <i>ordered list</i> or <i>random</i>. The default algorithm, ordered 
+                    list, is described below and is provided by DataNucleus. You can also implement and plug 
+                    your own algorithm. 
+                    See <a href="../extensions/connection_provider.html">Connection Provider</a>. 
+                </p>
+                <p>
+                    To use failover, each datastore connection must be provided through DataSources. The 
+                    <i>datanucleus.ConnectionFactoryName</i> property must be declared with a list of JNDI names 
+                    pointing to DataSources, in the form of <i>&lt;JNDINAME&gt; [,&lt;JNDINAME&gt;]</i>. See 
+                    the example:
+<source>datanucleus.ConnectionFactoryName=JNDINAME1,JNDINAME2</source>
+                </p>
+                <p>
+                    At least one least one JNDI name must be declared.
+                </p>
+                <br/>
+
+                <p>
+                    The <b>Ordered List Algorithm (default)</b> allows you to switch to slave DataSources upon 
+                    failure of a master DataSource while obtaining a datastore connection. This is shown below.
+                </p>
+                <p>
+                    <img src="../images/failover_ordered_1.jpg" border="0" alt=""/>            
+                </p>
+                <p>
+                    Each time DataNucleus needs to obtain a connection to the datastore, it takes the first 
+                    DataSource, the Master, and tries, on failure to obtain the connection goes to the next on 
+                    the list until it obtains a connection to the datastore or the end of the list is reached.
+                </p>
+                <p>
+                    <img src="../images/failover_ordered_2.jpg" border="0" alt=""/>
+                </p>
+                <p>
+                    The first JNDI name in the <i>datanucleus.ConnectionFactoryName</i> property is the Master 
+                    DataSource and the following JNDI names are the Slave DataSources.
+                </p>
+            </subsection>
+        </section>
+
+        <section name="RDBMS : Datastore Schema API">
+            <img src="../images/nucleus_extension.gif" border="0" alt=""/>
+            <p>
+                JDO/JPA are APIs for persisting and retrieving objects to/from datastores. They don't
+                provide a way of accessing the schema of the datastore itself (if it has one). In the
+                case of RDBMS it is useful to be able to find out what columns there are in a table, or
+                what data types are supported for example. DataNucleus Access Platform provides an
+                API for this.
+            </p>
+            <p>
+                The first thing to do is get your hands on the DataNucleus <i>StoreManager</i> and from
+                that the <i>StoreSchemaHandler</i>. You
+                do this as follows
+            </p>
+            <source><![CDATA[
+import org.datanucleus.api.jdo.JDOPersistenceManagerFactory;
+import org.datanucleus.store.StoreManager;
+import org.datanucleus.store.schema.StoreSchemaHandler;
+
+[assumed to have "pmf"]
+...
+
+StoreManager storeMgr = ((JDOPersistenceManagerFactory)pmf).getStoreManager();
+StoreSchemaHandler schemaHandler = storeMgr.getSchemaHandler();
+]]></source>
+            <p>
+                So now we have the <i>StoreSchemaHandler</i> what can we do with it? Well start with the
+                javadoc for the implementation that is used for RDBMS
+                <a href="http://www.datanucleus.org/javadocs/store.rdbms/latest/org/datanucleus/store/rdbms/schema/RDBMSSchemaHandler.html" target="_blank"><img src="../images/javadoc.gif" alt=""/></a>
+            </p>
+            <br/>
+
+            <subsection name="Datastore Types Information">
+                <p>
+                    So we now want to find out what JDBC/SQL types are supported for our RDBMS.
+                    This is simple.
+                </p>
+                <source><![CDATA[
+import org.datanucleus.store.rdbms.schema.RDBMSTypesInfo;
+
+Connection conn = (Connection)pm.getDataStoreConnection().getNativeConnection();
+RDBMSTypesInfo typesInfo = schemaHandler.getSchemaData(conn, "types");
+]]></source>
+                <p>
+                    As you can see from the javadocs for <i>RDBMSTypesInfo</i>
+                    <a href="http://www.datanucleus.org/javadocs/store.rdbms/latest/org/datanucleus/store/rdbms/schema/RDBMSTypesInfo.html" target="_blank"><img src="../images/javadoc.gif" alt=""/></a>
+                    we can access the JDBC types information via the "children". They are keyed by
+                    the JDBC type number of the JDBC type (see java.sql.Types).
+                    So we can just iterate it
+                </p>
+                <source><![CDATA[
+Iterator jdbcTypesIter = typesInfo.getChildren().values().iterator();
+while (jdbcTypesIter.hasNext())
+{
+    JDBCTypeInfo jdbcType = (JDBCTypeInfo)jdbcTypesIter.next();
+
+    // Each JDBCTypeInfo contains SQLTypeInfo as its children, keyed by SQL name
+    Iterator sqlTypesIter = jdbcType.getChildren().values().iterator();
+    while (sqlTypesIter.hasNext())
+    {
+        SQLTypeInfo sqlType = (SQLTypeInfo)sqlTypesIter.next();
+        ... inspect the SQL type info
+    }
+}]]></source>
+                <br/>
+            </subsection>
+
+            <subsection name="Column information for a table">
+                <p>
+                    Here we have a table in the datastore and want to find the columns present.
+                    So we do this
+                </p>
+                <source><![CDATA[
+import org.datanucleus.store.rdbms.schema.RDBMSTableInfo;
+
+Connection conn = (Connection)pm.getDataStoreConnection().getNativeConnection();
+RDBMSTableInfo tableInfo = schemaHandler.getSchemaData(conn, "columns", 
+    new Object[] {catalogName, schemaName, tableName});
+]]></source>
+                <p>
+                    As you can see from the javadocs for <i>RDBMSTableInfo</i>
+                    <a href="http://www.datanucleus.org/javadocs/store.rdbms/latest/org/datanucleus/store/rdbms/schema/RDBMSTableInfo.html" target="_blank"><img src="../images/javadoc.gif" alt=""/></a>
+                    we can access the columns information via the "children".
+                </p>
+                <source><![CDATA[
+Iterator columnsIter = tableInfo.getChildren().iterator();
+while (columnsIter.hasNext())
+{
+    RDBMSColumnInfo colInfo = (RDBMSColumnInfo)columnsIter.next();
+
+    ...
+}]]></source>
+                <br/>
+            </subsection>
+
+            <subsection name="Index information for a table">
+                <p>
+                    Here we have a table in the datastore and want to find the indices present.
+                    So we do this
+                </p>
+                <source><![CDATA[
+import org.datanucleus.store.rdbms.schema.RDBMSTableInfo;
+
+Connection conn = (Connection)pm.getDataStoreConnection().getNativeConnection();
+RDBMSTableIndexInfo tableInfo = schemaHandler.getSchemaData(conn, "indices", 
+    new Object[] {catalogName, schemaName, tableName});
+]]></source>
+                <p>
+                    As you can see from the javadocs for <i>RDBMSTableIndexInfo</i>
+                    <a href="http://www.datanucleus.org/javadocs/store.rdbms/latest/org/datanucleus/store/rdbms/schema/RDBMSTableIndexInfo.html" target="_blank"><img src="../images/javadoc.gif" alt=""/></a>
+                    we can access the index information via the "children".
+                </p>
+                <source><![CDATA[
+Iterator indexIter = tableInfo.getChildren().iterator();
+while (indexIter.hasNext())
+{
+    IndexInfo idxInfo = (IndexInfo)indexIter.next();
+
+    ...
+}]]></source>
+                <br/>
+            </subsection>
+
+            <subsection name="ForeignKey information for a table">
+                <p>
+                    Here we have a table in the datastore and want to find the FKs present.
+                    So we do this
+                </p>
+                <source><![CDATA[
+import org.datanucleus.store.rdbms.schema.RDBMSTableInfo;
+
+Connection conn = (Connection)pm.getDataStoreConnection().getNativeConnection();
+RDBMSTableFKInfo tableInfo = schemaHandler.getSchemaData(conn, "foreign-keys", 
+    new Object[] {catalogName, schemaName, tableName});
+]]></source>
+                <p>
+                    As you can see from the javadocs for <i>RDBMSTableFKInfo</i>
+                    <a href="http://www.datanucleus.org/javadocs/store.rdbms/latest/org/datanucleus/store/rdbms/schema/RDBMSTableFKInfo.html" target="_blank"><img src="../images/javadoc.gif" alt=""/></a>
+                    we can access the foreign-key information via the "children".
+                </p>
+                <source><![CDATA[
+Iterator fkIter = tableInfo.getChildren().iterator();
+while (fkIter.hasNext())
+{
+    ForeignKeyInfo fkInfo = (ForeignKeyInfo)fkIter.next();
+
+    ...
+}]]></source>
+                <br/>
+            </subsection>
+
+            <subsection name="PrimaryKey information for a table">
+                <p>
+                    Here we have a table in the datastore and want to find the PK present.
+                    So we do this
+                </p>
+                <source><![CDATA[
+import org.datanucleus.store.rdbms.schema.RDBMSTableInfo;
+
+Connection conn = (Connection)pm.getDataStoreConnection().getNativeConnection();
+RDBMSTablePKInfo tableInfo = schemaHandler.getSchemaData(conn, "primary-keys", 
+    new Object[] {catalogName, schemaName, tableName});
+]]></source>
+                <p>
+                    As you can see from the javadocs for <i>RDBMSTablePKInfo</i>
+                    <a href="http://www.datanucleus.org/javadocs/store.rdbms/latest/org/datanucleus/store/rdbms/schema/RDBMSTablePKInfo.html" target="_blank"><img src="../images/javadoc.gif" alt=""/></a>
+                    we can access the foreign-key information via the "children".
+                </p>
+                <source><![CDATA[
+Iterator pkIter = tableInfo.getChildren().iterator();
+while (pkIter.hasNext())
+{
+    PrimaryKeyInfo pkInfo = (PrimaryKeyInfo)pkIter.next();
+
+    ...
+}]]></source>
+                <br/>
+            </subsection>
+        </section>
     </body>
 </document>
