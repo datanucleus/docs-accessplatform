@@ -3181,10 +3181,9 @@
                     </tr>
                     <tr>
                         <td width="120">Description</td>
-                        <td>When persisting en empty string, should it be persisted as null in the datastore.
-                            This is to allow for datastores (Oracle) that dont differentiate between null
-                            and empty string. If it is set to false and the datastore doesnt differentiate then
-                            a special character will be saved when storing an empty string.
+                        <td>When persisting an empty string, should it be persisted as null in the datastore?
+                            This is to allow for datastores such as Oracle that dont differentiate between null and empty string. 
+                            If it is set to false and the datastore doesnt differentiate then a special character will be saved when storing an empty string (and interpreted when reading in).
                             <b>Applicable for RDBMS only</b></td>
                     </tr>
                     <tr>
