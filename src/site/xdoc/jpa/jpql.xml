@@ -109,6 +109,11 @@ SELECT p FROM Person p JOIN p.address a JOIN a.owner o WHERE o.name = 'Fred'
 Join to a Map relation field and access to the key/value of the Map.
 SELECT VALUE(om) FROM Company c INNER JOIN c.officeMap om ON KEY(om) = 'London'
 ]]></source>
+                <p>
+                    If you specify "LEFT OUTER FETCH" or "INNER FETCH" (i.e you specify <b>FETCH</b>)this means that you want those fields/properties fetching by this query. 
+                    This doesn't mean that DataNucleus will definitely fetch them in the same query (because sometimes it is impossible to fetch things like multi-valued fields 
+                    in a single query) but that it will attempt to fetch all fields that are selected (as well as the ones that are defaulted to EAGER).
+                </p>
                 <img src="../images/nucleus_extension.gif" border="0" alt=""/>
                 <p>
                     In strict JPA the entity name cannot be a <i>MappedSuperclass</i> entity name. That is, if you have an abstract superclass that is persistable, 
