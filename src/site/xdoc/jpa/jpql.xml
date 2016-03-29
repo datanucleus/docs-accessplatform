@@ -122,7 +122,6 @@ SELECT VALUE(om) FROM Company c INNER JOIN c.officeMap om ON KEY(om) = 'London'
                     In strict JPA you cannot join to another "root" element. That is, where you define JOIN syntax the following element is along a relation
                     from the previous element. DataNucleus supports joining to a (new) "root" element. See this example
                 </p>
-                </p>
 <source><![CDATA[
 SELECT p FROM Person p LEFT OUTER JOIN Address a ON p.addressName = a.name
 ]]></source>
