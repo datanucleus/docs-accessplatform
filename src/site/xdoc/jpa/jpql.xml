@@ -85,14 +85,6 @@ Using annotations
 @Entity(name="ThePerson")
 public class Person ...
 ]]></source>
-                <img src="../images/nucleus_extension.gif" border="0" alt=""/>
-                <p>
-                    In strict JPA the entity name cannot be a <i>MappedSuperclass</i> entity name. That is, if you have an abstract superclass that is persistable, 
-                    you cannot query for instances of that superclass and its subclasses. We consider this a significant shortcoming of the querying capability,
-                    and allow the entity name to also be of a <i>MappedSuperclass</i>. 
-                    You are unlikely to find this supported in other JPA implementations, but then maybe that's why you chose DataNucleus?
-                </p>
-                <br/>
                 <p>
                     The FROM clause also allows a user to add some explicit joins to related entities, and assign aliases to the joined entities. 
                     These are then usable in the filter/ordering/result etc. If you don't add any joins DataNucleus will add joins where they are 
@@ -117,6 +109,24 @@ SELECT p FROM Person p JOIN p.address a JOIN a.owner o WHERE o.name = 'Fred'
 Join to a Map relation field and access to the key/value of the Map.
 SELECT VALUE(om) FROM Company c INNER JOIN c.officeMap om ON KEY(om) = 'London'
 ]]></source>
+                <img src="../images/nucleus_extension.gif" border="0" alt=""/>
+                <p>
+                    In strict JPA the entity name cannot be a <i>MappedSuperclass</i> entity name. That is, if you have an abstract superclass that is persistable, 
+                    you cannot query for instances of that superclass and its subclasses. We consider this a significant shortcoming of the querying capability,
+                    and allow the entity name to also be of a <i>MappedSuperclass</i>. 
+                    You are unlikely to find this supported in other JPA implementations, but then maybe that's why you chose DataNucleus?
+                </p>
+                <br/>
+                <img src="../images/nucleus_extension.gif" border="0" alt=""/>
+                <p>
+                    In strict JPA you cannot join to another "root" element. That is, where you define JOIN syntax the following element is along a relation
+                    from the previous element. DataNucleus supports joining to a (new) "root" element. See this example
+                </p>
+                </p>
+<source><![CDATA[
+SELECT p FROM Person p LEFT OUTER JOIN Address a ON p.addressName = a.name
+]]></source>
+                <br/>
             </subsection>
 
             <a name="filter"/>
