@@ -15,6 +15,17 @@
                 As a result sometimes users will have to make some changes to move between versions of DataNucleus. We aim to keep this to a minimum.
             </p>
 
+            <a name="5_0_0_M3_FROM_5_0_0_M2"/>
+            <subsection name="Migration from 5.0.0.M2 to 5.0.0.M3">
+                <p>
+                    Migrating will require the following changes.
+                </p>
+                <ul>
+                    <li>HBase : changed default storage of relations to use "persistableId" to be consistent with Cassandra, Neo4j, MongoDB, Excel, ODF, JSON etc.
+                        Use persistence property <b>datanucleus.hbase.relationUsesPersistableId</b> as <i>false</i> to get old storage method.</li>
+                </ul>
+            </subsection>
+
             <a name="5_0_0_M2_FROM_5_0_0_M1"/>
             <subsection name="Migration from 5.0.0.M1 to 5.0.0.M2">
                 <p>
