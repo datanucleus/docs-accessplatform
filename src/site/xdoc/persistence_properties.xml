@@ -3559,6 +3559,25 @@
                 <table>
                     <tr>
                         <th colspan="2">
+                            <b>datanucleus.hbase.relationUsesPersistableId</b>
+                        </th>
+                    </tr>
+                    <tr>
+                        <td width="120">Description</td>
+                        <td>This defines how relations will be persisted. The legacy method would be just to store the "id" of the object.
+                            The default method is to use "persistableId" which is a form of the id but catering for datastore id and application id, and including
+                            the class of the target object to avoid subsequent lookups.
+                            <b>Applicable for HBase only.</b></td>
+                    </tr>
+                    <tr>
+                        <td>Range of Values</td>
+                        <td><b>true</b> | false</td>
+                    </tr>
+                </table>
+                <br/>
+                <table>
+                    <tr>
+                        <th colspan="2">
                             <b>datanucleus.hbase.enforceUniquenessInApplication</b>
                         </th>
                     </tr>
