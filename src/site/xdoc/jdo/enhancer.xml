@@ -83,6 +83,11 @@
                         <td>Whether to enhance all classes as detachable irrespective of metadata</td>
                     </tr>
                     <tr>
+                        <td>ignoreMetaDataForMissingClasses</td>
+                        <td>false</td>
+                        <td>Whether to ignore metadata for classes that aren't found</td>
+                    </tr>
+                    <tr>
                         <td>verbose</td>
                         <td>false</td>
                         <td>Verbose output?</td>
@@ -201,6 +206,11 @@
                     <tr>
                         <td>alwaysDetachable</td>
                         <td>Optional. Whether to enhance all classes as detachable irrespective of metadata</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>ignoreMetaDataForMissingClasses</td>
+                        <td>Optional. Whether to ignore metadata for classes that aren't found</td>
                         <td></td>
                     </tr>
                     <tr>
@@ -339,6 +349,7 @@ java -cp classpath  org.datanucleus.enhancer.DataNucleusEnhancer [options] [mapp
         -v : verbose output
         -q : quiet mode (no output, overrides verbose flag too)
         -alwaysDetachable : enhance all classes as detachable irrespective of metadata
+        -ignoreMetaDataForMissingClasses : Ignore metadata for classes that aren't found
         -generatePK {flag} : generate any PK classes where needed 
                              ({flag} should be true or false - default=true)
         -generateConstructor {flag} : generate default constructor where needed 

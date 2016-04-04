@@ -119,6 +119,11 @@
                         <td>Whether to enhance classes to make use of a detach listener for attempts to access
                             an undetached field.</td>
                     </tr>
+                    <tr>
+                        <td>ignoreMetaDataForMissingClasses</td>
+                        <td>false</td>
+                        <td>Whether to ignore metadata for classes that aren't found</td>
+                    </tr>
                 </table>
                 <p>
                     You will need to add <i>(org.datanucleus) datanucleus-api-jpa</i> into the CLASSPATH (of the plugin, 
@@ -190,6 +195,11 @@
                         <td>destination</td>
                         <td>Optional. Defining a directory where enhanced classes will be written. 
                             If omitted, the original classes are updated.</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>ignoreMetaDataForMissingClasses</td>
+                        <td>Optional. Whether to ignore metadata for classes that aren't found</td>
                         <td></td>
                     </tr>
                     <tr>
@@ -278,6 +288,7 @@ java -cp classpath  org.datanucleus.enhancer.DataNucleusEnhancer [options]
                              ({flag} should be true or false - default=true)
         -generateConstructor {flag} : generate default constructor where needed 
                              ({flag} should be true or false - default=true)
+        -ignoreMetaDataForMissingClasses : Ignore metadata for classes that aren't found
 
     where "mapping-files" and "class-files" are provided when not enhancing a persistence-unit, 
         and give the paths to the mapping files and class-files that define the classes being enhanced.
