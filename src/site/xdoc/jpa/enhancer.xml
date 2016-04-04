@@ -119,6 +119,11 @@
                         <td>Whether to enhance classes to make use of a detach listener for attempts to access
                             an undetached field.</td>
                     </tr>
+                    <tr>
+                        <td>ignoreMetaDataForMissingClasses</td>
+                        <td>false</td>
+                        <td>Whether to ignore when we have metadata specified for classes that aren't found</td>
+                    </tr>
                 </table>
                 <p>
                     You will need to add <i>(org.datanucleus) datanucleus-api-jpa</i> into the CLASSPATH (of the plugin, 
@@ -233,7 +238,12 @@
                         <td>if</td>
                         <td>Optional. The name of a property that must be set in order to the Enhancer Ant Task to execute.</td>
                         <td></td>
-                    </tr>                   
+                    </tr>    
+                    <tr>
+                        <td>ignoreMetaDataForMissingClasses</td>
+                        <td>Optional. Whether to ignore when we have metadata specified for classes that aren't found</td>
+                        <td></td>
+                    </tr>               
                 </table>
                 <p>
                     The enhancer task extends the Apache Ant <a href="http://ant.apache.org/manual/CoreTasks/java.html">Java task</a>, 
@@ -278,6 +288,7 @@ java -cp classpath  org.datanucleus.enhancer.DataNucleusEnhancer [options]
                              ({flag} should be true or false - default=true)
         -generateConstructor {flag} : generate default constructor where needed 
                              ({flag} should be true or false - default=true)
+        -ignoreMetaDataForMissingClasses : ignore classes that have defined metadata but are missing
 
     where "mapping-files" and "class-files" are provided when not enhancing a persistence-unit, 
         and give the paths to the mapping files and class-files that define the classes being enhanced.

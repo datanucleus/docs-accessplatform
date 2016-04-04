@@ -83,6 +83,11 @@
                         <td>Whether to enhance all classes as detachable irrespective of metadata</td>
                     </tr>
                     <tr>
+                        <td>ignoreMetaDataForMissingClasses</td>
+                        <td>false</td>
+                        <td>Whether to ignore when we have metadata specified for classes that aren't found</td>
+                    </tr>
+                    <tr>
                         <td>verbose</td>
                         <td>false</td>
                         <td>Verbose output?</td>
@@ -174,10 +179,8 @@
                 <p>
                     Ant provides a powerful framework for performing tasks and DataNucleus provides an Ant task to 
                     enhance classes. The DataNucleus Enhancer is in <i>datanucleus-core.jar</i>, and you need to make
-                    sure that the <i>datanucleus-core.jar</i>, <i>datanucleus-api-jdo.jar</i>, <i>jdo-api.jar</i> 
-                    (and optionally <i>log4j.jar</i>) are in your CLASSPATH.
-                    If using JPA metadata then you will also need <i>persistence-api.jar</i> and
-                    <i>datanucleus-api-jpa.jar</i> in the CLASSPATH.
+                    sure that the <i>datanucleus-core.jar</i>, <i>datanucleus-api-jdo.jar</i>, <i>jdo-api.jar</i> (and optionally <i>log4j.jar</i>) are in your CLASSPATH.
+                    If using JPA metadata then you will also need <i>persistence-api.jar</i> and <i>datanucleus-api-jpa.jar</i> in the CLASSPATH.
                     In the DataNucleus Enhancer Ant task, the following parameters are available
                 </p>
                 <table>
@@ -201,6 +204,11 @@
                     <tr>
                         <td>alwaysDetachable</td>
                         <td>Optional. Whether to enhance all classes as detachable irrespective of metadata</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>ignoreMetaDataForMissingClasses</td>
+                        <td>Optional. Whether to ignore when we have metadata specified for classes that aren't found</td>
                         <td></td>
                     </tr>
                     <tr>
@@ -339,6 +347,7 @@ java -cp classpath  org.datanucleus.enhancer.DataNucleusEnhancer [options] [mapp
         -v : verbose output
         -q : quiet mode (no output, overrides verbose flag too)
         -alwaysDetachable : enhance all classes as detachable irrespective of metadata
+        -ignoreMetaDataForMissingClasses : ignore classes that have defined metadata but are missing
         -generatePK {flag} : generate any PK classes where needed 
                              ({flag} should be true or false - default=true)
         -generateConstructor {flag} : generate default constructor where needed 
