@@ -61,5 +61,5 @@ All that you need to do is add a _plugin.xml_
 	</plugin>
 
 together with MANIFEST.MF to your application, and it will be supported. Obviously if it is of
-a type that you think we ought to support out-of-the-box then raise a JIRA on project "NUCRDBMS"
+a type that you think we ought to support out-of-the-box then raise an issue against the <a href="https://github.com/datanucleus/datanucleus-rdbms/issues">DataNucleus RDBMS plugin</a>
 with your plugin.xml definition and mention the datastore it was needed for.
