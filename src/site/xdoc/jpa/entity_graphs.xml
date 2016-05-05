@@ -114,16 +114,23 @@ Properties props = new Properties();
 props.put("javax.persistence.loadgraph", includeOtherGraph);
 MyClass myObj = em.find(MyClass.class, id, props);]]></source>
                 <p>
-                    Here we have made use of the <i>EntityManager.find</i> method and provided the property
-                    <b>javax.persistence.loadgraph</b> to be our EntityGraph. This means that it will fetch
-                    all fields in the <i>default</i> EntityGraph, <b>plus</b> all fields in this EntityGraph. 
-                    If we had provided the property <b>javax.persistence.fetchgraph</b> set to our
-                    EntityGraph it would have fetched just the fields defined in that EntityGraph.
+                    Here we have made use of the <i>EntityManager.find</i> method and provided the property <b>javax.persistence.loadgraph</b> to be our EntityGraph. 
+                    This means that it will fetch all fields in the <i>default</i> EntityGraph, <b>plus</b> all fields in this EntityGraph. 
+                    If we had provided the property <b>javax.persistence.fetchgraph</b> set to our EntityGraph it would have fetched just the fields defined in that EntityGraph.
                 </p>
                 <p>
-                    Note that you can also make use of EntityGraphs when using the JPA Query API, specifying
-                    the same properties above but as query <i>hints</i>.
+                    Note that you can also make use of EntityGraphs when using the JPA Query API, specifying the same properties above but as query <i>hints</i>, like this
                 </p>
+<source><![CDATA[
+EntityGraph<MyClass> eg = em.createEntityGraph(MyClass.class);
+eg.addAttributeNodes("id");
+eg.addAttributeNodes("name");
+eg.addAttributeNodes("other");
+
+Query q = em.createQuery("SELECT m FROM MyClass m");
+q.setHint("javax.persistence.fetchgraph", eg);
+List<MyClass> results = q.getResultList();
+]]></source>
                 <br/>
             </subsection>
         </section>
