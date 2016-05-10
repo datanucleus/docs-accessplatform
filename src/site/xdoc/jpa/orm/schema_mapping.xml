@@ -218,6 +218,7 @@ CREATE VIEW SALEABLE_PRODUCT (ID, NAME, PRICE, CURRENCY) AS
 package mydomain.views;
 
 @Entity
+@Table("SALEABLE_PRODUCT")
 @Extension(vendorName="datanucleus", key="view-definition", value="CREATE VIEW SALEABLE_PRODUCT
 (
     {this.id},
@@ -258,7 +259,7 @@ public class SaleableProduct
                     Please note the following
                 </p>
                 <ul>
-                    <li>We've defined our class as using "nondurable" identity. This is an important step since rows of the <b>View</b>
+                    <li>We would typically define our class as using "nondurable" identity (@NonDurableId). This is an important step since rows of the <b>View</b>
                         typically don't operate in the same way as rows of a <b>Table</b>, not mapping onto a persisted updateable object as such</li>
                     <li>We've specified the "table", which in this case is the view name - otherwise DataNucleus would create a name
                        for the view based on the class name.</li>

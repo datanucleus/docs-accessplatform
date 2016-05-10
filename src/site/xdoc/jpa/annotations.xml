@@ -75,6 +75,11 @@
                     <td>Class</td>
                     <td>Defines a class as using datastore-identity (DataNucleus extension).</td>
                 </tr>
+                <tr class="d">
+                    <td><a href="#NonDurableId">@NonDurableId</a></td>
+                    <td>Class</td>
+                    <td>Defines a class as using nondurable identity (DataNucleus extension).</td>
+                </tr>
                 <tr>
                     <td><a href="#EntityListeners">@EntityListeners</a></td>
                     <td>Class</td>
@@ -746,6 +751,23 @@ public class MyClass
                 <source>
 @Entity
 @DatastoreId(column="MY_ID")
+public class MyClass
+{
+    ...
+}</source>
+                <br/>
+                <br/>
+            </subsection>
+
+            <a name="NonDurableId"/>
+            <subsection name="@NonDurableId">
+                <p>
+                    This DataNucleus-extension annotation is used to define that the class uses nondurable identity.
+                    Specified on the <b>class</b>.
+                </p>
+                <source>
+@Entity
+@NonDurableId
 public class MyClass
 {
     ...
