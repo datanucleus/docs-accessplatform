@@ -19,19 +19,15 @@
             <ul>
                 <li><a href="#datastore">Datastore Definition</a> - datastore properties</li>
                 <li><a href="#general">General</a> - general properties</li>
-                <li><a href="#schema">Schema Control</a> - properties controlling the generation of the 
-                    datastore schema.</li>
-                <li><a href="#transaction">Transactions and Locking</a> - properties controlling how 
-                    transactions operate</li>
+                <li><a href="#schema">Schema Control</a> - properties controlling the generation of the datastore schema.</li>
+                <li><a href="#transaction">Transactions and Locking</a> - properties controlling how transactions operate</li>
                 <li><a href="#cache">Caching</a> - properties controlling the behaviour of the cache(s)</li>
                 <li><a href="#validation">Bean Validation</a> - properties controlling bean validation at persist</li>
-                <li><a href="#identity">Value Generation</a> - properties controlling the generation of 
-                    object identities and field values</li>
+                <li><a href="#identity">Value Generation</a> - properties controlling the generation of object identities and field values</li>
                 <li><a href="#metadata">MetaData</a> - metadata properties</li>
                 <li><a href="#autostart">Auto-Start</a> - Auto-Start Mechanism properties</li>
                 <li><a href="#query">Query</a> - properties controlling the behaviour of queries</li>
-                <li><a href="#datastorespecific">Datastore-Specific</a> - properties for particular datastores 
-                    e.g RDBMS</li>
+                <li><a href="#datastorespecific">Datastore-Specific</a> - properties for particular datastores e.g RDBMS</li>
             </ul>
 
             <br/>
@@ -2596,6 +2592,23 @@
                         <td width="120">Description</td>
                         <td>Whether to treat all classes as detachable irrespective of input metadata.
                             See also "alwaysDetachable" enhancer option.</td>
+                    </tr>
+                    <tr>
+                        <td>Range of values</td>
+                        <td><b>false</b> | true</td>
+                    </tr>
+                </table>
+                <br/>
+                <table>
+                    <tr>
+                        <th colspan="2">
+                            <b>datanucleus.metadata.listener.object</b>
+                        </th>
+                    </tr>
+                    <tr>
+                        <td width="120">Description</td>
+                        <td>Property specifying a org.datanucleus.metadata.MetaDataListener object that will be registered at startup and will receive 
+                            notification of all metadata load activity.</td>
                     </tr>
                     <tr>
                         <td>Range of values</td>
