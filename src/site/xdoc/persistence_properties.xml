@@ -3612,10 +3612,27 @@
                     </tr>
                     <tr>
                         <td width="120">Description</td>
-                        <td>Setting this property to true means that when a new object is persisted (and its identity
-                            is assigned), no check will be made as to whether it exists in the datastore and that the
-                            user takes responsibility for such checks.
+                        <td>Setting this property to true means that when a new object is persisted (and its identity is assigned), 
+                            no check will be made as to whether it exists in the datastore and that the user takes responsibility for such checks.
                             <b>Applicable for HBase only.</b></td>
+                    </tr>
+                    <tr>
+                        <td>Range of Values</td>
+                        <td>true | <b>false</b></td>
+                    </tr>
+                </table>
+                <br/>
+                <table>
+                    <tr>
+                        <th colspan="2">
+                            <b>datanucleus.cassandra.enforceUniquenessInApplication</b>
+                        </th>
+                    </tr>
+                    <tr>
+                        <td width="120">Description</td>
+                        <td>Setting this property to true means that when a new object is persisted (and its identity is assigned), 
+                            no check will be made as to whether it exists in the datastore (since Cassandra does an UPSERT) and that the user takes responsibility for such checks.
+                            <b>Applicable for Cassandra only.</b></td>
                     </tr>
                     <tr>
                         <td>Range of Values</td>
