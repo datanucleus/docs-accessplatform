@@ -9,17 +9,17 @@
     <body>
         <section name="JPA : Multitenancy">
             <p>
-                On occasion you need to share a data model with other user-groups or other applications and 
-                where the model is persisted to the same structure of datastore. There are three ways of 
-                handling this with DataNucleus.
+                On occasion you need to share a data model with other user-groups or other applications and where the model is persisted to the same structure of datastore. 
+                There are three ways of handling this with DataNucleus.
+            </p>
             </p>
             <ul>
                 <li><b>Separate Database per Tenant</b> - have a different database per user-group/application.</li>
                 <li><b>Separate Schema per Tenant</b> - as the first option, except use different schemas.</li>
-                <li><b>Same Database/Schema but with a Discriminator</b> - this is described below.</li>
+                <li><b>Same Database/Schema but with a Discriminator in affected Table(s)</b> - this is described below.</li>
             </ul>
 
-            <subsection name="Multitenancy via Discriminator">
+            <subsection name="Multitenancy via Discriminator in Table">
                 <p>
                     If you specify the persistence property <i>datanucleus.tenantId</i> as an identifier
                     for your user-group/application then DataNucleus will know that it needs to provide
@@ -37,12 +37,11 @@
      ...
 </class>]]></source>
                 <p>
-                    In all subsequent use of DataNucleus, any "insert" to the primary "table"(s) will also include
-                    the TENANT column value. Additionally any query will apply a WHERE clause restricting to a particular
-                    value of TENANT column.
+                    In all subsequent use of DataNucleus, any "insert" to the primary "table"(s) will also include the TENANT column value. 
+                    Additionally any query will apply a WHERE clause restricting to a particular value of TENANT column.
                 </p>
                 <p>
-                    If you want to disable multitenancy on a class, just specify the following metadata
+                    If you have enabled multi-tenancy as above but want to disable multitenancy on a class, just specify the following metadata
                 </p>
                 <source><![CDATA[
 <class name="MyClass">
