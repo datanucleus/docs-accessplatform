@@ -9,27 +9,27 @@
     <body>
         <section name="TomEE and DataNucleus JPA">
             <p>
-                Apache TomEE ships with OpenJPA as the default JPA provider, however any valid JPA provider can be used.
+                Apache TomEE ships with OpenJPA or EclipseLink as the default JPA provider (depending on which version of TomEE), however any valid JPA provider can be used.
             </p>
             <p>
                 The basic steps are:
             </p>
             <ul>
             <li>Add the DataNucleus jars to <i>&lt;tomee-home&gt;/lib/</i></li>
-            <li>Configure the webapp or the server to use DataNucleus.</li>
+            <li>Configure the web-app or the server to use DataNucleus.</li>
             </ul>
 
             <subsection name="Webapp Configuration">
                 <p>
-                    Any webapp can specify the JPA provider it would like to use via the <i>persistence.xml</i> file, which can be at any of the following locations in a webapp
+                    Any web-app can specify the JPA provider it would like to use via the <i>persistence.xml</i> file, which can be at any of the following locations in a webapp
                 </p>
                 <ul>
                 <li>WEB-INF/persistence.xml of the .war file</li>
                 <li>META-INF/persistence.xml in any jar located in WEB-INF/lib/</li>
                 </ul>
                 <p>
-                    A single webapp may have many persistence.xml files and each may use whichever JPA provider it needs.
-                    The following is an example of a fairly common persistence.xml for DataNucleus
+                    A single web-app may have many <i>persistence.xml</i> files and each may use whichever JPA provider it needs.
+                    The following is an example of a fairly common <i>persistence.xml</i> for DataNucleus
                 </p>
 <source><![CDATA[
 <persistence version="1.0"
@@ -56,7 +56,7 @@
 
             <subsection name="Server Configuration">
                 <p>
-                    The default JPA provider can be changed at the server level to favour DataNucleus over OpenJPA.
+                    The default JPA provider can be changed at the server level to favour DataNucleus over OpenJPA/EclipseLink.
                     Using the <i>&lt;tomee-home&gt;/conf/system.properties</i> file or any other valid means of setting java.lang.System.getProperties(), 
                     the following standard properties can set the default for any persistence.xml file.
                 </p>
@@ -81,14 +81,14 @@ javax.persistence.nonJtaDataSource
                 </p>
 <source><![CDATA[
 Add:
-<tomee-home>/lib/datanucleus-core-4.0.0-m4.jar
-<tomee-home>/lib/datanucleus-api-jpa-4.0.0-m4.jar
-<tomee-home>/lib/datanucleus-rdbms-4.0.0-m4.jar
+<tomee-home>/lib/datanucleus-core-5.0.0-m4.jar
+<tomee-home>/lib/datanucleus-api-jpa-5.0.0-m4.jar
+<tomee-home>/lib/datanucleus-rdbms-5.0.0-m4.jar
 
 Remove (optional):
 <tomee-home>/lib/asm-3.2.jar
 <tomee-home>/lib/commons-lang-2.6.jar
-<tomee-home>/lib/openjpa-2.2.0.jar
+<tomee-home>/lib/openjpa-2.2.0.jar (or EclipseLink)
 <tomee-home>/lib/serp-1.13.1.jar
 ]]></source>
             </subsection>
