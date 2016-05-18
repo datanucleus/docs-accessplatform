@@ -9,7 +9,7 @@
     <body>
         <section name="TomEE and DataNucleus JPA">
             <p>
-                Apache TomEE ships with OpenJPA or EclipseLink as the default JPA provider (depending on which version of TomEE), however any valid JPA provider can be used.
+                Apache TomEE ships with OpenJPA/EclipseLink as the default JPA provider (depending on which version of TomEE), however any valid JPA provider can be used.
             </p>
             <p>
                 The basic steps are:
@@ -21,7 +21,7 @@
 
             <subsection name="Webapp Configuration">
                 <p>
-                    Any web-app can specify the JPA provider it would like to use via the <i>persistence.xml</i> file, which can be at any of the following locations in a webapp
+                    Any web-app can specify the JPA provider it would like to use via the <i>persistence.xml</i> file, which can be at any of the following locations in a web-app
                 </p>
                 <ul>
                 <li>WEB-INF/persistence.xml of the .war file</li>
@@ -77,7 +77,7 @@ javax.persistence.nonJtaDataSource
 
             <subsection name="DataNucleus libraries">
                 <p>
-                    Jars needed for DataNucleus 4.x:
+                    Jars needed for DataNucleus 5.x:
                 </p>
 <source><![CDATA[
 Add:
