@@ -844,10 +844,11 @@
                     </tr>
                 </table>
                 <p>
-                    An extension to this <b>for RDBMS</b> is where you have an Enum that defines its own "value"s for the different enum options.
+                    An extension to this is where you have an Enum that defines its own "value"s for the different enum options.
+                    Note that this is applicable to RDBMS, MongoDB, Cassandra, Neo4j and HBase currently.
                 </p>
                 <source><![CDATA[
-public enum MyColour 
+public enum MyColour
 {
     RED((short)1), GREEN((short)3), BLUE((short)5), YELLOW((short)8);
 
@@ -855,27 +856,12 @@ public enum MyColour
 
     private MyColour(short value)
     {
-            this.value = value;
+        this.value = value;
     }
 
     public short getValue() 
     {
-            return value;
-    }
-
-    public static MyColour getEnumByValue(short value)
-    {
-        switch (value)
-        {
-            case 1:
-                return RED;
-            case 3:
-                return GREEN;
-            case 5:
-                return BLUE;
-            default:
-                return YELLOW;
-        }
+        return value;
     }
 }]]></source>
                 <p>
@@ -884,13 +870,11 @@ public enum MyColour
                     If you define the metadata as
                 </p>
                 <source><![CDATA[
-@Extensions({
-    @Extension(vendorName="datanucleus", key="enum-getter-by-value", value="getEnumByValue"),
-    @Extension(vendorName="datanucleus", key="enum-value-getter", value="getValue")
-   })
+@Extension(vendorName="datanucleus", key="enum-value-getter", value="getValue")
 MyColour colour;]]></source>
                 <p>
                     this will now persist 1, 3, 5, 8, being the "value" of each of the enum options.
+                    You can use this method to persist "int", "short", or "String" types.
                 </p>
                 <br/>
             </subsection>
