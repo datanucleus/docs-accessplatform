@@ -1,12 +1,12 @@
-<head><title>Extensions : Query Cache</title></head>
+<head><title>Extensions : Query Compilation Cache</title></head>
 
-## Extensions : Query Cache
+## Extensions : Query Compilation Cache
 ![Plugin](../images/nucleus_plugin.gif)
 
 DataNucleus is developed as a plugin-driven framework and one of the components that is pluggable is the caching of query compilations. 
 DataNucleus provides some inbuilt cache options, but also allows you to provide your own.
 
-DataNucleus is able to support third party Query Cache products. 
+DataNucleus is able to support third party Query Compilation Cache products. 
 You can extend DataNucleus's capabilities using the plugin extension *org.datanucleus.cache_query*.
 
 
@@ -53,20 +53,20 @@ The following sections describe how to create your own Query cache plugin for Da
 
 ### Interface
 
-If you have your own Query cache you can easily use it with DataNucleus. DataNucleus defines a QueryCache interface and you need to implement this.
-[![Javadoc](../images/javadoc.gif)](http://www.datanucleus.org/javadocs/core/latest/org/datanucleus/store/query/cache/QueryCache.html).
+If you have your own Query cache you can easily use it with DataNucleus. DataNucleus defines a QueryCompilationCache interface and you need to implement this.
+[![Javadoc](../images/javadoc.gif)](http://www.datanucleus.org/javadocs/core/latest/org/datanucleus/store/query/compiler/QueryCompilationCache.html).
 
 
 	package org.datanucleus.store.query.cache;
-	public interface QueryCache
+	public interface QueryCompilationCache
 	{
     	void close();
     	void evict(String queryKey);
     	void clear();
     	boolean isEmpty();
     	int size();
-    	CachedQuery get(String queryKey);
-    	CachedQuery put(String queryKey, CachedQuery cachedQuery);
+    	QueryCompilation get(String queryKey);
+    	QueryCompilation put(String queryKey, QueryCompilation compilation);
     	boolean contains(String queryKey);
 	}
 
@@ -77,9 +77,9 @@ Let's suppose your want to implement your own Level 2 cache _MyLevel2Cache_
 	package mydomain;
 	
 	import org.datanucleus.NucleusContext;
-	import org.datanucleus.store.query.cache.QueryCache;
+	import org.datanucleus.store.query.compiler.QueryCompilationCache;
 	
-	public class MyQueryCache implements QueryCache
+	public class MyQueryCache implements QueryCompilationCache
 	{
 	    public MyQueryCache(NucleusContext nucCtx)
     	{
@@ -105,5 +105,5 @@ Note that you also require a MANIFEST.MF file as per the [Extensions Guide](inde
 
 ### Plugin Usage
 
-The only thing remaining is to use your Query Cache plugin. To do this you specify the persistence property _datanucleus.cache.query.type_ as __MyCache__ (the "name" in _plugin.xml_).
+The only thing remaining is to use your Query Compilation Cache plugin. To do this you specify the persistence property _datanucleus.cache.query.type_ as __MyCache__ (the "name" in _plugin.xml_).
 
