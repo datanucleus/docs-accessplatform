@@ -129,23 +129,18 @@ EntityManager em;
             <p>There are several sub-elements of this <i>persistence.xml</i> file</p>
             <ul>
                 <li><b>provider</b> - the JPA persistence provider to be used.
-                    The JPA persistence "provider" for DataNucleus is 
-                    <b>org.datanucleus.api.jpa.PersistenceProviderImpl</b></li>
-                <li><b>jta-data-source</b> - JNDI name for JTA connections (make sure you set <i>transaction-type</i> as <b>JTA</b> on the persistence-unit for this)</li>
+                    The JPA persistence "provider" for DataNucleus is <b>org.datanucleus.api.jpa.PersistenceProviderImpl</b></li>
+                <li><b>jta-data-source</b> - JNDI name for JTA connections (make sure you set <i>transaction-type</i> as <b>JTA</b> on the persistence-unit for this)
+                    <b>This is only for RDBMS.</b></li>
                 <li><b>non-jta-data-source</b> - JNDI name for non-JTA connections.
-                    Note that if using a JTA datasource as the primary connection, you ought to provide a
-                    <i>non-jta-data-source</i> also since any schema generation and/or sequence handling will
-                    need to use that.
-                </li>
-                <li><b>jar-file</b> - name of a JAR file to scan for annotated classes to include in this
-                    persistence-unit.</li>
-                <li><b>mapping-file</b> - name of an XML "mapping" file containing persistence information
-                to be included in this persistence-unit.</li>
+                    Note that if using a JTA datasource as the primary connection, you ought to provide a <i>non-jta-data-source</i> also since any schema generation 
+                    and/or sequence handling will need to use that.
+                    <b>This is only for RDBMS.</b></li>
+                <li><b>jar-file</b> - name of a JAR file to scan for annotated classes to include in this persistence-unit.</li>
+                <li><b>mapping-file</b> - name of an XML "mapping" file containing persistence information to be included in this persistence-unit.</li>
                 <li><b>class</b> - name of an annotated class to include in this persistence-unit</li>
                 <li><b>properties</b> - properties defining the persistence factory to be used.
-                    Please refer to 
-                    <a href="../persistence_properties.html">Persistence Properties Guide</a> 
-                    for details</li>
+                    Please refer to <a href="../persistence_properties.html">Persistence Properties Guide</a> for details</li>
             </ul>
             <br/>
 
@@ -154,13 +149,14 @@ EntityManager em;
                     With a persistence-unit you have 2 ways of specifying the datastore to use
                 </p>
                 <ul>
-                    <li><b>Specify the connection URL/driverName/userName/password</b> and it will internally
-                    create a DataSource for this URL (with optional connection pooling). This is achieved by
-                    specifying <b>javax.persistence.jdbc.url</b>, <b>javax.persistence.jdbc.driver</b>,
-                    <b>javax.persistence.jdbc.user</b>, and <b>javax.persistence.jdbc.password</b> properties</li>
-                    <li><b>Specify the JNDI name of the connectionFactory</b> This is achieved by specifying
-                    <b>javax.persistence.jtaDataSource</b>, and <b>javax.persistence.nonJtaDataSource</b> (for secondary operations) or
-                    by specifying the element(s) <i>jta-data-source</i>/<i>non-jta-data-source</i></li>
+                    <li><b>Specify the connection URL/driverName/userName/password</b> and it will internally create a DataSource for this URL (or equivalent for non-RDBMS). 
+                        This is achieved by specifying <b>javax.persistence.jdbc.url</b>, <b>javax.persistence.jdbc.driver</b>,
+                        <b>javax.persistence.jdbc.user</b>, and <b>javax.persistence.jdbc.password</b> properties. This optionally includes connection pooling dependent on datastore.
+                    </li>
+                    <li><b>Specify the JNDI name of the connectionFactory</b> (only for RDBMS). 
+                        This is achieved by specifying <b>javax.persistence.jtaDataSource</b>, and <b>javax.persistence.nonJtaDataSource</b> (for secondary operations) or
+                        by specifying the element(s) <i>jta-data-source</i>/<i>non-jta-data-source</i>
+                    </li>
                 </ul>
             </subsection>
 

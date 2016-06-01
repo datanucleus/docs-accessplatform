@@ -116,9 +116,8 @@
                     </tr>
                     <tr>
                         <td width="120">Description</td>
-                        <td>Instance of a connection factory for <b>transactional</b> connections. 
-                            This is an alternative to <b>datanucleus.ConnectionURL</b>.
-                            For RDBMS, it must be an instance of javax.sql.DataSource. 
+                        <td>Instance of a connection factory for <b>transactional</b> connections. This is an alternative to <b>datanucleus.ConnectionURL</b>.
+                            <b>Only for RDBMS</b>, and it must be an instance of javax.sql.DataSource. 
                             See <a href="jdo/datastore_connection.html#datasource">Data Sources</a>.</td>
                     </tr>
                     <tr>
@@ -138,7 +137,7 @@
                         <td width="120">Description</td>
                         <td>Instance of a connection factory for <b>nontransactional</b> connections. 
                             This is an alternative to <b>datanucleus.ConnectionURL</b>.
-                            For RDBMS, it must be an instance of javax.sql.DataSource.
+                            <b>Only for RDBMS</b>, and it must be an instance of javax.sql.DataSource.
                             See <a href="jdo/datastore_connection.html#datasource">Data Sources</a>.</td>
                     </tr>
                     <tr>
@@ -157,7 +156,7 @@
                     <tr>
                         <td width="120">Description</td>
                         <td>The JNDI name for a connection factory for <b>transactional</b> connections. 
-                            For RBDMS, it must be a JNDI name that points to a javax.sql.DataSource object. 
+                            <b>Only for RDBMS</b>, and it must be a JNDI name that points to a javax.sql.DataSource object. 
                             See <a href="jdo/datastore_connection.html#datasource">Data Sources</a>.</td>
                     </tr>
                     <tr>
@@ -176,7 +175,7 @@
                     <tr>
                         <td width="120">Description</td>
                         <td>The JNDI name for a connection factory for <b>nontransactional</b> connections. 
-                            For RBDMS, it must be a JNDI name that points to a javax.sql.DataSource object. 
+                            <b>Only for RDBMS</b>, and it must be a JNDI name that points to a javax.sql.DataSource object. 
                             See <a href="jdo/datastore_connection.html#datasource">Data Sources</a>.</td>
                     </tr>
                     <tr>
@@ -194,7 +193,7 @@
                     </tr>
                     <tr>
                         <td width="120">Description</td>
-                        <td>Name of a class that implements <i>org.datanucleus.store.connection.DecryptionProvider</i>
+                        <td>Name of a class that implements <i>org.datanucleus.store.ConnectionEncryptionProvider</i>
                             and should only be specified if the password is encrypted in the persistence properties</td>
                     </tr>
                     <tr>
