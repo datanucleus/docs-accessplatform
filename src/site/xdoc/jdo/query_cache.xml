@@ -11,18 +11,15 @@
             <img src="../images/nucleus_extension.gif" border="0" alt=""/>
             <img src="../images/query_compilation.gif" border="0" alt=""/>
             <p>
-                JDO doesn't currently define a mechanism for caching of queries. DataNucleus provides
-                3 levels of caching
+                JDO doesn't currently define a mechanism for caching of queries. DataNucleus provides 3 levels of caching
             </p>
             <ul>
                 <li><a href="#genericCompilation">Generic Compilation</a> : when a query is compiled it is 
                     initially compiled <i>generically</i> into expression trees. This generic compilation
-                    is independent of the datastore in use, so can be used for other datastores.
-                    This can be cached.</li>
+                    is independent of the datastore in use, so can be used for other datastores. This can be cached.</li>
                 <li><a href="#datastoreCompilation">Datastore Compilation</a> : after a query is compiled
                     into expression trees (above) it is then converted into the native language of the
-                    datastore in use. For example with RDBMS, it is converted into SQL.
-                    This can be cached</li>
+                    datastore in use. For example with RDBMS, it is converted into SQL. This can be cached</li>
                 <li><a href="#results">Results</a> : when a query is run and returns objects of the candidate
                     type, you can cache the identities of the result objects.</li>
             </ul>
