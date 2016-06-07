@@ -407,10 +407,28 @@
                     </tr>
                     <tr>
                         <td width="120">Description</td>
-                        <td>String id to use as a discriminator on all persistable class tables to restrict data
-                            for the tenant using this application instance 
+                        <td>String id to use as a discriminator on all persistable class tables to restrict data for the tenant using this application instance 
                             (aka <a href="jdo/multitenancy.html">multi-tenancy via discriminator</a>).
-                            <i>RDBMS, MongoDB datastores only</i></td>
+                            <i>RDBMS, MongoDB, HBase, Neo4j, Cassandra datastores only</i></td>
+                    </tr>
+                    <tr>
+                        <td>Range of Values</td>
+                        <td></td>
+                    </tr>
+                </table>
+                <br/>
+                <table>
+                    <tr>
+                        <th colspan="2">
+                            <b>datanucleus.tenantProvider</b>
+                        </th>
+                    </tr>
+                    <tr>
+                        <td width="120">Description</td>
+                        <td>
+                            Instance of a class that implements <i>org.datanucleus.store.schema.MultiTenancyProvider</i>
+                            which will return the tenant name to use for each call.
+                            <i>RDBMS, MongoDB, HBase, Neo4j, Cassandra datastores only</i></td>
                     </tr>
                     <tr>
                         <td>Range of Values</td>
