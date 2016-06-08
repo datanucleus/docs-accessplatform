@@ -52,10 +52,24 @@
                     Note that the <b>Tenant ID</b> can be set in one of three ways.
                 </p>
                 <ul>
-                    <li>Per EMF : just set the persistence property <i>datanucleus.tenantId</i> when you start up the EMF and all access for this EMF will
-                        use this Tenant ID</li>
-                    <li>Per EM : set the persistence property <i>datanucleus.tenantId</i> when you start up the PMF as the default Tenant ID and set a property on any
-                        PM that you want a different Tenant ID specifying for (pm.setProperty("datanucleus.tenantId", "MyOtherValue");)</li>
+                    <li>Per EMF : just set the persistence property <i>datanucleus.tenantId</i> when you start up the EMF and all access for this EMF will use this Tenant ID</li>
+                    <li>Per EM : set the persistence property <i>datanucleus.tenantId</i> when you start up the PMF as the default Tenant ID and set a property on any EntityManager
+                        that you want a different Tenant ID specifying for. Like this
+                        <source><![CDATA[
+EntityManager em = emf.createEntityManager();
+... // All operations will apply to default tenant specified in persistence property for EMF
+em.close();
+
+EntityManager em1 = emf.createEntityManager();
+em1.setProperty("datanucleus.tenantId", "John");
+... // All operations will apply to tenant "John"
+em1.close();
+
+EntityManager em2 = emf.createEntityManager();
+em2.setProperty("datanucleus.tenantId", "Chris");
+... // All operations will apply to tenant "Chris"
+em2.close();]]></source>
+                    </li>
                     <li>Per datastore access : When creating the EMF set the persistence property <i>datanucleus.tenantProvider</i> and set it to an instance of
                         <i>org.datanucleus.store.schema.MultiTenancyProvider</i>.
                         <source><![CDATA[
