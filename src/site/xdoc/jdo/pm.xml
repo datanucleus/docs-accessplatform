@@ -233,6 +233,20 @@ Object attachedObj = pm.makePersistent(obj); // Returns a copy of the detached o
                 <br/>
             </subsection>
 
+            <a name="multitenancy"/>
+            <subsection name="Multitenancy">
+                <p>
+                    If you are using a PersistenceManager in a <a href="multitenancy.html">multitenancy</a> environment, and want to have
+                    a PersistenceManager per <i>tenant</i> you would set the "Tenant ID" on the PersistenceManager after creation.
+                </p>
+<source><![CDATA[
+pm.setProperty("datanucleus.tenantId", "MyTenantName");]]></source>
+                <p>
+                    Subsequently on database accesses for classes that are using multitenancy you will likely see use of the "Tenant ID" discriminator column.
+                </p>
+                <br/>
+            </subsection>
+
         </section>
     </body>
 </document>

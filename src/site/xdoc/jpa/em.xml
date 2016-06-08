@@ -204,6 +204,21 @@ Object updatedObj = em.merge(coll)</source>
                 </p>
                 <br/>
             </subsection>
+            
+            <a name="multitenancy"/>
+            <subsection name="Multitenancy">
+                <p>
+                    If you are using a EntityManager in a <a href="multitenancy.html">multitenancy</a> environment, and want to have
+                    a EntityManager per <i>tenant</i> you would set the "Tenant ID" on the EntityManager after creation.
+                </p>
+<source><![CDATA[
+em.setProperty("datanucleus.tenantId", "MyTenantName");]]></source>
+                <p>
+                    Subsequently on database accesses for classes that are using multitenancy you will likely see use of the "Tenant ID" discriminator column.
+                </p>
+                <br/>
+            </subsection>
+            
         </section>
     </body>
 </document>
