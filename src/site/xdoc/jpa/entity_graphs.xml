@@ -126,6 +126,8 @@ EntityGraph<MyClass> eg = em.createEntityGraph(MyClass.class);
 eg.addAttributeNodes("id");
 eg.addAttributeNodes("name");
 eg.addAttributeNodes("other");
+Subgraph<MyOtherClass> myOtherClassGraph = eg.addSubgraph("other", MyOtherClass.class);
+myOtherClass.addAttributeNodes("name");
 
 Query q = em.createQuery("SELECT m FROM MyClass m");
 q.setHint("javax.persistence.fetchgraph", eg);
