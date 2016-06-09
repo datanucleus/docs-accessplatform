@@ -64,6 +64,22 @@ public class Hotel
     </attributes>
 </entity>]]></source>
                 <p>
+                    Alternatively, if you really want to embody schema info in your class, you can use annotations
+                </p>
+<source><![CDATA[
+@Table(name="ESTABLISHMENT")
+public class Hotel
+{
+    @Column(name="NAME")
+    private String name;
+    @Column(name="DIRECTION")
+    private String address;
+    @Column(name="PHONE")
+    private String telephoneNumber;
+    @Column(name="NUMBER_OF_ROOMS")
+    private int numberOfRooms;
+]]></source>
+                <p>
                     So we have defined the table and the column names.
                     It should be mentioned that if you don't specify the table and column names then DataNucleus will generate
                     names for the datastore identifiers consistent with the JPA specification.
@@ -115,6 +131,7 @@ public class Payment
         </basic>
     </attributes>
 </entity>]]></source>
+                <p>Alternatively, you can specify these using annotations should you so wish.</p>
                 <p>
                     So we make use of the <i>nullable</i> attribute. The table, when created by DataNucleus, will then provide the nullability 
                     that we require. Unfortunately with JPA there is no way to specify a default value for a field when it hasn't been
@@ -170,9 +187,9 @@ public class Payment
     </attributes>
 </entity>
 ]]></source>
+                <p>Alternatively, you can specify these using annotations should you so wish.</p>
                 <p>
-                    So we have defined TRANSFER_REF to use VARCHAR(255) column type, CURRENCY to use (VAR)CHAR(3) column type, and AMOUNT to use
-                    DECIMAL(10,2) column type.
+                    So we have defined TRANSFER_REF to use VARCHAR(255) column type, CURRENCY to use (VAR)CHAR(3) column type, and AMOUNT to use DECIMAL(10,2) column type.
                 </p>
                 <p>See also :-</p>
                 <ul>

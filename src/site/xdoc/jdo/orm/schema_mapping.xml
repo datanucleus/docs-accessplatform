@@ -64,6 +64,22 @@ public class Hotel
     </field>
 </class>]]></source>
                 <p>
+                    Alternatively, if you really want to embody schema info in your class, you can use annotations
+                </p>
+<source><![CDATA[
+@PersistenceCapable(table="ESTABLISHMENT")
+public class Hotel
+{
+    @Column(name="NAME")
+    private String name;
+    @Column(name="DIRECTION")
+    private String address;
+    @Column(name="PHONE")
+    private String telephoneNumber;
+    @Column(name="NUMBER_OF_ROOMS")
+    private int numberOfRooms;
+]]></source>
+                <p>
                     So we have defined the table and the column names.
                     It should be mentioned that if you don't specify the table and column names then DataNucleus will generate
                     names for the datastore identifiers. The table name will be based on the class name, and the column
@@ -113,6 +129,21 @@ public class MySubClass extends MyClass // persisted to table "MYSUBCLASS"
     </datastore-identity>
     ...
 </class>]]></source>
+                <p>Alternatively, you can specify these using annotations should you so wish.</p>
+<source><![CDATA[
+@PersistenceCapable(table="MYCLASS")
+@DatastoreIdentity(column="MY_PK_COLUMN")
+public class MyClass
+{
+    ...
+}
+
+@PersistenceCapable(table="MYSUBCLASS")
+@DatastoreIdentity(column="MYSUB_PK_COLUMN")
+public class MySubClass extends MyClass
+{
+    ...
+}]]></source>
                 <p>
                     So we will have a PK column "MY_PK_COLUMN" in the table "MYCLASS", and a PK column "MYSUB_PK_COLUMN" in the table
                     "MYSUBCLASS" (and that corresponds to the "MY_PK_COLUMN" value in "MYCLASS"). We could also do
