@@ -64,9 +64,6 @@
                     <li><a href="#javax.cache">javax.cache</a> - a simple wrapper to standard javax.cache's 
                         caching product. Provides basic support for adding items to the cache and retrieval from the 
                         cache. Doesn't support pinning and unpinning.</li>
-                    <li><a href="#jcache">JCache</a> - a simple wrapper to an old version of javax.cache's 
-                        caching product. Provides basic support for adding items to the cache and retrieval from the 
-                        cache. Doesn't support pinning and unpinning.</li>
                     <li><a href="#memcached">spymemcached</a> - a simple wrapper to Spymemcached java client for 
                         memcached caching product. Provides basic support for adding items to the cache and retrieval 
                         from the cache. Doesn't support pinning and unpinning.</li>
@@ -183,21 +180,6 @@ public class MyClass
                 </p>
                 <source>
 datanucleus.cache.level2.type=javax.cache
-datanucleus.cache.level2.cacheName={cache name}
-datanucleus.cache.level2.timeout={expiration time in millis - optional}</source>
-                <br/>
-            </subsection>
-
-            <a name="jcache"/>
-            <subsection name="L2 Cache using JCache">
-                <p>
-                    DataNucleus provides a simple wrapper to 
-                    <a href="http://sourceforge.net/projects/jsr107cache/" target="_blank">JCache's caches</a>. 
-                    This is an old version of what will become javax.cache (separate option).
-                    To enable this you should set the persistence properties
-                </p>
-                <source>
-datanucleus.cache.level2.type=jcache
 datanucleus.cache.level2.cacheName={cache name}
 datanucleus.cache.level2.timeout={expiration time in millis - optional}</source>
                 <br/>
