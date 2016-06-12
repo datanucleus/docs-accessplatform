@@ -16,10 +16,8 @@
                 The 2 levels of caching available are
             </p>
             <ul>
-                <li><a href="em.html#level1_cache">Level 1 Cache</a> - represents the caching of instances within an 
-                    EntityManager</li>
-                <li><a href="#level2">Level 2 Cache</a> - represents the caching of instances within an 
-                    EntityManagerFactory (across multiple EntityManager's)</li>
+                <li><a href="em.html#level1_cache">Level 1 Cache</a> - represents the caching of instances within an EntityManager</li>
+                <li><a href="#level2">Level 2 Cache</a> - represents the caching of instances within an EntityManagerFactory (across multiple EntityManager's)</li>
             </ul>
             <p>
                 You can think of a cache as a Map, with values referred to by keys. 
@@ -45,25 +43,20 @@
                         the JPA2 interface of being able to put objects into the cache, and evict them when 
                         required. This option does not support distributed caching, solely running within the 
                         JVM of the client application. Soft references are held to non pinned objects.</li>
-                    <li><a href="#ehcache">EHCache</a> - a simple wrapper to EHCache's caching 
-                        product. Provides basic support for adding items to the cache and retrieval from the cache. 
-                        Doesn't support pinning and unpinning.</li>
-                    <li><a href="#ehcache">EHCacheClassBased</a> - similar to the EHCache option
-                        but class-based.</li>
-                    <li><a href="#oscache">OSCache</a> - a simple wrapper to OSCache's caching 
-                        product. Provides basic support for adding items to the cache and retrieval from the cache. 
-                        Doesn't support pinning and unpinning.</li>
-                    <li><a href="#swarmcache">SwarmCache</a> - a simple wrapper to SwarmCache's 
-                        caching product. Provides basic support for adding items to the cache and retrieval from the 
-                        cache. Doesn't support pinning and unpinning.</li>
+                    <li><a href="#javax.cache">javax.cache</a> - a simple wrapper to standard javax.cache caching product(s). 
+                        Provides basic support for adding items to the cache and retrieval from the cache. Doesn't support pinning and unpinning.</li>
+                    <li><a href="#ehcache">EHCache</a> - a simple wrapper to EHCache's caching product. 
+                        Provides basic support for adding items to the cache and retrieval from the cache. Doesn't support pinning and unpinning.</li>
+                    <li><a href="#ehcache">EHCacheClassBased</a> - similar to the EHCache option but class-based.</li>
+                    <li><a href="#oscache">OSCache</a> - a simple wrapper to OSCache's caching product. 
+                        Provides basic support for adding items to the cache and retrieval from the cache. Doesn't support pinning and unpinning.</li>
+                    <li><a href="#swarmcache">SwarmCache</a> - a simple wrapper to SwarmCache's caching product. 
+                        Provides basic support for adding items to the cache and retrieval from the cache. Doesn't support pinning and unpinning.</li>
                     <li><a href="#coherence">Oracle Coherence</a> - a simple wrapper to Oracle's 
                         Coherence caching product. Provides basic support for adding items to the cache and retrieval 
                         from the cache. Doesn't support pinning and unpinning. Oracle's caches support distributed 
                         caching, so you could, in principle, use DataNucleus in a distributed environment with 
                         this option.</li>
-                    <li><a href="#javax.cache">javax.cache</a> - a simple wrapper to standard javax.cache's 
-                        caching product. Provides basic support for adding items to the cache and retrieval from the 
-                        cache. Doesn't support pinning and unpinning.</li>
                     <li><a href="#memcached">spymemcached</a> - a simple wrapper to Spymemcached java client for 
                         memcached caching product. Provides basic support for adding items to the cache and retrieval 
                         from the cache. Doesn't support pinning and unpinning.</li>
@@ -75,9 +68,8 @@
                         from the cache. Doesn't support pinning and unpinning.</li>
                 </ul>
                 <p>
-                    The javax.cache cache is available in the datanucleus-core plugin.
-                    The EHCache, OSCache, SwarmCache, Coherence, JCache, Cacheonix, and Memcache caches are available in the
-                    <a href="../../../plugins/cache.html">datanucleus-cache</a> plugin.
+                    The weak, soft and javax.cache caches are available in the datanucleus-core plugin.
+                    The EHCache, OSCache, SwarmCache, Coherence, Cacheonix, and Memcache caches are available in the <a href="../../../plugins/cache.html">datanucleus-cache</a> plugin.
                 </p>
                 <p>
                     In addition you can control the <i>mode</i> of operation of the L2 cache. You do this using the
@@ -92,8 +84,7 @@
                 <p>
                     Objects are placed in the L2 cache when you commit() the transaction of a EntityManager. 
                     This means that you only have datastore-persisted objects in that cache. 
-                    Also, if an object is deleted during a transaction then at commit it will be 
-                    removed from the L2 cache if it is present.
+                    Also, if an object is deleted during a transaction then at commit it will be removed from the L2 cache if it is present.
                 </p>
                 <p>
                     <a href="../extensions/level2_cache.html"><img src="../images/nucleus_plugin.gif" border="0" alt=""/></a>
