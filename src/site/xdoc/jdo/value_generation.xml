@@ -18,32 +18,23 @@
                 The available strategies for JDO are :-
             </p>
             <ul>
-                <li><a href="#native"><b>native</b></a> - this is the default and allows DataNucleus
-                    to choose the most suitable for the datastore.</li>
-                <li><a href="#sequence"><b>sequence</b></a> - this uses a datastore sequence (if supported
-                    by the datastore)</li>
-                <li><a href="#identity"><b>identity</b></a> - these use autoincrement/identity/serial features in 
-                    the datastore (if supported by the datastore)</li>
-                <li><a href="#increment"><b>increment</b></a> - this is datastore neutral and increments
-                    a sequence value using a table.</li>
+                <li><a href="#native"><b>native</b></a> - this is the default and allows DataNucleus to choose the most suitable for the datastore.</li>
+                <li><a href="#sequence"><b>sequence</b></a> - this uses a datastore sequence (if supported by the datastore)</li>
+                <li><a href="#identity"><b>identity</b></a> - these use autoincrement/identity/serial features in the datastore (if supported by the datastore)</li>
+                <li><a href="#increment"><b>increment</b></a> - this is datastore neutral and increments a sequence value using a table.</li>
                 <li><a href="#uuidstring"><b>uuid-string</b></a> - this is a UUID in string form</li>
                 <li><a href="#uuidhex"><b>uuid-hex</b></a> - this is a UUID in hexadecimal form</li>
-                <li><a href="#uuid"><b>uuid</b></a> - provides a pure UUID String utilising the JDK1.5 UUID class
-                    <img src="../images/nucleus_extension.gif" border="0" alt=""/></li>
+                <li><a href="#uuid"><b>uuid</b></a> - provides a pure UUID String utilising the JDK UUID class <img src="../images/nucleus_extension.gif" border="0" alt=""/></li>
                 <li><a href="#uuid-object"><b>uuid-object</b></a> - provides a pure UUID object utilising the JDK1.5 UUID class
                     <img src="../images/nucleus_extension.gif" border="0" alt=""/></li>
                 <li><a href="#auid"><b>auid</b></a> - provides a pure UUID following the 
                     OpenGroup standard <img src="../images/nucleus_extension.gif" border="0" alt=""/></li>
-                <li><a href="#timestamp"><b>timestamp</b></a> - creates a java.sql.Timestamp of the current time
-                    <img src="../images/nucleus_extension.gif" border="0" alt=""/></li>
-                <li><a href="#timestamp-value"><b>timestamp-value</b></a> - creates a long (millisecs) of the 
-                    current time <img src="../images/nucleus_extension.gif" border="0" alt=""/></li>
-                <li><a href="#max"><b>max</b></a> - uses a max(column)+1 method (only in RDBMS)
-                    <img src="../images/nucleus_extension.gif" border="0" alt=""/></li>
+                <li><a href="#timestamp"><b>timestamp</b></a> - creates a java.sql.Timestamp of the current time <img src="../images/nucleus_extension.gif" border="0" alt=""/></li>
+                <li><a href="#timestamp-value"><b>timestamp-value</b></a> - creates a long (millisecs) of the current time <img src="../images/nucleus_extension.gif" border="0" alt=""/></li>
+                <li><a href="#max"><b>max</b></a> - uses a max(column)+1 method (only in RDBMS)<img src="../images/nucleus_extension.gif" border="0" alt=""/></li>
                 <li><a href="#datastoreuuidhex"><b>datastore-uuid-hex</b></a> - UUID in hexadecimal form using 
                     datastore capabilities (only in RDBMS) <img src="../images/nucleus_extension.gif" border="0" alt=""/></li>
-                <li><a href="../extensions/value_generator.html">user-supplied value generators</a>
-                    - allows you to hook in your own identity generator 
+                <li><a href="../extensions/value_generator.html">user-supplied value generators</a> - allows you to hook in your own identity generator 
                     <img src="../images/nucleus_extension.gif" border="0" alt=""/></li>
             </ul>
             <p>See also :-</p>
@@ -230,20 +221,33 @@ public class MyClass
                     configure the Meta-Data for the class something like this (replacing 'myclass' with your class name) :
                 </p>
                 <source><![CDATA[
-<class name="myclass">
+<class name="MyClass">
     <datastore-identity strategy="identity"/>
     ...
 </class>]]></source>
+                <p>or using annotations</p>
+                <source><![CDATA[
+@PersistenceCapable
+@DatastoreIdentity(strategy=IdGenerationStrategy.IDENTITY)
+public class MyClass {...}]]></source>
                 <p>
                     For a class using <u>application identity</u> you need to set the <i>value-strategy</i> attribute on the 
                     primary key field. You can configure the Meta-Data for the class something like this (replacing 'myclass' 
                     and 'myfield' with your class and field names) :
                 </p>
                 <source><![CDATA[
-<class name="myclass" identity-type="application" objectid-class="myprimarykeyclass">
+<class name="myclass" identity-type="application">
     <field name="myfield" primary-key="true" value-strategy="identity"/<
     ...
 </class>]]></source>
+                <p>or using annotations</p>
+                <source><![CDATA[
+@PersistenceCapable
+public class MyClass
+{
+    @Persistent(valueStrategy=IdGenerationStrategy.IDENTITY, primaryKey="true")
+    long myfield;
+}]]></source>
                 <p>
                     Please be aware that if you have an inheritance tree with the base class defined as using "identity" then
                     the column definition for the PK of the base table will be defined as "AUTO_INCREMENT" or "IDENTITY" or 
@@ -274,19 +278,33 @@ public class MyClass
                     classes Meta-Data.
                 </p>
                 <source><![CDATA[
-<class name="myclass" ... >
+<class name="MyClass" ... >
     <datastore-identity strategy="increment"/>
     ...
 </class>]]></source>
+                <p>or using annotations</p>
+                <source><![CDATA[
+@PersistenceCapable
+@DatastoreIdentity(strategy=IdGenerationStrategy.INCREMENT)
+public class MyClass {...}]]></source>
                 <p>
                     To configure an <u>application identity</u> class to use this generation method you simply add this to the
                     class' Meta-Data. If your class is in an inheritance tree you should define this for the base class only.
                 </p>
                 <source><![CDATA[
-<class name="myclass" ... >
+<class name="MyClass" ... >
     <field name="myfield" primary-key="true" value-strategy="increment"/>
     ...
 </class>>]]></source>
+                <p>or using annotations</p>
+                <source><![CDATA[
+@PersistenceCapable
+public class MyClass 
+{
+    @Persistent(valueStrategy=IdGenerationStrategy.INCREMENT, primaryKey="true");
+    long myfield;
+    ...
+}]]></source>
                 <p>
 					Additional properties for configuring this generator are set in the JDO Meta-Data, see the available
                     properties below. Unsupported properties are silently ignored by DataNucleus.
@@ -514,26 +532,30 @@ public class MyClass
                     For a class using <u>datastore identity</u> you need to add metadata something like the following
                 </p>
                 <source><![CDATA[
-<class name="myclass" ... >
+<class name="MyClass" ... >
     <datastore-identity strategy="uuid"/>
     ...
 </class>]]></source>
+                <p>or using annotations</p>
+                <source><![CDATA[
+@PersistenceCapable
+@DatastoreIdentity(customStrategy="uuid")
+public class MyClass {...}]]></source>
                 <p>
                     To configure an <u>application identity</u> class to use this generation method you simply add 
                     this to the class' JDO Meta-Data.
                 </p>
                 <source><![CDATA[
-<class name="myclass" ... >
+<class name="MyClass" ... >
     <field name="myfield" primary-key="true" value-strategy="uuid"/>
     ...
-</class>
-
-Or using annotations
-
+</class>]]></source>
+                <p>or using annotations</p>
+                <source><![CDATA[
 public class MyClass
 {
-    @Persistent(customValueStrategy="uuid")
-    String myField;
+    @Persistent(customValueStrategy="uuid", primaryKey="true")
+    String myfield;
 }]]></source>
                 <p>
                     This value generator will generate values unique across different JVMs
