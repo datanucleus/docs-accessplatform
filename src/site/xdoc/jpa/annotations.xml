@@ -16,14 +16,12 @@
             <ul>
                 <li>You must have the <b>datanucleus-api-jpa</b> jar available in your CLASSPATH.</li>
                 <li>You must have the <b>persistence-api</b> (or <b>javax.persistence</b>) jar in your CLASSPATH since this provides the annotations</li>
-                <li>Annotations should really only be used for attributes of persistence that you won't be 
-                    changing at deployment. Things such as table and column names shouldn't really be 
-                    specified using annotations although it is permitted. Instead it would be better to put 
-                    such information in an ORM file.</li>
+                <li>Annotations should really only be used for attributes of persistence that you won't be changing at deployment. 
+                    Things such as table and column names shouldn't really be specified using annotations although it is permitted. ]
+                    Instead it would be better to put such information in an ORM file.</li>
                 <li>Annotations can be added in two places - for the class as a whole, or for a field in particular.</li>
                 <li>You can annotate fields or getters with field-level information. It doesn't matter which.</li>
-                <li>Annotations are prefixed by the @ symbol and can take properties (in brackets after the 
-                    name, comma-separated)</li>
+                <li>Annotations are prefixed by the @ symbol and can take attributes (in brackets after the name, comma-separated)</li>
                 <li>JPA doesn't provide for some key JDO concepts and DataNucleus provides its own annotations for these cases.</li>
                 <li>You have to import "javax.persistence.XXX" where XXX is the annotation name of a JPA annotation</li>
                 <li>You have to import "org.datanucleus.api.jpa.annotations.XXX" where XXX is the annotation name of a DataNucleus value-added annotation</li>
