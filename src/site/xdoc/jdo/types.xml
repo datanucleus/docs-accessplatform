@@ -844,7 +844,7 @@
                     </tr>
                 </table>
                 <p>
-                    An extension to this is where you have an Enum that defines its own "value"s for the different enum options.
+                    A DataNucleus extension to this is where you have an Enum that defines its own "value"s for the different enum options.
                     Note that this is applicable to RDBMS, MongoDB, Cassandra, Neo4j, HBase, Excel, ODF and JSON currently.
                 </p>
                 <source><![CDATA[
@@ -876,6 +876,13 @@ MyColour colour;]]></source>
                     this will now persist 1, 3, 5, 8, being the "value" of each of the enum options.
                     You can use this method to persist "int", "short", or "String" types.
                 </p>
+                <p>
+                    A DataNucleus extension is available for RDBMS datastores where you are storing the <i>name</i> of the enum, and to put a CHECK constraint on the column.
+                    You specify it like this
+                </p>
+                <source><![CDATA[
+@Extension(vendorName="datanucleus", key="enum-check-constraint", value="true")
+MyColour colour;]]></source>
                 <br/>
             </subsection>
 
