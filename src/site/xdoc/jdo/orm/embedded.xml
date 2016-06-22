@@ -48,7 +48,7 @@
                     into a join table (instead of persisting them into their own table)</li>
             </ul>
             <p>
-                Note that, for RDBMS, <b>there are some restrictions with respect to what types of fields you can have in an embedded class</b>. DataNucleus does supports
+                Note that, for RDBMS, <b>there are some restrictions with respect to what types of fields you can have in an embedded class</b>. DataNucleus supports
                 all basic types, as well as 1-1/N-1 relations (where the <i>foreign-key</i> is at the embedded object side). It does not support 1-N/M-N fields since the
                 owner object of the collection element is not clearly defined (since an embedded class has no "identity" as such).
             </p>
