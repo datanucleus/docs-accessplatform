@@ -25,12 +25,11 @@ List results = (List)q.getResultsList();</source>
             <a name="parameters"/>
             <subsection name="Input Parameters">
                 <p>
-                    In JPQL queries it is convenient to pass in parameters so we don't have to define the same query for 
-                    different values. Here's an example
+                    In queries it is convenient to pass in parameters so we don't have to define the same query for different values. Here's an example
                 </p>
                 <source>
 Numbered Parameters :
-Query q = em.createQuery("SELECT p FROM Person p WHERE p.lastName = ?1 AND p.firstName = ?2");
+Query q = em.createQuery("SELECT p.id FROM Person p WHERE p.lastName = ?1 AND p.firstName = ?2");
 q.setParameter(1, theSurname).setParameter(2, theForename);</source>
                 <p>
                     So we have parameters that are prefixed by <b>?</b> (question mark) and are numbered starting at 1.
@@ -44,7 +43,7 @@ q.setParameter(1, theSurname).setParameter(2, theForename);</source>
                 </p>
                 <source>
 Named Parameters :
-Query q = em.createQuery("SELECT p FROM Person p WHERE p.lastName = :firstParam AND p.firstName = :otherParam");
+Query q = em.createQuery("SELECT p.id FROM Person p WHERE p.lastName = :firstParam AND p.firstName = :otherParam");
 q.setParameter("firstParam", theSurname).setParameter("otherParam", theForename);</source>
                 <br/>
             </subsection>
@@ -56,7 +55,7 @@ q.setParameter("firstParam", theSurname).setParameter("otherParam", theForename)
                     0 to 19 on the first page, then 20 to 39, etc. You can facilitate this as follows
                 </p>
                 <source><![CDATA[
-Query q = em.createNativeQuery("SELECT p FROM Person p WHERE p.age &gt; 20");
+Query q = em.createNativeQuery("SELECT p.id FROM Person p WHERE p.age &gt; 20");
 q.setFirstResult(0).setMaxResults(20);]]></source>
                 <p>
                     So with this query we get results 0 to 19 inclusive.
