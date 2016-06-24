@@ -94,7 +94,7 @@ public class MyClass
                     persistent. By default a property is non-persistent, so we have no need in specifying the
                     <i>someOtherField</i> as transient. Using XML MetaData we would have done
                 </p>
-                <source><![CDATA[
+<source><![CDATA[
 <entity name="mydomain.MyClass">
     <attributes>
         <basic name="birthday"/>
@@ -129,6 +129,38 @@ public class Person
 }</source>
                 <br/>
             </subsection>
+
+            <a name="readonly"/>
+            <subsection name="Making a field/property read-only">
+                <img src="../images/nucleus_extension.gif" border="0" alt=""/>
+                <p>
+                    If you want to make a member read-only you can do it like this.
+                </p>
+<source><![CDATA[
+<entity name="mydomain.MyClass">
+    <attributes>
+        <basic name="myField">
+            <extension key=""insertable" value="false"/>
+            <extension key="updateable" value="false"/>
+        </basic>
+    </attributes>
+</entity>]]></source>
+                <p>
+                    and with Annotations
+                </p>
+<source><![CDATA[
+import org.datanucleus.api.jdo.annotations.ReadOnly;
+
+@Entity
+public class MyClass
+{
+    @ReadOnly
+    String myField;
+
+}]]></source>
+                <br/>
+            </subsection>
+            
         </section>
     </body>
 </document>

@@ -107,7 +107,7 @@ public class MyClass
                 <br/>
             </subsection>
 
-            <a name="#override"/>
+            <a name="override"/>
             <subsection name="Overriding Superclass Field/Property MetaData">
                 <p>
                     If you are using XML MetaData you can also override the MetaData for fields/properties of
@@ -168,6 +168,52 @@ public class Person
 }</source>
                 <br/>
             </subsection>
+            
+            <a name="readonly"/>
+            <subsection name="Making a field/property read-only">
+                <img src="../images/nucleus_extension.gif" border="0" alt=""/>
+                <p>
+                    If you want to make a member read-only you can do it like this.
+                </p>
+<source><![CDATA[
+<jdo>
+    <package name="mydomain">
+        <class name="MyClass">
+            <field name="myField">
+                <extension vendor-name="datanucleus" key="insertable" value="false"/>
+                <extension vendor-name="datanucleus" key="updateable" value="false"/>
+            </field>
+        </class>
+    </package>
+</jdo>]]></source>
+                <p>
+                    and with Annotations
+                </p>
+<source><![CDATA[
+@PersistenceCapable
+public class MyClass
+{
+    @Extensions({@Extension(vendorName="datanucleus", key="insertable", value="false")
+        @Extension(vendorName="datanucleus", key="insertable", value="false")})
+    String myField;
+
+}]]></source>
+                <p>
+                    alternatively using a DataNucleus convenience annotation
+                </p>
+<source><![CDATA[
+import org.datanucleus.api.jdo.annotations.ReadOnly;
+
+@PersistenceCapable
+public class MyClass
+{
+    @ReadOnly
+    String myField;
+
+}]]></source>
+                <br/>
+            </subsection>
+            
         </section>
     </body>
 </document>
