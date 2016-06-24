@@ -552,6 +552,28 @@ public class CollectionStringToStringConverter implements AttributeConverter<Col
         ...
     </class>
 </package>]]></source>
+            <p>or with annotations</p>
+<source><![CDATA[
+import org.datanucleus.api.jdo.annotations.SharedRelation;
+
+public class Account
+{
+    ...
+
+    @Persistent
+    @Join(table="ACCOUNT_ADDRESSES", columns={@Column(name="ACCOUNT_ID_OID")})
+    @Element(columns={@Column(name="ADDRESS_ID_EID")})
+    @SharedRelation(column="ADDRESS_TYPE", value="work")
+    Collection<Address> workAddresses;
+
+    @Persistent
+    @Join(table="ACCOUNT_ADDRESSES", columns={@Column(name="ACCOUNT_ID_OID")})
+    @Element(columns={@Column(name="ADDRESS_ID_EID")})
+    @SharedRelation(column="ADDRESS_TYPE", value="home")
+    Collection<Address> homeAddresses;
+
+    ...
+}]]></source>
             <p>
                 So we have defined the same join table for the 2 collections "ACCOUNT_ADDRESSES", and the same columns
                 in the join table, meaning that we will be sharing the same join table to represent both relations. The
@@ -609,6 +631,24 @@ public class CollectionStringToStringConverter implements AttributeConverter<Col
         ...
     </class>
 </package>]]></source>
+            <p>or with annotations</p>
+<source><![CDATA[
+import org.datanucleus.api.jdo.annotations.SharedRelation;
+
+public class Account
+{
+    ...
+
+    @Persistent
+    @SharedRelation(column="ADDRESS_TYPE", value="work")
+    Collection<Address> workAddresses;
+
+    @Persistent
+    @SharedRelation(column="ADDRESS_TYPE", value="home")
+    Collection<Address> homeAddresses;
+
+    ...
+}]]></source>
             <p>
                 So we have defined the same foreign key for the 2 collections "ACCOUNT_ID_OID", The
                 important step is then to define the 2 DataNucleus <i>extension</i> tags. These define a column in the element table

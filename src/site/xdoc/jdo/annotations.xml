@@ -260,6 +260,16 @@
                     <td>Class/Field/Method</td>
                     <td>Defines a JDO extension</td>
                 </tr>
+                <tr class="d">
+                    <td><a href="#SharedRelation">@SharedRelation</a></td>
+                    <td>Field/Method</td>
+                    <td>Specifies that the relation for this field/property is "shared" (DataNucleus extension).</td>
+                </tr>
+                <tr class="d">
+                    <td><a href="#ReadOnly">@ReadOnly</a></td>
+                    <td>Field/Method</td>
+                    <td>Specifies that this field/property is "read-only" (DataNucleus extension).</td>
+                </tr>
             </table>
             <br/>
 
@@ -2828,6 +2838,78 @@ public class Person
                 <br/>
                 <br/>
             </subsection>
+
+            <a name="SharedRelation"/>
+            <subsection name="@SharedRelation">
+                <p>
+                    This DataNucleus-extension annotation is used to define a field with a (1-N/M-N) relation as being "shared" so that a distinguisher column is added.
+                    Specified on the <b>field/property</b>.
+                </p>
+                <table>
+                    <tr class="d">
+                        <th>Attribute</th>
+                        <th>Type</th>
+                        <th>Description</th>
+                        <th>Default</th>
+                    </tr>
+                    <tr class="d">
+                        <td>value</td>
+                        <td>String</td>
+                        <td>value to be stored in the distinguisher column for this relation field</td>
+                        <td></td>
+                    </tr>
+                    <tr class="d">
+                        <td>column</td>
+                        <td>String</td>
+                        <td>Name of the distinguisher column for this relation field</td>
+                        <td></td>
+                    </tr>
+                    <tr class="d">
+                        <td>primaryKey</td>
+                        <td>boolean</td>
+                        <td>Whether the distinguisher column should be part of the PK (when in a join table)</td>
+                        <td></td>
+                    </tr>
+                </table>
+                <source><![CDATA[
+@PersistenceCapable
+public class MyClass
+{
+    @Persistent
+    @Join
+    @SharedRelation(column="ADDRESS_TYPE", value="home")
+    Collection<Address> homeAddresses;
+
+    @Persistent
+    @Join
+    @SharedRelation(column="ADDRESS_TYPE", value="work")
+    Collection<Address> workAddresses;
+    ...
+}]]></source>
+                <br/>
+                <br/>
+            </subsection>
+
+            <a name="ReadOnly"/>
+            <subsection name="@ReadOnly">
+                <p>
+                    This DataNucleus-extension annotation is used to define a field as being read-only (equivalent as insertable="false", updateable="false").
+                    Specified on the <b>field/property</b>.
+                </p>
+                <source><![CDATA[
+@PersistenceCapable
+public class MyClass
+{
+    @Persistent
+    @ReadOnly
+    String someValue;
+
+    ...
+}]]></source>
+                <br/>
+                <br/>
+            </subsection>
+
         </section>
     </body>
 </document>
