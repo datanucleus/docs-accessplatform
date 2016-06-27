@@ -160,6 +160,11 @@
                     <td>Class</td>
                     <td>ORM : Defines a series of columns that dont have associated fields ("unmapped columns")</td>
                 </tr>
+                <tr class="d">
+                    <td><a href="#ReadOnly_Class">@ReadOnly</a></td>
+                    <td>Class</td>
+                    <td>Specifies that this class is "read-only" (DataNucleus extension).</td>
+                </tr>
                 <tr>
                     <td><a href="#Persistent">@Persistent</a></td>
                     <td>Field/Method</td>
@@ -2884,6 +2889,23 @@ public class MyClass
     @Join
     @SharedRelation(column="ADDRESS_TYPE", value="work")
     Collection<Address> workAddresses;
+    ...
+}]]></source>
+                <br/>
+                <br/>
+            </subsection>
+
+            <a name="ReadOnly_Class"/>
+            <subsection name="@ReadOnly">
+                <p>
+                    This DataNucleus-extension annotation is used to define a class as being read-only (equivalent as read-only="true").
+                    Specified on the <b>class</b>.
+                </p>
+                <source><![CDATA[
+@PersistenceCapable
+@ReadOnly
+public class MyClass
+{
     ...
 }]]></source>
                 <br/>

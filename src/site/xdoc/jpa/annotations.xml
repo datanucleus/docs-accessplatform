@@ -203,6 +203,12 @@
                     <td>Class/Field/Method</td>
                     <td>Defines a generator of sequences using a table in the datastore for use with persistent entities</td>
                 </tr>
+                <tr class="d">
+                    <td><a href="#ReadOnly_Class">@ReadOnly</a></td>
+                    <td>Class</td>
+                    <td>Specifies that this class is "read-only" (DataNucleus extension).</td>
+                </tr>
+
                 <tr>
                     <td><a href="#Embedded">@Embedded</a></td>
                     <td>Field/Method</td>
@@ -263,6 +269,11 @@
                     <td><a href="#SharedRelation">@SharedRelation</a></td>
                     <td>Field/Method</td>
                     <td>Specifies that the relation for this field/property is "shared" (DataNucleus extension).</td>
+                </tr>
+                <tr class="d">
+                    <td><a href="#ReadOnly">@ReadOnly</a></td>
+                    <td>Field/Method</td>
+                    <td>Specifies that this field/property is "read-only" (DataNucleus extension).</td>
                 </tr>
                 <tr class="d">
                     <td><a href="#Index_Field">@Index</a></td>
@@ -3375,6 +3386,44 @@ public class Person
                 <br/>
                 <br/>
             </subsection>
+
+            <a name="ReadOnly_Class"/>
+            <subsection name="@ReadOnly">
+                <p>
+                    This DataNucleus-extension annotation is used to define a class as being read-only (equivalent as read-only="true").
+                    Specified on the <b>class</b>.
+                </p>
+                <source><![CDATA[
+@Entity
+@ReadOnly
+public class MyClass
+{
+    ...
+}]]></source>
+                <br/>
+                <br/>
+            </subsection>
+
+            <a name="ReadOnly"/>
+            <subsection name="@ReadOnly">
+                <p>
+                    This DataNucleus-extension annotation is used to define a field as being read-only (equivalent as insertable="false", updateable="false").
+                    Specified on the <b>field/property</b>.
+                </p>
+                <source><![CDATA[
+@Entity
+public class MyClass
+{
+    @Basic
+    @ReadOnly
+    String someValue;
+
+    ...
+}]]></source>
+                <br/>
+                <br/>
+            </subsection>
+
         </section>
 
     </body>
