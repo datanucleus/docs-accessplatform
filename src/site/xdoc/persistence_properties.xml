@@ -3344,13 +3344,12 @@
                 <table>
                     <tr>
                         <th colspan="2">
-                            <b>datanucleus.rdbms.oracleNlsSortOrder</b>
+                            <b>datanucleus.rdbms.oracle.nlsSortOrder</b>
                         </th>
                     </tr>
                     <tr>
                         <td width="120">Description</td>
-                        <td>Sort order for Oracle String fields in queries (BINARY disables native language sorting)
-                            <b>Applicable for RDBMS only</b></td>
+                        <td>Sort order for Oracle String fields in queries (BINARY disables native language sorting). <b>Applicable for RDBMS only</b></td>
                     </tr>
                     <tr>
                         <td>Range of Values</td>
@@ -3406,6 +3405,22 @@
                     <tr>
                         <td>Range of Values</td>
                         <td>valid charset for MySQL</td>
+                    </tr>
+                </table>
+                <br/>
+                <table>
+                    <tr>
+                        <th colspan="2">
+                            <b>datanucleus.rdbms.informix.useSerialForIdentity</b>
+                        </th>
+                    </tr>
+                    <tr>
+                        <td width="120">Description</td>
+                        <td>Whether we are using SERIAL for identity columns (instead of SERIAL8). <b>Applicable for RDBMS only.</b></td>
+                    </tr>
+                    <tr>
+                        <td>Range of Values</td>
+                        <td>true | <b>false</b></td>
                     </tr>
                 </table>
                 <br/>
@@ -3592,23 +3607,6 @@
                             that are non-relation fields or 1-1/N-1 fields and will load them in the same
                             SQL call.
                             <b>Applicable for RDBMS only</b></td>
-                    </tr>
-                    <tr>
-                        <td>Range of Values</td>
-                        <td>true | <b>false</b></td>
-                    </tr>
-                </table>
-                <br/>
-                <table>
-                    <tr>
-                        <th colspan="2">
-                            <b>datanucleus.rdbms.adapter.informixUseSerialForIdentity</b>
-                        </th>
-                    </tr>
-                    <tr>
-                        <td width="120">Description</td>
-                        <td>Whether we are using SERIAL for identity columns (instead of SERIAL8).
-                            <b>Applicable for RDBMS only.</b></td>
                     </tr>
                     <tr>
                         <td>Range of Values</td>
