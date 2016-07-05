@@ -1357,6 +1357,48 @@ MyColour colour;]]></source>
                 </table>
             </subsection>
 
+            <subsection name="Generic Type Variables">
+                <p>
+                    JDO does not explicitly require support for generic type variables. DataNucleus does support some situations with generic type variables.
+                </p>
+                <p>
+                    The first example that is largely supported is where you have an abstract base class with a generic Type Variable and then you specify the type
+                    in the (concrete) subclass(es).
+                </p>
+<source><![CDATA[
+public abstract class Base<T>
+{
+    private T id;
+}
+
+public class Sub1 extends Base<Long>
+{
+    ...
+}
+public class Sub2 extends Base<Integer>
+{
+    ...
+}]]></source>
+                <p>
+                    Similarly you use TypeVariables to form relations, like this
+                </p>
+<source><![CDATA[
+public abstract class Ownable<T extends Serializable> implements Serializable
+{
+    @ManyToOne(optional = false)
+    private T owner;
+}
+
+public class Document extends Ownable<Person>
+{
+    ...
+}]]></source>
+                <p>
+                    Clearly there are many combinations of where TypeVariables can be used and DataNucleus supports a subset of these currently.
+                    Try it and see.
+                </p>
+            </subsection>
+
             <a name="attributeconverter"/>
             <subsection name="JDO Attribute Converters">
                 <p>
