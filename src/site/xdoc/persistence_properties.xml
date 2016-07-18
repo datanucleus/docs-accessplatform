@@ -2951,15 +2951,12 @@
                 <table>
                     <tr>
                         <th colspan="2">
-                            <b>datanucleus.query.compileOptimised</b>
+                            <b>datanucleus.query.compileOptimiseVarThis</b>
                         </th>
                     </tr>
                     <tr>
                         <td width="120">Description</td>
-                        <td>The generic query compilation process has a simple "optimiser" to try to iron out potential
-                        problems in users queries. It isn't very advanced yet, but currently will detect and try to fix
-                        a query clause like "var == this" (which is pointless). This will be extended in the future to
-                        handle other common situations</td>
+                        <td>This optimisation will detect and try to fix a query clause like "var == this" (which is pointless). It is not very advanced but may help in some situations</td>
                     </tr>
                     <tr>
                         <td>Range of Values</td>
