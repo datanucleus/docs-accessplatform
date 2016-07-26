@@ -194,8 +194,10 @@
                     <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                 </tr>
             </table>
-            <p>[1] These functions can't be used in the return part because it's not possible to determine the return type from the parameters.</p>
-            <br />
+            <p>
+                [1] These functions can't be used in the return part because it's not possible to determine the return type from the parameters.
+            </p>
+            <br/>
             <p>
                 <b>Functions on Type Geometry</b> (OGC SF 3.2.10)
             </p>
@@ -260,17 +262,16 @@
                     <td>OGC SF</td>
                     <td><img src="../images/icon_warning_sml.gif" border="0" alt=""/> [1]</td>
                     <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
-                    <td><img src="../images/icon_error_sml.gif" border="0" alt=""/> [2]</td>
+                    <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                 </tr>
                 <tr>
                     <td>Spatial.isSimple(Geometry)</td>
-                    <td>TRUE if this Geometry is simple, as defined in the Geometry 
-                        Model.</td>
+                    <td>TRUE if this Geometry is simple, as defined in the Geometry Model.</td>
                     <td>OGC SF</td>
                     <td><img src="../images/icon_warning_sml.gif" border="0" alt=""/> [1]</td>
                     <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
-                    <td><img src="../images/icon_error_sml.gif" border="0" alt=""/> [2]</td>
+                    <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                 </tr>
                 <tr>
@@ -279,7 +280,7 @@
                     <td>OGC SF</td>
                     <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
-                    <td><img src="../images/icon_error_sml.gif" border="0" alt=""/> [2]</td>
+                    <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                 </tr>
                 <tr>
@@ -293,8 +294,8 @@
                 </tr>
             </table>
             <p>
-                [1] Oracle does not allow boolean expressions in the SELECT-list.<br />
-                [2] MySQL does not implement these functions.</p>
+                [1] Oracle does not allow boolean expressions in the SELECT-list.
+            </p>
             <br/>
             <p>
                 <b>Functions on Type Point</b> (OGC SF 3.2.11)
@@ -366,13 +367,14 @@
                     <td>OGC SF</td>
                     <td><img src="../images/icon_warning_sml.gif" border="0" alt=""/> [1]</td>
                     <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
-                    <td><img src="../images/icon_error_sml.gif" border="0" alt=""/> [2]</td>
+                    <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                 </tr>
             </table>
-            <p>[1] Oracle does not allow boolean expressions in the SELECT-list.<br /> 
-                [2] MySQL does not implement these functions.</p>
-            <br />
+            <p>
+                [1] Oracle does not allow boolean expressions in the SELECT-list.<br />
+            </p>
+            <br/>
             <p>
                 <b>Functions on Type Curve and Type MultiCurve</b> (OGC SF 3.2.12, 3.2.17)
             </p>
@@ -455,7 +457,7 @@
                     <th>Oracle Spatial</th>
                 </tr>
                 <tr>
-                    <td>Spatial.centroid(Surface)<br />centroid(MultiSurface)</td>
+                    <td>Spatial.centroid(Surface)<br/>centroid(MultiSurface)</td>
                     <td>Returns the centroid of Surface, which may lie outside of it.</td>
                     <td>OGC SF</td>
                     <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
@@ -464,7 +466,7 @@
                     <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                 </tr>
                 <tr>
-                    <td>Spatial.pointOnSurface(Surface)<br />pointOnSurface(MultiSurface)</td>
+                    <td>Spatial.pointOnSurface(Surface)<br/>pointOnSurface(MultiSurface)</td>
                     <td>Returns a Point guaranteed to lie on the surface.</td>
                     <td>OGC SF</td>
                     <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
@@ -473,7 +475,7 @@
                     <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                 </tr>
                 <tr>
-                    <td>Spatial.area(Surface)<br />area(MultiSurface)</td>
+                    <td>Spatial.area(Surface)<br/>area(MultiSurface)</td>
                     <td>Returns the area of Surface.</td>
                     <td>OGC SF</td>
                     <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
@@ -651,14 +653,14 @@
                     <td>OGC SF</td>
                     <td><img src="../images/icon_warning_sml.gif" border="0" alt=""/></td>
                     <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
-                    <td><img src="../images/icon_error_sml.gif" border="0" alt=""/> [3]</td>
+                    <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                     <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                 </tr>
             </table>
-            <p>[1] Oracle does not allow boolean expressions in the SELECT-list.<br />
-                [2] MySQL does not implement these functions according to the specification.They return the same result 
-                as the corresponding MBR-based functions.<br />
-                [3] MySQL does not implement these functions.</p>
+            <p>
+                [1] Oracle does not allow boolean expressions in the SELECT-list.<br />
+                [2] MySQL does not implement these functions according to the specification. They return the same result as the corresponding MBR-based functions.
+            </p>
             <br />
             <p>
                 <b>Function on Distance Relationships</b> (OGC SF 3.2.20)    
@@ -753,8 +755,10 @@
                     <td><img src="../images/icon_success_sml.gif" border="0" alt=""/></td>
                 </tr>
             </table>
-            <p>[1] These functions are currently not implemented in MySQL. They may appear in future releases.</p>
-            <br />
+            <p>
+                [1] These functions are currently not implemented in MySQL. They may appear in future releases.
+            </p>
+            <br/>
             <p><b>Test whether the bounding box of one geometry intersects the bounding box of another</b></p>
             <table>
                 <tr>
