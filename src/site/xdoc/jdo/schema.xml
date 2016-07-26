@@ -69,29 +69,27 @@
             <a name="schema-generation"/>
             <subsection name="Schema Generation for persistence-unit">
                 <p>
-                    DataNucleus allows you to generate the schema for your <i>persistence-unit</i> when creating
-                    a PMF. You enable this by specifying the persistence property
-                    <b>datanucleus.generateSchema.mode</b> to <i>create</i> (other values <i>drop</i> which deletes
-                    the schema, and <i>drop-and-create</i> which deletes and recreates the schema). When you create
-                    your PMF it will generate the schema before it returns your PMF.
-                </p>
-                <p>
-                    You have some additional control over whether to actually create the schema, or whether to just
-                    output DDL for the schema (which you could apply yourself) - see the persistence property
-                    <b>datanucleus.generateSchema.target</b> which can be set to <i>scripts</i> to just create the DDL.
-                </p>
-                <p>
-                    For RDBMS there are a few extensions here that are also worthy of mention, in that you can define 
-                    scripts that are run during this schema generation phase. These are controlled by the following
-                    persistence properties
+                    DataNucleus allows you to generate the schema for your <i>persistence-unit</i> when creating a PMF. 
+                    You can drop/create the schema either directly in the datastore, or create scripts (DDL) to apply later.
+                    See the associated persistence properties (most of these only apply to RDBMS).
                 </p>
                 <ul>
-                    <li><b>datanucleus.generateSchema.scripts.create.source</b> - set this to an SQL script of your
-                    own that will create some tables (prior to any schema generation from the persistable objects)</li>
-                    <li><b>datanucleus.generateSchema.scripts.drop.source</b> - set this to an SQL script of your
-                    own that will drop some tables (prior to any schema generation from the persistable objects)</li>
+                    <li><b>datanucleus.generateSchema.database.mode</b> which can be set to <i>create</i>, <i>drop</i>, <i>drop-and-create</i> or <i>none</i> to control the 
+                        generation of the schema in the database.</li>
+                    <li><b>datanucleus.generateSchema.scripts.mode</b> which can be set to <i>create</i>, <i>drop</i>, <i>drop-and-create</i> or <i>none</i> to control the 
+                        generation of the schema as scripts (DDL). 
+                        See also <i>datanucleus.generateSchema.scripts.create.target</i> and <i>datanucleus.generateSchema.scripts.drop.target</i> which will be generated using
+                        this mode of operation.</li>
+                    <li><b>datanucleus.generateSchema.scripts.create.target</b> - this should be set to the name of a DDL script file that will be generated
+                        when using <i>datanucleus.generateSchema.scripts.mode</i></li>
+                    <li><b>datanucleus.generateSchema.scripts.drop.target</b> - this should be set to the name of a DDL script file that will be generated
+                        when using <i>datanucleus.generateSchema.scripts.mode</i></li>
+                    <li><b>datanucleus.generateSchema.scripts.create.source</b> - set this to an SQL script of your own that will create some tables
+                        (prior to any schema generation from the persistable objects)</li>
+                    <li><b>datanucleus.generateSchema.scripts.drop.source</b> - set this to an SQL script of your own that will drop some tables 
+                        (prior to any schema generation from the persistable objects)</li>
                     <li><b>datanucleus.generateSchema.scripts.load</b> - set this to an SQL script of your own that
-                    will insert any data that you require to be available when your PMF is initialised</li>
+                        will insert any data that you require to be available when your PMF is initialised</li>
                 </ul>
             </subsection>
 
