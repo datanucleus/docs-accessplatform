@@ -981,7 +981,7 @@ public class SampleLineString
                     <code>SampleLineString</code>s whose line string has a length less than the given limit.
                 </p>
                 <source><![CDATA[Double limit = new Double(100.0);
-Query query = pm.newQuery(SampleLineString.class, "geom != null && Spatial.length(geom) < :limit");
+Query query = pm.newQuery(SampleLineString.class, "geom != null && geom.length() < :limit");
 List list = (List) query.execute(limit);]]></source>
                 <br/>
             </subsection>
@@ -992,7 +992,7 @@ List list = (List) query.execute(limit);]]></source>
                     <code>SampleLineString</code>
                 </p>
                 <source><![CDATA[query = pm.newQuery(SampleLineString.class, "id == :id");
-query.setResult("Spatial.pointN(geom, 2)");
+query.setResult("geom.pointN(2)");
 query.setUnique(true);
 Geometry point = (Geometry) query.execute(new Long(1001));]]></source>
                 <br/>
@@ -1004,7 +1004,7 @@ Geometry point = (Geometry) query.execute(new Long(1001));]]></source>
                     <code>SampleLineString</code>s, whose end point spatially equals a given point.
                 </p>
                 <source><![CDATA[Point point = new Point("SRID=4326;POINT(110 45)");
-Query query = pm.newQuery(SampleLineString.class, "geom != null && Spatial.equals(Spatial.endPoint(geom), :point)");
+Query query = pm.newQuery(SampleLineString.class, "geom != null && Spatial.equals(geom.endPoint(), :point)");
 List list = (List) query.execute(point);
 ]]></source>
                 <br/>
