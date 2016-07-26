@@ -34,31 +34,27 @@
             <a name="schema-generation"/>
             <subsection name="Schema Generation for persistence-unit">
                 <p>
-                    DataNucleus allows you to generate the schema for your <i>persistence-unit</i> when creating
-                    a EMF. You enable this by specifying the persistence property
-                    <b>javax.persistence.schema-generation-action</b> to <i>create</i> (other values <i>drop</i> which 
-                    deletes the schema, and <i>drop-and-create</i> which deletes and recreates the schema). 
-                    When you create your EMF it will generate the schema before it returns your EMF.
-                </p>
-                <p>
-                    You have some additional control over whether to actually create the schema, or whether to just
-                    output DDL for the schema (which you could apply yourself) - see the persistence property
-                    <b>javax.persistence.schema-generation.scripts.create-target</b> which can be set to the filename for the DDL to just create the DDL.
-                    Similarly if wanting the DDL for dropping the schema, the persistence property
-                    <b>javax.persistence.schema-generation.scripts.drop-target</b> can be set to the filename for the DDL.
-                </p>
-                <p>
-                    For RDBMS there are a few extensions here that are also worthy of mention, in that you can define 
-                    scripts that are run during this schema generation phase. These are controlled by the following
-                    persistence properties
+                    DataNucleus JPA allows you to generate the schema for your <i>persistence-unit</i> when creating an EMF. 
+                    You can create, drop or drop then create the schema either directly in the datastore, or in scripts (DDL) as required.
+                    See the associated persistence properties (most of these only apply to RDBMS).
                 </p>
                 <ul>
-                    <li><b>javax.persistence.schema-generation.create-script-source</b> - set this to an SQL script of your
-                    own that will create some tables (prior to any schema generation from the persistable objects)</li>
-                    <li><b>javax.persistence.schema-generation.drop-script-source</b> - set this to an SQL script of your
-                    own that will drop some tables (prior to any schema generation from the persistable objects)</li>
-                    <li><b>javax.persistence.sql.load-script-source</b> - set this to an SQL script of your own that
-                    will insert any data that you require to be available when your PMF is initialised</li>
+                    <li><b>javax.persistence.schema-generation.database.action</b> which can be set to <i>create</i>, <i>drop</i>, <i>drop-and-create</i> or <i>none</i> to control the 
+                        generation of the schema in the database.</li>
+                    <li><b>javax.persistence.schema-generation.scripts.action</b> which can be set to <i>create</i>, <i>drop</i>, <i>drop-and-create</i> or <i>none</i> to control the 
+                        generation of the schema as scripts (DDL). 
+                        See also <i>javax.persistence.schema-generation.scripts.create.target</i> and <i>javax.persistence.schema-generation.scripts.drop.target</i> 
+                        which will be generated using this mode of operation.</li>
+                    <li><b>javax.persistence.schema-generation.scripts.create.target</b> - this should be set to the name of a DDL script file that will be generated
+                        when using <i>javax.persistence.schema-generation.scripts.action</i></li>
+                    <li><b>javax.persistence.schema-generation.scripts.drop.target</b> - this should be set to the name of a DDL script file that will be generated
+                        when using <i>javax.persistence.schema-generation.scripts.action</i></li>
+                    <li><b>javax.persistence.schema-generation.scripts.create.source</b> - set this to an SQL script of your own that will create some tables 
+                        (prior to any schema generation from the persistable objects)</li>
+                    <li><b>javax.persistence.schema-generation.scripts.drop.source</b> - set this to an SQL script of your own that will drop some tables
+                        (prior to any schema generation from the persistable objects)</li>
+                    <li><b>javax.persistence.sql-load-script-source</b> - set this to an SQL script of your own that
+                        will insert any data that you require to be available when your EMF is initialised</li>
                 </ul>
             </subsection>
 
