@@ -3248,6 +3248,24 @@
                 <table>
                     <tr>
                         <th colspan="2">
+                            <b>datanucleus.rdbms.useColumnDefaultWhenNull</b>
+                        </th>
+                    </tr>
+                    <tr>
+                        <td width="120">Description</td>
+                        <td>If an object is being persisted and a field (column) is null, the default behaviour is to look whether the column has a "default" value defined in the datastore
+                            and pass that in. You can turn this off and instead pass in NULL for the column by setting this property to <i>false</i>.
+                            <b>Applicable for RDBMS only</b></td>
+                    </tr>
+                    <tr>
+                        <td>Range of Values</td>
+                        <td><b>true</b> | false</td>
+                    </tr>
+                </table>
+                <br/>
+                <table>
+                    <tr>
+                        <th colspan="2">
                             <b>datanucleus.rdbms.persistEmptyStringAsNull</b>
                         </th>
                     </tr>
