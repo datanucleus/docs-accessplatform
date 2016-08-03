@@ -194,6 +194,15 @@ List<ComputerPeripheral> results = q.executeList();]]></source>
                     and thereafter refer to <i>elemVar</i> for the element in the collection to place restrictions on the element. Similarly you can
                     use <i>elemVar</i> in the result clause
                 </p>
+                <img src="../images/nucleus_plugin.gif" border="0" alt=""/>
+                <p>
+                    <b>RDBMS</b> : By default when you navigate through a 1-1/N-1 relation in JDOQL DataNucleus will decide to join using either LEFT OUTER JOIN or INNER JOIN
+                    based on whether the relation is <i>nullable</i>. If it is nullable then LEFT OUTER JOIN will be used. 
+                    You can change this default by specifying the persistence property (to apply to all queries) or query extension <b>datanucleus.query.jdoql.navigationJoinType</b> 
+                    and set it to either "INNERJOIN" or "LEFTOUTERJOIN". 
+                    You can also set the default for the <i>filter</i> only using the persistence property(to apply to all queries) or query extension 
+                    <b>datanucleus.query.jdoql.navigationJoinTypeForFilter</b> and set it to either "INNERJOIN" or "LEFTOUTERJOIN". 
+                </p>
                 <br/>
             </subsection>
 
@@ -1059,6 +1068,7 @@ Query q = pm.newQuery("SELECT this.name FROM mydomain.Product WHERE inv.products
                     variables across 1-1 "relations" where you only have the "id" stored rather than a real relation.
                 </p>
 
+                <img src="../images/nucleus_plugin.gif" border="0" alt=""/>
                 <p>
                     <b>RDBMS : </b>In all situations we aim for DataNucleus JDOQL implementation to work out the right way of linking a variable into the query, 
                     whether this is via a join (INNER, LEFT OUTER), or via a subquery. As you can imagine this can be complicated to work out the optimum for all situations

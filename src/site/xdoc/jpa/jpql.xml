@@ -133,6 +133,15 @@ SELECT p FROM Person p LEFT OUTER JOIN Address a ON p.addressName = a.name
                 <p>
                     Here we simply chose an ON clause to join the two roots.
                 </p>
+                <img src="../images/nucleus_plugin.gif" border="0" alt=""/>
+                <p>
+                    <b>RDBMS</b> : By default if you don't specify the JOIN to some related object in the FROM clause and instead navigate through a 1-1/N-1 relation like "a.owner" 
+                    then it will join using INNER JOIN. 
+                    You can change this default by specifying the persistence property (to apply to all queries) or query extension <b>datanucleus.query.jpql.navigationJoinType</b> 
+                    and set it to either "INNERJOIN" or "LEFTOUTERJOIN". 
+                    You can also set the default for the <i>filter</i> only using the persistence property(to apply to all queries) or query extension 
+                    <b>datanucleus.query.jpql.navigationJoinTypeForFilter</b> and set it to either "INNERJOIN" or "LEFTOUTERJOIN". 
+                </p>
                 <br/>
             </subsection>
 
