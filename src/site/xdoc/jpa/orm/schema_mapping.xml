@@ -288,6 +288,8 @@ public class SaleableProduct
                     <li>If your <b>View</b> already exists you are still required to provide a <i>view-definition</i> even though
                         DataNucleus will not be utilising it, since it also uses this attribute as the flag for whether it is a <b>View</b>
                         or a <b>Table</b> - just make sure that you specify the "table" also in the MetaData.</li>
+                    <li>If you have a relation to the class represented by a <b>View</b>, you cannot expect it to create an FK in the <b>View</b>. The <b>View</b> will map on to exactly
+                        the members defined in the class it represents. i.e cannot have a 1-N FK uni relation to the class with the <b>View</b>.</li>
                 </ul>
                 <p>
                     We can now utilise this class within normal DataNucleus JPA querying operation.
