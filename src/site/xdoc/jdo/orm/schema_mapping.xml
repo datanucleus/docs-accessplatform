@@ -373,24 +373,25 @@ public class Payment
                 <p>
                     The standard situation with an RDBMS datastore is to map classes to <b>Tables</b>. 
                     The majority of RDBMS also provide support for <b>Views</b>, providing the equivalent of a read-only SELECT across various tables. 
-                    DataNucleus also provides support for querying such Views. This provides more flexibility to the user where they have data and need to display it in their application. 
+                    DataNucleus also provides support for <i>querying</i> such Views (though not persisting into them). 
+                    This provides more flexibility to the user where they have data and need to display it in their application. 
                     Support for Views is described below.
                 </p>
                 <p>
-                    When you want to access data according to a View, you are required to provide a class that will accept
+                    When you want to access data according to a View, you are required to provide a (persistable) class that will accept
                     the values from the View when queried, and Meta-Data for the class that defines the View and how
                     it maps onto the provided class. Let's take an example. We have a View SALEABLE_PRODUCT in our database 
                     as follows, defined based on data in a PRODUCT table.
                 </p>
 <source><![CDATA[
 CREATE VIEW SALEABLE_PRODUCT (ID, NAME, PRICE, CURRENCY) AS
-    SELECT ID, NAME, CURRENT_PRICE AS PRICE, CURRENCY FROM PRODUCT
-    WHERE PRODUCT.STATUS_ID = 1]]></source>
+    SELECT ID, NAME, CURRENT_PRICE AS PRICE, CURRENCY FROM PRODUCT WHERE PRODUCT.STATUS_ID = 1]]></source>
                 <p>
-                    So we define a class to receive the values from this <b>View</b>.
+                    So we define a class to represent the values from this <b>View</b>.
                 </p>
 <source><![CDATA[
 package mydomain.views;
+
 public class SaleableProduct
 {
     String id;
@@ -452,8 +453,7 @@ WHERE PRODUCT.STATUS_ID = 1"/>
                 <ul>
                     <li>We've defined our class as using "nondurable" identity. This is an important step since rows of the <b>View</b>
                         typically don't operate in the same way as rows of a <b>Table</b>, not mapping onto a persisted updateable object as such</li>
-                    <li>We've specified the "table", which in this case is the view name - otherwise DataNucleus would create a name
-                       for the view based on the class name.</li>
+                    <li>We've specified the "table", which in this case is the view name - otherwise DataNucleus would create a name for the view based on the class name.</li>
                     <li>We've defined a DataNucleus extension <i>view-definition</i> that defines the view for this class. If the view
                         doesn't already exist it doesn't matter since DataNucleus (when used with <i>autoCreateSchema</i>) will execute this construction definition.</li>
                     <li>The <i>view-definition</i> can contain macros utilising the names of the fields in the class, and hence
