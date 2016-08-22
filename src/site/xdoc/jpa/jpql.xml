@@ -142,6 +142,15 @@ SELECT p FROM Person p LEFT OUTER JOIN Address a ON p.addressName = a.name
                     You can also set the default for the <i>filter</i> only using the persistence property(to apply to all queries) or query extension 
                     <b>datanucleus.query.jpql.navigationJoinTypeForFilter</b> and set it to either "INNERJOIN" or "LEFTOUTERJOIN". 
                 </p>
+                <img src="../images/nucleus_extension.gif" border="0" alt=""/>
+                <p>
+                    In strict JPA you cannot join to an embedded element class (of an embeddable). With DataNucleus you can do this, and hence form queries
+                    using fields of the embeddable (not available in most other JPA providers). See this example, where class <i>Person</i> has a Collection 
+                    of embeddable <i>Address</i> objects.
+                </p>
+<source><![CDATA[
+SELECT p FROM Person p LEFT OUTER JOIN p.addresses a WHERE a.name = 'Home'
+]]></source>
                 <br/>
             </subsection>
 
