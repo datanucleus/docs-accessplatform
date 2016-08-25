@@ -1129,8 +1129,8 @@ int numRowsDeleted = query.executeUpdate();]]></source>
         <section name="JPQL UPDATE Queries">
             <p>
                 The JPA specification defines a mode of JPQL for updating objects in the datastore. 
-                <b>Note that this will not invoke any cascading defined on a field basis, with only datastore-defined Foreign Keys cascading. Additionally
-                    related objects already in-memory will not be updated.</b>
+                <b>Note that this will not invoke any cascading defined on a field basis, with only datastore-defined Foreign Keys cascading. 
+                Additionally related objects already in-memory will not be updated.</b>
             </p>
 			<a name="update-syntax"/>
             <subsection name="UPDATE Syntax">
@@ -1146,6 +1146,13 @@ UPDATE [&lt;candidate-class&gt;] SET item1=value1, item2=value2
 <source><![CDATA[
 Query query = em.createQuery("UPDATE Person p SET p.salary = 10000 WHERE age = 18");
 int numRowsUpdated = query.executeUpdate();]]></source>
+                <img src="../images/nucleus_extension.gif" border="0" alt=""/>
+                <p>
+                    In strict JPA you cannot use a subquery in the UPDATE clause. With DataNucleus JPA you can do this so, for example, you can set
+                    a field to the result of a subquery.
+                </p>
+<source><![CDATA[
+Query query = em.createQuery("UPDATE Person p SET p.salary = (SELECT MAX(p2.salary) FROM Person p2 WHERE age < 18) WHERE age = 18");]]></source>
                 <br/>
             </subsection>
         </section>
