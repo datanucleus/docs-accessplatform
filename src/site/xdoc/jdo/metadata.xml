@@ -8,27 +8,20 @@
     <body>
         <section name="JDO : Metadata Overview">
             <p>
-                JDO requires the persistence of classes to be defined via Metadata. This Metadata
-                can be provided in the following forms
+                JDO requires the persistence of classes to be defined via Metadata. This Metadata can be provided in the following forms
             </p>
             <ul>
-                <li><a href="metadata_xml.html">XML</a> : the traditional mechanism, with XML files 
-                    containing information for each class to be persisted. As a further complication
-                    you can define basic persistence metadata for a class in one file, and then ORM
-                    metadata for that class in a separate file (since the ORM metadata is specific
+                <li><a href="metadata_xml.html">XML</a> : the traditional mechanism, with XML files containing information for each class to be persisted. As a further complication
+                    you can define basic persistence metadata for a class in one file, and then ORM metadata for that class in a separate file (since the ORM metadata is specific
                     to a certain datastore).</li>
-                <li><a href="annotations.html">Annotations</a> : using JDK1.5+ annotations in the 
-                    classes to be persisted</li>
-                <li><a href="metadata_api.html">API</a> : a programmatic API allowing definition
-                    of which classes are to be persisted at runtime</li>
+                <li><a href="annotations.html">Annotations</a> : using Java annotations in the classes to be persisted</li>
+                <li><a href="metadata_api.html">API</a> : a programmatic API allowing definition of which classes are to be persisted at runtime</li>
             </ul>
             <table>
                 <tr>
-                    <td>When not using the MetaData API we recommend that you use either XML or annotations
-                    for the basic persistence information, but always use XML for ORM information. This is
-                    because it is liable to change at deployment time and hence is accessible when in XML form
-                    whereas in annotations you add an extra compile cycle (and also you may need to deploy
-                    to some other datastore at some point, hence needing a different deployment).</td>
+                    <td>When not using the MetaData API we recommend that you use either XML or annotations for the basic persistence information, but always use XML for 
+                    ORM information. This is because it is liable to change at deployment time and hence is accessible when in XML form whereas in annotations you add an 
+                    extra compile cycle (and also you may need to deploy to some other datastore at some point, hence needing a different deployment).</td>
                 </tr>
             </table>
 
@@ -55,7 +48,7 @@
             <subsection name="XML Metadata loading">
                 <p> 
                     JDO expects the XML Meta-Data to be specified in a file or files in particular locations in the CLASSPATH. 
-                    For example, if you have a class <i>com.mycompany.sample.myexample</i>, JDO will look for any of the following 
+                    For example, if you have a class <i>com.mycompany.sample.MyExample</i>, JDO will look for any of the following 
                     resources until it finds one (in the order stated) :-
                 </p>
                 <source>
@@ -65,7 +58,7 @@ package.jdo
 com/package.jdo
 com/mycompany/package.jdo
 com/mycompany/sample/package.jdo
-com/mycompany/sample/myexample.jdo</source>
+com/mycompany/sample/MyExample.jdo</source>
                 <p>
                     In addition, for this example, DataNucleus allows the previous JDO 1.0.0 alternatives of
                 </p>
