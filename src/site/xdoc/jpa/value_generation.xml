@@ -163,6 +163,9 @@ public class MyClass
                 <p>
                     This value generator will generate values unique across different JVMs
                 </p>
+                <p>
+                    Values generated using this generator are available in @PrePersist.
+                </p>
                 <br/>
             </subsection>
 
@@ -233,6 +236,9 @@ public class MyClass
                 </p>
                 <p>
                     This value generator will generate values unique across different JVMs
+                </p>
+                <p>
+                    Values generated using this generator are NOT available in @PrePersist, being generated at persist only.
                 </p>
                 <br/>
             </subsection>
@@ -347,6 +353,9 @@ public class MyClass
                 <p>
                     This value generator will generate values unique across different JVMs
                 </p>
+                <p>
+                    Values generated using this generator are available in @PrePersist.
+                </p>
                 <br/>
             </subsection>
 
@@ -379,6 +388,9 @@ public class MyClass
                     This will generate java UUID Strings in the "myId" field.
                     You can also set the "strategy" to "timestamp", "auid", "uuid-string", "uuid-hex", "uuid-object" and "timestamp_value". Please read the 
                     <a href="../jdo/value_generation.html">JDO documentation</a> for full details of these generators.
+                </p>
+                <p>
+                    Values generated using these generators are available in @PrePersist.
                 </p>
                 <br/>
             </subsection>
