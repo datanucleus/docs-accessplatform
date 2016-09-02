@@ -15,6 +15,18 @@
                 As a result sometimes users will have to make some changes to move between versions of DataNucleus. We aim to keep this to a minimum.
             </p>
 
+            <a name="5_0_2_FROM_5_0_1"/>
+            <subsection name="Migration from 5.0.1 to 5.0.2">
+                <p>
+                    Migrating will require the following changes.
+                </p>
+                <ul>
+                    <li>When mapping a field of type Map&lt;PC,?&gt; with the key being embedded into a join table, this would previously have added an extra column to
+                    be part of the PK of the join table (certainly for JPA). It no longer does this, and instead uses all fields of the key in the PK. You can get previous handling
+                    by specifying extension <i>surrogate-pk-column</i> to <i>true</i> on the metadata for the field.</li>
+                </ul>
+            </subsection>
+
             <a name="5_0_1_FROM_5_0_0_REL"/>
             <subsection name="Migration from 5.0.0.RELEASE to 5.0.1">
                 <p>
