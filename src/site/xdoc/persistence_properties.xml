@@ -2815,6 +2815,24 @@
                     </tr>
                 </table>
                 <br/>
+                <table>
+                    <tr>
+                        <th colspan="2">
+                            <b>datanucleus.metadata.useDiscriminatorForSingleTable</b>
+                        </th>
+                    </tr>
+                    <tr>
+                        <td width="120">Description</td>
+                        <td>With JPA the spec implies that all use of "single-table" inheritance will use a discriminator. DataNucleus up to and including 5.0.2
+                            relied on the user defining the discriminator, whereas it now will add one if not supplied. Set this to <i>false</i> to get behaviour
+                            as it was <= 5.0.2</td>
+                    </tr>
+                    <tr>
+                        <td>Range of values</td>
+                        <td><b>true</b> | false</td>
+                    </tr>
+                </table>
+                <br/>
                 <br/>
             </subsection>
 
