@@ -15,6 +15,17 @@
                 As a result sometimes users will have to make some changes to move between versions of DataNucleus. We aim to keep this to a minimum.
             </p>
 
+            <a name="5_0_3_FROM_5_0_2"/>
+            <subsection name="Migration from 5.0.2 to 5.0.3">
+                <p>
+                    Migrating will require the following changes.
+                </p>
+                <ul>
+                    <li>The JPA spec implies that when you specify SINGLE-TABLE inheritance for a tree then a discriminator will be used. DataNucleus previously
+                        left it to a user to define the discriminator, but now adds it for them.</li>
+                </ul>
+            </subsection>
+
             <a name="5_0_2_FROM_5_0_1"/>
             <subsection name="Migration from 5.0.1 to 5.0.2">
                 <p>

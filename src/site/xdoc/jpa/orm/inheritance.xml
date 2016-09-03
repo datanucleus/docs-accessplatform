@@ -145,7 +145,21 @@ public class Product {...}]]></source>
                 <source><![CDATA[
 @Entity
 @Inheritance(strategy=InheritanceType.SINGLE_TABLE)
-public class Product {...}]]></source>
+@DiscriminatorValue("PRODUCT")
+@DiscriminatorColumn(name="PRODUCT_TYPE", discriminatorType=DiscriminatorType.STRING)
+public class Product {...}
+
+@Entity
+@DiscriminatorValue("BOOK")
+public class Book {...}
+
+@Entity
+@DiscriminatorValue("TRAVELGUIDE")
+public class TravelGuide {...}
+
+@Entity
+@DiscriminatorValue("COMPACTDISC")
+public class CompactDisc {...}]]></source>
                 <p> 
                     This change of use of the <b>inheritance</b> element has the effect of using the PRODUCT table 
                     for all classes, containing the fields of <b>Product</b>, <b>Book</b>, <b>CompactDisc</b>, and 
@@ -163,6 +177,9 @@ public class Product {...}]]></source>
                 <p>
                     In the above example, when we insert a TravelGuide object into the datastore, a row will be 
                     inserted into the PRODUCT table only.
+                </p>
+                <p>
+                    <b>When using SINGLE-TABLE DataNucleus will always use a discriminator (default column name is DTYPE).</b>
                 </p>
                 <br/>
             </subsection>
