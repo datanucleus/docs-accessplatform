@@ -23,7 +23,10 @@
                 <ul>
                     <li>The JPA spec implies that when you specify SINGLE-TABLE inheritance for a tree then a discriminator will be used. DataNucleus previously
                         left it to a user to define the discriminator, but now adds it for them. See persistence property <b>datanucleus.metadata.useDiscriminatorForSingleTable</b>
-                        to get old behaviour</li>
+                        (set to <i>false</i>) to get old behaviour</li>
+                    <li>The JPA spec implies that if no discriminator value(s) are provided then the provider should use entity-name. DataNucleus has not done this thus far, instead
+                        using class-name. We now swap to entity-name, but allow a persistence property <b>datanucleus.metadata.useDiscriminatorClassNameByDefault</b> that you
+                        can set to <i>true</i> to get old behaviour.</li>
                     <li>DatastoreAdapter method <i>getRangeByLimitEndOfStatementClause</i> now has an extra argument added, for people who are overriding an adapter</li>
                 </ul>
             </subsection>
