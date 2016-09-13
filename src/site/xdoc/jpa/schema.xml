@@ -187,17 +187,14 @@ public class MyClass {...}]]></source>
                 and is very simple to operate. It has the following modes of operation :
             </p>
             <ul>
-                <li><b>createSchema</b> - create the specified schema if the datastore supports that operation.</li>
-                <li><b>deleteSchema</b> - delete the specified schema if the datastore supports that operation.</li>
+                <li><b>createDatabase</b> - create the specified database (catalog/schema) if the datastore supports that operation.</li>
+                <li><b>deleteDatabase</b> - delete the specified database (catalog.schema) if the datastore supports that operation.</li>
                 <li><b>create</b> - create all database tables required for the classes defined by the input data.</li>
                 <li><b>delete</b> - delete all database tables required for the classes defined by the input data.</li>
-                <li><b>deletecreate</b> - delete all database tables required for the classes defined by the input 
-                    data, then create the tables.</li>
+                <li><b>deletecreate</b> - delete all database tables required for the classes defined by the input data, then create the tables.</li>
                 <li><b>validate</b> - validate all database tables required for the classes defined by the input data.</li>
-                <li><b>dbinfo</b> - provide detailed information about the database, it's limits and datatypes 
-                    support. Only for RDBMS currently.</li>
-                <li><b>schemainfo</b> - provide detailed information about the database schema.
-                    Only for RDBMS currently.</li>
+                <li><b>dbinfo</b> - provide detailed information about the database, it's limits and datatypes  support. Only for RDBMS currently.</li>
+                <li><b>schemainfo</b> - provide detailed information about the database schema. Only for RDBMS currently.</li>
             </ul>
             <p>
                 In addition for RDBMS, the <b>create</b>/<b>delete</b> modes can be used by adding "-ddlFile {filename}" 
@@ -259,9 +256,14 @@ public class MyClass {...}]]></source>
                         <td>Whether to ignore when we have metadata specified for classes that aren't found</td>
                     </tr>
                     <tr>
+                        <td>catalogName</td>
+                        <td></td>
+                        <td>Name of the catalog (mandatory when using <i>createDatabase</i> or <i>deleteDatabase</i> options)</td>
+                    </tr>
+                    <tr>
                         <td>schemaName</td>
                         <td></td>
-                        <td>Name of the schema (mandatory when using <i>createSchema</i> or <i>deleteSchema</i> options)</td>
+                        <td>Name of the schema (mandatory when using <i>createDatabase</i> or <i>deleteDatabase</i> options)</td>
                     </tr>
                     <tr>
                         <td>persistenceUnitName</td>
@@ -277,7 +279,7 @@ public class MyClass {...}]]></source>
                     <tr>
                         <td>jdkLogConfiguration</td>
                         <td></td>
-                        <td>Config file location for JDK1.4 logging (if using it)</td>
+                        <td>Config file location for java.util.logging (if using it)</td>
                     </tr>
                     <tr>
                         <td>verbose</td>
@@ -336,8 +338,8 @@ public class MyClass {...}]]></source>
                     the Maven goals
                 </p>
                 <source>
-mvn datanucleus:schema-createschema        Create the Schema
-mvn datanucleus:schema-deleteschema        Delete the Schema
+mvn datanucleus:schema-createdatabase      Create the Database (catalog/schema)
+mvn datanucleus:schema-deletedatabase      Delete the Database (catalog/schema)
 mvn datanucleus:schema-create              Create the tables for the specified classes
 mvn datanucleus:schema-delete              Delete the tables for the specified classes
 mvn datanucleus:schema-deletecreate        Delete and create the tables for the specified classes
@@ -374,11 +376,16 @@ mvn datanucleus:schema-dbinfo              Output info for the datastore</source
                     <tr>
                         <td>mode</td>
                         <td>Mode of operation.</td>
-                        <td><b>create</b>, delete, validate, dbinfo, schemainfo, createSchema, deleteSchema</td>
+                        <td><b>create</b>, delete, validate, dbinfo, schemainfo, createDatabase, deleteDatabase</td>
+                    </tr>
+                    <tr>
+                        <td>catalogName</td>
+                        <td>Catalog name to use when used in <i>createDatabase</i>/<i>deleteDatabase</i> modes</td>
+                        <td></td>
                     </tr>
                     <tr>
                         <td>schemaName</td>
-                        <td>Schema name to use when used in <i>createSchema</i>/<i>deleteSchema</i> modes</td>
+                        <td>Schema name to use when used in <i>createDatabase</i>/<i>deleteDatabase</i> modes</td>
                         <td></td>
                     </tr>
                     <tr>
@@ -491,8 +498,8 @@ java [-cp classpath] [system_props] org.datanucleus.store.schema.SchemaTool [mod
         -Ddatanucleus.ConnectionPassword=db_password
         -Dlog4j.configuration=file:{log4j.properties} (optional)
     where modes can be
-        -createSchema {schemaName} : create the specified schema (if supported)
-        -deleteSchema {schemaName} : delete the specified schema (if supported)
+        -createDatabase : create the specified database (if supported)
+        -deleteDatabase : delete the specified database (if supported)
         -create : Create the tables specified by the mapping-files/class-files
         -delete : Delete the tables specified by the mapping-files/class-files
         -deletecreate : Delete the tables specified by the mapping-files/class-files and then create them
@@ -500,6 +507,8 @@ java [-cp classpath] [system_props] org.datanucleus.store.schema.SchemaTool [mod
         -dbinfo : Detailed information about the database
         -schemainfo : Detailed information about the database schema
     where options can be
+        -catalog {catalogName} : Catalog name when using "createDatabase"/"deleteDatabase"
+        -schema {schemaName} : Schema name when using "createDatabase"/"deleteDatabase"
         -api : The API that is being used (default is JDO, but set this to JPA)
         -pu {persistence-unit-name} : Name of the persistence unit to manage the schema for
         -ddlFile {filename} : RDBMS - only for use with "create"/"delete" mode to dump the DDL to the specified file
@@ -568,12 +577,11 @@ package org.datanucleus.store.schema;
 
 public interface SchemaAwareStoreManager
 {
-    void createSchema(String schemaName, Properties props);
+    void createDatabase(String catalogName, String schemaName, Properties props);
+    void deleteDatabase(String catalogName, String schemaName, Properties props);
+
     void createSchemaForClasses(Set<String> classNames, Properties props);
-
-    void deleteSchema(String schemaName, Properties props);
     void deleteSchemaForClasses(Set<String> classNames, Properties props);
-
     void validateSchemaForClasses(Set<String> classNames, Properties props);
 }]]></source>
                 <p>
