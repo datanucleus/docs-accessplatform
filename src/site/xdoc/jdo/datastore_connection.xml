@@ -136,8 +136,8 @@ finally
                 We currently provide support for the following
             </p>
             <ul>
-                <li>RDBMS : <a href="#pooling_rdbms_dbcp">Apache DBCP</a> we allow use of externally-defined DBCP, but also provide a builtin DBCP v1.4</li>
-                <li>RDBMS : <a href="#pooling_rdbms_dbcp2">Apache DBCP v2+</a></li>
+                <li>RDBMS : <a href="#pooling_rdbms_dbcp">Apache DBCP</a></li>
+                <li>RDBMS : <a href="#pooling_rdbms_dbcp2">Apache DBCP v2</a>, we allow externally defined DBCP2, but also provide a builtin DBCP v2.1.1</li>
                 <li>RDBMS : <a href="#pooling_rdbms_c3p0">C3P0</a></li>
                 <li>RDBMS : <a href="#pooling_rdbms_proxool">Proxool</a></li>
                 <li>RDBMS : <a href="#pooling_rdbms_bonecp">BoneCP</a></li>
@@ -176,14 +176,49 @@ datanucleus.connectionPool.driver.defaultRowPrefetch=50]]></source>
                 <br/>
             </subsection>
 
+            <a name="pooling_rdbms_dbcp2"/>
+            <subsection name="RDBMS : Apache DBCP v2+">
+                <p>
+                    DataNucleus provides a builtin version of DBCP2 to provide pooling. This is automatically selected
+                    if using RDBMS, unless you specify otherwise. An alternative is to use an external DBCP2 (
+                    <a href="http://jakarta.apache.org/commons/dbcp/">DBCP</a>). 
+                    This is accessed by specifying the persistence property <b>datanucleus.connectionPoolingType</b>. To utilise DBCP2-based connection pooling we do this
+                </p>
+                <source>
+// Specify our persistence properties used for creating our PMF
+Properties props = new Properties();
+properties.setProperty("datanucleus.ConnectionDriverName","com.mysql.jdbc.Driver");
+properties.setProperty("datanucleus.ConnectionURL","jdbc:mysql://localhost/myDB");
+properties.setProperty("datanucleus.ConnectionUserName","login");
+properties.setProperty("datanucleus.ConnectionPassword","password");
+properties.setProperty("datanucleus.connectionPoolingType", "dbcp2");</source>
+                <p>
+                    So the <i>PMF</i> will use connection pooling using DBCP. To do this you will
+                    need <i>commons-dbcp2</i>, <i>commons-pool2</i> JARs to be in the CLASSPATH.
+                </p>
+                <p>
+                    You can also specify persistence properties to control the actual pooling.
+                    The currently supported properties for DBCP2 are shown below
+                </p>
+                <source>
+# Pooling of Connections
+datanucleus.connectionPool.maxIdle=10
+datanucleus.connectionPool.minIdle=3
+datanucleus.connectionPool.maxActive=5
+datanucleus.connectionPool.maxWait=60
+
+datanucleus.connectionPool.testSQL=SELECT 1
+
+datanucleus.connectionPool.timeBetweenEvictionRunsMillis=2400000</source>
+                <br/>
+            </subsection>
+
             <a name="pooling_rdbms_dbcp"/>
             <subsection name="RDBMS : Apache DBCP">
                 <p>
-                    DataNucleus provides a builtin version of DBCP to provide pooling. This is automatically selected
-                    if using RDBMS, unless you specify otherwise. An alternative is to use an external DBCP (
-                    <a href="http://jakarta.apache.org/commons/dbcp/">DBCP</a>). 
-                    This is accessed by specifying the persistence property 
-                    <b>datanucleus.connectionPoolingType</b> etc like this
+                    DataNucleus allows you to utilise a connection pool using <a href="http://jakarta.apache.org/commons/dbcp/">DBCP</a> (v1) to efficiently 
+                    manage the connections to the datastore. It is recommended to use DBCP v2 instead of DBCP v1 for all JRE's 1.7+.
+                    This is accessed by specifying the persistence property <b>datanucleus.connectionPoolingType</b> etc like this
                 </p>
                 <source>
 // Specify our persistence properties used for creating our PMF
@@ -215,42 +250,6 @@ datanucleus.connectionPool.testSQL=SELECT 1
 
 datanucleus.connectionPool.timeBetweenEvictionRunsMillis=2400000
 datanucleus.connectionPool.minEvictableIdleTimeMillis=18000000</source>
-                <br/>
-            </subsection>
-
-            <a name="pooling_rdbms_dbcp2"/>
-            <subsection name="RDBMS : Apache DBCP v2+">
-                <p>
-                    DataNucleus allows you to utilise a connection pool using Apache DBCP version 2 to efficiently manage the connections to the datastore.
-                    <a href="http://jakarta.apache.org/commons/dbcp/">DBCP</a> is a third-party library providing connection pooling. 
-                    This is accessed by specifying the persistence property <b>datanucleus.connectionPoolingType</b>. To utilise DBCP-based connection pooling we do this
-                </p>
-                <source>
-// Specify our persistence properties used for creating our PMF
-Properties props = new Properties();
-properties.setProperty("datanucleus.ConnectionDriverName","com.mysql.jdbc.Driver");
-properties.setProperty("datanucleus.ConnectionURL","jdbc:mysql://localhost/myDB");
-properties.setProperty("datanucleus.ConnectionUserName","login");
-properties.setProperty("datanucleus.ConnectionPassword","password");
-properties.setProperty("datanucleus.connectionPoolingType", "dbcp2");</source>
-                <p>
-                    So the <i>PMF</i> will use connection pooling using DBCP. To do this you will
-                    need <i>commons-dbcp2</i>, <i>commons-pool2</i> JARs to be in the CLASSPATH.
-                </p>
-                <p>
-                    You can also specify persistence properties to control the actual pooling.
-                    The currently supported properties for DBCP2 are shown below
-                </p>
-                <source>
-# Pooling of Connections
-datanucleus.connectionPool.maxIdle=10
-datanucleus.connectionPool.minIdle=3
-datanucleus.connectionPool.maxActive=5
-datanucleus.connectionPool.maxWait=60
-
-datanucleus.connectionPool.testSQL=SELECT 1
-
-datanucleus.connectionPool.timeBetweenEvictionRunsMillis=2400000</source>
                 <br/>
             </subsection>
 

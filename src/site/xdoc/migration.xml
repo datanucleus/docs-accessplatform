@@ -28,6 +28,8 @@
                         using class-name. We now swap to entity-name, but allow a persistence property <b>datanucleus.metadata.useDiscriminatorClassNameByDefault</b> that you
                         can set to <i>true</i> to get old behaviour.</li>
                     <li>DatastoreAdapter method <i>getRangeByLimitEndOfStatementClause</i> now has an extra argument added, for people who are overriding an adapter</li>
+                    <li>The builtin DBCP connection pool has been removed and replaced by a builtin DBCP2 connection pool. DBCP2 is recommended over DBCP for all JRE's 1.7+ so
+                        this switch was long overdue.</li>
                 </ul>
             </subsection>
 
