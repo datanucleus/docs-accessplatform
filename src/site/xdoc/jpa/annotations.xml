@@ -1667,7 +1667,9 @@ public class MyClass
                     <tr class="c">
                         <td>referencedColumnName</td>
                         <td>String</td>
-                        <td>Name of the associated PK column in the superclass</td>
+                        <td>Name of the associated PK column in the superclass. 
+                            This is for use when you have a composite PK so acts as a way of aligning the respective columns.
+                            <b>It is not to allow joining to some non-PK column</b></td>
                         <td></td>
                     </tr>
                     <tr class="c">
@@ -3101,7 +3103,9 @@ public class Person
                     <tr class="c">
                         <td>referencedColumnName</td>
                         <td>String</td>
-                        <td>Name of the column in the other table that this is the FK for</td>
+                        <td>Name of the column in the other table that this is the FK for.
+                            This is for use when you have a composite PK so acts as a way of aligning the respective columns.
+                            <b>It is not to allow joining to some non-PK column</b></td>
                         <td></td>
                     </tr>
                     <tr class="c">

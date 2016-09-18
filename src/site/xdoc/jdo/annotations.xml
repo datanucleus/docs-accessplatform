@@ -2500,13 +2500,17 @@ public class MyClass
                     <tr class="c">
                         <td>target</td>
                         <td>String</td>
-                        <td>ORM : Column in the other class that this maps to</td>
+                        <td>ORM : Column in the other class that this maps to.
+                            This is for use when you have a composite PK so acts as a way of aligning the respective columns.
+                            <b>It is not to allow joining to some non-PK column</b></td>
                         <td></td>
                     </tr>
                     <tr class="c">
                         <td>targetMember</td>
                         <td>String</td>
-                        <td>ORM : Field/Property in the other class that this maps to</td>
+                        <td>ORM : Field/Property in the other class that this maps to.
+                            This is for use when you have a composite PK so acts as a way of aligning the respective columns.
+                            <b>It is not to allow joining to some non-PK column</b></td>
                         <td></td>
                     </tr>
                     <tr class="c">
