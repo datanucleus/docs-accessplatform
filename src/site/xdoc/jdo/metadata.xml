@@ -25,26 +25,6 @@
                 </tr>
             </table>
 
-            <subsection name="Metadata priority">
-                <p>
-                    JDO defines the priority order for metadata as being
-                </p>
-                <ul>
-                    <li>API Metadata</li>
-                    <li>ORM XML Metadata</li>
-                    <li>JDO XML Metadata</li>
-                    <li>Annotations</li>
-                </ul>
-                <p>
-                    So if a class has Metadata defined by API then that will override all other
-                    Metadata. If a class has annotations and JDO XML Metadata then the XML Metadata
-                    will take precedence over the annotations (or rather be merged on top of the
-                    annotations). You can use whichever (or multiple) of the above forms at the same time
-                    for a single class.
-                </p>
-                <br/>
-            </subsection>
-
             <subsection name="XML Metadata loading">
                 <p> 
                     JDO expects the XML Meta-Data to be specified in a file or files in particular locations in the CLASSPATH. 
