@@ -8,27 +8,20 @@
     <body>
         <section name="JDO : Metadata Overview">
             <p>
-                JDO requires the persistence of classes to be defined via Metadata. This Metadata
-                can be provided in the following forms
+                JDO requires a definition of how to persist classes by way of Metadata. This Metadata can be provided in the following forms
             </p>
-            <ul>
-                <li><a href="metadata_xml.html">XML</a> : the traditional mechanism, with XML files 
-                    containing information for each class to be persisted. As a further complication
-                    you can define basic persistence metadata for a class in one file, and then ORM
-                    metadata for that class in a separate file (since the ORM metadata is specific
-                    to a certain datastore).</li>
-                <li><a href="annotations.html">Annotations</a> : using JDK1.5+ annotations in the 
-                    classes to be persisted</li>
-                <li><a href="metadata_api.html">API</a> : a programmatic API allowing definition
-                    of which classes are to be persisted at runtime</li>
-            </ul>
+            <img src="../images/jdo/metadata.png" border="0"/>
+            <p>
+                So you can provide the metadata via <a href="annotations.html">annotations</a> solely, or via <a href="annotations.html">annotations</a> plus XML overrides for ORM, or
+                via <a href="metadata_xml.html">JDO XML Metadata</a> solely, or via <a href="metadata_xml.html">JDO XML Metadata</a> plus XML overrides for ORM, or finally
+                via a <a href="metadata_api.html">Metadata API</a>. If you are using XML overrides for ORM, this definition will be merged in to the 
+                base definition (annotations or JDO XML Metadata). Note that you can utilise annotations for one class, and then JDO XML Metadata for another class should you so wish.
+            </p>
             <table>
                 <tr>
-                    <td>When not using the MetaData API we recommend that you use either XML or annotations
-                    for the basic persistence information, but always use XML for ORM information. This is
-                    because it is liable to change at deployment time and hence is accessible when in XML form
-                    whereas in annotations you add an extra compile cycle (and also you may need to deploy
-                    to some other datastore at some point, hence needing a different deployment).</td>
+                    <td>When not using the MetaData API we recommend that you use either XML or annotations for the basic persistence information, but always use XML for 
+                    ORM information. This is because it is liable to change at deployment time and hence is accessible when in XML form whereas in annotations you add an 
+                    extra compile cycle (and also you may need to deploy to some other datastore at some point, hence needing a different deployment).</td>
                 </tr>
             </table>
 
