@@ -15,7 +15,11 @@
                 of your objects. This short guide will demonstrate some of the more common operations.
             </p>
             <p>
-                <b>Important : An <i>EntityManagerFactory</i> is designed to be thread-safe. An <i>EntityManager</i> is not</b>
+                <b>Important : An <i>EntityManagerFactory</i> is designed to be thread-safe. An <i>EntityManager</i> is not</b>.
+                Note that if you set the persistence property <b>datanucleus.Multithreaded</b> this acts as a hint to the EMF to provide 
+                <i>EntityManager</i>s that are usable with multiple threads. While DataNucleus makes efforts to make this <i>EntityManager</i>
+                usable with multiple threads, it is not guaranteed to work multi-threaded in all situations, particularly around second class collection/map
+                fields.
             </p>
             <p>
                 You obtain an <i>EntityManager</i>
