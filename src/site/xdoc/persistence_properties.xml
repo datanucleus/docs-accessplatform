@@ -238,7 +238,8 @@
                     <tr>
                         <td width="120">Description</td>
                         <td>Whether to run the PM/EM multithreaded.
-                        <b>Note that this is a hint only to try to allow thread-safe operations on the PM/EM</b></td>
+                            <b>Note that this is only a hint to try to allow thread-safe operations on the PM/EM</b>.
+                            Users are always advised to run a PM/EM as single threaded, since some operations are not currently locked and so could cause issues multi-threaded.</td>
                     </tr>
                     <tr>
                         <td>Range of Values</td>
