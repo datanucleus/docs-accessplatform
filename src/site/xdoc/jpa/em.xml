@@ -3,11 +3,11 @@
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
     <properties>
-        <title>Entity Manager</title>
+        <title>EntityManager</title>
     </properties>
 
     <body>
-        <section name="JPA : Entity Manager">
+        <section name="JPA : EntityManager">
             <p>
                 As you read in the guide for <a href="emf.html">EntityManagerFactory</a>, to control the persistence of your objects
                 you will require at least one <i>EntityManagerFactory</i>. Once you have obtained this object you then use
@@ -21,25 +21,32 @@
                 usable with multiple threads, it is not guaranteed to work multi-threaded in all situations, particularly around second class collection/map
                 fields.
             </p>
-            <p>
-                You obtain an <i>EntityManager</i>
-                <a href="http://docs.oracle.com/javaee/7/api/javax/persistence/EntityManager.html" target="_blank"><img src="../images/javadoc.gif" alt=""/></a>
-                from an <i>EntityManagerFactory</i> as follows
-            </p>
-            <source>EntityManager em = emf.createEntityManager();</source>
-            <p>
-                In the case of using container-managed JavaEE, you would instead obtain the
-                <i>EntityManager</i> by injection
-            </p>
+
+            <subsection name="Opening/Closing an EntityManager">
+                <p>
+                    You obtain an <i>EntityManager</i>
+                    <a href="http://docs.oracle.com/javaee/7/api/javax/persistence/EntityManager.html" target="_blank"><img src="../images/javadoc.gif" alt=""/></a>
+                    from an <i>EntityManagerFactory</i> as follows
+                </p>
+                <source>EntityManager em = emf.createEntityManager();</source>
+                <p>
+                    In the case of using container-managed JavaEE, you would instead obtain the
+                    <i>EntityManager</i> by injection
+                </p>
 <source><![CDATA[
 @PersistenceContext(unitName="myPU")
 EntityManager em;
 ]]></source>
-            <p>
-                In general you will be performing all operations on a <i>EntityManager</i> within a transaction, whether your
-                transactions are controlled by your JavaEE container, by a framework such as Spring, or by locally defined transactions.
-                In the examples below we will omit the transaction demarcation for clarity.
-            </p>
+                <p>
+                    You then perform all operations that you need using this <i>EntityManager</i> and finally you must <b>close</b> it.
+                    Forgetting to close it will lead to memory/resource leaks.
+                </p>
+                <source>em.close();</source>
+                <p>
+                    In general you will be performing all operations on a <i>EntityManager</i> within a transaction, whether your
+                    transactions are controlled by your JavaEE container, by a framework such as Spring, or by locally defined transactions.
+                    In the examples below we will omit the transaction demarcation for clarity.
+                </p>
             <br/>
 
             <subsection name="Persisting an Object">

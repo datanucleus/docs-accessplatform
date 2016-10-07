@@ -3,11 +3,11 @@
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
     <properties>
-        <title>Persistence Manager</title>
+        <title>PersistenceManager</title>
     </properties>
 
     <body>
-        <section name="JDO : Persistence Manager">
+        <section name="JDO : PersistenceManager">
             <p>
                 As you read in the guide for <a href="pmf.html">PersistenceManagerFactory</a>, to control the 
                 persistence of your objects you will require at least one <i>PersistenceManagerFactory</i>. 
@@ -24,18 +24,25 @@
                 usable with multiple threads, it is not guaranteed to work multi-threaded in all situations, particularly around second class collection/map
                 fields.
             </p>
-            <p>
-                You obtain a <i>PersistenceManager</i> 
-                <a href="http://db.apache.org/jdo/api30/apidocs/javax/jdo/PersistenceManager.html" target="_blank"><img src="../images/javadoc.gif" alt=""/></a>
-                as follows
-            </p>
-            <source>PersistenceManager pm = pmf.getPersistenceManager();</source>
-            <p>
-                You likely will be performing all operations on a <i>PersistenceManager</i> within a transaction, 
-                whether your transactions are controlled by your JavaEE container, by a framework such as Spring, or by 
-                locally defined transactions. Alternatively you can perform your operations non-transactional.
-                In the examples below we will omit the transaction demarcation for clarity.
-            </p>
+
+            <subsection name="Opening/Closing a PersistenceManager">
+                <p>
+                    You obtain a <i>PersistenceManager</i> 
+                    <a href="http://db.apache.org/jdo/api30/apidocs/javax/jdo/PersistenceManager.html" target="_blank"><img src="../images/javadoc.gif" alt=""/></a>
+                    as follows
+                </p>
+                <source>PersistenceManager pm = pmf.getPersistenceManager();</source>
+                <p>
+                    You then perform all operations that you need using this <i>PersistenceManager</i> and finally you must <b>close</b> it.
+                    Forgetting to close it will lead to memory/resource leaks.
+                </p>
+                <source>pm.close();</source>
+                <p>
+                    You likely will be performing all operations on a <i>PersistenceManager</i> within a transaction, 
+                    whether your transactions are controlled by your JavaEE container, by a framework such as Spring, or by 
+                    locally defined transactions. Alternatively you can perform your operations non-transactional.
+                    In the examples below we will omit the transaction demarcation for clarity.
+                </p>
             <br/>
 
             <subsection name="Persisting an Object">
