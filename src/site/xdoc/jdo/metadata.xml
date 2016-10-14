@@ -20,6 +20,11 @@
                 If you are using XML overrides for ORM, this definition will be merged in to the base definition (annotations or JDO XML Metadata).
                 Note that you can utilise annotations for one class, and then JDO XML Metadata for another class should you so wish.
             </p>
+            <p>
+                One further alternative is if you have annotations in your classes, you provide JDO XML Metadata (<i>package.jdo</i>), and also 
+                ORM XML Metadata (<i>package-{mapping}.orm</i>). In this case it will take the JDO XML Metadata, merge in the annotations, and then apply overrides from
+                the ORM XML Metadata.
+            </p>
             <table>
                 <tr>
                     <td>When not using the MetaData API we recommend that you use either XML or annotations for the basic persistence information, but always use XML for 
