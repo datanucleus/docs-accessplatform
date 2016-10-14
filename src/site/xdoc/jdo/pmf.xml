@@ -328,9 +328,10 @@ PersistenceManagerFactory pmf = JDOHelper.getPersistenceManagerFactory("myPersis
                     You can alternatively specify JDO standard <b>javax.jdo.option.ConnectionFactory2Name</b> to the same end.</li>
                 <li><b>jar-file</b> - name of a JAR file to scan for annotated classes to include in this persistence-unit.</li>
                 <li><b>mapping-file</b> - name of an XML "mapping" file containing persistence information
-                to be included in this persistence-unit. This is the "JDO" mapping file (<b>not</b> the ORM)</li>
+                    to be included in this persistence-unit. This is the JDO XML Metadata file (<i>package.jdo</i>) (<b>not</b> the ORM XML Metadata file)</li>
                 <li><b>class</b> - name of an annotated class to include in this persistence-unit</li>
                 <li><b>properties</b> - properties defining the persistence factory to be used.</li>
+                <li><b>exclude-unlisted-classes</b> - when this is specified then it will only load metadata for the classes/mapping files listed.</li>
             </ul>
             <br/>
 
@@ -341,6 +342,15 @@ PersistenceManagerFactory pmf = JDOHelper.getPersistenceManagerFactory("myPersis
                 </p>
                 <source>
 PersistenceManagerFactory pmf = JDOHelper.getPersistenceManagerFactory("MyPersistenceUnit");</source>
+                <br/>
+            </subsection>
+
+            <subsection name="Metadata loading using persistence unit">
+                <p>
+                    When you specify a PMF using a <i>persistence.xml</i> it will load the metadata for all classes that are specified directly in the persistence unit,
+                    as well as all classes defined in JDO XML metadata files that are specified directly in the persistence unit. If you don't have the <i>exclude-unlisted-classes</i>
+                    set to true then it will also do a CLASSPATH scan to try to find any other classes that are part of that persistence unit.
+                </p>
                 <br/>
             </subsection>
 
