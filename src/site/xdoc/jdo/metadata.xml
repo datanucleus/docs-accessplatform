@@ -22,8 +22,8 @@
             </p>
             <p>
                 One further alternative is if you have annotations in your classes, you provide JDO XML Metadata (<i>package.jdo</i>), and also 
-                ORM XML Metadata (<i>package-{mapping}.orm</i>). In this case it will take the JDO XML Metadata, merge in the annotations, and then apply overrides from
-                the ORM XML Metadata.
+                ORM XML Metadata (<i>package-{mapping}.orm</i>). In this case the annotations are the base representation, applying overrides from JDO XML Metadata, 
+                and then overrides from the ORM XML Metadata.
             </p>
             <table>
                 <tr>
