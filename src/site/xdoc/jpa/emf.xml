@@ -147,8 +147,8 @@ EntityManager em;
             <subsection name="Metadata loading using persistence unit">
                 <p>
                     When you specify an EMF using a <i>persistence.xml</i> it will load the metadata for all classes that are specified directly in the persistence unit. 
-                    If you don't have the <i>exclude-unlisted-classes</i> set to true then it will also do a CLASSPATH scan to try to find any other classes that are part of that 
-                    persistence unit.
+                    If you don't have the <i>exclude-unlisted-classes</i> set to true then it will also do a CLASSPATH scan to try to find any other <b>annotated</b> classes 
+                    that are part of that persistence unit.
                     To set the CLASSPATH scanner to a custom version use the persistence property <b>datanucleus.metadata.scanner</b> and set it to the classname of the scanner class.
                 </p>
                 <br/>
