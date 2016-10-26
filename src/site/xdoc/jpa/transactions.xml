@@ -107,9 +107,10 @@ finally
 }]]></source>
                 <p>
                     so we control the transaction using the <i>UserTransaction</i>.
-                    The second scenario is where the <i>UserTransaction</i> is started after you have the
-                    <i>EntityManager</i>. In this case we need to join our <i>EntityManager</i> to the 
-                    newly created <i>UserTransaction</i>, like this
+                </p>
+                <p>
+                    The second scenario is where the <i>UserTransaction</i> is started after you have the <i>EntityManager</i>. 
+                    In this case we need to join our <i>EntityManager</i> to the newly created <i>UserTransaction</i>, like this
                 </p>
 <source><![CDATA[
 EntityManager em = emf.createEntityManager();

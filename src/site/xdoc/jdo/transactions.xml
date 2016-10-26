@@ -66,11 +66,9 @@ pm.close();]]></source>
             <a name="jta"/>
             <subsection name="JTA Transactions">
                 <p>
-                    When using a JDO implementation such as DataNucleus in a J2SE environment, you can also
-                    make use of <b>JTA Transactions</b>. <b>You define the persistence property
-                    <i>javax.jdo.option.TransactionType</i> setting it to "JTA"</b>. 
-                    Then you make use of JTA (or JDO) to demarcate the transactions. 
-                    So you could do something like
+                    When using a JDO implementation such as DataNucleus in a J2SE environment, you can also make use of <b>JTA Transactions</b>. 
+                    <b>You define the persistence property <i>javax.jdo.option.TransactionType</i> setting it to "JTA"</b>. 
+                    Then you make use of JTA (or JDO) to demarcate the transactions. So you could do something like
                 </p>
                 <source><![CDATA[
 UserTransaction ut = (UserTransaction)
@@ -89,12 +87,10 @@ finally
     pm.close();
 }]]></source>
                 <p>
-                    So here we used the JTA API to begin/commit the controlling 
-                    (<i>javax.transaction.UserTransaction</i>).
+                    So here we used the JTA API to begin/commit the controlling (<i>javax.transaction.UserTransaction</i>).
                 </p>
                 <p>
-                    An alternative is where you don't have a UserTransaction started and just use the
-                    JDO API, which will start the UserTransaction for you.
+                    An alternative is where you don't have a UserTransaction started and just use the JDO API, which will start the UserTransaction for you.
                 </p>
                 <source><![CDATA[
 UserTransaction ut = (UserTransaction)
