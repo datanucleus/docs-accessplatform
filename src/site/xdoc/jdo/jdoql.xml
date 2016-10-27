@@ -1206,7 +1206,22 @@ List results = (List)query.execute();]]></source>
                     With JDOQL the user has a very flexible query syntax which allows for querying of the vast majority
                     of data components in a single query. In some situations it is desirable for the query to utilise
                     the results of a separate query in its calculations. JDO allows subqueries, so that both 
-                    calculations can be performed in one query. Here's an example, using single-string JDOQL
+                    calculations can be performed in one query. The syntax of a string-based subquery is as follows
+                </p>
+<source><![CDATA[
+SELECT <subquery-result-clause>
+        [FROM <subquery-from-clause>
+        [WHERE <filter>]
+        [VARIABLES <variable declarations>]
+        [PARAMETERS <parameter declarations>]
+]]></source>
+                <p>
+                    The <i>subquery-result-clause</i> consists of an optional keyword "DISTINCT" followed by a single expression.
+                    The <i>subquery-from-clause</i> may have one of two forms: A candidate class name followed by an optional alias definition followed by an optional "EXCLUDE SUBCLASSES",
+                    or a field access expression followed by an optional alias definition.
+                </p>
+                <p>
+                    Here's an example, using single-string JDOQL
                 </p>
 <source><![CDATA[
 SELECT FROM org.datanucleus.Employee WHERE salary > 
