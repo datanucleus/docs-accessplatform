@@ -2966,6 +2966,24 @@
                 <table>
                     <tr>
                         <th colspan="2">
+                            <b>datanucleus.query.closeable</b>
+                        </th>
+                    </tr>
+                    <tr>
+                        <td width="120">Description</td>
+                        <td>This property only has relevance to JDO and when set to false (the default) will simply close all results when close() is called.
+                            When set to true it will also close the query object making it unusable, releasing all resources as well.
+                            Also applies to a JDO Extent use of close().</td>
+                    </tr>
+                    <tr>
+                        <td>Range of Values</td>
+                        <td>true | <b>false</b></td>
+                    </tr>
+                </table>
+                <br/>
+                <table>
+                    <tr>
+                        <th colspan="2">
                             <b>datanucleus.query.useFetchPlan</b>
                         </th>
                     </tr>
