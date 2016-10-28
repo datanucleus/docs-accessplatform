@@ -16,8 +16,7 @@
             </p>
             <ul>
                 <li><a href="#local">Local transactions</a> : managed using the JDO Transaction API</li>
-                <li><a href="#jta">JTA transactions</a> : managed using the JTA UserTransaction API, or using
-                    the JDO Transaction API</li>
+                <li><a href="#jta">JTA transactions</a> : managed using the JTA UserTransaction API, or using the JDO Transaction API</li>
                 <li><a href="#container">Container-managed transactions</a> : managed by a JEE environment</li>
                 <li><a href="#spring">Spring-managed transactions</a> : managed by SpringFramework</li>
                 <li><a href="#nontransactional">No transactions</a></li>
@@ -34,7 +33,7 @@
                     are by default <b>Locally Managed Transactions</b>. The users code will manage the 
                     transactions by starting, and commiting the transaction itself. With these transactions 
                     with JDO 
-                    <a href="http://db.apache.org/jdo/api20/apidocs/javax/jdo/Transaction.html" target="_blank"><img src="../images/javadoc.gif" alt=""/></a>
+                    <a href="http://www.datanucleus.org/javadocs/javax.jdo/3.2/javax/jdo/Transaction.html" target="_blank"><img src="../images/javadoc.gif" alt=""/></a>
                     you would do something like
                 </p>
                 <source><![CDATA[
