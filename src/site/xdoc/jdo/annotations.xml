@@ -697,7 +697,8 @@ public class MyClass
             <subsection name="@FetchPlans">
                 <p>
                     Annotation used to define a set of fetch plans.
-                    Specified on the <b>class</b>. Used by named queries
+                    Specified on the <b>class</b>. Used by named queries.
+                    Note that you can put multiple @FetchPlan instead of using this.
                 </p>
                 <table>
                     <tr>
@@ -782,6 +783,7 @@ public class MyClass
                 <p>
                     Annotation used to define a set of fetch groups for a class.
                     Specified on the <b>class</b>.
+                    Note that you can put multiple @FetchGroup instead of using this.
                 </p>
                 <table>
                     <tr>
@@ -935,6 +937,7 @@ public class MyClass
                 <p>
                     Annotation used to define a set of named queries for a class.
                     Specified on the <b>class</b>.
+                    Note that you can put multiple @Query instead of using this.
                 </p>
                 <table>
                     <tr>
@@ -1052,6 +1055,7 @@ public class Person
                 <p>
                     Annotation used to define a set of indices for a class.
                     Specified on the <b>class</b>.
+                    Note that you can put multiple @Index instead of using this.
                 </p>
                 <table>
                     <tr>
@@ -1148,6 +1152,7 @@ public class MyClass
                 <p>
                     Annotation used to define a set of unique constraints for a class.
                     Specified on the <b>class</b>.
+                    Note that you can put multiple @Unique instead of using this.
                 </p>
                 <table>
                     <tr>
@@ -1244,6 +1249,7 @@ public class MyClass
                 <p>
                     Annotation used to define a set of foreign-key constraints for a class.
                     Specified on the <b>class</b>.
+                    Note that you can put multiple @Extension instead of using this.
                 </p>
                 <table>
                     <tr>
@@ -1336,6 +1342,7 @@ public class MyClass
                 <p>
                     Annotation used to define a set of joins (to secondary tables) for a class.
                     Specified on the <b>class</b>.
+                    Note that you can put multiple @Join instead of using this.
                 </p>
                 <table>
                     <tr>
@@ -1430,6 +1437,7 @@ public class MyClass
                     Annotation used to define the columns which have no associated field in the class.
                     User should specify a minimum of @Column "name", "jdbcType", and "insertValue".
                     Specified on the <b>class</b>.
+                    Note that you can put multiple @Column instead of using this.
                 </p>
                 <table>
                     <tr>
@@ -2777,6 +2785,7 @@ public class MyClass
                 <p>
                     Annotation used to define a set of extensions specific to the JDO implementation being used.
                     Specified on the <b>class</b> or <b>field</b>.
+                    Note that you can put multiple @Extension instead of using this.
                 </p>
                 <table>
                     <tr>
