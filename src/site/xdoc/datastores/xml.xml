@@ -61,19 +61,13 @@
                     Things to note :
                 </p>
                 <ul>
-                    <li><b>schema</b> on class is used to define the "XPath" to the root of the class in XML.
-                            You can also use the extension "xpath" to specify the same thing.</li>
-                    <li><b>table</b> on class is used to define the name of the element for an object of
-                            the particular class.</li>
-                    <li><b>column</b> on field is used to define the name of the element for a field of
-                            the particular class.</li>
-                    <li><b>XmlAttribute</b> : when set to true denotes that this will appear in the
-                            XML file as an attribute of the overall element for the object</li>
+                    <li><b>schema</b> on class is used to define the "XPath" to the root of the class in XML. You can also use the extension "xpath" to specify the same thing.</li>
+                    <li><b>table</b> on class is used to define the name of the element for an object of the particular class.</li>
+                    <li><b>column</b> on field is used to define the name of the element for a field of the particular class.</li>
+                    <li><b>XmlAttribute</b> : when set to true denotes that this will appear in the XML file as an attribute of the overall element for the object</li>
                     <li>When a field is primary-key it will gain a JAXB "XmlID" attribute.</li>
-                    <li>When a field is a relation to another object (and the field is not embedded) then
-                            it will gain a JAXB "XmlIDREF" attribute as a link to the other object.</li>
-                    <li><b>Important : JAXB has a limitation for primary keys</b> : there can only be
-                            a single PK field, and it must be a String!</li>
+                    <li>When a field is a relation to another object (and the field is not embedded) then it will gain a JAXB "XmlIDREF" attribute as a link to the other object.</li>
+                    <li><b>Important : JAXB has a limitation for primary keys</b> : there can only be a single PK field, and it must be a String!</li>
                 </ul>
                 <p>
                     What is generated with the above is as follows
@@ -113,8 +107,7 @@ public class Person
    
     ...]]></source>
                 <p>
-                    Here's the same example using JPA Annotations (with DataNucleus @Extension/@Extensions
-                    annotations)
+                    Here's the same example using JPA Annotations (with DataNucleus @Extension annotation)
                 </p>
                 <source>
 TODO Add this example

@@ -107,10 +107,8 @@ hbase.columnFamily.[family name to apply property on].[attribute] = {value}</sou
                 </p>
 <source><![CDATA[
 @PersistenceCapable
-@Extensions({
-    @Extension(vendorName = "datanucleus", key = "hbase.columnFamily.meta.bloomFilter", value = "ROWKEY"), 
-    @Extension(vendorName = "datanucleus", key = "hbase.columnFamily.meta.inMemory", value = "true") 
-}) 
+@Extension(vendorName = "datanucleus", key = "hbase.columnFamily.meta.bloomFilter", value = "ROWKEY")
+@Extension(vendorName = "datanucleus", key = "hbase.columnFamily.meta.inMemory", value = "true")
 public class MyClass
 {
     @PrimaryKey 

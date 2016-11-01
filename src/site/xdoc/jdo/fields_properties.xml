@@ -25,8 +25,7 @@
                     it from the datastore.
                 </p>
                 <b>
-                    Requirement : you have a field in the class. This can be public, protected, private or package
-                    access, but cannot be static or final.
+                    Requirement : you have a field in the class. This can be public, protected, private or package access, but cannot be static or final.
                 </b>
                 <b>
                     Almost all Java field types are default persistent (if DataNucleus knows how to persist a type then it defaults to persistent) 
@@ -193,8 +192,8 @@ public class Person
 @PersistenceCapable
 public class MyClass
 {
-    @Extensions({@Extension(vendorName="datanucleus", key="insertable", value="false")
-        @Extension(vendorName="datanucleus", key="insertable", value="false")})
+    @Extension(vendorName="datanucleus", key="insertable", value="false")
+    @Extension(vendorName="datanucleus", key="insertable", value="false")
     String myField;
 
 }]]></source>

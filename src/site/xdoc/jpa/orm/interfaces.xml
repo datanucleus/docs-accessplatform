@@ -129,10 +129,8 @@ public class ShapeHolder
 public class ShapeHolder
 {
     @OneToOne
-    @Extensions(
-        @Extension(key="implementation-classes",
-            value="mydomain.Circle,mydomain.Rectangle,mydomain.Square"),
-        @Extension(key="mapping-strategy", value="identity")})
+    @Extension(key="implementation-classes", value="mydomain.Circle,mydomain.Rectangle,mydomain.Square")
+    @Extension(key="mapping-strategy", value="identity")
     Shape shape;
 
     ...
@@ -169,10 +167,8 @@ public class ShapeHolder
 {
     @OneToMany
     @JoinTable
-    @Extensions(
-        @Extension(key="implementation-classes",
-            value="mydomain.Circle,mydomain.Rectangle,mydomain.Square"),
-        @Extension(key="mapping-strategy", value="identity")})
+    @Extension(key="implementation-classes", value="mydomain.Circle,mydomain.Rectangle,mydomain.Square")
+    @Extension(key="mapping-strategy", value="identity")
     Collection<Shape> shapes;
 
     ...

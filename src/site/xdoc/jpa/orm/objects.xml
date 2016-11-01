@@ -29,8 +29,7 @@
                     "implementation" stored, as well as the identity of the object. The disadvantages are that
                     no querying can be performed, and that there is no referential integrity.</li>
                 <li><b>xcalia</b> : a slight variation on "identity" whereby there is a single column
-                    yet the contents of that column are consistent with what Xcalia XIC JDO implementation
-                    stored there.</li>
+                    yet the contents of that column are consistent with what Xcalia XIC JDO implementation stored there.</li>
             </ul>
             <p>
                 The user controls which one of these is to be used by specifying the <i>extension</i>
@@ -64,8 +63,7 @@ public class ParkingSpace
     String location;
 
     @OneToOne
-    @Extension(key="implementation-classes", 
-        value="mydomain.samples.vehicles.Car,mydomain.samples.vehicles.Motorbike")
+    @Extension(key="implementation-classes", value="mydomain.samples.vehicles.Car,mydomain.samples.vehicles.Motorbike")
     Object occupier;
 }]]></source>
                 <p>
@@ -93,10 +91,8 @@ public class ParkingSpace
     String location;
 
     @OneToOne
-    @Extensions({
-        @Extension(key="implementation-classes", 
-            value="mydomain.samples.vehicles.Car,mydomain.samples.vehicles.Motorbike"),
-        @Extension(key="mapping-strategy", value="identity")})
+    @Extension(key="implementation-classes", value="mydomain.samples.vehicles.Car,mydomain.samples.vehicles.Motorbike")
+    @Extension(key="mapping-strategy", value="identity")
     Object occupier;
 }]]></source>
                 <p>
@@ -104,9 +100,7 @@ public class ParkingSpace
                 </p>
                 <img src="../../images/orm/objects_identity_1_1_db.gif" border="0" alt=""/>
                 <p>
-                    and the column "OCCUPIER" will contain strings such as 
-                    <i>com.mydomain.samples.object.Car:1</i> allowing retrieval of the related implementation 
-                    object.
+                    and the column "OCCUPIER" will contain strings such as <i>com.mydomain.samples.object.Car:1</i> allowing retrieval of the related implementation object.
                 </p>
             </subsection>
 
