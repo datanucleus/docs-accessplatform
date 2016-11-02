@@ -17,13 +17,15 @@
                 with a web application you would have one PMF representing the datastore, present for the duration
                 of the application, and then have a PM per request that comes in, closing it before responding.
             </p>
-            <p>
-                <b>Important : A <i>PersistenceManagerFactory</i> is designed to be thread-safe. A <i>PersistenceManager</i> is not</b>.
-                Note that if you set the persistence property <b>javax.jdo.option.Multithreaded</b> this acts as a hint to the PMF to provide 
-                <i>PersistenceManager</i>s that are usable with multiple threads. While DataNucleus makes efforts to make this <i>PersistenceManager</i>
-                usable with multiple threads, it is not guaranteed to work multi-threaded in all situations, particularly around second class collection/map
-                fields.
-            </p>
+            <table class="infoTable"><tr>
+                <td><img src="../images/lightbulb.png" border="0"/></td>
+                <td><b>Important : A <i>PersistenceManagerFactory</i> is designed to be thread-safe. A <i>PersistenceManager</i> is not.</b>
+                    Note that if you set the persistence property <b>javax.jdo.option.Multithreaded</b> this acts as a hint to the PMF to provide 
+                    <i>PersistenceManager</i>s that are usable with multiple threads. While DataNucleus makes efforts to make this <i>PersistenceManager</i>
+                    usable with multiple threads, it is not guaranteed to work multi-threaded in all situations, particularly around second class collection/map
+                    fields.
+                </td>
+            </tr></table>
 
             <subsection name="Opening/Closing a PersistenceManager">
                 <p>

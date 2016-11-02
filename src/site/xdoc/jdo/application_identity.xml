@@ -34,12 +34,12 @@ public class MyClass
     @Persistent(primaryKey="true")
     private long myPrimaryKeyField;
 }]]></source>
-            <table>
+            <table class="infoTable">
                 <tr>
+                    <td><img src="../images/lightbulb.png" border="0"/></td>
                     <td>
                         <b>When you have an inheritance hierarchy, you should specify the identity type in the 
-                        <i>base instantiable</i> class for the inheritance tree. This is then used for all persistent classes 
-                        in the tree.</b>
+                        <i>base instantiable</i> class for the inheritance tree. This is then used for all persistent classes in the tree.</b>
                         This means that you can have superclass(es) using application-identity without any identity
                         fields/properties but using <i>subclass-table</i> inheritance, and then the base instantiable 
                         class is the first persistable class which has the identity field(s).

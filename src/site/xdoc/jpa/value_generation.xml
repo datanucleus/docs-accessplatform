@@ -34,17 +34,14 @@
                 fields. DataNucleus allows you to do it for any field.</b> Please bear this in mind when
                 considering portability.
             </p>
-            <table>
-                <tr>
-                    <th>
-                        Please note that by defining a value-strategy for a field then it will, by default, 
-                        always generate a value for that field on persist. If the field can store nulls and 
-                        you only want it to generate the value at persist when it is null (i.e you haven't 
-                        assigned a value yourself) then you can add the extension <i>"strategy-when-notnull"</i> 
-                        as <i>false</i>
-                    </th>
-                </tr>
-            </table>
+            <table class="infoTable"><tr>
+                <td><img src="../images/lightbulb.png" border="0"/></td>
+                <td>
+                    Please note that by defining a value-strategy for a field then it will, by default, always generate a value for that field on persist. 
+                    If the field can store nulls and you only want it to generate the value at persist when it is null (i.e you haven't assigned a value yourself) 
+                    then you can add the extension <i>"strategy-when-notnull"</i> as <i>false</i>
+                </td>
+            </tr></table>
             <br/>
 
             <a name="native"/>

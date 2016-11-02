@@ -23,10 +23,10 @@
                     stored in the fields into the datastore, and will set the values of the fields when extracting 
                     it from the datastore.
                 </p>
-                <b>
-                    Requirement : you have a field in the class. This can be public, protected, private or package
-                    access, but cannot be static or final.
-                </b>
+                <table class="infoTable"><tr>
+                    <td><img src="../images/lightbulb.png" border="0"/></td>
+                    <td>Requirement : you have a field in the class. This can be public, protected, private or package access, but cannot be static or final.</td>
+                </tr></table>
                 <p>
                     An example of how to define the persistence of a field is shown below
                 </p>
@@ -66,11 +66,12 @@ public class MyClass
                     In this situation you want to persist the output from <i>getXXX</i> to the datastore, and use the 
                     <i>setXXX</i> to load up the value into the object when extracting it from the datastore.
                 </p>
-                <b>
-                    Requirement : you have a property in the class with Java Bean getter/setter methods. These methods
+                <table class="infoTable"><tr>
+                    <td><img src="../images/lightbulb.png" border="0"/></td>
+                    <td>Requirement : you have a property in the class with Java Bean getter/setter methods. These methods
                     can be public, protected, private or package access, but cannot be static. The class must have BOTH
-                    getter AND setter methods.
-                </b>
+                    getter AND setter methods.</td>
+                </tr></table>
                 <p>
                     An example of how to define the persistence of a property is shown below
                 </p>
