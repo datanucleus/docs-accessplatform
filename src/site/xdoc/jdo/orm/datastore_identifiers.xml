@@ -224,13 +224,16 @@ class MyElement
                     <li>LowerCase: identifiers are in lower case</li>
                     <li>MixedCase: No case changes are made to the name of the identifier provided by the user (class name or metadata).</li>
                 </ul>
-                <p>
-                    <b>Please be aware that some datastores only support UPPERCASE or lowercase identifiers and so setting this parameter 
-                        may have no effect if your database doesn't support that option.</b>
-                    <b>Please note also that this case control only applies to DataNucleus-generated identifiers. If
-                        you provide your own identifiers for things like schema/catalog etc then you need to specify
-                        those using the case you wish to use in the datastore (including quoting as necessary)</b>
-                </p>
+                <table class="infoTable"><tr>
+                    <td><img src="../../images/lightbulb.png" border="0"/></td>
+                    <td>Some datastores only support UPPERCASE or lowercase identifiers and so setting this parameter 
+                        may have no effect if your database doesn't support that option.</td>
+                </tr></table>
+                <table class="infoTable"><tr>
+                    <td><img src="../../images/lightbulb.png" border="0"/></td>
+                    <td>This case control only applies to DataNucleus-generated identifiers. If you provide your own identifiers for things like 
+                        schema/catalog etc then you need to specify those using the case you wish to use in the datastore (including quoting as necessary)</td>
+                </tr></table>
             </subsection>
 
         </section>
