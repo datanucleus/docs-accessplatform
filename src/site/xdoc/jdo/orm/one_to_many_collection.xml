@@ -29,19 +29,24 @@
                 <li><a href="#shared_fk">1-N using shared foreign key</a> (DataNucleus Extension)</li>
                 <li><a href="compound_identity.html#1_N_coll_bi">1-N Bidirectional "Compound Identity" (owner object as part of PK in element)</a></li>
             </ul>
-            <p>
-                <b>Important : If you declare a field as a Collection, you can instantiate it as either Set-based
-                or as List-based. With a List an "ordering" column is required, whereas with a Set it isn't. Consequently
-                DataNucleus needs to know if you plan on using it as Set-based or List-based. You do this by adding an "order"
-                element to the field if it is to be instantiated as a List-based collection. If there is no "order"
-                element, then it will be assumed to be Set-based.</b>
-            </p>
-            <p>
-                <b>Please note that RDBMS supports the full range of options on this page, whereas other datastores
-                (ODF, Excel, HBase, MongoDB, etc) persist the Collection in a column in the owner object (as well as a column
-                in the non-owner object when bidirectional) rather than using join-tables or foreign-keys since 
-                those concepts are RDBMS-only.</b>
-            </p>
+            <table class="infoTable"><tr>
+                <td><img src="../../images/lightbulb.png" border="0"/></td>
+                <td>
+                    <b>If you declare a field as a Collection, you can instantiate it as either Set-based or as List-based. 
+                    With a List an "ordering" column is required, whereas with a Set it isn't. Consequently DataNucleus needs to know if you plan on using it as 
+                    Set-based or List-based. You do this by adding an "order" element to the field if it is to be instantiated as a List-based collection. 
+                    If there is no "order" element, then it will be assumed to be Set-based.</b>
+                </td>
+            </tr></table>
+            <table class="infoTable"><tr>
+                <td><img src="../../images/lightbulb.png" border="0"/></td>
+                <td>
+                    Please note that RDBMS supports the full range of options on this page, whereas other datastores (ODF, Excel, HBase, MongoDB, etc) persist the List in a 
+                    column in the owner object (as well as a column in the non-owner object when bidirectional) rather than using join-tables or foreign-keys since 
+                    those concepts are RDBMS-only.
+                </td>
+            </tr></table>
+            <br/>
 
             <subsection name="equals() and hashCode()">
                 <p>

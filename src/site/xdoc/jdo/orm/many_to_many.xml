@@ -26,15 +26,21 @@
                 about the <b>Product</b> class, however with DataNucleus (as with the majority of JDO implementations) these 
                 relationships are independent.
             </p>
-            <p>
-                <b>Please note that RDBMS supports the full range of options on this page, whereas other datastores
-                (ODF, Excel, HBase, MongoDB, etc) persist the Collection in a column in the owner object and a column in
-                the non-owner object rather than using join-tables since that concept is RDBMS-only.</b>
-            </p>
-            <p>
-                <b>Please note when adding objects to an M-N relation, you MUST add to the owner side as a minimum, and optionally
-                also add to the non-owner side. Just adding to the non-owner side will not add the relation.</b>
-            </p>
+            <table class="infoTable"><tr>
+                <td><img src="../../images/lightbulb.png" border="0"/></td>
+                <td>
+                    Please note that RDBMS supports the full range of options on this page, whereas other datastores (ODF, Excel, HBase, MongoDB, etc) persist the List in a 
+                    column in the owner object (as well as a column in the non-owner object when bidirectional) rather than using join-tables or foreign-keys since 
+                    those concepts are RDBMS-only.
+                </td>
+            </tr></table>
+            <table class="infoTable"><tr>
+                <td><img src="../../images/lightbulb.png" border="0"/></td>
+                <td>
+                    Please note when adding objects to an M-N relation, you MUST add to the owner side as a minimum, and optionally
+                    also add to the non-owner side. Just adding to the non-owner side will not add the relation.
+                </td>
+            </tr></table>
             <p>
                 The various possible relationships are described below.
             </p>
