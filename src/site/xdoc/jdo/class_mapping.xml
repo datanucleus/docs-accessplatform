@@ -9,10 +9,8 @@
     <body>
         <section name="JDO : Class Mapping">
             <p>
-                The first thing to decide when implementing your persistence layer is which classes are to be
-                persisted.
-                Let's take a sample class (<i>Hotel</i>) as an example
-                We can define a class as persistable using either annotations in the class, or XML metadata.
+                The first thing to decide when implementing your persistence layer is which classes are to be persisted.
+                Let's take a sample class (<i>Hotel</i>) as an example. We can define a class as persistable using either annotations in the class, or XML metadata.
             </p>
             <p>
                 To achieve the above aim with XML metadata, we do this
@@ -35,13 +33,16 @@ public class Hotel
                 <li><a href="metadata_xml.html#class">MetaData reference for &lt;class&gt; element</a></li>
                 <li><a href="annotations.html#PersistenceCapable">Annotations reference for @PersistenceCapable</a></li>
             </ul>
+            <table class="infoTable"><tr>
+                <td><img src="../images/lightbulb.png" border="0"/></td>
+                <td>If any of your other classes <b>access the fields of these persistable classes directly</b> then these other classes should be defined as <i>PersistenceAware</i>.</td>
+            </tr></table>
+            <br/>
 
             <subsection name="Persistence-Aware Classes">
                 <p>
-                    With JDO persistence all classes that are persisted have to be identified in XML or annotations as
-                    shown above. In addition, if any of your other classes <b>access the fields of these persistable 
-                    classes directly</b> then these other classes should be defined as <i>PersistenceAware</i>. 
-                    You do this as follows
+                    With JDO persistence all classes that are persisted have to be identified in XML or annotations as shown above. 
+                    To mark a class as <i>Persistence Aware</i> you do this as follows
                 </p>
                 <source><![CDATA[
 <class name="MyClass" persistence-modifier="persistence-aware">
@@ -66,8 +67,7 @@ public class MyClass
             <subsection name="Read-Only">
                 <img src="../images/nucleus_extension.gif" border="0" alt=""/>
                 <p>
-                    You can, if you wish, make a class <i>read-only</i>. This is a DataNucleus extension and you set
-                    it as follows
+                    You can, if you wish, make a class <i>read-only</i>. This is a DataNucleus extension and you set it as follows
                 </p>
                 <source><![CDATA[
 <class name="MyClass">

@@ -15,13 +15,10 @@
             </p>
             <ul>
                 <li><b>Entity</b> - persistable class with full control over its persistence.</li>
-                <li><b>MappedSuperclass</b> - persistable class that will not be persisted into its own table
-                        simply providing some fields to be persisted. Consequently an inheritance tree cannot just
-                        have a mapped superclass on its own. 
-                        <a href="orm/inheritance.html#mappedsuperclass">Read more</a></li>
-                <li><b>Embeddable</b> - persistable class that is only persistable embedded into
-                        an entity class.
-                        <a href="orm/embedded.html">Read more</a></li>
+                <li><b>MappedSuperclass</b> - persistable class that will not be persisted into its own table simply providing some fields to be persisted. 
+                    Consequently an inheritance tree cannot just have a mapped superclass on its own. 
+                    <a href="orm/inheritance.html#mappedsuperclass">Read more</a></li>
+                <li><b>Embeddable</b> - persistable class that is only persistable embedded into an entity class. <a href="orm/embedded.html">Read more</a></li>
             </ul>
             <p>
                 Let's take a sample class (<i>Hotel</i>) as an example
@@ -63,8 +60,7 @@ public class Hotel
                     permit this, but such classes need special enhancement. To allow this you need to
                 </p>
                 <ul>
-                    <li>Annotate the class that will access these public fields (assuming it isn't an Entity)
-                        with the DataNucleus extension annotation @PersistenceAware</li>
+                    <li>Annotate the class that will access these public fields (assuming it isn't an Entity) with the DataNucleus extension annotation @PersistenceAware</li>
                 </ul>
                 <p>
                     You perform the annotation of the class as follows
