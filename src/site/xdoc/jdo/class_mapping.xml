@@ -41,8 +41,8 @@ public class Hotel
 
             <subsection name="Persistence-Aware Classes">
                 <p>
-                    With JDO persistence all classes that are persisted have to be identified in XML or annotations as shown above. 
-                    To mark a class as <i>Persistence Aware</i> you do this as follows
+                    If a class is not itself persistable but it interacts with <i>fields</i> of persistable classes then it should be marked as <i>Persistence Aware</i>.
+                    You do this as follows, with XML
                 </p>
                 <source><![CDATA[
 <class name="MyClass" persistence-modifier="persistence-aware">
