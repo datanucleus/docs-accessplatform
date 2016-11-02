@@ -61,7 +61,7 @@ public class MyClass
 
             <a name="PC"/>
             <subsection name="Embedding entities (1-1)">
-                <table><tr><td>Applicable to RDBMS, Excel, OOXML, ODF, HBase, MongoDB, Neo4j, Cassandra, JSON.</td></tr></table>
+                <table class="datastoreTable"><tr><td>Applicable to RDBMS, Excel, OOXML, ODF, HBase, MongoDB, Neo4j, Cassandra, JSON.</td></tr></table>
                 <p>
                     In a typical 1-1 relationship between 2 classes, the 2 classes in the relationship are 
                     persisted to their own table, and a foreign key is managed between them. With JPA and 
@@ -181,7 +181,7 @@ public class ComputerCard
 
             <a name="NestedPC"/>
             <subsection name="Embedding Nested Entities">
-                <table><tr><td>Applicable to RDBMS, Excel, OOXML, ODF, HBase, MongoDB, Neo4j, Cassandra, JSON.</td></tr></table>
+                <table class="datastoreTable"><tr><td>Applicable to RDBMS, Excel, OOXML, ODF, HBase, MongoDB, Neo4j, Cassandra, JSON.</td></tr></table>
                 <p>
                     In the above example we had an embedded Entity within a persisted object. What 
                     if our embedded Persistable object also contain another Entity object. So, 
@@ -265,7 +265,7 @@ public class Connector
 
             <a name="Collection"/>
             <subsection name="Embedding Collection Elements">
-                <table><tr><td>Applicable to RDBMS, MongoDB</td></tr></table>
+                <table class="datastoreTable"><tr><td>Applicable to RDBMS, MongoDB</td></tr></table>
                 <p>
                     In a typical 1-N relationship between 2 classes, the 2 classes in the relationship are persisted 
                     to their own table, and either a join table or a foreign key is used to relate them. With JPA and 
@@ -378,7 +378,7 @@ public class Device
 
             <a name="Map"/>
             <subsection name="Embedding Map Keys/Values">
-                <table><tr><td>Applicable to RDBMS, MongoDB</td></tr></table>
+                <table class="datastoreTable"><tr><td>Applicable to RDBMS, MongoDB</td></tr></table>
                 <p>
                     In a typical 1-N map relationship between classes, the classes in the relationship are persisted 
                     to their own table, and a join table forms the map linkage. With JPA and DataNucleus you have a 

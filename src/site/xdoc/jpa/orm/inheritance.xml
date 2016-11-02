@@ -57,7 +57,7 @@
 
             <a name="discriminator"/>
             <subsection name="Discriminator">
-                <table><tr><td>Applicable to RDBMS, HBase, MongoDB</td></tr></table>
+                <table class="datastoreTable"><tr><td>Applicable to RDBMS, HBase, MongoDB</td></tr></table>
                 <p>
                     A <i>discriminator</i> is an extra "column" stored alongside data to identify the class of which
                     that information is part. It is useful when storing objects which have inheritance to provide
@@ -82,7 +82,7 @@ public class Product {...}]]></source>
 
             <a name="singletable"/>
             <subsection name="SINGLE_TABLE">
-                <table><tr><td>Applicable to RDBMS</td></tr></table>
+                <table class="datastoreTable"><tr><td>Applicable to RDBMS</td></tr></table>
                 <p>
                     "SINGLE_TABLE" strategy is where the root class has a table and all subclasses are also persisted 
                     into that table. This corresponds to JDOs "new-table" for the root class and "superclass-table" 
@@ -187,7 +187,7 @@ public class CompactDisc {...}]]></source>
     
             <a name="joined"/>
             <subsection name="JOINED">
-                <table><tr><td>Applicable to RDBMS</td></tr></table>
+                <table class="datastoreTable"><tr><td>Applicable to RDBMS</td></tr></table>
                 <p>
                     "JOINED" strategy means that each entity in the inheritance hierarchy has its own table and that the table
                     of each class only contains columns for that class. Inherited fields are persisted into the tables of the
@@ -270,7 +270,7 @@ public class Product {...}]]></source>
     
             <a name="tableperclass"/>
             <subsection name="TABLE_PER_CLASS">
-                <table><tr><td>Applicable to all datastores</td></tr></table>
+                <table class="datastoreTable"><tr><td>Applicable to all datastores</td></tr></table>
                 <p>
                     This strategy is like "JOINED" except that in addition to each class having its own table, the table also
                     holds columns for all inherited fields. So taking the same classes as used above

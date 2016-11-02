@@ -74,7 +74,7 @@
 
             <a name="discriminator"/>
             <subsection name="Discriminator">
-                <table><tr><td>Applicable to RDBMS, HBase, MongoDB</td></tr></table>
+                <table class="datastoreTable"><tr><td>Applicable to RDBMS, HBase, MongoDB</td></tr></table>
                 <p>
                     A <i>discriminator</i> is an extra "column" stored alongside data to identify the class of which
                     that information is part. It is useful when storing objects which have inheritance to provide
@@ -104,7 +104,7 @@ public class Product {...}]]></source>
 
             <a name="newtable"/>
             <subsection name="New Table">
-                <table><tr><td>Applicable to RDBMS</td></tr></table>
+                <table class="datastoreTable"><tr><td>Applicable to RDBMS</td></tr></table>
                 <p>
                     Here we want to have a separate table for each class. This has the advantage of being the most normalised
                     data definition. It also has the disadvantage of being slower in performance since multiple tables will
@@ -196,7 +196,7 @@ public class CompactDisc {...}
     
             <a name="subclasstable"/>
             <subsection name="Subclass table">
-                <table><tr><td>Applicable to RDBMS</td></tr></table>
+                <table class="datastoreTable"><tr><td>Applicable to RDBMS</td></tr></table>
                 <p> DataNucleus supports persistence of classes in the tables of subclasses where this is required. 
                     This is typically used where you have an abstract base class and it doesn't make sense having a separate 
                     table for that class. In our example we have no real interest in having a separate table for the 
@@ -240,7 +240,7 @@ public class AbstractProduct {...}
     
             <a name="superclasstable"/>
             <subsection name="Superclass table">
-                <table><tr><td>Applicable to RDBMS</td></tr></table>
+                <table class="datastoreTable"><tr><td>Applicable to RDBMS</td></tr></table>
                 <p> 
                     DataNucleus supports persistence of classes in the tables of superclasses where this is required. 
                     This has the advantage that retrieval of an object is a single SQL call to a single table. It also has 
@@ -396,7 +396,7 @@ public class CompactDisc {...}
     
             <a name="completetable"/>
             <subsection name="Complete table">
-                <table><tr><td>Applicable to RDBMS, Neo4j, NeoDatis, Excel, OOXML, ODF, HBase, JSON, AmazonS3, 
+                <table class="datastoreTable"><tr><td>Applicable to RDBMS, Neo4j, NeoDatis, Excel, OOXML, ODF, HBase, JSON, AmazonS3, 
                     GoogleStorage, MongoDB, LDAP</td></tr></table>
                 <p>
                     With "complete-table" we define the strategy on the root class of the inheritance tree and it applies
@@ -459,7 +459,7 @@ public class AbstractProduct {...}]]></source>
             </subsection>
     
             <subsection name="Retrieval of inherited objects">
-                <table><tr><td>Applicable to all datastores</td></tr></table>
+                <table class="datastoreTable"><tr><td>Applicable to all datastores</td></tr></table>
                 <p> 
                     JDO provides particular mechanisms for retrieving inheritance trees. These are accessed via the 
                     Extent/Query interface. Taking our example above, we can then do

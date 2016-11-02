@@ -43,7 +43,7 @@
 
             <a name="Collection"/>
             <subsection name="Serialised Collections">
-                <table><tr><td>Applicable to RDBMS, HBase, MongoDB</td></tr></table>
+                <table class="datastoreTable"><tr><td>Applicable to RDBMS, HBase, MongoDB</td></tr></table>
                 <p>
                     Collections are usually persisted by way of either a <i>join table</i>, or by use of a 
                     <i>foreign-key</i> in the element table. In some situations it is required to store the 
@@ -105,7 +105,7 @@
 
             <a name="CollectionElements"/>
             <subsection name="Serialised Collection Elements">
-                <table><tr><td>Applicable to RDBMS</td></tr></table>
+                <table class="datastoreTable"><tr><td>Applicable to RDBMS</td></tr></table>
                 <p>
                     Collections are usually persisted by way of either a <i>join table</i>, or by use of a 
                     <i>foreign-key</i> in the element table. In some situations you may want to serialise the 
@@ -151,7 +151,7 @@
 
             <a name="Map"/>
             <subsection name="Serialised Maps">
-                <table><tr><td>Applicable to RDBMS, HBase, MongoDB</td></tr></table>
+                <table class="datastoreTable"><tr><td>Applicable to RDBMS, HBase, MongoDB</td></tr></table>
                 <p>
                     Maps are usually persisted by way of a <i>join table</i>, or very occasionaly using a 
                     <i>foreign-key</i> in the value table. In some situations it is required to store the whole
@@ -211,7 +211,7 @@
 
             <a name="MapKeysValues"/>
             <subsection name="Serialised Map Keys/Values">
-                <table><tr><td>Applicable to RDBMS</td></tr></table>
+                <table class="datastoreTable"><tr><td>Applicable to RDBMS</td></tr></table>
                 <p>
                     Maps are usually persisted by way of a <i>join table</i>, or very occasionaly using a 
                     <i>foreign-key</i> in the value table. In the join table case you have the option of 
@@ -259,7 +259,7 @@
 
             <a name="PC"/>
             <subsection name="Serialised persistable Fields">
-                <table><tr><td>Applicable to RDBMS, HBase, MongoDB</td></tr></table>
+                <table class="datastoreTable"><tr><td>Applicable to RDBMS, HBase, MongoDB</td></tr></table>
                 <p>
                     A field that is a <i>persistable</i> object is typically stored as a foreign-key 
                     relation between the container object and the contained object. In some situations it is 
@@ -296,7 +296,7 @@
 
             <a name="Reference"/>
             <subsection name="Serialised Reference (Interface/Object) Fields">
-                <table><tr><td>Applicable to RDBMS</td></tr></table>
+                <table class="datastoreTable"><tr><td>Applicable to RDBMS</td></tr></table>
                 <p>
                     A reference (Interface/Object) field is typically stored as a foreign-key relation between 
                     the container object and the contained implementation of the reference. In some situations 
@@ -343,7 +343,7 @@
 
             <a name="LocalFile"/>
             <subsection name="Serialised Field to Local File">
-                <table><tr><td>Applicable to RDBMS</td></tr></table>
+                <table class="datastoreTable"><tr><td>Applicable to RDBMS</td></tr></table>
                 <p>
                     If you have a non-relation field that implements Serializable you have the option of serialising
                     it into a file on the local disk. This could be useful where you have a large file and don't want

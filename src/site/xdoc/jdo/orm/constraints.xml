@@ -24,7 +24,7 @@
 
             <a name="index"/>
             <subsection name="Indexes">
-                <table><tr><td>Applicable to RDBMS, NeoDatis, MongoDB.</td></tr></table>
+                <table class="datastoreTable"><tr><td>Applicable to RDBMS, NeoDatis, MongoDB.</td></tr></table>
                 <p>
                     Many datastores provide the ability to have indexes defined to give performance benefits.
                     With RDBMS the indexes are specified on the table and the indexes to the rows are stored separately.
@@ -96,7 +96,7 @@ public class Booking
 
             <a name="unique"/>
             <subsection name="Unique constraints">
-                <table><tr><td>Applicable to RDBMS, NeoDatis, MongoDB.</td></tr></table>
+                <table class="datastoreTable"><tr><td>Applicable to RDBMS, NeoDatis, MongoDB.</td></tr></table>
                 <p>
                     Some datastores provide the ability to have unique constraints defined on tables to give 
                     extra control over data integrity. JDO provides a mechanism for defining such unique constraints. 
@@ -141,7 +141,7 @@ public class Booking
 
             <a name="fk"/>
             <subsection name="Foreign Keys">
-                <table><tr><td>Applicable to RDBMS</td></tr></table>
+                <table class="datastoreTable"><tr><td>Applicable to RDBMS</td></tr></table>
                 <p> 
                     When objects have relationships with one object containing, for example, a Collection of another 
                     object, it is common to store a foreign key in the datastore representation to link the two 
@@ -216,7 +216,7 @@ public class Room
 
             <a name="pk"/>
             <subsection name="Primary Keys">
-                <table><tr><td>Applicable to RDBMS</td></tr></table>
+                <table class="datastoreTable"><tr><td>Applicable to RDBMS</td></tr></table>
                 <p>
                     In RDBMS datastores, it is accepted as good practice to have a primary key on all tables. 
                     You specify in other parts of the MetaData which fields are part of the primary key (if using 

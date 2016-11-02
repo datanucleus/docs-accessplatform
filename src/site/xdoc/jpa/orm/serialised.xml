@@ -23,7 +23,7 @@
             <br/>
 
             <subsection name="Serialised Fields">
-                <table><tr><td>Applicable to RDBMS, HBase, MongoDB</td></tr></table>
+                <table class="datastoreTable"><tr><td>Applicable to RDBMS, HBase, MongoDB</td></tr></table>
                 <p>
                     If you wish to serialise a particular field into a single column (in the table of the class), you need
                     to simply mark the field as a "lob" (large object). Let's take an example. We have the following classes
@@ -69,7 +69,7 @@
 
             <a name="LocalFile"/>
             <subsection name="Serialised Field to Local File">
-                <table><tr><td>Applicable to RDBMS</td></tr></table>
+                <table class="datastoreTable"><tr><td>Applicable to RDBMS</td></tr></table>
                 <p>
                     <b>Note this is not part of the JPA spec, but is available in DataNucleus to ease your usage.</b>
                     If you have a non-relation field that implements Serializable you have the option of serialising
