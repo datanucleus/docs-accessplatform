@@ -14,6 +14,13 @@
                 "persistable". The mechanism provided by DataNucleus is to use an "enhancer" process to perform this 
                 manipulation before you use your classes at runtime. The process is very quick and easy.
             </p>
+            <table>
+                <tr>
+                    <td>
+                        Important : you <b>cannot</b> enhance classes that are in a JAR/WAR file. They must be unpacked, enhanced and then repacked.
+                    </td>
+                </tr>
+            </table>
             <p>
                 How to use the DataNucleus Enhancer depends on what environment you are using. Below are some typical examples. 
             </p>
