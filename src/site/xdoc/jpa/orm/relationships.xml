@@ -98,13 +98,14 @@ em.persist(b); // "b" is provisionally persistent</source>
                     If you set that persistence property to false then it will assume that your
                     objects have their bidirectional relationships consistent and will just persist what it finds.
                 </p>
-                <table>
-                    <tr>
-                        <td>When performing management of relations there are some checks implemented to
-                        spot typical errors in user operations e.g add an element to a collection and then remove it (why?!).
-                        You can disable these checks using <b>datanucleus.manageRelationshipsChecks</b>, set to false.</td>
-                    </tr>
-                </table>
+                <table class="infoTable"><tr>
+                    <td><img src="../../images/lightbulb.png" border="0"/></td>
+                    <td>
+                        When performing management of relations there are some checks implemented to spot typical errors in user operations 
+                        e.g add an element to a collection and then remove it (why?!).
+                        You can disable these checks using <b>datanucleus.manageRelationshipsChecks</b>, set to false.
+                    </td>
+                </tr></table>
             </subsection>
         </section>
 

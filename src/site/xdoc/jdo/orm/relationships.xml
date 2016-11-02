@@ -129,14 +129,14 @@ a.setB(b); // "b" is now provisionally persistent
                     This management of relations can be turned on/off using a persistence property <b>datanucleus.manageRelationships</b>. 
                     If you always set both sides of a relation at persist/update then you could safely turn it off.
                 </p>
-                <table>
-                    <tr>
-                        <td>When performing management of relations there are some checks implemented to
-                        spot typical errors in user operations e.g add an element to a collection and then
-                        remove it (why?!). You can disable these checks using 
-                        <b>datanucleus.manageRelationshipsChecks</b>, set to false.</td>
-                    </tr>
-                </table>
+                <table class="infoTable"><tr>
+                    <td><img src="../../images/lightbulb.png" border="0"/></td>
+                    <td>
+                        When performing management of relations there are some checks implemented to spot typical errors in user operations 
+                        e.g add an element to a collection and then remove it (why?!). 
+                        You can disable these checks using <b>datanucleus.manageRelationshipsChecks</b>, set to false.
+                    </td>
+                </tr></table>
             </subsection>
         </section>
 
