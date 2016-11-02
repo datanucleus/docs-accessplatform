@@ -208,11 +208,12 @@ public class MyClass
                     <li>Neo4j - long based</li>
                     <li>NuoDB (IDENTITY)</li>
                 </ul>
-                <p>
-                    <b>This generation strategy should only be used if there is a single "root" table for 
+                <table class="infoTable"><tr>
+                    <td><img src="../images/lightbulb.png" border="0"/></td>
+                    <td>This generation strategy should only be used if there is a single "root" table for 
                     the inheritance tree. If you have more than 1 root table (e.g using subclass-table inheritance)
-                    then you should choose a different generation strategy</b>
-                </p>
+                    then you should choose a different generation strategy</td>
+                </tr></table>
                 <p>
                     For a class using <u>datastore identity</u> you need to set the <i>strategy</i> attribute. You can 
                     configure the Meta-Data for the class something like this (replacing 'myclass' with your class name) :
@@ -252,10 +253,11 @@ public class MyClass
                     definitions. This is because the identities are assigned in the base table (since all objects will have 
                     an entry in the base table).
                 </p>
-                <p>
-                    <b>Please note that if using optimistic transactions, this strategy will mean that the value
-                    is only set when the object is actually persisted (i.e at flush() or commit())</b>
-                </p>
+                <table class="infoTable"><tr>
+                    <td><img src="../images/lightbulb.png" border="0"/></td>
+                    <td>Please note that if using optimistic transactions, this strategy will mean that the value
+                    is only set when the object is actually persisted (i.e at flush() or commit())</td>
+                </tr></table>
                 <p>
                     This value generator will generate values unique across different JVMs
                 </p>
@@ -388,8 +390,11 @@ public class MyClass
                     This generator creates identities with 16 characters in string format. The identity contains the IP 
                     address of the local machine where DataNucleus is running, as well as other necessary components to provide 
                     uniqueness across time.
-                    <b>Note that this 'string' contains non-standard characters so is not usable on all datastores. You are better off with a standard UUID in most situations</b>
                 </p>
+                <table class="infoTable"><tr>
+                    <td><img src="../images/lightbulb.png" border="0"/></td>
+                    <td>Note that this 'string' contains non-standard characters so is not usable on all datastores. You are better off with a standard UUID in most situations</td>
+                </tr></table>
                 <p>
                     This generator can be used in concurrent applications. It is especially useful in situations where large 
                     numbers of transactions within a certain amount of time have to be made, and the additional overhead of 
@@ -516,7 +521,7 @@ public class MyClass
             <subsection name="uuid">
                 <img src="../images/nucleus_extension.gif" border="0" alt=""/>
                 <p>
-                    This generator uses the JDK1.5 UUID class to generate String values. The values are 128-bit 
+                    This generator uses the JRE UUID class to generate String values. The values are 128-bit 
                     (36 character) of the form "0e400c2c-b3a0-4786-a0c6-f2607bf643eb"
                 </p>
                 <p>
@@ -564,7 +569,7 @@ public class MyClass
             <subsection name="uuid-object">
                 <img src="../images/nucleus_extension.gif" border="0" alt=""/>
                 <p>
-                    This generator uses the JDK1.5 UUID class to generate UUID values. The values are 128-bit 
+                    This generator uses the JRE UUID class to generate UUID values. The values are 128-bit 
                     (36 character) of the form "0e400c2c-b3a0-4786-a0c6-f2607bf643eb"
                 </p>
                 <p>
@@ -607,8 +612,7 @@ public class MyClass
                 <p>
                     This generator can be used in concurrent applications. It is especially useful in situations where large 
                     numbers of transactions within a certain amount of time have to be made, and the additional overhead of 
-                    synchronizing the concurrent creation of unique identifiers through the database would break performance
-                    limits.
+                    synchronizing the concurrent creation of unique identifiers through the database would break performance limits.
                 </p>
                 <p>
                     For a class using <u>datastore identity</u> you need to add metadata something like the following

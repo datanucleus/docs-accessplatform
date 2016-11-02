@@ -15,8 +15,11 @@
                 <a href="interfaces.html">Interfaces</a> since both interfaces and java.lang.Object are 
                 basically <i>references</i> to some persistable object.
             </p>
-            <p><b>java.lang.Object cannot be used to persist non-persistable types with fixed schema datastore (e.g RDBMS). 
-                Think of how you would expect it to be stored if you think it ought to</b></p>
+            <table class="infoTable"><tr>
+                <td><img src="../../images/lightbulb.png" border="0"/></td>
+                <td>java.lang.Object cannot be used to persist non-persistable types with fixed schema datastore (e.g RDBMS). 
+                Think of how you would expect it to be stored if you think it ought to</td>
+            </tr></table>
             <p>
                 JDO doesn't define how an object FCO is persisted in the datastore. Obviously there can be
                 many "implementations" and so no obvious solution. DataNucleus allows the following
