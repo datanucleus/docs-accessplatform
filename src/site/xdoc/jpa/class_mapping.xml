@@ -42,10 +42,8 @@ public class Hotel
 }</source>
             <p>
                 In the above example we have marked the class as an <b>entity</b>. We could equally have
-                marked it as <b>mapped-superclass</b> 
-                (using annotation @MappedSuperclass, or XML element &lt;mapped-superclass&gt;) or
-                as <b>embeddable</b>
-                (using annotation @Embeddable, or XML element &lt;embeddable&gt;).
+                marked it as <b>mapped-superclass</b> (using annotation @MappedSuperclass, or XML element &lt;mapped-superclass&gt;) 
+                or as <b>embeddable</b> (using annotation @Embeddable, or XML element &lt;embeddable&gt;).
             </p>
             <p>See also :-</p>
             <ul>
@@ -80,12 +78,11 @@ public class MyClassThatAccessesPublicFields
             <subsection name="Read-Only">
                 <img src="../images/nucleus_extension.gif" border="0" alt=""/>
                 <p>
-                    You can, if you wish, make a class <i>read-only</i>. This is a DataNucleus extension and you set
-                    it as follows
+                    You can, if you wish, make a class <i>read-only</i>. This is a DataNucleus extension and you set it as follows
                 </p>
                 <source><![CDATA[
 @Entity
-@Extension(vendorName="datanucleus", key="read-only", value="true")
+@Extension(key="read-only", value="true")
 public class MyClass
 {
     ...
