@@ -22,7 +22,12 @@
                 <li><a href="#nontransactional">No transactions</a></li>
                 <li><a href="#flushing">Flushing a Transaction</a></li>
                 <li><a href="#isolation">Controlling transaction isolation level</a></li>
+                <li><a href="#synchronisation">Synchronising a transaction</a></li>
                 <li><a href="#readonly">Read-Only transactions</a></li>
+                <li><a href="#pbr_at_commit">Persistence-by-Reachability at COMMIT</a></li>
+                <li><a href="#savepoint">RDBMS : Savepoints</a></li>
+                <li><a href="#pessimistic">Pessimistic Locking of objects</a></li>
+                <li><a href="#optimistic">Optimistic Locking of objects</a></li>
             </ul>
             <br/>
 
@@ -207,6 +212,7 @@ tx.setIsolationLevel("read-committed");</source>
                 <br/>
             </subsection>
 
+            <a name="synchronisation"/>
             <subsection name="JDO Transaction Synchronisation">
                 <p>
                     There are situations where you may want to get notified that a transaction is in course of 
@@ -283,6 +289,56 @@ pm.close();]]></source>
                     Any call to <i>commit</i> on the transaction will throw an exception forcing the user to
                     roll it back.
                 </p>
+                <br/>
+            </subsection>
+
+            <a name="pbr_at_commit"/>
+            <subsection name="Persistence-by-Reachability at commit()">
+                <p>
+                    When a transaction is committed JDO will, by default, run its reachability algorithm
+                    to check if any reachable objects have been persisted and are no longer reachable.
+                    If an object is found to be no longer reachable and was only persisted by being reachable
+                    (not by an explicit persist operation) then it will be removed from the datastore.
+                    You can turn off this reachability check for JDO by setting the persistence property
+                    <b>datanucleus.persistenceByReachabilityAtCommit</b> to false.
+                </p>
+                <br/>
+            </subsection>
+
+            <a name="savepoint"/>
+            <subsection name="RDBMS : Savepoints">
+                <img src="../images/nucleus_extension.gif" border="0" alt=""/>
+                <p>
+                    JDBC provides the ability to specify a point in a transaction and rollback to that point if required, assuming the JDBC driver supports it.
+                    DataNucleus provides this as a vendor extension, as follows
+                </p>
+                <source><![CDATA[
+import org.datanucleus.api.jdo.JDOTransaction;
+
+
+PersistenceManager pm = pmf.getPersistenceManager();
+JDOTransaction tx = (JDOTransaction)pm.currentTransaction();
+try
+{
+    tx.begin();
+
+    {users code to persist objects}
+    tx.setSavepoint("Point1");
+
+    {more user code to persist objects}
+    tx.rollbackToSavepoint("Point1");
+
+    tx.releaseSavepoint("Point1");
+    tx.rollback();
+}
+finally
+{
+    if (tx.isActive())
+    {
+        tx.rollback();
+    }
+}
+pm.close();]]></source>
                 <br/>
             </subsection>
         </section>
@@ -535,18 +591,6 @@ q.setSerializeRead(true);]]></source>
                     <li><a href="metadata_xml.html#version">JDO MetaData reference for &lt;version&gt; element</a></li>
                     <li><a href="annotations.html#Version">JDO Annotations reference for @Version</a></li>
                 </ul>
-                <br/>
-            </subsection>
-
-            <subsection name="Persistence-by-Reachability at commit()">
-                <p>
-                    When a transaction is committed JDO will, by default, run its reachability algorithm
-                    to check if any reachable objects have been persisted and are no longer reachable.
-                    If an object is found to be no longer reachable and was only persisted by being reachable
-                    (not by an explicit persist operation) then it will be removed from the datastore.
-                    You can turn off this reachability check for JDO by setting the persistence property
-                    <b>datanucleus.persistenceByReachabilityAtCommit</b> to false.
-                </p>
                 <br/>
             </subsection>
         </section>
