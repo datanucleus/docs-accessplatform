@@ -335,7 +335,7 @@ public class Person_
                     all classes (original + metamodel) are compiled.
                 </p>
                 <p>
-                    To enable this in Maven you would need the above jar, plus <i>javax.persistence-{version}.jar</i> to be in the CLASSPATH at compile
+                    To enable this in Maven you would need the above jar, plus <i>javax.persistence.jar</i> to be in the CLASSPATH at compile
                 </p>
                 <source><![CDATA[
 <plugin>
@@ -353,7 +353,7 @@ public class Person_
                     <li>Go to <i>Java Compiler</i> and make sure the compiler compliance level is 1.7 or above (needed for DN 5+ anyway)</li>
                     <li>Go to <i>Java Compiler -> Annotation Processing</i> and enable the project specific settings and enable annotation processing</li>
                     <li>Go to <i>Java Compiler -> Annotation Processing -> Factory Path</i>, enable the project 
-                        specific settings and then add the following jars to the list: <i>datanucleus-jpa-query.jar</i>, <i>javax.persistence-{version}.jar</i>
+                        specific settings and then add the following jars to the list: <i>datanucleus-jpa-query.jar</i>, <i>javax.persistence.jar</i>
                     </li>
                 </ul>
             </subsection>

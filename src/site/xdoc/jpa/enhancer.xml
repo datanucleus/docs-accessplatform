@@ -184,9 +184,8 @@
                 <p>
                     Ant provides a powerful framework for performing tasks. DataNucleus provides an Ant task to 
                     enhance classes. DataNucleus provides an Enhancer in <i>datanucleus-core.jar</i>.
-                    You need to make sure that the <i>datanucleus-core.jar</i>, 
-                    <i>datanucleus-api-jpa.jar</i>, <i>log4j.jar</i> (optional),
-                    and <i>persistence-api.jar</i> are in your CLASSPATH.
+                    You need to make sure that the <i>datanucleus-core.jar</i>, <i>datanucleus-api-jpa.jar</i>, <i>log4j.jar</i> (optional),
+                    and <i>javax.persistence.jar</i> are in your CLASSPATH.
                     In the DataNucleus Enhancer Ant task, the following parameters are available
                 </p>
                 <table>
@@ -300,7 +299,7 @@ java -cp classpath  org.datanucleus.enhancer.DataNucleusEnhancer [options]
     where classpath must contain the following
         datanucleus-core.jar
         datanucleus-api-jpa.jar
-        persistence-api.jar
+        javax.persistence.jar
         log4j.jar (optional)
         your classes
         your meta-data files</source>
@@ -310,13 +309,13 @@ java -cp classpath  org.datanucleus.enhancer.DataNucleusEnhancer [options]
                 </p>
                 <source>
 Linux/Unix :
-java -cp target/classes:lib/datanucleus-core.jar:lib/datanucleus-api-jpa.jar:lib/persistence-api.jar:lib/log4j.jar
+java -cp target/classes:lib/datanucleus-core.jar:lib/datanucleus-api-jpa.jar:lib/javax.persistence.jar:lib/log4j.jar
      -Dlog4j.configuration=file:log4j.properties
      org.datanucleus.enhancer.DataNucleusEnhancer
      -api JPA -pu MyUnit
 
 Windows :
-java -cp target\classes;lib\datanucleus-core.jar;lib\datanucleus-api-jpa.jar;lib\persistence-api.jar;lib\log4j.jar
+java -cp target\classes;lib\datanucleus-core.jar;lib\datanucleus-api-jpa.jar;lib\javax.persistence.jar;lib\log4j.jar
      -Dlog4j.configuration=file:log4j.properties
      org.datanucleus.enhancer.DataNucleusEnhancer 
      -api JPA -pu MyUnit
@@ -332,7 +331,7 @@ DataNucleus Enhancer (version 5.0.0.release) for API "JPA"
 DataNucleus Enhancer : Classpath
 >>  /home/andy/work/myproject//target/classes
 >>  /home/andy/work/myproject/lib/log4j.jar
->>  /home/andy/work/myproject/lib/persistence-api.jar
+>>  /home/andy/work/myproject/lib/javax.persistence.jar
 >>  /home/andy/work/myproject/lib/datanucleus-core.jar
 >>  /home/andy/work/myproject/lib/datanucleus-api-jpa.jar
 

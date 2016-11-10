@@ -135,7 +135,7 @@
                 <p>
                     You will need to add <i>datanucleus-api-jdo.jar</i> into the CLASSPATH (of the plugin, or your project) 
                     for the enhancer to operate. Also if using JPA metadata then you also will need
-                    <i>datanucleus-api-jpa.jar</i> and <i>persistence-api.jar</i> in the CLASSPATH.
+                    <i>datanucleus-api-jpa.jar</i> and <i>javax.persistence.jar</i> in the CLASSPATH.
                     You then run the Maven DataNucleus plugin, as follows
                 </p>
                 <source>mvn datanucleus:enhance</source>
@@ -183,8 +183,8 @@
                 <p>
                     Ant provides a powerful framework for performing tasks and DataNucleus provides an Ant task to 
                     enhance classes. The DataNucleus Enhancer is in <i>datanucleus-core.jar</i>, and you need to make
-                    sure that the <i>datanucleus-core.jar</i>, <i>datanucleus-api-jdo.jar</i>, <i>jdo-api.jar</i> (and optionally <i>log4j.jar</i>) are in your CLASSPATH.
-                    If using JPA metadata then you will also need <i>persistence-api.jar</i> and <i>datanucleus-api-jpa.jar</i> in the CLASSPATH.
+                    sure that the <i>datanucleus-core.jar</i>, <i>datanucleus-api-jdo.jar</i>, <i>javax.jdo.jar</i> (and optionally <i>log4j.jar</i>) are in your CLASSPATH.
+                    If using JPA metadata then you will also need <i>javax.persistence.jar</i> and <i>datanucleus-api-jpa.jar</i> in the CLASSPATH.
                     In the DataNucleus Enhancer Ant task, the following parameters are available
                 </p>
                 <table>
@@ -364,9 +364,9 @@ java -cp classpath  org.datanucleus.enhancer.DataNucleusEnhancer [options] [mapp
     where classpath must contain the following
         datanucleus-core.jar
         datanucleus-api-jdo.jar
-        jdo-api.jar
+        javax.jdo.jar
         log4j.jar (optional)
-        persistence-api.jar (optional - if using JPA metadata)
+        javax.persistence.jar (optional - if using JPA metadata)
         your classes
         your meta-data files</source>
                 <p>
@@ -377,14 +377,14 @@ java -cp classpath  org.datanucleus.enhancer.DataNucleusEnhancer [options] [mapp
                 </p>
                 <source>
 Linux/Unix :
-java -cp target/classes:lib/datanucleus-core.jar:lib/jdo-api.jar:
+java -cp target/classes:lib/datanucleus-core.jar:lib/javax.jdo.jar:
                     lib/datanucleus-api-jdo.jar:lib/log4j.jar
      -Dlog4j.configuration=file:log4j.properties
      org.datanucleus.enhancer.DataNucleusEnhancer
      **/*.jdo
 
 Windows :
-java -cp target\classes;lib\datanucleus-core.jar;lib\jdo-api.jar;
+java -cp target\classes;lib\datanucleus-core.jar;lib\javax.jdo.jar;
                     lib\datanucleus-api-jdo.jar;lib\log4j.jar
      -Dlog4j.configuration=file:log4j.properties
      org.datanucleus.enhancer.DataNucleusEnhancer
@@ -402,7 +402,7 @@ DataNucleus Enhancer (version 5.0.0.release) for API "JDO"
 DataNucleus Enhancer : Classpath
 >>  /home/andy/work/myproject//target/classes
 >>  /home/andy/work/myproject/lib/log4j.jar
->>  /home/andy/work/myproject/lib/jdo-api.jar
+>>  /home/andy/work/myproject/lib/javax.jdo.jar
 >>  /home/andy/work/myproject/lib/datanucleus-core.jar
 >>  /home/andy/work/myproject/lib/datanucleus-api-jdo.jar
 

@@ -226,7 +226,7 @@ target/classes/org/datanucleus/samples/jdo/tutorial/Inventory.class
 target/classes/org/datanucleus/samples/jdo/tutorial/Product.class
 
 [when using Ant]
-lib/jdo-api.jar
+lib/javax.jdo.jar
 lib/datanucleus-core.jar
 lib/datanucleus-api-jdo.jar</source>
 				<p>
@@ -252,11 +252,11 @@ Using Maven : (this is usually done automatically after the "compile" goal)
 mvn datanucleus:enhance
 
 Manually on Linux/Unix :
-java -cp target/classes:lib/datanucleus-core.jar:lib/datanucleus-api-jdo.jar:lib/jdo-api.jar
+java -cp target/classes:lib/datanucleus-core.jar:lib/datanucleus-api-jdo.jar:lib/javax.jdo.jar
      org.datanucleus.enhancer.DataNucleusEnhancer -pu Tutorial
 
 Manually on Windows :
-java -cp target\classes;lib\datanucleus-core.jar;lib\datanucleus-api-jdo.jar;lib\jdo-api.jar
+java -cp target\classes;lib\datanucleus-core.jar;lib\datanucleus-api-jdo.jar;lib\javax.jdo.jar
      org.datanucleus.enhancer.DataNucleusEnhancer -pu Tutorial
 
 [Command shown on many lines to aid reading - should be on single line]</source>
@@ -413,13 +413,13 @@ mvn exec:java
 
 
 Manually on Linux/Unix :
-java -cp lib/jdo-api.jar:lib/datanucleus-core.jar:lib/datanucleus-neo4j.jar:
+java -cp lib/javax.jdo.jar:lib/datanucleus-core.jar:lib/datanucleus-neo4j.jar:
          lib/datanucleus-api-jdo.jar:lib/{neo4j_jars}:target/classes/:. 
              org.datanucleus.samples.jdo.tutorial.Main
 
 
 Manually on Windows :
-java -cp lib\jdo-api.jar;lib\datanucleus-core.jar;lib\datanucleus-neo4j.jar;
+java -cp lib\javax.jdo.jar;lib\datanucleus-core.jar;lib\datanucleus-neo4j.jar;
          lib\datanucleus-api-jdo.jar;lib\{neo4j_jars};target\classes\;. 
              org.datanucleus.samples.jdo.tutorial.Main
 

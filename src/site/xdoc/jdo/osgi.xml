@@ -28,7 +28,7 @@
                     By this we mean the jar needs to have the MANIFEST.MF file including <i>ExportPackage</i> for
                     the packages required by DataNucleus. Failure to have this will result in <i>ClassNotFoundException</i>
                     when trying to load its classes.</li>
-                <li>Use <i>jdo-api.jar</i> v3.0.1 or later since those are OSGi-enabled</li>
+                <li>Use <i>javax.jdo.jar</i> v3.0.1 or later since those are OSGi-enabled</li>
                 <li>The <i>javax.persistence</i> jar that is included in the DataNucleus distribution is OSGi-enabled.</li>
                 <li>When using DataNucleus in an OSGi environments set the persistence property
                     <b>datanucleus.plugin.pluginRegistryClassName</b> to <i>org.datanucleus.plugin.OSGiPluginRegistry</i></li>

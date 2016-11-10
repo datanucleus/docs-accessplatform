@@ -222,7 +222,7 @@ target/classes/org/datanucleus/samples/jpa/tutorial/Inventory.class
 target/classes/org/datanucleus/samples/jpa/tutorial/Product.class
 
 [when using Ant]
-lib/persistence-api.jar
+lib/javax.persistence.jar
 lib/datanucleus-core.jar
 lib/datanucleus-api-jpa.jar</source>
 				<p>
@@ -248,12 +248,12 @@ Using Maven : (this is usually done automatically after the "compile" goal)
 mvn datanucleus:enhance
 
 Manually on Linux/Unix :
-java -cp target/classes:lib/datanucleus-core.jar:lib/datanucleus-api-jpa.jar:lib/persistence-api.jar
+java -cp target/classes:lib/datanucleus-core.jar:lib/datanucleus-api-jpa.jar:lib/javax.persistence.jar
      org.datanucleus.enhancer.DataNucleusEnhancer 
      -api JPA -pu Tutorial
 
 Manually on Windows :
-java -cp target\classes;lib\datanucleus-core.jar;lib\datanucleus-api-jpa.jar;lib\persistence-api.jar
+java -cp target\classes;lib\datanucleus-core.jar;lib\datanucleus-api-jpa.jar;lib\javax.persistence.jar
      org.datanucleus.enhancer.DataNucleusEnhancer
      -api JPA -pu Tutorial
 
@@ -407,13 +407,13 @@ mvn exec:java
 
 
 Manually on Linux/Unix :
-java -cp lib/persistence-api.jar:lib/datanucleus-core.jar:lib/datanucleus-hbase.jar:
+java -cp lib/javax.persistence.jar:lib/datanucleus-core.jar:lib/datanucleus-hbase.jar:
          lib/datanucleus-api-jpa.jar:lib/{hbase_jars}:target/classes/:. 
      org.datanucleus.samples.jpa.tutorial.Main
 
 
 Manually on Windows :
-java -cp lib\persistence-api.jar;lib\datanucleus-core.jar;lib\datanucleus-hbase.jar;
+java -cp lib\javax.persistence.jar;lib\datanucleus-core.jar;lib\datanucleus-hbase.jar;
          lib\datanucleus-api-jpa.jar;lib\{hbase_jars};target\classes\;.
      org.datanucleus.samples.jpa.tutorial.Main
 
@@ -555,13 +555,13 @@ mvn datanucleus:schema-create
 
 
 Manually on Linux/Unix :
-java -cp target/classes:lib/persistence-api.jar:lib/datanucleus-core.jar:
+java -cp target/classes:lib/javax.persistence.jar:lib/datanucleus-core.jar:
          lib/datanucleus-hbase.jar:lib/datanucleus-api-jpa.jar:lib/{hbase-jars}
      org.datanucleus.store.schema.SchemaTool
      -create -api JPA -pu Tutorial
 
 Manually on Windows :
-java -cp target\classes;lib\persistence-api.jar;lib\datanucleus-core.jar;
+java -cp target\classes;lib\javax.persistence.jar;lib\datanucleus-core.jar;
          lib\datanucleus-hbase.jar;lib\datanucleus-api-jpa.jar;lib\{hbase-jars}
      org.datanucleus.store.schema.SchemaTool
      -create -api JPA -pu Tutorial
