@@ -358,7 +358,8 @@ public class Account
 
 public class Address
 {
-    ...
+    @Column(name="ACCOUNT_ID")
+    Account account;
 }]]></source>
                 <table>
                     <tr>
