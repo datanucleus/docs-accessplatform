@@ -103,12 +103,10 @@ public class Address
 {
     ...
 }]]></source>
-                <table>
-                    <tr>
-                        <td>The crucial part is the <i>join</i> element on the field element - this signals to 
-                            JDO to use a join table.</td>
-                    </tr>
-                </table>
+                <table class="infoTable"><tr>
+                    <td><img src="../images/lightbulb.png" border="0"/></td>
+                    <td>The crucial part is the <i>join</i> element on the field element - this signals to JDO to use a join table.</td>
+                </tr></table>
                 <p>
                     There will be 3 tables, one for <b>Address</b>, one for <b>Account</b>, and the join table. 
                     The difference from Set is in the contents of the join table. An index column (INTEGER_IDX)
@@ -331,12 +329,10 @@ public class Address
 
     Account account;
 }]]></source>
-                <table>
-                    <tr>
-                        <td>The crucial part is the <i>join</i> element on the field element - this signals to 
-                            JDO to use a join table.</td>
-                    </tr>
-                </table>
+                <table class="infoTable"><tr>
+                    <td><img src="../images/lightbulb.png" border="0"/></td>
+                    <td>The crucial part is the <i>join</i> element on the field element - this signals to JDO to use a join table.</td>
+                </tr></table>
                 <p>
                     There will be 3 tables, one for <b>Address</b>, one for <b>Account</b>, and the join table. 
                     The difference from Set is in the contents of the join table. An index column (INTEGER_IDX) 
@@ -422,13 +418,11 @@ public class Address
 
     Account account;
 }]]></source>
-                <table>
-                    <tr>
-                        <td>The crucial part is the <i>mapped-by</i> attribute of the field on the "1" side of 
-                            the relationship. This tells the JDO implementation to look for a field called 
-                            <i>account</i> on the <b>Address</b> class.</td>
-                    </tr>
-                </table>
+                <table class="infoTable"><tr>
+                    <td><img src="../images/lightbulb.png" border="0"/></td>
+                    <td>The crucial part is the <i>mapped-by</i> attribute of the field on the "1" side of the relationship. 
+                        This tells the JDO implementation to look for a field called <i>account</i> on the <b>Address</b> class.</td>
+                </tr></table>
                 <p>
                     Again there will be 2 tables, one for <b>Address</b>, and one for <b>Account</b>. The 
                     difference from the Set example is that the List index is placed in the table for 

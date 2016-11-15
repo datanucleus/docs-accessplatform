@@ -114,15 +114,12 @@ public class Address
 {
     ...
 }]]></source>
-                <table>
-                    <tr>
-                        <td>The crucial part is the <i>join</i> element on the field element - this signals to 
-                            JDO to use a join table.</td>
-                    </tr>
-                </table>
+                <table class="infoTable"><tr>
+                    <td><img src="../images/lightbulb.png" border="0"/></td>
+                    <td>The crucial part is the <i>join</i> element on the field element - this signals to JDO to use a join table.</td>
+                </tr></table>
                 <p>
-                    This will create 3 tables in the database, one for <b>Address</b>, one for <b>Account</b>, 
-                    and a join table, as shown below.
+                    This will create 3 tables in the database, one for <b>Address</b>, one for <b>Account</b>, and a join table, as shown below.
                 </p>
                 <br/>
                 <img src="../../images/orm/relationship_1_N_uni_collection_join_db.jpg" border="0" alt=""/>
@@ -278,12 +275,10 @@ public class Address
 {
     ...
 }]]></source>
-                <table>
-                    <tr>
-                        <td>The crucial part is the <i>join</i> element on the field element - this signals to 
-                            JDO to use a join table.</td>
-                    </tr>
-                </table>
+                <table class="infoTable"><tr>
+                    <td><img src="../images/lightbulb.png" border="0"/></td>
+                    <td>The crucial part is the <i>join</i> element on the field element - this signals to JDO to use a join table.</td>
+                </tr></table>
                 <p>
                     This will create 3 tables in the database, one for <b>Address</b>, one for <b>Account</b>, 
                     and a join table, as shown below.
@@ -361,12 +356,11 @@ public class Address
     @Column(name="ACCOUNT_ID")
     Account account;
 }]]></source>
-                <table>
-                    <tr>
-                        <td>The crucial part is the <i>mapped-by</i> on the "1" side of the relationship. 
-                            This tells the JDO implementation to look for a field called <i>account</i> on the <b>Address</b> class.</td>
-                    </tr>
-                </table>
+                <table class="infoTable"><tr>
+                    <td><img src="../images/lightbulb.png" border="0"/></td>
+                    <td>The crucial part is the <i>mapped-by</i> on the "1" side of the relationship. 
+                        This tells the JDO implementation to look for a field called <i>account</i> on the <b>Address</b> class.</td>
+                </tr></table>
                 <p>
                     This will create 2 tables in the database, one for <b>Address</b> (including an 
                     <i>ACCOUNT_ID</i> to link to the <i>ACCOUNT</i> table), and one for <b>Account</b>.
