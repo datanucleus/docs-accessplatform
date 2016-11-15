@@ -191,8 +191,11 @@ public class Address
 {
     ...
 }]]></source>
-                <p><b>Note that you MUST specify the join-column here otherwise it defaults to a join table with JPA!</b></p>
-                <p> 
+                <table class="infoTable"><tr>
+                    <td><img src="../../images/lightbulb.png" border="0"/></td>
+                    <td>Note that you MUST specify the join-column here otherwise it defaults to a join table with JPA!</td>
+                </tr></table>
+                <p>
                     There will be 2 tables, one for <b>Address</b>, and one for <b>Account</b>. If you wish to specify
                     the names of the column(s) used in the schema for the foreign key in the <b>Address</b> table you should
                     use the <i>join-column</i> element within the field of the collection.
