@@ -52,6 +52,11 @@
                 all basic types, as well as 1-1/N-1 relations (where the <i>foreign-key</i> is at the embedded object side). It does not support 1-N/M-N fields since the
                 owner object of the collection element is not clearly defined (since an embedded class has no "identity" as such).
             </p>
+            <table class="infoTable"><tr>
+                <td><img src="../../images/lightbulb.png" border="0"/></td>
+                <td>Please note that whilst nested embedded members are supported, you cannot use recursive embedded objects since that would require potentially infinite 
+                    columns in the owner table, or infinite embedded join tables.</td>
+            </tr></table>
             <br/>
 
             <a name="PC"/>
