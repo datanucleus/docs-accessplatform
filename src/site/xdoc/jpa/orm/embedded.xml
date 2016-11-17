@@ -196,8 +196,6 @@ public class ComputerCard
 @Embeddable
 public class ComputerCard
 {
-    ...
-
     @Embedded
     Connector connector;
 
@@ -216,7 +214,7 @@ public class Connector
 {
     int type;
 }</source>
-                <p>Well we want to store all of these objects into the same record in the COMPUTER table.</p>
+                <p>We want to store all of these objects into the same record in the COMPUTER table.</p>
                 <source><![CDATA[
 <entity name="mydomain.Computer">
     <attributes>
@@ -304,7 +302,7 @@ public class Network
 
     @Embedded
     @ElementCollection
-    private Collection<Device> devices = new HashSet();
+    private Collection<Device> devices = new HashSet<>();
 
     public Network(String name)
     {
@@ -360,8 +358,7 @@ public class Device
                 <p>
                     So here we will end up with a table called "NETWORK" with columns "NETWORK_ID", and "NAME",
                     and a table called "NETWORK_DEVICES" with columns "NETWORK_ID", "ADPT_PK_IDX", "DEVICE_NAME",
-                    "DEVICE_IP_ADDR". When we persist a <b>Network</b> object, any devices are persisted into the 
-                    NETWORK_DEVICES table.
+                    "DEVICE_IP_ADDR". When we persist a <b>Network</b> object, any devices are persisted into the NETWORK_DEVICES table.
                 </p>
                 <img src="../../images/orm/embedded_collection_embedded_db.gif" border="0" alt=""/><br/><br/>
                 <p>
