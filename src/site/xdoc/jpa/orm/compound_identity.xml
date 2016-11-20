@@ -25,6 +25,10 @@
                     field in the identity class of the derived entity. In DataNucleus you cannot do this currently, and should define the `@IdClass` of the 
                     entity being contained and use that type in the identity class of the derived entity.</td>
             </tr></table>
+            <table class="infoTable"><tr>
+                <td><img src="../../images/lightbulb.png" border="0"/></td>
+                <td>The persistable class that is contained cannot be using <i>datastore identity</i>, and must be using <i>application identity</i> with an objectid-class</td>
+            </tr></table>
             <br/>
 
             <a name="1_1_uni"/>
