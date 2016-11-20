@@ -3,11 +3,11 @@
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
     <properties>
-        <title>Compound Identity Relationships</title>
+        <title>JPA : Derived Identity Relationships</title>
     </properties>
 
     <body>
-        <section name="JPA : Compound Identity Relationships">
+        <section name="JPA : Derived Identity Relationships">
             <p>
                 An derived identity relationship is a relationship between two objects of two classes in which the child object must coexist with the 
                 parent object and where the primary key of the child includes the Entity object of the parent. So effectively the key aspect of this
@@ -48,8 +48,10 @@
                     In addition we need to define primary key classes for our <b>User</b> and <b>Account</b> classes
                 </p>
                 <source><![CDATA[
+@Entity
 public class User
 {
+    @Id
     long id;
 
     ... (remainder of User class)
@@ -92,10 +94,13 @@ public class User
     }
 }
 
+@Entity
 public class Account
 {
+    @Id
+    @OneToOne
     User user;
-                
+
     ... (remainder of Account class)
 
     /**
@@ -152,6 +157,7 @@ public class Account
             <basic name="login">
                 <column name="LOGIN" length="20"/>
             </basic>
+        </attributes>
     </entity>
 
     <entity class="mydomain.Account">
@@ -182,12 +188,10 @@ public class Account
                 </p>
                 <ul>
                     <li>In the child Primary Key class, you must have a field with the same name as the relationship in the 
-                        child class, and the field in the child Primary Key class must be the same type as the Primary Key 
-                        class of the parent</li>
+                        child class, and the field in the child Primary Key class must be the same type as the Primary Key class of the parent</li>
                     <li>See also the <a href="../application_identity.html#primarykey">general instructions for Primary Key classes</a></li>
-                    <li>You can only have one "Account" object linked to a particular "User" object since the FK to the "User"
-                        is now the primary key of "Account". To remove this restriction you could also add a "long id" to 
-                        "Account" and make the "Account.PK" a composite primary-key</li>
+                    <li>You can only have one "Account" object linked to a particular "User" object since the FK to the "User" is now the primary key of "Account". 
+                        To remove this restriction you could also add a "long id" to  "Account" and make the "Account.PK" a composite primary-key</li>
                 </ul>
                 <br/>
             </subsection>
@@ -195,12 +199,11 @@ public class Account
             <a name="1_N_coll_bi"/>
             <subsection name="1-N Collection Relationship">
                 <p>
-                    Lets take the same classes as we have in the <a href="one_to_many_collection.html#fk_bi">1-N Relationships
-                    (FK)</a>. In the 1-N relationships guide we note that in the datastore representation of the
-                    <b>Account</b> and <b>Address</b> classes the <b>ADDRESS</b> table has a primary key as well as a 
-                    foreign-key to <b>ACCOUNT</b>. In our example here we want to have the primary-key to <b>ACCOUNT</b> to 
-                    <i>include</i> the foreign-key. To do this we need to modify the classes slightly, adding primary-key 
-                    fields to both classes, and use "application-identity" for both.
+                    Lets take the same classes as we have in the <a href="one_to_many_collection.html#fk_bi">1-N Relationships (FK)</a>. 
+                    In the 1-N relationships guide we note that in the datastore representation of the <b>Account</b> and <b>Address</b> classes the 
+                    <b>ADDRESS</b> table has a primary key as well as a foreign-key to <b>ACCOUNT</b>. 
+                    In our example here we want to have the primary-key to <b>ACCOUNT</b> to <i>include</i> the foreign-key. 
+                    To do this we need to modify the classes slightly, adding primary-key fields to both classes, and use "application-identity" for both.
                 </p>
                 <br/>
                 <img src="../../images/orm/relationship_1_N_compound_class.jpg" border="0" alt=""/>
@@ -209,11 +212,14 @@ public class Account
                     In addition we need to define primary key classes for our <b>Account</b> and <b>Address</b> classes
                 </p>
                 <source><![CDATA[
+@Entity
 public class Account
 {
-    long id; // PK field
+    @Id
+    long id;
 
-    Set addresses = new HashSet();
+    @OneToMany
+    Set<Address> addresses = new HashSet<>();
 
     ... (remainder of Account class)
 
@@ -255,9 +261,14 @@ public class Account
     }
 }
 
+@Entity
 public class Address
 {
+    @Id
     long id;
+
+    @Id
+    @ManyToOne
     Account account;
 
     .. (remainder of Address class)
@@ -321,6 +332,7 @@ public class Address
                 <column name="LASTNAME" length="50"/>
             </basic>
             <one-to-many name="addresses" mapped-by="account"/>
+        </attributes>
     </entity>
 
     <entity class="mydomain.Address">
@@ -381,11 +393,14 @@ public class Address
                     In addition we need to define primary key classes for our <b>Account</b> and <b>Address</b> classes
                 </p>
                 <source><![CDATA[
+@Entity
 public class Account
 {
-    long id; // PK field
+    @Id
+    long id;
 
-    Set addresses = new HashSet();
+    @OneToMany
+    Set<Address> addresses = new HashSet<>();
 
     ... (remainder of Account class)
 
@@ -427,9 +442,14 @@ public class Account
     }
 }
 
+@Entity
 public class Address
 {
+    @Id
     String alias;
+
+    @Id
+    @ManyToOne
     Account account;
 
     .. (remainder of Address class)
@@ -495,6 +515,7 @@ public class Address
             <one-to-many name="addresses" mapped-by="account">
                 <map-key name="alias"/>
             </one-to-many>
+        </attributes>
     </entity>
 
     <entity class="mydomain.Address">
@@ -528,12 +549,10 @@ public class Address
                 </p>
                 <ul>
                     <li>In the child Primary Key class, you must have a field with the same name as the relationship in the 
-                        child class, and the field in the child Primary Key class must be the same type as the Primary Key
-                        class of the parent</li>
+                        child class, and the field in the child Primary Key class must be the same type as the Primary Key class of the parent</li>
                     <li>See also the <a href="../application_identity.html#primarykey">general instructions for Primary Key classes</a></li>
                     <li>If we had omitted the "alias" field from "Address" it would have only been possible to have one 
-                        "Address" in the "Account" "addresses" collection due to PK constraints. For that reason we have the
-                        "alias" field too as part of the PK.</li>
+                        "Address" in the "Account" "addresses" collection due to PK constraints. For that reason we have the "alias" field too as part of the PK.</li>
                 </ul>
                 <br/>
             </subsection>
