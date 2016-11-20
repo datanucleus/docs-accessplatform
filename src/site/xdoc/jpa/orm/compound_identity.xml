@@ -9,11 +9,9 @@
     <body>
         <section name="JPA : Compound Identity Relationships">
             <p>
-                An identifying relationship (or "compound identity relationship") is a relationship between two 
-                objects of two classes in which the child object must coexist with the parent object and where the primary 
-                key of the child includes the Entity object of the parent. So effectively the key aspect of this
-                type of relationship is that the primary key of one of the classes includes a Entity field 
-                (hence why is is referred to as <i>Compound Identity</i>).
+                An derived identity relationship is a relationship between two objects of two classes in which the child object must coexist with the 
+                parent object and where the primary key of the child includes the Entity object of the parent. So effectively the key aspect of this
+                type of relationship is that the primary key of one of the classes includes a Entity field (hence why is is referred to as <i>Derived Identity</i>).
                 This type of relation is available in the following forms
             </p>
             <ul>
@@ -21,6 +19,12 @@
                 <li><a href="#1_N_coll_bi">1-N collection bidirectional using ForeignKey</a></li>
                 <li><a href="#1_N_map_bi">1-N map bidirectional using ForeignKey (key stored in value)</a></li>
             </ul>
+            <table class="infoTable"><tr>
+                <td><img src="../../images/lightbulb.png" border="0"/></td>
+                <td>Note that in pure JPA, if the entity that is part of the id of the derived entity has a single long field then you can put a <i>long</i>
+                    field in the identity class of the derived entity. In DataNucleus you cannot do this currently, and should define the `@IdClass` of the 
+                    entity being contained and use that type in the identity class of the derived entity.</td>
+            </tr></table>
             <br/>
 
             <a name="1_1_uni"/>

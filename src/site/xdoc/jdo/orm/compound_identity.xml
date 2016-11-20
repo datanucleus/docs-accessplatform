@@ -9,18 +9,21 @@
     <body>
         <section name="JDO : Compound Identity Relationships">
             <p>
-                An identifying relationship (or "compound identity relationship" in JDO) is a relationship between two 
-                objects of two classes in which the child object must coexist with the parent object and where the primary 
-                key of the child includes the persistable object of the parent. So effectively the key aspect of this
-                type of relationship is that the primary key of one of the classes includes a persistable field 
-                (hence why is is referred to as <i>Compound Identity</i>). This type of relation is available in the following
-                forms
+                A JDO "compound identity relationship" is a relationship between two classes in which the child object must coexist with the parent object 
+                and where the primary key of the child includes the persistable object of the parent. The key aspect of this type of relationship is that 
+                the primary key of one of the classes includes a persistable field (hence why is is referred to as <i>Compound Identity</i>). 
+                This type of relation is available in the following forms
             </p>
             <ul>
                 <li><a href="#1_1_uni">1-1 unidirectional</a></li>
                 <li><a href="#1_N_coll_bi">1-N collection bidirectional using ForeignKey</a></li>
                 <li><a href="#1_N_map_bi">1-N map bidirectional using ForeignKey (key stored in value)</a></li>
             </ul>
+            <table class="infoTable"><tr>
+                <td><img src="../../images/lightbulb.png" border="0"/></td>
+                <td>In the identity class of the compound persistable class you should define the <i>object-idclass</i> of the 
+                    persistable type being contained and use that type in the identity class of the compound persistable type.</td>
+            </tr></table>
             <br/>
 
             <a name="1_1_uni"/>
