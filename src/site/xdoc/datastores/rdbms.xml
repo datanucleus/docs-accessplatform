@@ -35,8 +35,7 @@
             </p>
             <p>
                 The jars required to use DataNucleus RDBMS persistence are <i>datanucleus-core</i>,
-                <i>datanucleus-api-jdo</i>/<i>datanucleus-api-jpa</i>, <i>datanucleus-rdbms</i>
-                and <i>JDBC driver</i>.
+                <i>datanucleus-api-jdo</i>/<i>datanucleus-api-jpa</i>, <i>datanucleus-rdbms</i> and <i>JDBC driver</i>.
             </p>
             <p>
                 There are tutorials available for use of DataNucleus with RDBMS 
@@ -83,7 +82,6 @@
                 <li><a href="#virtuoso">Virtuoso</a></li>
                 <li><a href="#pointbase">Pointbase</a></li>
                 <li><a href="#timesten">Oracle TimesTen</a></li>
-                <li><a href="#mckoi">McKoi database</a></li>
             </ul>
             <p>
                 <img src="../images/nucleus_plugin.gif" border="0" alt=""/> Note that if your RDBMS is not listed
@@ -156,32 +154,30 @@ datanucleus.ConnectionPassword='password'
             </subsection>
 
             <a name="sqlserver"/>
-            <subsection name="MS SQL Server">
+            <subsection name="SQL Server">
                 <p>
                     <a href="http://www.microsoft.com/sql">Microsoft SQLServer</a> is supported as an RDBMS datastore by 
                     DataNucleus with the following proviso
                 </p>
                 <ul>
-                    <li>MS SQL 2000 does not keep accuracy on <i>datetime</i> datatypes. This is an MS SQL 2000 issue. 
+                    <li>SQLServer 2000 does not keep accuracy on <i>datetime</i> datatypes. This is an SQLServer 2000 issue. 
                         In order to keep the accuracy when storing <i>java.util.Date</i> java types, use <i>int</i> datatype.</li>
                 </ul>
                 <p>
-                    To specify MS SQL as your datastore, you will need something like the following specifying (replacing 'db-name' 
+                    To specify SQLServer as your datastore, you will need something like the following specifying (replacing 'db-name' 
                     with name of your database etc)
                 </p>
-                <p>Microsoft SqlServer 2005 JDBC Driver (Recommended)</p>
+                <p>Microsoft SQLServer 2005 JDBC Driver (Recommended)</p>
                 <source>
 datanucleus.ConnectionDriverName=com.microsoft.sqlserver.jdbc.SQLServerDriver
-datanucleus.ConnectionURL=jdbc:sqlserver://'host':'port';DatabaseName='db-name'
-                    ;SelectMethod=cursor
+datanucleus.ConnectionURL=jdbc:sqlserver://'host':'port';DatabaseName='db-name';SelectMethod=cursor
 datanucleus.ConnectionUserName='user-name'
 datanucleus.ConnectionPassword='password'
                 </source>
-                <p>Microsoft SqlServer 2000 JDBC Driver</p>
+                <p>Microsoft SQLServer 2000 JDBC Driver</p>
                 <source>
 datanucleus.ConnectionDriverName=com.microsoft.jdbc.sqlserver.SQLServerDriver
-datanucleus.ConnectionURL=jdbc:microsoft:sqlserver://'host':'port';DatabaseName='db-name'
-                    ;SelectMethod=cursor
+datanucleus.ConnectionURL=jdbc:microsoft:sqlserver://'host':'port';DatabaseName='db-name';SelectMethod=cursor
 datanucleus.ConnectionUserName='user-name'
 datanucleus.ConnectionPassword='password'
                 </source>
@@ -285,16 +281,14 @@ datanucleus.ConnectionPassword=
                 </p>
                 <source>
 datanucleus.ConnectionDriverName=com.informix.jdbc.IfxDriver
-datanucleus.ConnectionURL=jdbc:informix-sqli://[{ip|host}:port][/dbname]:
-                    INFORMIXSERVER=servername[;name=value[;name=value]...]
+datanucleus.ConnectionURL=jdbc:informix-sqli://[{ip|host}:port][/dbname]:INFORMIXSERVER=servername[;name=value[;name=value]...]
 datanucleus.ConnectionUserName=informix
 datanucleus.ConnectionPassword=password
                 </source>
                 <p>e.g.</p>
                 <source>
 datanucleus.ConnectionDriverName=com.informix.jdbc.IfxDriver
-datanucleus.ConnectionURL=jdbc:informix-sqli://192.168.254.129:9088:
-                    informixserver=demo_on;database=buf_log_db
+datanucleus.ConnectionURL=jdbc:informix-sqli://192.168.254.129:9088:informixserver=demo_on;database=buf_log_db
 datanucleus.ConnectionUserName=informix
 datanucleus.ConnectionPassword=password
                 </source>
@@ -521,25 +515,6 @@ datanucleus.ConnectionDriverName=com.pointbase.jdbc.jdbcUniversalDriver
 datanucleus.ConnectionURL=jdbc:pointbase://127.0.0.1/{dbname}
 datanucleus.ConnectionUserName=
 datanucleus.ConnectionPassword=
-                </source>
-            </subsection>
-
-            <a name="mckoi"/>
-            <subsection name="McKoi">
-                <p>
-                    <a href="http://www.mckoi.com/database">McKoi</a> is supported as an RDBMS datastore by DataNucleus 
-                    with the following proviso
-                </p>
-                <ul>
-                    <li>McKoi doesn't provide full information to allow correct validation of tables/constraints.</li>
-                </ul>
-                <p> To specify McKoi as your datastore, you will need something like the following specifying 
-                    (replacing 'db-name' with name of your database etc) </p>
-                <source>
-datanucleus.ConnectionDriverName=com.mckoi.JDBCDriver
-datanucleus.ConnectionURL=jdbc:mckoi://'host':'port'/'db-name'
-datanucleus.ConnectionUserName='user-name'
-datanucleus.ConnectionPassword='password'
                 </source>
             </subsection>
 
