@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<document xmlns="http://maven.apache.org/XDOC/2.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+    <properties>
+        <title>JPA Auditing</title>
+    </properties>
+
+    <body>
+        <section name="JPA : Auditing">
+            <table class="datastoreTable"><tr><td>Applicable to RDBMS</td></tr></table>
+            <p>
+                With standard JPA you have no annotations available to automativelly add timestamps into the datastore against each record
+                when it is persisted or updated. Whilst you can do this manually, setting the field(s) in prePersist callbacks etc, DataNucleus
+                provides some simple annotations to make it simpler still.
+            </p>
+            <source><![CDATA[
+import org.datanucleus.api.jpa.annotations.CreateTimestamp;
+import org.datanucleus.api.jpa.annotations.UpdateTimestamp;
+
+@Entity
+public class Hotel
+{
+    @Id
+    long id;
+
+    @CreateTimestamp
+    Timestamp createTimestamp;
+
+    @UpdateTimestamp
+    Timestamp updateTimestamp;
+
+    ...
+}</source>
+            <p>
+                In the above example we have 2 fields in the class that will have columns in the datastore. The field <i>createTimestamp</i> will be persisted 
+                at INSERT with the Timestamp of the insert. The field <i>updateTimestamp</i> will be persisted whenever any update is made to the object
+                in the datastore, with the Timestamp of the update.
+            </p>
+        </section>
+	</body>
+</document>
