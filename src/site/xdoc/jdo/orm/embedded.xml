@@ -21,7 +21,7 @@
                 objects of that type will ever be persisted in their own right into their own table, and have an 
                 identity. JDO provides a MetaData attribute that you can use to signal this.
             </p>
-            <source><![CDATA[
+<source><![CDATA[
 <jdo>
     <package name="com.mydomain.samples.embedded">
         <class name="MyClass" embedded-only="true">
@@ -29,6 +29,15 @@
         </class>
     </package>
 </jdo>]]></source>
+            <p>
+                or using annotations
+            </p>
+<source><![CDATA[
+@PersistenceCapable(embeddedOnly="true")
+public class MyClass 
+{
+    ...
+}]]></source>
             <p>
                 With the above MetaData (using the <i>embedded-only</i> attribute), in our application any objects of the class 
                 <b>MyClass</b> <u>cannot</u> be persisted in their own right. They can only be embedded into other objects.
@@ -71,21 +80,13 @@
                     <b>Computer</b> has a graphics card and a sound card. So we model these cards using a 
                     <b>ComputerCard</b> class. So our classes become
                 </p>
-                <source>
+<source>
 public class Computer
 {
     private String operatingSystem;
 
     private ComputerCard graphicsCard;
-
     private ComputerCard soundCard;
-
-    public Computer(String osName, ComputerCard graphics, ComputerCard sound)
-    {
-        this.operatingSystem = osName;
-        this.graphicsCard = graphics;
-        this.soundCard = sound;
-    }
 
     ...
 }
@@ -97,14 +98,7 @@ public class ComputerCard
     public static final int AGP_CARD = 2;
 
     private String manufacturer;
-
     private int type;
-
-    public ComputerCard(String manufacturer, int type)
-    {
-        this.manufacturer = manufacturer;
-        this.type = type;
-    }
 
     ...
 }</source>
@@ -115,9 +109,9 @@ public class ComputerCard
                 <img src="../../images/orm/embedded_pc_traditional_db.gif" border="0" alt=""/><br/><br/>
                 <p>
                     However we decide that we want to persist <b>Computer</b> objects into a table called COMPUTER and 
-                    we also want to persist the PC cards into the <u>same table</u>. We define our MetaData like this
+                    we also want to persist the computer cards into the same table. We define our XML MetaData like this
                 </p>
-                <source><![CDATA[
+<source><![CDATA[
 <jdo>
     <package name="com.mydomain.samples.embedded">
         <class name="Computer" identity-type="datastore" table="COMPUTER">
@@ -138,12 +132,34 @@ public class ComputerCard
             </field>
         </class>
 
-        <class name="ComputerCard" table="COMPUTER_CARD">
+        <class name="ComputerCard" embedded-only="true">
             <field name="manufacturer"/>
             <field name="type"/>
         </class>
     </package>
 </jdo>]]></source>
+                <p>or using annotations</p>
+<source><![CDATA[
+public class Computer
+{
+    @Embedded(nullIndicatorColumn="GRAPHICS_MANUFACTURER", members={
+        @Persistent(name="manufacturer", column="GRAPHICS_MANUFACTURER"),
+        @Persistent(name="type", column="GRAPHICS_TYPE")})
+    private ComputerCard graphicsCard;
+
+    @Embedded(nullIndicatorColumn="SOUND_MANUFACTURER", members={
+        @Persistent(name="manufacturer", column="SOUND_MANUFACTURER"),
+        @Persistent(name="type", column="SOUND_TYPE")})
+    private ComputerCard soundCard;
+
+    ...
+}
+
+@PersistenceCapable(embeddedOnly="true")
+public class ComputerCard
+{
+    ...
+}]]></source>
                 <p>
                     So here we will end up with a TABLE called "COMPUTER" with columns "COMPUTER_ID", "OS_NAME", 
                     "GRAPHICS_MANUFACTURER", "GRAPHICS_TYPE", "SOUND_MANUFACTURER", "SOUND_TYPE". If we call 
@@ -198,7 +214,7 @@ public class ComputerCard
                     if our embedded persistable object also contain another persistable object. So, 
                     using the above example what if <b>ComputerCard</b> contains an object of type <b>Connector</b> ?
                 </p>
-                <source>
+<source>
 public class ComputerCard
 {
     Connector connector;
@@ -217,8 +233,8 @@ public class Connector
 {
     int type;
 }</source>
-                <p>Well we want to store all of these objects into the same record in the COMPUTER table.</p>
-                <source><![CDATA[
+                <p>Well we want to store all of these objects into the same record in the COMPUTER table, so we define our XML metadata like this</p>
+<source><![CDATA[
 <jdo>
     <package name="com.mydomain.samples.embedded">
         <class name="Computer" identity-type="datastore" table="COMPUTER">
@@ -265,6 +281,10 @@ public class Connector
                     many levels as you require! The <b>Connector</b> objects will be persisted into the 
                     GRAPHICS_CONNECTOR_TYPE, and SOUND_CONNECTOR_TYPE columns in the COMPUTER table.
                 </p>
+                <table class="infoTable"><tr>
+                    <td><img src="../../images/lightbulb.png" border="0"/></td>
+                    <td>Please note that you cannot specify <b>nested</b> embedded column information using JDO annotations; use XML metadata instead.</td>
+                </tr></table>
                 <img src="../../images/orm/embedded_pc_nested_embedded_db.gif" border="0" alt=""/><br/>
                 <br/>
             </subsection>
@@ -297,17 +317,11 @@ public class Connector
                     Let's take an example. We are modelling a <b>Network</b>, and in our simple model our 
                     <b>Network</b> has collection of <b>Device</b>s. So we define our classes as
                 </p>
-                <source><![CDATA[
+<source><![CDATA[
 public class Network
 {
     private String name;
-
     private Collection<Device> devices = new HashSet<>();
-
-    public Network(String name)
-    {
-        this.name = name;
-    }
 
     ...
 }
@@ -315,23 +329,16 @@ public class Network
 public class Device
 {
     private String name;
-
     private String ipAddress;
-
-    public Device(String name, String addr)
-    {
-        this.name = name;
-        this.ipAddress = addr;
-    }
 
     ...
 }]]></source>
                 <p>
                     We decide that instead of <b>Device</b> having its own table, we want to persist them into the join
                     table of its relationship with the <b>Network</b> since they are only used by the network itself.
-                    We define our MetaData like this
+                    We define our XML MetaData like this
                 </p>
-                <source><![CDATA[
+<source><![CDATA[
 <jdo>
     <package name="com.mydomain.samples.embedded">
         <class name="Network" identity-type="datastore" table="NETWORK">
@@ -366,6 +373,28 @@ public class Device
         </class>
     </package>
 </jdo>]]></source>
+                <p>or using annotations</p>
+<source><![CDATA[
+public class Network
+{
+    @Element(embeddedMapping={
+        @Embedded(members={
+            @Persistent(name="name", column="DEVICE_NAME"),
+            @Persistent(name="ipAddress", column="DEVICE_IP_ADDR")})
+    })
+    private Collection<Device> devices = new HashSet<>();
+
+    ...
+}
+
+@PersistenceCapable(embeddedOnly="true")
+public class Device
+{
+    private String name;
+    private String ipAddress;
+
+    ...
+}]]></source>
                 <p>
                     So here we will end up with a table called "NETWORK" with columns "NETWORK_ID", and "NAME",
                     and a table called "NETWORK_DEVICES" with columns "NETWORK_ID", "ADPT_PK_IDX", "DEVICE_NAME",
@@ -384,10 +413,10 @@ public class Device
                     You note that in our example above DataNucleus has added an extra column "ADPT_PK_IDX" to provide 
                     the primary key of the join table now that we're storing the elements as embedded. A variation on 
                     this would have been if we wanted to maybe use the "DEVICE_IP_ADDR" as the other part of the 
-                    primary key, in which case the "ADPT_PK_IDX" would not be needed. You would specify this as 
-                    follows
+                    primary key, in which case the "ADPT_PK_IDX" would not be needed. 
+                    You would specify XML metadata like this
                 </p>
-                <source><![CDATA[
+<source><![CDATA[
             <field name="devices" persistence-modifier="persistent" table="NETWORK_DEVICES">
                 <collection element-type="com.mydomain.samples.embedded.Device"/>
                 <join>
@@ -449,17 +478,11 @@ public class Device
                     Let's take an example. We are modelling a <b>FilmLibrary</b>, and in our simple model our 
                     <b>FilmLibrary</b> has map of <b>Film</b>s, keyed by a String alias. So we define our classes as
                 </p>
-                <source><![CDATA[
+<source><![CDATA[
 public class FilmLibrary
 {
     private String owner;
-
     private Map<String, Film> films = new HashMap<>();
-
-    public FilmLibrary(String owner)
-    {
-        this.owner = owner;
-    }
 
     ...
 }
@@ -467,23 +490,16 @@ public class FilmLibrary
 public class Film
 {
     private String name;
-
     private String director;
-
-    public Film(String name, String director)
-    {
-        this.name = name;
-        this.director = director;
-    }
 
     ...
 }]]></source>
                 <p>
                     We decide that instead of <b>Film</b> having its own table, we want to persist them into the join
                     table of its map relationship with the <b>FilmLibrary</b> since they are only used by the library 
-                    itself. We define our MetaData like this
+                    itself. We define our XML MetaData like this
                 </p>
-                <source><![CDATA[
+<source><![CDATA[
 <jdo>
     <package name="com.mydomain.samples.embedded">
         <class name="FilmLibrary" identity-type="datastore" table="FILM_LIBRARY">
@@ -517,6 +533,29 @@ public class Film
         </class>
     </package>
 </jdo>]]></source>
+                <p>or using annotations</p>
+<source><![CDATA[
+public class FilmLibrary
+{
+    @Key(column="FILM_ALIAS")
+    @Value(embeddedMapping={
+        @Embedded(members={
+            @Persistent(name="name", column="FILM_NAME"),
+            @Persistent(name="director", column="FILM_DIRECTOR")})
+    })
+    private Map<String, Film> films = new HashMap<>();
+
+    ...
+}
+
+@PersistenceCapable(embeddedOnly="true")
+public class Film
+{
+    private String name;
+    private String director;
+
+    ...
+}]]></source>
                 <p>
                     So here we will end up with a table called "FILM_LIBRARY" with columns "FILM_LIBRARY_ID", and "OWNER",
                     and a table called "FILM_LIBRARY_FILMS" with columns "FILM_LIBRARY_ID", "FILM_ALIAS", "FILM_NAME", "FILM_DIRECTOR".
