@@ -172,8 +172,45 @@
         ...
     </build>]]></source>
                 <p>
-                    So you then get auto-enhancement after each compile. Please refer to the
-                    <a href="maven.html">Maven JDO guide</a> for more details.
+                    If you wanted to enhance test classes as well, then use two executions
+                </p>
+                <source><![CDATA[
+    <build>
+        ...
+        <plugins>
+            <plugin>
+                <groupId>org.datanucleus</groupId>
+                <artifactId>datanucleus-maven-plugin</artifactId>
+                <version>5.0.0-release</version>
+                <configuration>
+                    <log4jConfiguration>${basedir}/log4j.properties</log4jConfiguration>
+                    <verbose>true</verbose>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>process-classes</id>
+                        <phase>process-classes</phase>
+                        <goals>
+                            <goal>enhance</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>process-test-classes</id>
+                        <phase>process-test-classes</phase>
+                        <goals>
+                            <goal>enhance</goal>
+                        </goals>
+                        <configuration>
+                            <metadataDirectory>${project.build.testOutputDirectory}</metadataDirectory>
+                        </configuration>
+                    </execution>
+		</executions>
+            </plugin>
+        </plugins>
+        ...
+    </build>]]></source>
+                <p>
+                    Please refer to the <a href="maven.html">Maven JDO guide</a> for more details.
                 </p>
                 <br/>
             </subsection>
