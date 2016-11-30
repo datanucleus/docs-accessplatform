@@ -29,12 +29,20 @@
                     By default this will add a column <b>TENANT_ID</b> to each primary table, of String-based type.
                     You can control this by specifying extension metadata for each persistable class
                 </p>
-                <source><![CDATA[
+<source><![CDATA[
 <class name="MyClass">
      <extension vendor-name="datanucleus" key="multitenancy-column-name" value="TENANT"/>
      <extension vendor-name="datanucleus" key="multitenancy-column-length" value="24"/>
      ...
 </class>]]></source>
+                <p>or using annotations</p>
+<source><![CDATA[
+@PersistenceCapable
+@MultiTenant(column="TENANT", columnLength=24)
+public class MyClass
+{
+    ...
+}]]></source>
                 <p>
                     In all subsequent use of DataNucleus, any "insert" to the primary "table"(s) will also include the TENANT column value. 
                     Additionally any query will apply a WHERE clause restricting to a particular value of TENANT column.
@@ -42,11 +50,19 @@
                 <p>
                     If you have enabled multi-tenancy as above but want to disable multitenancy on a class, just specify the following metadata on the class in question
                 </p>
-                <source><![CDATA[
+<source><![CDATA[
 <class name="MyClass">
      <extension vendor-name="datanucleus" key="multitenancy-disable" value="true"/>
      ...
 </class>]]></source>
+                <p>or using annotations</p>
+<source><![CDATA[
+@PersistenceCapable
+@MultiTenant(disable=true)
+public class MyClass
+{
+    ...
+}]]></source>
                 <p>
                     Note that the <b>Tenant ID</b> can be set in one of three ways.
                 </p>
@@ -54,7 +70,7 @@
                     <li>Per PMF : just set the persistence property <i>datanucleus.tenantId</i> when you start up the PMF and all access for this PMF will use this Tenant ID</li>
                     <li>Per PM : set the persistence property <i>datanucleus.tenantId</i> when you start up the PMF as the default Tenant ID and set a property on any PM
                         that you want a different Tenant ID specifying for. Like this
-                        <source><![CDATA[
+<source><![CDATA[
 PersistenceManager pm = pmf.getPersistenceManager();
 ... // All operations will apply to default tenant specified in persistence property for PMF
 pm.close();
