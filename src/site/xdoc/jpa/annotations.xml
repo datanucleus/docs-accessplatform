@@ -208,6 +208,11 @@
                     <td>Class</td>
                     <td>Specifies that this class is "read-only" (DataNucleus extension).</td>
                 </tr>
+                <tr class="d">
+                    <td><a href="#MultiTenant_Class">@MultiTenant</a></td>
+                    <td>Class</td>
+                    <td>Specifies multi-tenancy details for this class (DataNucleus extension).</td>
+                </tr>
 
                 <tr>
                     <td><a href="#Embedded">@Embedded</a></td>
@@ -430,6 +435,16 @@
                     <td><a href="#Extension">@Extension</a></td>
                     <td>Class/Field/Method</td>
                     <td>Defines a DataNucleus extension (DataNucleus extension).</td>
+                </tr>
+                <tr class="d">
+                    <td><a href="#CreateTimestamp">@CreateTimestamp</a></td>
+                    <td>Field/Method</td>
+                    <td>Specifies that this field/property should store a creation timestamp when inserting (DataNucleus extension).</td>
+                </tr>
+                <tr class="d">
+                    <td><a href="#UpdateTimestamp">@CreateTimestamp</a></td>
+                    <td>Field/Method</td>
+                    <td>Specifies that this field/property should store an update timestamp when updating (DataNucleus extension).</td>
                 </tr>
             </table>
             <br/>
@@ -3411,6 +3426,49 @@ public class MyClass
                 <br/>
             </subsection>
 
+            <a name="MultiTenant_Class"/>
+            <subsection name="@MultiTenant">
+                <p>
+                    This DataNucleus-extension annotation is used specify multi-tenancy details for a class.
+                    Specified on the <b>class</b>.
+                </p>
+                <table>
+                    <tr class="d">
+                        <th>Attribute</th>
+                        <th>Type</th>
+                        <th>Description</th>
+                        <th>Default</th>
+                    </tr>
+                    <tr class="d">
+                        <td>column</td>
+                        <td>String</td>
+                        <td>Name of the multi-tenancy column for this class.</td>
+                        <td>TENANT_ID</td>
+                    </tr>
+                    <tr class="d">
+                        <td>columnName</td>
+                        <td>int</td>
+                        <td>Length of the multi-tenancy column.</td>
+                        <td></td>
+                    </tr>
+                    <tr class="d">
+                        <td>disabled</td>
+                        <td>boolean</td>
+                        <td>Whether the multi-tenancy for this class is disabled.</td>
+                        <td>false</td>
+                    </tr>
+                </table>
+                <source><![CDATA[
+@Entity
+@MultiTenant(column="TENANT", columnLength=255)
+public class MyClass
+{
+    ...
+}]]></source>
+                <br/>
+                <br/>
+            </subsection>
+
             <a name="ReadOnly"/>
             <subsection name="@ReadOnly">
                 <p>
@@ -3425,6 +3483,42 @@ public class MyClass
     @ReadOnly
     String someValue;
 
+    ...
+}]]></source>
+                <br/>
+                <br/>
+            </subsection>
+
+            <a name="CreateTimestamp"/>
+            <subsection name="@CreateTimestamp">
+                <p>
+                    This DataNucleus-extension annotation is used to define this field as being persisted with a timestamp of the creation time of this object.
+                    Specified on the <b>field/property</b>.
+                </p>
+                <source><![CDATA[
+@Entity
+public class MyClass
+{
+    @CreateTimestamp
+    Timestamp createTime;
+    ...
+}]]></source>
+                <br/>
+                <br/>
+            </subsection>
+
+            <a name="UpdateTimestamp"/>
+            <subsection name="@UpdateTimestamp">
+                <p>
+                    This DataNucleus-extension annotation is used to define this field as being persisted with a timestamp of the update time of this object.
+                    Specified on the <b>field/property</b>.
+                </p>
+                <source><![CDATA[
+@Entity
+public class MyClass
+{
+    @UpdateTimestamp
+    Timestamp updateTime;
     ...
 }]]></source>
                 <br/>
