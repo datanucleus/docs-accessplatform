@@ -68,8 +68,8 @@ public class MyClass
                     Note that the <b>Tenant ID</b> can be set in one of three ways.
                 </p>
                 <ul>
-                    <li>Per EMF : just set the persistence property <i>datanucleus.tenantId</i> when you start up the EMF and all access for this EMF will use this Tenant ID</li>
-                    <li>Per EM : set the persistence property <i>datanucleus.tenantId</i> when you start up the PMF as the default Tenant ID and set a property on any EntityManager
+                    <li>Per EntityManagerFactory : just set the persistence property <i>datanucleus.tenantId</i> when you start up the EMF, and all access for this EMF will use this Tenant ID</li>
+                    <li>Per EntityManager : set the persistence property <i>datanucleus.tenantId</i> when you start up the EMF as the default Tenant ID, and set a property on any EntityManager
                         that you want a different Tenant ID specifying for. Like this
 <source><![CDATA[
 EntityManager em = emf.createEntityManager();

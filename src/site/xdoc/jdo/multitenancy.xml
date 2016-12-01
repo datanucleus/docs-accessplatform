@@ -67,8 +67,8 @@ public class MyClass
                     Note that the <b>Tenant ID</b> can be set in one of three ways.
                 </p>
                 <ul>
-                    <li>Per PMF : just set the persistence property <i>datanucleus.tenantId</i> when you start up the PMF and all access for this PMF will use this Tenant ID</li>
-                    <li>Per PM : set the persistence property <i>datanucleus.tenantId</i> when you start up the PMF as the default Tenant ID and set a property on any PM
+                    <li>Per PersistenceManagerFactory : just set the persistence property <i>datanucleus.tenantId</i> when you start up the PMF, and all access for this PMF will use this Tenant ID</li>
+                    <li>Per PersistenceManager : set the persistence property <i>datanucleus.tenantId</i> when you start up the PMF as the default Tenant ID, and set a property on any PM
                         that you want a different Tenant ID specifying for. Like this
 <source><![CDATA[
 PersistenceManager pm = pmf.getPersistenceManager();
