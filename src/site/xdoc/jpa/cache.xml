@@ -35,37 +35,32 @@
                 </p>
                 <ul>
                     <li><b>none</b> - turn OFF Level 2 caching.</li>
-                    <li><b>weak</b> - use the internal (weak reference based) L2 cache. Provides support for 
-                        the JPA2 interface of being able to put objects into the cache, and evict them when 
-                        required. This option does not support distributed caching, solely running within the 
-                        JVM of the client application. Weak references are held to non pinned objects.</li>
-                    <li><b>soft</b> - use the internal (soft reference based) L2 cache. Provides support for 
-                        the JPA2 interface of being able to put objects into the cache, and evict them when 
-                        required. This option does not support distributed caching, solely running within the 
-                        JVM of the client application. Soft references are held to non pinned objects.</li>
-                    <li><a href="#javax.cache">javax.cache</a> - a simple wrapper to standard javax.cache caching product(s). 
-                        Provides basic support for adding items to the cache and retrieval from the cache. Doesn't support pinning and unpinning.</li>
+                    <li><b>weak</b> - use the internal (weak reference based) L2 cache. 
+                        Provides support for the JPA interface of being able to put objects into the cache, and evict them when required.
+                        This option does not support distributed caching, solely running within the JVM of the client application. 
+                        Weak references are held to non pinned objects.</li>
+                    <li><b>soft</b> - use the internal (soft reference based) L2 cache. 
+                        Provides support for the JPA interface of being able to put objects into the cache, and evict them when required.
+                        This option does not support distributed caching, solely running within the JVM of the client application. 
+                        Soft references are held to non pinned objects.</li>
+                    <li><a href="#javax.cache">javax.cache</a> - a simple wrapper to the Java standard "javax.cache" Temporary Caching API. 
+                        Provides basic support for adding items to the cache and retrieval from the cache.</li>
                     <li><a href="#ehcache">EHCache</a> - a simple wrapper to EHCache's caching product. 
-                        Provides basic support for adding items to the cache and retrieval from the cache. Doesn't support pinning and unpinning.</li>
+                        Provides basic support for adding items to the cache and retrieval from the cache.</li>
                     <li><a href="#ehcache">EHCacheClassBased</a> - similar to the EHCache option but class-based.</li>
                     <li><a href="#oscache">OSCache</a> - a simple wrapper to OSCache's caching product. 
-                        Provides basic support for adding items to the cache and retrieval from the cache. Doesn't support pinning and unpinning.</li>
+                        Provides basic support for adding items to the cache and retrieval from the cache.</li>
                     <li><a href="#swarmcache">SwarmCache</a> - a simple wrapper to SwarmCache's caching product. 
-                        Provides basic support for adding items to the cache and retrieval from the cache. Doesn't support pinning and unpinning.</li>
-                    <li><a href="#coherence">Oracle Coherence</a> - a simple wrapper to Oracle's 
-                        Coherence caching product. Provides basic support for adding items to the cache and retrieval 
-                        from the cache. Doesn't support pinning and unpinning. Oracle's caches support distributed 
-                        caching, so you could, in principle, use DataNucleus in a distributed environment with 
-                        this option.</li>
-                    <li><a href="#memcached">spymemcached</a> - a simple wrapper to Spymemcached java client for 
-                        memcached caching product. Provides basic support for adding items to the cache and retrieval 
-                        from the cache. Doesn't support pinning and unpinning.</li>
-                    <li><a href="#memcached">xmemcached</a> - a simple wrapper to Xmemcached java client for 
-                        memcached caching product. Provides basic support for adding items to the cache and retrieval 
-                        from the cache. Doesn't support pinning and unpinning.</li>
-                    <li><a href="#cacheonix">cacheonix</a> - a simple wrapper to the Cacheonix distributed
-                        caching software. Provides basic support for adding items to the cache and retrieval 
-                        from the cache. Doesn't support pinning and unpinning.</li>
+                        Provides basic support for adding items to the cache and retrieval from the cache.</li>
+                    <li><a href="#coherence">Oracle Coherence</a> - a simple wrapper to Oracle's Coherence caching product. 
+                        Provides basic support for adding items to the cache and retrieval from the cache. 
+                        Oracle's caches support distributed caching, so you could, in principle, use DataNucleus in a distributed environment with this option.</li>
+                    <li><a href="#memcached">spymemcached</a> - a simple wrapper to the "spymemcached" client for memcached caching product. 
+                        Provides basic support for adding items to the cache and retrieval from the cache.</li>
+                    <li><a href="#memcached">xmemcached</a> - a simple wrapper to the "xmemcached" client for memcached caching product. 
+                        Provides basic support for adding items to the cache and retrieval from the cache.</li>
+                    <li><a href="#cacheonix">cacheonix</a> - a simple wrapper to the Cacheonix distributed caching software. 
+                        Provides basic support for adding items to the cache and retrieval from the cache.</li>
                 </ul>
                 <p>
                     The weak, soft and javax.cache caches are available in the datanucleus-core plugin.
@@ -146,17 +141,13 @@ public class MyClass
                     If a field is <i>cacheable</i> then
                 </p>
                 <ul>
-                    <li>If it is a persistable object, the "identity" of the related object will be stored
-                            in the Level 2 cache for this field of this object</li>
-                    <li>If it is a Collection of persistable elements, the "identity" of the elements will be 
-                            stored in the Level 2 cache for this field of this object</li>
-                    <li>If it is a Map of persistable keys/values, the "identity" of the keys/values will be 
-                            stored in the Level 2 cache for this field of this object</li>
+                    <li>If it is a persistable object, the "identity" of the related object will be stored in the Level 2 cache for this field of this object</li>
+                    <li>If it is a Collection of persistable elements, the "identity" of the elements will be stored in the Level 2 cache for this field of this object</li>
+                    <li>If it is a Map of persistable keys/values, the "identity" of the keys/values will be stored in the Level 2 cache for this field of this object</li>
                 </ul>
                 <p>
                     When pulling an object in from the Level 2 cache and it has a reference to another object
-                    Access Platform uses the "identity" to find that object in the Level 1 or Level 2 caches
-                    to re-relate the objects.
+                    DataNucleus uses the "identity" to find that object in the Level 1 or Level 2 caches to re-relate the objects.
                 </p>
                 <br/>
                 <br/>
@@ -165,45 +156,36 @@ public class MyClass
             <a name="javax.cache"/>
             <subsection name="L2 Cache using javax.cache">
                 <p>
-                    DataNucleus provides a simple wrapper to 
-                    <a href="http://jcp.org/en/jsr/detail?id=107" target="_blank">javax.cache's caches</a>. 
-                    To enable this you should put a javax.cache implementation in your CLASSPATH, and set the persistence properties
+                    DataNucleus provides a simple wrapper to any compliant
+                    <a href="http://jcp.org/en/jsr/detail?id=107" target="_blank">javax.cache implementation</a>. 
+                    To enable this you should put a "javax.cache" implementation in your CLASSPATH, and set the persistence properties
                 </p>
                 <source>
 datanucleus.cache.level2.type=javax.cache
 datanucleus.cache.level2.cacheName={cache name}
 datanucleus.cache.level2.timeout={expiration time in millis - optional}</source>
                 <br/>
-            </subsection>
-
-            <a name="coherence"/>
-            <subsection name="L2 Cache using Oracle Coherence">
                 <p>
-                    DataNucleus provides a simple wrapper to 
-                    <a href="http://www.oracle.com/technology/products/coherence/index.html" target="_blank">Oracle's Coherence caches</a>.
-                    This currently takes the <i>NamedCache</i> interface in Coherence and instantiates a cache of a 
-                    user provided name. To enabled this you should set the following persistence properties
+                    As an example, you could simply add the following to a Maven POM, together with those persistence properties above to use HazelCast "javax.cache" implementation
                 </p>
-                <source>
-datanucleus.cache.level2.type=coherence
-datanucleus.cache.level2.cacheName={coherence cache name}</source>
-                <p>
-                    The <i>Coherence cache name</i> is the name that you would normally put into a call to 
-                    CacheFactory.getCache(name). You have the benefits of Coherence's distributed/serialized 
-                    caching. If you require more control over the Coherence cache whilst using it with 
-                    DataNucleus, you can just access the cache directly via
-                </p>
-                <source>
-DataStoreCache cache = pmf.getDataStoreCache();
-NamedCache tangosolCache = ((TangosolLevel2Cache)cache).getTangosolCache();</source>
-                <br/>
+<source><![CDATA[
+<dependency>
+    <groupId>javax.cache</groupId>
+    <artifactId>cache-api</artifactId>
+    <version>1.0.0</version>
+</dependency>
+<dependency>
+    <groupId>com.hazelcast</groupId>
+    <artifactId>hazelcast</artifactId>
+    <version>3.7.3</version>
+</dependency>
+]]></source>
             </subsection>
 
             <a name="ehcache"/>
             <subsection name="L2 Cache using EHCache">
                 <p>
-                    DataNucleus provides a simple wrapper to 
-                    <a href="http://www.sf.net/projects/ehcache" target="_blank">EHCache's caches</a>. 
+                    DataNucleus provides a simple wrapper to <a href="http://www.sf.net/projects/ehcache" target="_blank">EHCache's own API caches</a> (not the javax.cache API variant). 
                     To enable this you should set the persistence properties
                 </p>
                 <source>
@@ -217,38 +199,11 @@ datanucleus.cache.level2.configurationFile={EHCache configuration file (in class
                 <br/>
             </subsection>
 
-            <a name="oscache"/>
-            <subsection name="L2 Cache using OSCache">
-                <p>
-                    DataNucleus provides a simple wrapper to 
-                    <a href="http://www.opensymphony.com/oscache/" target="_blank">OSCache's caches</a>. 
-                    To enable this you should set the persistence properties
-                </p>
-                <source>
-datanucleus.cache.level2.type=oscache
-datanucleus.cache.level2.cacheName={cache name}</source>
-                <br/>
-            </subsection>
-
-            <a name="swarmcache"/>
-            <subsection name="L2 Cache using SwarmCache">
-                <p>
-                    DataNucleus provides a simple wrapper to 
-                    <a href="http://swarmcache.sourceforge.net/" target="_blank">SwarmCache's caches</a>. 
-                    To enable this you should set the persistence properties
-                </p>
-                <source>
-datanucleus.cache.level2.type=swarmcache
-datanucleus.cache.level2.cacheName={cache name}</source>
-                <br/>
-            </subsection>
-
             <a name="memcached"/>
             <subsection name="L2 Cache using Spymemcached/Xmemcached">
                 <p>
-                    DataNucleus provides a simple wrapper to 
-                    <a href="http://code.google.com/p/spymemcached/">Spymemcached caches</a> and
-                    <a href="http://code.google.com/p/xmemcached/">Xmemcached caches</a>. . 
+                    DataNucleus provides a simple wrapper to <a href="http://code.google.com/p/spymemcached/">Spymemcached caches</a> and
+                    <a href="http://code.google.com/p/xmemcached/">Xmemcached caches</a>.
                     To enable this you should set the persistence properties
                 </p>
                 <source>
@@ -267,8 +222,7 @@ datanucleus.cache.level2.memcached.expireSeconds=...</source>
             <a name="cacheonix"/>
             <subsection name="L2 Cache using Cacheonix">
                 <p>
-                    DataNucleus provides a simple wrapper to 
-                    <a href="http://www.cacheonix.com/" target="_blank">Cacheonix</a>. 
+                    DataNucleus provides a simple wrapper to <a href="http://www.cacheonix.com/" target="_blank">Cacheonix</a>. 
                     To enable this you should set the persistence properties
                 </p>
                 <source>
@@ -313,6 +267,52 @@ datanucleus.cache.level2.configurationFile={Cacheonix configuration file (in cla
    </local>
 
 </cacheonix>]]></source>
+                <br/>
+            </subsection>
+
+            <a name="oscache"/>
+            <subsection name="L2 Cache using OSCache">
+                <p>
+                    DataNucleus provides a simple wrapper to <a href="http://www.opensymphony.com/oscache/" target="_blank">OSCache's caches</a>. 
+                    To enable this you should set the persistence properties
+                </p>
+                <source>
+datanucleus.cache.level2.type=oscache
+datanucleus.cache.level2.cacheName={cache name}</source>
+                <br/>
+            </subsection>
+
+            <a name="swarmcache"/>
+            <subsection name="L2 Cache using SwarmCache">
+                <p>
+                    DataNucleus provides a simple wrapper to <a href="http://swarmcache.sourceforge.net/" target="_blank">SwarmCache's caches</a>. 
+                    To enable this you should set the persistence properties
+                </p>
+                <source>
+datanucleus.cache.level2.type=swarmcache
+datanucleus.cache.level2.cacheName={cache name}</source>
+                <br/>
+            </subsection>
+
+            <a name="coherence"/>
+            <subsection name="L2 Cache using Oracle Coherence">
+                <p>
+                    DataNucleus provides a simple wrapper to 
+                    <a href="http://www.oracle.com/technology/products/coherence/index.html" target="_blank">Oracle's Coherence caches</a>.
+                    This currently takes the <i>NamedCache</i> interface in Coherence and instantiates a cache of a user provided name.
+                    To enabled this you should set the following persistence properties
+                </p>
+                <source>
+datanucleus.cache.level2.type=coherence
+datanucleus.cache.level2.cacheName={coherence cache name}</source>
+                <p>
+                    The <i>Coherence cache name</i> is the name that you would normally put into a call to CacheFactory.getCache(name). 
+                    You have the benefits of Coherence's distributed/serialized caching. 
+                    If you require more control over the Coherence cache whilst using it with DataNucleus, you can just access the cache directly via
+                </p>
+                <source>
+DataStoreCache cache = pmf.getDataStoreCache();
+NamedCache tangosolCache = ((TangosolLevel2Cache)cache).getTangosolCache();</source>
                 <br/>
             </subsection>
 
