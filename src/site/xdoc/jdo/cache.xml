@@ -34,15 +34,14 @@
                     With the <b>Level 2</b> Cache you currently have the following options.
                 </p>
                 <ul>
-                    <li><b>none</b> - turn OFF Level 2 caching.</li>
+                    <li><b>soft</b> - use the internal (soft reference based) L2 cache. <b>This is the default L2 cache in DataNucleus.</b>
+                        Provides support for the JDO interface of being able to pin objects into the cache, and unpin them when required.
+                        This option does not support distributed caching, solely running within the JVM of the client application. 
+                        Soft references are held to non pinned objects.</li>
                     <li><b>weak</b> - use the internal (weak reference based) L2 cache. 
                         Provides support for the JDO interface of being able to pin objects into the cache, and unpin them when required.
                         This option does not support distributed caching, solely running within the JVM of the client application. 
                         Weak references are held to non pinned objects.</li>
-                    <li><b>soft</b> - use the internal (soft reference based) L2 cache. 
-                        Provides support for the JDO interface of being able to pin objects into the cache, and unpin them when required.
-                        This option does not support distributed caching, solely running within the JVM of the client application. 
-                        Soft references are held to non pinned objects.</li>
                     <li><a href="#javax.cache">javax.cache</a> - a simple wrapper to the Java standard "javax.cache" Temporary Caching API. 
                         Provides basic support for adding items to the cache and retrieval from the cache, but doesn't support pinning and unpinning.</li>
                     <li><a href="#ehcache">EHCache</a> - a simple wrapper to EHCache's caching product. 
@@ -61,6 +60,7 @@
                         Provides basic support for adding items to the cache and retrieval from the cache. Doesn't support pinning and unpinning.</li>
                     <li><a href="#cacheonix">cacheonix</a> - a simple wrapper to the Cacheonix distributed caching software. 
                         Provides basic support for adding items to the cache and retrieval from the cache. Doesn't support pinning and unpinning.</li>
+                    <li><b>none</b> - turn OFF Level 2 caching.</li>
                 </ul>
                 <p>
                     The weak, soft and javax.cache caches are available in the datanucleus-core plugin.
@@ -247,6 +247,8 @@ datanucleus.cache.level2.timeout={expiration time in millis - optional}</source>
     <version>3.7.3</version>
 </dependency>
 ]]></source>
+                <br/>
+                <br/>
             </subsection>
 
             <a name="ehcache"/>

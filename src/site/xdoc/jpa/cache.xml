@@ -34,33 +34,25 @@
                     With the L2 Cache you currently have the following options.
                 </p>
                 <ul>
-                    <li><b>none</b> - turn OFF Level 2 caching.</li>
+                    <li><b>soft</b> - use the internal (soft reference based) L2 cache. <b>This is the default L2 cache in DataNucleus.</b>
+                        Provides support for the JPA interface of being able to put objects into the cache, and evict them when required.
+                        This option does not support distributed caching, solely running within the JVM of the client application. 
+                        Soft references are held to non pinned objects.</li>
                     <li><b>weak</b> - use the internal (weak reference based) L2 cache. 
                         Provides support for the JPA interface of being able to put objects into the cache, and evict them when required.
                         This option does not support distributed caching, solely running within the JVM of the client application. 
                         Weak references are held to non pinned objects.</li>
-                    <li><b>soft</b> - use the internal (soft reference based) L2 cache. 
-                        Provides support for the JPA interface of being able to put objects into the cache, and evict them when required.
-                        This option does not support distributed caching, solely running within the JVM of the client application. 
-                        Soft references are held to non pinned objects.</li>
-                    <li><a href="#javax.cache">javax.cache</a> - a simple wrapper to the Java standard "javax.cache" Temporary Caching API. 
-                        Provides basic support for adding items to the cache and retrieval from the cache.</li>
-                    <li><a href="#ehcache">EHCache</a> - a simple wrapper to EHCache's caching product. 
-                        Provides basic support for adding items to the cache and retrieval from the cache.</li>
+                    <li><a href="#javax.cache">javax.cache</a> - a simple wrapper to the Java standard "javax.cache" Temporary Caching API.</li>
+                    <li><a href="#ehcache">EHCache</a> - a simple wrapper to EHCache's caching product.</li>
                     <li><a href="#ehcache">EHCacheClassBased</a> - similar to the EHCache option but class-based.</li>
-                    <li><a href="#oscache">OSCache</a> - a simple wrapper to OSCache's caching product. 
-                        Provides basic support for adding items to the cache and retrieval from the cache.</li>
-                    <li><a href="#swarmcache">SwarmCache</a> - a simple wrapper to SwarmCache's caching product. 
-                        Provides basic support for adding items to the cache and retrieval from the cache.</li>
+                    <li><a href="#oscache">OSCache</a> - a simple wrapper to OSCache's caching product.</li>
+                    <li><a href="#swarmcache">SwarmCache</a> - a simple wrapper to SwarmCache's caching product.</li>
                     <li><a href="#coherence">Oracle Coherence</a> - a simple wrapper to Oracle's Coherence caching product. 
-                        Provides basic support for adding items to the cache and retrieval from the cache. 
                         Oracle's caches support distributed caching, so you could, in principle, use DataNucleus in a distributed environment with this option.</li>
-                    <li><a href="#memcached">spymemcached</a> - a simple wrapper to the "spymemcached" client for memcached caching product. 
-                        Provides basic support for adding items to the cache and retrieval from the cache.</li>
-                    <li><a href="#memcached">xmemcached</a> - a simple wrapper to the "xmemcached" client for memcached caching product. 
-                        Provides basic support for adding items to the cache and retrieval from the cache.</li>
-                    <li><a href="#cacheonix">cacheonix</a> - a simple wrapper to the Cacheonix distributed caching software. 
-                        Provides basic support for adding items to the cache and retrieval from the cache.</li>
+                    <li><a href="#memcached">spymemcached</a> - a simple wrapper to the "spymemcached" client for memcached caching product.</li>
+                    <li><a href="#memcached">xmemcached</a> - a simple wrapper to the "xmemcached" client for memcached caching product. </li>
+                    <li><a href="#cacheonix">cacheonix</a> - a simple wrapper to the Cacheonix distributed caching software.</li>
+                    <li><b>none</b> - turn OFF Level 2 caching.</li>
                 </ul>
                 <p>
                     The weak, soft and javax.cache caches are available in the datanucleus-core plugin.
@@ -110,8 +102,7 @@ Cache cache = emf.getCache();</source>
                 
                 <p>
                     You can also control which classes are put into a Level 2 cache.
-                    So with the following JPA2 annotation @Cacheable, no objects of type <i>MyClass</i>
-                    will be put in the L2 cache.
+                    So with the following JPA annotation @Cacheable, no objects of type <i>MyClass</i> will be put in the L2 cache.
                 </p>
                 <source><![CDATA[
 @Cacheable(false)
@@ -121,10 +112,8 @@ public class MyClass
     ...
 }]]></source>
                 <p>
-                    If you want to control which fields of an object are put in the Level 2 cache you can do this
-                    using an extension annotation on the field.
-                    This setting is only required for fields that are relationships to other persistable 
-                    objects. Like this
+                    If you want to control which fields of an object are put in the Level 2 cache you can do this using an extension annotation on the field.
+                    This setting is only required for fields that are relationships to other persistable objects. Like this
                 </p>
                 <source><![CDATA[
 public class MyClass
@@ -180,6 +169,8 @@ datanucleus.cache.level2.timeout={expiration time in millis - optional}</source>
     <version>3.7.3</version>
 </dependency>
 ]]></source>
+                <br/>
+                <br/>
             </subsection>
 
             <a name="ehcache"/>
