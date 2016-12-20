@@ -27,7 +27,7 @@ List results = (List)q.getResultList();</source>
                     In JPQL queries you define the query in a single string, defining the result, the candidate class(es), the filter,
                     any grouping, and the ordering. This string has to follow the following pattern
                 </p>
-                <source>
+<source>
 SELECT [&lt;result&gt;]
     FROM &lt;from_entities_and_variables&gt;
     [WHERE &lt;filter&gt;]
@@ -35,6 +35,21 @@ SELECT [&lt;result&gt;]
     [ORDER BY &lt;ordering&gt;]</source> 
                 <p>
                     The "keywords" in the query are shown in UPPER CASE are case-insensitive.
+                </p>
+                <img src="../images/nucleus_extension.gif" border="0" alt=""/>
+                <p>
+                    If you set the persistence property <b>datanucleus.query.jpql.allowRange</b> to <i>true</i> then you can optionally also specify
+                    the range of results required in the JPQL string after the ordering. It accepts the following format when this is specified
+                </p>
+<source>
+SELECT [&lt;result&gt;]
+    FROM &lt;from_entities_and_variables&gt;
+    [WHERE &lt;filter&gt;]
+    [GROUP BY &lt;grouping&gt;] [HAVING &lt;having&gt;]
+    [ORDER BY &lt;ordering&gt;]
+    [RANGE &lt;fromInclusive&gt;,&lt;toExclusive&gt;]</source>
+                <p>
+                    where <i>fromInclusive</i> is the first row to be returned (origin = 0), and <i>toExclusive</i> is the row after the last one to be returned).
                 </p>
                 <br/>
             </subsection>
