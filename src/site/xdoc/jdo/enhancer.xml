@@ -550,15 +550,12 @@ enhancer.enhance();</source>
                 The class <i>A</i> is to be persisted in the datastore. The class <i>B</i> directly updates the fields of class <i>A</i> but doesn't need 
                 persisting. The class <i>C</i> is not involved in the persistence process. We would define JDO MetaData for these classes like this
             </p>
-            <source><![CDATA[
-<class name="A" persistence-modifier="persistence-capable">
-    <field name="myField">
-        ...
-    </field>
-    ...
-</class>
-<class name="B" persistence-modifier="persistence-aware">
-</class>]]></source>
+<source><![CDATA[
+@PersistenceCapable
+public class A {...}
+
+@PersistenceAware
+public class B {...}]]></source>
             <p>
                 So our MetaData is mainly for those classes that are <i>persistable</i> and are to be persisted 
                 to the datastore (we don't really need the <i>persistence-modifier</i> for thse classes since this is 
