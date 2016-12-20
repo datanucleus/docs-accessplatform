@@ -464,8 +464,6 @@ DataNucleus Enhancer completed with success for 2 classes. Timings : input=422 m
 			<a name="runtime"/>
             <subsection name="Runtime Enhancement">
                 <p>
-                    Enhancement of persistent classes at runtime is possible when using JRE 1.5+.
-                    Runtime Enhancement requires the following runtime dependencies: DataNucleus Core library. 
                     To enable runtime enhancement, the <i>javaagent</i> option must be set in the java command line.
                     For example,
                 </p>
@@ -488,15 +486,17 @@ java -javaagent:datanucleus-core.jar=-api=JDO,mydomain.mypackage1,mydomain.mypac
                     Please take care over the following when using runtime enhancement
                 </p>
                 <ul>
-                    <li>When you have a class with a field of another persistable type
-                        make sure that you mark that field as "persistent" (@Persistent, or in XML)
-                        since with runtime enhancement at that point the related class is likely
-                        not yet enhanced so will likely not be marked as persistent otherwise.
+                    <li>When you have a class with a field of another persistable type, make sure that you mark that field as "persistent" (@Persistent)
+                        since with runtime enhancement at that point the related class is likely not yet enhanced so will likely not be marked as persistent otherwise.
                         <b>Be explicit</b></li>
-                    <li>
-                        If the agent jar is not found make sure it is specified with an absolute path.
-                    </li>
+                    <li>If the agent jar is not found make sure it is specified with an absolute path.</li>
                 </ul>
+                <table class="infoTable"><tr>
+                    <td><img src="../images/lightbulb.png" border="0"/></td>
+                    <td>
+                        You can only runtime enhance classes that have been annotated. It will not work with classes that have XML metadata only.
+                    </td>
+                </tr></table>
                 <br/>
             </subsection>
 

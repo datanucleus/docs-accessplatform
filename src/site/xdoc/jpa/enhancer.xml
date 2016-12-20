@@ -355,18 +355,13 @@ DataNucleus Enhancer completed with success for 2 classes. Timings : input=422 m
 			<a name="runtime"/>
             <subsection name="Runtime Enhancement">
                 <p>
-                    Enhancement of persistent classes at runtime is possible when using JRE 1.5 or superior 
-                    versions. Runtime Enhancement requires the <i>datanucleus-core</i> jar be in the CLASSPATH
-                    but then you'd have that if using DataNucleus.
-                </p>
-                <p>
                     When operating in a JavaEE environment (JBoss, WebSphere, etc) instead set the persistence 
                     property <a href="emf.html">datanucleus.jpa.addClassTransformer</a> to <i>true</i>.
                     Note that this is only for a real JavaEE server that implements the JavaEE parts of the JPA spec.
                 </p>
                 <p>
-                    To enable runtime enhancement in other environments, the <i>javaagent</i> option must be set 
-                    in the java command line. For example,
+                    To enable runtime enhancement in other environments, the <i>javaagent</i> option must be set in the java command line. 
+                    For example,
                 </p>
                 <source>java -javaagent:datanucleus-core.jar=-api=JPA Main</source>
                 <p>
@@ -385,15 +380,17 @@ DataNucleus Enhancer completed with success for 2 classes. Timings : input=422 m
                     Please take care over the following when using runtime enhancement
                 </p>
                 <ul>
-                    <li>When you have a class with a field of another persistable type
-                        make sure that you mark that field as "persistent" (@Persistent, or in XML)
-                        since with runtime enhancement at that point the related class is likely
-                        not yet enhanced so will likely not be marked as persistent otherwise.
+                    <li>When you have a class with a field of another persistable type make sure that you mark that field as "persistent" (@Persistent)
+                        since with runtime enhancement at that point the related class is likely not yet enhanced so will likely not be marked as persistent otherwise.
                         <b>Be explicit</b></li>
-                    <li>
-                        If the agent jar is not found make sure it is specified with an absolute path.
-                    </li>
+                    <li>If the agent jar is not found make sure it is specified with an absolute path.</li>
                 </ul>
+                <table class="infoTable"><tr>
+                    <td><img src="../images/lightbulb.png" border="0"/></td>
+                    <td>
+                        You can only runtime enhance classes that have been annotated. It will not work with classes that have XML metadata only.
+                    </td>
+                </tr></table>
                 <br/>
             </subsection>
 
