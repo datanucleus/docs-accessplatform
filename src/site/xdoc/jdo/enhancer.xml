@@ -528,31 +528,27 @@ enhancer.enhance();</source>
             <p>
                 DataNucleus requires that all classes that are persisted implement 
                 <a href="http://www.datanucleus.org/javadocs/core/4.0/org/datanucleus/enhancer/Persistable.html">Persistable</a>. 
-                <b>Why should we do this, Hibernate/TopLink dont need it ?</b>. Well thats a simple question really
+                <b>Why should we do this, Hibernate/EclipseLink dont need it ?</b>. Well thats a simple question really
             </p>
             <ul>
-                <li>DataNucleus uses this <i>Persistable</i> interface, and adds it using bytecode enhancement 
-                    techniques so that you never need to actually change your classes. This means that you get
-                    <b>transparent persistence</b>, and your classes always remain <i>your</i> classes.
+                <li>DataNucleus uses this <i>Persistable</i> interface, and adds it using bytecode enhancement techniques so that you never need to actually change your classes. 
+                    This means that you get <b>transparent persistence</b>, and your classes always remain <i>your</i> classes.
                     ORM tools that use a mix of reflection and/or proxies are not totally transparent.</li>
-                <li>DataNucleus' use of <i>Persistable</i> provides transparent change tracking. When any 
-                    change is made to an object the change creates a notification to DataNucleus allowing it to be 
-                    optimally persisted. ORM tools that dont have access to such change tracking have to use reflection
-                    to detect changes. The performance of this process will break down as soon as you read a large 
-                    number of objects, but modify just a handful, with these tools having to compare all object 
-                    states for modification at transaction commit time.</li>
+                <li>DataNucleus' use of <i>Persistable</i> provides transparent change tracking. When any change is made to an object the change creates a notification to 
+                    DataNucleus allowing it to be optimally persisted. ORM tools that dont have access to such change tracking have to use reflection to detect changes. 
+                    The performance of this process will break down as soon as you read a large number of objects, but modify just a handful, with these tools having to 
+                    compare all object states for modification at transaction commit time.</li>
+                <li>EclipseLink and Hibernate are actually now starting to push the use of bytecode enhancement much more, so seem to have grasped the benefits also.</li>
             </ul>
             <p>
                 Why not also read <a href="http://blog.bolkey.com/2009/05/hibernate-datanucleus-r1/">this comparison</a>
                 of bytecode enhancement, and proxies. It gives a clear enough comparison of the relative benefits.
             </p>
             <p>
-                In a JDO-enabled application there are 3 categories of classes. These are <i>persistable</i>, 
-                <i>PersistenceAware</i> and normal classes. The Meta-Data defines which classes fit into these 
-                categories. To give an example for JDO, we have 3 classes. The class <i>A</i> is to be persisted in 
-                the datastore. The class <i>B</i> directly updates the fields of class <i>A</i> but doesn't need 
-                persisting. The class <i>C</i> is not involved in the persistence process. We would define JDO
-                MetaData for these classes like this
+                In a JDO-enabled application there are 3 categories of classes. These are <i>persistable</i>, <i>PersistenceAware</i> and normal classes. 
+                The Meta-Data defines which classes fit into these categories. To give an example for JDO, we have 3 classes. 
+                The class <i>A</i> is to be persisted in the datastore. The class <i>B</i> directly updates the fields of class <i>A</i> but doesn't need 
+                persisting. The class <i>C</i> is not involved in the persistence process. We would define JDO MetaData for these classes like this
             </p>
             <source><![CDATA[
 <class name="A" persistence-modifier="persistence-capable">
@@ -572,11 +568,10 @@ enhancer.enhance();</source>
             <p>
                 JDO allows implementations to bytecode enhance persistable classes to implement some interface to provide
                 them with change tracking etc. JDO provides a builtin <i>PersistenceCapable</i> interface but we don't use
-                that so we have full control over what information is stored in the class.
+                that so that we have full control over what information is stored in the class.
                 Users could manually make their classes implement this <i>Persistable</i> interface but this would impose work on them. 
                 JDO permits the use of a byte-code enhancer that converts the users normal classes to implement this interface. 
-                DataNucleus provides its own byte-code enhancer (in the <i>datanucleus-core.jar</i>). This section 
-                describes how to use this enhancer with DataNucleus. 
+                DataNucleus provides its own byte-code enhancer (in the <i>datanucleus-core.jar</i>).
             </p>
             <img src="../images/enhancer_persistable.gif" alt=""/><br/>
             <p>
@@ -599,35 +594,30 @@ enhancer.enhance();</source>
                 datastore object when it was detached, and which fields were detached is stored in "dnDetachedState").
                 Please see the JDO spec for more details.
             </p>
-            <table class="infoTable">
-                <tr>
-                    <td><img src="../images/lightbulb.png" border="0"/></td>
-                    <td><b>If the MetaData is changed in any way during development, the classes should always be recompiled and re-enhanced afterwards.</b></td>
+            <table class="infoTable"><tr>
+                <td><img src="../images/lightbulb.png" border="0"/></td>
+                <td><b>If the MetaData is changed in any way during development, the classes should always be recompiled and re-enhanced afterwards.</b></td>
             </tr></table>
 
             <subsection name="Byte-Code Enhancement Myths">
                 <p>
-                    Some groups (e.g Hibernate) perpetuated arguments against "byte-code enhancement" saying that 
-                    it was somehow 'evil'. The most common were :-
+                    Some groups (e.g Hibernate) perpetuated arguments against "byte-code enhancement" saying that it was somehow 'evil'. The most common were :-
                 </p>
                 <ul>
                     <li><i>Slows down the code-test cycle</i>. This is erroneous since you only need to enhance just before
                         test and the provided tools for Ant, Eclipse and Maven all do the enhancement job automatically and rapidly.</li>
-                    <li><i>Is less "lazy" than the proxy approach since you have to load the object as soon as you get
-                        a pointer to it</i>. In a 1-1 relation you <b>have to load</b> the object then since you would 
-                        cause issues with null pointers otherwise. With 1-N relations you load the elements of the 
-                        collection/map only when you access them and not the collection/map. Hardly an issue then is 
-                        it!</li>
-                    <li><i>Fail to detect changes to public fields unless you enhance your client code</i>. Firstly 
-                        very few people will be writing code with public fields since it is bad practice in an OO 
-                        design, and secondly, this is why we have "PersistenceAware" classes.</li>
+                    <li><i>Is less "lazy" than the proxy approach since you have to load the object as soon as you get a pointer to it</i>. 
+                        In a 1-1 relation you <b>have to load</b> the object then since you would cause issues with null pointers otherwise. 
+                        With 1-N relations you load the elements of the collection/map only when you access them and not the collection/map. 
+                        Hardly an issue then is it!</li>
+                    <li><i>Fail to detect changes to public fields unless you enhance your client code</i>. Firstly very few people will be writing code with 
+                        public fields since it is bad practice in an OO design, and secondly, this is why we have "PersistenceAware" classes.</li>
                 </ul>
                 <p>
-                    So as you can see, there are no valid reasons against byte-code enhancement, and the pluses are 
-                    that runtime detection of dirty events on objects is much quicker, hence your persistence layer 
-                    operates faster without any need for iterative reflection-based checks.
-                    The fact is that Hibernate itself also now has a mode whereby you can do bytecode enhancement
-                    although not the default mode of Hibernate. So maybe it wasn't so evil after all ?
+                    So as you can see, there are no valid reasons against byte-code enhancement, and the pluses are that runtime detection of dirty events on 
+                    objects is much quicker, hence your persistence layer operates faster without any need for iterative reflection-based checks.
+                    The fact is that Hibernate itself also now has a mode whereby you can do bytecode enhancement although not the default mode of Hibernate. 
+                    So maybe it wasn't so evil after all ?
                 </p>
                 <br/>
             </subsection>
