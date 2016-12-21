@@ -3,21 +3,71 @@
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
     <properties>
-        <title>Enhancer</title>
+        <title>JDO Enhancement</title>
     </properties>
 
     <body>
+        <section name="Class enhancement">
+			<a name="enhancement"/>
+            <p>
+                DataNucleus requires that all classes that are persisted implement 
+                <a href="http://www.datanucleus.org/javadocs/core/5.0/org/datanucleus/enhancement/Persistable.html">Persistable</a>. 
+                Rather than requiring that a user add this themself, we provide an <b>enhancer</b> that will modify your compiled classes to implement all required methods.
+            </p>
+            <ul>
+                <li>The use of this interface means that you get <b>transparent persistence</b>, and your classes always remain <i>your</i> classes; ORM tools that use a mix of 
+                    reflection and/or proxies are not totally transparent.</li>
+                <li>DataNucleus' use of <i>Persistable</i> provides transparent change tracking. When any change is made to an object the change creates a notification to 
+                    DataNucleus allowing it to be optimally persisted. ORM tools that dont have access to such change tracking have to use reflection to detect changes. 
+                    The performance of this process will break down as soon as you read a large number of objects, but modify just a handful, with these tools having to 
+                    compare all object states for modification at transaction commit time.</li>
+                <li>Other ORMs utilise bytecode enhancement : OpenJPA requires a similar bytecode enhancement process also, and EclipseLink and Hibernate both allow it as an 
+                    option since they also now see the benefits of this approach over use of proxies and reflection. 
+                    Read <a href="http://blog.bolkey.com/2009/05/hibernate-datanucleus-r1/">this comparison</a> of bytecode enhancement, and proxies to see the relative benefits.</li>
+            </ul>
+            <p>
+                In the DataNucleus bytecode enhancement contract there are 3 categories of classes. 
+                These are <i>PersistenceCapable</i>, <i>PersistenceAware</i> and normal classes. The Meta-Data (XML or annotations) defines which classes fit into these categories. 
+                To give an example, we have 3 classes. Class <i>A</i> is to be persisted in the datastore, class <i>B</i> directly updates the fields of class <i>A</i> 
+                but doesn't need persisting, and class <i>C</i> is not involved in the persistence process. We would define these classes as follows
+            </p>
+<source><![CDATA[
+@PersistenceCapable
+public class A {...}
+
+@PersistenceAware
+public class B {...}
+
+public class C {...}]]></source>
+            <p>
+                So our MetaData is mainly for those classes that are <i>PersistenceCapable</i> and are to be persisted to the datastore.
+                For <i>PersistenceAware</i> classes we simply notate that the class knows about persistence. 
+                We don't define MetaData for any class that has no knowledge of persistence.
+            </p>
+            <p>
+                You can read more about the precise details of the bytecode enhancement contract at the foot of this page.
+            </p>
+            <table class="infoTable"><tr>
+                <td><img src="../images/lightbulb.png" border="0"/></td>
+                <td><b>Note that whilst the JDO spec defines a contract for bytecode enhancement (<i>PersistenceCapable</i>), this is not used by DataNucleus, 
+                    and instead we use our own <i>Persistable</i> interface. This allows us to provide a more integrated solution.</b></td>
+            </tr></table>
+        </section>
+
         <section name="DataNucleus Enhancer">
             <p>
-                As is described in the <a href="#enhancement">Class Enhancement guide below</a>, 
-                DataNucleus utilises the common technique of byte-code manipulation to make your normal Java classes 
-                "persistable". The mechanism provided by DataNucleus is to use an "enhancer" process to perform this 
-                manipulation before you use your classes at runtime. The process is very quick and easy.
+                DataNucleus provides its own <i>enhancer</i> to perform the bytecode enhancement of the classes involved in the persistence process.
+                The process is very quick and easy.
             </p>
             <table class="infoTable"><tr>
                 <td><img src="../images/lightbulb.png" border="0"/></td>
                 <td>Important : you <b>cannot</b> enhance classes that are in a JAR/WAR file. They must be unpacked, enhanced and then repacked.</td>
             </tr></table>
+            <table class="infoTable"><tr>
+                <td><img src="../images/lightbulb.png" border="0"/></td>
+                <td><b>If the MetaData is changed in any way during development, the classes should always be recompiled and re-enhanced afterwards.</b></td>
+            </tr></table>
+
             <p>
                 How to use the DataNucleus Enhancer depends on what environment you are using. Below are some typical examples. 
             </p>
@@ -523,78 +573,47 @@ enhancer.enhance();</source>
             </subsection>
         </section>
 
-        <section name="Class enhancement">
-            <a name="enhancement"/>
-            <p>
-                DataNucleus requires that all classes that are persisted implement 
-                <a href="http://www.datanucleus.org/javadocs/core/4.0/org/datanucleus/enhancer/Persistable.html">Persistable</a>. 
-                <b>Why should we do this, Hibernate/EclipseLink dont need it ?</b>. Well thats a simple question really
-            </p>
-            <ul>
-                <li>DataNucleus uses this <i>Persistable</i> interface, and adds it using bytecode enhancement techniques so that you never need to actually change your classes. 
-                    This means that you get <b>transparent persistence</b>, and your classes always remain <i>your</i> classes.
-                    ORM tools that use a mix of reflection and/or proxies are not totally transparent.</li>
-                <li>DataNucleus' use of <i>Persistable</i> provides transparent change tracking. When any change is made to an object the change creates a notification to 
-                    DataNucleus allowing it to be optimally persisted. ORM tools that dont have access to such change tracking have to use reflection to detect changes. 
-                    The performance of this process will break down as soon as you read a large number of objects, but modify just a handful, with these tools having to 
-                    compare all object states for modification at transaction commit time.</li>
-                <li>EclipseLink and Hibernate are actually now starting to push the use of bytecode enhancement much more, so seem to have grasped the benefits also.</li>
-            </ul>
-            <p>
-                Why not also read <a href="http://blog.bolkey.com/2009/05/hibernate-datanucleus-r1/">this comparison</a>
-                of bytecode enhancement, and proxies. It gives a clear enough comparison of the relative benefits.
-            </p>
-            <p>
-                In a JDO-enabled application there are 3 categories of classes. These are <i>persistable</i>, <i>PersistenceAware</i> and normal classes. 
-                The Meta-Data defines which classes fit into these categories. To give an example for JDO, we have 3 classes. 
-                The class <i>A</i> is to be persisted in the datastore. The class <i>B</i> directly updates the fields of class <i>A</i> but doesn't need 
-                persisting. The class <i>C</i> is not involved in the persistence process. We would define JDO MetaData for these classes like this
-            </p>
-<source><![CDATA[
-@PersistenceCapable
-public class A {...}
+        <section name="Enhancement Contract Details">
+            <subsection name="Persistable">
+                <p>
+                    JPA allows implementations to bytecode-enhance persistable classes to implement some interface to provide them with change tracking etc.
+                    DataNucleus provides its own byte-code enhancer (in the <i>datanucleus-core.jar</i>) to enhance users entity classes to implement this <i>Persistable</i> interface.
+                    If we start off with the following class
+                </p>
 
-@PersistenceAware
-public class B {...}]]></source>
-            <p>
-                So our MetaData is mainly for those classes that are <i>persistable</i> and are to be persisted 
-                to the datastore (we don't really need the <i>persistence-modifier</i> for thse classes since this is 
-                the default). For <i>PersistenceAware</i> classes we simply notate that the class knows about 
-                persistence. We don't define MetaData for any class that has no knowledge of persistence.
-            </p>
-            <p>
-                JDO allows implementations to bytecode enhance persistable classes to implement some interface to provide
-                them with change tracking etc. JDO provides a builtin <i>PersistenceCapable</i> interface but we don't use
-                that so that we have full control over what information is stored in the class.
-                Users could manually make their classes implement this <i>Persistable</i> interface but this would impose work on them. 
-                JDO permits the use of a byte-code enhancer that converts the users normal classes to implement this interface. 
-                DataNucleus provides its own byte-code enhancer (in the <i>datanucleus-core.jar</i>).
-            </p>
-            <img src="../images/enhancer_persistable.gif" alt=""/><br/>
-            <p>
-                The example above doesn't show all <i>Persistable</i> methods, but demonstrates that all added 
-                methods and fields are prefixed with "dn" to distinguish them from the users own methods and fields. 
-                Also each persistent field of the class will be given a dnGetXXX, dnSetXXX method so that accesses 
-                of these fields are intercepted so that DataNucleus can manage their "dirty" state.
-            </p>
-            <p>
-                The MetaData defines which classes are required to be persisted, and also defines which aspects of 
-                persistence each class requires. For example if a class has the <i>detachable</i> attribute set to 
-                <i>true</i>, then that class will be enhanced to also implement <i>Detachable</i>
-                <a href="http://www.datanucleus.org/javadocs/core/4.0/org/datanucleus/enhancer/Detachable.html" target="_blank">
-                <img src="../images/javadoc.gif" alt=""/></a>
-            </p>
-            <img src="../images/enhancer_detachable.gif" alt=""/><br/>
-            <p>
-                Again, the example above doesn't show all methods added for the Detachable interface but the main 
-                thing to know is that the detached state (object id of the datastore object, the version of the 
-                datastore object when it was detached, and which fields were detached is stored in "dnDetachedState").
-                Please see the JDO spec for more details.
-            </p>
-            <table class="infoTable"><tr>
-                <td><img src="../images/lightbulb.png" border="0"/></td>
-                <td><b>If the MetaData is changed in any way during development, the classes should always be recompiled and re-enhanced afterwards.</b></td>
-            </tr></table>
+<source><![CDATA[
+@Entity
+public class MyClass
+{
+    String field1;
+    String field2;
+    ...
+}]]></source>
+                <p>
+                    This is bytecode enhanced for JPA to implement
+                    <a href="http://www.datanucleus.org/javadocs/core/5.0/org/datanucleus/enhancement/Persistable.html">Persistable</a>, and optionally
+                    <a href="http://www.datanucleus.org/javadocs/core/5.0/org/datanucleus/enhancement/Detachable.html" target="_blank">Detachable</a>.
+                    If we simply make the class <i>Persistable</i> then it will look something like this
+                </p>
+                <img src="../images/enhancer_persistable.gif" alt=""/><br/>
+                <p>
+                    The example above doesn't show all <i>Persistable</i> methods, but demonstrates that all added 
+                    methods and fields are prefixed with "dn" to distinguish them from the users own methods and fields. 
+                    Also each persistent field of the class will be given a dnGetXXX, dnSetXXX method so that accesses 
+                    of these fields are intercepted so that DataNucleus can manage their "dirty" state.
+                </p>
+                <p>
+                    If a class has the <i>detachable</i> attribute set to <i>true</i> then it will also be enhanced to implement <i>Detachable</i>
+                    and will look something like this
+                </p>
+                <img src="../images/enhancer_detachable.gif" alt=""/><br/>
+                <p>
+                    Again, the example above doesn't show all methods added for the Detachable interface but the main 
+                    thing to know is that the detached state (object id of the datastore object, the version of the 
+                    datastore object when it was detached, and which fields were detached is stored in "dnDetachedState").
+                    Please see the JDO spec for more details.
+                </p>
+            </subsection>
 
             <subsection name="Byte-Code Enhancement Myths">
                 <p>
