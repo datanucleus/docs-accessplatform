@@ -577,7 +577,7 @@ enhancer.enhance();</source>
         <section name="Enhancement Contract Details">
             <subsection name="Persistable">
                 <p>
-                    JPA allows implementations to bytecode-enhance persistable classes to implement some interface to provide them with change tracking etc.
+                    JDO allows implementations to bytecode-enhance persistable classes to implement some interface to provide them with change tracking etc.
                     DataNucleus provides its own byte-code enhancer (in the <i>datanucleus-core.jar</i>) to enhance users entity classes to implement this <i>Persistable</i> interface.
                     If we start off with the following class
                 </p>
@@ -591,7 +591,7 @@ public class MyClass
     ...
 }]]></source>
                 <p>
-                    This is bytecode enhanced for JPA to implement
+                    This is bytecode enhanced for JDO to implement
                     <a href="http://www.datanucleus.org/javadocs/core/5.0/org/datanucleus/enhancement/Persistable.html">Persistable</a>, and optionally
                     <a href="http://www.datanucleus.org/javadocs/core/5.0/org/datanucleus/enhancement/Detachable.html" target="_blank">Detachable</a>.
                     If we simply make the class <i>Persistable</i> then it will look something like this
