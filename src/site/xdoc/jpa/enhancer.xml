@@ -60,7 +60,8 @@ public class C {...}]]></source>
 
         <section name="DataNucleus Enhancer">
             <p>
-                DataNucleus provides its own <i>enhancer</i> to perform the bytecode enhancement of the classes involved in the persistence process.
+                DataNucleus provides its own <i>enhancer</i> to perform the bytecode enhancement of the classes involved in the persistence process, and
+                this is located in the <i>datanucleus-core.jar</i>.
                 The process is very quick and easy.
             </p>
             <table class="infoTable"><tr>
@@ -92,10 +93,9 @@ public class C {...}]]></source>
 			<a name="maven"/>
             <subsection name="Maven">
                 <p>
-                    Maven operates from a series of plugins. There is a DataNucleus plugin for Maven that 
-                    allows enhancement of classes. Go to the Download section of the website and download this.
-                    Once you have the Maven plugin, you then need to set any properties for the plugin in your <i>pom.xml</i> file. 
-                    Some properties that you may need to change are below
+                    Maven operates from a series of plugins. There is a DataNucleus plugin for Maven that allows enhancement of classes. 
+                    Go to the Download section of the website and download this. Once you have the Maven plugin, you then need to set any properties for the 
+                    plugin in your <i>pom.xml</i> file. Some properties that you may need to change are below
                 </p>
                 <table>
                     <tr>
@@ -205,7 +205,7 @@ public class C {...}]]></source>
             <plugin>
                 <groupId>org.datanucleus</groupId>
                 <artifactId>datanucleus-maven-plugin</artifactId>
-                <version>5.0.0-release</version>
+                <version>5.0.1</version>
                 <configuration>
                     <api>JPA</api>
                     <persistenceUnitName>MyUnit</persistenceUnitName>
@@ -225,8 +225,7 @@ public class C {...}]]></source>
         ...
     </build>]]></source>
                 <p>
-                    So you then get auto-enhancement after each compile. 
-                    Please refer to the <a href="maven.html">Maven JPA guide</a> for more details.
+                    So you then get auto-enhancement after each compile. Please refer to the <a href="maven.html">Maven JPA guide</a> for more details.
                 </p>
                 <br/>
             </subsection>
@@ -234,10 +233,10 @@ public class C {...}]]></source>
             <a name="ant"/>
             <subsection name="Ant">
                 <p>
-                    Ant provides a powerful framework for performing tasks. DataNucleus provides an Ant task to 
-                    enhance classes. DataNucleus provides an Enhancer in <i>datanucleus-core.jar</i>.
+                    Ant provides a powerful framework for performing tasks, and DataNucleus provides an Ant task to enhance classes.
                     You need to make sure that the <i>datanucleus-core.jar</i>, <i>datanucleus-api-jpa.jar</i>, <i>log4j.jar</i> (optional),
                     and <i>javax.persistence.jar</i> are in your CLASSPATH.
+                    If using JDO metadata then you will also need <i>javax.jdo.jar</i> and <i>datanucleus-api-jdo.jar</i> in the CLASSPATH.
                     In the DataNucleus Enhancer Ant task, the following parameters are available
                 </p>
                 <table>
@@ -248,8 +247,7 @@ public class C {...}]]></source>
                     </tr>
                     <tr>
                         <td>destination</td>
-                        <td>Optional. Defining a directory where enhanced classes will be written. 
-                            If omitted, the original classes are updated.</td>
+                        <td>Optional. Defining a directory where enhanced classes will be written. If omitted, the original classes are updated.</td>
                         <td></td>
                     </tr>
                     <tr>
@@ -265,8 +263,7 @@ public class C {...}]]></source>
                     <tr>
                         <td>checkonly</td>
                         <td>Whether to just check the classes for enhancement status. Will respond for each class with 
-                            "ENHANCED" or "NOT ENHANCED". <b>This will disable the enhancement process and just perform these 
-                            checks.</b></td>
+                            "ENHANCED" or "NOT ENHANCED". <b>This will disable the enhancement process and just perform these checks.</b></td>
                         <td>true, <b>false</b></td>
                     </tr>
                     <tr>
@@ -301,8 +298,7 @@ public class C {...}]]></source>
                     </tr>               
                 </table>
                 <p>
-                    The enhancer task extends the Apache Ant <a href="http://ant.apache.org/manual/CoreTasks/java.html">Java task</a>, 
-                    thus all parameters available to the Java task are also available to the enhancer task.
+                    The enhancer task extends the Apache Ant Java task, thus all parameters available to the Java task are also available to the enhancer task.
                 </p>
                 <p>
                     So you could define something <i>like</i> the following, setting up the parameter <b>enhancer.classpath</b>,
@@ -310,11 +306,8 @@ public class C {...}]]></source>
                 </p>
                 <source><![CDATA[
 <target name="enhance" description="DataNucleus enhancement">
-    <taskdef name="datanucleusenhancer" classpathref="enhancer.classpath" 
-                classname="org.datanucleus.enhancer.EnhancerTask" />
-
-    <datanucleusenhancer
-        persistenceUnit="MyUnit" failonerror="true" verbose="true">
+    <taskdef name="datanucleusenhancer" classpathref="enhancer.classpath" classname="org.datanucleus.enhancer.EnhancerTask" />
+    <datanucleusenhancer persistenceUnit="MyUnit" failonerror="true" verbose="true">
         <jvmarg line="-Dlog4j.configuration=${log4j.config.file}"/>
         <classpath>
             <path refid="enhancer.classpath"/>
@@ -326,9 +319,8 @@ public class C {...}]]></source>
 			<a name="manual"/>
             <subsection name="Manually">
                 <p>
-                    DataNucleus provides an Enhancer in <i>datanucleus-core.jar</i>. If you are 
-                    building your application manually and want to enhance your classes you follow the 
-                    instructions in this section. You invoke the enhancer as follows
+                    If you are building your application manually and want to enhance your classes you follow the instructions in this section. 
+                    You invoke the enhancer as follows
                 </p>
                 <source>
 java -cp classpath  org.datanucleus.enhancer.DataNucleusEnhancer [options] 
@@ -378,7 +370,7 @@ java -cp target\classes;lib\datanucleus-core.jar;lib\datanucleus-api-jpa.jar;lib
                     and include the respective JAR's in the classpath (-cp). The enhancer responds as follows
                 </p>
                 <source>
-DataNucleus Enhancer (version 5.0.0.release) for API "JPA"
+DataNucleus Enhancer (version 5.0.1) for API "JPA"
 
 DataNucleus Enhancer : Classpath
 >>  /home/andy/work/myproject//target/classes
