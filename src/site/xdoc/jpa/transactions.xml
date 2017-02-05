@@ -76,14 +76,18 @@ em.close();]]></source>
     ...
 </persistence-unit>]]></source>
                 <p>
-                    The basic idea with <b>Locally-Managed transactions</b> is that you are 
-                    managing the transaction start and end.
+                    The basic idea with <b>Locally-Managed transactions</b> is that you are managing the transaction start and end.
                 </p>
                 <br/>
             </subsection>
 
             <a name="jta"/>
             <subsection name="JTA Transactions">
+                <table class="infoTable"><tr>
+                    <td><img src="../images/lightbulb.png" border="0"/></td>
+                    <td>Strict JPA does not support use of JTA transactions in a JavaSE environment. DataNucleus does however allow JTA transactions in a JavaSE environment.</td>
+                </tr></table>
+
                 <p>
                     The other type of transaction with JPA is using JTA. With this type, where you have a JTA data source 
                     from which you have a <i>UserTransaction</i>. This <i>UserTransaction</i> can have resources "joined" 
@@ -136,8 +140,7 @@ finally
     em.close();
 }]]></source>
                 <p>
-                    In the JTA case you will have defined your <a href="emf.html#persistenceunit">persistence-unit</a>
-                    to be like this
+                    In the JTA case you will have defined your <a href="emf.html#persistenceunit">persistence-unit</a> to be like this
                 </p>
 <source><![CDATA[
 <persistence-unit name="MyUnit" transaction-type="JTA">
