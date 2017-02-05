@@ -12,12 +12,12 @@
                 A Transaction forms a unit of work. The Transaction manages what happens within that unit of work,
                 and when an error occurs the Transaction can roll back any changes performed. Transactions can be 
                 managed by the users application, or can be managed by a framework (such as Spring), or can be 
-                managed by a JEE container. These are described below.
+                managed by a JavaEE container. These are described below.
             </p>
             <ul>
                 <li><a href="#local">Local transactions</a> : managed using the JDO Transaction API</li>
                 <li><a href="#jta">JTA transactions</a> : managed using the JTA UserTransaction API, or using the JDO Transaction API</li>
-                <li><a href="#container">Container-managed transactions</a> : managed by a JEE environment</li>
+                <li><a href="#container">Container-managed transactions</a> : managed by a JavaEE environment</li>
                 <li><a href="#spring">Spring-managed transactions</a> : managed by SpringFramework</li>
                 <li><a href="#nontransactional">No transactions</a></li>
                 <li><a href="#flushing">Flushing a Transaction</a></li>
@@ -97,8 +97,7 @@ finally
                     An alternative is where you don't have a UserTransaction started and just use the JDO API, which will start the UserTransaction for you.
                 </p>
                 <source><![CDATA[
-UserTransaction ut = (UserTransaction)
-    new InitialContext().lookup("java:comp/UserTransaction");
+UserTransaction ut = (UserTransaction)new InitialContext().lookup("java:comp/UserTransaction");
 PersistenceManager pm = pmf.getPersistenceManager();
 Transaction tx = pm.currentTransaction();
 try
@@ -114,8 +113,14 @@ finally
     pm.close();
 }]]></source>
                 <p>
-                    <b>Important</b> : please note that you need to set both transactional and 
-                    nontransactional datasources, and <b>the nontransactional cannot be JTA</b>.
+                    <b>Important</b> : please note that you need to set both transactional and nontransactional datasources, and <b>the nontransactional cannot be JTA</b>.
+                </p>
+                <p>
+                    Note that the JavaEE spec does not define a standard way of finding the JTA TransactionManager, and so all JavaEE containers have their own ways of handling this.
+                    DataNucleus provides a way of scanning the various methods to find that appropriate for the JavaEE container in use, but you can explicitly
+                    set the method of finding the <i>TransactionManager</i>, by use of the persistence properties
+                    <b>datanucleus.jtaLocator</b> and, if using this property set to <i>custom_jndi</i> then also <b>datanucleus.jtaJndiLocation</b> set to the JNDI location
+                    that stores the <i>TransactionManager</i> instance.
                 </p>
                 <br/>
             </subsection>
@@ -123,10 +128,10 @@ finally
             <a name="container"/>
             <subsection name="Container-Managed Transactions">
                 <p>
-                    When using a JEE container you are giving over control of the transactions to the container. 
+                    When using a JavaEE container you are giving over control of the transactions to the container. 
                     Here you have <b>Container-Managed Transactions</b>. In terms of your code, you would do like 
                     the previous example <b>except</b> that you would OMIT the <i>tx.begin(), tx.commit(), 
-                    tx.rollback()</i> since the JEE container will be doing this for you.
+                    tx.rollback()</i> since the JavaEE container will be doing this for you.
             	</p>
                 <br/>
             </subsection>
