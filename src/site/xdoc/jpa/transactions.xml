@@ -144,7 +144,7 @@ finally
     <jta-data-source>java:comp/env/myDS</properties>
     ...
 </persistence-unit>]]></source>
-
+                <u>JTA TransactionManager</u>
                 <p>
                     Note that the JavaEE spec does not define a standard way of finding the JTA TransactionManager, and so all JavaEE containers have their own ways of handling this.
                     DataNucleus provides a way of scanning the various methods to find that appropriate for the JavaEE container in use, but you can explicitly

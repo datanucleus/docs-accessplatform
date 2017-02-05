@@ -115,6 +115,7 @@ finally
                 <p>
                     <b>Important</b> : please note that you need to set both transactional and nontransactional datasources, and <b>the nontransactional cannot be JTA</b>.
                 </p>
+                <u>JTA TransactionManager</u>
                 <p>
                     Note that the JavaEE spec does not define a standard way of finding the JTA TransactionManager, and so all JavaEE containers have their own ways of handling this.
                     DataNucleus provides a way of scanning the various methods to find that appropriate for the JavaEE container in use, but you can explicitly
