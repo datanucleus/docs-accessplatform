@@ -262,5 +262,92 @@ $JBOSS_HOME/bin$ add-user.bat
 ]]></source>
             </subsection>
         </section>
+
+        <section name="TomEE">
+            <a name="tomee"/>
+            <p>
+                Apache TomEE ships with OpenJPA/EclipseLink as the default JPA provider (depending on which version of TomEE), however any valid JPA provider can be used.
+            </p>
+            <p>
+                The basic steps are:
+            </p>
+            <ul>
+            <li>Add the DataNucleus jars to <i>&lt;tomee-home&gt;/lib/</i></li>
+            <li>Configure the web-app or the server to use DataNucleus.</li>
+            </ul>
+
+            <subsection name="Webapp Configuration">
+                <p>
+                    Any web-app can specify the JPA provider it would like to use via the <i>persistence.xml</i> file, which can be at any of the following locations in a web-app
+                </p>
+                <ul>
+                <li>WEB-INF/persistence.xml of the .war file</li>
+                <li>META-INF/persistence.xml in any jar located in WEB-INF/lib/</li>
+                </ul>
+                <p>
+                    A single web-app may have many <i>persistence.xml</i> files and each may use whichever JPA provider it needs.
+                    The following is an example of a fairly common <i>persistence.xml</i> for DataNucleus
+                </p>
+<source><![CDATA[
+<persistence version="2.1" xmlns="http://xmlns.jcp.org/xml/ns/persistence"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
+
+    <persistence-unit name="movie-unit">
+        <provider>org.datanucleus.api.jpa.PersistenceProviderImpl</provider>
+        <jta-data-source>movieDatabase</jta-data-source>
+        <non-jta-data-source>movieDatabaseUnmanaged</non-jta-data-source>
+
+        <properties>
+            <property name="javax.persistence.schema-generation.database.action" value="drop-and-create"/>
+        </properties>
+    </persistence-unit>
+</persistence>
+]]></source>
+                <p>
+                    Note that you may have to set the persistence property <i>datanucleus.jtaLocator</i> and <i>datanucleus.jtaJndiLocation</i> to find your JTA "TransactionManager".
+                    See the <a href="../persistence_properties.html">persistence properties guide</a> for details of those.
+                </p>
+            </subsection>
+
+            <subsection name="Server Configuration">
+                <p>
+                    The default JPA provider can be changed at the server level to favour DataNucleus over OpenJPA/EclipseLink.
+                    Using the <i>&lt;tomee-home&gt;/conf/system.properties</i> file or any other valid means of setting java.lang.System.getProperties(), 
+                    the following standard properties can set the default for any persistence.xml file.
+                </p>
+<source>
+javax.persistence.provider
+javax.persistence.transactionType
+javax.persistence.jtaDataSource
+javax.persistence.nonJtaDataSource
+</source>
+                <p>
+                    So, for example, DataNucleus can become the default provider via setting
+                </p>
+<source>CATALINA_OPTS=-Djavax.persistence.provider=org.datanucleus.api.jpa.PersistenceProviderImpl</source>
+                <p>
+                    You must of course add the DataNucleus libraries to <i>&lt;tomee-home&gt;/lib/</i> for this to work.
+                </p>
+            </subsection>
+
+            <subsection name="DataNucleus libraries">
+                <p>
+                    Jars needed for DataNucleus 5.0:
+                </p>
+<source><![CDATA[
+Add:
+<tomee-home>/lib/datanucleus-core-5.0.7.jar
+<tomee-home>/lib/datanucleus-api-jpa-5.0.7.jar
+<tomee-home>/lib/datanucleus-rdbms-5.0.7.jar
+
+Remove (optional):
+<tomee-home>/lib/asm-3.2.jar
+<tomee-home>/lib/commons-lang-2.6.jar
+<tomee-home>/lib/openjpa-2.2.0.jar (or EclipseLink)
+<tomee-home>/lib/serp-1.13.1.jar
+]]></source>
+            </subsection>
+        </section>
     </body>
 </document>
