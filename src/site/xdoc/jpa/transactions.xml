@@ -152,8 +152,8 @@ finally
                     Note that the JavaEE spec does not define a standard way of finding the JTA TransactionManager, and so all JavaEE containers have their own ways of handling this.
                     DataNucleus provides a way of scanning the various methods to find that appropriate for the JavaEE container in use, but you can explicitly
                     set the method of finding the <i>TransactionManager</i>, by use of the persistence properties
-                    <b>datanucleus.jtaLocator</b> and, if using this property set to <i>custom_jndi</i> then also <b>datanucleus.jtaJndiLocation</b> set to the JNDI location
-                    that stores the <i>TransactionManager</i> instance.
+                    <b>datanucleus.transaction.jta.transactionManagerLocator</b> and, if using this property set to <i>custom_jndi</i> then also 
+                    <b>datanucleus.transaction.jta.transactionManagerJNDI</b> set to the JNDI location that stores the <i>TransactionManager</i> instance.
                 </p>
                 <br/>
             </subsection>
@@ -183,10 +183,8 @@ finally
             <subsection name="No Transactions">
                 <p>
                     DataNucleus allows the ability to operate without transactions. With JPA this is enabled 
-                    by default (see the 2 properties <b>datanucleus.NontransactionalRead</b>,
-                    <b>datanucleus.NontransactionalWrite</b> set to <i>true</i>). This means that you can read objects
-                    and make updates outside of transactions. This is
-                    effectively an "auto-commit" mode.
+                    by default (see the 2 properties <b>datanucleus.transaction.nontx.read</b>, <b>datanucleus.transaction.nontx.write</b> set to <i>true</i>, the default). 
+                    This means that you can read objects and make updates outside of transactions. This is effectively an "auto-commit" mode.
                 </p>
                 <source><![CDATA[
 EntityManager em = emf.createEntityManager();
@@ -228,7 +226,7 @@ List<ObjectProvider> objs =
                 <img src="../images/nucleus_extension.gif" alt=""/>
                 <p>
                     DataNucleus also allows specification of the transaction isolation level. This is specified 
-                    via the EntityManagerFactory property <i>datanucleus.transactionIsolation</i>.
+                    via the EntityManagerFactory property <i>datanucleus.transaction.isolation</i>.
                     It accepts the standard JDBC values of
                 </p>
                 <ul>

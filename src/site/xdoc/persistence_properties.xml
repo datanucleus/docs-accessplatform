@@ -247,40 +247,6 @@
                     </tr>
                 </table>
                 <br/>
-                <a name="NontransactionalRead"/>
-                <table>
-                    <tr>
-                        <th colspan="2">
-                            <b>datanucleus.NontransactionalRead</b>
-                        </th>
-                    </tr>
-                    <tr>
-                        <td width="120">Description</td>
-                        <td>Whether to allow nontransactional reads</td>
-                    </tr>
-                    <tr>
-                        <td>Range of Values</td>
-                        <td>false | <b>true</b></td>
-                    </tr>
-                </table>
-                <br/>
-                <a name="NontransactionalWrite"/>
-                <table>
-                    <tr>
-                        <th colspan="2">
-                            <b>datanucleus.NontransactionalWrite</b>
-                        </th>
-                    </tr>
-                    <tr>
-                        <td width="120">Description</td>
-                        <td>Whether to allow nontransactional writes</td>
-                    </tr>
-                    <tr>
-                        <td>Range of Values</td>
-                        <td>false | <b>true</b></td>
-                    </tr>
-                </table>
-                <br/>
                 <a name="Optimistic"/>
                 <table>
                     <tr>
@@ -629,22 +595,6 @@
                     <tr>
                         <td>Range of Values</td>
                         <td><b>fetch-groups</b> | all | loaded</td>
-                    </tr>
-                </table>
-                <br/>
-                <a name="TransactionType"/>
-                <table>
-                    <tr>
-                        <th colspan="2"><b>datanucleus.TransactionType</b></th>
-                    </tr>
-                    <tr>
-                        <td width="120">Description</td>
-                        <td>Type of transaction to use. If running under JavaSE the default is RESOURCE_LOCAL, and
-                            if running under JavaEE the default is JTA.</td>
-                    </tr>
-                    <tr>
-                        <td>Range of Values</td>
-                        <td>RESOURCE_LOCAL | JTA</td>
                     </tr>
                 </table>
                 <br/>
@@ -1717,18 +1667,32 @@
 
             <a name="transaction"/>
             <subsection name="Transactions and Locking">
+                <a name="TransactionType"/>
+                <table>
+                    <tr>
+                        <th colspan="2"><b>datanucleus.transaction.type</b></th>
+                    </tr>
+                    <tr>
+                        <td width="120">Description</td>
+                        <td>Type of transaction to use. If running under JavaSE the default is RESOURCE_LOCAL, and if running under JavaEE the default is JTA.</td>
+                    </tr>
+                    <tr>
+                        <td>Range of Values</td>
+                        <td>RESOURCE_LOCAL | JTA</td>
+                    </tr>
+                </table>
+                <br/>
                 <a name="TransactionIsolationLevel"/>
                 <table>
                     <tr>
                         <th colspan="2">
-                            <b>datanucleus.transactionIsolation</b>
+                            <b>datanucleus.transaction.isolation</b>
                         </th>
                     </tr>
                     <tr>
                         <td width="120">Description</td>
-                        <td>Select the default transaction isolation level for ALL PM/EM 
-                            factories. Some databases do not support all isolation levels, refer to your 
-                            database documentation. Please refer to the transaction guides for
+                        <td>Select the default transaction isolation level for ALL PM/EM factories. 
+                            Some databases do not support all isolation levels, refer to your database documentation. Please refer to the transaction guides for
                             <a href="jdo/transactions.html#isolation">JDO</a> and
                             <a href="jpa/transactions.html#isolation">JPA</a></td>
                     </tr>
@@ -1741,36 +1705,15 @@
                 <table>
                     <tr>
                         <th colspan="2">
-                            <b>datanucleus.SerializeRead</b>
-                        </th>
-                    </tr>
-                    <tr>
-                        <td width="120">Description</td>
-                        <td>With datastore transactions you can apply locking to objects as they are
-                            read from the datastore. This setting applies as the default for all
-                            PM/EMs obtained. You can also specify this
-                            on a per-transaction or per-query basis (which is often better to avoid
-                            deadlocks etc)</td>
-                    </tr>
-                    <tr>
-                        <td>Range of Values</td>
-                        <td>true | <b>false</b></td>
-                    </tr>
-                </table>
-                <br/>
-                <table>
-                    <tr>
-                        <th colspan="2">
-                            <b>datanucleus.jtaLocator</b>
+                            <b>datanucleus.transaction.jta.transactionManagerLocator</b>
                         </th>
                     </tr>
                     <tr>
                         <td width="120">Description</td>
                         <td>Selects the locator to use when using JTA transactions so that DataNucleus can find the JTA TransactionManager.
-                        If this isn't specified and using JTA transactions DataNucleus will search all available locators which could
-                        have a performance impact.
+                        If this isn't specified and using JTA transactions DataNucleus will search all available locators which could have a performance impact.
                         See <a href="extensions/jta_locator.html">JTA Locator extension</a>.
-                        If specifying "custom_jndi" please also specify "datanucleus.jtaJndiLocation"</td>
+                        If specifying "custom_jndi" please also specify "datanucleus.transaction.jta.transactionManagerJNDI"</td>
                     </tr>
                     <tr>
                         <td>Range of Values</td>
@@ -1782,7 +1725,7 @@
                 <table>
                     <tr>
                         <th colspan="2">
-                            <b>datanucleus.jtaJndiLocation</b>
+                            <b>datanucleus.transaction.jta.transactionManagerJNDI</b>
                         </th>
                     </tr>
                     <tr>
@@ -1793,6 +1736,78 @@
                     <tr>
                         <td>Range of Values</td>
                         <td>JNDI location</td>
+                    </tr>
+                </table>
+                <br/>
+                <a name="NontransactionalRead"/>
+                <table>
+                    <tr>
+                        <th colspan="2">
+                            <b>datanucleus.transaction.nontx.read</b>
+                        </th>
+                    </tr>
+                    <tr>
+                        <td width="120">Description</td>
+                        <td>Whether to allow nontransactional reads</td>
+                    </tr>
+                    <tr>
+                        <td>Range of Values</td>
+                        <td>false | <b>true</b></td>
+                    </tr>
+                </table>
+                <br/>
+                <a name="NontransactionalWrite"/>
+                <table>
+                    <tr>
+                        <th colspan="2">
+                            <b>datanucleus.transaction.nontx.write</b>
+                        </th>
+                    </tr>
+                    <tr>
+                        <td width="120">Description</td>
+                        <td>Whether to allow nontransactional writes</td>
+                    </tr>
+                    <tr>
+                        <td>Range of Values</td>
+                        <td>false | <b>true</b></td>
+                    </tr>
+                </table>
+                <br/>
+                <table>
+                    <tr>
+                        <th colspan="2">
+                            <b>datanucleus.transaction.nontx.atomic</b>
+                        </th>
+                    </tr>
+                    <tr>
+                        <td width="120">Description</td>
+                        <td>When a user invokes a nontransactional operation they can choose for these changes to go 
+                            straight to the datastore (atomically) or to wait until either the next transaction commit, 
+                            or close of the PM/EM. Disable this if you want operations to be processed with the next
+                            real transaction. This defaults to <i>true</i> for JDO, and <i>false</i> for JPA</td>
+                    </tr>
+                    <tr>
+                        <td>Range of Values</td>
+                        <td>true | false</td>
+                    </tr>
+                </table>
+                <br/>
+                <br/>
+                <table>
+                    <tr>
+                        <th colspan="2">
+                            <b>datanucleus.SerializeRead</b>
+                        </th>
+                    </tr>
+                    <tr>
+                        <td width="120">Description</td>
+                        <td>With datastore transactions you can apply locking to objects as they are read from the datastore. 
+                            This setting applies as the default for all PM/EMs obtained. 
+                            You can also specify this on a per-transaction or per-query basis (which is often better to avoid deadlocks etc)</td>
+                    </tr>
+                    <tr>
+                        <td>Range of Values</td>
+                        <td>true | <b>false</b></td>
                     </tr>
                 </table>
                 <br/>
@@ -1822,8 +1837,9 @@
                     <tr>
                         <td width="120">Description</td>
                         <td>Sets when persistence operations are flushed to the datastore.
-                        <i>MANUAL</i> means that operations will be sent only on flush()/commit().
-                        <i>AUTO</i> means that operations will be sent immediately.</td>
+                            <i>MANUAL</i> means that operations will be sent only on flush()/commit().
+                            <i>AUTO</i> means that operations will be sent immediately.
+                        </td>
                     </tr>
                     <tr>
                         <td>Range of values</td>
@@ -1847,25 +1863,6 @@
                     </tr>
                     <tr>
                         <td>Range of values</td>
-                        <td>true | false</td>
-                    </tr>
-                </table>
-                <br/>
-                <table>
-                    <tr>
-                        <th colspan="2">
-                            <b>datanucleus.nontx.atomic</b>
-                        </th>
-                    </tr>
-                    <tr>
-                        <td width="120">Description</td>
-                        <td>When a user invokes a nontransactional operation they can choose for these changes to go 
-                            straight to the datastore (atomically) or to wait until either the next transaction commit, 
-                            or close of the PM/EM. Disable this if you want operations to be processed with the next
-                            real transaction. This defaults to <i>true</i> for JDO, and <i>false</i> for JPA</td>
-                    </tr>
-                    <tr>
-                        <td>Range of Values</td>
                         <td>true | false</td>
                     </tr>
                 </table>

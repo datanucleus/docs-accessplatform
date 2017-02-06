@@ -156,16 +156,6 @@ PersistenceManagerFactory pmf = JDOHelper.getPersistenceManagerFactory("myPersis
                         <td>Alias for <a href="../persistence_properties.html#Multithreaded">datanucleus.Multithreaded</a></td>
                     </tr>
                     <tr>
-                        <td>javax.jdo.option.NontransactionalRead</td>
-                        <td><b>true</b> | false</td>
-                        <td>Alias for <a href="../persistence_properties.html#NontransactionalRead">datanucleus.NontransactionalRead</a></td>
-                    </tr>
-                    <tr>
-                        <td>javax.jdo.option.NontransactionalWrite</td>
-                        <td><b>true</b> | false</td>
-                        <td>Alias for <a href="../persistence_properties.html#NontransactionalWrite">datanucleus.NontransactionalWrite</a></td>
-                    </tr>
-                    <tr>
                         <td>javax.jdo.option.Optimistic</td>
                         <td>true | <b>false</b></td>
                         <td>Alias for <a href="../persistence_properties.html#Optimistic">datanucleus.Optimistic</a></td>
@@ -191,11 +181,6 @@ PersistenceManagerFactory pmf = JDOHelper.getPersistenceManagerFactory("myPersis
                         <td>Alias for <a href="../persistence_properties.html#CopyOnAttach">datanucleus.CopyOnAttach</a></td>
                     </tr>
                     <tr>
-                        <td>javax.jdo.option.TransactionType</td>
-                        <td></td>
-                        <td>Alias for <a href="../persistence_properties.html#TransactionType">datanucleus.TransactionType</a></td>
-                    </tr>
-                    <tr>
                         <td>javax.jdo.option.PersistenceUnitName</td>
                         <td></td>
                         <td>Alias for <a href="../persistence_properties.html#PersistenceUnitName">datanucleus.PersistenceUnitName</a></td>
@@ -216,9 +201,24 @@ PersistenceManagerFactory pmf = JDOHelper.getPersistenceManagerFactory("myPersis
                         <td>Alias for <a href="../persistence_properties.html#ReadOnlyDatastore">datanucleus.readOnlyDatastore</a></td>
                     </tr>
                     <tr>
+                        <td>javax.jdo.option.TransactionType</td>
+                        <td></td>
+                        <td>Alias for <a href="../persistence_properties.html#TransactionType">datanucleus.transaction.type</a></td>
+                    </tr>
+                    <tr>
                         <td>javax.jdo.option.TransactionIsolationLevel</td>
                         <td></td>
-                        <td>Alias for <a href="../persistence_properties.html#TransactionIsolationLevel">datanucleus.transactionIsolation</a></td>
+                        <td>Alias for <a href="../persistence_properties.html#TransactionIsolationLevel">datanucleus.transaction.isolation</a></td>
+                    </tr>
+                    <tr>
+                        <td>javax.jdo.option.NontransactionalRead</td>
+                        <td><b>true</b> | false</td>
+                        <td>Alias for <a href="../persistence_properties.html#NontransactionalRead">datanucleus.transaction.nontx.read</a></td>
+                    </tr>
+                    <tr>
+                        <td>javax.jdo.option.NontransactionalWrite</td>
+                        <td><b>true</b> | false</td>
+                        <td>Alias for <a href="../persistence_properties.html#NontransactionalWrite">datanucleus.transaction.nontx.write</a></td>
                     </tr>
                     <tr>
                         <td>javax.jdo.option.DatastoreReadTimeoutMillis</td>

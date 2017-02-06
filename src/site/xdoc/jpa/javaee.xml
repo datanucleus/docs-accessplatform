@@ -249,8 +249,8 @@ $JBOSS_HOME/bin$ add-user.bat
             <property name="jboss.as.jpa.providerModule" value="org.datanucleus"/>
 
             <!-- following is probably not useful... but it ensures we bind to the JTA transaction manager...-->
-            <property name="datanucleus.jtaLocator" value="custom_jndi"/>
-            <property name="datanucleus.jtaJndiLocation" value="java:/TransactionManager"/>
+            <property name="datanucleus.transaction.jta.transactionManagerLocator" value="custom_jndi"/>
+            <property name="datanucleus.transaction.jta.transactionManagerJNDI" value="java:/TransactionManager"/>
 
             <property name="datanucleus.autoCreateSchema" value="true"/>
             <property name="datanucleus.metadata.validate" value="false"/>

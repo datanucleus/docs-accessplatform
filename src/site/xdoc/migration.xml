@@ -9,11 +9,26 @@
     <body>
         <section name="AccessPlatform : Migration between versions">
             <p>
-                This version of DataNucleus AccessPlatform builds on the v4 series of releases, adding future flexibility.
+                This version of DataNucleus AccessPlatform builds on the v5.0 release, adding future flexibility.
                 All releases are checked regularly against the JDO/JPA TCKs, meaning that DataNucleus is always stable in terms of functionality.
                 Occasionally, due to unknown bugs, or due to new functionality being introduced we need to change some aspects of DataNucleus. 
                 As a result sometimes users will have to make some changes to move between versions of DataNucleus. We aim to keep this to a minimum.
             </p>
+
+            <a name="5_1_0_M1_FROM_5_0_6"/>
+            <subsection name="Migration from 5.0.6 to 5.1.0-M1">
+                <p>
+                    Migrating will require the following changes.
+                </p>
+                <ul>
+                    <li>The persistence property <i>datanucleus.nontransactionalRead</i> is renamed to <b>datanucleus.transaction.nontx.read</b></li>
+                    <li>The persistence property <i>datanucleus.nontransactionalWrite</i> is renamed to <b>datanucleus.transaction.nontx.write</b></li>
+                    <li>The persistence property <i>datanucleus.transactionType</i> is renamed to <b>datanucleus.transaction.type</b></li>
+                    <li>The persistence property <i>datanucleus.transactionIsolation</i> is renamed to <b>datanucleus.transaction.isolation</b></li>
+                    <li>The persistence property <i>datanucleus.jtaLocator</i> is renamed to <b>datanucleus.transaction.jta.transactionManagerLocator</b></li>
+                    <li>The persistence property <i>datanucleus.jtaJndiLocation</i> is renamed to <b>datanucleus.transaction.jta.transactionManagerJNDI</b></li>
+                </ul>
+            </subsection>
 
             <a name="5_0_6_FROM_5_0_5"/>
             <subsection name="Migration from 5.0.5 to 5.0.6">
