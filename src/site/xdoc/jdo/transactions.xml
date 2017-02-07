@@ -162,7 +162,7 @@ PersistenceManager pm = pmf.getPersistenceManager();
 pm.close();]]></source>
                 <p>
                     When using non-transactional operations, you need to pay attention to the persistence property
-                    <b>datanucleus.nontx.atomic</b>. If this is true then any persist/delete/update will be committed
+                    <b>datanucleus.transaction.nontx.atomic</b>. If this is true then any persist/delete/update will be committed
                     to the datastore immediately. If this is false then any persist/delete/update will be queued up until
                     the next transaction (or <i>pm.close()</i>) and committed with that.
                 </p>
