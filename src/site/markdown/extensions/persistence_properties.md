@@ -1,4 +1,4 @@
-<head><title>Extensions : Connection Pooling</title></head>
+<head><title>Extensions : Persistence Property</title></head>
 
 ## Extensions : Persistence Properties
 ![Plugin](../images/nucleus_plugin.gif)

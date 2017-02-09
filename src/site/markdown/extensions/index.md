@@ -19,7 +19,7 @@ A minimum _META-INF/MANIFEST.MF_ for a plugin jar should look like this
 	Bundle-Name: myplugin
 	Bundle-SymbolicName: mydomain.myplugin
 	Bundle-Version: 1.0.0
-	Bundle-Vendor: My Company</source>
+	Bundle-Vendor: My Company
 
 Each plugin extension has attributes. If you want to override an extension that is included in DataNucleus itself then you 
 need to specify the __priority__ attribute, setting it to an integer (the default plugin has priority=0, so set to higher than this to override it).
