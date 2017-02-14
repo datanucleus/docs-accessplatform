@@ -76,10 +76,6 @@
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">JDO API <span class="caret"></span></a>
                     <ul class="dropdown-menu">
                         <li><a href="<%= (attr :_basedir) %>documentation/products.html">Products Overview</a></li>
-                        <li><a href="http://www.datanucleus.org/products/accessplatform_5_1">Version 5.1</a></li>
-                        <li><a href="http://www.datanucleus.org/products/accessplatform_5_0">Version 5.0</a></li>
-                        <li><a href="http://www.datanucleus.org/products/accessplatform_4_2">Version 4.2</a></li>
-                        <li><a href="http://www.datanucleus.org/products/accessplatform_4_1">Version 4.1</a></li>
                         <li><a href="<%= (attr :_basedir) %>documentation/usage.html">Usage</a></li>
                         <li><a href="<%= (attr :_basedir) %>documentation/donations.html">Donations</a></li>
                         <li role="separator" class="divider"></li>
@@ -105,6 +101,7 @@
                 </li>
                 <li><a href="<%= (attr :_basedir) %>rest/api.html">REST API</a></li>
                 <li><a href="<%= (attr :_basedir) %>datastores/index.html">Datastores</a></li>
+                <li><a href="<%= (attr :_basedir) %>extensions.html">Extensions</a></li>
             </ul>
         </div>
     </div>
@@ -130,14 +127,30 @@
 <footer style="background-color:#97d5ca; padding: 5px;">
 <div class="container">
     <div class="row">
-        <div class="col-sm-4">
-            <a href="https://forum.datanucleus.org.html">DataNucleus Forum</a>
-        </div>
-        <div class="col-sm-4">
-            <a href="https://gitter.im/datanucleus/Lobby">Gitter</a><br/>
-        </div>
-        <div class="col-sm-4">
-            <a href="https://stackoverflow.com/questions/tagged/datanucleus"><i>Stackoverflow</i></a><br/>
+		<div class="col-sm-6 text-center-mobile">
+			<h3>DataNucleus : flexible persistence</h3>
+			<ul class="social-footer">
+				<li><a href="https://twitter.com/datanucleus"><i class="fa fa-twitter"></i></a></li>
+			</ul>
+		</div>
+		<div class="col-sm-6 text-center-mobile">
+			<div class="row">
+				<div class="col-sm-6 text-center-mobile">
+				    <h5>Support</h5>
+					<ul class="list-unstyled">
+						<li><a href="http://forum.datanucleus.org">DataNucleus Forum</a></li>
+						<li><a href="https://gitter.im/datanucleus/Lobby">Gitter (DataNucleus/Lobby)</a></li>
+                        <li><a href="https://stackoverflow.com/questions/tagged/datanucleus"><i>Stackoverflow</i></a></li>
+			        </ul>
+			    </div>
+				<div class="col-sm-6 text-center-mobile">
+				    <h5>Information</h5>
+					<ul class="list-unstyled">
+						<li><a href="../../documentation/license.html">License (Apache 2)</a></li>
+						<li><a href="../../documentation/problem_reporting.html">Problem Reporting</a></li>
+			        </ul>
+			    </div>
+			</div>
         </div>
     </div>
     <hr/>
