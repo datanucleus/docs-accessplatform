@@ -1,0 +1,111 @@
+[[cache_query]]
+= Extension: Query Cache
+:_basedir: ../
+:_imagesdir: images/
+
+DataNucleus is developed as a plugin-driven framework and one of the components that is pluggable is the caching of query compilations. 
+DataNucleus provides some inbuilt cache options, but also allows you to provide your own.
+
+DataNucleus is able to support third party Query Compilation Cache products. 
+You can extend DataNucleus's capabilities using the plugin extension *org.datanucleus.cache_query*.
+
+
+[cols="2,1,1,1", options="header"]
+|===
+|Plugin extension-point
+|Key
+|Description
+|Location
+
+|org.datanucleus.cache_query
+|weak
+|Weak Query Cache (default)
+|datanucleus-core
+
+|org.datanucleus.cache_query
+|soft
+|Soft Query Cache
+|datanucleus-core
+
+|org.datanucleus.cache_query
+|strong
+|Strong Query Cache
+|datanucleus-core
+
+|org.datanucleus.cache_query
+|javax.cache
+|javax.cache Query Cache
+|datanucleus-core
+
+|org.datanucleus.cache_query
+|cacheonix
+|Cacheonix Query Cache
+|datanucleus-cache
+|===
+
+The following sections describe how to create your own Query cache plugin for DataNucleus.
+
+== Interface
+
+If you have your own Query cache you can easily use it with DataNucleus. DataNucleus defines a QueryCompilationCache interface and you need to implement this.
+http://www.datanucleus.org/javadocs/core/latest/org/datanucleus/store/query/compiler/QueryCompilationCache.html[image:../images/javadoc.png[Javadoc]].
+
+[source,java]
+-----
+package org.datanucleus.store.query.cache;
+public interface QueryCompilationCache
+{
+    void close();
+    void evict(String queryKey);
+    void clear();
+    boolean isEmpty();
+    int size();
+    QueryCompilation get(String queryKey);
+    QueryCompilation put(String queryKey, QueryCompilation compilation);
+    boolean contains(String queryKey);
+}
+-----
+
+== Implementation
+
+Let's suppose your want to implement your own Level 2 cache _MyLevel2Cache_
+
+[source,java]
+-----
+package mydomain;
+
+import org.datanucleus.NucleusContext;
+import org.datanucleus.store.query.compiler.QueryCompilationCache;
+
+public class MyQueryCache implements QueryCompilationCache
+{
+    public MyQueryCache(NucleusContext nucCtx)
+    {
+        ...
+    }
+
+    ... (implement the interface)
+}
+-----
+
+== Plugin Specification
+
+Once you have this implementation you then need to make the class available as a DataNucleus plugin. You do this by putting a file 
+`plugin.xml` in your JAR at the root of the CLASSPATH, like this
+
+[source,xml]
+-----
+    <?xml version="1.0"?>
+    <plugin id="mydomain" name="DataNucleus plug-ins" provider-name="My Company">
+        <extension point="org.datanucleus.cache_query">
+            <cache name="MyCache" class-name="mydomain.MyQueryCache"/>
+        </extension>
+    </plugin>
+-----
+
+Note that you also require a `MANIFEST.MF` file as xref:extensions.adoc#MANIFEST[described above].
+
+== Plugin Usage
+
+The only thing remaining is to use your Query Compilation Cache plugin. To do this you specify the persistence property _datanucleus.cache.query.type_ as __MyCache__ (the "name" in `plugin.xml`).
+

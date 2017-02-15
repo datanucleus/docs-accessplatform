@@ -1,0 +1,27 @@
+[[management_server]]
+= Extension: Management Server (JMX)
+:_basedir: ../
+:_imagesdir: images/
+
+DataNucleus exposes runtime metrics via JMX MBeans. Management Servers permits DataNucleus to 
+register its MBeans into a different MBeanServer. Management Servers can be plugged using the 
+plugin extension *org.datanucleus.management_server*. The following plugin extensions are currently available
+
+[cols="2,1,1,1", options="header"]
+|===
+|Plugin extension-point
+|Key
+|Description
+|Location
+
+|org.datanucleus.management_server
+|default
+|Register DataNucleus MBeans into the JVM MBeanServer.
+|datanucleus-core
+
+|org.datanucleus.management_server
+|mx4j
+|Register DataNucleus MBeans into a MX4J MBeanServer
+|datanucleus-core
+|===
+

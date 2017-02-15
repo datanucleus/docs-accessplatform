@@ -1,0 +1,211 @@
+[[store_valuegenerator]]
+= Extension: Value Generators
+:_basedir: ../
+:_imagesdir: images/
+
+
+DataNucleus is developed as a plugin-driven framework and one of the components that is pluggable is 
+the generation of identity or field values. DataNucleus provides a http://www.datanucleus.org/products/accessplatform/jdo/value_generation.html[large selection]
+of generators but is structured so that you can easily add your own variant and have it usable within your DataNucleus usage. Below are listed
+some of those available, but each store plugin typically will define its own. The JDO/JPA specs define various that are required.
+You can extend DataNucleus's capabilities using the plugin extension *org.datanucleus.store_valuegenerator*.
+
+[cols="2,1,1,2,1", options="header"]
+|===
+|Plugin extension-point
+|Key
+|Datastore
+|Description
+|Location
+
+|org.datanucleus.store_valuegenerator
+|auid
+|all datastores
+|Value Generator using AUIDs
+|datanucleus-core
+
+|org.datanucleus.store_valuegenerator
+|uuid-hex
+|all datastores
+|Value Generator using uuid-hex
+|datanucleus-core
+
+|org.datanucleus.store_valuegenerator
+|uuid-string
+|all datastores
+|Value Generator using uuid-string
+|datanucleus-core
+
+|org.datanucleus.store_valuegenerator
+|timestamp
+|all datastores
+|Value Generator using Timestamp
+|datanucleus-core
+
+|org.datanucleus.store_valuegenerator
+|timestamp-value
+|all datastores
+|Value Generator using Timestamp millisecs value
+|datanucleus-core
+
+|org.datanucleus.store_valuegenerator
+|increment
+|rdbms
+|Value Generator using increment strategy
+|datanucleus-rdbms
+
+|org.datanucleus.store_valuegenerator
+|sequence
+|rdbms
+|Value Generator using datastore sequences
+|datanucleus-rdbms
+
+|org.datanucleus.store_valuegenerator
+|table-sequence
+|rdbms
+|Value Generator using a database table to generate sequences (same as increment)
+|datanucleus-rdbms
+
+|org.datanucleus.store_valuegenerator
+|max
+|rdbms
+|Value Generator using max(COL)+1 strategy
+|datanucleus-rdbms
+
+|org.datanucleus.store_valuegenerator
+|datastore-uuid-hex
+|rdbms
+|Value Generator using uuid-hex attributed by the datastore
+|datanucleus-rdbms
+
+|org.datanucleus.store_valuegenerator
+|identity
+|mongodb
+|Value Generator for MongoDB using identity strategy
+|datanucleus-mongodb
+
+|org.datanucleus.store_valuegenerator
+|identity
+|neo4j
+|Value Generator for Neo4j using identity strategy
+|datanucleus-neo4j
+|===
+
+The following sections describe how to create your own value generator plugin for DataNucleus.
+
+== Interface
+
+Any value generator plugin will need to implement _org.datanucleus.store.valuegenerator.ValueGenerator_
+http://www.datanucleus.org/javadocs/core/latest/org/datanucleus/store/valuegenerator/ValueGenerator.html[image:../images/javadoc.png[Javadoc]].
+So you need to implement the following interface
+
+[source,java]
+-----
+public interface ValueGenerator
+{
+    String getName ();
+
+    void allocate (int additional);
+
+    Object next ();
+    Object current ();
+
+    long nextValue();
+    long currentValue();
+}
+-----
+
+== Implementation
+
+DataNucleus provides an abstract base class _org.datanucleus.store.valuegenerator.AbstractValueGenerator_ to extend if you don't require 
+datastore access. If you do require (RDBMS) datastore access for your ValueGenerator then you can extend _org.datanucleus.store.rdbms.valuegenerator.AbstractRDBMSValueGenerator_
+Let's give an example, here we want a generator that provides a form of UUID identity. We define our class as
+
+[source,java]
+-----
+package mydomain;
+
+import org.datanucleus.store.valuegenerator.ValueGenerationBlock;
+import org.datanucleus.store.valuegenerator.AbstractValueGenerator;
+
+public class MyUUIDValueGenerator extends AbstractValueGenerator
+{
+    public MyUUIDValueGenerator(String name, Properties props)
+    {
+        super(name, props);
+    }
+
+    /**
+     * Method to reserve "size" ValueGenerations to the ValueGenerationBlock.
+     * @param size The block size
+     * @return The reserved block
+     */
+    public ValueGenerationBlock reserveBlock(long size)
+    {
+        Object[] ids = new Object[(int) size];
+        for (int i = 0; i < size; i++)
+        {
+            ids[i] = getIdentifier();
+        }
+        return new ValueGenerationBlock(ids);
+    }
+
+    /**
+     * Create a UUID identifier.
+     * @return The identifier
+     */
+    private String getIdentifier()
+    {
+        ... Write this method to generate the identifier
+    }
+}
+-----
+
+As show you need a constructor taking 2 arguments _String_ and _java.util.Properties_. The first being the name of the generator, and the 
+second containing properties for use in the generator.
+
+* __class-name__ Name of the class that the value is being added to
+* __root-class-name__ Name of the root class in this inheritance tree
+* __field-name__ Name of the field whose value is being set (not provided if this is datastore identity field)
+* __catalog-name__ Catalog that objects of the class are stored in
+* __schema-name__ Schema that objects of the class are stored in
+* __table-name__ Name of the (root) table storing this field
+* __column-name__ Name of the column storing this field
+* __sequence-name__ Name of the sequence (if specified in the MetaData)
+
+== Plugin Specification
+
+So we now have our custom "value generator" and we just need to make this into a DataNucleus plugin. To do this
+you simply add a file `plugin.xml` to your JAR at the root, like this
+
+[source,xml]
+-----
+<?xml version="1.0"?>
+<plugin id="mydomain" name="DataNucleus plug-ins" provider-name="My Company">
+    <extension point="org.datanucleus.store_valuegenerator">
+        <valuegenerator name="myuuid" class-name="mydomain.MyUUIDValueGenerator" unique="true"/>
+    </extension>
+</plugin>
+-----
+
+Note that you also require a `MANIFEST.MF` file as xref:extensions.adoc#MANIFEST[described above].
+
+The name "myuuid" is what you will use as the "strategy" when specifying to use it in MetaData.
+The flag "unique" is only needed if your generator is to be unique across all requests. For example if your
+generator was only unique for a particular class then you should omit that part. Thats all. You now have a 
+DataNucleus "value generator" plugin.
+
+
+== Plugin Usage
+
+To use your value generator you would reference it in your JDO MetaData like this
+
+[source,xml]
+-----
+<class name="MyClass">
+    <datastore-identity strategy="myuuid"/>
+    ...
+</class>
+-----
+
+Don't forget that if you write a value generator that could be of value to others you could easily donate it to DataNucleus for inclusion in the next release.

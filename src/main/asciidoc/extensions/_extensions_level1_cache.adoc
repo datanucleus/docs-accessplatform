@@ -1,0 +1,77 @@
+[[cache_level1]]
+= Extension: Level 1 Cache
+:_basedir: ../
+:_imagesdir: images/
+
+
+DataNucleus is developed as a plugin-driven framework and one of the components that is pluggable is the Level 1 caching of objects 
+(between PM/EMs for the same PMF/EMF). DataNucleus comes with builtin support for three Level 1 caches, but is a plugin point so that you can 
+easily add your own variant and have it usable within your DataNucleus usage.
+
+DataNucleus is able to support third party Level 1 Cache products. There are DataNucleus-provided plugins for
+weak, soft referenced caches etc. You can extend DataNucleus's capabilities using the plugin extension *org.datanucleus.cache_level1*. 
+
+[cols="2,1,1,1", options="header"]
+|===
+|Plugin extension-point
+|Key
+|Description
+|Location
+
+|org.datanucleus.cache_level1
+|weak
+|Weak referenced cache (default)
+|datanucleus-core
+
+|org.datanucleus.cache_level1
+|soft
+|Soft referenced cache
+|datanucleus-core
+
+|org.datanucleus.cache_level1
+|strong
+|Strong-referenced cache (HashMap)
+|datanucleus-core
+|===
+
+The following sections describe how to create your own Level 1 cache plugin for DataNucleus.
+
+== Interface
+
+If you have your own Level1 cache you can easily use it with DataNucleus. DataNucleus defines a Level1Cache interface and you need to implement this.
+http://www.datanucleus.org/javadocs/core/latest/org/datanucleus/cache/Level1Cache.html[image:../images/javadoc.png[Javadoc]].
+
+[source,java]
+-----
+package org.datanucleus.cache;
+
+public interface Level1Cache extends Map
+{
+}
+-----
+
+So you need to create a class, __MyLevel1Cache__ for example, that implements this interface (i.e that implements _java.util.Map_).
+
+
+== Plugin Specification
+
+Once you have this implementation you then need to make the class available as a DataNucleus plugin. You do this by putting a file 
+`plugin.xml` in your JAR at the root of the CLASSPATH, like this
+
+[source,xml]
+-----
+<?xml version="1.0"?>
+<plugin id="mydomain.mycache" name="DataNucleus plug-ins" provider-name="My Company">
+    <extension point="org.datanucleus.cache_level1">
+        <cache name="MyCache" class-name="mydomain.MyLevel1Cache"/>
+    </extension>
+</plugin>
+-----
+
+Note that you also require a `MANIFEST.MF` file as xref:extensions.adoc#MANIFEST[described above].
+
+== Plugin Usage
+
+The only thing remaining is to use your L1 Cache plugin. To do this you specify the 
+persistence property _datanucleus.cache.level1.type_ as __MyCache__ (the "name" in `plugin.xml`).
+

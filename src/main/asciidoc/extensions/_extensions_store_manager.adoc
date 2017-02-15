@@ -1,0 +1,114 @@
+[[store_manager]]
+= Extension: Store Manager
+:_basedir: ../
+:_imagesdir: images/
+
+DataNucleus provides support for persisting objects to particular datastores. It provides this capability via a "Store Manager". 
+It provides a Store Manager plugin for many datastores (see below). You can extend DataNucleus's capabilities using the plugin extension 
+*org.datanucleus.store_manager*.
+
+[cols="2,1,1,2,2", options="header"]
+.Store Managers
+|===
+|Plugin extension-point
+|Key
+|URL-key
+|Description
+|Location
+
+|org.datanucleus.store_manager
+|rdbms
+|jdbc
+|Store Manager for RDBMS datastores
+|datanucleus-rdbms
+
+|org.datanucleus.store_manager
+|cassandra
+|cassandra
+|Store Manager for Cassandra datastore
+|datanucleus-cassandra
+
+|org.datanucleus.store_manager
+|ldap
+|ldap
+|Store Manager for LDAP datastores
+|datanucleus-ldap
+
+|org.datanucleus.store_manager
+|excel
+|excel
+|Store Manager for Excel spreadsheets
+|datanucleus-excel
+
+|org.datanucleus.store_manager
+|odf
+|odf
+|Store Manager for ODF spreadsheets
+|datanucleus-odf
+
+|org.datanucleus.store_manager
+|xml
+|xml
+|Store Manager for XML datastores
+|datanucleus-xml
+
+|org.datanucleus.store_manager
+|json
+|json
+|Store Manager for JSON datastores
+|datanucleus-json
+
+|org.datanucleus.store_manager
+|amazons3
+|amazons3
+|Store Manager for Amazon S3 datastore
+|datanucleus-json
+
+|org.datanucleus.store_manager
+|googlestorage
+|googlestorage
+|Store Manager for Google Storage datastore
+|datanucleus-json
+
+|org.datanucleus.store_manager
+|hbase
+|hbase
+|Store Manager for HBase datastores
+|datanucleus-hbase
+
+|org.datanucleus.store_manager
+|mongodb
+|mongodb
+|Store Manager for MongoDB datastores
+|datanucleus-mongodb
+|===
+
+== Interface
+
+If you want to implement support for another datastore you can achieve it by implementating the StoreManager interface.
+http://www.datanucleus.org/javadocs/core/latest/org/datanucleus/store/StoreManager.html[(Javadoc)].
+
+For a brief guide on starting support for a new datastore, follow this
+http://www.datanucleus.org/documentation/development/new_store_plugin_howto.html[HOWTO].
+
+== Plugin Specification
+
+Once you have this implementation you then need to make the class available as a DataNucleus plugin. You do this by putting a file 
+`plugin.xml` in your JAR at the root of the CLASSPATH. The file `plugin.xml` will look like this
+
+[source,xml]
+-----------
+<?xml version="1.0"?>
+<plugin id="mydomain.mystore" name="DataNucleus plug-ins" provider-name="My Company">
+    <extension point="org.datanucleus.store_manager">
+        <store-manager class-name="mydomain.MyStoreManager" url-key="mykey" key="mykey"/>
+    </extension>
+</plugin>
+-----------
+
+Note that you also require a MANIFEST.MF file as xref:extensions.adoc#MANIFEST[described above].
+
+== Plugin Usage
+
+The only thing remaining is to use your StoreManager. To do this you simply define your ConnectionURL to start with the _mykey_ defined in the plugin spec 
+(for example, with the RDBMS plugin, the connection URL starts _jdbc:db-name:..._. This will select your store manager based on that.

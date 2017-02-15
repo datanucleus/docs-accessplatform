@@ -1,0 +1,97 @@
+[[annotations]]
+= Extension: Annotations
+:_basedir: ../
+:_imagesdir: images/
+
+
+DataNucleus is developed as a plugin-driven framework and one of the components that is pluggable is the reading of annotations. 
+DataNucleus provides a support for JDO and JPA annotations, but is structured so that you can easily add your own annotations and have them
+usable within your DataNucleus usage.
+
+DataNucleus supports Java annotations. More than this, it actually provides a pluggable framework whereby you can plug in your own annotations support. 
+The JDO API plugin provides support for JDO annotations, and the JPA API plugin provides support for JPA annotations. 
+You can extend DataNucleus's capabilities using the plugin extension *org.datanucleus.annotations*.
+
+[cols="2,1,1,1", options="header"]
+|===
+|Plugin extension-point
+|Key
+|Description
+|Location
+
+|org.datanucleus.annotations
+|@PersistenceCapable
+|JDO annotation reader
+|datanucleus-api-jdo
+
+|org.datanucleus.annotations
+|@PersistenceAware
+|JDO annotation reader
+|datanucleus-api-jdo
+
+|org.datanucleus.annotations
+|@Entity
+|JPA annotation reader
+|datanucleus-api-jpa
+
+|org.datanucleus.annotations
+|@MappedSuperclass
+|JPA annotation reader
+|datanucleus-api-jpa
+
+|org.datanucleus.annotations
+|@Embeddable
+|JPA annotation reader
+|datanucleus-api-jpa
+|===
+
+
+== Interface
+
+Any annotation reader plugin will need to implement _org.datanucleus.metadata.annotations.AnnotationReader_.
+http://www.datanucleus.org/javadocs/core/latest/org/datanucleus/metadata/annotations/AnnotationReader.html[image:../images/javadoc.png[Javadoc]].
+So you need to implement the following interface
+
+[source,java]
+-----
+package org.datanucleus.metadata.annotations;
+
+import org.datanucleus.metadata.PackageMetaData;
+import org.datanucleus.metadata.ClassMetaData;
+
+public interface AnnotationReader
+{
+    /**
+     * Accessor for the annotations packages supported by this reader.
+     * @return The annotations packages that will be processed.
+     */
+    String[] getSupportedAnnotationPackages();
+
+    /**
+     * Method to get the ClassMetaData for a class from its annotations.
+     * @param cls The class
+     * @param pmd MetaData for the owning package (that this will be a child of)
+     * @return The ClassMetaData (unpopulated and unitialised)
+     */
+    public ClassMetaData getMetaDataForClass(Class cls, PackageMetaData pmd);
+}
+-----
+
+== Plugin Specification
+
+So we now have our custom "annotation reader" and we just need to make this into a DataNucleus 
+plugin. To do this you simply add a file `plugin.xml` to your JAR at the root. This file should look like this
+
+[source,xml]
+-----
+<?xml version="1.0"?>
+<plugin id="mydomain.annotations" name="DataNucleus plug-ins" provider-name="My Company">
+    <extension point="org.datanucleus.annotations">
+        <annotations annotation-class="mydomain.annotations.MyAnnotationType" reader="mydomain.annotations.MyAnnotationReader"/>
+    </extension>
+</plugin>
+-----
+
+Note that you also require a `MANIFEST.MF` file as xref:extensions.adoc#MANIFEST[described above].
+
+So here we have our "annotations reader" class "MyAnnotationReader" which will process any classes annotated with the annotation "MyAnnotationType".

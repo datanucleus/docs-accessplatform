@@ -1,0 +1,122 @@
+[[rdbms_connectionpool]]
+= Extension: RDBMS Connection Pooling
+:_basedir: ../
+:_imagesdir: images/
+
+
+DataNucleus is developed as a plugin-driven framework and one of the components that is pluggable is the pooling of connections to RDBMS datastores. 
+DataNucleus provides a large selection of connection pools (DBCP, C3P0, Proxool, BoneCP) but is structured so that you can easily add your 
+own variant and have it usable within your DataNucleus usage.
+
+
+DataNucleus requires a DataSource to define the datastore in use and consequently allows use of 
+connection pooling. DataNucleus provides plugins for various different pooling products, shown below. 
+You can easily define your own plugin for pooling. You can extend DataNucleus's capabilities 
+using the plugin extension *org.datanucleus.store.rdbms.connectionpool*.
+
+[cols="2,1,2,1", options="header"]
+|===
+|Plugin extension-point
+|Key
+|Description
+|Location
+
+|org.datanucleus.store.rdbms.connectionpool
+|dbcp-builtin
+|RDBMS connection pool, using Apache DBCP builtin
+|datanucleus-rdbms
+
+|org.datanucleus.store.rdbms.connectionpool
+|bonecp
+|RDBMS connection pool, using BoneCP
+|datanucleus-rdbms
+
+|org.datanucleus.store.rdbms.connectionpool
+|c3p0
+|RDBMS connection pool, using C3P0
+|datanucleus-rdbms
+
+|org.datanucleus.store.rdbms.connectionpool
+|dbcp
+|RDBMS connection pool, using Apache DBCP
+|datanucleus-rdbms
+
+|org.datanucleus.store.rdbms.connectionpool
+|proxool
+|RDBMS connection pool, using Proxool
+|datanucleus-rdbms
+
+|org.datanucleus.store.rdbms.connectionpool
+|tomcat
+|RDBMS connection pool, using Tomcat pool
+|datanucleus-rdbms
+|===
+
+The following sections describe how to create your own connection pooling plugin for DataNucleus.
+
+== Interface
+
+If you have your own DataSource connection pooling implementation you can easily use it with DataNucleus.
+http://www.datanucleus.org/javadocs/store.rdbms/latest/org/datanucleus/store/rdbms/connectionpool/ConnectionPoolFactory.html[image:../images/javadoc.png[Javadoc]].
+DataNucleus defines a ConnectionPoolFactory interface and you need to implement this.
+
+[source,java]
+-----
+package org.datanucleus.store.rdbms.connectionpool;
+
+public interface ConnectionPoolFactory
+{
+    /**
+     * Method to make a ConnectionPool for use within DataNucleus.
+     * @param storeMgr StoreManager
+     * @return The ConnectionPool
+     * @throws Exception Thrown if an error occurs during creation
+     */
+    public ConnectionPool createConnectionPool(StoreManager storeMgr);
+}
+-----
+
+where you also define a ConnectionPool
+http://www.datanucleus.org/javadocs/store.rdbms/latest/org/datanucleus/store/rdbms/connectionpool/ConnectionPool.html[image:../images/javadoc.png[Javadoc]].
+
+[source,java]
+-----
+package org.datanucleus.store.rdbms.connectionpool;
+
+public interface ConnectionPool
+{
+    /**
+     * Method to call when closing the StoreManager down, and consequently to close the pool.
+     */
+    void close();
+
+    /**
+     * Accessor for the pooled DataSource.
+     * @return The DataSource
+     */
+    DataSource getDataSource();
+}
+-----
+
+== Plugin Specification
+
+The only thing required now is to register this plugin with DataNucleus when you start up your application.
+To do this create a file `plugin.xml` and put it in your JAR at the root of the CLASSPATH, like this
+
+[source,xml]
+-----
+<?xml version="1.0"?>
+<plugin id="mydomain" name="DataNucleus plug-ins" provider-name="My Company">
+    <extension point="org.datanucleus.store.rdbms.connectionpool">
+        <connectionpool-factory name="mypool" class-name="mydomain.MyConnectionPoolFactory"/>
+    </extension>
+</plugin>
+-----
+
+Note that you also require a `MANIFEST.MF` file as xref:extensions.adoc#MANIFEST[described above].
+
+== Plugin Usage
+
+The only thing remaining is to use your new _ConnectionPoolFactory_ plugin. You do this by having your plugin in the CLASSPATH at runtime, 
+and setting the persistence property __datanucleus.connectionPoolingType__ to _mypool_ (the name you specified in the `plugin.xml` file).
+
