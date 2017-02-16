@@ -195,7 +195,7 @@ Writing your own classes to be persisted is the start point, but you now need to
 -----
 
 [[step3]]
-== Step 3 : Enhance your classes">
+== Step 3 : Enhance your classes
 
 DataNucleus relies on the classes that you want to persist be enhanced to implement the interface _Persistable_. 
 You could write your classes manually to do this but this would be laborious. Alternatively you can use a post-processing step to compilation that "enhances" your 
@@ -367,11 +367,11 @@ Clearly you can perform a large range of operations on objects. We can't hope to
 
 To run your JPA-enabled application will require a few things to be available in the Java CLASSPATH, these being
 
-* The "persistence.xml" file (stored under META-INF/)
+* The `persistence.xml` file (stored under META-INF/)
 * Any ORM MetaData files for your persistable classes
 * Any JDBC driver classes needed for accessing your datastore
 * The JPA API JAR (defining the JPA interface)
-* The *DataNucleus Core*, *DataNucleus JPA API* and *DataNucleus RDBMS* JARs
+* The *datanucleus-core*, *datanucleus-api-jpa* and *datanucleus-rdbms* JARs
 
 After that it is simply a question of starting your application and all should be taken care of. You can access the DataNucleus Log file by specifying the 
 link:../logging.html[logging] configuration properties, and any messages from DataNucleus will be output in the normal way. 
@@ -417,8 +417,10 @@ End of Tutorial
 == Step 6 : Controlling the schema
 
 We haven't yet looked at controlling the schema generated for these classes.
-Now let's pay more attention to this part by defining XML Metadata for the schema. We define this in XML to separate schema information from 
-persistence information. So we define a file `_META-INF/orm.xml_` at the root of the CLASSPATH.
+Now let's pay more attention to this part by defining XML Metadata for the schema. 
+In this example we define this in XML to separate schema information from persistence information (though could equally have used annotations if we really wanted to). 
+This information is used _either_ to match up to an existing schema, _or_ is used to generate a new schema (see #xref:tutorial_rdbms.html#step7[Step 7]).
+So we define a file `_META-INF/orm.xml_` at the root of the CLASSPATH.
 
 [source,xml]
 -----
