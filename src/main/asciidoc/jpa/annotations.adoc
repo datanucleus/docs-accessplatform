@@ -720,7 +720,7 @@ This annotation is used to define the inheritance persistence for this class. Sp
 |strategy
 |InheritanceType
 |Inheritance strategy
-|*SINGLE_TABLE* | JOINED | TABLE_PER_CLASS
+|*SINGLE_TABLE*, JOINED, TABLE_PER_CLASS
 |===
 
 [source,java]
@@ -865,7 +865,7 @@ This annotation is used to define the discriminator column for a class. Specifie
 |discriminatorType
 |DiscriminatorType
 |Type of the discriminator column
-|STRING | CHAR | INTEGER
+|STRING, CHAR, INTEGER
 
 |length
 |String
@@ -1866,7 +1866,7 @@ It specifies the JDBC type to use for storage of this type, so whether it stores
 |value
 |TemporalType
 |Type for storage
-|DATE | TIME | TIMESTAMP
+|DATE, TIME, TIMESTAMP
 |===
 
 [source,java]
@@ -1896,7 +1896,7 @@ This annotation is used to define that a field is stored enumerated (not that it
 |value
 |EnumType
 |Type for storage
-|*ORDINAL* | STRING
+|*ORDINAL*, STRING
 |===
 
 [source,java]
@@ -2152,7 +2152,7 @@ This annotation is used to define that a field represents a 1-N relation to non-
 |fetch
 |FetchType
 |Whether the field should be fetched immediately
-|EAGER | *LAZY*
+|EAGER, *LAZY*
 |===
 
 [source,java]
@@ -2772,7 +2772,7 @@ This DataNucleus-extension annotation is used to define that the class uses data
 |generationType
 |GenerationType
 |Strategy to use when generating the values for this field. Has possible values of GenerationType TABLE, SEQUENCE, IDENTITY, AUTO.
-|*AUTO* | TABLE | SEQUENCE
+|*AUTO*, TABLE, SEQUENCE
 
 |generator
 |String
