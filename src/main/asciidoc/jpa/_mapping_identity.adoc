@@ -7,15 +7,17 @@ All JPA-enabled persistable classes need to have an "identity" to be able to ide
 In strict JPA there is only 1 type of identity - _application identity_, where you have a field or field(s) of the entity that are used to define the identity.
 With DataNucleus JPA we allow 2 additional types of identity. So your options are
 
-* xref:identity.html#application[Application Identity] : a field, or several fields of the persistable type are assigned as being (part of) the primary key.
-* xref:identity.html#datastore[Datastore Identity] : a surrogate column is added to the persistence of the persistable type, and objects of this type are identified by
+* xref:mapping.html#application_identity[Application Identity] : a field, or several fields of the persistable type are assigned as being (part of) the primary key.
+* xref:mapping.html#datastore_identity[Datastore Identity] : a surrogate column is added to the persistence of the persistable type, and objects of this type are identified by
 the class plus the value in this surrogate column. *DataNucleus Extension*
-* xref:identity.html#nondurable[Nondurable Identity] : the persistable type has no identity as such, so the only way to lookup objects of this type would be
+* xref:mapping.html#nondurable_identity[Nondurable Identity] : the persistable type has no identity as such, so the only way to lookup objects of this type would be
 via query for values of specific fields. This is useful for storing things like log messages etc. *DataNucleus Extension*
 
-A further complication is where you use _application identity_ but one of the fields forming the primary key is a relation field. This is known as xref:identity.html#derived[Derived Identity].
+A further complication is where you use _application identity_ but one of the fields forming the primary key is a relation field. 
+This is known as xref:identity.html#derived_identity[Derived Identity].
 
-[[application]]
+
+[[application_identity]]
 == Application Identity
 
 With *application identity* you are taking control of the specification of id's to DataNucleus. Application identity can require a primary key class 
@@ -111,7 +113,7 @@ MyClass myObj = em.find(MyClass.class, mykey);
 If you have defined your own "IdClass" then the _mykey_ is the toString() form of the identity of your PK class.
 
 
-[[application_primarykey]]
+[[application_identity_primarykey]]
 === Primary Key
 
 When you choose application identity you are defining which fields of the class are part of the primary key,
@@ -216,7 +218,7 @@ You can't use classes like java.lang.String, or java.lang.Long directly. You mus
 * the Primary Key class must provide a String constructor that returns an instance that compares equal to an instance that returned that String by the toString() method.
 * the Primary Key class must be only used within a single inheritance tree.
 
-Please note that if one of the fields that comprises the primary key is in itself an entity then you have xref:identity.html#derived[Derived Identity]
+Please note that if one of the fields that comprises the primary key is in itself an entity then you have xref:mapping.html#derived[Derived Identity]
 and should consult the documentation for that feature which contains its own example.
 
 image:../images/nucleus_extension.png[]
@@ -298,12 +300,12 @@ public class ComposedIdKey implements Serializable
 -----
 
 
-[[datastore]]
+[[datastore_identity]]
 == Datastore Identity
 
 image:../images/nucleus_extension.png[]
 
-While JPA defines support for xref:identity.html#application[application identity] only, DataNucleus also provides support for *datastore identity*. 
+While JPA defines support for xref:mapping.html#application[application identity] only, DataNucleus also provides support for *datastore identity*. 
 With *datastore identity* you are leaving the assignment of id's to DataNucleus and your class will *not* have a field for this identity - it will be added to the 
 datastore representation by DataNucleus. It is, to all extents and purposes a _surrogate key_ that will have its own column in the datastore. 
 To specify that a class is to use *datastore identity* with JPA, you define the metadata as follows
@@ -357,7 +359,7 @@ See also:-
 === Datastore Identity : Accessing the Identity
 
 When using *datastore identity*, the class has no associated field so you can't just access a field of the class to see its identity - if you need a field 
-to be able to access the identity then you should be using xref:identity.html#application[application identity]. 
+to be able to access the identity then you should be using xref:mapping.html#application_identity[application identity]. 
 There are, however, ways to get the identity for the datastore identity case, if you have the object.
 
 [source,java]
@@ -374,7 +376,7 @@ From this you can use the "find" method to retrieve the object
 MyClass myObj = em.find(MyClass.class, idKey);
 -----
 
-[[nondurable]]
+[[nondurable_identity]]
 == Nondurable Identity
 
 image:../images/nucleus_extension.png[]
@@ -408,7 +410,7 @@ DataNucleus provides support for "nondurable" identity for some datastores only 
 What this means for something like RDBMS is that the table of the class will not have a primary-key.
 
 
-[[derived]]
+[[derived_identity]]
 == Derived Identity Relationships
 
 An derived identity relationship is a relationship between two objects of two classes in which the child object must coexist with the 
@@ -416,9 +418,9 @@ parent object and where the primary key of the child includes the Entity object 
 type of relationship is that the primary key of one of the classes includes a Entity field (hence why is is referred to as _Derived Identity_).
 This type of relation is available in the following forms
 
-* xref:identity.html#derived_1_1_uni[1-1 unidirectional]
-* xref:identity.html#derived_1_N_coll_bi[1-N collection bidirectional using ForeignKey]
-* xref:identity.html#derived_1_N_map_bi[1-N map bidirectional using ForeignKey (key stored in value)]
+* xref:mapping.html#derived_identity_1_1_uni[1-1 unidirectional]
+* xref:mapping.html#derived_identity_1_N_coll_bi[1-N collection bidirectional using ForeignKey]
+* xref:mapping.html#derived_identity_1_N_map_bi[1-N map bidirectional using ForeignKey (key stored in value)]
 
 WARNING: In pure JPA, if the entity that is part of the id of the derived entity has a single long field then you can put a _long_
 field in the identity class of the derived entity. In DataNucleus you cannot do this currently, and should define the `@IdClass` of the 
@@ -427,7 +429,7 @@ entity being contained and use that type in the identity class of the derived en
 NOTE: The persistable class that is contained cannot be using _datastore identity_, and must be using _application identity_ with an objectid-class
 
 
-[[derived_1_1_uni]]
+[[derived_identity_1_1_uni]]
 === 1-1 Relationship
 
 Lets take the same classes as we have in the link:one_to_one.html[1-1 Relationships].
@@ -582,11 +584,11 @@ Things to note:-
 
 * In the child Primary Key class, you must have a field with the same name as the relationship in the child class, and the field in the child Primary Key class must 
 be the same type as the Primary Key class of the parent
-* See also the xref:identity.html#application_primarykey[general instructions for Primary Key classes]
+* See also the xref:mapping.html#application_identity_primarykey[general instructions for Primary Key classes]
 * You can only have one "Account" object linked to a particular "User" object since the FK to the "User" is now the primary key of "Account". 
 To remove this restriction you could also add a "long id" to  "Account" and make the "Account.PK" a composite primary-key
 
-[[derived_1_N_coll_bi]]
+[[derived_identity_1_N_coll_bi]]
 === 1-N Collection Relationship
 
 Lets take the same classes as we have in the link:orm/one_to_many_collection.html#fk_bi[1-N Relationships (FK)].
@@ -755,11 +757,11 @@ Things to note :-
 
 * In the child Primary Key class, you must have a field with the same name as the relationship in the child class, and the field in the child Primary Key class 
 must be the same type as the Primary Key class of the parent
-* See also the xref:identity.html#application_primarykey[general instructions for Primary Key classes]
+* See also the xref:mapping.html#application_identity_primarykey[general instructions for Primary Key classes]
 * If we had omitted the "id" field from "Address" it would have only been possible to have one "Address" in the "Account" "addresses" collection due to PK constraints. 
 For that reason we have the "id" field too.
 
-[[derived_1_N_map_bi]]
+[[derived_identity_1_N_map_bi]]
 === 1-N Map Relationship
 
 Lets take the same classes as we have in the link:orm/one_to_many_map.html#fk_bi_key[1-N Relationships FK].
@@ -928,6 +930,6 @@ Things to note :-
 
 * In the child Primary Key class, you must have a field with the same name as the relationship in the child class, and the field in the child Primary Key class
 must be the same type as the Primary Key class of the parent
-* See also the xref:identity.html#application_primarykey[general instructions for Primary Key classes]
+* See also the xref:mapping.html#application_identity_primarykey[general instructions for Primary Key classes]
 * If we had omitted the "alias" field from "Address" it would have only been possible to have one "Address" in the "Account" "addresses" collection due to PK constraints. 
 For that reason we have the "alias" field too as part of the PK.

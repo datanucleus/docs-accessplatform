@@ -18,7 +18,7 @@ In order to demonstrate the various inheritance strategies we need an example. H
 We have an abstract base class, extending this to provide something that we can represent any product by. We then provide a few specialisations for 
 typical products. We will use these classes later when defining how to persistent these objects in the different inheritance strategies
 
-image:../images/orm/inheritance_classes.gif[];
+image:../images/inheritance_classes.png[]
 
 As mentioned, the default JPA strategy is "SINGLE_TABLE", namely that the base class will have a table and all subclasses will be persisted into that same table. 
 So if you don't specify an "inheritance strategy" in your root class this is what you will get.
@@ -59,8 +59,9 @@ or with annotations
 public class Product {...}
 -----
 
+
 [[inheritance_singletable]]
-== SINGLE_TABLE
+== Strategy : SINGLE_TABLE
 
 NOTE: Applicable to RDBMS
 
@@ -154,7 +155,7 @@ The final thing to note is that in our classes *Book* and *CompactDisc* we have 
 With *CompactDisc* we have defined that its column will be called DISCTITLE since both of these fields will be persisted into the same table 
 and would have had identical names otherwise - this gets around the problem.
 
-image:../images/orm/inheritance_db_superclasstable.gif[]
+image:../images/inheritance_db_superclasstable.png[]
 
 In the above example, when we insert a TravelGuide object into the datastore, a row will be inserted into the PRODUCT table only.
 
@@ -162,7 +163,7 @@ NOTE: When using SINGLE-TABLE DataNucleus will always use a discriminator (defau
 
     
 [[inheritance_joined]]
-== JOINED
+== Strategy : JOINED
 
 NOTE: Applicable to RDBMS
 
@@ -242,12 +243,13 @@ public class Product {...}
 So we will have 5 tables - ABSTRACTPRODUCT, PRODUCT, BOOK, COMPACTDISC, and TRAVELGUIDE. 
 They each contain just the fields for that class (and not any inherited fields, except the identity to join with).
 
-image:../images/orm/inheritance_db_newtable.gif[]
+image:../images/inheritance_db_newtable.png[]
 
 In the above example, when we insert a TravelGuide object into the datastore, a row will be inserted into ABSTRACTPRODUCT, PRODUCT, BOOK, and TRAVELGUIDE.
 
+
 [[inheritance_tableperclass]]
-== TABLE_PER_CLASS
+== Strategy : TABLE_PER_CLASS
 
 NOTE: Applicable to all datastores
 
@@ -318,12 +320,13 @@ public class Product {...}
 -----
 
 This then implies a datastore schema as follows
-image:../images/orm/inheritance_db_completetable.gif[]
+image:../images/inheritance_db_completetable.png[]
 
 So any object of explicit type *Book* is persisted into the table BOOK. 
 Similarly any *TravelGuide* is persisted into the table TRAVELGUIDE, etc.
 In addition if any class in the inheritance tree is abstract then it won't have a table since there cannot be any instances of that type.
 *DataNucleus currently has limitations when using a class using this inheritance as the element of a collection.*
+
 
 [[inheritance_mappedsuperclass]]
 == Mapped Superclasses
