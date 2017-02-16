@@ -1,0 +1,905 @@
+[[identity]]
+= JPA Identity
+:_basedir: ../
+:_imagesdir: images/
+
+All JPA-enabled persistable classes need to have an "identity" to be able to identify an object for retrieval and relationships. 
+In strict JPA there is only 1 type of identity - _application identity_, where you have a field or field(s) of the entity that are used to define the identity.
+With DataNucleus JPA we allow 2 additional types of identity. So your options are
+
+* xref:identity.html#application[Application Identity] : a field, or several fields of the persistable type are assigned as being (part of) the primary key.
+* xref:identity.html#datastore[Datastore Identity] : a surrogate column is added to the persistence of the persistable type, and objects of this type are identified by
+the class plus the value in this surrogate column. *DataNucleus Extension*
+* xref:identity.html#nondurable[Nondurable Identity] : the persistable type has no identity as such, so the only way to lookup objects of this type would be
+via query for values of specific fields. This is useful for storing things like log messages etc. *DataNucleus Extension*
+
+A further complication is where you use _application identity_ but one of the fields forming the primary key is a relation field. This is known as xref:identity.html#derived[Derived Identity].
+
+[[application]]
+== Application Identity
+
+With *application identity* you are taking control of the specification of id's to DataNucleus. Application identity requires a primary key class 
+_(unless using SingleFieldIdentity, where one is provided for you)_, and each persistent capable class may define a different class for its primary 
+key, and different persistent capable classes can use the same primary key class, as appropriate. With *application identity* the field(s) of the primary key 
+will be present as field(s) of the class itself. To specify that a class is to use *application identity*, you add the following to the MetaData for the class.
+
+[source,xml]
+-----
+<entity class="org.mydomain.MyClass">
+    <id-class class="org.mydomain.MyIdClass"/>
+    <attributes>
+        <id name="myPrimaryKeyField"/>
+    </attributes>
+</entity>
+-----
+
+For JPA we specify the *id* field and *id-class*. Alternatively, if we are using annotations
+
+[source,java]
+-----
+@Entity
+@IdClass(class=MyIdClass.class)
+public class MyClass
+{
+    @Id
+    private long myPrimaryKeyField;
+}
+-----
+
+NOTE: *When you have an inheritance hierarchy, you should specify the identity type in the _base instantiable_ class for the inheritance tree. This is then used for all persistent 
+classes in the tree.* This means that you can have @MappedSuperclass without any identity fields/properties as superclass, and then the base instantiable class is the first persistable
+class which has the identity field(s).
+
+See also:-
+
+* link:metadata_xml.html#id[MetaData reference for <id> element]
+* link:annotations.html#Id[Annotations reference for @Id]
+
+=== Application Identity : Generating identities
+
+By choosing *application identity* you are controlling the process of identity generation 
+for this class. This does not mean that you have a lot of work to do for this. JPA1 defines many 
+ways of generating these identities and DataNucleus supports all of these and provides some 
+more of its own besides.
+
+See also:-
+
+* link:value_generation.html[Identity Generation Guide] - strategies for generating ids
+
+
+=== Application Identity : Changing Identities
+
+JPA doesn't define what happens if you change the identity (an identity field) of an object once persistent. *DataNucleus doesn't currently support changes to identities.*
+
+=== Application Identity : Accessing objects by Identity
+
+You access an object from its object class name and identity "value" as follows
+
+[source,java]
+-----
+MyClass myObj = em.find(MyClass.class, mykey);
+-----
+
+If you have defined your own "IdClass" then the _mykey_ is the toString() form of the identity of your PK class.
+
+
+[[application_primarykey]]
+=== Primary Key
+
+When you choose application identity you are defining which fields of the class are part of the primary key,
+and you are taking control of the specification of id's to DataNucleus. Application identity requires a primary key (PK) class, 
+and each persistent capable class may define a different class for its primary key, and different persistent capable classes can 
+use the same primary key class, as appropriate. 
+If you have only a single primary-key field then there are builtin PK classes so you can forget this section. Where you have more than 1 primary key field, 
+you would define the PK class like this
+
+[source,xml]
+-----
+<entity class="MyClass">
+    <id-class class="MyIdClass"/>
+    ...
+</entity>
+-----
+
+or using annotations
+
+[source,java]
+-----
+@Entity
+@IdClass(class=MyIdClass.class)
+public class MyClass
+{
+    ...
+}
+-----
+
+You now need to define the PK class to use. This is simplified for you because *if you have only one PK field then you dont need to define a PK class* 
+and you only define it when you have a composite PK.
+
+An important thing to note is that the PK can only be made up of fields of the following Java types
+
+* Primitives : *boolean*, *byte*, *char*, *int*, *long*, *short*
+* java.lang : *Boolean*, *Byte*, *Character*, *Integer*, *Long*, *Short*, *String*, *Enum*, StringBuffer
+* java.math : *BigInteger*
+* java.sql : *Date*, *Time*, *Timestamp*
+* java.util : *Date*, Currency, Locale, TimeZone, UUID
+* java.net : URI, URL
+* _persistable_
+
+Note that the types in *bold* are JPA standard types. Any others are DataNucleus extensions and, as always, link:../datastores/index.html[check the specific datastore docs] 
+to see what is supported for your datastore.
+
+*Single PrimaryKey field*
+
+The simplest way of using *application identity* is where you have a single PK field, and in this case you use an inbuilt primary key class that DataNucleus provides, 
+so you don't need to specify the _objectid-class_. Let's take an example
+
+[source,java]
+-----
+public class MyClass
+{
+    long id;
+    ...
+}
+-----
+
+[source,xml]
+-----
+<entity class="MyClass">
+    <attributes>
+        <id name="id"/>
+        ...
+    </attributes>
+</entity>
+-----
+
+or using annotations
+
+[source,java]
+-----
+@Entity
+public class MyClass
+{
+    @Id
+    long id;
+    ...
+}
+-----
+
+So we didnt specify the JPA "id-class". You will, of course, have to give the field a value before persisting the object, either by setting it yourself, or by using a 
+link:value_generation.html[value-strategy] on that field.
+
+
+=== PrimaryKey : Rules for User-Defined classes
+
+If you wish to use *application identity* and don't want to use the "SingleFieldIdentity" builtin PK classes then you must define a Primary Key class of your own. 
+You can't use classes like java.lang.String, or java.lang.Long directly. You must follow these rules when defining your primary key class.
+
+* the Primary Key class must be public
+* the Primary Key class must implement Serializable
+* the Primary Key class must have a public no-arg constructor, which might be the default constructor
+* The PrimaryKey class can have a constructor taking the primary key fields, or can use Java bean setters/getters
+* the field types of all non-static fields in the Primary Key class must be serializable, and are recommended to be primitive, String, Date, or Number types
+* all serializable non-static fields in the Primary Key class can be public, but package/protected/private should also be fine
+* the names of the non-static fields in the Primary Key class must include the names of the primary key fields in the Entity, and the types of the common fields must be identical
+* the equals() and hashCode() methods of the Primary Key class must use the value(s) of all the fields corresponding to the primary key fields in the JPA entity
+* if the Primary Key class is an inner class, it must be static
+* the Primary Key class must override the toString() method defined in Object, and return a String that can be used as the parameter of a constructor
+* the Primary Key class must provide a String constructor that returns an instance that compares equal to an instance that returned that String by the toString() method.
+* the Primary Key class must be only used within a single inheritance tree.
+
+Please note that if one of the fields that comprises the primary key is in itself an entity then you have xref:identity.html#derived[Derived Identity]
+and should consult the documentation for that feature which contains its own example.
+
+image:../images/nucleus_extension.png[]
+
+NOTE: Since there are many possible combinations of primary-key fields it is impossible for DataNucleus to provide a series of builtin composite primary key classes. 
+However the link:enhancer.html[DataNucleus enhancer] provides a mechanism for auto-generating a primary-key class for a persistable class. It follows the rules listed 
+above and should work for all cases. Obviously if you want to tailor the output of things like the PK toString() method then you ought to define your own. 
+The enhancer generation of primary-key class is only enabled if you don't define your own class.
+
+
+=== PrimaryKey Example - Multiple Field
+
+Here's an example of a composite (multiple field) primary key class
+
+[source,java]
+-----
+@Entity
+@IdClass(ComposedIdKey.class)
+public class MyClass
+{
+    @Id
+    String field1;
+
+    @Id
+    String field2;
+    ...
+}
+
+public class ComposedIdKey implements Serializable
+{
+    public String field1;
+    public String field2;
+
+    /**
+     *  Default constructor.
+     */
+    public ComposedIdKey ()
+    {
+    }
+
+    /**
+     * Constructor accepting same input as generated by toString().
+     */
+    public ComposedIdKey(String value) 
+    {
+        StringTokenizer token = new StringTokenizer (value, "::");
+        //field1
+        this.field1 = token.nextToken ();
+        //field2
+        this.field2 = token.nextToken ();
+    }
+
+    public boolean equals(Object obj)
+    {
+        if (obj == this)
+        {
+            return true;
+        }
+        if (!(obj instanceof ComposedIdKey))
+        {
+            return false;
+        }
+        ComposedIdKey c = (ComposedIdKey)obj;
+
+        return field1.equals(c.field1) && field2.equals(c.field2);
+    }
+
+    public int hashCode ()
+    {
+        return this.field1.hashCode() ^ this.field2.hashCode();
+    }
+
+    public String toString ()
+    {
+        // Give output expected by String constructor
+        return "" + this.field1 + "::" + this.field2;
+    }
+}
+-----
+
+
+[[datastore]]
+== Datastore Identity
+
+image:../images/nucleus_extension.png[]
+
+While JPA defines support for xref:identity.html#application[application identity] only, DataNucleus also provides support for *datastore identity*. 
+With *datastore identity* you are leaving the assignment of id's to DataNucleus and your class will *not* have a field for this identity - it will be added to the 
+datastore representation by DataNucleus. It is, to all extents and purposes a _surrogate key_ that will have its own column in the datastore. 
+To specify that a class is to use *datastore identity* with JPA, you define the metadata as follows
+
+[source,xml]
+-----
+<entity class="org.mydomain.MyClass">
+    <datastore-id/>
+    ...
+</entity>
+-----
+
+or using annotations, for example
+[source,java]
+-----
+@Entity
+@org.datanucleus.api.jpa.annotations.DatastoreIdentity
+public class MyClass
+{
+    ...
+}
+-----
+
+_Please note that since the JPA XML metadata is poorly designed it is not possible to specify datastore identity using XML, you have to use the annotations._
+
+NOTE: *When you have an inheritance hierarchy, you should specify the identity type in the _base_ class for the inheritance tree. This is then used for all persistent classes in the tree.*
+
+
+=== Datastore Identity : Generating identities
+
+By choosing *datastore identity* you are handing the process of identity generation to the DataNucleus. 
+This does not mean that you haven't got any control over how it does this. JPA defines many ways of generating these identities and 
+DataNucleus supports all of these and provides some more of its own besides.
+
+Defining which one to use is a simple matter of adding a MetaData element to your classes definition, like this
+
+[source,java]
+-----
+@Entity
+@org.datanucleus.api.jpa.annotations.DatastoreIdentity(generationType=GenerationType.TABLE)
+public class MyClass
+{
+    ...
+}
+-----
+
+See also:-
+* link:value_generation.html[Identity Generation Guide] - strategies for generating ids
+* link:annotations.html#DatastoreIdentity[Annotations reference for @DatastoreIdentity]
+
+=== Datastore Identity : Accessing the Identity
+
+When using *datastore identity*, the class has no associated field so you can't just access a field of the class to see its identity - if you need a field 
+to be able to access the identity then you should be using xref:identity.html#application[application identity]. 
+There are, however, ways to get the identity for the datastore identity case, if you have the object.
+
+[source,java]
+-----
+import org.datanucleus.api.jpa.NucleusJPAHelper;
+
+Object idKey = NucleusJPAHelper.getDatastoreIdForEntity(obj);
+-----
+
+From this you can use the "find" method to retrieve the object
+
+[source,java]
+-----
+MyClass myObj = em.find(MyClass.class, idKey);
+-----
+
+[[nondurable]]
+== Nondurable Identity
+
+image:../images/nucleus_extension.png[]
+
+JPA requires that all objects have an identity. DataNucleus provides a vendor extension that allows objects of a class to not have a unique identity in the datastore. 
+This type of identity is typically for log files, history files etc where you aren't going to access the object by key, but instead by a different parameter. 
+In the datastore the table will typically not have a primary key. 
+To specify that a class is to use *nondurable identity* with DataNucleus you would add the following to the MetaData for the class.
+
+[source,xml]
+-----
+<entity class="org.mydomain.MyClass">
+    <nondurable-id/>
+    ...
+</entity>
+-----
+
+or using annotations, for example
+
+[source,java]
+-----
+@Entity
+@org.datanucleus.api.jpa.annotations.NonDurableId
+public class MyClass
+{
+    ...
+}
+-----
+
+DataNucleus provides support for "nondurable" identity for some datastores only currently (RDBMS, Excel, ODF, MongoDB, HBase, Cassandra, Neo4j). 
+What this means for something like RDBMS is that the table of the class will not have a primary-key.
+
+
+[[derived]]
+== Derived Identity Relationships
+
+An derived identity relationship is a relationship between two objects of two classes in which the child object must coexist with the 
+parent object and where the primary key of the child includes the Entity object of the parent. So effectively the key aspect of this
+type of relationship is that the primary key of one of the classes includes a Entity field (hence why is is referred to as _Derived Identity_).
+This type of relation is available in the following forms
+
+* xref:identity.html#derived_1_1_uni[1-1 unidirectional]
+* xref:identity.html#derived_1_N_coll_bi[1-N collection bidirectional using ForeignKey]
+* xref:identity.html#derived_1_N_map_bi[1-N map bidirectional using ForeignKey (key stored in value)]
+
+WARNING: In pure JPA, if the entity that is part of the id of the derived entity has a single long field then you can put a _long_
+field in the identity class of the derived entity. In DataNucleus you cannot do this currently, and should define the `@IdClass` of the 
+entity being contained and use that type in the identity class of the derived entity.
+
+NOTE: The persistable class that is contained cannot be using _datastore identity_, and must be using _application identity_ with an objectid-class
+
+
+[[derived_1_1_uni]]
+=== 1-1 Relationship
+
+Lets take the same classes as we have in the link:one_to_one.html[1-1 Relationships].
+In the 1-1 relationships guide we note that in the datastore representation of the *User* and *Account* the *ACCOUNT* table has a primary key as well as a foreign-key to *USER*. 
+In our example here we want to just have a primary key that is also a foreign-key to *USER*. 
+To do this we need to modify the classes slightly and add primary-key fields and use "application-identity".
+
+image:../images/orm/relationship_1_1_compound_class.jpg[]
+
+In addition we need to define primary key classes for our *User* and *Account* classes
+
+[source,java]
+-----
+@Entity
+public class User
+{
+    @Id
+    long id;
+
+    ... (remainder of User class)
+
+    /**
+     * Inner class representing Primary Key
+     */
+    public static class PK implements Serializable
+    {
+        public long id;
+
+        public PK()
+        {
+        }
+
+        public PK(String s)
+        {
+            this.id = Long.valueOf(s).longValue();
+        }
+
+        public String toString()
+        {
+            return "" + id;
+        }
+
+        public int hashCode()
+        {
+            return (int)id;
+        }
+
+        public boolean equals(Object other)
+        {
+            if (other != null && (other instanceof PK))
+            {
+                PK otherPK = (PK)other;
+                return otherPK.id == this.id;
+            }
+            return false;
+        }
+    }
+}
+
+@Entity
+public class Account
+{
+    @Id
+    @OneToOne
+    User user;
+
+    ... (remainder of Account class)
+
+    /**
+     * Inner class representing Primary Key
+     */
+    public static class PK implements Serializable
+    {
+        public User.PK user; // Use same name as the real field above
+
+        public PK()
+        {
+        }
+
+        public PK(String s)
+        {
+            StringTokenizer token = new StringTokenizer(s,"::");
+
+            this.user = new User.PK(token.nextToken());
+        }
+
+        public String toString()
+        {
+            return "" + this.user.toString();
+        }
+
+        public int hashCode()
+        {
+            return user.hashCode();
+        }
+
+        public boolean equals(Object other)
+        {
+            if (other != null && (other instanceof PK))
+            {
+                PK otherPK = (PK)other;
+                return this.user.equals(otherPK.user);
+            }
+            return false;
+        }
+    }
+}
+-----
+
+To achieve what we want with the datastore schema we define the MetaData like this
+
+[source,xml]
+-----
+<entity-mappings>
+    <entity class="mydomain.User">
+        <table name="USER"/>
+        <id-class class="mydomain.User.PK"/>
+        <attributes>
+            <id name="id">
+                <column name="USER_ID"/>
+            </id>
+            <basic name="login">
+                <column name="LOGIN" length="20"/>
+            </basic>
+        </attributes>
+    </entity>
+
+    <entity class="mydomain.Account">
+        <table name="ACCOUNT"/>
+        <id-class class="mydomain.Account.PK"/>
+        <attributes>
+            <id name="user">
+                <column name="USER_ID"/>
+            </id>
+            <basic name="firstName">
+                <column name="FIRSTNAME" length="50"/>
+            </basic>
+            <basic name="secondName">
+                <column name="LASTNAME" length="50"/>
+            </basic>
+            <one-to-one name="user"/>
+        </attributes>
+    </entity>
+</entity-mappings>
+-----
+
+So now we have the following datastore schema
+
+image:../images/orm/relationship_1_1_compound_db.jpg[]
+
+Things to note:-
+
+* In the child Primary Key class, you must have a field with the same name as the relationship in the child class, and the field in the child Primary Key class must 
+be the same type as the Primary Key class of the parent
+* See also the xref:identity.html#application_primarykey[general instructions for Primary Key classes]
+* You can only have one "Account" object linked to a particular "User" object since the FK to the "User" is now the primary key of "Account". 
+To remove this restriction you could also add a "long id" to  "Account" and make the "Account.PK" a composite primary-key
+
+[[derived_1_N_coll_bi]]
+=== 1-N Collection Relationship
+
+Lets take the same classes as we have in the link:orm/one_to_many_collection.html#fk_bi[1-N Relationships (FK)].
+In the 1-N relationships guide we note that in the datastore representation of the *Account* and *Address* classes the *ADDRESS* table has a primary key as 
+well as a foreign-key to *ACCOUNT*. In our example here we want to have the primary-key to *ACCOUNT* to _include_ the foreign-key. 
+To do this we need to modify the classes slightly, adding primary-key fields to both classes, and use "application-identity" for both.
+
+image:../images/orm/relationship_1_N_compound_class.jpg[]
+
+In addition we need to define primary key classes for our *Account* and *Address* classes
+
+[source,java]
+-----
+@Entity
+public class Account
+{
+    @Id
+    long id;
+
+    @OneToMany
+    Set<Address> addresses = new HashSet<>();
+
+    ... (remainder of Account class)
+
+    /**
+     * Inner class representing Primary Key
+     */
+    public static class PK implements Serializable
+    {
+        public long id;
+
+        public PK()
+        {
+        }
+
+        public PK(String s)
+        {
+            this.id = Long.valueOf(s).longValue();
+        }
+
+        public String toString()
+        {
+            return "" + id;
+        }
+
+        public int hashCode()
+        {
+            return (int)id;
+        }
+
+        public boolean equals(Object other)
+        {
+            if (other != null && (other instanceof PK))
+            {
+                PK otherPK = (PK)other;
+                return otherPK.id == this.id;
+            }
+            return false;
+        }
+    }
+}
+
+@Entity
+public class Address
+{
+    @Id
+    long id;
+
+    @Id
+    @ManyToOne
+    Account account;
+
+    .. (remainder of Address class)
+
+    /**
+     * Inner class representing Primary Key
+     */
+    public static class PK implements Serializable
+    {
+        public long id; // Same name as real field above
+        public Account.PK account; // Same name as the real field above
+
+        public PK()
+        {
+        }
+
+        public PK(String s)
+        {
+            StringTokenizer token = new StringTokenizer(s,"::");
+            this.id = Long.valueOf(token.nextToken()).longValue();
+            this.account = new Account.PK(token.nextToken());
+        }
+
+        public String toString()
+        {
+            return "" + id + "::" + this.account.toString();
+        }
+
+        public int hashCode()
+        {
+            return (int)id ^ account.hashCode();
+        }
+
+        public boolean equals(Object other)
+        {
+            if (other != null && (other instanceof PK))
+            {
+                PK otherPK = (PK)other;
+                return otherPK.id == this.id && this.account.equals(otherPK.account);
+            }
+            return false;
+        }
+    }
+}
+-----
+
+To achieve what we want with the datastore schema we define the MetaData like this
+
+[source,xml]
+-----
+<entity-mappings>
+    <entity class="mydomain.Account">
+        <table name="ACCOUNT"/>
+        <id-class class="mydomain.Account.PK"/>
+        <attributes>
+            <id name="id">
+                <column name="ACCOUNT_ID"/>
+            </id>
+            <basic name="firstName">
+                <column name="FIRSTNAME" length="50"/>
+            </basic>
+            <basic name="secondName">
+                <column name="LASTNAME" length="50"/>
+            </basic>
+            <one-to-many name="addresses" mapped-by="account"/>
+        </attributes>
+    </entity>
+
+    <entity class="mydomain.Address">
+        <table name="ADDRESS"/>
+        <id-class class="mydomain.Address.PK"/>
+        <attributes>
+            <id name="id">
+                <column name="ID"/>
+            </id>
+            <id name="account">
+                <column name="ACCOUNT_ID"/>
+            </id>
+            <basic name="city">
+                <column name="CITY"/>
+            </basic>
+            <basic name="street">
+                <column name="STREET"/>
+            </basic>
+            <many-to-one name="account"/>
+        </attributes>
+    </entity>
+</entity-mappings>
+-----
+
+So now we have the following datastore schema
+
+image:../images/orm/relationship_1_N_compound_db.jpg[]
+
+Things to note :-
+
+* In the child Primary Key class, you must have a field with the same name as the relationship in the child class, and the field in the child Primary Key class 
+must be the same type as the Primary Key class of the parent
+* See also the xref:identity.html#application_primarykey[general instructions for Primary Key classes]
+* If we had omitted the "id" field from "Address" it would have only been possible to have one "Address" in the "Account" "addresses" collection due to PK constraints. 
+For that reason we have the "id" field too.
+
+[[derived_1_N_map_bi]]
+=== 1-N Map Relationship
+
+Lets take the same classes as we have in the link:orm/one_to_many_map.html#fk_bi_key[1-N Relationships FK].
+In this guide we note that in the datastore representation of the *Account* and *Address* classes the *ADDRESS* table has a primary key as well as a foreign-key to 
+*ACCOUNT*. In our example here we want to have the primary-key to *ACCOUNT* to _include_ the foreign-key. To do this we need to modify the classes slightly, 
+adding primary-key fields to both classes, and use "application-identity" for both.
+
+image:../images/orm/relationship_1_N_bi_map_fk_simple_pc_class.jpg[]
+In addition we need to define primary key classes for our *Account* and *Address* classes
+
+[source,java]
+-----
+@Entity
+public class Account
+{
+    @Id
+    long id;
+
+    @OneToMany
+    Set<Address> addresses = new HashSet<>();
+
+    ... (remainder of Account class)
+
+    /**
+     * Inner class representing Primary Key
+     */
+    public static class PK implements Serializable
+    {
+        public long id;
+
+        public PK()
+        {
+        }
+
+        public PK(String s)
+        {
+            this.id = Long.valueOf(s).longValue();
+        }
+
+        public String toString()
+        {
+            return "" + id;
+        }
+
+        public int hashCode()
+        {
+            return (int)id;
+        }
+
+        public boolean equals(Object other)
+        {
+            if (other != null && (other instanceof PK))
+            {
+                PK otherPK = (PK)other;
+                return otherPK.id == this.id;
+            }
+            return false;
+        }
+    }
+}
+
+@Entity
+public class Address
+{
+    @Id
+    String alias;
+
+    @Id
+    @ManyToOne
+    Account account;
+
+    .. (remainder of Address class)
+
+    /**
+     * Inner class representing Primary Key
+     */
+    public static class PK implements Serializable
+    {
+        public String alias; // Same name as real field above
+        public Account.PK account; // Same name as the real field above
+
+        public PK()
+        {
+        }
+
+        public PK(String s)
+        {
+            StringTokenizer token = new StringTokenizer(s,"::");
+            this.alias = Long.valueOf(token.nextToken()).longValue();
+            this.account = new Account.PK(token.nextToken());
+        }
+
+        public String toString()
+        {
+            return alias + "::" + this.account.toString();
+        }
+
+        public int hashCode()
+        {
+            return alias.hashCode() ^ account.hashCode();
+        }
+
+        public boolean equals(Object other)
+        {
+            if (other != null && (other instanceof PK))
+            {
+                PK otherPK = (PK)other;
+                return otherPK.alias.equals(this.alias) && this.account.equals(otherPK.account);
+            }
+            return false;
+        }
+    }
+}
+-----
+
+To achieve what we want with the datastore schema we define the MetaData like this
+
+[source,xml]
+-----
+<entity-mappings>
+    <entity class="mydomain.Account">
+        <table name="ACCOUNT"/>
+        <id-class class="mydomain.Account.PK"/>
+        <attributes>
+            <id name="id">
+                <column name="ACCOUNT_ID"/>
+            </id>
+            <basic name="firstName">
+                <column name="FIRSTNAME" length="50"/>
+            </basic>
+            <basic name="secondName">
+                <column name="LASTNAME" length="50"/>
+            </basic>
+            <one-to-many name="addresses" mapped-by="account">
+                <map-key name="alias"/>
+            </one-to-many>
+        </attributes>
+    </entity>
+
+    <entity class="mydomain.Address">
+        <table name="ADDRESS"/>
+        <id-class class="mydomain.Address.PK"/>
+        <attributes>
+            <id name="account">
+                <column name="ACCOUNT_ID"/>
+            </id>
+            <id name="alias">
+                <column name="KEY"/>
+            </id>
+            <basic name="city">
+                <column name="CITY"/>
+            </basic>
+            <basic name="street">
+                <column name="STREET"/>
+            </basic>
+            <many-to-one name="account"/>
+        </attributes>
+    </entity>
+</entity-mappings>
+-----
+
+So now we have the following datastore schema
+image:../images/orm/relationship_1_N_compound_map_db.jpg[]
+
+Things to note :-
+
+* In the child Primary Key class, you must have a field with the same name as the relationship in the child class, and the field in the child Primary Key class
+must be the same type as the Primary Key class of the parent
+* See also the xref:identity.html#application_primarykey[general instructions for Primary Key classes]
+* If we had omitted the "alias" field from "Address" it would have only been possible to have one "Address" in the "Account" "addresses" collection due to PK constraints. 
+For that reason we have the "alias" field too as part of the PK.

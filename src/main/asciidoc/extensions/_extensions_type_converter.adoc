@@ -11,7 +11,7 @@ you can extend DataNucleus capabilities using the plugin extension *org.datanucl
 == TypeConverter Interface
 
 Any type converter plugin will need to implement _org.datanucleus.store.types.converters.TypeConverter_
-http://www.datanucleus.org/javadocs/core/latest/org/datanucleus/store/types/converters/TypeConverter.html[(Javadoc)].
+http://www.datanucleus.org/javadocs/core/latest/org/datanucleus/store/types/converters/TypeConverter.html[image:../images/javadoc.png[Javadoc]].
 So you need to implement the following interface
 
 [source,java]
@@ -67,7 +67,7 @@ Obviously this particular TypeConverter is included in DataNucleus, but hopefull
 
 Some datastore plugins may support schemas where you can put an upper limit on the length of columns (e.g RDBMS). You can build this information
 into your TypeConverter plugin by also implementing the interface ColumnLengthDefiningTypeConverter
-http://www.datanucleus.org/javadocs/core/latest/org/datanucleus/store/types/converters/ColumnLengthDefiningTypeConverter.html[(Javadoc)]
+http://www.datanucleus.org/javadocs/core/latest/org/datanucleus/store/types/converters/ColumnLengthDefiningTypeConverter.html[image:../images/javadoc.png[Javadoc]]
 which simply means adding the method _int getDefaultColumnLength(int columnPosition)_.
 
 
@@ -77,7 +77,7 @@ which simply means adding the method _int getDefaultColumnLength(int columnPosit
 The default is to convert a member type to a single column type in the datastore. DataNucleus allows you to convert to multiple columns, for example imagine
 a type Point that has an _x_ and _y_. You want to persist this into 2 columns, the _x_ stored in column 0, and the _y_ stored in column 1. So now you update your
 TypeConverter to also implement MultiColumnConverter
-http://www.datanucleus.org/javadocs/core/latest/org/datanucleus/store/types/converters/MultiColumnConverter.html[(Javadoc)]
+http://www.datanucleus.org/javadocs/core/latest/org/datanucleus/store/types/converters/MultiColumnConverter.html[image:../images/javadoc.png[Javadoc]]
 which simply means adding the method _Class[] getDatastoreColumnTypes()_.
 
 
