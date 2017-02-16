@@ -7,14 +7,14 @@ All JPA-enabled persistable classes need to have an "identity" to be able to ide
 In strict JPA there is only 1 type of identity - _application identity_, where you have a field or field(s) of the entity that are used to define the identity.
 With DataNucleus JPA we allow 2 additional types of identity. So your options are
 
-* xref:mapping.html#application_identity[Application Identity] : a field, or several fields of the persistable type are assigned as being (part of) the primary key.
-* xref:mapping.html#datastore_identity[Datastore Identity] : a surrogate column is added to the persistence of the persistable type, and objects of this type are identified by
+* link:#application_identity[Application Identity] : a field, or several fields of the persistable type are assigned as being (part of) the primary key.
+* link:#datastore_identity[Datastore Identity] : a surrogate column is added to the persistence of the persistable type, and objects of this type are identified by
 the class plus the value in this surrogate column. *DataNucleus Extension*
-* xref:mapping.html#nondurable_identity[Nondurable Identity] : the persistable type has no identity as such, so the only way to lookup objects of this type would be
+* link:#nondurable_identity[Nondurable Identity] : the persistable type has no identity as such, so the only way to lookup objects of this type would be
 via query for values of specific fields. This is useful for storing things like log messages etc. *DataNucleus Extension*
 
 A further complication is where you use _application identity_ but one of the fields forming the primary key is a relation field. 
-This is known as xref:identity.html#derived_identity[Derived Identity].
+This is known as link:#derived_identity[Derived Identity].
 
 
 [[application_identity]]

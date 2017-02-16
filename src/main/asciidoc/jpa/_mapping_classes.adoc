@@ -5,11 +5,12 @@
 
 We have the following types of classes in DataNucleus JPA.
 
-* xref:mapping.html#entity[Entity] - persistable class with full control over its persistence.
-* xref:mapping.html#mapped_superclass[MappedSuperclass] - persistable class that will not be persisted into its own table simply providing some fields to be persisted. 
+* link:#entity[Entity] - persistable class with full control over its persistence.
+* link:#mapped_superclass[MappedSuperclass] - persistable class that will not be persisted into its own table simply providing some fields to be persisted. 
 Consequently an inheritance tree cannot just have a mapped superclass on its own.
-* xref:mapping.html#embeddable[Embeddable] - persistable class that is only persistable embedded into an entity class.
-* xref:mapping.html#persistence_aware[PersistenceAware] - a class that is not itself persisted, but that needs to access internals of persistable classes. *This is a DataNucleus extension, nit part of the JPA standard*.
+* link:#embeddable[Embeddable] - persistable class that is only persistable embedded into an entity class.
+* link:#persistence_aware[PersistenceAware] - a class that is not itself persisted, but that needs to access internals of persistable classes. 
+*This is a DataNucleus extension, not part of the JPA standard*.
 
 
 
@@ -61,7 +62,7 @@ public abstract class Building
 }
 -----
 
-This is of particular relevance when considering link:orm/inheritance.html#mappedsuperclass[inheritance].
+This is of particular relevance when considering xref:mapping.html#inheritance_mappedsuperclass[inheritance].
 
 
 

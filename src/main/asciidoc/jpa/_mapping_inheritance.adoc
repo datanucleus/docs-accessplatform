@@ -7,12 +7,12 @@ In Java it is a normal situation to have inheritance between classes. With JPA y
 For each inheritance tree (for the root class) you select how you want to persist those classes information. You have the following choices.
 
 * The _default strategy_ is to select a class to have its fields persisted in the table of the base class. There is only one table per inheritance hierarchy. 
-In JPA this is known as xref:mapping.html#inheritance_singletable[SINGLE_TABLE]
+In JPA this is known as link:#inheritance_singletable[SINGLE_TABLE]
 * The next way is to have a table for each class in the inheritance hierarchy, and for each table to only hold columns for the fields of that class. 
 Fields of superclasses are persisted into the table of the superclass. Consequently to get all field values for a subclass object a join is made
-of all tables of superclasses. In JPA this is referred to as xref:mapping.html#inheritance_joined[JOINED]
+of all tables of superclasses. In JPA this is referred to as link:#inheritance_joined[JOINED]
 * The third way is like _JOINED_ except that each table will also contain columns for all inherited fields. 
-In JPA this is referred to as xref:mapping.html#inheritance_tableperclass[TABLE_PER_CLASS]
+In JPA this is referred to as link:#inheritance_tableperclass[TABLE_PER_CLASS]
 
 In order to demonstrate the various inheritance strategies we need an example. Here are a few simple classes representing products in a (online) store. 
 We have an abstract base class, extending this to provide something that we can represent any product by. We then provide a few specialisations for 

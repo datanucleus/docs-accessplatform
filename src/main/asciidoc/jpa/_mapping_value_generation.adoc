@@ -1,0 +1,328 @@
+[[value_generation]]
+= Value Generation
+:_basedir: ../
+:_imagesdir: images/
+
+Fields of a class can either have the values set by you the user, or you can set DataNucleus to 
+generate them for you. This is of particular importance with identity fields where you want unique
+identities. You can use this value generation process with the identity field(s) in JPA. 
+There are many different "strategies" for generating values, as defined by the JPA specification.
+Some strategies are specific to a particular datastore, and some are generic. You should
+choose the strategy that best suits your target datastore. The available strategies are :-
+
+* link:#valuegen_native[AUTO] - this is the default and allows DataNucleus to choose the most suitable for the datastore
+* link:#valuegen_sequence[SEQUENCE] - this uses a datastore sequence (if supported by the datastore)
+* link:#valuegen_identity[IDENTITY] - these use autoincrement/identity/serial features in the datastore (if supported by the datastore)
+* link:#valuegen_increment[TABLE] - this is datastore neutral and increments a sequence value using a table.
+* link:#valuegen_custom[Custom generators] - these are beyond the scope of the JPA spec but provided by DataNucleus<
+
+See also:-
+* metadata_xml.html#generated-value[JPA MetaData reference for <generated-value>]
+* annotations.html#GeneratedValue[JPA Annotation reference for @GeneratedValue]
+
+NOTE: the JPA spec only requires the ability to generate values for identity fields. DataNucleus allows you to do it for any field. Please bear this in mind when considering portability
+
+NOTE: By defining a value-strategy for a field then it will, by default, always generate a value for that field on persist. 
+If the field can store nulls and you only want it to generate the value at persist when it is null (i.e you haven't assigned a value yourself) 
+then you can add the extension _"strategy-when-notnull"_ as _false_
+
+
+[[valuegen_native]]
+== ValueGeneration Strategy AUTO
+
+With this strategy DataNucleus will choose the most appropriate strategy for the datastore being used.
+If you define the field as String-based then it will choose <a href="#uuidhex">uuid-hex</a>. Otherwise
+the field is numeric in which case it chooses <a href="#identity">identity</a> if supported, otherwise
+<a href="#sequence">sequence</a> if supported, otherwise <a href="#increment">increment</a> if supported
+otherwise throws an exception. 
+On RDBMS you can get the behaviour used up until DN v3.0 by specifying the persistence property 
+*datanucleus.rdbms.useLegacyNativeValueStrategy* as _true_.
+For a class using *application identity* you need to set the _value-strategy_ attribute 
+on the primary key field. You can configure the Meta-Data for the class something like this 
+
+[source,xml]
+-----
+<entity class="MyClass">
+    <attributes>
+        <id name="myId">
+            <generated-value strategy="AUTO"/>
+        </id>
+    </attributes>
+</entity>
+-----
+
+or using annotations
+
+[source,java]
+-----
+@Entity
+public class MyClass
+{
+    @Id
+    @GeneratedValue(strategy=GenerationType.AUTO)
+    private long myId;
+    ...
+}
+-----
+
+To configure a class to use this generation using *datastore identity* you need to look at the @DatastoreId extension annotation or the XML <datastore-id> tag
+
+
+[[valuegen_sequence]]
+== ValueGeneration Strategy SEQUENCE
+
+NOTE: Applicable to Oracle, PostgreSQL, SAPDB, DB2, Firebird, HSQLDB, H2, Derby, SQLServer, NuoDB
+
+A sequence is a user-defined database function that generates a sequence of unique numeric ids. 
+The unique identifier value returned from the database is translated to a java type: java.lang.Long
+To configure a class to use this strategy using *application identity* you would add the following to the class' Meta-Data
+
+[source,xml]
+-----
+<sequence-generator name="SEQ1" sequence-name="MY_SEQ" initial-value="5" allocation-size="10"/>
+<entity class="MyClass">
+    <attributes>
+        <id name="myId">
+            <generated-value strategy="SEQUENCE" generator="SEQ1"/>
+        </id>
+    </attributes>
+</entity>
+-----
+
+or using annotations
+
+[source,java]
+-----
+@Entity
+@SequenceGenerator(name="SEQ1", sequenceName="MY_SEQ", initialValue=5, allocationSize=10)
+public class MyClass
+{
+    @Id
+    @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="SEQ1")
+    private long myId;
+    ...
+}
+-----
+
+If the sequence does not yet exist in the database at the time DataNucleus needs a new unique 
+identifier, a new sequence is created in the database based on the JPA Meta-Data configuration. 
+Additional properties for configuring sequences are set in the JPA Meta-Data, see the available 
+properties below. Unsupported properties by a database are silently ignored by DataNucleus.
+
+[cols="1,2,1", options="header"]
+|===
+|Property
+|Description
+|Required
+
+|key-database-cache-size
+|specifies how many sequence numbers are to be preallocated and stored in memory for faster access. This is an optimization feature provided by the database
+|No
+
+|sequence-catalog-name
+|Name of the catalog where the sequence is.
+|No.
+
+|sequence-schema-name
+|Name of the schema where the sequence is.
+|No.
+|===
+
+TODO Describe @SequenceGenerator
+
+To configure a class to use this generation using *datastore identity* you need to look at the @DatastoreId extension annotation or the XML <datastore-id> tag.
+
+This value generator will generate values unique across different JVMs
+
+Values generated using this generator are available in @PrePersist.
+
+
+[[valuegen_identity]]
+== ValueGeneration Strategy IDENTITY
+
+NOTE: Applicable to DB2 (IDENTITY), MySQL (AUTOINCREMENT), SQLServer (IDENTITY), Sybase (IDENTITY), HSQLDB (IDENTITY), H2(IDENTITY), PostgreSQL (SERIAL), Derby (IDENTITY),
+MongoDB (String), Neo4j (long), NuoDB (IDENTITY)
+
+Auto-increment/identity/serial are primary key columns that are populated when a row is inserted in the table. 
+These use the databases own keywords on table creation and so rely on having the table structure either created by DataNucleus or having the column with the necessary keyword.
+
+TIP: This generation strategy should only be used if there is a single "root" table for the inheritance tree. If you have more than 1 root table (e.g using subclass-table inheritance)
+then you should choose a different generation strategy
+
+For a class using *application identity* you need to set the _value-strategy_ attribute on the primary key field. You can configure the Meta-Data for the class something like this 
+
+[source,xml]
+-----
+<entity class="MyClass">
+    <attributes>
+        <id name="myId">
+            <generated-value strategy="IDENTITY"/>
+        </id>
+    </attributes>
+</entity>
+-----
+
+or using annotations
+
+[source,java]
+-----
+@Entity
+public class MyClass
+{
+    @Id
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    private long myId;
+    ...
+}
+-----
+
+Please be aware that if you have an inheritance tree with the base class defined as using "identity" then the column definition for the PK 
+of the base table will be defined as "AUTO_INCREMENT" or "IDENTITY" or "SERIAL" (dependent on the RDBMS) and all subtables will NOT have 
+this identifier added to their PK column definitions. This is because the identities are assigned in the base table (since all objects will have 
+an entry in the base table).
+
+*Please note that if using optimistic transactions, this strategy will mean that the value is only set when the object is actually persisted (i.e at flush() or commit())*
+
+To configure a class to use this generation using *datastore identity* you need to look at the @DatastoreId extension annotation or the XML <datastore-id> tag
+
+This value generator will generate values unique across different JVMs.
+
+Values generated using this generator are NOT available in @PrePersist, being generated at persist only.
+
+
+[[valuegen_increment]]
+== ValueGeneration Strategy TABLE
+
+NOTE: Applies to all datastores
+
+This method is database neutral and uses a sequence table that holds an incrementing sequence value. The unique identifier value returned from the 
+database is translated to a java type: java.lang.Long. This method require a sequence table in the database and creates one if doesn't exist.
+
+To configure an *application identity* class to use this generation method you simply add this to the class' Meta-Data. If your class is in an inheritance 
+tree you should define this for the base class only.
+
+[source,xml]
+-----
+<entity class="MyClass">
+    <attributes>
+        <id name="myId">
+            <generated-value strategy="TABLE"/>
+        </id>
+    </attributes>
+</entity>
+-----
+
+or using annotations
+
+[source,java]
+-----
+@Entity
+public class MyClass
+{
+    @Id
+    @GeneratedValue(strategy=GenerationType.TABLE)
+    private long myId;
+    ...
+}
+-----
+
+Additional properties for configuring this generator are set in the JPA Meta-Data, see the available properties below. Unsupported properties are silently ignored by DataNucleus.
+
+TODO Describe TableGenerator
+
+[cols="1,2,1", options="header"]
+|===
+|Property
+|Description
+|Required
+
+|key-initial-value
+|First value to be allocated.
+|No. Defaults to 1
+
+|key-cache-size
+|number of unique identifiers to cache. The keys are pre-allocated, cached and used on demand. 
+If _key-cache-size_ is greater than 1, it may generate holes in the object keys in the database, if not all keys are used.
+|No. Default is 50
+
+|sequence-table-basis
+|Whether to define uniqueness on the base class name or the base table name.
+Since there is no "base table name" when the root class has "subclass-table" this should be set to "class" when the root class has "subclass-table" inheritance
+|No. Defaults to _class_, but the other option is _table_
+
+|sequence-name
+|name for the sequence (overriding the "sequence-table-basis" above). The row in the table will use this in the PK column
+|No
+
+|sequence-table-name
+|Table name for storing the sequence.
+|No. Defaults to _SEQUENCE_TABLE_
+
+|sequence-catalog-name
+|Name of the catalog where the table is.
+|No.
+
+|sequence-schema-name
+|Name of the schema where the table is.
+|No.
+
+|sequence-name-column-name
+|Name for the column that represent sequence names.
+|No. Defaults to _SEQUENCE_NAME_
+
+|sequence-nextval-column-name
+|Name for the column that represent incremeting sequence values.
+|No. Defaults to _NEXT_VAL_
+
+|table-name
+|Name of the table whose column we are generating the value for (used when we have no previous sequence value and want a start point.
+|No.
+
+|column-name
+|Name of the column we are generating the value for (used when we have no previous sequence value and want a start point.
+|No.
+|===
+
+To configure a class to use this generation using *datastore identity* you need to look at the @DatastoreId extension annotation or the XML <datastore-id> tag
+
+This value generator will generate values unique across different JVMs
+
+Values generated using this generator are available in @PrePersist.
+
+
+[[valuegen_custom]]
+== ValueGeneration Strategy "Custom"
+
+image:../images/nucleus_extension.png[]
+
+JPA only provides a very restricted set of value generators. DataNucleus provides various others internally. To access these you need to use a custom annotation as follows
+
+[source,xml]
+-----
+<entity class="MyClass">
+    <attributes>
+        <id name="myId">
+            <generated-value strategy="uuid"/>
+        </id>
+    </attributes>
+</entity>
+-----
+
+or using annotations
+
+[source,java]
+-----
+@Entity
+public class MyClass
+{
+    @Id
+    @ValueGenerator(strategy="uuid")
+    private String myId;
+    ...
+}
+-----
+
+This will generate java UUID Strings in the "myId" field. You can also set the "strategy" to "timestamp", "auid", "uuid-string", "uuid-hex", "uuid-object" and "timestamp_value". 
+Please read the link:../jdo/value_generation.html[JDO documentation] for full details of these generators.
+
+Values generated using these generators are available in @PrePersist.
