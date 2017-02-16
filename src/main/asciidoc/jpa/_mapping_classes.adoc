@@ -1,0 +1,133 @@
+[[classes]]
+= Classes
+:_basedir: ../
+:_imagesdir: images/
+
+We have the following types of classes in DataNucleus JPA.
+
+* xref:class_mapping.html#entity[Entity] - persistable class with full control over its persistence.
+* xref:class_mapping.html#mapped_superclass[MappedSuperclass] - persistable class that will not be persisted into its own table simply providing some fields to be persisted. 
+Consequently an inheritance tree cannot just have a mapped superclass on its own.
+* xref:class_mapping.html#embeddable[Embeddable] - persistable class that is only persistable embedded into an entity class.
+* xref:class_mapping.html#persistence_aware[PersistenceAware] - a class that is not itself persisted, but that needs to access internals of persistable classes. *This is a DataNucleus extension, nit part of the JPA standard*.
+
+
+
+[[entity]]
+== Class: Entity
+
+Let's take a sample class (_Hotel_) as an example. We can define a class as persistable using either annotations in the class, or XML metadata.
+To achieve the above aim with XML metadata, we do this
+
+[source,xml]
+-----
+<entity class="org.datanucleus.test.Hotel">
+    ...
+</entity>
+-----
+
+Alternatively, using link:annotations.html[JPA Annotations], like this
+[source,java]
+-----
+@Entity
+public class Hotel
+{
+    ...
+}
+-----
+
+
+
+[[mapped_superclass]]
+== Class: MappedSuperclass
+
+Say we have an abstract base class _Building_ with concrete subclass _Hotel_ (as above). We want to persist some fields of _Building_, but it is abstract so
+will not have any objects of that type. So we make the class a _MappedSuperclass_, like this
+
+[source,xml]
+-----
+<mapped-superclass class="org.datanucleus.test.Building">
+    ...
+</mapped-superclass>
+-----
+
+Alternatively, using link:annotations.html[JPA Annotations], like this
+[source,java]
+-----
+@MappedSuperclass
+public abstract class Building
+{
+    ...
+}
+-----
+
+This is of particular relevance when considering link:orm/inheritance.html#mappedsuperclass[inheritance].
+
+
+
+[[embeddable]]
+== Class: Embeddable
+
+Here we have a class _ConstructionDetails_ that we never need to persist individually, and it will only ever be persisted as part of an owner object (in this case _Building_).
+Since information from objects of this class will be persisted, we need to mark the class as _Embeddable_, like this
+
+[source,xml]
+-----
+<embeddable class="org.datanucleus.test.ConstructionDetails">
+    ...
+</mapped-superclass>
+-----
+
+Alternatively, using link:annotations.html[JPA Annotations], like this
+[source,java]
+-----
+@Embeddable
+public class ConstructionDetails
+{
+    ...
+}
+-----
+
+and hereafter we can persist fields of type _ConstructionDetails_, as per link:orm/embedded.html[the Embedded Object guide].
+
+
+
+[[persistence_aware]]
+== Class: Persistence Aware
+
+image:../images/nucleus_extension.png[]
+
+With JPA you cannot access _public_ fields of classes. DataNucleus allows an extension to permit this, but such classes need special enhancement. To allow this you need to
+annotate the class that will access these public fields (assuming it isn't an Entity) with the DataNucleus extension annotation @PersistenceAware, as follows
+
+[source,java]
+-----
+@PersistenceAware
+public class MyClassThatAccessesPublicFields
+{
+    ...
+}
+-----
+
+See also :-
+
+* link:annotations.html#PersistenceAware[Annotations reference for @PersistenceAware]
+
+
+[[read_only]]
+== Class: Read-Only
+
+image:../images/nucleus_extension.png[]
+
+You can, if you wish, make a class _read-only_. This is a DataNucleus extension and you set it as follows
+
+[source,java]
+-----
+@Entity
+@Extension(key="read-only", value="true")
+public class MyClass
+{
+    ...
+}
+-----
+

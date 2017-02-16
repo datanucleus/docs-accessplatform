@@ -1,0 +1,24 @@
+[[mapping]]
+= Mapping
+:_basedir: ../
+:_imagesdir: images/
+
+To implement a persistence layer with JPA you need to map the classes and fields/properties that are involved in the persistence process.
+This can be as simple as marking the classes as an @Entity, or you can configure down to the fine detail of precisely what schema it maps on to.
+The following sections deal with the many options available.
+
+When mapping a class for JPA you can make use of Java annotations, or XML metadata, or a mixture of both. This is very much down to your own personal preference
+but we try to present both ways here.
+
+TIP: We advise trying to keep schema information out of annotations, so that you avoid tying compiled code to a specific datastore. That way you
+retain datastore-independence. This may not be a concern for your project however.
+
+NOTE: Whilst the JPA spec only allows you to specify your mapping information using JPA annotations of JPA ORM XML, DataNucleus JPA also allows you
+the option of using JDO annotations or JDO XML metadata. This is a way of easily migrating across to JPA from JDO, for example. Consult the DataNucleus JDO docs for details.
+
+
+include::_mapping_classes.adoc[leveloffset=+1]
+include::_mapping_members.adoc[leveloffset=+1]
+include::_mapping_identity.adoc[leveloffset=+1]
+include::_mapping_versioning.adoc[leveloffset=+1]
+include::_mapping_inheritance.adoc[leveloffset=+1]

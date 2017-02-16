@@ -1,5 +1,5 @@
 [[identity]]
-= JPA Identity
+= Identity
 :_basedir: ../
 :_imagesdir: images/
 
@@ -18,22 +18,46 @@ A further complication is where you use _application identity_ but one of the fi
 [[application]]
 == Application Identity
 
-With *application identity* you are taking control of the specification of id's to DataNucleus. Application identity requires a primary key class 
-_(unless using SingleFieldIdentity, where one is provided for you)_, and each persistent capable class may define a different class for its primary 
+With *application identity* you are taking control of the specification of id's to DataNucleus. Application identity can require a primary key class 
+_(when you have multiple identity fields)_, and each persistent capable class may define a different class for its primary 
 key, and different persistent capable classes can use the same primary key class, as appropriate. With *application identity* the field(s) of the primary key 
 will be present as field(s) of the class itself. To specify that a class is to use *application identity*, you add the following to the MetaData for the class.
 
 [source,xml]
 -----
 <entity class="org.mydomain.MyClass">
-    <id-class class="org.mydomain.MyIdClass"/>
     <attributes>
         <id name="myPrimaryKeyField"/>
     </attributes>
 </entity>
 -----
 
-For JPA we specify the *id* field and *id-class*. Alternatively, if we are using annotations
+or, if we are using annotations
+
+[source,java]
+-----
+@Entity
+public class MyClass
+{
+    @Id
+    private long myPrimaryKeyField;
+}
+-----
+
+When we have *multiple identity fields* we also require an *id-class*, using XML
+
+[source,xml]
+-----
+<entity class="org.mydomain.MyClass">
+    <id-class class="org.mydomain.MyIdClass"/>
+    <attributes>
+        <id name="myPrimaryKeyField1"/>
+        <id name="myPrimaryKeyField2"/>
+    </attributes>
+</entity>
+-----
+
+or, if we are using annotations
 
 [source,java]
 -----
@@ -42,7 +66,11 @@ For JPA we specify the *id* field and *id-class*. Alternatively, if we are using
 public class MyClass
 {
     @Id
-    private long myPrimaryKeyField;
+    private long myPrimaryKeyField1;
+    
+    @Id
+    private long myPrimaryKeyField2;
+
 }
 -----
 

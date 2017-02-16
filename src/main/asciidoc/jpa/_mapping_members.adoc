@@ -1,0 +1,154 @@
+[[members]]
+= Fields/Properties
+:_basedir: ../
+:_imagesdir: images/
+
+
+Once we have defined a class to be persistable (as either _Entity_, _MappedSuperclass_, or _Embedded_), we need to define how to persist the different 
+fields/properties that are to be persisted. There are two distinct modes of persistence definition; the most common uses *fields*, whereas an alternative uses *properties*.
+
+
+[[persistent_fields]]
+== Persistent Fields
+
+The most common form of persistence is where you have a *field* in a class and want to persist it to the datastore. 
+With this mode of operation DataNucleus will persist the values stored in the fields into the datastore, and will set the values of the 
+fields when extracting it from the datastore.
+
+NOTE: Requirement : you have a field in the class. This can be public, protected, private or package access, but cannot be static or final.
+
+An example of how to define the persistence of a field is shown below
+
+[source,java]
+-----
+@Entity
+public class MyClass
+{
+    @Basic
+    Date birthday;
+
+    @Transient
+    String someOtherField;
+}
+-----
+
+So, using annotations, we have marked this class as persistent, and the field _birthday_ also as persistent, whereas field _someOtherField_ is not persisted.
+Using XML MetaData we would have done
+
+[source,xml]
+-----
+<entity name="mydomain.MyClass">
+    <attributes>
+        <basic name="birthday"/>
+        <transient name="someOtherField"/>
+    </attributes>
+</entity>
+-----
+
+Please note that the field Java type defines whether it is, by default, persistable. Look at the link:types.html[Types Guide] and if the type has a tick in the column
+"Persistent?" then you can omit the "basic" specification.
+
+
+
+[[persistent_properties]]
+== Persistent Properties
+
+A second mode of operation is where you have Java Bean-style getter/setter for a *property*. In this situation you want to persist the output from _getXXX_ to the datastore, 
+and use the _setXXX_ to load up the value into the object when extracting it from the datastore.
+
+NOTE: Requirement : you have a property in the class with Java Bean getter/setter methods. These methods can be public, protected, private or package access, 
+but cannot be static. The class must have BOTH getter AND setter methods.
+
+An example of how to define the persistence of a property is shown below
+
+[source,java]
+-----
+@Entity
+public class MyClass
+{
+    @Basic
+    Date getBirthday()
+    {
+        ...
+    }
+
+    void setBirthday(Date date)
+    {
+        ...
+    }
+}
+-----
+
+So, using annotations, we have marked this class as persistent, and the getter is marked as persistent. By default a property is non-persistent, so we have no 
+need in specifying the _someOtherField_ as transient. Using XML MetaData we would have done
+
+[source,xml]
+-----
+<entity name="mydomain.MyClass">
+    <attributes>
+        <basic name="birthday"/>
+    </attributes>
+</entity>
+-----
+
+[[member_position]]
+== Field/Property Positioning
+
+image:../images/nucleus_extension.png[]
+
+With some datastores (notably spreadsheets) it is desirable to be able to specify the relative position of a column. 
+The default (for DataNucleus) is just to put them in ascending alphabetical order.
+JPA doesn't allow configuration of this, but DataNucleus provides the following vendor extension.
+It is currently only possible using (DataNucleus) annotations
+
+[source,java]
+-----
+@Entity
+@Table(name="People")
+public class Person
+{
+    @Id
+    @ColumnPosition(0)
+    long personNum;
+
+    @ColumnPosition(1)
+    String firstName;
+
+    @ColumnPosition(2)
+    String lastName;
+}
+-----
+
+[[member_readonly]]
+== Making a field/property read-only
+
+image:../images/nucleus_extension.png[]
+
+If you want to make a member read-only you can do it like this.
+
+[source,xml]
+-----
+<entity name="mydomain.MyClass">
+    <attributes>
+        <basic name="myField">
+            <extension key="insertable" value="false"/>
+            <extension key="updateable" value="false"/>
+        </basic>
+    </attributes>
+</entity>
+-----
+
+or with Annotations
+
+[source,java]
+-----
+import org.datanucleus.api.jdo.annotations.ReadOnly;
+
+@Entity
+public class MyClass
+{
+    @ReadOnly
+    String myField;
+
+}
+-----
