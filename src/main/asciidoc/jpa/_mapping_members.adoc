@@ -91,6 +91,19 @@ need in specifying the _someOtherField_ as transient. Using XML MetaData we woul
 </entity>
 -----
 
+
+[[member_transient]]
+== Making a field/property non-persistent
+
+If you have a field/property that you don't want to persist, just mark it as _transient_, like this
+
+[source,java]
+-----
+    @Transient
+    String unimportantField;
+-----
+
+
 [[member_position]]
 == Field/Property Positioning
 
@@ -118,6 +131,7 @@ public class Person
     String lastName;
 }
 -----
+
 
 [[member_readonly]]
 == Making a field/property read-only
