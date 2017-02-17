@@ -1,0 +1,94 @@
+[[datastore_identifiers]]
+= Datastore Identifiers
+:_basedir: ../
+:_imagesdir: images/
+
+A datastore identifier is a simple name of a database object, such as a column, table, index, or view, and is composed of a
+sequence of letters, digits, and underscores ( _ ) that represents it's name. DataNucleus allows users to specify the names of tables, 
+columns, indexes etc but if the user doesn't specify these DataNucleus will generate names.
+
+With RDBMS the generation of identifier names is controlled by an IdentifierFactory, and DataNucleus provides a default implementation for JPA.
+You can link:extensions.html#rdbms_identifier_factory[provide your own RDBMS IdentifierFactory plugin] to give your own preferred naming if so desired.
+For RDBMS you set the _RDBMS IdentifierFactory_ by setting the persistence property _datanucleus.identifierFactory_. 
+Set it to the symbolic name of the factory you want to use.
+
+* link:#rdbms_jpa[jpa] RDBMS IdentifierFactory (default for JPA persistence for RDBMS)
+
+With non-RDBMS the generation of identifier names is controlled by a NamingFactory and again a default implementation for JPA.
+You can link:extensions.html#identifier_namingfactory[provide your own NamingFactory plugin] to give your own preferred naming if so desired.
+You set the _NamingFactory_ by setting the persistence property _datanucleus.identifier.namingFactory_ to give your own preferred naming if so desired. 
+Set it to the symbolic name of the factory you want to use.
+
+* link:#jpa[jpa] NamingFactory (default for JPA persistence for non-RDBMS)
+
+In describing the different possible naming conventions available out of the box with DataNucleus we'll use the following example
+
+[source,java]
+-----
+public class MyClass
+{
+    String myField1;
+    Collection<MyElement> elements1; // Using join table
+    Collection<MyElement> elements2; // Using foreign-key
+}
+
+class MyElement
+{
+    String myElementField;
+    MyClass myClass2;
+}
+-----
+
+[[jpa]]
+== NamingFactory 'jpa'
+
+The _NamingFactory_ "jpa" aims at providing a naming policy consistent with the "JPA" specification.
+
+Using the same example above, the rules in this _NamingFactory_ mean that, assuming that the user doesn't specify any <column> elements :-
+
+* _MyClass_ will be persisted into a table named *MYCLASS*
+* When using datastore identity *MYCLASS* will have a column called *MYCLASS_ID*
+* _MyClass.myField1_ will be persisted into a column called *MYFIELD1*
+* _MyElement_ will be persisted into a table named *MYELEMENT*
+* _MyClass.elements1_ will be persisted into a join table called *MYCLASS_MYELEMENT*
+* *MYCLASS_ELEMENTS1* will have columns called *MYCLASS_MYCLASS_ID* (FK to owner table) and *ELEMENTS1_ELEMENT_ID* (FK to element table)
+* *MyClass.elements2* will be persisted into a column *ELEMENTS2_MYCLASS_ID* (FK to owner) table
+* Any discriminator column will be called *DTYPE*
+* Any index column in a List for field _MyClass.myField1_ will be called *MYFIELD1_ORDER*
+* Any adapter column added to a join table to form part of the primary key will be called *IDX*
+* Any version column for a table will be called *VERSION*
+
+
+[[rdbms_jpa]]
+== RDBMS IdentifierFactory 'jpa'
+
+The _RDBMS IdentifierFactory_ "jpa" aims at providing a naming policy consistent with the JPA specification.
+
+Using the same example above, the rules in this _IdentifierFactory_ mean that, assuming that the user doesnt specify any <column> elements :-
+
+* _MyClass_ will be persisted into a table named *MYCLASS*
+* When using datastore identity *MYCLASS* will have a column called *MYCLASS_ID*
+* _MyClass.myField1_ will be persisted into a column called *MYFIELD1*
+* _MyElement_ will be persisted into a table named *MYELEMENT*
+* _MyClass.elements1_ will be persisted into a join table called *MYCLASS_MYELEMENT*
+* *MYCLASS_ELEMENTS1* will have columns called *MYCLASS_MYCLASS_ID* (FK to owner table) and *ELEMENTS1_ELEMENT_ID* (FK to element table)
+* *MyClass.elements2* will be persisted into a column *ELEMENTS2_MYCLASS_ID* (FK to owner) table
+* Any discriminator column will be called *DTYPE*
+* Any index column in a List for field _MyClass.myField1_ will be called *MYFIELD1_ORDER*
+* Any adapter column added to a join table to form part of the primary key will be called *IDX*
+* Any version column for a table will be called *VERSION*
+
+
+== Controlling the Case
+
+The underlying datastore will define what case of identifiers are accepted. By default, DataNucleus will capitalise names (assuming that the datastore supports it). 
+You can however influence the case used for identifiers. This is specifiable with the persistence property _datanucleus.identifier.case_, having the following values
+
+* UpperCase: identifiers are in upper case
+* LowerCase: identifiers are in lower case
+* MixedCase: No case changes are made to the name of the identifier provided by the user (class name or metadata).
+
+NOTE : Some datastores only support UPPERCASE or lowercase identifiers and so setting this parameter may have no effect if your database doesn't support that option.
+
+NOTE : This case control only applies to DataNucleus-generated identifiers. If you provide your own identifiers for things like schema/catalog etc then you 
+need to specify those using the case you wish to use in the datastore (including quoting as necessary)
