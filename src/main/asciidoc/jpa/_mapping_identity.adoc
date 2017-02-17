@@ -437,7 +437,22 @@ In the 1-1 relationships guide we note that in the datastore representation of t
 In our example here we want to just have a primary key that is also a foreign-key to *USER*. 
 To do this we need to modify the classes slightly and add primary-key fields and use "application-identity".
 
-image:../images/orm/relationship_1_1_compound_class.jpg[]
+[source,java]
+-----
+public class User
+{
+    long id;
+
+    ...
+}
+
+public class Account
+{
+    User user;
+
+    ...
+}
+-----
 
 In addition we need to define primary key classes for our *User* and *Account* classes
 
@@ -578,7 +593,7 @@ To achieve what we want with the datastore schema we define the MetaData like th
 
 So now we have the following datastore schema
 
-image:../images/orm/relationship_1_1_compound_db.jpg[]
+image:../images/relationship_1_1_compound_db.jpg[]
 
 Things to note:-
 
@@ -596,7 +611,26 @@ In the 1-N relationships guide we note that in the datastore representation of t
 well as a foreign-key to *ACCOUNT*. In our example here we want to have the primary-key to *ACCOUNT* to _include_ the foreign-key. 
 To do this we need to modify the classes slightly, adding primary-key fields to both classes, and use "application-identity" for both.
 
-image:../images/orm/relationship_1_N_compound_class.jpg[]
+[source,java]
+-----
+public class Account
+{
+    long id;
+
+    Set<Address> addresses;
+
+    ...
+}
+
+public class Address
+{
+    long id;
+
+    Account account;
+
+    ...
+}
+-----
 
 In addition we need to define primary key classes for our *Account* and *Address* classes
 
@@ -751,7 +785,7 @@ To achieve what we want with the datastore schema we define the MetaData like th
 
 So now we have the following datastore schema
 
-image:../images/orm/relationship_1_N_compound_db.jpg[]
+image:../images/relationship_1_N_compound_db.jpg[]
 
 Things to note :-
 
@@ -766,10 +800,32 @@ For that reason we have the "id" field too.
 
 Lets take the same classes as we have in the link:orm/one_to_many_map.html#fk_bi_key[1-N Relationships FK].
 In this guide we note that in the datastore representation of the *Account* and *Address* classes the *ADDRESS* table has a primary key as well as a foreign-key to 
-*ACCOUNT*. In our example here we want to have the primary-key to *ACCOUNT* to _include_ the foreign-key. To do this we need to modify the classes slightly, 
-adding primary-key fields to both classes, and use "application-identity" for both.
+*ACCOUNT*. In our example here we want to have the primary-key to *ACCOUNT* to _include_ the foreign-key. 
+To do this we need to modify the classes slightly, adding primary-key fields to both classes, and use "application-identity" for both.
 
-image:../images/orm/relationship_1_N_bi_map_fk_simple_pc_class.jpg[]
+[source,java]
+-----
+public class Account
+{
+    long id;
+
+    Map<String, Address> addresses;
+
+    ...
+}
+
+public class Address
+{
+    long id;
+
+    String alias;
+
+    Account account;
+
+    ...
+}
+-----
+
 In addition we need to define primary key classes for our *Account* and *Address* classes
 
 [source,java]
@@ -781,7 +837,7 @@ public class Account
     long id;
 
     @OneToMany
-    Set<Address> addresses = new HashSet<>();
+    Map<String, Address> addresses;
 
     ... (remainder of Account class)
 
@@ -924,7 +980,7 @@ To achieve what we want with the datastore schema we define the MetaData like th
 -----
 
 So now we have the following datastore schema
-image:../images/orm/relationship_1_N_compound_map_db.jpg[]
+image:../images/relationship_1_N_compound_map_db.jpg[]
 
 Things to note :-
 

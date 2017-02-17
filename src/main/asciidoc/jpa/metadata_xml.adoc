@@ -1010,7 +1010,7 @@ strategy is used.
 
 
 [[discriminator-column]]
-== Metadata for discriminator-column tag">
+== Metadata for discriminator-column tag
 
 These are attributes within the *<discriminator-column>* tag (under <entity>).
 This defines the column used for a discriminator.
@@ -1036,7 +1036,7 @@ This defines the column used for a discriminator.
 
 
 [[id]]
-== Metadata for id tag">
+== Metadata for id tag
 
 These are attributes within the *<id>* tag (under <attributes>).
 This is used to define the field used to be the identity of the class.
@@ -1054,7 +1054,7 @@ This is used to define the field used to be the identity of the class.
 
 
 [[generated-value]]
-== Metadata for generated-value tag">
+== Metadata for generated-value tag
 
 These are attributes within the *<generated-value>* tag (under <id>). This is used to define how to generate the value for the identity field.
 
@@ -1076,7 +1076,7 @@ Please refer to the link:#sequence-generator[<sequence-generator>] and link:#tab
 
 
 [[datastore-id]]
-== Metadata for datastore-id tag">
+== Metadata for datastore-id tag
 
 These are attributes within the *<datastore-id>* tag (under <entity>). This is used to define the entity is using datastore identity (DataNucleus extension).
 
@@ -1098,7 +1098,7 @@ These are attributes within the *<datastore-id>* tag (under <entity>). This is u
 
 
 [[surrogate-version]]
-== Metadata for surrogate-version tag">
+== Metadata for surrogate-version tag
 
 These are attributes within the *<surrogate-version>* tag (under <entity>).
 This is used to define the entity has a surrogate version column (DataNucleus extension).
@@ -1121,7 +1121,7 @@ This is used to define the entity has a surrogate version column (DataNucleus ex
 
 
 [[embedded-id]]
-== Metadata for embedded-id tag">
+== Metadata for embedded-id tag
 
 These are attributes within the *<embedded-id>* tag (under <attributes>). This is used to define the field used to be the (embedded) identity of the class.
 *Note that this is not yet fully supported - specify the fields in the class*
@@ -1140,7 +1140,7 @@ These are attributes within the *<embedded-id>* tag (under <attributes>). This i
 
 
 [[version]]
-== Metadata for version tag">
+== Metadata for version tag
 
 These are attributes within the *<version>* tag (under <attributes>). This is used to define the field used to be hold the version of the class.
 
@@ -1158,7 +1158,7 @@ These are attributes within the *<version>* tag (under <attributes>). This is us
 
 
 [[basic]]
-== Metadata for basic tag">
+== Metadata for basic tag
 
 These are attributes within the *<basic>* tag (under <attributes>). This is used to define the persistence information for the field.
 
@@ -1184,7 +1184,7 @@ These are attributes within the *<basic>* tag (under <attributes>). This is used
 
 
 [[temporal]]
-== Metadata for temporal tag">
+== Metadata for temporal tag
 
 These are attributes within the *<temporal>* tag (under <basic>). This is used to define the details of persistence as a temporal type. 
 The contents of the element can be one of DATE, TIME, TIMESTAMP.
@@ -1192,14 +1192,14 @@ The contents of the element can be one of DATE, TIME, TIMESTAMP.
 
 
 [[enumerated]]
-== Metadata for enumerated tag">
+== Metadata for enumerated tag
 
 These are attributes within the *<enumerated>* tag (under <basic>). This is used to define the details of persistence as an enum type. 
 The contents of the element can be one of *ORDINAL* or STRING to represent whether the enum is persisted as an integer-based or the actual string.
 
 
 [[one-to-one]]
-== Metadata for one-to-one tag">
+== Metadata for one-to-one tag
 
 These are attributes within the *<one-to-one>* tag (under <attributes>). This is used to define that the field is part of a 1-1 relation.
 
@@ -1233,7 +1233,7 @@ These are attributes within the *<one-to-one>* tag (under <attributes>). This is
 
 
 [[many-to-one]]
-== Metadata for many-to-one tag">
+== Metadata for many-to-one tag
 
 These are attributes within the *<many-to-one>* tag (under <attributes>). This is used to define that the field is part of a N-1 relation.
 
@@ -1263,7 +1263,7 @@ These are attributes within the *<many-to-one>* tag (under <attributes>). This i
 
 
 [[element-collection]]
-== Metadata for element-collection tag">
+== Metadata for element-collection tag
 
 These are attributes within the *<element-collection>* tag (under <attributes>). This is used to define that the field is part of a 1-N non-PC relation.
 
@@ -1289,7 +1289,7 @@ These are attributes within the *<element-collection>* tag (under <attributes>).
 
 
 [[one-to-many]]
-== Metadata for one-to-many tag">
+== Metadata for one-to-many tag
 
 These are attributes within the *<one-to-many>* tag (under <attributes>). This is used to define that the field is part of a 1-N relation.
 
@@ -1323,7 +1323,7 @@ These are attributes within the *<one-to-many>* tag (under <attributes>). This i
 
 
 [[many-to-many]]
-== Metadata for many-to-many tag">
+== Metadata for many-to-many tag
 
 These are attributes within the *<many-to-many>* tag (under <attributes>). This is used to define that the field is part of a M-N relation.
 
@@ -1353,7 +1353,7 @@ These are attributes within the *<many-to-many>* tag (under <attributes>). This 
 
 
 [[embedded]]
-== Metadata for embedded tag">
+== Metadata for embedded tag
 
 These are attributes within the *<embedded>* tag (under <attributes>). This is used to define that the field is part of an embedded relation.
 
@@ -1371,7 +1371,7 @@ These are attributes within the *<embedded>* tag (under <attributes>). This is u
 
 
 [[order-by]]
-== Metadata for order-by tag">
+== Metadata for order-by tag
 
 This element is specified under <one-to-many> or <many-to-many>. 
 It is used to define the field(s) of the element class that is used for ordering the elements when they are retrieved from the datastore. 
@@ -1381,7 +1381,7 @@ It should be a comma-separated list of field names (of the element) with optiona
 
 
 [[order-column]]
-== Metadata for order-column tag">
+== Metadata for order-column tag
 
 This element is specified under <one-to-many> or <many-to-many>. 
 It is used to define that the List will be ordered with the ordering stored in a surrogate column in the other table.
@@ -1420,7 +1420,7 @@ It is used to define that the List will be ordered with the ordering stored in a
 
 
 [[map-key]]
-== Metadata for map-key tag">
+== Metadata for map-key tag
 
 These are attributes within the *<map-key>* tag (under <one-to-many> or <many-to-many>). This is used to define the field of the value class that is the key of a Map.
 
@@ -1438,20 +1438,20 @@ These are attributes within the *<map-key>* tag (under <one-to-many> or <many-to
 
 
 [[map-key-temporal]]
-== Metadata for map-key-temporal tag">
+== Metadata for map-key-temporal tag
 
 Within the *<map-key-temporal>* tag (under <element-collection>, <one-to-many> or <many-to-many>) you put the TemporalType value.
 
 
 
 [[map-key-enumerated]]
-== Metadata for map-key-enumerated tag">
+== Metadata for map-key-enumerated tag
 
 Within the *<map-key-enumerated>* tag (under <element-collection>, <one-to-many> or <many-to-many>) you put the EnumType value.
 
 
 [[transient]]
-== Metadata for transient tag">
+== Metadata for transient tag
 
 These are attributes within the *<transient>* tag (under <attributes>). This is used to define that the field is not to be persisted.
 
@@ -1468,7 +1468,7 @@ These are attributes within the *<transient>* tag (under <attributes>). This is 
 
 
 [[index]]
-== Metadata for index tag">
+== Metadata for index tag
 
  These are attributes within the *<index>* element. This is used to define the details of an index when overriding the provider default.
 
@@ -1494,7 +1494,7 @@ These are attributes within the *<transient>* tag (under <attributes>). This is 
 
 
 [[foreign-key]]
-== Metadata for foreign-key tag">
+== Metadata for foreign-key tag
 
 These are attributes within the *<foreign-key>* element. This is used to define the details of a foreign-key when overriding the provider default.
 
@@ -1520,7 +1520,7 @@ These are attributes within the *<foreign-key>* element. This is used to define 
 
 
 [[convert]]
-== Metadata for convert tag">
+== Metadata for convert tag
 
 These are attributes within the *<convert>* element, under *<basic>*. This is used to define the use of type conversion on this field.
 
@@ -1546,19 +1546,19 @@ These are attributes within the *<convert>* element, under *<basic>*. This is us
 
 
 [[exclude-default-listeners]]
-== Metadata for exclude-default-listeners tag">
+== Metadata for exclude-default-listeners tag
 
 This element is specified under <mapped-superclass> or <entity> and is used to denote that any default listeners defined in this file will be ignored.
 
 
 [[exclude-superclass-listeners]]
-== Metadata for exclude-superclass-listeners tag">
+== Metadata for exclude-superclass-listeners tag
 
 This element is specified under <mapped-superclass> or <entity> and is used to denote that any listeners of superclasses will be ignored.
 
 
 [[entity-listener]]
-== Metadata for entity-listener tag">
+== Metadata for entity-listener tag
 
 These are attributes within the *<entity-listener>* tag (under <entity-listeners>). This is used to an EntityListener class and the methods it uses
 
@@ -1575,7 +1575,7 @@ These are attributes within the *<entity-listener>* tag (under <entity-listeners
 
 
 [[pre-persist]]
-== Metadata for pre-persist tag">
+== Metadata for pre-persist tag
 
 These are attributes within the *<pre-persist>* tag (under <entity>). This is used to define any "PrePersist" method callback.
 
@@ -1592,7 +1592,7 @@ These are attributes within the *<pre-persist>* tag (under <entity>). This is us
 
 
 [[post-persist]]
-== Metadata for post-persist tag">
+== Metadata for post-persist tag
 
 These are attributes within the *<post-persist>* tag (under <entity>). This is used to define any "PostPersist" method callback.
 
@@ -1609,7 +1609,7 @@ These are attributes within the *<post-persist>* tag (under <entity>). This is u
 
 
 [[pre-remove]]
-== Metadata for pre-remove tag">
+== Metadata for pre-remove tag
 
 These are attributes within the *<pre-remove>* tag (under <entity>). This is used to define any "PreRemove" method callback.
 
@@ -1626,7 +1626,7 @@ These are attributes within the *<pre-remove>* tag (under <entity>). This is use
 
 
 [[post-remove]]
-== Metadata for post-remove tag">
+== Metadata for post-remove tag
 
 These are attributes within the *<post-remove>* tag (under <entity>). This is used to define any "PostRemove" method callback.
 
@@ -1643,7 +1643,7 @@ These are attributes within the *<post-remove>* tag (under <entity>). This is us
 
 
 [[pre-update]]
-== Metadata for pre-update tag">
+== Metadata for pre-update tag
 
 These are attributes within the *<pre-remove>* tag (under <entity>). This is used to define any "PreUpdate" method callback.
 

@@ -17,9 +17,41 @@ NOTE: For RDBMS a 1-1 relation is stored as a foreign-key column(s). For non-RDB
 
 For this case you could have 2 classes, *User* and *Account*, as below.
 
-image:../images/relationship_1_1_uni_class.png[]
+[source,java]
+-----
+public class Account
+{
+    User user;
+}
 
-so the *Account* class knows about the *User* class, but not vice-versa. If you define the XML metadata for these classes as follows
+public class User
+{
+    ...
+}
+-----
+
+so the *Account* class knows about the *User* class, but not vice-versa. If you define the annotations for these classes as follows
+
+[source,java]
+-----
+@Entity
+public class Account
+{
+    ...
+
+    @OneToOne
+    @JoinColumn(name="USER_ID")
+    User user;
+}
+
+@Entity
+public class User
+{
+    ...
+}
+-----
+
+or using XML metadata
 
 [source,xml]
 -----
@@ -48,24 +80,6 @@ so the *Account* class knows about the *User* class, but not vice-versa. If you 
 </entity-mappings>
 -----
 
-or alternatively using annotations
-
-[source,java]
------
-public class Account
-{
-    ...
-
-    @OneToOne
-    @JoinColumn(name="USER_ID")
-    User user;
-}
-
-public class User
-{
-    ...
-}
------
 
 This will create 2 tables in the database, one for *User* (with name _USER_), and one for *Account* (with name _ACCOUNT_ and a column _USER_ID_), as shown below.
 
@@ -83,9 +97,51 @@ an exception will typically be thrown (assuming the RDBMS supports foreign keys)
 
 For this case you could have 2 classes, *User* and *Account* again, but this time as below. Here the *Account* class knows about the *User* class, and also vice-versa.
 
-image:../images/relationship_1_1_bi_class.png[]
+[source,java]
+-----
+public class Account
+{
+    User user;
 
-We create the 1-1 relationship with a single foreign-key. To do this you define the XML metadata as
+    ...
+}
+
+public class User
+{
+    Account account;
+
+    ...
+}
+-----
+
+
+We create the 1-1 relationship with a single foreign-key. To do this you define the annotations as
+
+[source,java]
+-----
+@Entity
+public class Account
+{
+    ...
+
+    @OneToOne
+    @JoinColumn(name="USER_ID")
+    User user;
+}
+
+@Entity
+public class User
+{
+    ...
+
+    @OneToOne(mappedBy="user")
+    Account account;
+
+    ...
+}
+-----
+
+or using XML metadata
 
 [source,xml]
 -----
@@ -114,30 +170,6 @@ We create the 1-1 relationship with a single foreign-key. To do this you define 
         </attributes>
     </entity>
 </entity-mappings>
------
-
-or alternatively using annotations
-
-[source,java]
------
-public class Account
-{
-    ...
-
-    @OneToOne
-    @JoinColumn(name="USER_ID")
-    User user;
-}
-
-public class User
-{
-    ...
-
-    @OneToOne(mappedBy="user")
-    Account account;
-
-    ...
-}
 -----
 
 The difference is that we added _mapped-by_ to the field of *User* making it bidirectional (and putting the FK at the other side for RDBMS)
