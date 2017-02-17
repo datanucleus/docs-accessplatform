@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<document xmlns="http://maven.apache.org/XDOC/2.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+    <properties>
+        <title>JPA Serialised Objects</title>
+    </properties>
+
+    <body>
+        <section name="JPA : Serialising Objects">
+            <p>
+                JPA1 provides a way for users to specify that a field will be persisted <i>serialised</i>. This is of use, 
+                for example, to collections/maps/arrays which typically are stored using join tables or foreign-keys to other
+                records. By specifying that a field is serialised a column will be added to store that field and the field will 
+                be serialised into it.
+            </p>
+            <p>
+                JPA's definition of serialising applies to any field and all in the same way, unlike the situation with 
+                JDO which provides much more flexibility. Perhaps the most important thing to bear in mind when deciding 
+                to serialise a field is that that object in the field being serialised must implement 
+                <i>java.io.Serializable</i>.
+            </p>
+            <br/>
+
+            <subsection name="Serialised Fields">
+                <table class="datastoreTable"><tr><td>Applicable to RDBMS, HBase, MongoDB</td></tr></table>
+                <p>
+                    If you wish to serialise a particular field into a single column (in the table of the class), you need
+                    to simply mark the field as a "lob" (large object). Let's take an example. We have the following classes
+                </p>
+                <img src="../../images/orm/serialised_collection_class.jpg" alt=""/><br/>
+                <p>
+                    and we want the <i>animals</i> collection to be serialised into a single column in the table
+                    storing the <b>Farm</b> class, so we define our MetaData like this
+                </p>
+                <source><![CDATA[
+<entity class="Farm">
+    <table name="FARM"/>
+    <attributes>
+        ...
+        <basic name="animals">
+            <column name="ANIMALS"/>
+            <lob/>
+        </basic>
+        ...
+    </attributes>
+</entity>]]></source>
+                <p>
+                    So we make use of the <i>lob</i> element (or @Lob annotation). This specification results in a table
+                    like this
+                </p>
+                <img src="../../images/orm/serialised_collection_db.jpg" alt=""/><br/>
+                <p>
+                    Provisos to bear in mind are
+                </p>
+                <ul>
+                    <li>Queries cannot be performed on collections stored as serialised.</li>
+                </ul>
+                <p>
+                    If the field that we want to serialise is of type String, byte[], char[], Byte[] or Character[]
+                    then the field will be serialised into a CLOB column rather than BLOB.
+                </p>
+                <p>See also :-</p>
+                <ul>
+                    <li><a href="../metadata_xml.html#basic">MetaData reference for &lt;basic&gt; element</a></li>
+                    <li><a href="../annotations.html#Lob">Annotations reference for @Lob</a></li>
+                </ul>
+            </subsection>
+
+            <a name="LocalFile"/>
+            <subsection name="Serialised Field to Local File">
+                <table class="datastoreTable"><tr><td>Applicable to RDBMS</td></tr></table>
+                <p>
+                    <b>Note this is not part of the JPA spec, but is available in DataNucleus to ease your usage.</b>
+                    If you have a non-relation field that implements Serializable you have the option of serialising
+                    it into a file on the local disk. This could be useful where you have a large file and don't want
+                    to persist very large objects into your RDBMS. Obviously this will mean that the field is no
+                    longer queryable, but then if its a large file you likely don't care about that. So let's give an
+                    example
+                </p>
+<source><![CDATA[
+@Entity
+public class Person
+{
+    @Id
+    long id;
+
+    @Basic
+    @Lob
+    @Extension(vendorName="datanucleus", key="serializeToFileLocation"
+        value="person_avatars")
+    AvatarImage image;
+}]]></source>
+                <p>
+                    Or using XML
+                </p>
+                <source><![CDATA[
+<entity class="Person">
+    <attributes>
+        ...
+        <basic name="image">
+            <lob/>
+            <extension key="serializeToFileLocation" value="person_avatars"
+        </basic>
+        ...
+    </attributes>
+</entity>]]></source>
+                <p>
+                    So this will now persist a file into a folder <i>person_avatars</i> with filename as the String
+                    form of the identity of the owning object. In a real world example you likely will specify the
+                    extension value as an absolute path name, so you can place it anywhere in the local disk.
+                </p>
+            </subsection>
+        </section>
+
+    </body>
+</document>

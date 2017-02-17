@@ -1,0 +1,100 @@
+[[secondary_tables]]
+= Secondary Tables
+:_basedir: ../
+:_imagesdir: images/
+
+NOTE: Applicable to RDBMS
+
+The standard JPA persistence strategy is to persist an object of a class into its own table. In some 
+situations you may wish to map the class to a primary table as well as one or more secondary tables. 
+For example when you have a Java class that could have been split up into 2 separate classes yet, for 
+whatever reason, has been written as a single class, however you have a legacy datastore and you need to 
+map objects of this class into 2 tables. JPA allows persistence of fields of a class into _secondary_
+tables.
+
+The process for managing this situation is best demonstrated with an example. Let's suppose we have a class
+that represents a *Printer*. The *Printer* class contains within it various attributes of the
+toner cartridge. So we have
+
+[source,java]
+-----
+package com.mydomain.samples.secondarytable;
+
+public class Printer
+{
+    long id;
+    String make;
+    String model;
+
+    String tonerModel;
+    int tonerLifetime;
+
+    /**
+     * Constructor.
+     * @param make Make of printer (e.g Hewlett-Packard)
+     * @param model Model of Printer (e.g LaserJet 1200L)
+     * @param tonerModel Model of toner cartridge
+     * @param tonerLifetime lifetime of toner (number of prints)
+     */
+    public Printer(String make, String model, String tonerModel, int tonerLifetime)
+    {
+        this.make = make;
+        this.model = model;
+        this.tonerModel = tonerModel;
+        this.tonerLifetime = tonerLifetime;
+    }
+
+}
+-----
+
+Now we have a database schema that has 2 tables (PRINTER and PRINTER_TONER) in which to store objects of this class.
+So we need to tell DataNucleus to perform this mapping. So we define the MetaData for the *Printer* class like this
+
+[source,xml]
+-----
+<entity class="Printer">
+    <table name="PRINTER"/>
+    <secondary-table name="PRINTER_TONER">
+        <primary-key-join-column name="PRINTER_REFID"/>
+    </secondary-table>
+
+    <attributes>
+        <id name="id">
+            <column name="PRINTER_ID"/>
+        </id>
+        <basic name="make">
+            <column name="MAKE" length="40"/>
+        </basic>
+        <basic name="model">
+            <column name="MODEL" length="100"/>
+        </basic>
+        <basic name="tonerModel">
+            <column name="MODEL" table="PRINTER_TONER"/>
+        </basic>
+        <basic name="tonerLifetime">
+            <column name="LIFETIME" table="PRINTER_TONER"/>
+        </basic>
+    </attributes>
+</entity>
+-----
+
+Here we have defined that objects of the *Printer* class will be stored in the primary table PRINTER. 
+In addition we have defined that some fields are stored in the table PRINTER_TONER.
+
+<li>We declare the "secondary-table"(s) that we will be using at the start of the definition.
+<li>We define _tonerModel_ and _tonerLifetime_ to use columns in the table PRINTER_TONER. This uses the "table" attribute of <column>
+<li>Whilst defining the secondary table(s) we will be using, we also define the join column to be called "PRINTER_REFID".
+
+This results in the following database tables :-
+
+image:../images/secondarytables_db.png[]
+
+So we now have our primary and secondary database tables. The primary key of the PRINTER_TONER table serves as a foreign key to the primary class. 
+Whenever we persist a *Printer* object a row will be inserted into *both* of these tables.
+
+See also :-
+
+* link:metadata_xml.html#secondary-table[MetaData reference for <secondary-table> element]
+* link:metadata_xml.html#column[MetaData reference for <column> element]
+* link:annotations.html#SecondaryTable[Annotations reference for @SecondaryTable]
+* link:annotations.html#Column[Annotations reference for @Column]
