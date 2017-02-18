@@ -1,0 +1,908 @@
+[[jpql_geospatial_functions]]
+= JPQL Geospatial Functions
+:_basedir: ../
+:_imagesdir: images/
+
+
+image:../images/nucleus_extension.png[]
+
+When querying spatial data you can make use of a set of spatial methods on the various Java geometry types. 
+The list contains all of the functions detailed in Section 3.2 of the http://www.opengeospatial.org/standards/sfa[OGC Simple Features specification]. 
+Additionally DataNucleus provides some commonly required methods like bounding box test and datastore specific functions. 
+The following tables list all available functions as well as information about which RDBMS implement them. 
+An entry in the "Result" column indicates, whether the funcion may be used in the result part of a JPQL query.
+
+
+== Functions for Constructing a Geometry Value given its Well-known Text Representation (OGC SF 3.2.6)
+
+[cols="7,10,2,1,1,1,1", options="header"]
+|===
+|Method
+|Description
+|Specification
+|Result [1]
+|PostGIS
+|MySQL
+|Oracle Spatial
+
+|Spatial.geomFromText(String, Integer)
+|Construct a Geometry value given its well-known textual representation.
+|OGC SF
+|icon:times[]
+|icon:check[]
+|icon:check[]
+|icon:check[]
+
+|Spatial.pointFromText(String, Integer)
+|Construct a Point.
+|OGC SF
+|icon:times[]
+|icon:check[]
+|icon:check[]
+|icon:check[]
+
+|Spatial.lineFromText(String, Integer)
+|Construct a LineString.
+|OGC SF
+|icon:times[]
+|icon:check[]
+|icon:check[]
+|icon:check[]
+
+|Spatial.polyFromText(String, Integer)
+|Construct a Polygon.
+|OGC SF
+|icon:times[]
+|icon:check[]
+|icon:check[]
+|icon:check[]
+
+|Spatial.mPointFromText(String, Integer)
+|Construct a MultiPoint.
+|OGC SF
+|icon:times[]
+|icon:check[]
+|icon:check[]
+|icon:check[]
+
+|Spatial.mLineFromText(String, Integer)
+|Construct a MultiLineString.
+|OGC SF
+|icon:times[]
+|icon:check[]
+|icon:check[]
+|icon:check[]
+
+|Spatial.mPolyFromText(String, Integer)
+|Construct a MultiPolygon.
+|OGC SF
+|icon:times[]
+|icon:check[]
+|icon:check[]
+|icon:check[]
+
+|Spatial.geomCollFromText(String, Integer)
+|Construct a GeometryCollection.
+|OGC SF
+|icon:times[]
+|icon:check[]
+|icon:check[]
+|icon:check[]
+|===
+
+[1] These functions can't be used in the return part because it's not possible to determine the return type from the parameters.</p>
+
+== Functions for Constructing a Geometry Value given its Well-known Binary Representation (OGC SF 3.2.7)
+
+[cols="7,10,2,1,1,1,1", options="header"]
+|===
+|Method
+|Description
+|Specification
+|Result [1]
+|PostGIS
+|MySQL
+|Oracle Spatial
+
+|Spatial.geomFromWKB(String, Integer)
+|Construct a Geometry value given its well-known binary representation.
+|OGC SF
+|icon:times[]
+|icon:check[]
+|icon:check[]
+|icon:check[]
+
+|Spatial.pointFromWKB(String, Integer)
+|Construct a Point.
+|OGC SF
+|icon:times[]
+|icon:check[]
+|icon:check[]
+|icon:check[]
+
+|Spatial.lineFromWKB(String, Integer)
+|Construct a LineString.
+|OGC SF
+|icon:times[]
+|icon:check[]
+|icon:check[]
+|icon:check[]
+
+|Spatial.polyFromWKB(String, Integer)
+|Construct a Polygon.
+|OGC SF
+|icon:times[]
+|icon:check[]
+|icon:check[]
+|icon:check[]
+
+|Spatial.mPointFromWKB(String, Integer)
+|Construct a MultiPoint.
+|OGC SF
+|icon:times[]
+|icon:check[]
+|icon:check[]
+|icon:check[]
+
+|Spatial.mLineFromWKB(String, Integer)
+|Construct a MultiLineString.
+|OGC SF
+|icon:times[]
+|icon:check[]
+|icon:check[]
+|icon:check[]
+
+|Spatial.mPolyFromWKB(String, Integer)
+|Construct a MultiPolygon.
+|OGC SF
+|icon:times[]
+|icon:check[]
+|icon:check[]
+|icon:check[]
+
+|Spatial.geomCollFromWKB(String, Integer)
+|Construct a GeometryCollection.
+|OGC SF
+|icon:times[]
+|icon:check[]
+|icon:check[]
+|icon:check[]
+|===
+
+[1] These functions can't be used in the return part because it's not possible to determine the return type from the parameters.
+
+
+== Functions on Type Geometry (OGC SF 3.2.10)
+
+[cols="7,10,2,1,1,1,1", options="header"]
+|===
+|Method
+|Description
+|Specification
+|Result [1]
+|PostGIS
+|MySQL
+|Oracle Spatial
+
+|Spatial.dimension(Geometry)
+|Returns the dimension of the Geometry.
+|OGC SF
+|icon:check[]
+|icon:check[]
+|icon:check[]
+|icon:check[]
+
+|Spatial.geometryType(Geometry)
+|Returns the name of the instantiable subtype of Geometry.
+|OGC SF
+|icon:check[]
+|icon:check[]
+|icon:check[]
+|icon:check[]
+
+|Spatial.asText(Geometry)
+|Returns the well-known textual representation.
+|OGC SF
+|icon:check[]
+|icon:check[]
+|icon:check[]
+|icon:check[]
+
+|Spatial.asBinary(Geometry)
+|Returns the well-known binary representation.
+|OGC SF
+|icon:times[]
+|icon:check[]
+|icon:check[]
+|icon:check[]
+
+|Spatial.srid(Geometry)
+|Returns the Spatial Reference System ID for this Geometry.
+|OGC SF
+|icon:check[]
+|icon:check[]
+|icon:check[]
+|icon:check[]
+
+|Spatial.isEmpty(Geometry)
+|TRUE if this Geometry corresponds to the empty set.
+|OGC SF
+|icon:exclamation[] [1]
+|icon:check[]
+|icon:check[]
+|icon:check[]
+
+|Spatial.isSimple(Geometry)
+|TRUE if this Geometry is simple, as defined in the Geometry Model.
+|OGC SF
+|icon:exclamation[] [1]
+|icon:check[]
+|icon:check[]
+|icon:check[]
+
+|Spatial.boundary(Geometry)
+|Returns a Geometry that is the combinatorial boundary of the Geometry.
+|OGC SF
+|icon:check[]
+|icon:check[]
+|icon:check[]
+|icon:check[]
+
+|Spatial.envelope(Geometry)
+|Returns the rectangle bounding Geometry as a Polygon.
+|OGC SF
+|icon:check[]
+|icon:check[]
+|icon:check[]
+|icon:check[]
+|===
+
+[1] Oracle does not allow boolean expressions in the SELECT-list.
+
+
+== Functions on Type Point (OGC SF 3.2.11)
+
+[cols="7,10,2,1,1,1,1", options="header"]
+|===
+|Method
+|Description
+|Specification
+|Result [1]
+|PostGIS
+|MySQL
+|Oracle Spatial
+
+|Spatial.x(Point)
+|Returns the x-coordinate of the Point as a Double.
+|OGC SF
+|icon:check[]
+|icon:check[]
+|icon:check[]
+|icon:check[]
+
+|Spatial.y(Point)
+|Returns the y-coordinate of the Point as a Double.
+|OGC SF
+|icon:check[]
+|icon:check[]
+|icon:check[]
+|icon:check[]
+|===
+
+
+== Functions on Type Curve (OGC SF 3.2.12)
+
+[cols="7,10,2,1,1,1,1", options="header"]
+|===
+|Method
+|Description
+|Specification
+|Result [1]
+|PostGIS
+|MySQL
+|Oracle Spatial
+
+|Spatial.startPoint(Curve))
+|Returns the first point of the Curve.
+|OGC SF
+|icon:check[]
+|icon:check[]
+|icon:check[]
+|icon:check[]
+
+|Spatial.endPoint(Curve))
+|Returns the last point of the Curve.
+|OGC SF
+|icon:check[]
+|icon:check[]
+|icon:check[]
+|icon:check[]
+
+|Spatial.isRing(Curve)
+|Returns TRUE if Curve is closed and simple. .
+|OGC SF
+|icon:exclamation[] [1]
+|icon:check[]
+|icon:check[]
+|icon:check[]
+|===
+
+[1] Oracle does not allow boolean expressions in the SELECT-list.
+
+
+== Functions on Type Curve and Type MultiCurve (OGC SF 3.2.12, 3.2.17)
+
+[cols="7,10,2,1,1,1,1", options="header"]
+|===
+|Method
+|Description
+|Specification
+|Result [1]
+|PostGIS
+|MySQL
+|Oracle Spatial
+
+|Spatial.isClosed(Curve)<br />Spatial.isClosed(MultiCurve)
+|Returns TRUE if Curve is closed, i.e., if StartPoint(Curve) = EndPoint(Curve).
+|OGC SF
+|icon:exclamation[] [1]
+|icon:check[]
+|icon:check[]
+|icon:check[]
+
+|Spatial.length(Curve)<br />Spatial.length(MultiCurve)
+|Returns the length of the Curve.
+|OGC SF
+|icon:check[]
+|icon:check[]
+|icon:check[]
+|icon:check[]
+|===
+
+[1] Oracle does not allow boolean expressions in the SELECT-list.
+
+
+== Functions on Type LineString (OGC SF 3.2.13)
+
+[cols="7,10,2,1,1,1,1", options="header"]
+|===
+|Method
+|Description
+|Specification
+|Result [1]
+|PostGIS
+|MySQL
+|Oracle Spatial
+
+|Spatial.numPoints(LineString)
+|Returns the number of points in the LineString.
+|OGC SF
+|icon:check[]
+|icon:check[]
+|icon:check[]
+|icon:check[]
+
+|Spatial.pointN(LineString, Integer)
+|Returns Point n.
+|OGC SF
+|icon:check[]
+|icon:check[]
+|icon:check[]
+|icon:check[]
+|===
+
+
+== Functions on Type Surface and Type MultiSurface (OGC SF 3.2.14, 3.2.18)
+
+[cols="7,10,2,1,1,1,1", options="header"]
+|===
+|Method
+|Description
+|Specification
+|Result [1]
+|PostGIS
+|MySQL
+|Oracle Spatial
+
+|Spatial.centroid(Surface)<br/>centroid(MultiSurface)
+|Returns the centroid of Surface, which may lie outside of it.
+|OGC SF
+|icon:check[]
+|icon:check[]
+|icon:times[] [1]
+|icon:check[]
+
+|Spatial.pointOnSurface(Surface)<br/>pointOnSurface(MultiSurface)
+|Returns a Point guaranteed to lie on the surface.
+|OGC SF
+|icon:check[]
+|icon:check[]
+|icon:times[] [1]
+|icon:check[]
+
+|Spatial.area(Surface)<br/>area(MultiSurface)
+|Returns the area of Surface.
+|OGC SF
+|icon:check[]
+|icon:check[]
+|icon:check[]
+|icon:check[]
+|===
+
+[1] MySQL does not implement these functions.
+
+
+== Functions on Type Polygon (OGC SF 3.2.15)
+
+[cols="7,10,2,1,1,1,1", options="header"]
+|===
+|Method
+|Description
+|Specification
+|Result [1]
+|PostGIS
+|MySQL
+|Oracle Spatial
+
+|Spatial.exteriorRing(Polygon)
+|Returns the exterior ring of Polygon.
+|OGC SF
+|icon:check[]
+|icon:check[]
+|icon:check[]
+|icon:check[]
+
+|Spatial.numInteriorRing(Polygon)
+|Returns the number of interior rings.
+|OGC SF
+|icon:check[]
+|icon:check[]
+|icon:check[]
+|icon:check[]
+
+|Spatial.interiorRingN(Polygon, Integer)
+|Returns the nth interior ring.
+|OGC SF
+|icon:check[]
+|icon:check[]
+|icon:check[]
+|icon:check[]
+|===
+
+
+== Functions on Type GeomCollection (OGC SF 3.2.16)
+
+[cols="7,10,2,1,1,1,1", options="header"]
+|===
+|Method
+|Description
+|Specification
+|Result [1]
+|PostGIS
+|MySQL
+|Oracle Spatial
+
+|Spatial.numGeometries(GeomCollection)
+|Returns the number of geometries in the collection.
+|OGC SF
+|icon:check[]
+|icon:check[]
+|icon:check[]
+|icon:check[]
+
+|Spatial.geometryN(GeomCollection, Integer)
+|Returns the nth geometry in the collection.
+|OGC SF
+|icon:check[]
+|icon:check[]
+|icon:check[]
+|icon:check[]
+|===
+
+
+== Functions that test Spatial Relationships (OGC SF 3.2.19)
+
+[cols="7,10,2,1,1,1,1", options="header"]
+|===
+|Method
+|Description
+|Specification
+|Result [1]
+|PostGIS
+|MySQL
+|Oracle Spatial
+
+|Spatial.equals(Geometry, Geometry)
+|TRUE if the two geometries are spatially equal.
+|OGC SF
+|icon:exclamation[]
+|icon:check[]
+|icon:exclamation[] [2]
+|icon:check[]
+
+|Spatial.disjoint(Geometry, Geometry)
+|TRUE if the two geometries are spatially disjoint.
+|OGC SF
+|icon:exclamation[]
+|icon:check[]
+|icon:exclamation[] [2]
+|icon:check[]
+
+|Spatial.touches(Geometry, Geometry)
+|TRUE if the first Geometry spatially touches the other Geometry.
+|OGC SF
+|icon:exclamation[]
+|icon:check[]
+|icon:exclamation[] [2]
+|icon:check[]
+
+|Spatial.within(Geometry, Geometry)
+|TRUE if first Geometry is completely contained in second Geometry.
+|OGC SF
+|icon:exclamation[]
+|icon:check[]
+|icon:exclamation[] [2]
+|icon:check[]
+
+|Spatial.overlaps(Geometry, Geometry)
+|TRUE if first Geometries is spatially overlapping the other Geometry.
+|OGC SF
+|icon:exclamation[]
+|icon:check[]
+|icon:exclamation[] [2]
+|icon:check[]
+
+|Spatial.crosses(Geometry, Geometry)
+|TRUE if first Geometry crosses the other Geometry.
+|OGC SF
+|icon:exclamation[]
+|icon:check[]
+|icon:times[] [3]
+|icon:check[]
+
+|Spatial.intersects(Geometry, Geometry)
+|TRUE if first Geometry spatially intersects the other Geometry.
+|OGC SF
+|icon:exclamation[]
+|icon:check[]
+|icon:exclamation[] [2]
+|icon:check[]
+
+|Spatial.contains(Geometry, Geometry)
+|TRUE if second Geometry is completely contained in first Geometry.
+|OGC SF
+|icon:exclamation[]
+|icon:check[]
+|icon:exclamation[] [2]
+|icon:check[]
+
+|Spatial.relate(Geometry, Geometry, String)
+|TRUE if the spatial relationship specified by the patternMatrix holds.
+|OGC SF
+|icon:exclamation[]
+|icon:check[]
+|icon:check[]
+|icon:check[]
+|===
+
+[1] Oracle does not allow boolean expressions in the SELECT-list.
+[2] MySQL does not implement these functions according to the specification. They return the same result as the corresponding MBR-based functions.
+
+
+== Function on Distance Relationships (OGC SF 3.2.20)    
+
+[cols="7,10,2,1,1,1,1", options="header"]
+|===
+|Method
+|Description
+|Specification
+|Result [1]
+|PostGIS
+|MySQL
+|Oracle Spatial
+
+|Spatial.distance(Geometry, Geometry)
+|Returns the distance between the two geometries.
+|OGC SF
+|icon:check[]
+|icon:check[]
+|icon:check[] [1]
+|icon:check[]
+|===
+
+[1] MariaDB 5.3.3+ implements this.
+
+
+== Functions that implement Spatial Operators (OGC SF 3.2.21)
+
+[cols="7,10,2,1,1,1,1", options="header"]
+|===
+|Method
+|Description
+|Specification
+|Result [1]
+|PostGIS
+|MySQL
+|Oracle Spatial
+
+|Spatial.intersection(Geometry, Geometry)
+|Returns a Geometry that is the set intersection of the two geometries.
+|OGC SF
+|icon:check[]
+|icon:check[]
+|icon:times[]
+|icon:check[]
+
+|Spatial.difference(Geometry, Geometry)
+|Returns a Geometry that is the closure of the set difference of the two geometries.
+|OGC SF
+|icon:check[]
+|icon:check[]
+|icon:times[]
+|icon:check[]
+
+|Spatial.union(Geometry, Geometry)
+|Returns a Geometry that is the set union of the two geometries.
+|OGC SF
+|icon:check[]
+|icon:check[]
+|icon:times[]
+|icon:check[]
+
+|Spatial.symDifference(Geometry, Geometry)
+|Returns a Geometry that is the closure of the set symmetric difference of the two geometries.
+|OGC SF
+|icon:check[]
+|icon:check[]
+|icon:times[]
+|icon:check[]
+
+|Spatial.buffer(Geometry, Double)
+|Returns as Geometry defined by buffering a distance around the Geometry.
+|OGC SF
+|icon:check[]
+|icon:check[]
+|icon:times[]
+|icon:check[]
+
+|Spatial.convexHull(Geometry)
+|Returns a Geometry that is the convex hull of the Geometry.
+|OGC SF
+|icon:check[]
+|icon:check[]
+|icon:times[]
+|icon:check[]
+|===
+
+[1] These functions are currently not implemented in MySQL. They may appear in future releases.
+
+
+
+*Test whether the bounding box of one geometry intersects the bounding box of another*
+
+[cols="7,10,2,1,1,1,1", options="header"]
+|===
+|Method
+|Description
+|Specification
+|Result [1]
+|PostGIS
+|MySQL
+|Oracle Spatial
+
+|Spatial.bboxTest(Geometry, Geometry)
+|Returns TRUE if if the bounding box of the first Geometry overlaps second Geometry's bounding box
+|icon:exclamation[] [1]
+|icon:check[]
+|icon:check[]
+|icon:check[]
+|===
+
+[1] Oracle does not allow boolean expressions in the SELECT-list.
+
+
+== PostGIS Spatial Operators
+
+NOTE: These functions are only supported on PostGIS.
+
+[cols="7,10,1", options="header"]
+|===
+|Method
+|Description
+|Result
+
+|PostGIS.bboxOverlapsLeft(Geometry, Geometry)
+|The PostGIS &amp;< operator returns TRUE if the bounding box of the first Geometry overlaps or is to the left of second Geometry's bounding box
+|icon:check[]
+
+|PostGIS.bboxOverlapsRight(Geometry, Geometry)
+|The PostGIS &amp;< operator returns TRUE if the bounding box of the first Geometry overlaps or is to the right of second Geometry's bounding box
+|icon:check[]
+
+|PostGIS.bboxLeft(Geometry, Geometry)
+|The PostGIS << operator returns TRUE if the bounding box of the first Geometry overlaps or is strictly to the left of second Geometry's bounding box
+|icon:check[]
+
+|PostGIS.bboxRight(Geometry, Geometry)
+|The PostGIS << operator returns TRUE if the bounding box of the first Geometry overlaps or is strictly to the right of second Geometry's bounding box
+|icon:check[]
+
+|PostGIS.bboxOverlapsBelow(Geometry, Geometry)
+|The PostGIS &amp;<@ operator returns TRUE if the bounding box of the first Geometry overlaps or is below second Geometry's bounding box
+|icon:check[]
+
+|PostGIS.bboxOverlapsAbove(Geometry, Geometry)
+|The PostGIS {vbar}&amp;< operator returns TRUE if the bounding box of the first Geometry overlaps or is above second Geometry's bounding box
+|icon:check[]
+
+|PostGIS.bboxBelow(Geometry, Geometry)
+|The PostGIS <<{vbar} operator returns TRUE if the bounding box of the first Geometry is strictly below second Geometry's bounding box
+|icon:check[]
+
+|PostGIS.bboxAbove(Geometry, Geometry)
+|The PostGIS {vbar}<< operator returns TRUE if the bounding box of the first Geometry is strictly above second Geometry's bounding box
+|icon:check[]
+
+|PostGIS.sameAs(Geometry, Geometry)
+|The PostGIS ~= operator returns TRUE if the two geometries are vertex-by-vertex equal.
+|icon:check[]
+
+|PostGIS.bboxWithin(Geometry, Geometry)
+|The PostGIS @ operator returns TRUE if the bounding box of the first Geometry overlaps or is completely contained by second Geometry's bounding box
+|icon:check[]
+
+|PostGIS.bboxContains(Geometry, Geometry)
+|The PostGIS ~ operator returns TRUE if the bounding box of the first Geometry completely contains second Geometry's bounding box
+|icon:check[]
+|===
+
+
+== MySQL specific Functions for Testing Spatial Relationships between Minimal Bounding Boxes
+
+NOTE: These functions are only supported on MySQL
+
+[cols="7,10,1", options="header"]
+|===
+|Method
+|Desription
+|Result
+
+|MySQL.mbrEqual(Geometry, Geometry)
+|
+|icon:check[]
+
+|MySQL.mbrDisjoint(Geometry, Geometry)
+|
+|icon:check[]
+
+|MySQL.mbrIntersects(Geometry, Geometry)
+|
+|icon:check[]
+
+|MySQL.mbrTouches(Geometry, Geometry)
+|
+|icon:check[]
+
+|MySQL.mbrWithin(Geometry, Geometry)
+|
+|icon:check[]
+
+|MySQL.mbrContains(Geometry, Geometry)
+|
+|icon:check[]
+
+|MySQL.mbrOverlaps(Geometry, Geometry)
+|
+|icon:check[]
+|===
+
+
+== Oracle specific Functions for Constructing SDO_GEOMETRY types
+
+NOTE: These functions are only supported on Oracle Geospatial.
+
+[cols="7,10", options="header"]
+|===
+|Method
+|Desription
+|Oracle.sdo_geometry(Integer gtype, Integer srid, SDO_POINT point, SDO_ELEM_INFO_ARRAY elem_info, SDO_ORDINATE_ARRAY ordinates)
+|Creates a SDO_GEOMETRY geometry from the passed geometry type, srid, point, element infos and ordinates.
+
+|Oracle.sdo_point_type(Double x, Double y, Double z)
+|Creates a SDO_POINT geometry from the passed ordinates.
+
+|Oracle.sdo_elem_info_array(String numbers)
+|Creates a SDO_ELEM_INFO_ARRAY from the passed comma-separeted integers.
+
+|Oracle.sdo_ordinate_array(String ordinates)
+|Creates a SDO_ORDINATE_ARRAY from the passed comma-separeted doubles.
+|===
+
+
+== Examples
+
+The following sections provide some examples of what can be done using spatial methods in JPQL queries. In the examples we use a class from the test suite. Here's the source code for reference:
+
+[source,java]
+-----
+package mydomain.samples.pggeometry;
+
+import org.postgis.LineString;
+
+public class SampleLineString
+{			
+    private long id;
+    private String name;
+    private LineString geom;
+                
+    public SampleLineString(long id, String name, LineString lineString) 
+    {
+        this.id = id;
+        this.name = name;
+        this.geom = lineString;
+    }
+                
+    public long getId() 
+    {
+        return id;
+    }
+    ....
+}
+-----
+
+[source,xml]
+-----
+<entity-mappings>
+    <package>mydomain.samples.pggeometry</package>
+
+    <entity class="mydomain.samples.pggeometry.SampleLineString">
+        <extension vendor-name="datanucleus" key="spatial-dimension" value="2"/>
+        <extension vendor-name="datanucleus" key="spatial-srid" value="4326"/>
+        <attributes>
+            <id name="id"/>
+            <basic name="name"/>
+            <basic name="geom">
+                <extension vendor-name="datanucleus" key="mapping" value="no-userdata"/> [2]
+            </basic>
+        </attributes>
+    </entity>
+</entity-mappings>
+-----
+
+
+=== Example 1 - Spatial Function in the Filter of a Query
+
+This example shows how to use spatial functions in the filter of a query. The query returns a list of _SampleLineString_s whose line string has a length less than the given limit.
+
+[source,java]
+-----
+Query q = em.createQuery("SELECT s FROM SampleLineString s WHERE geom IS NOT NULL AND Spatial.length(geom) < :limit");
+q.setParameter("limit", new Double(100.0));
+List list = q.getResultList();
+-----
+
+
+=== Example 2 - Spatial Function in the Result Part of a Query
+
+This time we use a spatial function in the result part of a query. The query returns the length of the line string from the selected _SampleLineString_
+
+[source,java]
+-----
+q = em.createQuery("SELECT Spatial.pointN(geom, 2) FROM SampleLineString s WHERE id == :id");
+q.setParameter("id", new Long(1001));
+Geometry point = q.getSingleResult();
+-----
+
+
+=== Example 3 - Nested Functions
+
+You may want to use nested functions in your query. This example shows how to do that. The query returns a list of _SampleLineString_s, whose end point spatially equals a given point.
+
+[source,java]
+-----
+Point point = new Point("SRID=4326;POINT(110 45)");
+Query q = em.createQuery("SELECT s FROM SampleLineString s WHERE geom IS NOT NULL AND Spatial.equals(Spatial.endPoint(geom), :point)");
+q.setParameter("point", point);
+List list = q.getResultList();
+-----
+

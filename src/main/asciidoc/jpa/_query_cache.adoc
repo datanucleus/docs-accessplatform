@@ -1,0 +1,70 @@
+[[cache]]
+= Query Cache
+:_basedir: ../
+:_imagesdir: images/
+
+
+image:../images/nucleus_extension.png[]
+
+image:../images/query_compilation.png[]
+
+JPA doesn't currently define a mechanism for caching of queries. DataNucleus provides 3 levels of caching
+
+* link:#genericCompilation[Generic Compilation] : when a query is compiled it is initially compiled _generically_ into expression trees. 
+This generic compilation is independent of the datastore in use, so can be used for other datastores. This can be cached.
+* link#datastoreCompilation[Datastore Compilation] : after a query is compiled into expression trees (above) it is then converted into the native language of the datastore in use. 
+For example with RDBMS, it is converted into SQL. This can be cached
+* link:#results[Results] : when a query is run and returns objects of the candidate type, you can cache the identities of the result objects.
+
+
+[[cache_genericcompilation]]
+== Generic Query Compilation Cache
+
+This cache is by default set to _soft_, meaning that the generic query compilation is cached using soft references. 
+This is set using the persistence property *datanucleus.cache.queryCompilation.type*. 
+You can also set it to _strong_ meaning that strong references are used, or _weak_ meaning that weak references are used, or finally to _none_ 
+meaning that there is no caching of generic query compilation information
+
+You can turn caching on/off (default = on) on a query-by-query basis by specifying the query extension *datanucleus.query.compilation.cached* as true/false.
+
+
+[[cache_datastorecompilation]]
+== Datastore Query Compilation Cache
+
+This cache is by default set to _soft_, meaning that the datastore query compilation is cached using soft references. 
+This is set using the persistence property *datanucleus.cache.queryCompilationDatastore.type*. 
+You can also set it to _strong_ meaning that strong references are used, or _weak_ meaning that weak references are used, or finally to _none_ 
+meaning that there is no caching of datastore-specific query compilation information
+
+You can turn caching on/off (default = on) on a query-by-query basis by specifying the query extension *datanucleus.query.compilation.cached* as true/false.
+As a finer degree of control, where cached results are used, you can omit the validation of object existence in the datastore by setting the query extension
+*datanucleus.query.resultCache.validateObjects*.
+
+
+[[cache_results]]
+== Query Results Cache
+
+This cache is by default set to _soft_, meaning that the datastore query results are cached using soft references. 
+This is set using the persistence property *datanucleus.cache.queryResult.type*. 
+You can also set it to _strong_ meaning that strong references are used, or _weak_ meaning that weak references are used, or finally to _none_ 
+meaning that there is no caching of query results information. 
+You can also specify *datanucleus.cache.queryResult.cacheName* to define the name of the cache used for the query results cache.
+
+You can turn caching on/off (default = off) on a query-by-query basis by specifying the query extension *datanucleus.query.results.cached* as true/false.
+
+Obviously with a cache of query results, you don't necessarily want to retain this cached over a long period. In this situation you can evict results from the cache like this.
+
+[source,java]
+-----
+import org.datanucleus.api.jpa.JPAQueryCache;
+import org.datanucleus.api.jpa.EntityManagerFactoryImpl;
+
+...
+JPAQueryCache cache = ((EntityManagerFactoryImpl)emf).getQueryCache();
+
+cache.evict(query);
+-----
+
+which evicts the results of the specific query. The JPAQueryCache has more options available should you need them ...
+
+http://www.datanucleus.org/javadocs/jpa/latest/org/datanucleus/jpa/JPAQueryCache.html[image:../images/javadoc.png[Javadoc]]

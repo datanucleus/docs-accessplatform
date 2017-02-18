@@ -1,0 +1,271 @@
+[[api]]
+= Query API
+:_basedir: ../
+:_imagesdir: images/
+
+
+Let's now try to understand the Query API in JPA
+http://www.datanucleus.org/javadocs/javax.persistence/2.1/javax/persistence/Query.html[image:../images/javadoc.png[Javadoc]].
+We firstly need to look at a typical Query. We'll take 2 examples
+
+Let's create a JPQL query to highlight its usage
+
+[source,java]
+-----
+Query q = em.createQuery("SELECT p FROM Product p WHERE p.param2 < :threshold ORDER BY p.param1 ascending");
+q.setParameter("threshold", my_threshold);
+List results = q.getResultList();
+-----
+
+In this Query, we implicitly select JPQL by using the method _EntityManager.createQuery()_, and the query is specified 
+to return all objects of type _Product_ (or subclasses) which have the field _param2_ less than some threshold 
+value ordering the results by the value of field _param1_. We've specified the query like this because we want to pass 
+the threshold value in as a parameter (so maybe running it once with one value, and once with a different value).
+We then set the parameter value of our _threshold_ parameter. The Query is then executed to return a List of results. 
+The example is to highlight the typical methods specified for a (JPQL) Query.
+
+
+And for a second example we create a native (SQL) query
+
+[source,java]
+-----
+Query q = em.createNativeQuery("SELECT * FROM Product p WHERE p.param2 < ?1");
+q.setParameter(1, my_threshold);
+List results = q.getResultList();
+-----
+
+So we implicitly select SQL by using the method _EntityManager.createNativeQuery()_, and the query is specified like in the JPQL case 
+to return all instances of type _Product_ (using the table name in this SQL query) where the column _param2_ is less than some threshold value.
+
+
+
+[[query_range]]
+== setFirstResult(), setMaxResults()
+
+A query will by default return all of the results that it finds. You can restrict how many results are returned by use of two methods. So you could do
+
+[source,java]
+-----
+Query q = em.createQuery("SELECT p FROM Product p WHERE p.param2 < :threshold ORDER BY p.param1 ascending");
+q.setFirstResult(1);
+q.setMaxResults(3);
+-----
+
+so we will get results 1, 2, and 3 returned only. The first result starts at 0 by default.
+
+
+[[query_hints]]
+== setHint()
+
+JPA's query API allows implementations to support extensions ("hints") and provides a simple interface for enabling the use of such extensions on queries.
+
+[source,java]
+-----
+q.setHint("extension_name", value);
+-----
+
+JPA supports some standard hints, namely *javax.persistence.fetchgraph*, *javax.persistence.loadgraph*, *javax.persistence.query.timeout*, *javax.persistence.lock.timeout*.
+DataNucleus provides various vendor-specific hints for different types of queries (see different parts of this documentation).
+
+
+[[query_parameters]]
+== setParameter()
+
+When queries take values (literals) it is usually best practice to define these as parameters.
+JPA's query API supports named and numbered parameters and provides method for setting the value of particular parameters. 
+To set a named parameter, for example, you could do
+
+[source,java]
+-----
+Query q = em.createQuery("SELECT p FROM Product p WHERE p.param2 < :threshold ORDER BY p.param1 ascending");
+q.setParameter("threshold", value);
+-----
+
+To set a numbered parameter you could do
+
+[source,java]
+-----
+Query q = em.createQuery("SELECT p FROM Product p WHERE p.param2 < ?1 ORDER BY p.param1 ascending");
+q.setParameter(1, value);
+-----
+
+Numbered parameters are numbered from 1.
+
+
+
+[[query_executelist]]
+== getResultList()
+
+To execute a JPA query you would typically call _getResultList_. This will return a List of results. 
+This should not be called when the query is an "UPDATE"/"DELETE".
+
+[source,java]
+-----
+Query q = em.createQuery("SELECT p FROM Product p WHERE p.param2 < :threshold ORDER BY p.param1 ascending");
+q.setParameter("threshold", value);
+List results = q.getResultList();
+-----
+
+
+[[query_executesingle]]
+== getSingleResult()
+
+To execute a JPA query where you are expecting a single value to be returned you would call _getSingleResult_. This will return the single Object. 
+If the query returns more than one result then you will get an Exception.
+This should not be called when the query is an "UPDATE"/"DELETE".
+
+[source,java]
+-----
+Query q = em.createQuery("SELECT p FROM Product p WHERE p.param2 = :value");
+q.setParameter("value", val1);
+Product prod = q.getSingleResult();
+-----
+
+
+[[query_executeupdate]]
+== executeUpdate()
+
+To execute a JPA UPDATE/DELETE query you would call _executeUpdate_. 
+This will return the number of objects changed by the call.
+This should not be called when the query is a "SELECT".
+
+[source,java]
+-----
+Query q = em.createQuery("DELETE FROM Product p");
+int number = q.executeUpdate();
+-----
+
+
+[[query_flushmode]]
+== setFlushMode()
+
+By default, when a query is executed it will be evaluated against the contents of the datastore at the point of execution. 
+If there are any outstanding changes waiting to be flushed then these will not feature in the results. 
+To make sure all outstanding changes are respected
+
+[source,java]
+-----
+q.setFlushMode(FlushModeType.AUTO);
+-----
+
+
+[[query_lockmode]]
+== setLockMode()
+
+JPA allows control over whether objects found by a fetch (JPQL query) are locked during that
+transaction so that other transactions can't update them in the meantime. For example
+
+[source,java]
+-----
+q.setLockMode(LockModeType.PESSIMISTIC_READ);
+-----
+
+You can also specify this for all queries for all EntityManagers using a persistence property *datanucleus.rdbms.useUpdateLock*.
+
+
+[[query_loadResultsAtCommit]]
+== Large Result Sets : Loading Results at Commit()
+
+image:../images/nucleus_extension.png[]
+
+When a transaction is committed by default all remaining results for a query are loaded so that the query is usable thereafter. 
+With a large result set you clearly don't want this to happen. So in this case you should set the query hint *datanucleus.query.loadResultsAtCommit* to _false_.
+
+To do this on a per query basis for JPA you would do
+
+[source,java]
+-----
+query.setHint("datanucleus.query.loadResultsAtCommit", "false");
+-----
+
+
+[[query_resultCacheType]]
+== Result Set : Caching of Results
+
+image:../images/nucleus_extension.png[]
+
+When you execute a query, the query results are typically loaded when the user accesses each row. Results that have been read can then be cached locally.
+You can control this caching to optimise it for your memory requirements. 
+You can set the query hint *datanucleus.query.resultCacheType* and it has the following possible values
+
+* _weak_ : use a weak reference map for caching (default)
+* _soft_ : use a soft reference map for caching
+* _hard_ : use a Map for caching (objects not garbage collected)
+* _none_ : no caching (hence uses least memory)
+
+To do this on a per query basis, you would do
+
+[source,java]
+-----
+query.setHint("datanucleus.query.resultCacheType", "weak");
+-----
+
+
+[[query_resultSizeMethod]]
+== Large Result Sets : Size
+image:../images/nucleus_extension.png[]
+
+If you have a large result set you clearly don't want to instantiate all objects since this would hit the memory footprint of your application. 
+To get the number of results many JDBC drivers, for example, will load all rows of the result set. 
+This is to be avoided so DataNucleus provides control over the mechanism for getting the size of results.
+The persistence property *datanucleus.query.resultSizeMethod* has a default of _last_ (which means navigate to the last object, hence hitting the JDBC driver problem). 
+On RDBMS, if you set this to _count_ then it will use a simple "count()" query to get the size.
+
+To do this on a per query basis you would do
+
+[source,java]
+-----
+query.setHint("datanucleus.query.resultSizeMethod", "count");
+-----
+
+
+
+[[query_resultset_type]]
+== RDBMS : Result Set Type
+
+image:../images/nucleus_extension.png[]
+
+For RDBMS datastores, _java.sql.ResultSet_ defines three possible result set types.
+
+* _forward-only_ : the result set is navegable forwards only
+* _scroll-sensitive_ : the result set is scrollable in both directions and is sensitive to changes in the datastore
+* _scroll-insensitive_ : the result set is scrollable in both directions and is insensitive to changes in the datastore
+
+DataNucleus allows specification of this type as a query extension *datanucleus.rdbms.query.resultSetType*.
+
+To do this on a per query basis you would do
+[source,java]
+-----
+query.setHint("datanucleus.rdbms.query.resultSetType", "scroll-insensitive");
+-----
+
+The default is _forward-only_. The benefit of the other two is that the result set will be scrollable and hence objects will only be read 
+in to memory when accessed. So if you have a large result set you should set this to one of the scrollable values.
+
+
+
+[[query_resultset_control]]
+== RDBMS : Result Set Control
+image:../images/nucleus_extension.png[]
+
+DataNucleus RDBMS provides a useful extension allowing control over the ResultSet's that are created by queries. 
+You have at your convenience some properties that give you the power to control whether the result set is read only, 
+whether it can be read forward only, the direction of fetching etc. 
+
+To do this on a per query basis you would do
+
+[source,java]
+-----
+query.setHint("datanucleus.rdbms.query.fetchDirection", "forward");
+query.setHint("datanucleus.rdbms.query.resultSetConcurrency", "read-only");
+-----
+
+                    Alternatively you can specify these as persistence properties so that they apply to all queries for that PMF/EMF. Again, the properties are
+
+* *datanucleus.rdbms.query.fetchDirection* - controls the direction that the ResultSet is navigated. By default this is forwards only. Use this property to change that.
+* *datanucleus.rdbms.query.resultSetConcurrency* - controls whether the ResultSet is read only or updateable.
+
+
+                    Bear in mind that not all RDBMS support all of the possible values for these options. That
+                    said, they do add a degree of control that is often useful.
+

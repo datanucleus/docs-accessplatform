@@ -1,0 +1,1285 @@
+[[jpql]]
+= JPQL
+:_basedir: ../
+:_imagesdir: images/
+
+
+The JPA specification defines JPQL (a pseudo-OO query language, with SQL-like syntax), for selecting objects from the datastore. 
+To provide a simple example, this is what you would do
+
+[source,java]
+-----
+Query q = em.createQuery("SELECT p FROM Person p WHERE p.lastName = 'Jones'");
+List results = q.getResultList();
+-----
+
+This finds all "Person" objects with surname of "Jones". You specify all details in the query.
+
+
+[[jpql-select-syntax]]
+== SELECT Syntax
+
+In JPQL queries you define the query in a single string, defining the result, the candidate class(es), the filter, any grouping, and the ordering. 
+This string has to follow the following pattern
+
+[source,java]
+-----
+SELECT [<result>]
+    FROM <from_entities_and_variables>
+    [WHERE <filter>]
+    [GROUP BY <grouping>] [HAVING <having>]
+    [ORDER BY <ordering>]
+-----
+
+The "keywords" in the query are shown in UPPER CASE are case-insensitive.
+
+image:../images/nucleus_extension.png[]
+
+If you set the persistence property *datanucleus.query.jpql.allowRange* to _true_ then you can optionally also specify
+the range of results required in the JPQL string after the ordering. It accepts the following format when this is specified
+
+[source]
+-----
+SELECT [<result>]
+    FROM <from_entities_and_variables>
+    [WHERE <filter>]
+    [GROUP BY <grouping>] [HAVING <having>]
+    [ORDER BY <ordering>]
+    [RANGE <fromInclusive>,<toExclusive>]
+-----
+
+where _fromInclusive_ is the first row to be returned (origin = 0), and _toExclusive_ is the row after the last one to be returned).
+
+
+[[jpql_from]]
+== FROM Clause
+
+The FROM clause declares query identification variables that represent iteration over objects in the database. 
+The syntax of the FROM clause is as follows:
+
+-----
+from_clause ::= FROM identification_variable_declaration {, {identification_variable_declaration | collection_member_declaration}}*
+identification_variable_declaration ::= range_variable_declaration { join | fetch_join }*
+range_variable_declaration ::= entity_name [AS] identification_variable
+
+join ::= join_spec join_association_path_expression [AS] identification_variable
+fetch_join ::= join_spec FETCH join_association_path_expression
+join_spec::= [ LEFT [OUTER] | INNER ] JOIN
+join_association_path_expression ::= join_collection_valued_path_expression | join_single_valued_path_expression
+join_collection_valued_path_expression::=
+    identification_variable.{single_valued_embeddable_object_field.}*collection_valued_field
+join_single_valued_path_expression::=
+    identification_variable.{single_valued_embeddable_object_field.}*single_valued_object_field
+-----
+
+The FROM clause firstly defines the _candidate_ entity for the query. You can specify the candidate fully-qualified, or you can specify just the *entity name*. Using our example
+
+-----
+# Using candidate name fully qualified
+SELECT p FROM org.datanucleus.company.Person p
+
+
+# Using entity name
+SELECT p FROM Person p
+-----
+
+By default the *entity name* is the last part of the class name (without the package), but you can specify it in metadata
+
+Firstly, in XML metadata
+
+[source,xml]
+-----
+<entity class="org.datanucleus.company.Person" name="ThePerson">
+    ...
+</entity>
+-----
+
+or using annotations
+
+[source,java]
+-----
+@Entity(name="ThePerson")
+public class Person ...
+-----
+
+The FROM clause also allows a user to add some explicit joins to related entities, and assign aliases to the joined entities. 
+These are then usable in the filter/ordering/result etc. If you don't add any joins DataNucleus will add joins where they are 
+implicit from the filter expression for example. The FROM clause is of the following structure
+
+[source]
+-----
+FROM {candidate_entity} {candidate_alias}
+    [[[ LEFT [OUTER] | INNER ] JOIN] join_spec [join_alias] *
+-----
+
+With JPQL you are explicitly stating that the join across _join_spec_ is performed as "LEFT OUTER" or "INNER" (rather than just leaving it to DataNucleus
+to decide which to use). Note that the _join_spec_ can be a relation field, or alternately if you have a Map of non-Entity keys/values then also
+the Map field. If you provide the _join_alias_ then you can use it thereafter in other clauses of the query. 
+
+Some examples of FROM clauses.
+
+[source]
+-----
+# Join across 2 relations, allowing referral to Address (a) and Owner (o)
+SELECT p FROM Person p JOIN p.address a JOIN a.owner o WHERE o.name = 'Fred'
+
+# Join to a Map relation field and access to the key/value of the Map.
+SELECT VALUE(om) FROM Company c INNER JOIN c.officeMap om ON KEY(om) = 'London'
+-----
+
+If you specify "LEFT OUTER FETCH" or "INNER FETCH" (i.e you specify *FETCH*)this means that you want those fields/properties fetching by this query. 
+This doesn't mean that DataNucleus will definitely fetch them in the same query (because sometimes it is impossible to fetch things like multi-valued fields 
+in a single query) but that it will attempt to fetch all fields that are selected (as well as the ones that are defaulted to EAGER).
+
+
+
+image:../images/nucleus_extension.png[]
+
+In strict JPA the entity name cannot be a _MappedSuperclass_ entity name. That is, if you have an abstract superclass that is persistable, 
+you cannot query for instances of that superclass and its subclasses. We consider this a significant shortcoming of the querying capability,
+and allow the entity name to also be of a _MappedSuperclass_. 
+You are unlikely to find this supported in other JPA implementations, but then maybe that's why you chose DataNucleus?
+
+
+image:../images/nucleus_extension.png[]
+
+In strict JPA you cannot join to another "root" element. That is, you define JOIN syntax to the following element *along a relation*
+from the previous element. DataNucleus supports joining to a (new) "root" element potentially without any relation. See this example
+
+[source]
+-----
+SELECT p FROM Person p LEFT OUTER JOIN Address a ON p.addressName = a.name
+-----
+
+Here we simply chose an ON clause to join the two roots.
+
+
+image:../images/nucleus_extension.png[]
+
+In strict JPA you cannot join to an embedded element class (of an embeddable). With DataNucleus you can do this, and hence form queries
+using fields of the embeddable (not available in most other JPA providers). See this example, where class _Person_ has a Collection 
+of embeddable _Address_ objects.
+
+[source]
+-----
+SELECT p FROM Person p LEFT OUTER JOIN p.addresses a WHERE a.name = 'Home'
+-----
+
+image:../images/nucleus_extension.png[]
+
+*RDBMS* : By default if you don't specify the JOIN to some related object in the FROM clause and instead navigate through a 1-1/N-1 relation like "a.owner" then it will join using INNER JOIN. 
+You can change this default by specifying the persistence property (to apply to all queries) or query extension *datanucleus.query.jpql.navigationJoinType* 
+and set it to either "INNERJOIN" or "LEFTOUTERJOIN". 
+You can also set the default for the _filter_ only using the persistence property(to apply to all queries) or query extension 
+*datanucleus.query.jpql.navigationJoinTypeForFilter* and set it to either "INNERJOIN" or "LEFTOUTERJOIN". 
+
+
+[[jpql_filter]]
+== WHERE clause (filter)
+
+The most important thing to remember when defining the _filter_ for JPQL is that *think how you would write it in SQL, and its likely the same except for FIELD names instead of COLUMN names*. 
+The _filter_ has to be a boolean expression, and can include 
+link:#jpql_entities[the candidate entity], link:#jpql_fields_properties[fields/properties], link:#jpql_literals[literals], link:#jpql_functions[functions], 
+link:#jpql_parameters[parameters], link:#jpql_operators[operators] and link:#jpql_subqueries[subqueries]
+
+
+[[jpql_grouping]]
+== GROUP BY/HAVING clauses
+
+The GROUP BY construct enables the aggregation of values according to a set of properties. 
+The HAVING construct enables conditions to be specified that further restrict the query result. 
+Such conditions are restrictions upon the groups. The syntax of the GROUP BY and HAVING clauses is as follows:
+
+[source]
+-----
+groupby_clause ::= GROUP BY groupby_item {, groupby_item}*
+groupby_item ::= single_valued_path_expression | identification_variable
+
+having_clause ::= HAVING conditional_expression
+-----
+
+If a query contains both a WHERE clause and a GROUP BY clause, the effect is that of first applying the where clause, 
+and then forming the groups and filtering them according to the HAVING clause. 
+The HAVING clause causes those groups to be retained that satisfy the condition of the HAVING clause. 
+The requirements for the SELECT clause when GROUP BY is used follow those of SQL: namely, any item that appears in the SELECT clause 
+(other than as an argument to an aggregate function) must also appear in the GROUP BY clause. In forming the groups, null values are 
+treated as the same for grouping purposes. Grouping by an entity is permitted. In this case, the entity must contain no serialized 
+state fields or lob-valued state fields. The HAVING clause must specify search conditions over the grouping items or aggregate functions that apply to grouping items.
+If there is no GROUP BY clause and the HAVING clause is used, the result is treated as a single group, and the select list can only 
+consist of aggregate functions. When a query declares a HAVING clause, it must always also declare a GROUP BY clause. 
+
+Some examples
+
+[source]
+-----
+SELECT p.firstName, p.lastName FROM Person p GROUP BY p.lastName
+
+SELECT p.firstName, p.lastName FROM Person p GROUP BY p.lastName HAVING COUNT(p.lastName) > 1
+-----
+
+
+[[jpql_ordering]]
+== ORDER BY clause
+
+The ORDER BY clause allows the objects or values that are returned by the query to be ordered. The syntax of the ORDER BY clause is 
+
+[source]
+-----
+orderby_clause ::= ORDER BY orderby_item {, orderby_item}*
+orderby_item ::= state_field_path_expression | result_variable {ASC | DESC}
+-----
+
+By default your results will be returned in the order determined by the datastore, so don't rely on any particular order. 
+You can, of course, specify the order yourself. You do this using field/property names and _ASC_/_DESC_ keywords. For example
+
+[source]
+-----
+field1 ASC, field2 DESC
+-----
+
+which will sort primarily by _field1_ in ascending order, then secondarily by _field2_ in descending order.
+
+
+image:../images/nucleus_extension.png[]
+
+Although it is not (yet) standard JPQL, DataNucleus also supports specifying a directive for where NULL values of the ordered field/property go in the order, so the full syntax supported is
+
+[source]
+-----
+fieldName {ASC|DESC} {NULLS FIRST|NULLS LAST}
+-----
+
+NOTE: This is only supported for a few RDBMS including H2, HSQLDB, PostgreSQL, DB2, Oracle, Derby, Firebird, SQLServer v11+.
+
+
+[[jpql_fetchplan]]
+== Fetched Fields
+
+By default a query will fetch fields according to their defined EAGER/LAZY setting, so fields like primitives, wrappers, Dates, and 1-1/N-1 relations will be fetched, 
+whereas 1-N/M-N fields will not be fetched. JPQL allows you to include _FETCH JOIN_ as a hint to include 1-N/M-N fields where possible. 
+For RDBMS datastores any multi-valued field will be _bulk-fetched_ if it is defined to be EAGER or is placed in the current EntityGraph. 
+By _bulk-fetched_ we mean that there will be a single SQL issued per collection field (hence avoiding the N+1 problem). 
+Note that you can disable this by either not putting multi-valued fields in the FetchPlan, or by setting the query extension "datanucleus.rdbms.query.multivaluedFetch" to "none"
+(default is "exists" using the single SQL per field).
+All non-RDBMS datastores do respect this FETCH JOIN setting, since a collection/map is stored in a single "column" in the object and so is readily retrievable.
+
+Note that you can also make use of link:entity_graphs.html[Entity Graphs] to have fuller control over what is retrieved from each query.
+
+
+[[jpql_fields_properties]]
+== Fields/Properties
+
+In JPQL you refer to fields/properties in the query by referring to the field/bean name. 
+For example, if you are querying a candidate entity called _Product_ and it has a field "price", then you access it like this
+
+[source]
+-----
+price < 150.0
+-----
+
+Note that if you want to refer to a field/property of an entity you can prefix the field by its alias
+
+[source]
+-----
+p.price < 150.0
+-----
+
+You can also chain field references if you have an entity Product (alias = p) with a field of (entity) Inventory, which has a field _name_, so you could do
+
+[source]
+-----
+p.inventory.name = 'Backup'
+-----
+
+
+[[jpql_operators]]
+== Operators
+
+The operators are listed below in order of decreasing precedence.
+
+* Navigation operator (.)
+* Arithmetic operators:
+** +, - unary
+** *, / multiplication and division
+** +, - addition and subtraction
+* <![CDATA[Comparison operators : =, >, >=, <, <=, <> (not equal), [NOT] BETWEEN, [NOT] LIKE, [NOT] IN, IS [NOT] NULL, IS [NOT] EMPTY, [NOT] MEMBER [OF], [NOT] EXISTS]]>
+* Logical operators:
+** NOT
+** AND
+** OR
+
+
+[[jpql_literals]]
+== Literals
+
+JPQL supports literals of the following types : Number, boolean, character, String, _NULL_ and temporal.
+When String literals are specified using single-string format they should be surrounded by single-quotes _'_. 
+Please note that temporal literals are specified using _JDBC escape syntax_ in String form, namely
+
+[source]
+-----
+{d 'yyyy-mm-dd'}                 - a Date
+{t 'hh:mm:ss'}                   - a Time
+{ts 'yyyy-mm-dd hh:mm:ss.f...'}  - a Timestamp
+-----
+
+
+[[jpql_parameters]]
+== Input Parameters
+
+In JPQL queries it is convenient to pass in parameters so we don't have to define the same query for different values. Let's take two examples
+
+[source,java]
+-----
+# Named Parameters :
+Query q = em.createQuery("SELECT p FROM Person p WHERE p.lastName = :surname AND o.firstName = :forename");
+q.setParameter("surname", theSurname);
+q.setParameter("forename", theForename);
+
+# Numbered Parameters :
+Query q = em.createQuery("SELECT p FROM Person p WHERE p.lastName = ?1 AND p.firstName = ?2");
+q.setParameter(1, theSurname);
+q.setParameter(2, theForename);
+-----
+
+So in the first case we have parameters that are prefixed by *:* (colon) to identify them as a parameter and we use that name when calling _Query.setParameter()_.
+In the second case we have parameters that are prefixed by *?* (question mark) and are numbered starting at 1. 
+We then use the numbered position when calling _Query.setParameter()_.
+
+
+[[jpql_case]]
+== CASE expressions
+
+For particular use in the _result_ clause, you can make use of a *CASE* expression where you want to return different things based on some condition(s). Like this
+
+[source,java]
+-----
+Query q = em.createQuery(
+     "SELECT p.personNum, CASE WHEN p.age < 18 THEN 'Youth' WHEN p.age >= 18 AND p.age < 65 THEN 'Adult' ELSE 'Old' END FROM Person p");
+-----
+
+So in this case the second result value will be a String, either "Youth", "Adult" or "Old" depending on the age of the person.
+The BNF structure of the JPQL CASE expression is
+
+[source]
+-----
+CASE WHEN conditional_expression THEN scalar_expression 
+    {WHEN conditional_expression THEN scalar_expression}* ELSE scalar_expression 
+END
+-----
+
+
+[[jpql_functions]]
+== JPQL Functions
+
+JPQL provides an SQL-like query language. Just as with SQL, JPQL also supports a range of functions to enhance the querying possibilities. 
+The tables below also mark whether a particular method is supported for evaluation link:#jpql_inmemory[in-memory].
+
+image:../images/nucleus_plugin.png[]
+
+Please note that you can easily add support for other functions for evaluation "in-memory" using this link:../extensions/extensions.html#query_method_evaluators[DataNucleus plugin point]
+
+image:../images/nucleus_plugin.png[]
+
+Please note that you can easily add support for other functions with RDBMS datastore using this link:../extensions/extensions.html#rdbms_sql_methods[DataNucleus plugin point]
+
+
+[[jpql_functions_aggregate]]
+=== Aggregate Functions
+
+There are a series of aggregate functions for aggregating the values of a field for all rows of the results.
+
+[cols="4,8,1,1", options="header"]
+|===
+|Function Name
+|Description
+|Standard
+|In-Memory
+
+|COUNT(field)
+|Returns the aggregate count of the field (Long)
+|icon:check[]
+|icon:check[]
+
+|MIN(field)
+|Returns the minimum value of the field (type of the field)
+|icon:check[]
+|icon:check[]
+
+|MAX(field)
+|Returns the maximum value of the field (type of the field)
+|icon:check[]
+|icon:check[]
+
+|AVG(field)
+|Returns the average value of the field (Double)
+|icon:check[]
+|icon:check[]
+
+|SUM(field)
+|Returns the sum of the field value(s) (Long, Double, BigInteger, BigDecimal)
+|icon:check[]
+|icon:check[]
+|===
+
+[[jpql_functions_string]]
+=== String Functions
+
+There are a series of functions to be applied to String fields.
+
+[cols="4,8,1,1", options="header"]
+|===
+|Function Name
+|Description
+|Standard
+|In-Memory
+
+|CONCAT(str_field, str_field2 [, str_fieldX])
+|Returns the concatenation of the string fields
+|icon:check[]
+|icon:check[]
+
+|SUBSTRING(str_field, num1 [, num2])
+|Returns the substring of the string field starting at position _num1_, and optionally with the length of _num2_
+|icon:check[]
+|icon:check[]
+
+|TRIM([trim_spec] [trim_char] [FROM] str_field)
+|Returns trimmed form of the string field
+|icon:check[]
+|icon:check[]
+
+|LOWER(str_field)
+|Returns the lower case form of the string field
+|icon:check[]
+|icon:check[]
+
+|UPPER(str_field)
+|Returns the upper case form of the string field
+|icon:check[]
+|icon:check[]
+
+|LENGTH(str_field)
+|Returns the size of the string field (number of characters)
+|icon:check[]
+|icon:check[]
+
+|LOCATE(str_field1, str_field2 [, num])
+|Returns position of _str_field2_ in _str_field1_ optionally starting at _num_
+|icon:check[]
+|icon:check[]
+|===
+
+[[jpql_functions_temporal]]
+=== Temporal Functions
+
+There are a series of functions for use with temporal values
+
+[cols="4,8,1,1", options="header"]
+|===
+|Function Name
+|Description
+|Standard
+|In-Memory
+
+|CURRENT_DATE
+|Returns the current date (day month year) of the datastore server
+|icon:check[]
+|icon:check[]
+
+|CURRENT_TIME
+|Returns the current time (hour minute second) of the datastore server
+|icon:check[]
+|icon:check[]
+
+|CURRENT_TIMESTAMP
+|Returns the current timestamp of the datastore server
+|icon:check[]
+|icon:check[]
+
+|YEAR(dateField)
+|Returns the year of the specified date in timezone it was stored
+|icon:times[]
+|icon:check[]
+
+|MONTH(dateField)
+|Returns the month of the specified date (1-12) in timezone it was stored. Previous to 5.0.0.M2 this was (0-11).
+|icon:times[]
+|icon:check[]
+
+|MONTH_JAVA(dateField)
+|Returns the month of the specified date (0-11) in timezone it was stored
+|icon:times[]
+|icon:check[]
+
+|DAY(dateField)
+|Returns the day of the month of the specified date in timezone it was stored
+|icon:times[]
+|icon:check[]
+
+|HOUR(dateField)
+|Returns the hour of the specified date in timezone it was stored
+|icon:times[]
+|icon:check[]
+
+|MINUTE(dateField)
+|Returns the minute of the specified date in timezone it was stored
+|icon:times[]
+|icon:check[]
+
+|SECOND(dateField)
+|Returns the second of the specified date in timezone it was stored
+|icon:times[]
+|icon:check[]
+|===
+
+[[jpql_functions_collection]]
+=== Collection Functions
+
+There are a series of functions for use with collection values
+
+[cols="4,8,1,1", options="header"]
+|===
+|Function Name
+|Description
+|Standard
+|In-Memory
+
+|INDEX(collection_field)
+|Returns index number of the field element when that is the element of an indexed List field.
+|icon:check[]
+|icon:times[]
+
+|SIZE(collection_field)
+|Returns the size of the collection field. Empty collection will return 0
+|icon:check[]
+|icon:check[]
+|===
+
+[[jpql_functions_map]]
+=== Map Functions
+
+There are a series of functions for use with maps
+
+[cols="4,8,1,1", options="header"]
+|===
+|Function Name
+|Description
+|Standard
+|In-Memory
+
+|KEY(map_field)
+|Returns the key of the map
+|icon:check[]
+|icon:times[]
+
+|VALUE(map_field)
+|Returns the value of the map
+|icon:check[]
+|icon:check[]
+
+|SIZE(map_field)
+|Returns the size of the map field. Empty map will return 0
+|icon:check[]
+|icon:check[]
+|===
+
+[[jpql_functions_arithmetic]]
+=== Arithmetic Functions
+
+There are a series of functions for arithmetic use
+
+[cols="4,8,1,1", options="header"]
+|===
+|Function Name
+|Description
+|Standard
+|In-Memory
+
+|ABS(numeric_field)
+|Returns the absolute value of the numeric field
+|icon:check[]
+|icon:check[]
+
+|SQRT(numeric_field)
+|Returns the square root of the numeric field
+|icon:check[]
+|icon:check[]
+
+|MOD(num_field1, num_field2)
+|Returns the modulus of the two numeric fields (_num_field1 % num_field2)_
+|icon:check[]
+|icon:check[]
+
+|ACOS(num_field)
+|Returns the arc-cosine of a numeric field
+|icon:times[]
+|icon:check[]
+
+|ASIN(num_field)
+|Returns the arc-sine of a numeric field
+|icon:times[]
+|icon:check[]
+
+|ATAN(num_field)
+|Returns the arc-tangent of a numeric field
+|icon:times[]
+|icon:check[]
+
+|COS(num_field)
+|Returns the cosine of a numeric field
+|icon:times[]
+|icon:check[]
+
+|SIN(num_field)
+|Returns the sine of a numeric field
+|icon:times[]
+|icon:check[]
+
+|TAN(num_field)
+|Returns the tangent of a numeric field
+|icon:times[]
+|icon:check[]
+
+|DEGREES(num_field)
+|Returns the degrees of a numeric field
+|icon:times[]
+|icon:check[]
+
+|RADIANS(num_field)
+|Returns the radians of a numeric field
+|icon:times[]
+|icon:check[]
+
+|CEIL(num_field)
+|Returns the ceiling of a numeric field
+|icon:times[]
+|icon:check[]
+
+|FLOOR(num_field)
+|Returns the floor of a numeric field
+|icon:times[]
+|icon:check[]
+
+|LOG(num_field)
+|Returns the natural logarithm of a numeric field
+|icon:times[]
+|icon:check[]
+
+|EXP(num_field)
+|Returns the exponent of a numeric field
+|icon:times[]
+|icon:check[]
+
+|POWER(numeric_field, numeric_value)
+|Returns the numeric field to the specified power
+|icon:times[]
+|icon:times[]
+|===
+
+[[jpql_functions_other]]
+=== Other Functions
+
+You have a further function available
+
+[cols="4,8,1,1", options="header"]
+|===
+|Function Name
+|Description
+|Standard
+|In-Memory
+
+|FUNCTION(name, [arg1 [,arg2 ...]])
+|Executes the specified SQL function "name" with the defined arguments
+|icon:check[]
+|icon:times[]
+|===
+
+
+In addition, DataNucleus JPA provides support for a number of link:query.html#jpql_geospatial_functions[Geospatial functions].
+
+
+[[jpql_collections]]
+== Collection Fields
+
+Where you have a collection field, often you want to navigate it to query based on some filter for the element. To achieve this, you can clearly 
+link:#jpql_from[JOIN to the element in the FROM clause]. Alternatively you can use the _MEMBER OF_ keyword. Let's take an example, you have
+a field which is a Collection of Strings, and want to return the owner object that has an element that is _"Freddie"_.
+
+[source,java]
+-----
+Query q = em.createQuery("SELECT p.firstName, p.lastName FROM Person p WHERE 'Freddie' MEMBER OF p.nicknames");
+-----
+
+Beyond this, you can also make use of the link:#jpql_functions_collection[collection functions] and use the size of the collection for example.
+
+
+
+[[jpql_maps]]
+== Map Fields
+
+Where you have a map field, often you want to navigate it to query based on some filter for the key or value. 
+Let's take an example, you want to return the value for a particular key in the map of an owner.
+
+[source,java]
+-----
+Query q = em.createQuery("SELECT VALUE(p.addresses) FROM Person p WHERE KEY(p.addresses) = 'London Flat'");
+-----
+
+Beyond this, you can also make use of the link:#jpql_functions_map[map functions] and use the size of the map for example.
+
+NOTE: in the JPA spec they allow a user to interchangeably use "p.addresses" to refer to the _value_ of the Map. 
+DataNucleus doesn't support that since that primary expression is a Map field, and the Map can equally be represented as a join table,
+key stored in value, or value stored in key. Hence you should always use VALUE(...) if you mean to refer to the Map value - besides
+it is a damn sight clearer the intent by doing that.
+
+
+
+[[jpql_subqueries]]
+== Subqueries
+
+With JPQL the user has a very flexible query syntax which allows for querying of the vast majority of data components in a single query. 
+In some situations it is desirable for the query to utilise the results of a separate query in its calculations. 
+JPQL also allows the use of subqueries. Here's an example
+
+[source]
+-----
+SELECT Object(e) FROM org.datanucleus.Employee e 
+WHERE e.salary > (SELECT avg(f.salary) FROM org.datanucleus.Employee f)
+-----
+
+So we want to find all Employees that have a salary greater than the average salary.
+The subquery must be in parentheses (brackets). Note that we have defined the subquery with an alias of "f", whereas in the outer query the alias is "e".
+
+
+=== ALL/ANY/SOME Expressions
+
+One use of subqueries with JPQL is where you want to compare with some or all of a particular expression. To give an example
+
+[source]
+-----
+SELECT emp FROM Employee emp 
+WHERE emp.salary > ALL (SELECT m.salary FROM Manager m WHERE m.department = emp.department)
+-----
+
+So this returns all employees that earn more than all managers in the same department! You can also compare with SOME/ANY, like this
+
+[source]
+-----
+SELECT emp FROM Employee emp 
+WHERE emp.salary > ANY (SELECT m.salary FROM Manager m WHERE m.department = emp.department)
+-----
+
+So this returns all employees that earn more than any one Manager in the same department.
+
+
+=== EXISTS Expressions
+
+Another use of subqueries in JPQL is where you want to check on the existence of a particular thing. For example
+
+-----
+SELECT DISTINCT emp FROM Employee emp
+WHERE EXISTS (SELECT emp2 FROM Employee emp2 WHERE emp2 = emp.spouse)
+-----
+
+So this returns the employees that have a partner also employed.
+
+NOTE: in strict JPQL you can only have subqueries in WHERE or HAVING clauses. DataNucleus additionally allows them in the SELECT clause.
+
+
+[[jpql_candidates]]
+== Specify candidates to query over
+
+image:../images/nucleus_extension.png[]
+
+With JPA you always query objects of the candidate type in the datastore. DataNucleus extends this and allows you to provide
+a Collection of candidate objects that will be queried (rather than going to the datastore), and it will perform the querying "in-memory". 
+You set the candidates like this
+
+[source,java]
+-----
+Query query = em.createQuery("SELECT p FROM Products p WHERE ...");
+((org.datanucleus.api.jpa.JPAQuery)query).getInternalQuery().setCandidates(myCandidates);
+List<Product> results = query.getResultList();
+-----
+
+
+[[jpql_range]]
+== Range of Results
+
+With JPQL you can select the range of results to be returned. For example if you have a web page and you are paginating
+the results of some search, you may want to get the results from a query in blocks of 20 say, with results
+0 to 19 on the first page, then 20 to 39, etc. You can facilitate this as follows
+
+[source,java]
+-----
+Query q = em.createQuery("SELECT p FROM Person p WHERE p.age > 20");
+q.setFirstResult(0);
+q.setMaxResults(20);
+-----
+
+So with this query we get results 0 to 19 inclusive.
+
+
+[[jpql_result]]
+== Query Result
+
+Whilst the majority of the time you will want to return instances of a candidate class, JPQL also allows you to return customised results. Consider the following example
+
+[source,java]
+-----
+Query q = em.createQuery("SELECT p.firstName, p.lastName FROM Person p WHERE p.age > 20");
+List<Object[]> results = q.getResultList();
+-----
+
+this returns the first and last name for each Person meeting that filter. 
+Obviously we may have some container class that we would like the results returned in, so if we change the query to this
+
+[source,java]
+-----
+Query<PersonName> q = em.createQuery(
+    "SELECT p.firstName, p.lastName FROM Person p WHERE p.age > 20", PersonName.class);
+List<PersonName> results = q.getResultList();
+-----
+
+so each result is a PersonName, holding the first and last name. This result class needs to match one of the following structures
+
+* Constructor taking arguments of the same types and the same order as the result clause. An instance of the result class is created using this constructor. For example
+[source,java]
+-----
+public class PersonName
+{
+    protected String firstName = null;
+    protected String lastName = null;
+    public PersonName(String first, String last)
+    {
+        this.firstName = first;
+        this.lastName = last;
+    }
+}
+-----
+* Default constructor, and setters for the different result columns, using the alias name for each column as the property name of the setter. For example
+[source,java]
+-----
+public class PersonName
+{
+    protected String firstName = null;
+    protected String lastName = null;
+    public PersonName()
+    {
+    }
+    public void setFirstName(String first) {this.firstName = first;}
+    public void setLastName(String last) {this.lastName = last;}
+}
+-----
+* Default constructor, and a method _void put(Object aliasName, Object value)_
+
+Note that if the setter property name doesn't match the query result component name, you should use _AS {alias}_ in the query so they are the same.
+
+A special case, where you don't have a result class but want to easily extract multiple columns in the form of a *Tuple* JPA provides a special class 
+_javax.persistence.Tuple_ to supply as the result class in the above call. From that you can get hold of the column aliases, and their values.
+
+[source,java]
+-----
+Query<PersonName> q = em.createQuery(
+    "SELECT p.firstName, p.lastName FROM Person p WHERE p.age > 20", Tuple.class);
+List<Tuple> results = q.getResultList();
+for (Tuple t : results)
+{
+    List<TupleElement> cols = t.getElements();
+    for (TupleElement col : cols)
+    {
+        String colName = col.getAlias();
+        Object value = t.get(colname);
+    }
+}
+-----
+
+
+== Query Execution
+
+There are two ways to execute a JPQL query. When you know it will return 0 or 1 results you call
+
+[source,java]
+-----
+Object result = query.getSingleResult();
+-----
+
+If however you know that the query will return multiple results, or you just don't know then you would call
+
+[source,java]
+-----
+List results = query.getResultList();
+-----
+
+
+[[jpql_inmemory]]
+== JPQL In-Memory queries
+
+image:../images/nucleus_extension.png[]
+
+The typical use of a JPQL query is to translate it into the native query language of the datastore and return objects matched by the query. 
+For many (usually non-RDBMS) datastores it is simply impossible to support the full JPQL syntax in the datastore _native query language_ and so it is
+necessary to evaluate the query in-memory. This means that we evaluate as much as we can in the datastore and then instantiate those objects and evaluate further in-memory.
+Here we document the current capabilities of _in-memory evaluation_ in DataNucleus.
+
+* Subqueries using ALL, ANY, SOME, EXISTS are not currently supported
+* MEMBER OF syntax is not currently supported.
+
+To enable evaluation in memory you specify the query hint *datanucleus.query.evaluateInMemory* to _true_ as follows
+
+[source,java]
+-----
+query.setHint("datanucleus.query.evaluateInMemory","true");
+-----
+
+
+[[jpql_named]]
+== Named Query
+
+With the JPA API you can either define a query at runtime, or define it in the MetaData/annotations for a class and refer to it at runtime using a symbolic name. 
+This second option means that the method of invoking the query at runtime is much simplified. To demonstrate the process, lets say we have a class called _Product_ 
+(something to sell in a store). We define the JPA Meta-Data for the class in the normal way, but we also have some query that we know we will require, so we 
+define the following in the Meta-Data.
+
+[source,xml]
+-----
+<entity class="Product">
+    ...
+    <named-query name="SoldOut"><![CDATA[
+    SELECT p FROM Product p WHERE p.status = "Sold Out"
+    ]]></named-query>
+</entity>
+-----
+
+or using annotations
+
+[source,java]
+-----
+@Entity
+@NamedQuery(name="SoldOut", query="SELECT p FROM Product p WHERE p.status = 'Sold Out'")
+public class Product {...}
+-----
+
+*Note that DataNucleus also supports specifying this using annotations in non-Entity classes. This is beyond the JPA spec, but is very useful in real applications*
+
+So we have a JPQL query called "SoldOut" defined for the class _Product_ that returns all Products (and subclasses) that have a _status_ of "Sold Out". 
+Out of interest, what we would then do in our application to execute this query would be
+
+[source,java]
+-----
+Query query = em.createNamedQuery("SoldOut");
+List<Product> results = query.getResultList();
+-----
+
+
+[[jpql_save_as_named]]
+== Saving a Query as a Named Query
+
+You can save a query as a named query like this
+
+[source,java]
+-----
+Query q = em.createQuery("SELECT p FROM Product p WHERE ...");
+...
+emf.addNamedQuery("MyQuery", q);
+-----
+
+image:../images/nucleus_extension.png[]
+
+DataNucleus also allows you to create a query, and then save it as a "named" query directly with the query. You do this as follows
+
+[source,java]
+-----
+Query q = em.createQuery("SELECT p FROM Product p WHERE ...");
+((org.datanucleus.api.jpa.JPAQuery)q).saveAsNamedQuery("MyQuery");
+-----
+
+With both methods you can thereafter access the query via
+
+[source,java]
+-----
+Query q = em.createNamedQuery("MyQuery");
+-----
+
+
+== JPQL Strictness
+
+By default DataNucleus allows some extensions in syntax over strict JPQL (as defined by the JPA spec). To allow only strict JPQL you can do as follows
+
+[source,java]
+-----
+Query query = em.createQuery(...);
+query.setHint("datanucleus.jpql.strict", "true");
+-----
+
+
+== JPQL : SQL Generation for RDBMS
+
+With a JPQL query running on an RDBMS the query is compiled into SQL. Here we give a few examples of what SQL is generated. 
+You can of course try this for yourself observing the content of the DataNucleus log.
+
+In JPQL you specify a candidate class and its alias (identifier). In addition you can specify joins with their respective alias. 
+The DataNucleus implementation of JPQL will preserve these aliases in the generated SQL.
+
+[source]
+-----
+# JPQL:
+SELECT Object(P) FROM mydomain.Person P INNER JOIN P.bestFriend AS B
+
+# SQL:
+SELECT P.ID
+FROM PERSON P INNER JOIN PERSON B ON B.ID = P.BESTFRIEND_ID
+-----
+
+With the JPQL _MEMBER OF_ syntax this is typically converted into an EXISTS query.
+
+[source]
+-----
+# JPQL:
+SELECT DISTINCT Object(p) FROM mydomain.Person p WHERE :param MEMBER OF p.friends
+
+# SQL:
+SELECT DISTINCT P.ID FROM PERSON P
+WHERE EXISTS (
+    SELECT 1 FROM PERSON_FRIENDS P_FRIENDS, PERSON P_FRIENDS_1 
+    WHERE P_FRIENDS.PERSON_ID = P.ID
+    AND P_FRIENDS_1.GLOBAL_ID = P_FRIENDS.FRIEND_ID 
+    AND 101 = P_FRIENDS_1.ID)
+-----
+
+
+[[jpql_delete]]
+== JPQL DELETE Queries
+
+The JPA specification defines a mode of JPQL for deleting objects from the datastore.
+NOTE: his will not invoke any cascading defined on a field basis, with only datastore-defined Foreign Keys cascading. Additionally related objects already in-memory will not be updated.
+
+[[jpql_delete_syntax]]
+=== DELETE Syntax
+
+The syntax for deleting records is very similar to selecting them
+
+[source]
+-----
+DELETE FROM [<candidate-class>]
+    [WHERE <filter>]
+-----
+
+The "keywords" in the query are shown in UPPER CASE are case-insensitive.
+
+[source,java]
+-----
+Query query = em.createQuery("DELETE FROM Person p WHERE firstName = 'Fred'");
+int numRowsDeleted = query.executeUpdate();
+-----
+
+
+[[jpql_update]]
+== JPQL UPDATE Queries
+
+The JPA specification defines a mode of JPQL for updating objects in the datastore. 
+
+NOTE: This will not invoke any cascading defined on a field basis, with only datastore-defined Foreign Keys cascading. Additionally related objects already in-memory will not be updated
+
+[[jpql_update_syntax]]
+=== UPDATE Syntax
+
+The syntax for updating records is very similar to selecting them
+
+[source]
+-----
+UPDATE [<candidate-class>] SET item1=value1, item2=value2
+    [WHERE <filter>]
+-----
+
+The "keywords" in the query are shown in UPPER CASE are case-insensitive.
+
+[source,java]
+-----
+Query query = em.createQuery("UPDATE Person p SET p.salary = 10000 WHERE age = 18");
+int numRowsUpdated = query.executeUpdate();
+-----
+
+image:../images/nucleus_extension.png[]
+
+In strict JPA you cannot use a subquery in the UPDATE clause. With DataNucleus JPA you can do this so, for example, you can set a field to the result of a subquery.
+
+[source,java]
+-----
+Query query = em.createQuery("UPDATE Person p SET p.salary = (SELECT MAX(p2.salary) FROM Person p2 WHERE age < 18) WHERE age = 18");
+-----
+
+
+[[jpql_bnf]]
+== JPQL BNF Notation
+
+The BNF defining the JPQL query language is shown below.
+
+[source]
+-----
+QL_statement ::= select_statement | update_statement | delete_statement
+select_statement ::= select_clause from_clause [where_clause] [groupby_clause] [having_clause] [orderby_clause]
+
+update_statement ::= update_clause [where_clause]
+
+delete_statement ::= delete_clause [where_clause]
+
+from_clause ::= FROM identification_variable_declaration
+    {, {identification_variable_declaration | collection_member_declaration}}*
+identification_variable_declaration ::= range_variable_declaration { join | fetch_join }*
+range_variable_declaration ::= entity_name [AS] identification_variable
+
+join ::= join_spec join_association_path_expression [AS] identification_variable
+fetch_join ::= join_spec FETCH join_association_path_expression
+join_spec::= [ LEFT [OUTER] | INNER ] JOIN
+join_association_path_expression ::= join_collection_valued_path_expression | join_single_valued_path_expression
+join_collection_valued_path_expression::=
+    identification_variable.{single_valued_embeddable_object_field.}*collection_valued_field
+join_single_valued_path_expression::=
+    identification_variable.{single_valued_embeddable_object_field.}*single_valued_object_field
+collection_member_declaration ::=
+    IN (collection_valued_path_expression) [AS] identification_variable
+qualified_identification_variable ::= KEY(identification_variable) | VALUE(identification_variable) |
+    ENTRY(identification_variable)
+single_valued_path_expression ::= qualified_identification_variable |
+    state_field_path_expression | single_valued_object_path_expression
+general_identification_variable ::= identification_variable | KEY(identification_variable) | 
+    VALUE(identification_variable)
+
+state_field_path_expression ::= general_identification_variable.{single_valued_object_field.}*state_field
+single_valued_object_path_expression ::=
+    general_identification_variable.{single_valued_object_field.}* single_valued_object_field
+collection_valued_path_expression ::=
+    general_identification_variable.{single_valued_object_field.}*collection_valued_field
+
+update_clause ::= UPDATE entity_name [[AS] identification_variable] SET update_item {, update_item}*
+update_item ::= [identification_variable.]{state_field | single_valued_object_field} = new_value
+new_value ::= scalar_expression | simple_entity_expression | NULL
+
+delete_clause ::= DELETE FROM entity_name [[AS] identification_variable]
+
+select_clause ::= SELECT [DISTINCT] select_item {, select_item}*
+select_item ::= select_expression [[AS] result_variable]
+select_expression ::= single_valued_path_expression | scalar_expression | aggregate_expression | 
+    identification_variable | OBJECT(identification_variable) | constructor_expression
+constructor_expression ::= NEW constructor_name ( constructor_item {, constructor_item}* )
+constructor_item ::= single_valued_path_expression | scalar_expression | aggregate_expression |
+    identification_variable
+
+aggregate_expression ::= { AVG | MAX | MIN | SUM } ([DISTINCT] state_field_path_expression) |
+    COUNT ([DISTINCT] identification_variable | state_field_path_expression |
+    single_valued_object_path_expression)
+
+where_clause ::= WHERE conditional_expression
+groupby_clause ::= GROUP BY groupby_item {, groupby_item}*
+groupby_item ::= single_valued_path_expression | identification_variable
+having_clause ::= HAVING conditional_expression
+orderby_clause ::= ORDER BY orderby_item {, orderby_item}*
+orderby_item ::= state_field_path_expression | result_variable [ ASC | DESC ]
+
+subquery ::= simple_select_clause subquery_from_clause [where_clause] [groupby_clause] [having_clause]
+subquery_from_clause ::= FROM subselect_identification_variable_declaration
+    {, subselect_identification_variable_declaration | collection_member_declaration}*
+
+subselect_identification_variable_declaration ::= identification_variable_declaration |
+    derived_path_expression [AS] identification_variable {join}*|
+    derived_collection_member_declaration
+derived_path_expression ::=
+    superquery_identification_variable.{single_valued_object_field.}*collection_valued_field |
+    superquery_identification_variable.{single_valued_object_field.}*single_valued_object_field
+derived_collection_member_declaration ::=
+    IN superquery_identification_variable.{single_valued_object_field.}*collection_valued_field
+simple_select_clause ::= SELECT [DISTINCT] simple_select_expression
+simple_select_expression::= single_valued_path_expression | scalar_expression | aggregate_expression |
+    identification_variable
+scalar_expression ::= simple_arithmetic_expression | string_primary | enum_primary |
+    datetime_primary | boolean_primary | case_expression | entity_type_expression
+conditional_expression ::= conditional_term | conditional_expression OR conditional_term
+conditional_term ::= conditional_factor | conditional_term AND conditional_factor
+conditional_factor ::= [ NOT ] conditional_primary
+conditional_primary ::= simple_cond_expression | (conditional_expression)
+simple_cond_expression ::= comparison_expression | between_expression |
+    in_expression | like_expression | null_comparison_expression | 
+    empty_collection_comparison_expression | collection_member_expression | exists_expression
+between_expression ::= 
+    arithmetic_expression [NOT] BETWEEN arithmetic_expression AND arithmetic_expression |
+    string_expression [NOT] BETWEEN string_expression AND string_expression |
+    datetime_expression [NOT] BETWEEN datetime_expression AND datetime_expression
+in_expression ::= {state_field_path_expression | type_discriminator} [NOT] IN
+    { ( in_item {, in_item}* ) | (subquery) | collection_valued_input_parameter }
+in_item ::= literal | single_valued_input_parameter
+like_expression ::= string_expression [NOT] LIKE pattern_value [ESCAPE escape_character]
+null_comparison_expression ::= {single_valued_path_expression | input_parameter} IS [NOT] NULL
+
+empty_collection_comparison_expression ::= collection_valued_path_expression IS [NOT] EMPTY
+collection_member_expression ::= entity_or_value_expression [NOT] MEMBER [OF] collection_valued_path_expression
+entity_or_value_expression ::= single_valued_object_path_expression | state_field_path_expression |
+    simple_entity_or_value_expression
+simple_entity_or_value_expression ::= identification_variable | input_parameter | literal
+exists_expression::= [NOT] EXISTS (subquery)
+all_or_any_expression ::= { ALL | ANY | SOME} (subquery)
+comparison_expression ::=
+    string_expression comparison_operator {string_expression | all_or_any_expression} |
+    boolean_expression { =|<>} {boolean_expression | all_or_any_expression} |
+    enum_expression { =|<>} {enum_expression | all_or_any_expression} |
+    datetime_expression comparison_operator
+    {datetime_expression | all_or_any_expression} |
+    entity_expression { = | <>} {entity_expression | all_or_any_expression} |
+    arithmetic_expression comparison_operator
+    {arithmetic_expression | all_or_any_expression} |
+    entity_type_expression { =|<>} entity_type_expression}
+comparison_operator ::= = | > | >= | < | <= | <>
+arithmetic_expression ::= simple_arithmetic_expression | (subquery)
+simple_arithmetic_expression ::= arithmetic_term | simple_arithmetic_expression { + | - } arithmetic_term
+arithmetic_term ::= arithmetic_factor | arithmetic_term { * | / } arithmetic_factor
+arithmetic_factor ::= [{ + | - }] arithmetic_primary
+arithmetic_primary ::= state_field_path_expression | numeric_literal |
+    (simple_arithmetic_expression) | input_parameter | functions_returning_numerics |
+     aggregate_expression | case_expression
+string_expression ::= string_primary | (subquery)
+string_primary ::= state_field_path_expression | string_literal |
+    input_parameter | functions_returning_strings | aggregate_expression | case_expression
+datetime_expression ::= datetime_primary | (subquery)
+
+datetime_primary ::= state_field_path_expression | input_parameter | functions_returning_datetime |
+    aggregate_expression | case_expression | date_time_timestamp_literal
+boolean_expression ::= boolean_primary | (subquery)
+boolean_primary ::= state_field_path_expression | boolean_literal | input_parameter |
+    case_expression
+enum_expression ::= enum_primary | (subquery)
+enum_primary ::= state_field_path_expression | enum_literal | input_parameter | case_expression
+entity_expression ::= single_valued_object_path_expression | simple_entity_expression
+simple_entity_expression ::= identification_variable | input_parameter
+entity_type_expression ::= type_discriminator | entity_type_literal | input_parameter
+type_discriminator ::= TYPE(identification_variable | single_valued_object_path_expression |
+    input_parameter)
+functions_returning_numerics::= LENGTH(string_primary) |
+    LOCATE(string_primary, string_primary[, simple_arithmetic_expression]) |
+    ABS(simple_arithmetic_expression) |
+    SQRT(simple_arithmetic_expression) |
+    MOD(simple_arithmetic_expression, simple_arithmetic_expression) |
+    SIZE(collection_valued_path_expression) |
+    INDEX(identification_variable)
+functions_returning_datetime ::= CURRENT_DATE | CURRENT_TIME | CURRENT_TIMESTAMP
+
+functions_returning_strings ::=
+    CONCAT(string_primary, string_primary {, string_primary}*) |
+    SUBSTRING(string_primary, simple_arithmetic_expression [, simple_arithmetic_expression]) |
+    TRIM([[trim_specification] [trim_character] FROM] string_primary) |
+    LOWER(string_primary) |
+    UPPER(string_primary)
+trim_specification ::= LEADING | TRAILING | BOTH
+case_expression ::= general_case_expression | simple_case_expression | coalesce_expression |
+    nullif_expression
+general_case_expression::= CASE when_clause {when_clause}* ELSE scalar_expression END
+when_clause::= WHEN conditional_expression THEN scalar_expression
+simple_case_expression::= 
+    CASE case_operand simple_when_clause {simple_when_clause}*
+    ELSE scalar_expression
+    END
+case_operand::= state_field_path_expression | type_discriminator
+simple_when_clause::= WHEN scalar_expression THEN scalar_expression
+coalesce_expression::= COALESCE(scalar_expression {, scalar_expression}+)
+nullif_expression::= NULLIF(scalar_expression, scalar_expression)
+-----

@@ -1,0 +1,97 @@
+[[stored_procedures]]
+= Stored Procedures
+:_basedir: ../
+:_imagesdir: images/
+
+The JPA 2.1 specification adds support for calling stored procedures through its API.
+It allows some flexibility in the type of stored procedure being used, supporting IN/OUT/INOUT parameters as well as result sets being returned. 
+Obviously if a datastore does not support stored procedures then this functionality will not apply.
+
+You start off by creating a stored procedure query, like this, referencing the stored procedure name in the datastore.
+
+[source,java]
+-----
+StoredProcedureQuery spq = em.createStoredProcedureQuery("PERSON_SP_1");
+-----
+
+If we have any parameters in this stored procedure we need to register them, for example
+
+[source,java]
+-----
+spq.registerStoredProcedureParameter("PARAM1", String.class, ParameterMode.IN);
+spq.registerStoredProcedureParameter("PARAM2", Integer.class, ParameterMode.OUT);
+-----
+
+If you have any result class, or result set mapping then you can specify those in the _createStoredProcedureQuery_ call.
+Now we are ready to execute the query and access the results.
+
+
+== Simple execution, returning a result set
+
+A common form of stored procedure will simply return a single result set. You execute such a procedure as follows
+
+[source,java]
+-----
+List results = spq.getResultList();
+-----
+
+or if expecting a single result, then
+
+[source,java]
+-----
+Object result = spq.getSingleResult();
+-----
+
+
+== Simple execution, returning output parameters
+
+A common form of stored procedure will simply return output parameter(s). You execute such a procedure as follows
+
+[source,java]
+-----
+spq.execute();
+Object paramVal = spq.getOutputParameterValue("PARAM2");
+-----
+
+or you can also access the output parameters via position (if specified by position).
+
+
+== Generalised execution, for multiple result sets
+
+A more complicated, yet general, form of execution of the stored procedure is as follows
+
+[source,java]
+-----
+boolean isResultSet = spq.execute(); // returns true when we have a result set from the proc
+List results1 = spq.getResultList(); // get the first result set
+if (spq.hasMoreResults())
+{
+    List results2 = spq.getResultList(); // get the second result set
+}
+-----
+
+So the user can get hold of multiple result sets returned by their stored procedure.
+
+
+[[stored_procedures_named]]
+== Named Stored Procedure Queries
+
+Just as with normal queries, you can also register a stored procedure query at development time and then access it via name from the EntityManager. 
+So we define one like this (not important on which class it is defined)
+
+[source,java]
+-----
+@NamedStoredProcedureQuery(name="myTestProc", procedureName="MY_TEST_SP_1",
+    parameters={@StoredProcedureParameter(name="PARAM1", type=String.class, mode=ParameterMode.IN})
+
+@Entity
+public class MyClass {...}
+-----
+
+and then create the query from the EntityManager
+
+[source,java]
+-----
+StoredProcedureQuery spq = em.createNamedStoredProcedureQuery("myTestProc");
+-----
+

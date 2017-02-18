@@ -1,0 +1,375 @@
+[[criteria]]
+= Criteria
+:_basedir: ../
+:_imagesdir: images/
+
+
+In JPA there is a query API referred to as "criteria", that broadly mirrors the JPQL query syntax. 
+This is really an API allowing the construction of queries expression by expression, and optionally making it type-safe.
+It provides two ways of specifying a field/property. The first way is using Strings, and the second using a link:#metamodel[Static MetaModel]. 
+The advantage of the Static MetaModel is that it means that your queries are refactorable if you rename a field. 
+Each example will be expressed in both ways where appropriate so you can see the difference.
+
+
+== Creating a Criteria query
+
+To use the JPA Criteria API, firstly you need to create a _CriteriaQuery_ object for the candidate in question, and set the candidate, its alias, 
+and the result to be of the candidate type
+
+[source,java]
+-----
+CriteriaBuilder cb = emf.getCriteriaBuilder();
+CriteriaQuery<Person> crit = cb.createQuery(Person.class);
+Root<Person> candidateRoot = crit.from(Person.class);
+candidateRoot.alias("p");
+
+crit.select(candidateRoot);
+-----
+
+So what we have there equates to
+
+-----
+SELECT p FROM mydomain.Person p
+-----
+
+For a complete list of all methods available on CriteriaBuilder, refer to
+http://www.datanucleus.org/javadocs/javax.persistence/2.1/javax/persistence/criteria/CriteriaBuilder.html[image:../images/javadoc.png[Javadoc]]
+
+For a complete list of all methods available on CriteriaQuery, refer to
+http://www.datanucleus.org/javadocs/javax.persistence/2.1/javax/persistence/criteria/CriteriaQuery.html[image:../images/javadoc.png[Javadoc]]
+
+
+== JPQL equivalent of the Criteria query
+
+image:../images/nucleus_extension.png[]
+
+If you ever want to know what is the equivalent JPQL string-based query for your Criteria, just print out _criteriaQuery.toString()_.
+This is *not* part of the JPA spec, but something that we feel is very useful so is provided as a DataNucleus vendor extension. 
+So, for example, the criteria query above would result in the following from _crit.toString()_
+
+-----
+SELECT p FROM mydomain.Person p
+-----
+
+
+== Criteria API : Result clause
+
+The basic Criteria query above is fine, but you may want to define a result other than the candidate. To do this we need to use the Criteria API.
+
+[source,java]
+-----
+Path nameField = candidateRoot.get("name");
+crit.select(nameField);
+-----
+
+which equates to
+
+-----
+SELECT p.name
+-----
+
+Note that here we accessed a field by its name (as a String). We could easily have accessed it via the link:#metamodel[Criteria MetaModel] too.
+
+
+== Criteria API : From clause joins
+
+The basic Criteria query above is fine, but you may want to define some explicit joins. To do this we need to use the Criteria API.
+
+[source,java]
+-----
+Metamodel model = emf.getMetamodel();
+ManagedType personType = model.type(Person.class);
+Attribute addressAttr = personType.getAttribute("address");
+Join addressJoin = candidateRoot.join((SingularAttribute)addressAttr);
+addressJoin.alias("a");
+-----
+
+which equates to
+
+-----
+FROM mydomain.Person p JOIN p.address a
+-----
+
+
+== Criteria API : Filter
+
+The basic Criteria query above is fine, but in the majority of cases we want to define a filter. To do this we need to use the Criteria API.
+
+[source,java]
+-----
+// String-based:
+Predicate nameEquals = cb.equal(candidateRoot.get("name"), "First");
+crit.where(nameEquals);
+
+// MetaModel-based:
+Predicate nameEquals = cb.equal(candidateRoot.get(Person_.name), "First");
+crit.where(nameEquals);
+-----
+
+You can also invoke methods, so a slight variation on this clause would be
+
+[source,java]
+-----
+// String-based:
+Predicate nameUpperEquals = cb.equal(cb.upper(candidateRoot.get("name")), "FIRST");
+
+// MetaModel-based:
+Predicate nameUpperEquals = cb.equal(cb.upper(candidateRoot.get(Person_.name)), "FIRST");
+-----
+
+which equates to
+
+-----
+WHERE (UPPER(p.name) = 'FIRST')
+-----
+
+
+== Criteria API : Ordering
+
+The basic Criteria query above is fine, but in many cases we want to define ordering. To do this we need to use the Criteria API.
+
+[source,java]
+-----
+// String-based:
+Order orderFirstName = cb.desc(candidateRoot.get("name"));
+crit.orderBy(orderFirstName);
+
+// MetaModel-based:
+Order orderFirstName = cb.desc(candidateRoot.get(Person_.name));
+crit.orderBy(orderFirstName);
+-----
+
+which equates to
+
+-----
+ORDER BY p.name DESC
+-----
+
+
+== Criteria API : Parameters
+
+Another common thing we would want to do is specify input parameters.
+To do this we need to use the Criteria API. Let's take an example of a filter with parameters.
+
+[source,java]
+-----
+// String-based:
+ParameterExpression param1 = cb.parameter(String.class, "myParam1");
+Predicate nameEquals = cb.equal(candidateRoot.get("name"), param1);
+crit.where(nameEquals);
+
+// MetaModel-based:
+ParameterExpression param1 = cb.parameter(String.class, "myParam1");
+Predicate nameEquals = cb.equal(candidateRoot.get(Person_.name), param1);
+crit.where(nameEquals);
+-----
+
+which equates to
+
+-----
+WHERE (p.name = :myParam)
+-----
+
+Don't forget to set the value of the parameters before executing the query!
+
+
+== Criteria API : Result as Tuple
+
+You sometimes need to define a result for a query.
+You can define a result class just like with normal JPQL, but a special case is where you don't have a particular result class and want to 
+use the _built-in_ JPA standard *Tuple* class.
+
+[source,java]
+-----
+CriteriaQuery<Tuple> crit = cb.createTupleQuery();
+-----
+
+
+== Executing a Criteria query
+
+Ok, so we've seen how to generate a Criteria query. So how can we execute it ?
+This is simple; convert it into a standard JPA query, set any parameter values and execute it.
+
+[source,java]
+-----
+Query query = em.createQuery(crit);
+List<Person> results = query.getResultList();
+-----
+
+
+== Criteria API : UPDATE query
+
+So the previous examples concentrated on SELECT queries. Let's now do an UPDATE
+
+[source,java]
+-----
+// String-based:
+CriteriaUpdate<Person> crit = qb.createCriteriaUpdate(Person.class);
+Root<Person> candidate = crit.from(Person.class);
+candidate.alias("p");
+crit.set(candidate.get("firstName"), "Freddie");
+Predicate teamName = qb.equal(candidate.get("firstName"), "Fred");
+crit.where(teamName);
+Query q = em.createQuery(crit);
+int num = q.executeUpdate();
+
+// MetaModel-based:
+CriteriaUpdate<Person> crit = qb.createCriteriaUpdate(Person.class);
+Root<Person> candidate = crit.from(Person.class);
+candidate.alias("p");
+crit.set(candidate.get(Person_.firstName), "Freddie");
+Predicate teamName = qb.equal(candidate.get(Person.firstName), "Fred");
+crit.where(teamName);
+Query q = em.createQuery(crit);
+int num = q.executeUpdate();
+-----
+
+which equates to
+
+-----
+UPDATE Person p SET p.firstName = 'Freddie' WHERE p.firstName = 'Fred'
+-----
+
+
+== Criteria API : DELETE query
+
+So the previous examples concentrated on SELECT queries. Let's now do a DELETE
+
+[source,java]
+-----
+// String-based:
+CriteriaDelete<Person> crit = qb.createCriteriaDelete(Person.class);
+Root<Person> candidate = crit.from(Person.class);
+candidate.alias("p");
+Predicate teamName = qb.equal(candidate.get("firstName"), "Fred");
+crit.where(teamName);
+Query q = em.createQuery(crit);
+int num = q.executeUpdate();
+
+// MetaModel-based:
+CriteriaDelete<Person> crit = qb.createCriteriaDelete(Person.class);
+Root<Person> candidate = crit.from(Person.class);
+candidate.alias("p");
+Predicate teamName = qb.equal(candidate.get(Person.firstName), "Fred");
+crit.where(teamName);
+Query q = em.createQuery(crit);
+int num = q.executeUpdate();
+-----
+
+which equates to
+
+-----
+DELETE FROM Person p WHERE p.firstName = 'Fred'
+-----
+
+
+[[metamodel]]
+== Static MetaModel
+
+As we mentioned at the start of this section, there is a Static MetaModel allowing refactorability.
+In JPA the MetaModel is a _static metamodel_ of generated classes that mirror the applications 
+entities and have persistable fields marked as _public_ and _static_ so that they can be accessed when generating the queries. 
+In the examples above you saw reference to a class with name with suffix "_". This is a (static) metamodel class. It is defined below.
+
+The JPA spec contains the following description of the static metamodel.
+
+_For every managed class in the persistence unit, a corresponding metamodel class is produced as follows:_
+
+* For each managed class X in package p, a metamodel class X_ in package p is created.
+* The name of the metamodel class is derived from the name of the managed class by appending "_" to the name of the managed class.
+* The metamodel class X_ must be annotated with the javax.persistence.StaticMetamodel annotation
+* If class X extends another class S, where S is the most derived managed class (i.e., entity or mapped superclass) extended by X, 
+then class X_ must extend class S_, where S_ is the meta-model class created for S.
+* For every persistent non-collection-valued attribute y declared by class X, where the type of y is Y, 
+the metamodel class must contain a declaration as follows: 
+[source,java]
+-----
+public static volatile SingularAttribute<X, Y> y;
+-----
+* For every persistent collection-valued attribute z declared by class X, where the element type of z is Z, the metamodel class must contain a declaration as follows:
+** if the collection type of z is java.util.Collection, then 
+[source,java]
+-----
+public static volatile CollectionAttribute<X, Z> z;
+-----
+** if the collection type of z is java.util.Set, then
+[source,java]
+-----
+public static volatile SetAttribute<X, Z> z;
+-----
+** if the collection type of z is java.util.List, then
+[source,java]
+-----
+public static volatile ListAttribute<X, Z> z;
+-----
+** if the collection type of z is java.util.Map, then
+[source,java]
+-----
+public static volatile MapAttribute<X, K, Z> z;
+-----
+where K is the type of the key of the map in class X
+
+Let's take an example, for the following class
+
+[source,java]
+-----
+package org.datanucleus.samples.jpa2.metamodel;
+
+import java.util.*;
+import javax.persistence.*;
+
+@Entity
+public class Person
+{
+    @Id
+    long id;
+
+    String name;
+
+    @OneToMany
+    List<Address> addresses;
+}
+-----
+
+the static metamodel class (generated by _datanucleus-jpa-query_) will be
+
+[source,java]
+-----
+package org.datanucleus.samples.jpa2.metamodel;
+
+import javax.persistence.metamodel.*;
+
+@StaticMetamodel(Person.class)
+public class Person_ 
+{
+    public static volatile SingularAttribute<Person, Long> id;
+    public static volatile SingularAttribute<Person, String> name;
+    public static volatile ListAttribute<Person, Address> addresses;
+}
+-----
+
+*So how do we generate this metamodel definition for our query classes?*
+DataNucleus provides an _annotation processor_ in the jar *datanucleus-jpa-query* that can be used when compiling your model classes to generate the static metamodel classes.
+What this does is when the compile is invoked, all classes that have persistence annotations will be passed to the annotation processor and a Java file generated for its metamodel. 
+Then all classes (original + metamodel) are compiled.
+
+To enable this in Maven you would need the above jar, plus `javax.persistence.jar` to be in the CLASSPATH at compile
+
+[source,xml]
+-----
+<plugin>
+    <artifactId>maven-compiler-plugin</artifactId>
+    <configuration>
+        <source>1.8</source>
+        <target>1.8</target>
+    </configuration>
+</plugin>
+-----
+
+To enable this in Eclipse you would need to do the following
+
+* Go to _Java Compiler_ and make sure the compiler compliance level is 1.7 or above (needed for DN 5+ anyway)
+* Go to _Java Compiler -> Annotation Processing_ and enable the project specific settings and enable annotation processing
+* Go to _Java Compiler -> Annotation Processing -> Factory Path_, enable the project specific settings and then add the following jars to the list: 
+`datanucleus-jpa-query.jar`, `javax.persistence.jar`
+
