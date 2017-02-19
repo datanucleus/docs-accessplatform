@@ -38,7 +38,7 @@ Finally when you delete the object from persistence and commit that transaction 
 When you detach an object (and its graph) either explicitly (using em.detach()) or implicitly via the PersistenceContext above, you need to be careful about which fields are detached.
 If you detach everything then you can end up with a huge graph that could impact on the performance of your application. On the other hand you need to ensure that you have all
 fields that you will be needing access to whilst detached. Should you access a field that was not detached an *IllegalAccessException* is thrown. 
-All fields that are loaded will be detached so make sure you either load all required when retrieving the object using <a href="entity_graphs.html">Entity Graphs</a> 
+All fields that are loaded will be detached so make sure you either load all required when retrieving the object using link:#entity_graphs[Entity Graphs] 
 or you access fields whilst attached (which will load them).
 
 WARNING: Please note that some people interpret the JPA spec as implying that an object which has a primary key field set to a value as being _detached_. 
