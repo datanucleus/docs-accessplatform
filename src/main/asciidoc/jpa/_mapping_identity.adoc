@@ -94,7 +94,7 @@ more of its own besides.
 
 See also:-
 
-* link:value_generation.html[Identity Generation Guide] - strategies for generating ids
+* link:#value_generation[Identity Generation Guide] - strategies for generating ids
 
 
 === Application Identity : Changing Identities
@@ -197,7 +197,7 @@ public class MyClass
 -----
 
 So we didnt specify the JPA "id-class". You will, of course, have to give the field a value before persisting the object, either by setting it yourself, or by using a 
-link:value_generation.html[value-strategy] on that field.
+link:#value_generation[value-strategy] on that field.
 
 
 === PrimaryKey : Rules for User-Defined classes
@@ -353,7 +353,7 @@ public class MyClass
 -----
 
 See also:-
-* link:value_generation.html[Identity Generation Guide] - strategies for generating ids
+* link:#value_generation[Identity Generation Guide] - strategies for generating ids
 * link:annotations.html#DatastoreIdentity[Annotations reference for @DatastoreIdentity]
 
 === Datastore Identity : Accessing the Identity
@@ -432,7 +432,7 @@ NOTE: The persistable class that is contained cannot be using _datastore identit
 [[derived_identity_1_1_uni]]
 === 1-1 Relationship
 
-Lets take the same classes as we have in the link:one_to_one.html[1-1 Relationships].
+Lets take the same classes as we have in the link:#one_one_relations[1-1 Relationships].
 In the 1-1 relationships guide we note that in the datastore representation of the *User* and *Account* the *ACCOUNT* table has a primary key as well as a foreign-key to *USER*. 
 In our example here we want to just have a primary key that is also a foreign-key to *USER*. 
 To do this we need to modify the classes slightly and add primary-key fields and use "application-identity".
@@ -606,7 +606,7 @@ To remove this restriction you could also add a "long id" to  "Account" and make
 [[derived_identity_1_N_coll_bi]]
 === 1-N Collection Relationship
 
-Lets take the same classes as we have in the link:orm/one_to_many_collection.html#fk_bi[1-N Relationships (FK)].
+Lets take the same classes as we have in the link:#one_many_fk_bi[1-N Relationships (FK)].
 In the 1-N relationships guide we note that in the datastore representation of the *Account* and *Address* classes the *ADDRESS* table has a primary key as 
 well as a foreign-key to *ACCOUNT*. In our example here we want to have the primary-key to *ACCOUNT* to _include_ the foreign-key. 
 To do this we need to modify the classes slightly, adding primary-key fields to both classes, and use "application-identity" for both.
@@ -798,7 +798,7 @@ For that reason we have the "id" field too.
 [[derived_identity_1_N_map_bi]]
 === 1-N Map Relationship
 
-Lets take the same classes as we have in the link:orm/one_to_many_map.html#fk_bi_key[1-N Relationships FK].
+Lets take the same classes as we have in the link:#one_many_map_fk_bi_key[1-N Relationships FK].
 In this guide we note that in the datastore representation of the *Account* and *Address* classes the *ADDRESS* table has a primary key as well as a foreign-key to 
 *ACCOUNT*. In our example here we want to have the primary-key to *ACCOUNT* to _include_ the foreign-key. 
 To do this we need to modify the classes slightly, adding primary-key fields to both classes, and use "application-identity" for both.

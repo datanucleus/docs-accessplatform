@@ -27,8 +27,8 @@ image:../images/nucleus_plugin.png[]
 
 If you have support for any additional types and would either like to contribute them, or have them listed here, let us know.
 Supporting a new type is easy, typically involving a link:#attributeconverter[JPA AttributeConverter] if you can easily convert the type into a String or Long. 
-See also link:extensions.html#java_types[the Java Types plugin-point]
-You can also define more specific support for it with RDBMS datastores - link:extensions.html#rdbms_java_types[the RDBMS Java Types plugin-point]
+See also link:../extensions/extensions.html#java_types[the Java Types plugin-point]
+You can also define more specific support for it with RDBMS datastores - link:../extensions/extensions.html#rdbms_java_types[the RDBMS Java Types plugin-point]
 
 Handling of second-class types uses wrappers and bytecode enhancement with DataNucleus. This contrasts to what Hibernate uses (proxies), and what Hibernate imposes on you. 
 See http://blog.bolkey.com/2009/05/hibernate-datanucleus-r1[this blog entry] if you have doubts about this approach.
@@ -512,7 +512,7 @@ DataNucleus supports a very wide range of collection, list and map types.
 |icon:check[]
 |icon:check[]
 |icon:times[]
-|See link:mapping.html#one_to_many_list[the 1-N Lists Guide]
+|See link:mapping.html#one_many_list[the 1-N Lists Guide]
 
 |java.util.BitSet
 |
@@ -528,7 +528,7 @@ DataNucleus supports a very wide range of collection, list and map types.
 |icon:check[]
 |icon:check[]
 |icon:times[]
-|See link:mapping.html#one_to_many[the 1-N Collections Guide]
+|See link:mapping.html#one_many[the 1-N Collections Guide]
 
 |java.util.HashMap
 |
@@ -536,7 +536,7 @@ DataNucleus supports a very wide range of collection, list and map types.
 |icon:check[]
 |icon:check[]
 |icon:times[]
-|See link:mapping.html#one_to_many_map[the 1-N Maps Guide]
+|See link:mapping.html#one_many_map[the 1-N Maps Guide]
 
 |java.util.HashSet
 |
@@ -544,7 +544,7 @@ DataNucleus supports a very wide range of collection, list and map types.
 |icon:check[]
 |icon:check[]
 |icon:times[]
-|See link:mapping.html#one_to_many[the 1-N Collections Guide]
+|See link:mapping.html#one_many[the 1-N Collections Guide]
 
 |java.util.Hashtable
 |
@@ -552,7 +552,7 @@ DataNucleus supports a very wide range of collection, list and map types.
 |icon:check[]
 |icon:check[]
 |icon:times[]
-|See link:mapping.html#one_to_many_map[the 1-N Maps Guide]
+|See link:mapping.html#one_many_map[the 1-N Maps Guide]
 
 |java.util.LinkedHashMap
 |
@@ -560,7 +560,7 @@ DataNucleus supports a very wide range of collection, list and map types.
 |icon:check[]
 |icon:check[]
 |icon:times[]
-|Persisted as a Map currently. No List-ordering is supported. See link:mapping.html#one_to_many_map[the 1-N Maps Guide]
+|Persisted as a Map currently. No List-ordering is supported. See link:mapping.html#one_many_map[the 1-N Maps Guide]
 
 |java.util.LinkedHashSet
 |
@@ -568,7 +568,7 @@ DataNucleus supports a very wide range of collection, list and map types.
 |icon:check[]
 |icon:check[]
 |icon:times[]
-|Persisted as a Set currently. No List-ordering is supported. See link:mapping.html#one_to_many[the 1-N Collections Guide]
+|Persisted as a Set currently. No List-ordering is supported. See link:mapping.html#one_many[the 1-N Collections Guide]
 
 |java.util.LinkedList
 |
@@ -576,7 +576,7 @@ DataNucleus supports a very wide range of collection, list and map types.
 |icon:check[]
 |icon:check[]
 |icon:times[]
-|See link:mapping.html#one_to_many_list[the 1-N Lists Guide]
+|See link:mapping.html#one_many_list[the 1-N Lists Guide]
 
 |java.util.List
 |
@@ -584,7 +584,7 @@ DataNucleus supports a very wide range of collection, list and map types.
 |icon:check[]
 |icon:check[]
 |icon:times[]
-|See link:mapping.html#one_to_many_list[the 1-N Lists Guide]
+|See link:mapping.html#one_many_list[the 1-N Lists Guide]
 
 |java.util.Map
 |
@@ -592,7 +592,7 @@ DataNucleus supports a very wide range of collection, list and map types.
 |icon:check[]
 |icon:check[]
 |icon:times[]
-|See link:mapping.html#one_to_many_map[the 1-N Maps Guide]
+|See link:mapping.html#one_many_map[the 1-N Maps Guide]
 
 |java.util.Properties
 |
@@ -600,7 +600,7 @@ DataNucleus supports a very wide range of collection, list and map types.
 |icon:check[]
 |icon:check[]
 |icon:times[]
-|See link:mapping.html#one_to_many_map[the 1-N Maps Guide]
+|See link:mapping.html#one_many_map[the 1-N Maps Guide]
 
 |java.util.PriorityQueue
 |
@@ -608,7 +608,7 @@ DataNucleus supports a very wide range of collection, list and map types.
 |icon:check[]
 |icon:check[]
 |icon:times[]
-|The comparator is specifiable via the metadata extension _comparator-name_ (see below). See link:mapping.html#one_to_many_list[the 1-N Lists Guide]
+|The comparator is specifiable via the metadata extension _comparator-name_ (see below). See link:mapping.html#one_many_list[the 1-N Lists Guide]
 
 |java.util.Queue
 |
@@ -616,7 +616,7 @@ DataNucleus supports a very wide range of collection, list and map types.
 |icon:check[]
 |icon:check[]
 |icon:times[]
-|The comparator is specifiable via the metadata extension _comparator-name_ (see below). See link:mapping.html#one_to_many_list[the 1-N Lists Guide]
+|The comparator is specifiable via the metadata extension _comparator-name_ (see below). See link:mapping.html#one_many_list[the 1-N Lists Guide]
 
 |java.util.Set
 |
@@ -624,7 +624,7 @@ DataNucleus supports a very wide range of collection, list and map types.
 |icon:check[]
 |icon:check[]
 |icon:times[]
-|See link:mapping.html#one_to_many[the 1-N Collections Guide]
+|See link:mapping.html#one_many[the 1-N Collections Guide]
 
 |java.util.SortedMap
 |
@@ -632,7 +632,7 @@ DataNucleus supports a very wide range of collection, list and map types.
 |icon:check[]
 |icon:check[]
 |icon:times[]
-|The comparator is specifiable via the metadata extension _comparator-name_ (see below). See link:mapping.html#one_to_many_map[the 1-N Maps Guide]
+|The comparator is specifiable via the metadata extension _comparator-name_ (see below). See link:mapping.html#one_many_map[the 1-N Maps Guide]
 
 |java.util.SortedSet
 |
@@ -640,7 +640,7 @@ DataNucleus supports a very wide range of collection, list and map types.
 |icon:check[]
 |icon:check[]
 |icon:times[]
-|The comparator is specifiable via the metadata extension _comparator-name_ (see below). See link:mapping.html#one_to_many[the 1-N Collections Guide]
+|The comparator is specifiable via the metadata extension _comparator-name_ (see below). See link:mapping.html#one_many[the 1-N Collections Guide]
 
 |java.util.Stack
 |
@@ -648,7 +648,7 @@ DataNucleus supports a very wide range of collection, list and map types.
 |icon:check[]
 |icon:check[]
 |icon:times[]
-|See link:mapping.html#one_to_many_list[the 1-N Lists Guide]
+|See link:mapping.html#one_many_list[the 1-N Lists Guide]
 
 |java.util.TreeMap
 |
@@ -656,7 +656,7 @@ DataNucleus supports a very wide range of collection, list and map types.
 |icon:check[]
 |icon:check[]
 |icon:times[]
-|The comparator is specifiable via the metadata extension _comparator-name_ (see below). See link:mapping.html#one_to_many_map[the 1-N Maps Guide]
+|The comparator is specifiable via the metadata extension _comparator-name_ (see below). See link:mapping.html#one_many_map[the 1-N Maps Guide]
 
 |java.util.TreeSet
 |
@@ -664,7 +664,7 @@ DataNucleus supports a very wide range of collection, list and map types.
 |icon:check[]
 |icon:check[]
 |icon:times[]
-|The comparator is specifiable via the metadata extension _comparator-name_ (see below). See link:mapping.html#one_to_many[the 1-N Collections Guide]
+|The comparator is specifiable via the metadata extension _comparator-name_ (see below). See link:mapping.html#one_many[the 1-N Collections Guide]
 
 |java.util.Vector
 |
@@ -672,7 +672,7 @@ DataNucleus supports a very wide range of collection, list and map types.
 |icon:check[]
 |icon:check[]
 |icon:times[]
-|See link:mapping.html#one_to_many_list[the 1-N Lists Guide]
+|See link:mapping.html#one_many_list[the 1-N Lists Guide]
 
 |com.google.common.collect.Multiset
 |icon:check[]
@@ -680,7 +680,7 @@ DataNucleus supports a very wide range of collection, list and map types.
 |icon:check[]
 |icon:check[]
 |icon:times[]
-|Requires *datanucleus-guava* plugin. See link:mapping.html#one_to_many[the 1-N Collections Guide]
+|Requires *datanucleus-guava* plugin. See link:mapping.html#one_many[the 1-N Collections Guide]
 |===
 
 image:../images/nucleus_extension.png[]
