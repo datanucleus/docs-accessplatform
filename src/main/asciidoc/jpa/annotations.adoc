@@ -183,7 +183,7 @@ public class MyClass
 }
 -----
 
-See the documentation for link:class_mapping.html[Class Mapping]
+See the documentation for link:mapping.html#classes[Class Mapping]
 
 
 [[MappedSuperclass]]
@@ -200,7 +200,7 @@ public class MyClass
     ...
 }
 -----
-See the documentation for link:orm/inheritance.html[Inheritance]
+See the documentation for link:mapping.html#inheritance[Inheritance]
 
 
 [[Embeddable]]
@@ -247,7 +247,7 @@ public class MyClass
 }
 -----
 
-See the documentation for link:identity.html#application_primarykey[Primary Keys]
+See the documentation for link:mapping.html#application_identity_primarykey[Primary Keys]
 
 
 [[Cacheable]]
@@ -263,7 +263,7 @@ public class MyClass
     ...
 }
 -----
-See the documentation for link:cache.html[L2 Cache]
+See the documentation for link:persistence.html#cache_level2[L2 Cache]
 
 
 [[EntityListeners]]
@@ -328,7 +328,7 @@ public class Person
 }
 -----
 
-*Note that with DataNucleus you can also specify @NamedQueries on non-persistable classes* See the documentation for link:jpql.html#named[Named Queries]
+*Note that with DataNucleus you can also specify @NamedQueries on non-persistable classes* See the documentation for link:query.html#jpql_named[Named Queries]
 
 
 [[NamedQuery]]
@@ -364,7 +364,7 @@ public class Person
 }
 -----
 *Note that with DataNucleus you can also specify @NamedQuery on non-persistable classes*
-See the documentation for link:jpql.html#named[Named Queries]
+See the documentation for link:query.html#jpql_named[Named Queries]
 
 
 [[NamedNativeQueries]]
@@ -397,7 +397,7 @@ public class Person
 }
 -----
 *Note that with DataNucleus you can also specify @NamedNativeQueries on non-persistable classes*
-See the documentation for link:native_query.html#named[Named Native Queries]
+See the documentation for link:query.html#native_named[Named Native Queries]
 
 
 [[NamedNativeQuery]]
@@ -438,7 +438,7 @@ public class Person
 }
 -----
 *Note that with DataNucleus you can also specify @NamedNativeQuery on non-persistable classes*
-See the documentation for link:native_query.html#named[Named Native Queries]
+See the documentation for link:query.html#native_named[Named Native Queries]
 
 
 [[NamedStoredProcedureQueries]]
@@ -473,7 +473,7 @@ public class Person
 }
 -----
 *Note that with DataNucleus you can also specify @NamedStoredProcedureQueries on non-persistable classes*
-See the documentation for link:stored_procedures.html#named[Named Stored procedures]
+See the documentation for link:query.html#stored_procedures_named[Named Stored procedures]
 
 
 [[NamedStoredProcedureQuery]]
@@ -530,7 +530,7 @@ public class Person
 }
 -----
 *Note that with DataNucleus you can also specify @NamedStoredProcedureQuery on non-persistable classes*
-See the documentation for link:stored_procedures.html#named[Named StoredProcedures]
+See the documentation for link:query.html#stored_procedures_named[Named StoredProcedures]
 
 
 [[SqlResultSetMappings]]
@@ -679,7 +679,7 @@ public class Person
 [[Converter]]
 === @Converter
 
-This annotation is used to mark a class as being an link:types.html#typeconverter[attribute converter].
+This annotation is used to mark a class as being an link:mapping.html#attributeconverter[attribute converter].
 _Note that DataNucleus doesn't require this specifying against a converter class except if you want to set the "autoApply"_. Specified on the *class*.
 
 [cols="1,1,3,1", options="header"]
@@ -732,7 +732,7 @@ public class MyClass
     ...
 }
 -----
-See the documentation for link:orm/inheritance.html[Inheritance]
+See the documentation for link:mapping.html#inheritance[Inheritance]
 
 
 [[Table]]
@@ -842,7 +842,7 @@ public class MyClass
     ...
 }
 -----
-See the documentation for link:orm/secondary_tables.html[Secondary Tables]
+See the documentation for link:mapping.html#secondary_tables[Secondary Tables]
 
 
 [[DiscriminatorColumn]]
@@ -883,7 +883,7 @@ public class MyClass
     ...
 }
 -----
-See the documentation for link:orm/inheritance.html[Inheritance]
+See the documentation for link:mapping.html#inheritance_discriminator[Inheritance]
 
 
 [[DiscriminatorValue]]
@@ -915,7 +915,7 @@ public class MyClass
     ...
 }
 -----
-See the documentation for link:orm/inheritance.html[Inheritance]
+See the documentation for link:mapping.html#inheritance_discriminator[Inheritance]
 
 
 [[PrimaryKeyJoinColumns_Class]]
@@ -1676,7 +1676,7 @@ public class Person
     ...
 }
 -----
-See the documentation for link:fields_properties.html[Fields/Properties]
+See the documentation for link:mapping.html#members.html[Fields/Properties]
 
 
 [[Transient]]
@@ -1697,7 +1697,7 @@ public class Person
     ...
 }
 -----
-See the documentation for link:fields_properties.html[Fields/Properties]
+See the documentation for link:mapping.html#members[Fields/Properties]
 
 
 [[JoinTable]]
@@ -1967,7 +1967,7 @@ public class Person
     ...
 }
 -----
-See the documentation for link:orm/one_to_one.html[1-1 Relations]
+See the documentation for link:mapping.html#one_one_relations[1-1 Relations]
 
 
 [[OneToMany]]
@@ -2019,7 +2019,7 @@ public class Person
     ...
 }
 -----
-See the documentation for link:orm/one_to_many_collection.html[1-N Relations]
+See the documentation for link:mapping.html#one_many_relations[1-N Relations]
 
 
 [[ManyToMany]]
@@ -2075,7 +2075,7 @@ public class Supplier
     ...
 }
 -----
-See the documentation for link:orm/many_to_many.html[M-N Relations]
+See the documentation for link:mapping.html#many_many_relations[M-N Relations]
 
 
 [[ManyToOne]]
@@ -2129,7 +2129,7 @@ public class Window
     ...
 }
 -----
-See the documentation for link:orm/many_to_one.html[N-1 Relations]
+See the documentation for link:mapping.html#many_one_relations[N-1 Relations]
 
 
 [[ElementCollection]]
@@ -2389,7 +2389,7 @@ public class Person
 [[Convert]]
 === @Convert
 
-This annotation is used to define a link:types.html#typeconverter[converter] for the field/property. Specified on the *field/method*.
+This annotation is used to define a link:mapping.html#attributeconverter[converter] for the field/property. Specified on the *field/method*.
 
 [cols="1,1,3,1", options="header"]
 |===
