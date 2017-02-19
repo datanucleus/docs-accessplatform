@@ -68,7 +68,7 @@ Click on the one of interest to see details of any provisos for its support, as 
 
 image:../images/nucleus_plugin.png[] 
 
-Note that if your RDBMS is not listed or currently supported you can easily write your own <a href="../extensions/extensions.html#rdbms_datastore_adapter[Datastore Adapter] for it
+Note that if your RDBMS is not listed or currently supported you can easily write your own link:../extensions/extensions.html#rdbms_datastore_adapter[Datastore Adapter] for it
 raise an issue in GitHub when you have it working and attach a patch to contribute it.
 Similarly if you are using an adapter that has some problem on your case you could use the same plugin mechanism to override the non-working feature.
 
@@ -503,51 +503,8 @@ The statements that DataNucleus currently allows for batching are
 
 
 
-[[failover]]
-== RDBMS : Failover
-
-In the majority of production situations it is desirable to have a level of failover between the underlying datastores used for persistence. 
-You have at least 2 options available to you here. These are shown below
-
-
-== DataNucleus Failover capability">
-
-image:../images/nucleus_extension.png[]
-
-DataNucleus has the capability to switch to between DataSources upon failure of one while obtaining a datastore connection. 
-The failover mechanism is useful for applications with multiple database nodes when the data is actually replicated/synchronized by the underlying database. 
-There are 2 things to be aware of before utilising this functionality.
-
-* DataNucleus doesn't replicate changes to all database nodes, and for this reason, this feature is suggested to be used only for reading objects or if the database is capable 
-to replicate the changes to all nodes.
-* If a connection breaks while in use the failover mechanism will not handle it, thus the user application must take care of restarting the transaction and execute the operations.
-
-Several failover algorithm are allowed to be used, one at time, as for example _round-robin_, _ordered list_ or _random_. 
-The default algorithm, ordered list, is described below and is provided by DataNucleus. You can also implement and plug your own algorithm. 
-See <a href="../extensions/extensions.html#connection_provider[Connection Provider]. 
-
-To use failover, each datastore connection must be provided through DataSources. The _datanucleus.ConnectionFactoryName_ property must be declared with a list of JNDI names 
-pointing to DataSources, in the form of _&lt;JNDINAME&gt; [,&lt;JNDINAME&gt;]_. See the example:
-
------
-datanucleus.ConnectionFactoryName=JNDINAME1,JNDINAME2
------
-
-At least one least one JNDI name must be declared.
-
-The *Ordered List Algorithm (default)* allows you to switch to slave DataSources upon failure of a master DataSource while obtaining a datastore connection. 
-
-
-Each time DataNucleus needs to obtain a connection to the datastore, it takes the first DataSource, the Master, and tries, on failure to obtain the connection goes to the next on 
-the list until it obtains a connection to the datastore or the end of the list is reached.
-
-
-The first JNDI name in the _datanucleus.ConnectionFactoryName_ property is the Master DataSource and the following JNDI names are the Slave DataSources.
-
-
-
 [[schema_api]]
-== RDBMS : Datastore Schema API
+=== RDBMS : Datastore Schema API
 
 image:../images/nucleus_extension.png[]
 
