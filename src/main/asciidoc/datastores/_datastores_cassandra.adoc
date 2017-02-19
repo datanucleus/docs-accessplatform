@@ -31,8 +31,8 @@ Things to bear in mind with Cassandra usage :-
 
 * Creation of a PMF/EMF will create a _Cluster_. This will be closed then the PMF/EMF is closed.
 * Any PM/EM will use a single _Session_, by default, shared amongst all PM/EMs.
-* If you specify the persistence property <b>datanucleus.cassandra.sessionPerManager</b> to _true_ then each PM/EM will have its own _Session_ object.
-* You can set the number of connections per host with the persistence property <b>datanucleus.mongodb.connectionsPerHost</b>
+* If you specify the persistence property *datanucleus.cassandra.sessionPerManager* to _true_ then each PM/EM will have its own _Session_ object.
+* You can set the number of connections per host with the persistence property *datanucleus.mongodb.connectionsPerHost*
 * Cassandra doesn't use transactions, so any JDO/JPA transaction operation is a no-op (i.e will be ignored).
 * This uses Cassandra 3.x (and CQL v3.x), not Thrift (like the previous unofficial attempts at a datanucleus-cassandra plugin used)
 * You need to specify the "schema" (_datanucleus.mapping.Schema_)
