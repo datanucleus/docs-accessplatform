@@ -1,0 +1,56 @@
+[[index]]
+= DataNucleus
+:_basedir: 
+:_imagesdir: images/
+
+image:images/dn_accessplatform_overview.png[]
+
+DataNucleus AccessPlatform v5.1 provides persistence and retrieval of Java objects to a range of datastores using 
+link:jdo/index.html[JDO]/link:jpa/mapping.html[JPA]/link:rest/rest.html[REST] APIs, 
+with a range of query languages and is fully-compliant with JDO and JPA specifications. 
+
+It is http://www.datanucleus.org/documentation/license.html[Apache 2 licensed]. 
+*No other persistence solution offers the same range of APIs, datastores and query languages whilst also being fully compliant.*
+
+            <table>
+                <tr>
+                    <td>
+                        <b>DataNucleus AccessPlatform 5.1 Checklist</b>
+                        <ul>
+                            <li><b>APIs Supported</b> :
+                                link:jdo/index.html[JDO 3.2], 
+                                link:jpa/index.html[JPA 2.1+],
+                                link:rest/index.html[REST]
+                            </li>
+                            <li><b>MetaData/Mapping Supported</b> :
+                                <a href="jdo/class_mapping.html">JDO</a>, 
+                                <a href="jpa/class_mapping.html">JPA</a>
+                            </li>
+                            <li><b>Datastores Supported</b> : 
+                                <a href="datastores/rdbms.html">RDBMS</a>,
+                                <a href="datastores/excel.html">Excel</a>,
+                                <a href="datastores/ooxml.html">OOXML</a>,
+                                <a href="datastores/odf.html">ODF</a>,
+                                <a href="datastores/xml.html">XML</a>,
+                                <a href="datastores/hbase.html">HBase</a>,
+                                <a href="datastores/mongodb.html">MongoDB</a>,
+                                <a href="datastores/cassandra.html">Cassandra</a>,
+                                <a href="datastores/neo4j.html">Neo4j</a>,
+                                <a href="datastores/json.html">JSON</a>,
+                                <a href="datastores/amazons3.html">Amazon S3</a>,
+                                <a href="datastores/googlestorage.html">GoogleStorage</a>,
+                                <a href="datastores/ldap.html">LDAP</a>
+                            </li>
+                            <li><b>JRE required</b> : 1.8 or above</li>
+                        </ul>
+                    </td>
+                </tr>
+            </table>
+
+*Beginners : The first thing to do is to visit the link:getting_started.html[Getting Started Guide]*
+
+*Migrating from older version : please link:migration.html[read this first] about how to upgrade*
+
+
+If you find something that DataNucleus Access Platform can't handle you can always extend it using link:extensions/extensions.html[its plugin mechanism] for one of its defined interfaces.
+Just look for the image:images/nucleus_plugin.png[] icon.
