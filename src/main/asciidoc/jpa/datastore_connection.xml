@@ -1,0 +1,627 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<document xmlns="http://maven.apache.org/XDOC/2.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+    <properties>
+        <title>Datastore Connection</title>
+    </properties>
+
+    <body>
+        <section name="JPA : Datastore Connections">
+            <p>
+                DataNucleus utilises datastore connections as follows
+            </p>
+            <ul>
+                <li>EMF : single connection at any one time for datastore-based value generation. Obtained just for the operation, then released</li>
+                <li>EMF : single connection at any one time for schema-generation. Obtained just for the operation, then released</li>
+                <li>EM  : single connection at any one time. When in a transaction the connection is held from the point of retrieval until the transaction 
+                    commits or rolls back. The exact point at which the connection is obtained is defined more fully below.
+                    When used for non-transactional operations the connection is obtained just for the specific operation (unless configured to retain it).</li>
+            </ul>
+            <p>
+                If you have multiple threads using the same EntityManager then you can get "ConnectionInUse"
+                problems where another operation on another thread comes in and tries to perform something while 
+                that first operation is still in use. This happens because the JPA spec requires an implementation 
+                to use a single datastore connection at any one time. When this situation crops up the user ought 
+                to use multiple EntityManagers.
+            </p>
+            <p>
+                Another important aspect is use of queries for Optimistic transactions, or for non-transactional 
+                contexts. In these situations it isn't possible to keep the datastore connection open indefinitely 
+                and so when the Query is executed the ResultSet is then read into core making the queried objects 
+                available thereafter.
+            </p>
+            <br/>
+
+            <subsection name="Transactional Context">
+                <p>
+                    For pessimistic/datastore transactions a connection will be obtained from the datastore when the
+                    first persistence operation is initiated. This datastore connection will be held <b>for the
+                    duration of the transaction</b> until such time as either <i>commit()</i> or <i>rollback()</i> are
+                    called.
+                </p>
+                <p>
+                    For optimistic transactions the connection is only obtained when flush()/commit() is called. 
+                    When flush() is called, or the transaction committed a datastore connection is finally obtained 
+                    and it is held open until commit/rollback completes. when a datastore operation is required. 
+                    The connection is typically released after performing that operation. So datastore connections, 
+                    in general, are held for much smaller periods of time. 
+                    This is complicated slightly by use of the persistence property <b>datanucleus.IgnoreCache</b>. 
+                    When this is set to <i>false</i>, the connection, once obtained, is not released until the call to 
+                    commit()/rollback().
+                </p>
+                <p>
+                    Note that for Neo4j/MongoDB a single connection is used for the duration of the EM for all
+                    transactional and nontransactional operations.
+                </p>
+                <br/>
+            </subsection>
+
+            <subsection name="Nontransactional Context">
+                <p>
+                    When performing non-transactional operations, the default behaviour is to obtain a connection when
+                    needed, and release it after use. With RDBMS you have the option of retaining this connection
+                    ready for the next operation to save the time needed to obtain it; this is enabled by setting the
+                    persistence property <b>datanucleus.connection.nontx.releaseAfterUse</b> to <i>false</i>.
+                </p>
+                <p>
+                    Note that for Neo4j/MongoDB a single connection is used for the duration of the EM for all
+                    transactional and nontransactional operations.
+                </p>
+                <br/>
+            </subsection>
+
+            <subsection name="User Connection">
+                <p>
+                    DataNucleus provides a mechanism for users to access the native connection to the datastore, so that 
+                    they can perform other operations as necessary. You obtain a connection as follows
+                </p>
+                <source>
+// Obtain the connection from the JDO implementation
+ExecutionContext ec = em.unwrap(ExecutionContext.class);
+NucleusConnection conn = ec.getStoreManager().getNucleusConnection(ec);
+try
+{
+    Object native = conn.getNativeConnection();
+    // Cast "native" to the required type for the datastore, see below
+    
+    ... use the connection to perform some operations.
+}
+finally
+{
+    // Hand the connection back to JPA
+    conn.close();
+}</source>
+                <p>
+                    For the datastores supported by DataNucleus, the "native" object is of the following types
+                </p>
+                <ul>
+                    <li>RDBMS : java.sql.Connection</li>
+                    <li>Excel : org.apache.poi.hssf.usermodel.HSSFWorkbook</li>
+                    <li>OOXML : org.apache.poi.hssf.usermodel.XSSFWorkbook</li>
+                    <li>ODF : org.odftoolkit.odfdom.doc.OdfDocument</li>
+                    <li>LDAP : javax.naming.ldap.LdapContext</li>
+                    <li>MongoDB : com.mongodb.DB</li>
+                    <li>HBase : NOT SUPPORTED</li>
+                    <li>JSON : NOT SUPPORTED</li>
+                    <li>XML : org.w3c.dom.Document</li>
+                    <li>NeoDatis : org.neodatis.odb.ODB</li>
+                    <li>GAE Datastore : com.google.appengine.api.datastore.DatastoreService</li>
+                    <li>Neo4j : org.neo4j.graphdb.GraphDatabaseService</li>
+                    <li>Cassandra : com.datastax.driver.core.Session</li>
+                </ul>
+                <p>
+                    Things to bear in mind with this connection
+                </p>
+                <ul>
+                    <li>You <b>must</b> return the connection back to the EntityManager before performing any EntityManager operation. You do this by calling <i>conn.close()</i></li>
+                    <li>If you don't return the connection and try to perform an EntityManager operation which requires the connection then an Exception is thrown.</li>
+                </ul>
+                <br/>
+            </subsection>
+        </section>
+
+        <section name="Connection Pooling">
+            <a name="pooling"/>
+            <p>
+                When you create an <i>EntityManagerFactory</i> using the connection URL, driver name and the
+                username/password to use, this doesn't necessarily pool the connections.
+                For some of the supported datastores DataNucleus allows you to utilise a connection pool to efficiently
+                manage the connections to the datastore. We currently provide support for the following
+            </p>
+            <ul>
+                <li>RDBMS : <a href="#pooling_rdbms_dbcp">Apache DBCP</a></li>
+                <li>RDBMS : <a href="#pooling_rdbms_dbcp2">Apache DBCP v2</a>, we allow use of externally-defined DBCP2, but also provide a builtin DBCP v2.1.1</li>
+                <li>RDBMS : <a href="#pooling_rdbms_c3p0">C3P0</a></li>
+                <li>RDBMS : <a href="#pooling_rdbms_proxool">Proxool</a></li>
+                <li>RDBMS : <a href="#pooling_rdbms_bonecp">BoneCP</a></li>
+                <li>RDBMS : <a href="#pooling_rdbms_hikaricp">HikariCP</a></li>
+                <li>RDBMS : <a href="#pooling_rdbms_tomcat">Tomcat</a></li>
+                <li>RDBMS : <a href="#pooling_rdbms_manual">Manually creating a DataSource</a> for a 3rd party software package</li>
+                <li>RDBMS : <a href="../extensions/rdbms_connection_pool.html">Custom Connection Pooling Plugins for RDBMS</a> 
+                    using the DataNucleus ConnectionPoolFactory interface</li>
+                <li>RDBMS : <a href="#pooling_rdbms_jndi">Using JNDI</a>, and lookup a connection DataSource.</li>
+                <li>LDAP : <a href="#pooling_ldap_jndi">Using JNDI</a></li>
+            </ul>
+            <br/>
+            <p>
+                You need to specify the persistence property <b>datanucleus.connectionPoolingType</b> to be whichever 
+                of the external pooling libraries you wish to use (or "None" if you explicitly want no pooling). 
+                DataNucleus provides two sets of connections to the datastore - one for transactional usage, and one 
+                for non-transactional usage. If you want to define a different pooling for nontransactional usage then 
+                you can also specify the persistence property <b>datanucleus.connectionPoolingType.nontx</b> to 
+                whichever is required.
+            </p>
+            <br/>
+
+            <subsection name="RDBMS : JDBC driver properties with connection pool">
+                <p>
+                    If using RDBMS and you have a JDBC driver that supports custom properties, you can still use 
+                    DataNucleus connection pooling and you need to specify the properties in with your normal 
+                    persistence properties, but add the prefix <b>datanucleus.connectionPool.driver.</b> to the property 
+                    name that the driver requires. For example if an Oracle JDBC driver accepts <i>defaultRowPrefetch</i> 
+                    then you would specify something like
+                </p>
+<source><![CDATA[
+datanucleus.connectionPool.driver.defaultRowPrefetch=50]]></source>
+                <p>
+                    and it will pass in <i>defaultRowPrefetch</i> as "50" into the driver used by the connection pool.
+                </p>
+                <br/>
+            </subsection>
+
+            <a name="pooling_rdbms_dbcp2"/>
+            <subsection name="RDBMS : Apache DBCP v2+">
+                <p>
+                    DataNucleus provides a builtin version of DBCP2 to provide pooling. This is automatically selected
+                    if using RDBMS, unless you specify otherwise. 
+                    An alternative is to use an external <a href="http://jakarta.apache.org/commons/dbcp/">DBCP2</a>. 
+                    This is accessed by specifying the persistence property <b>datanucleus.connectionPoolingType</b>. To utilise DBCP2-based connection pooling we do this
+                </p>
+                <source>
+// Specify our persistence properties used for creating our EMF
+Properties props = new Properties();
+properties.setProperty("javax.persistence.jdbc.driver","com.mysql.jdbc.Driver");
+properties.setProperty("javax.persistence.jdbc.url","jdbc:mysql://localhost/myDB");
+properties.setProperty("javax.persistence.jdbc.user","login");
+properties.setProperty("javax.persistence.jdbc.password","password");
+properties.setProperty("datanucleus.connectionPoolingType", "dbcp2");</source>
+                <p>
+                    So the <i>EMF</i> will use connection pooling using DBCP version 2. To do this you will
+                    need <i>commons-dbcp2</i>, <i>commons-pool2</i> JARs to be in the CLASSPATH.
+                </p>
+                <p>
+                    You can also specify persistence properties to control the actual pooling.
+                    The currently supported properties for DBCP2 are shown below
+                </p>
+                <source>
+# Pooling of Connections
+datanucleus.connectionPool.maxIdle=10
+datanucleus.connectionPool.minIdle=3
+datanucleus.connectionPool.maxActive=5
+datanucleus.connectionPool.maxWait=60
+
+datanucleus.connectionPool.testSQL=SELECT 1
+
+datanucleus.connectionPool.timeBetweenEvictionRunsMillis=2400000</source>
+                <br/>
+            </subsection>
+
+            <a name="pooling_rdbms_dbcp"/>
+            <subsection name="RDBMS : Apache DBCP">
+                <p>
+                    DataNucleus allows you to utilise a connection pool using <a href="http://jakarta.apache.org/commons/dbcp/">DBCP</a> (v1) to efficiently 
+                    manage the connections to the datastore. It is recommended to use DBCP v2 instead of DBCP v1 for all JRE's 1.7+.
+                    This is accessed by specifying the persistence property <b>datanucleus.connectionPoolingType</b> etc like this
+                </p>
+                <source>
+// Specify our persistence properties used for creating our EMF
+Properties props = new Properties();
+properties.setProperty("javax.persistence.jdbc.driver","com.mysql.jdbc.Driver");
+properties.setProperty("javax.persistence.jdbc.url","jdbc:mysql://localhost/myDB");
+properties.setProperty("javax.persistence.jdbc.user","login");
+properties.setProperty("javax.persistence.jdbc.password","password");
+properties.setProperty("datanucleus.connectionPoolingType", "DBCP");</source>
+                <p>
+                    So the <i>EMF</i> will use connection pooling using DBCP. To do this you will
+                    need <i>commons-dbcp</i>, <i>commons-pool</i> and <i>commons-collections</i> JARs to be in the CLASSPATH.
+                </p>
+                <p>
+                    You can also specify persistence properties to control the actual pooling.
+                    The currently supported properties for DBCP are shown below
+                </p>
+                <source>
+# Pooling of Connections
+datanucleus.connectionPool.maxIdle=10
+datanucleus.connectionPool.minIdle=3
+datanucleus.connectionPool.maxActive=5
+datanucleus.connectionPool.maxWait=60
+
+# Pooling of PreparedStatements
+datanucleus.connectionPool.maxStatements=0
+
+datanucleus.connectionPool.testSQL=SELECT 1
+
+datanucleus.connectionPool.timeBetweenEvictionRunsMillis=2400000
+datanucleus.connectionPool.minEvictableIdleTimeMillis=18000000</source>
+                <br/>
+            </subsection>
+
+            <a name="pooling_rdbms_c3p0"/>
+            <subsection name="RDBMS : C3P0">
+                <p>
+                    DataNucleus allows you to utilise a connection pool using C3P0 to efficiently manage the 
+                    connections to the datastore.
+                    <a href="http://www.sf.net/projects/c3p0">C3P0</a> is a third-party library providing
+                    connection pooling. This is accessed by specifying the persistence property 
+                    <b>datanucleus.connectionPoolingType</b>. To utilise C3P0-based connection pooling we do this
+                </p>
+                <source>
+// Specify our persistence properties used for creating our EMF
+Properties props = new Properties();
+properties.setProperty("javax.persistence.jdbc.driver","com.mysql.jdbc.Driver");
+properties.setProperty("javax.persistence.jdbc.url","jdbc:mysql://localhost/myDB");
+properties.setProperty("javax.persistence.jdbc.user","login");
+properties.setProperty("javax.persistence.jdbc.password","password");
+properties.setProperty("datanucleus.connectionPoolingType", "C3P0");</source>
+                <p>
+                    So the <i>EMF</i> will use connection pooling using C3P0. To do this you will
+                    need the <i>C3P0</i> JAR to be in the CLASSPATH. 
+                    If you want to configure C3P0 further you can include a "c3p0.properties" in your CLASSPATH - 
+                    see the C3P0 documentation for details.
+                </p>
+                <p>
+                    You can also specify persistence properties to control the actual pooling.
+                    The currently supported properties for C3P0 are shown below
+                </p>
+                <source>
+# Pooling of Connections
+datanucleus.connectionPool.maxPoolSize=5
+datanucleus.connectionPool.minPoolSize=3
+datanucleus.connectionPool.initialPoolSize=3
+
+# Pooling of PreparedStatements
+datanucleus.connectionPool.maxStatements=20</source>
+                <br/>
+            </subsection>
+
+            <a name="pooling_rdbms_proxool"/>
+            <subsection name="RDBMS : Proxool">
+                <p>
+                    DataNucleus allows you to utilise a connection pool using Proxool to efficiently manage the 
+                    connections to the datastore.
+                    <a href="http://proxool.sourceforge.net/">Proxool</a> is a third-party library providing
+                    connection pooling. This is accessed by specifying the persistence property 
+                    <b>datanucleus.connectionPoolingType</b>. To utilise Proxool-based connection pooling we do this
+                </p>
+                <source>
+// Specify our persistence properties used for creating our EMF
+Properties props = new Properties();
+properties.setProperty("javax.persistence.jdbc.driver","com.mysql.jdbc.Driver");
+properties.setProperty("javax.persistence.jdbc.url","jdbc:mysql://localhost/myDB");
+properties.setProperty("javax.persistence.jdbc.user","login");
+properties.setProperty("javax.persistence.jdbc.password","password");
+properties.setProperty("datanucleus.connectionPoolingType", "Proxool");</source>
+                <p>
+                    So the <i>EMF</i> will use connection pooling using Proxool. To do this you will
+                    need the <i>proxool</i> and <i>commons-logging</i> JARs to be in the CLASSPATH.
+                </p>
+                <p>
+                    You can also specify persistence properties to control the actual pooling.
+                    The currently supported properties for Proxool are shown below
+                </p>
+                <source>
+datanucleus.connectionPool.maxConnections=10
+
+datanucleus.connectionPool.testSQL=SELECT 1</source>
+                <br/>
+            </subsection>
+
+            <a name="pooling_rdbms_bonecp"/>
+            <subsection name="RDBMS : BoneCP">
+                <p>
+                    DataNucleus allows you to utilise a connection pool using BoneCP to efficiently manage the 
+                    connections to the datastore.
+                    <a href="http://www.jolbox.com">BoneCP</a> is a third-party library providing
+                    connection pooling. This is accessed by specifying the persistence property 
+                    <b>datanucleus.connectionPoolingType</b>. To utilise BoneCP-based connection pooling we do this
+                </p>
+                <source>
+// Specify our persistence properties used for creating our EMF
+Properties props = new Properties();
+properties.setProperty("javax.persistence.jdbc.driver","com.mysql.jdbc.Driver");
+properties.setProperty("javax.persistence.jdbc.url","jdbc:mysql://localhost/myDB");
+properties.setProperty("javax.persistence.jdbc.user","login");
+properties.setProperty("javax.persistence.jdbc.password","password");
+properties.setProperty("datanucleus.connectionPoolingType", "BoneCP");</source>
+                <p>
+                    So the <i>EMF</i> will use connection pooling using BoneCP. To do this you will
+                    need the <i>BoneCP</i> JAR (and SLF4J, google-collections) to be in the CLASSPATH.
+                </p>
+                <p>
+                    You can also specify persistence properties to control the actual pooling.
+                    The currently supported properties for BoneCP are shown below
+                </p>
+                <source>
+# Pooling of Connections
+datanucleus.connectionPool.maxPoolSize=5
+datanucleus.connectionPool.minPoolSize=3
+
+# Pooling of PreparedStatements
+datanucleus.connectionPool.maxStatements=20</source>
+                <br/>
+            </subsection>
+
+            <a name="pooling_rdbms_hikaricp"/>
+            <subsection name="RDBMS : HikariCP">
+                <p>
+                    DataNucleus allows you to utilise a connection pool using HikariCP to efficiently manage the 
+                    connections to the datastore.
+                    <a href="https://github.com/brettwooldridge/HikariCP">HikariCP</a> is a third-party library providing
+                    connection pooling. This is accessed by specifying the persistence property 
+                    <b>datanucleus.connectionPoolingType</b>. To utilise this connection pooling we do this
+                </p>
+                <source>
+// Specify our persistence properties used for creating our PMF
+Properties props = new Properties();
+properties.setProperty("datanucleus.ConnectionDriverName","com.mysql.jdbc.Driver");
+properties.setProperty("datanucleus.ConnectionURL","jdbc:mysql://localhost/myDB");
+properties.setProperty("datanucleus.ConnectionUserName","login");
+properties.setProperty("datanucleus.ConnectionPassword","password");
+properties.setProperty("datanucleus.connectionPoolingType", "HikariCP");</source>
+                <p>
+                    So the <i>EMF</i> will use connection pooling using HikariCP. To do this you will
+                    need the <i>HikariCP</i> JAR (and SLF4J, javassist as required) to be in the CLASSPATH.
+                </p>
+                <p>
+                    You can also specify persistence properties to control the actual pooling.
+                    The currently supported properties for HikariCP are shown below
+                </p>
+                <source>
+# Pooling of Connections
+datanucleus.connectionPool.maxPoolSize=5
+datanucleus.connectionPool.maxIdle=5
+datanucleus.connectionPool.leakThreshold=1
+datanucleus.connectionPool.maxLifetime=240</source>
+                <br/>
+            </subsection>
+
+            <a name="pooling_rdbms_tomcat"/>
+            <subsection name="RDBMS : Tomcat">
+                <p>
+                    DataNucleus allows you to utilise a connection pool using Tomcat JDBC Pool to efficiently manage the 
+                    connections to the datastore. This is accessed by specifying the persistence property 
+                    <b>datanucleus.connectionPoolingType</b>. To utilise Tomcat-based connection pooling we do this
+                </p>
+                <source>
+// Specify our persistence properties used for creating our EMF
+Properties props = new Properties();
+properties.setProperty("javax.persistence.jdbc.driver","com.mysql.jdbc.Driver");
+properties.setProperty("javax.persistence.jdbc.url","jdbc:mysql://localhost/myDB");
+properties.setProperty("javax.persistence.jdbc.user","login");
+properties.setProperty("javax.persistence.jdbc.password","password");
+properties.setProperty("datanucleus.connectionPoolingType", "tomcat");</source>
+                <p>
+                    So the <i>EMF</i> will use a DataSource with connection pooling using Tomcat. To do this you will
+                    need the <i>tomcat-jdbc</i> JAR to be in the CLASSPATH.
+                </p>
+                <p>
+                    You can also specify persistence properties to control the actual pooling, like with the other pools.
+                </p>
+                <br/>
+            </subsection>
+
+            <a name="pooling_rdbms_manual"/>
+            <subsection name="RDBMS : Manually create a DataSource ConnectionFactory">
+                <p>
+                    We could have used the built-in DBCP support which internally creates a DataSource 
+                    ConnectionFactory, alternatively the support for external DBCP, C3P0, Proxool, BoneCP etc, 
+                    however we can also do this manually if we so wish. 
+                    Let's demonstrate how to do this with one of the most used pools 
+                    <a href="http://commons.apache.org/dbcp" target="_blank">Apache Commons DBCP</a>
+                </p>
+                <p>
+                    With DBCP you need to generate a <b>javax.sql.DataSource</b>, which you will then 
+                    pass to DataNucleus. You do this as follows
+                </p>
+<source><![CDATA[
+// Load the JDBC driver
+Class.forName(dbDriver);
+
+// Create the actual pool of connections 
+ObjectPool connectionPool = new GenericObjectPool(null);
+
+// Create the factory to be used by the pool to create the connections
+ConnectionFactory connectionFactory = new DriverManagerConnectionFactory(dbURL, dbUser, dbPassword);
+
+// Create a factory for caching the PreparedStatements
+KeyedObjectPoolFactory kpf = new StackKeyedObjectPoolFactory(null, 20);
+
+// Wrap the connections with pooled variants
+PoolableConnectionFactory pcf = 
+    new PoolableConnectionFactory(connectionFactory, connectionPool, kpf, null, false, true);
+
+// Create the datasource
+DataSource ds = new PoolingDataSource(connectionPool);
+
+// Create our EMF
+Map properties = new HashMap();
+properties.put("datanucleus.ConnectionFactory", ds);
+EntityManagerFactory emf = Persistence.createEntityManagerFactory("myPersistenceUnit", properties);]]></source>
+                <p>
+                    Note that we haven't passed the <i>dbUser</i> and <i>dbPassword</i> to the EMF since we
+                    no longer need to specify them - they are defined for the pool so we let it do the work. 
+                    As you also see, we set the data source for the EMF. Thereafter we can sit back and enjoy
+                    the performance benefits. Please refer to the documentation for DBCP for details of its 
+                    configurability (you will need <i>commons-dbcp</i>, <i>commons-pool</i>, and 
+                    <i>commons-collections</i> in your CLASSPATH to use this above example).
+                </p>
+                <br/>
+            </subsection>
+
+            <a name="pooling_rdbms_jndi"/>
+            <subsection name="RDBMS : Lookup a DataSource using JNDI">
+                <p>
+                    DataNucleus allows you to use connection pools (java.sql.DataSource) bound to a 
+                    <b>javax.naming.InitialContext</b> with a JNDI name. You first need to 
+                    create the DataSource in the container (application server/web server), and
+                    secondly you define the <b>javax.persistence.jtaDataSource</b> property
+                    with the DataSource JNDI name.
+                    Please read more about this in <a href="#datasource">RDBMS DataSources</a>.
+                </p>
+                <br/>
+            </subsection>
+
+            <a name="pooling_ldap_jndi"/>
+            <subsection name="LDAP : JNDI">
+                <p>
+                    If using an LDAP datastore you can use the following persistence properties to enable 
+                    connection pooling
+                </p>
+<source>datanucleus.connectionPoolingType=JNDI</source>
+                <p>
+                    Once you have turned connection pooling on if you want more control over the pooling 
+                    you can also set the following persistence properties
+                </p>
+                <ul>
+                    <li><b>datanucleus.connectionPool.maxPoolSize</b> : max size of pool</li>
+                    <li><b>datanucleus.connectionPool.initialPoolSize</b> : initial size of pool</li>
+                </ul>
+            </subsection>
+        </section>
+
+        <section name="RDBMS : Data Sources">
+            <a name="datasource"/>
+            <p>
+                DataNucleus allows use of a <i>data source</i> that represents the datastore in use. This is often 
+                just a URL defining the location of the datastore, but there are in fact several ways of specifying this 
+                <i>data source</i> depending on the environment in which you are running.
+            </p>
+            <ul>
+                <li><a href="#nonmanaged-client">Nonmanaged Context - Java Client</a></li>
+                <li><a href="#managed-servlet">Managed Context - Servlet</a></li>
+                <li><a href="#managed-j2ee">Managed Context - JavaEE</a></li>
+            </ul>
+
+            <a name="nonmanaged-client"/>
+            <subsection name="Java Client Environment : Non-managed Context">
+                <p>
+                    DataNucleus permits you to take advantage of using database connection pooling that is available on 
+                    an application server. The application server could be a full JEE server (e.g WebLogic)
+                    or could equally be a servlet engine (e.g Tomcat, Jetty). Here we are in a non-managed context, and
+                    we use the following properties when creating our EntityManagerFactory, and refer to the JNDI 
+                    data source of the server.
+                </p>
+                <p>
+                    If the data source is avaiable in WebLogic, the simplest way of using a data source
+                    outside the application server is as follows.
+                </p>
+                <source>
+Hashtable ht = new Hashtable();
+ht.put(Context.INITIAL_CONTEXT_FACTORY,"weblogic.jndi.WLInitialContextFactory");
+ht.put(Context.PROVIDER_URL,"t3://localhost:7001");
+    
+Context ctx = new InitialContext(ht);
+DataSource ds = (DataSource) ctx.lookup("jdbc/datanucleus");
+    
+Map properties = new HashMap();
+properties.setProperty("datanucleus.ConnectionFactory",ds);
+EntityManagerFactory emf = ...</source>
+                <p>
+                    If the data source is avaiable in Websphere, the simplest way of using a data source
+                    outside the application server is as follows.
+                </p>
+                <source>
+Hashtable ht = new Hashtable();
+ht.put(Context.INITIAL_CONTEXT_FACTORY,"com.ibm.websphere.naming.WsnInitialContextFactory");
+ht.put(Context.PROVIDER_URL,"iiop://server:orb port");
+
+Context ctx = new InitialContext(ht);
+DataSource ds = (DataSource) ctx.lookup("jdbc/datanucleus");
+
+Map properties = new HashMap();
+properties.setProperty("datanucleus.ConnectionFactory",ds);
+EntityManagerFactory emf = ...</source>
+                <br/>
+            </subsection>
+
+            <a name="managed-servlet"/>
+            <subsection name="Servlet Environment : Managed Context">
+                <p>
+                    As an example of setting up such a JNDI data source for Tomcat 5.0, here we would add the following 
+                    file to <i>$TOMCAT/conf/Catalina/localhost/</i> as "datanucleus.xml"
+                </p>
+                <source><![CDATA[
+<?xml version='1.0' encoding='utf-8'?>
+<Context docBase="/home/datanucleus/" path="/datanucleus">
+    <Resource name="jdbc/datanucleus" type="javax.sql.DataSource"/>
+    <ResourceParams name="jdbc/datanucleus">
+        <parameter>
+            <name>maxWait</name>
+            <value>5000</value>
+        </parameter>
+        <parameter>
+            <name>maxActive</name>
+            <value>20</value>
+        </parameter>
+        <parameter>
+            <name>maxIdle</name>
+            <value>2</value>
+        </parameter>
+
+        <parameter>
+            <name>url</name>
+            <value>jdbc:mysql://127.0.0.1:3306/datanucleus?autoReconnect=true</value>
+        </parameter>
+        <parameter>
+            <name>driverClassName</name>
+            <value>com.mysql.jdbc.Driver</value>
+        </parameter>
+        <parameter>
+            <name>username</name>
+            <value>mysql</value>
+        </parameter>
+        <parameter>
+            <name>password</name>
+            <value></value>
+        </parameter>
+    </ResourceParams>
+</Context>]]></source>
+                <p>
+                    With this Tomcat JNDI data source we would then specify the data source (name) as 
+                    <i>java:comp/env/jdbc/datanucleus</i>.
+                </p>
+                <source>   
+Properties properties = new Properties();
+properties.setProperty("javax.persistence.jtaDataSource","java:comp/env/jdbc/datanucleus");
+EntityManagerFactory emf = ...</source>
+                <br/>
+            </subsection>
+            
+            <a name="managed-jee"/>
+            <subsection name="JEE Environment : Managed Context">
+                <p>
+                    As in the above example, we can also run in a managed context, in a JEE/Servlet environment, and 
+                    here we would make a minor change to the specification of the JNDI data source depending on the
+                    application server or the scope of the jndi: global or component.
+                </p>
+                <p>
+                    Using JNDI deployed in global environment:                
+                </p>
+                <source>   
+Properties properties = new Properties();
+properties.setProperty("javax.persistence.jtaDataSource","jdbc/datanucleus");
+EntityManagerFactory emf = ...</source>
+                <p>
+                    Using JNDI deployed in component environment:                
+                </p>
+                <source>   
+Properties properties = new Properties();
+properties.setProperty("javax.persistence.jtaDataSource","java:comp/env/jdbc/datanucleus");
+EntityManagerFactory emf = ...</source>
+                <br/>
+            </subsection>
+
+        </section>
+    </body>
+</document>

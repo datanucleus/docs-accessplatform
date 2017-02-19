@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<document xmlns="http://maven.apache.org/XDOC/2.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+    <properties>
+        <title>Lifecycle Listening</title>
+    </properties>
+
+    <body>
+        <section name="JPA : Lifecycle Callbacks">
+            <p>
+                JPA1 defines a mechanism whereby an Entity can be marked as a listener for lifecycle events. 
+                Alternatively a separate entity listener class can be defined to receive these events. Thereafter
+                when entities of the particular class go through lifecycle changes events are passed to the
+                provided methods. Let's look at the two different mechanisms
+            </p>
+
+            <subsection name="Entity Callbacks">
+                <p>
+                    An Entity itself can have several methods defined to receive events when any instances of that
+                    class pass through lifecycles changes. Let's take an example
+                </p>
+                <source><![CDATA[
+@Entity
+public class Account
+{
+    @Id
+    Long accountId;
+
+    Integer balance;
+    boolean preferred;
+
+    public Integer getBalance() { ... }
+
+    @PrePersist
+    protected void validateCreate()
+    {
+        if (getBalance() < MIN_REQUIRED_BALANCE)
+        {
+            throw new AccountException("Insufficient balance to open an account");
+        }
+    }
+
+    @PostLoad
+    protected void adjustPreferredStatus()
+    {
+        preferred = (getBalance() >= AccountManager.getPreferredStatusLevel());
+    }
+}]]></source>
+                <p>
+                    So in this example just before any "Account" object is persisted the <i>validateCreate</i> method
+                    will be called. In the same way, just after the fields of any "Account" object are loaded the
+                    <i>adjustPreferredStatus</i> method is called. Very simple.
+                </p>
+                <p>
+                    You can register callbacks for the following lifecycle events
+                </p>
+                <ul>
+                    <li>PrePersist</li>
+                    <li>PostPersist</li>
+                    <li>PreRemove</li>
+                    <li>PostRemove</li>
+                    <li>PreUpdate</li>
+                    <li>PostUpdate</li>
+                    <li>PostLoad</li>
+                </ul>
+                <p>
+                    The only other rule is that any method marked to be a callback method has to take no arguments
+                    as input, and have void return.
+                </p>
+                <br/>
+            </subsection>
+
+            <subsection name="Entity Listener">
+                <p>
+                    As an alternative to having the actual callback methods in the Entity class itself you can define
+                    a separate class as an <i>EntityListener</i>. So lets take the example shown before and do it
+                    for an EntityListener.
+                </p>
+                <source><![CDATA[
+@Entity
+@EntityListeners(org.datanucleus.MyEntityListener.class)
+public class Account
+{
+    @Id
+    Long accountId;
+
+    Integer balance;
+    boolean preferred;
+
+    public Integer getBalance() { ... }
+}
+]]></source>
+                <source><![CDATA[
+public class MyEntityListener
+{
+    @PostPersist
+    public void newAccountAlert(Account acct)
+    {
+         ... do something when we get a new Account
+    }
+}]]></source>
+                <p>
+                    So we define our "Account" entity as normal but mark it with an <i>EntityListener</i>, and then in the
+                    <i>EntityListener</i> we define the callbacks we require. As before we can define any of the 7 callbacks
+                    as we require. The only difference is that the callback method has to take an argument of type "Object"
+                    that it will be called for, and have void return.
+                </p>
+            </subsection>
+        </section>
+    </body>
+</document>
