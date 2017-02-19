@@ -10,11 +10,11 @@ image:../images/query_compilation.png[]
 
 JPA doesn't currently define a mechanism for caching of queries. DataNucleus provides 3 levels of caching
 
-* link:#genericCompilation[Generic Compilation] : when a query is compiled it is initially compiled _generically_ into expression trees. 
+* link:#cache_genericcompilation[Generic Compilation] : when a query is compiled it is initially compiled _generically_ into expression trees. 
 This generic compilation is independent of the datastore in use, so can be used for other datastores. This can be cached.
-* link#datastoreCompilation[Datastore Compilation] : after a query is compiled into expression trees (above) it is then converted into the native language of the datastore in use. 
+* link#cache_datastorecompilation[Datastore Compilation] : after a query is compiled into expression trees (above) it is then converted into the native language of the datastore in use. 
 For example with RDBMS, it is converted into SQL. This can be cached
-* link:#results[Results] : when a query is run and returns objects of the candidate type, you can cache the identities of the result objects.
+* link:#cache_results[Results] : when a query is run and returns objects of the candidate type, you can cache the identities of the result objects.
 
 
 [[cache_genericcompilation]]

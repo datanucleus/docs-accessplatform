@@ -230,6 +230,77 @@ boolean managedByThisEM = em.contains(lincoln);
 -----
 
 
+[[cascading]]
+== Cascading Operations
+
+When you have relationships between entities, and you persist one entity, by default the related entity will _not_ be persisted.
+For each of the relation annotations `@OneToOne`, `@OneToMany`, `@ManyToOne` and `@ManyToMany` there is an attribute _cascade_ which defaults to null
+but you can control what operations cascade (persist, remove, merge, detach, refresh).
+
+Let's use our example above, and create new _Person_ and _Account_ objects.
+
+[source,java]
+-----
+Person lincoln = new Person(1, "Abraham", "Lincoln");
+Account acct1 = new Account(1, lincoln); // Second argument sets the relation between the objects
+-----
+
+now to persist them both we have two options. Firstly with the default cascade setting
+
+[source,java]
+-----
+em.persist(lincoln);
+em.persist(acct1);
+-----
+
+The second option is to set the metadata on _Account_ as
+
+[source,java]
+-----
+@Entity
+public class Account
+{
+    @Id
+    long id;
+
+    @OneToOne(cascade={CascadeType.PERSIST, CascadeType.MERGE})
+    Person person;
+}
+-----
+
+now we can simply do this (since the _Account_ has a reference to _Person_);
+
+[source,java]
+-----
+em.persist(acct1);
+-----
+
+
+[[orphanremoval]]
+== Orphans
+
+When an element is removed from a collection, or when a 1-1 relation is nulled, sometimes it is desirable to delete the other object.
+JPA defines a facility of removing "orphans" by specifying metadata for a 1-1 or 1-N relation. Let's take our example. 
+In the above relation between _Account_ and _Person_ if we set the "person" field to null, this should mean that the _Person_ record is deleted.
+So we could change the metadata to
+
+[source,java]
+-----
+@Entity
+public class Account
+{
+    @Id
+    long id;
+
+    @OneToOne(cascade={CascadeType.PERSIST, CascadeType.MERGE}, `orphanRemoval`=true)
+    Person person;
+}
+-----
+
+So from now on, if we delete the _Account_ we delete the _Person_, and if we set the "person" field of _Account_ to null then we also delete the _Person_.
+
+
+
 [[level1_cache]]
 == Level 1 Cache
 
@@ -253,20 +324,5 @@ for that EntityManager. When the EntityManager is closed the cache is cleared.
 
 link:../extensions/extensions.html#cache_level1[image:../images/nucleus_plugin.png[]]
 The L1 cache is a DataNucleus plugin point allowing you to provide your own cache where you require it.
-
-
-[[multitenancy]]
-== Multitenancy
-
-If you are using an _EntityManager_ in a <a href="multitenancy.html">multitenancy</a> environment, and want to have an EntityManager per _tenant_ you 
-would set the "Tenant ID" on the EntityManager after creation.
-
-[source,java]
------
-EntityManager em = emf.createEntityManager();
-em.setProperty("datanucleus.tenantId", "MyTenantName");
------
-
-Subsequently on database accesses for classes that are using multitenancy you will likely see use of the "Tenant ID" discriminator column.
 
 

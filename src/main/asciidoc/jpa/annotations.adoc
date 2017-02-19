@@ -1946,12 +1946,12 @@ This annotation is used to define that a field represents a 1-1 relation. Specif
 If the field that owns the relation is stored in an embedded object on the other side, use DOT notation to identify it.
 |
 
-|link:orm/cascading.html[cascade]
+|link:persistence.html#cascading[cascade]
 |CascadeType[]
 |Whether persist, update, delete, refresh operations are cascaded
 |
 
-|link:orm/cascading.html[orphanRemoval]
+|link:persistence.html#orphanremoval[orphanRemoval]
 |boolean
 |Whether to remove orphans when either removing this side of the relation or when nulling the relation
 |true, *false*
@@ -1998,12 +1998,12 @@ This annotation is used to define that a field represents a 1-N relation. Specif
 If the field that owns the relation is stored in an embedded object on the other side, use DOT notation to identify it.
 |
 
-|link:orm/cascading.html[cascade]
+|link:persistence.html#cascading[cascade]
 |CascadeType[]
 |Whether persist, update, delete, refresh operations are cascaded
 |
 
-|link:orm/cascading.html[orphanRemoval]
+|link:persistence.html#orphanremoval[orphanRemoval]
 |boolean
 |Whether to remove orphans when either removing this side of the relation or when nulling the relationremoving an element
 |true, *false*
@@ -2051,7 +2051,7 @@ Specified on the *field/method*.
 If the field that owns the relation is stored in an embedded object on the other side, use DOT notation to identify it.
 |
 
-|link:orm/cascading.html[cascade]
+|link:persistence.html#cascading[cascade]
 |CascadeType[]
 |Whether persist, update, delete, refresh operations are cascaded
 |
@@ -2105,7 +2105,7 @@ This annotation is used to define that a field represents a N-1 relation. Specif
 |Whether the field can store nulls.
 |*true*, false
 
-|link:orm/cascading.html[cascade]
+|link:persistence.html#cascading[cascade]
 |CascadeType[]
 |Whether persist, update, delete, refresh operations are cascaded
 |
