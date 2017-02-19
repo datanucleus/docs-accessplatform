@@ -9,19 +9,19 @@ A Transaction forms a unit of work. The Transaction manages what happens within 
 Transactions can be managed by the users application, or can be managed by a framework (such as Spring), or can be managed by a JavaEE container. 
 These are described below.
 
-* <a href="#local">Local transactions</a> : managed using the JPA Transaction API
-* <a href="#jta">JTA transactions</a> : managed using the JTA UserTransaction API
-* <a href="#container">Container-managed transactions</a> : managed by a JavaEE environment
-* <a href="#spring">Spring-managed transactions</a> : managed by SpringFramework
-* <a href="#nontransactional">No transactions</a> : "auto-commit" mode
-* <a href="#flushing">Flushing a Transaction</a>
-* <a href="#isolation">Controlling transaction isolation level</a>
-* <a href="#readonly">Read-Only transactions</a>
-* <a href="#savepoint">RDBMS : Savepoints</a>
-* <a href="#pessimistic">Pessimistic Locking of objects</a>
-* <a href="#optimistic">Optimistic Locking of objects</a>
+* <a href="#transaction_local">Local transactions</a> : managed using the JPA Transaction API
+* <a href="#transaction_jta">JTA transactions</a> : managed using the JTA UserTransaction API
+* <a href="#transaction_container">Container-managed transactions</a> : managed by a JavaEE environment
+* <a href="#transaction_spring">Spring-managed transactions</a> : managed by SpringFramework
+* <a href="#transaction_nontransactional">No transactions</a> : "auto-commit" mode
+* <a href="#transaction_flushing">Flushing a Transaction</a>
+* <a href="#transaction_isolation">Controlling transaction isolation level</a>
+* <a href="#transaction_readonly">Read-Only transactions</a>
+* <a href="#transaction_savepoint">RDBMS : Savepoints</a>
+* <a href="#locking_pessimistic">Pessimistic Locking of objects</a>
+* <a href="#locking_optimistic">Optimistic Locking of objects</a>
 
-[[local]]
+[[transaction_local]]
 == Locally-Managed Transactions
 
 If using DataNucleus JPA in a J2SE environment the normal type of transaction is _RESOURCE_LOCAL_.
@@ -73,7 +73,7 @@ In this case you will have defined your link:#persistenceunit[persistence-unit] 
 The basic idea with *Locally-Managed transactions* is that you are managing the transaction start and end.
 
 
-[[jta]]
+[[transaction_jta]]
 == JTA Transactions
 
 NOTE: Strict JPA does not support use of JTA transactions in a JavaSE environment. DataNucleus does however allow JTA transactions in a JavaSE environment.
@@ -149,7 +149,7 @@ set the method of finding the _TransactionManager_, by use of the persistence pr
 if using this property set to _custom_jndi_ then also *datanucleus.transaction.jta.transactionManagerJNDI* set to the JNDI location that stores the _TransactionManager_ instance.
 
 
-[[container]]
+[[transaction_container]]
 == Container-Managed Transactions
 
 When using a JavaEE container you are giving over control of the transactions to the container. 
@@ -158,14 +158,14 @@ the above examples *except* that you would OMIT the _tx.begin(), tx.commit(),
 tx.rollback()_ since the JavaEE container will be doing this for you.
 
 
-[[spring]]
+[[transaction_spring]]
 == Spring-Managed Transactions
 
 When you use a framework like <a href="http://www.springframework.org" target="_blank">Spring</a> 
 you would not need to specify the _tx.begin(), tx.commit(), tx.rollback()_ since that would be done for you.
 
 
-[[nontransactional]]
+[[transaction_nontransactional]]
 == No Transactions
 
 DataNucleus allows the ability to operate without transactions. 
@@ -186,7 +186,7 @@ If this is true then any persist/delete/update will be committed to the datastor
 If this is false then any persist/delete/update will be queued up until the next transaction (or _em.close()_) and committed with that.
 
 
-[[flushing]]
+[[transaction_flushing]]
 == Flushing
 
 During a transaction, depending on the configuration, operations don't necessarily go to the datastore immediately, often waiting until _commit_. 
@@ -209,7 +209,7 @@ List<ObjectProvider> objs =
 -----
 
 
-[[isolation]]
+[[transaction_isolation]]
 == Transaction Isolation
 
 image:../images/nucleus_extension.png[]
@@ -232,7 +232,7 @@ tx.setOption("transaction.isolation", 2);
 -----
 
 
-[[readonly]]
+[[transaction_readonly]]
 == Read-Only Transactions
 
 Obviously transactions are intended for committing changes. 
@@ -264,7 +264,7 @@ em.close();
 Any call to _commit_ on the transaction will throw an exception forcing the user to roll it back.
 
 
-[[savepoint]]
+[[transaction_savepoint]]
 == Transaction Savepoints (RDBMS)
 
 image:../images/nucleus_extension.png[]
@@ -309,12 +309,12 @@ and when an error occurs the Transaction can roll back any changes performed.
 There are the following locking types for a transaction.
 
 * Transactions can lock all records in a datastore and keep them locked until they are ready to commit their changes. 
-These are known as link:#pessimistic[Pessimistic (or datastore) Locking].
+These are known as link:#locking_pessimistic[Pessimistic (or datastore) Locking].
 * Transactions can simply assume that things in the datastore will not change until they are ready to commit, not lock any records and 
-then just before committing make a check for changes. This is known as link:#optimistic[Optimistic Locking].
+then just before committing make a check for changes. This is known as link:#locking_optimistic[Optimistic Locking].
 
 
-[[pessimistic]]
+[[locking_pessimistic]]
 === Pessimistic (Datastore) Locking
 image:../images/nucleus_extension.png[]
 
@@ -392,7 +392,7 @@ It should be noted that DataNucleus provides two persistence properties that all
 * _datanucleus.datastoreTransactionFlushLimit_ represents the number of dirty objects before a flush is performed. This defaults to 1.
 
 
-[[optimistic]]
+[[locking_optimistic]]
 === Optimistic Locking
 
 It is suitable for longer lived operations maybe where user interaction is taking place and where it would be undesirable to block access to 

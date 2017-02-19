@@ -311,26 +311,26 @@ Please refer to <a href="datastores/index.html">the datastores guides] for the U
 |Username to use for connecting to the DB
 
 |datanucleus.ConnectionPassword
-|Password to use for connecting to the DB. See <a href="#ConnectionPasswordDecrypter">datanucleus.ConnectionPasswordDecrypter] for a way of providing an encrypted password here
+|Password to use for connecting to the DB. See *datanucleus.ConnectionPasswordDecrypter* for a way of providing an encrypted password here
 
 |datanucleus.ConnectionDriverName
 |The name of the (JDBC) driver to use for the DB (for RDBMS only).
 
 |datanucleus.ConnectionFactory
 |Instance of a connection factory for *transactional* connections. This is an alternative to *datanucleus.ConnectionURL*.
-*Only for RDBMS*, and it must be an instance of javax.sql.DataSource. See <a href="jdo/datastore_connection.html#datasource">Data Sources]
+*Only for RDBMS*, and it must be an instance of javax.sql.DataSource. See link:#datasource[Data Sources]
 
 |datanucleus.ConnectionFactory2
 |Instance of a connection factory for *nontransactional* connections. This is an alternative to *datanucleus.ConnectionURL*.
-*Only for RDBMS*, and it must be an instance of javax.sql.DataSource. See <a href="jdo/datastore_connection.html#datasource">Data Sources].
+*Only for RDBMS*, and it must be an instance of javax.sql.DataSource. See link:#datasource[Data Sources].
 
 |datanucleus.ConnectionFactoryName
 |The JNDI name for a connection factory for *transactional* connections. 
-*Only for RDBMS*, and it must be a JNDI name that points to a javax.sql.DataSource object. See <a href="jdo/datastore_connection.html#datasource">Data Sources].
+*Only for RDBMS*, and it must be a JNDI name that points to a javax.sql.DataSource object. See link:#datasource[Data Sources].
 
 |datanucleus.ConnectionFactory2Name
 |The JNDI name for a connection factory for *nontransactional* connections. 
-*Only for RDBMS*, and it must be a JNDI name that points to a javax.sql.DataSource object. See <a href="jdo/datastore_connection.html#datasource">Data Sources].
+*Only for RDBMS*, and it must be a JNDI name that points to a javax.sql.DataSource object. See link:#datasource[Data Sources].
 
 |datanucleus.ConnectionPasswordDecrypter
 |Name of a class that implements _org.datanucleus.store.ConnectionEncryptionProvider_ and should only be specified if the password is encrypted in the persistence properties
@@ -361,7 +361,7 @@ Users are always advised to run an EM as single threaded, since some operations 
 {true, *false*}
 
 |datanucleus.Optimistic
-|Whether to use optimistic transactions (<a href="transactions.html#optimistic">JPA]).
+|Whether to use optimistic transactions (link:#locking_optimistic[Optimistic locking]).
 {*true*, false}
 
 |datanucleus.RetainValues
@@ -384,7 +384,7 @@ of schema names in DDL. *RDBMS only*
 
 |datanucleus.tenantId
 |String id to use as a discriminator on all persistable class tables to restrict data for the tenant using this application instance 
-(aka <a href="jpa/multitenancy.html">multi-tenancy via discriminator]). *RDBMS, MongoDB, HBase, Neo4j, Cassandra only*
+(aka link:#multitenancy[multi-tenancy via discriminator]). *RDBMS, MongoDB, HBase, Neo4j, Cassandra only*
 
 |datanucleus.tenantProvider
 |Instance of a class that implements _org.datanucleus.store.schema.MultiTenancyProvider_ which will return the tenant name to use for each call.
@@ -476,7 +476,7 @@ connection URL. The associated DataNucleus plugin has to be in the CLASSPATH whe
 When using data sources (as usually done in a JavaEE container), DataNucleus cannot find out the correct type automatically and this option must be set.
 
 |datanucleus.jmxType
-|Which JMX server to use when hooking into JMX. Please refer to the <a href="jdo/monitoring.html">Monitoring Guide]
+|Which JMX server to use when hooking into JMX. Please refer to the link:#monitoring[Monitoring Guide]
 {default, mx4j}
 
 |datanucleus.deletionPolicy
@@ -701,7 +701,7 @@ DataNucleus provides the following properties for configuring transaction handli
 
 |datanucleus.transaction.isolation
 |Select the default transaction isolation level for ALL EntityManagers. Some databases do not support all isolation levels, refer to your database documentation. 
-Please refer to the transaction guides for <a href="jpa/transactions.html#isolation">JPA]
+Please refer to the link:#transaction_isolation[transaction guide]
 {read-uncommitted, *read-committed*, repeatable-read, serializable}
 
 |datanucleus.transaction.jta.transactionManagerLocator
@@ -744,7 +744,7 @@ batching {true, false}
 
 |datanucleus.connectionPoolingType
 |This property allows you to utilise a 3rd party software package for enabling connection pooling. When using RDBMS you can select from DBCP, C3P0, Proxool, BoneCP, etc. 
-You must have the 3rd party jars in the CLASSPATH to use these options. Please refer to the <a href="jdo/datastore_connection.html#pooling">Connection Pooling guide] for details.
+You must have the 3rd party jars in the CLASSPATH to use these options. Please refer to the link:#connection_pooling[Connection Pooling guide] for details.
 {None, *dbcp2-builtin*, DBCP, DBCP2, C3P0, Proxool, BoneCP, HikariCP, Tomcat, {others}}
 
 |datanucleus.connectionPoolingType.nontx
@@ -923,7 +923,7 @@ DataNucleus provides the following properties for configuring value generation h
 |datanucleus.valuegeneration.transactionIsolation
 |Select the default transaction isolation level for identity generation.
 Must have _datanucleus.valuegeneration.transactionAttribute_ set to _New_. Some databases do not support all isolation levels, refer to your database documentation. 
-Please refer to the transaction guide for <a href="jpa/transactions.html#isolation">JPA]
+Please refer to the link:#transactions_isolation[transaction guide]
 {read-uncommitted, *read-committed*, repeatable-read, serializable}
 |===
 
