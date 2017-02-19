@@ -1,0 +1,40 @@
+[[jpa_getting_started]]
+= JPA Getting Started Guide
+:_basedir: ../
+:_imagesdir: images/
+
+
+Developing applications is, in general, a complicated task, involving many components. Developing all of these components can be very time consuming.
+The Java Persistence API (JPA) was designed to alleviate some of this time spent, providing an API to allow java developers to persist object-oriented 
+data into relational databases (RDBMS). 
+
+DataNucleus JPA provides an implementation of this JPA _standard_, allowing you, the user, to persist your
+object-oriented data to not only the RDBMS datastores the standard was intended for, but also to a wide range of other datastores.
+These include popular map stores such as Cassandra and HBase, the Neo4j graph store, spreadsheets in Excel or OpenOffice formats, 
+JSON formatted Amazon and Google Storage options, the popular MongoDB JSON-like document store, as well as ubiquitous LDAP and more besides.
+
+DataNucleus doesn't purport to be the best solution to every problem. 
+For example, where you want to bulk persist large amounts of data then other solutions that get closer to the datastore API would be more appropriate.
+Where you want to tailor the precise query sent to the datastore to take advantage of some datastore-specific feature is another situation
+in which you may find a hand-crafted solution more appropriate. 
+That said, the range of capabilities of DataNucleus JPA cover a wide range of use-cases, the barrier to entry for use of DataNucleus us very low. 
+You do not need to necessarily be an expert in all features of the chosen datastore to use it. It shields you from the majority of the
+more routine handling, whilst still letting you have a high degree of control over its behaviour and we hope that you benefit from its features.
+
+
+== Key Points
+
+There are some key points to bear in mind when starting using JPA for java persistence.
+
+* Your classes should be exactly that, _your_ classes. DataNucleus imposes little to nothing on you. Some JPA providers insist on a
+_default constructor_, but DataNucleus provides its enhancer to add that automatically when not present.
+* Your JPA entity classes need link:enhancer.html[bytecode enhancing] for use in the persistence process, but this can be an automatic post-compilation step.
+* To persist objects of classes you firstly need to *define which classes are persistable, and how they are persisted*. 
+Start under the link:mapping.html[JPA Mapping Guide]
+* Use of JPA requires an link:persistence.html#emf[EntityManagerFactory] to access the datastore.
+* The persistence itself is controlled by an link:persistence.html#em[EntityManager] and each object to be persisted will
+have different link:persistence.html#lifecycle[lifecycle states] that you need to have an understanding of.
+* You retrieve objects either by their identity, or using a link:query.html[query]. With JPA you can use JPQL or SQL query languages
+* You will need `javax.persistence` as well as `datanucleus-api-jpa`, `datanucleus-core` and the `datanucleus-XXX` jar for whichever datastore you are using.
+
+include::tutorial_rdbms.adoc[leveloffset=+1]
