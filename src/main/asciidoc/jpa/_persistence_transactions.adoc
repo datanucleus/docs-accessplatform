@@ -9,17 +9,17 @@ A Transaction forms a unit of work. The Transaction manages what happens within 
 Transactions can be managed by the users application, or can be managed by a framework (such as Spring), or can be managed by a JavaEE container. 
 These are described below.
 
-* <a href="#transaction_local">Local transactions</a> : managed using the JPA Transaction API
-* <a href="#transaction_jta">JTA transactions</a> : managed using the JTA UserTransaction API
-* <a href="#transaction_container">Container-managed transactions</a> : managed by a JavaEE environment
-* <a href="#transaction_spring">Spring-managed transactions</a> : managed by SpringFramework
-* <a href="#transaction_nontransactional">No transactions</a> : "auto-commit" mode
-* <a href="#transaction_flushing">Flushing a Transaction</a>
-* <a href="#transaction_isolation">Controlling transaction isolation level</a>
-* <a href="#transaction_readonly">Read-Only transactions</a>
-* <a href="#transaction_savepoint">RDBMS : Savepoints</a>
-* <a href="#locking_pessimistic">Pessimistic Locking of objects</a>
-* <a href="#locking_optimistic">Optimistic Locking of objects</a>
+* link:#transaction_local">Local transactions</a> : managed using the JPA Transaction API
+* link:#transaction_jta">JTA transactions</a> : managed using the JTA UserTransaction API
+* link:#transaction_container">Container-managed transactions</a> : managed by a JavaEE environment
+* link:#transaction_spring">Spring-managed transactions</a> : managed by SpringFramework
+* link:#transaction_nontransactional">No transactions</a> : "auto-commit" mode
+* link:#transaction_flushing">Flushing a Transaction</a>
+* link:#transaction_isolation">Controlling transaction isolation level</a>
+* link:#transaction_readonly">Read-Only transactions</a>
+* link:#transaction_savepoint">RDBMS : Savepoints</a>
+* link:#locking_pessimistic">Pessimistic Locking of objects</a>
+* link:#locking_optimistic">Optimistic Locking of objects</a>
 
 [[transaction_local]]
 == Locally-Managed Transactions
@@ -161,7 +161,7 @@ tx.rollback()_ since the JavaEE container will be doing this for you.
 [[transaction_spring]]
 == Spring-Managed Transactions
 
-When you use a framework like <a href="http://www.springframework.org" target="_blank">Spring</a> 
+When you use a framework like http://www.springframework.org[Spring] 
 you would not need to specify the _tx.begin(), tx.commit(), tx.rollback()_ since that would be done for you.
 
 
@@ -329,7 +329,7 @@ This will result in all "SELECT ... FROM ..." statements being changed to be "SE
 This will be applied only where the underlying RDBMS supports the "FOR UPDATE" syntax.
 
 With pessimistic locking DataNucleus will grab a datastore connection at the first operation, and maintain it for the duration of the transaction. 
-A single connection is used for the transaction (with the exception of any <a href="value_generation.html">Identity Generation</a> operations which need datastore 
+A single connection is used for the transaction (with the exception of any link:mapping.html#value_generation[Value Generation] operations which need datastore 
 access, so these can use their own connection).
 
 In terms of the process of pessimistic (datastore) locking, we demonstrate this below.
