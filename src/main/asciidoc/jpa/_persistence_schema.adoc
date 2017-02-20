@@ -52,7 +52,7 @@ will insert any data that you require to be available when your EMF is initialis
 
 image:../images/nucleus_extension.png[]
 
-If you want to create the schema ("tables"+"columns"+"constraints") during the persistence process, the property 
+If you want to create the schema (_tables_ + _columns_ + _constraints_) during the persistence process, the property 
 *datanucleus.schema.autoCreateAll* provides a way of telling DataNucleus to do this. 
 It's a shortcut to setting the other 3 properties to true.
 Thereafter, during calls to DataNucleus to persist classes or performs queries of persisted data, whenever it encounters 
@@ -82,7 +82,7 @@ DataNucleus can check any existing schema against what is implied by the MetaDat
 The property *datanucleus.schema.validateTables* provides a way of telling DataNucleus to validate any tables that it 
 needs against their current definition in the datastore. If the user already has a schema, and want to make sure that their tables 
 match what DataNucleus requires (from the MetaData definition) they would set this property to _true_. 
-This can be useful for example where you are trying to map to an existing schema and want to verify that you've got the correct MetaData definition.</p>
+This can be useful for example where you are trying to map to an existing schema and want to verify that you've got the correct MetaData definition.
 
 The property *datanucleus.schema.validateColumns* provides a way of telling DataNucleus to validate any columns of the 
 tables that it needs against their current definition in the datastore. 
@@ -128,7 +128,7 @@ This is not part of JPA but DataNucleus allows an extension to specify the relat
 Note that the values of the position start at 0, and should be specified completely for all columns of all fields.
 
 
-[[schema_read_only]
+[[schema_read_only]]
 == Schema : Read-Only
 
 If your datastore is read-only (you can't add/update/delete any data in it), obviously you could just configure your 
@@ -194,8 +194,9 @@ If you are using Maven to build your system, you will need the DataNucleus Maven
 This provides 5 goals representing the different modes of *DataNucleus SchemaTool*. 
 You can use the goals *datanucleus:schema-create*, *datanucleus:schema-delete*, *datanucleus:schema-validate* depending on whether you want to 
 create, delete or validate the database tables. To use the DataNucleus Maven plugin you will may need to set properties 
-for the plugin (in your _pom.xml_). For example
-    
+for the plugin (in your `pom.xml`). For example
+
+[cols="2,1,5", options="header"]
 |===
 |Property
 |Default
@@ -295,6 +296,7 @@ mvn datanucleus:schema-dbinfo              Output info for the datastore
 
 An Ant task is provided for using *DataNucleus SchemaTool*. It has classname *org.datanucleus.store.schema.SchemaToolTask*, and accepts the following parameters
 
+[cols="2,5,2", options="header"]
 |===
 |Parameter
 |Description
@@ -302,7 +304,7 @@ An Ant task is provided for using *DataNucleus SchemaTool*. It has classname *or
 
 |api
 |API that we are using in our use of DataNucleus. *Set this to JPA typically*
-|*JDO* | JPA
+|*JDO*, JPA
 
 |persistenceUnit
 |Name of the persistence-unit that we should manage the schema for (defines the classes and the properties defining the datastore).
@@ -343,7 +345,8 @@ thus all parameters available to the Java task are also available to the SchemaT
 In addition to the parameters that the Ant task accepts, you will need to set up your CLASSPATH to include the classes and MetaData files, 
 and to define the following system properties via the _sysproperty_ parameter (not required when specifying the persistence props via the 
 properties file, or when providing the _persistence-unit_)
-    
+
+[cols="2,1,5", options="header"]
 |===
 |Parameter
 |Description
