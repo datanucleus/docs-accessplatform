@@ -1,0 +1,22 @@
+[[googlestorage]]
+= Google Storage Datastores
+:_basedir: ../
+:_imagesdir: images/
+
+DataNucleus supports persisting/retrieving objects to/from Google Storage 
+(using the https://github.com/datanucleus/datanucleus-json[datanucleus-json] plugin). 
+Simply specify your connection details as follows
+
+-----
+datanucleus.ConnectionURL=googlestorage:http://commondatastorage.googleapis.com/
+datanucleus.ConnectionUserName={Access Key ID}
+datanucleus.ConnectionPassword={Secret Access Key}
+datanucleus.cloud.storage.bucket={bucket}
+-----
+
+You then create your PMF/EMF as normal and use JDO/JPA as normal.
+
+Things to bear in mind with GoogleStorage usage :-
+
+* Querying can be performed using JDOQL or JPQL. Any filtering/ordering will be performed *in-memory*
+

@@ -1,0 +1,98 @@
+[[json]]
+= JSON Datastores
+:_basedir: ../
+:_imagesdir: images/
+
+
+image:../images/datastore/json.png[]
+
+DataNucleus supports persisting/retrieving objects to/from JSON documents (using the https://github.com/datanucleus/datanucleus-json[datanucleus-json] plugin). 
+Simply specify your "connectionURL" as follows
+
+-----
+datanucleus.ConnectionURL=json:{url}
+-----
+
+replacing "{url}" with some URL of your choice (e.g "http://www.mydomain.com/somepath/").
+You then create your PMF/EMF as normal and use JDO/JPA as normal.
+
+Things to bear in mind with JSON usage :-
+
+* Querying can be performed using JDOQL or JPQL. Any filtering/ordering will be performed *in-memory*
+* Relations : DataNucleus stores the id of the related object(s) in the element of the field. 
+If a relation is bidirectional then it will be stored at both ends of the relation; this facilitates easy access to the related object with no need to do a query to find it.</li>
+
+
+== Mapping : HTTP Mapping
+
+The persistence to JSON datastore is performed via HTTP methods. 
+HTTP response codes are used to validate the success or failure to perform the operations. The JSON datastore must respect the following:
+
+
+|===
+|Method
+|Operation
+|URL format
+|HTTP response code
+
+|PUT
+|update objects
+|/{primary key}
+|HTTP Code 201 (created), 200 (ok) or 204 (no content)
+
+|HEAD
+|locate objects
+|/{primary key}
+|HTTP 404 if the object does not exist
+
+|POST
+|insert objects
+|/
+|HTTP Code 201 (created), 200 (ok) or 204 (no content)
+
+|GET
+|fetch objects
+|/{primary key}
+|HTTP Code 200 (ok) or 404 if object does not exist
+
+|GET
+|retrieve extent of classes (set of objects)
+|/
+|HTTP Code 200 (ok) or 404 if no objects exist
+
+|DELETE
+|delete objects
+|/{primary key}
+|HTTP Code 202 (accepted), 200 (ok) or 204 (no content)
+|===
+
+
+== Mapping : Persistent Classes
+
+|===
+|Metadata API
+|Extension Element Attachment
+|Extension
+|Description
+
+|JDO
+|/jdo/package/class/extension
+|url
+|Defines the location of the resources/objects for the class
+|===
+
+
+[source,xml]
+-----
+<jdo>
+    <package name="org.datanucleus.samples.models.company">
+        <class name="Person" detachable="true">
+            <extension vendor-name="datanucleus" key="url" value="/Person"/>
+        </class>
+    </package>
+</jdo>
+-----
+
+In this example, the _url_ extension identifies the Person resources/objects as _/Person_.
+The persistence operations will be relative to this path. e.g /Person/{primary key} will be used for PUT (update), GET (fetch) and DELETE (delete) methods.
+

@@ -1,0 +1,195 @@
+[[hbase]]
+= HBase Datastores
+:_basedir: ../
+:_imagesdir: images/
+
+image:../images/datastore/hbase.png[]
+
+DataNucleus supports persisting/retrieving objects to/from HBase datastores (using the https://github.com/datanucleus/datanucleus-hbase[datanucleus-hbase] plugin, 
+which makes use of the HBase/Hadoop jars).  Simply specify your "connectionURL" as follows
+
+-----
+datanucleus.ConnectionURL=hbase[:{server}:{port}]
+datanucleus.ConnectionUserName=
+datanucleus.ConnectionPassword=
+-----
+
+If you just specify the URL as _hbase_ then you have a local HBase datastore, otherwise it tries to connect to the datastore at _{server}:{port}_. 
+Alternatively just put "hbase"  as the URL and set the zookeeper details in `hbase-site.xml` as normal.
+You then create your PMF/EMF as normal and use JDO/JPA as normal.
+
+The jars required to use DataNucleus HBase persistence are `datanucleus-core`, `datanucleus-api-jdo`/`datanucleus-api-jpa`, `datanucleus-hbase` and `hbase-client`.
+
+There are tutorials available for use of DataNucleus with HBase link:../jdo/tutorial_hbase.html[for JDO] and link:../jpa/tutorial_hbase.html[for JPA]
+
+Things to bear in mind with HBase usage :-
+
+* Creation of a PMF/EMF will create an internal _HBaseConnectionPool_
+* Creation of a PM/EM will create/use a _HConnection_.
+* Querying can be performed using JDOQL or JPQL. Some components of a filter are handled in the datastore, and the remainder in-memory.
+Currently any expression of a field (in the same table), or a literal are handled in-datastore,
+as are the operators &amp;&amp;, ||, >, >=, <, <=, ==, and !=.
+* The "row key" will be the PK field(s) when using "application-identity", and the generated id when using "datastore-identity"
+
+
+== Field/Column Naming
+
+By default each field is mapped to a single column in the datastore, with the family name being the name of the table, 
+and the column name using the name of the field as its basis (but following JDO/JPA naming strategies for the precise column name). 
+You can override this as follows
+
+[source,java]
+-----
+@Column(name="{familyName}:{qualifierName}")
+String myField;
+-----
+
+replacing _{familyName}_ with the family name you want to use, and _{qualifierName}_ with the column name (qualifier name in HBase terminology) you want to use.
+Alternatively if you don't want to override the default family name (the table name), then you just omit the "{familyName}:" part and simply specify the column name.
+
+
+== MetaData Extensions
+
+Some metadata extensions (_@Extension_) have been added to DataNucleus to support some of HBase particular table creation options. 
+The supported attributes at Table creation for a column family are:
+
+* *bloomFilter* : An advanced feature available in HBase is Bloom filters, allowing you to improve lookup times given you have a specific access pattern. 
+Default is NONE. Possible values are: ROW -> use the row key for the filter, ROWKEY -> use the row key and column key (family+qualifier) for the filter.
+* *inMemory* : The in-memory flag defaults to false. Setting it to true is not a guarantee that all blocks of a family are loaded into memory nor that 
+they stay there. It is an elevated priority, to keep them in memory as soon as they are loaded during a normal retrieval operation, and until
+the pressure on the heap (the memory available to the Java-based server processes)is too high, at which time they need to be discarded by force.
+* *maxVersions* : Per family, you can specify how many versions of each value you want to keep.The default value is 3, but you may reduce it to 1, 
+for example, in case you know for sure that you will never want to look at older values.
+* *keepDeletedCells* : ColumnFamilies can optionally keep deleted cells. That means deleted cells can still be retrieved with Get or Scan operations, 
+as long these operations have a time range specified that ends before the timestamp of any delete that would affect the cells. 
+This allows for point in time queries even in the presence of deletes. Deleted cells are still subject to TTL and there will never be more than 
+"maximum number of versions" deleted cells. A new "raw" scan options returns all deleted rows and the delete markers.
+* *compression* : HBase has pluggable compression algorithm, default value is NONE. Possible values GZ, LZO, SNAPPY.
+* *blockCacheEnabled* : As HBase reads entire blocks of data for efficient I/O usage, it retains these blocks in an in-memory cache so that subsequent 
+reads do not need any disk operation. The default of true enables the block cache for every read operation. But if your use-case only ever has sequential 
+reads on a particular column family, it is advisable that you disable it from polluting the block cache by setting it to false.
+* *timeToLive* : HBase supports predicate deletions on the number of versions kept for each value, but also on specific times. 
+The time-to-live (or TTL) sets a threshold based on the timestamp of a value and the internal housekeeping is checking automatically if a value exceeds its TTL. 
+If that is the case, it is dropped during major compactions
+
+To express these options, a format similar to a properties file is used such as:
+
+-----
+hbase.columnFamily.[family name to apply property on].[attribute] = {value}
+-----
+
+where:
+
+* attribute: One of the above defined attributes (inMemory, bloomFilter,...)
+* family name to apply property on: The column family affected.
+* value: Associated value for this attribute.
+
+Let's take an example applying column family/qualifiers, setting the bloom filter option to ROWKEY, and the in-memory flag to true would look like.
+Firstly JDO Annotations:-
+
+-----
+@PersistenceCapable
+@Extension(vendorName = "datanucleus", key = "hbase.columnFamily.meta.bloomFilter", value = "ROWKEY")
+@Extension(vendorName = "datanucleus", key = "hbase.columnFamily.meta.inMemory", value = "true")
+public class MyClass
+{
+    @PrimaryKey 
+    private long id; 
+
+    // column family data, name of attribute blob 
+    @Column(name = "data:blob") 
+    private String blob; 
+
+    // column family meta, name of attribute firstName 
+    @Column(name = "meta:firstName") 
+    private String firstName;
+
+    // column family meta, name of attribute firstName 
+    @Column(name = "meta:lastName") 
+    private String lastName;
+   
+   [ ... getter and setter ... ]
+}
+-----
+
+or using XML
+
+-----
+<class name="MyClass">
+    <extension vendor-name="datanucleus" key="hbase.columnFamily.meta.bloomFilter" value="ROWKEY"/>
+    <extension vendor-name="datanucleus" key="hbase.columnFamily.meta.inMemory" value="true"/>
+    <field name="id" primary-key="true"/>
+    <field name="blob">
+        <column name="data:blob"/>
+    </field>
+    <field name="firstName">
+        <column name="meta:firstName"/>
+    </field>
+    <field name="lastName">
+        <column name="meta:lastName"/>
+    </field>
+</class>
+-----
+
+Now JPA Annotations:-
+
+[source,java]
+-----
+@Entity
+@org.datanucleus.api.jpa.annotations.Extensions({
+    @org.datanucleus.api.jpa.annotations.Extension(key = "hbase.columnFamily.meta.bloomFilter", value = "ROWKEY"), 
+    @org.datanucleus.api.jpa.annotations.Extension(key = "hbase.columnFamily.meta.inMemory", value = "true") 
+}) 
+public class MyClass
+{
+    @Id 
+    private long id; 
+
+    // column family data, name of attribute blob 
+    @Column(name = "data:blob")
+    private String blob; 
+
+    // column family meta, name of attribute firstName 
+    @Column(name = "meta:firstName") 
+    private String firstName;
+
+    // column family meta, name of attribute firstName 
+    @Column(name = "meta:lastName") 
+    private String lastName;
+   
+   [ ... getter and setter ... ]
+}
+-----
+
+or using XML
+
+[source,xml]
+-----
+<entity class="mydomain.MyClass">
+    <extension vendor-name="datanucleus" key="hbase.columnFamily.meta.bloomFilter" value="ROWKEY"/>
+    <extension vendor-name="datanucleus" key="hbase.columnFamily.meta.inMemory" value="true"/>
+    <attributes>
+        <id name="id"/>
+        <basic name="blob">
+            <column name="data:blob"/>
+        </basic>
+        <basic name="firstName">
+            <column name="meta:firstName"/>
+        </basic>
+        <basic name="lastName">
+            <column name="meta:lastName"/>
+        </basic>
+    </attributes>
+</entity>
+-----
+
+
+== References
+
+Below are some references using this support
+
+
+* http://www.nofluffjuststuff.com/blog/matthias__wessendorf_/2010/03/apache_hadoop_hbase_plays_nice_with_jpa[Apache Hadoop HBase plays nicely with JPA]
+* http://rainerpeter.wordpress.com/2011/01/11/hbase-with-jpa-and-spring-roo/[HBase with JPA and Spring Roo]
+* http://rainerpeter.wordpress.com/2011/01/12/value-generator-plugin-datanucleus-hbase/[Value Generator plugin for HBase and DataNucleus]
+

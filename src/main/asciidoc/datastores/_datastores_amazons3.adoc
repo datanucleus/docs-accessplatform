@@ -1,0 +1,32 @@
+[[amazons3]]
+= Amazon S3 Datastores
+:_basedir: ../
+:_imagesdir: images/
+
+
+image:../images/datastore/aws.png[]
+
+DataNucleus supports persisting/retrieving objects to/from Amazon Simple Storage Service
+(using the https://github.com/datanucleus/datanucleus-json[datanucleus-json] plugin). 
+Simply specify your connection details as follows
+
+-----
+datanucleus.ConnectionURL=amazons3:http://s3.amazonaws.com/
+datanucleus.ConnectionUserName={Access Key ID}
+datanucleus.ConnectionPassword={Secret Access Key}
+datanucleus.cloud.storage.bucket={bucket}
+-----
+
+You then create your PMF/EMF as normal and use JDO/JPA as normal.
+
+Things to bear in mind with Amazon S3 usage :-
+
+* Querying can be performed using JDOQL or JPQL. Any filtering/ordering will be performed *in-memory*
+
+
+== References
+
+Below are some references using this support
+
+* http://www.den-4.com/?p=113[Simple Integration of Datanucleus 2.0.0 + AmazonS3]
+

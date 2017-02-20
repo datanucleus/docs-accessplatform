@@ -1,0 +1,108 @@
+[[xml]]
+= XML Datastores
+:_basedir: ../
+:_imagesdir: images/
+
+
+image:../images/datastore/xml.png[]
+
+DataNucleus supports persisting/retrieving objects to/from XML documents 
+(using the https://github.com/datanucleus/datanucleus-xml[datanucleus-xml] plugin).
+Simply specify your "connectionURL" as follows
+
+-----
+datanucleus.ConnectionURL=xml:file:myfile.xml
+-----
+
+replacing `myfile.xml` with your filename, which can be absolute or relative.
+
+It makes use of JAXB, and the jars required to use DataNucleus XML persistence are `datanucleus-core`,
+`datanucleus-api-jdo`/`datanucleus-api-jpa`, `datanucleus-xml` and `JAXB API`, `JAXB Reference Implementation`.
+If you wish to help out in this effort either by contributing or by sponsoring particular 
+functionality please contact us via the http://forum.datanucleus.org[DataNucleus Forum].
+
+Things to bear in mind with XML usage :-
+
+* Indentation of XML : the persistence property *datanucleus.xml.indentSize* defaults to 4 but you can set it to the desired indent size
+* Querying using JDOQL/JPQL will operate in-memory currently.
+* Application identity is supported but can only have 1 PK field and must be a String. This is a limitation of JAXB
+* Persistent properties are not supported, only persistent fields
+* Out of the box it will use the JAXB reference implementation. You could, in principle, provide support for other JAXB implementations by implementing
+_org.datanucleus.store.xml.JAXBHandler_ and then specify the persistence property *datanucleus.xml.jaxbHandlerClass* to the JAXBHandler
+implementation. If you do manage to write a JAXBHandler for other JAXB implementations please consider contributing it to the project
+
+
+== Mapping : XML Datastore Mapping
+
+When persisting a Java object to an XML datastore clearly the user would like some control over the structure of the XML document.
+Here's an example using JDO XML MetaData
+
+[source,xml]
+-----
+<jdo>
+    <package name="org.datanucleus.samples.models.company">
+        <class name="Person" detachable="true" schema="/myproduct/people" table="person">
+            <field name="personNum">
+                <extension vendor-name="datanucleus" key="XmlAttribute" value="true"/>
+            </field>
+            <field name="firstName" primary-key="true"/> <!-- PK since JAXB requires String -->
+            <field name="lastName"/>
+            <field name="bestFriend"/>
+        </class>
+    </package>
+</jdo>
+-----
+
+Things to note :
+
+* *schema* on class is used to define the "XPath" to the root of the class in XML. You can also use the extension "xpath" to specify the same thing.
+* *table* on class is used to define the name of the element for an object of the particular class.
+* *column* on field is used to define the name of the element for a field of the particular class.
+* *XmlAttribute* : when set to true denotes that this will appear in the XML file as an attribute of the overall element for the object
+* When a field is primary-key it will gain a JAXB "XmlID" attribute.
+* When a field is a relation to another object (and the field is not embedded) then it will gain a JAXB "XmlIDREF" attribute as a link to the other object.
+* *Important : JAXB has a limitation for primary keys* : there can only be a single PK field, and it must be a String!
+
+What is generated with the above is as follows
+
+[source,xml]
+-----
+<?xml version="1.0" encoding="UTF-8"?>
+<myproduct>
+    <people>
+        <person personNum="1">
+            <firstName>Bugs</firstName>
+            <lastName>Bunny</lastName>
+            <bestFriend>My</bestFriend>
+        </person>        
+    </people>
+</myproduct>
+-----
+
+Here's the same example using JDO Annotations
+
+[source,java]
+-----
+@PersistenceCapable(schema="/myproduct/people", table="person")
+public class Person
+{
+    @XmlAttribute
+    private long personNum;
+
+    @PrimaryKey
+    private String firstName;
+
+    private String lastName;
+
+    private Person bestFiend;
+
+    @XmlElementWrapper(name="phone-numbers")
+    @XmlElement(name="phone-number")
+    @Element(types=String.class)
+    private Map phoneNumbers = new HashMap();
+   
+    ...
+-----
+
+Here's the same example using JPA Annotations (with DataNucleus @Extension annotation)
+TODO Add this
