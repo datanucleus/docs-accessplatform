@@ -301,6 +301,103 @@ So from now on, if we delete the _Account_ we delete the _Person_, and if we set
 
 
 
+== Managing Relationships
+
+The power of a Java persistence solution like DataNucleus is demonstrated when persisting relationships between objects.
+There are many types of relationships.
+
+* link:mapping.html#one_one_relations[1-1 relationships] - this is where you have an object A relates to a second object B. 
+The relation can be _unidirectional_ where A knows about B, but B doesnt know about A.
+The relation can be _bidirectional_ where A knows about B and B knows about A.
+* link:mapping.html#one_many_relations[1-N relationships] - this is where you have an object A that has a collection of other objects of type B. 
+The relation can be _unidirectional_ where A knows about the objects B but the Bs dont know about A. 
+The relation can be _bidirectional_ where A knows about the objects B and the Bs know about A
+* link:mapping.html#many_one_relations[N-1 relationships] - this is where you have an object B1 that relates to an object A, 
+and an object B2 that relates to A also etc.
+The relation can be _unidirectional_ where the A doesnt know about the Bs.
+The relation can be _bidirectional_ where the A has a collection of the Bs.
+i.e a 1-N relationship but from the point of view of the element.
+* link:mapping.html#many_many_relations[M-N relationships] - this is where you have objects of type A that have a collection of objects 
+of type B and the objects of type B also have a collection of objects of type A.
+The relation is always _bidirectional_ by definition
+* link:mapping.html#derived_identity[Derived Identity relationships] when you have a relation and part of the
+primary key of the related object is the other persistent object.
+
+
+=== Assigning Relationships
+
+When the relation is _unidirectional_ you simply set the related field to refer to the other object.
+For example we have classes A and B and the class A has a field of type B. So we set it like this
+
+[source,java]
+-----
+A a = new A();
+B b = new B();
+a.setB(b); // "a" knows about "b"
+-----
+
+When the relation is _bidirectional_ you *have to set both sides* of the relation.
+For example, we have classes A and B and the class A has a collection of elements of type B, and B has a field of type A. 
+So we set it like this
+
+[source,java]
+-----
+A a = new A();
+B b1 = new B();
+a.addElement(b1); // "a" knows about "b1"
+b1.setA(a); // "b1" knows about "a"
+-----
+
+NOTE: With a _bidirectional_ relation you must set both sides of the relation
+
+
+=== Persisting Relationships - Reachability
+
+To persist an object with JPA you call the _EntityManager_ method _persist_ (or _merge_ if wanting to update a detached object).
+The object passed in will be persisted. By default all related objects will *not* be persisted with that object. 
+You can however change this by specifying the _cascade_ PERSIST (and/or MERGE) property for that field. 
+With this the related object(s) would also be persisted (or updated with any new values if they are already persistent).
+This process is called *persistence-by-reachability*.
+For example we have classes A and B and class A has a field of type B and this field has the _cascade_ property PERSIST set.
+To persist them we could do
+
+[source,java]
+-----
+A a = new A();
+B b = new B();
+a.setB(b);
+em.persist(a); // "a" and "b" are provisionally persistent
+-----
+
+A further example where you don't have the _cascade_ PERSIST set, but still want to persist both ends of a relation.
+
+[source,java]
+-----
+A a = new A();
+B b = new B();
+a.setB(b);
+em.persist(a); // "a" is provisionally persistent
+em.persist(b); // "b" is provisionally persistent
+-----
+
+
+=== Managed Relationships
+
+As we have mentioned above, it is for the user to set both sides of a bidirectional relation.
+If they don't and object A knows about B, but B doesnt know about A then what is the persistence solution to do ? 
+It doesn't know which side of the relation is correct. JPA doesn't define the behaviour for this situation.
+DataNucleus has two ways of handling this situation. 
+If you have the persistence property *datanucleus.manageRelationships* set to true then it will make sure that 
+the other side of the relation is set correctly, correcting obvious omissions, and giving exceptions for obvious errors.
+If you set that persistence property to false then it will assume that your
+objects have their bidirectional relationships consistent and will just persist what it finds.
+
+NOTE: When performing management of relations there are some checks implemented to spot typical errors in user operations 
+e.g add an element to a collection and then remove it (why?!). You can disable these checks using *datanucleus.manageRelationshipsChecks*, set to false.
+
+
+
+        
 [[level1_cache]]
 == Level 1 Cache
 
