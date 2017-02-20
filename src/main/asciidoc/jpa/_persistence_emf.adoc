@@ -305,7 +305,7 @@ DataNucleus provides the following properties for configuring the datastore used
 
 |datanucleus.ConnectionURL
 |URL specifying the datastore to use for persistence. Note that this will define the *type of datastore* as well as the datastore itself. 
-Please refer to <a href="datastores/index.html">the datastores guides] for the URL appropriate for the type of datastore you're using.
+Please refer to link:../datastores/index.html[the datastores guides] for the URL appropriate for the type of datastore you're using.
 
 |datanucleus.ConnectionUserName
 |Username to use for connecting to the DB
@@ -575,24 +575,24 @@ DataNucleus provides the following properties for configuring schema handling us
 |Description + Values
 
 |datanucleus.schema.autoCreateAll
-|Whether to automatically generate any schema, tables, columns, constraints that don't exist. Please refer to the <a href="jdo/schema.html">Schema Guide] for more details.
+|Whether to automatically generate any schema, tables, columns, constraints that don't exist. Please refer to the link:#schema[Schema Guide] for more details.
 {true, *false*}
 
 |datanucleus.schema.autoCreateDatabase
 |Whether to automatically generate any database (catalog/schema) that doesn't exist. This depends very much on whether the datastore in question supports this operation. 
-Please refer to the <a href="jdo/schema.html">Schema Guide] for more details.
+Please refer to the link:#schema[Schema Guide] for more details.
 {true, *false*}
 
 |datanucleus.schema.autoCreateTables
-|Whether to automatically generate any tables that don't exist. Please refer to the <a href="jdo/schema.html">Schema Guide] for more details.
+|Whether to automatically generate any tables that don't exist. Please refer to the link:#schema[Schema Guide] for more details.
 {true, *false*}
 
 |datanucleus.schema.autoCreateColumns
-|Whether to automatically generate any columns that don't exist. Please refer to the <a href="jdo/schema.html">Schema Guide] for more details.
+|Whether to automatically generate any columns that don't exist. Please refer to the link:#schema[Schema Guide] for more details.
 {true, *false*}
 
 |datanucleus.schema.autoCreateConstraints
-|Whether to automatically generate any constraints that don't exist. Please refer to the <a href="jdo/schema.html">Schema Guide] for more details.
+|Whether to automatically generate any constraints that don't exist. Please refer to the link:#schema[Schema Guide] for more details.
 {true, *false*}
 
 |datanucleus.autoCreateWarnOnError
@@ -602,20 +602,20 @@ Please refer to the <a href="jdo/schema.html">Schema Guide] for more details.
 
 |datanucleus.schema.validateAll
 |Alias for defining *datanucleus.schema.validateTables*, *datanucleus.schema.validateColumns* and *datanucleus.schema.validateConstraints* as all true.
-Please refer to the <a href="jdo/schema.html">Schema Guide] for more details.
+Please refer to the link:#schema[Schema Guide] for more details.
 {true, *false*}
 
 |datanucleus.schema.validateTables
-|Whether to validate tables against the persistence definition. Please refer to the <a href="jdo/schema.html">Schema Guide] for more details.
+|Whether to validate tables against the persistence definition. Please refer to the link:#schema[Schema Guide] for more details.
 {true, *false*}
 
 |datanucleus.schema.validateColumns
 |Whether to validate columns against the persistence definition. This refers to the column detail structure and NOT to whether the column exists or not. 
-Please refer to the <a href="jdo/schema.html">Schema Guide] for more details.
+Please refer to the link:#schema[Schema Guide] for more details.
 {true, *false*}
 
 |datanucleus.schema.validateConstraints
-|Whether to validate table constraints against the persistence definition. Please refer to the <a href="jdo/schema.html">Schema Guide] for more details.
+|Whether to validate table constraints against the persistence definition. Please refer to the link:#schema[Schema Guide] for more details.
 {true, *false*}
 
 |datanucleus.readOnlyDatastore
@@ -1045,7 +1045,7 @@ This allows you to override the default behaviour where there maybe is some issu
 
 |datanucleus.rdbms.statementBatchLimit
 |Maximum number of statements that can be batched. The default is 50 and also applies to delete of objects.
-Please refer to the <a href="datastores/rdbms.html#statement_batching">Statement Batching guide] *Applicable for RDBMS only*
+Please refer to the link:datastores.html#statement_batching[Statement Batching guide] *Applicable for RDBMS only*
 {integer value (0 = no batching)}
 
 |datanucleus.rdbms.checkExistTablesOrViews
@@ -1123,13 +1123,6 @@ to select the affected owner objects. 'none' means don't fetch container element
 
 |datanucleus.rdbms.informix.useSerialForIdentity
 |Whether we are using SERIAL for identity columns (instead of SERIAL8). *Applicable for RDBMS only.* {true, *false*}
-
-|datanucleus.rdbms.connectionProviderName
-|Name of the connection provider to use to allow failover. Please refer to the <a href="datastores/rdbms.html#failover">Failover guide] *Applicable for RDBMS only*
-{*PriorityList*, Name of a provider}
-
-|datanucleus.rdbms.connectionProviderFailOnError
-|Whether to fail if an error occurs, or try to continue and log warnings *Applicable for RDBMS only*. {true, *false*}
 
 |datanucleus.rdbms.dynamicSchemaUpdates
 |Whether to allow dynamic updates to the schema. This means that upon each insert/update the types of objects will be tested and any previously unknown implementations of
