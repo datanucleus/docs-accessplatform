@@ -1,0 +1,145 @@
+[[maven]]
+= Maven Plugin
+:_basedir: ../
+:_imagesdir: images/
+
+http://maven.apache.org[Apache Maven] is a project management and build tool that is quite common in organisations. 
+Using DataNucleus and JPA with Maven is simple since the DataNucleus jars, JPA API jar and Maven plugin are present in the Maven central repository, 
+so you don't need to define any repository to find the artifacts. 
+
+== `pom.xml` Integration
+
+The first thing to do is identify which artifacts are required for your project, and updating your `pom.xml` accordingly.
+
+Firstly, you will need the following for _compile time_ building against the JPA API.
+
+[source,xml]
+-----
+<project>
+    ...
+    <dependencies>
+        <dependency>
+            <groupId>org.datanucleus</groupId>
+            <artifactId>javax.persistence</artifactId>
+            <version>2.1.0</version>
+        </dependency>
+    </dependencies>
+    ...
+</project>
+-----
+
+If using any DataNucleus API extensions in your code then you will also need `datanucleus-core` at _compile time_.
+
+At runtime you will need the DataNucleus artifacts present also, so this becomes
+
+[source,xml]
+-----
+<project>
+    ...
+    <dependencies>
+        ...
+        <dependency>
+            <groupId>org.datanucleus</groupId>
+            <artifactId>javax.persistence</artifactId>
+            <version>2.1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.datanucleus</groupId>
+            <artifactId>datanucleus-core</artifactId>
+            <version>[5.0.0-release, )</version>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.datanucleus</groupId>
+            <artifactId>datanucleus-api-jpa</artifactId>
+            <version>[5.0.0-release, )</version>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.datanucleus</groupId>
+            <artifactId>datanucleus-rdbms</artifactId>
+            <version>[5.0.0-release, )</version>
+            <scope>runtime</scope>
+        </dependency>
+    </dependencies>
+    ...
+</project>
+-----
+
+Obviously replace the `datanucleus-rdbms` jar with the jar for whichever datastore you are using.
+If you are running the Maven "exec" plugin you may not need the "runtime" specifications.
+
+Please note that you can alternatively use the convenience artifact for JPA+RDBMS (when using RDBMS).
+
+[source,xml]
+-----
+<project>
+    ...
+    <dependencies>
+        ...
+        <dependency>
+            <groupId>org.datanucleus</groupId>
+            <artifactId>datanucleus-accessplatform-jpa-rdbms</artifactId>
+            <version>5.0.7</version>
+            <type>pom</type>
+        </dependency>
+    </dependencies>
+    ...
+</project>
+-----
+
+
+== Enhancement and SchemaTool
+
+Now that you have the DataNucleus jars available to you, via the repositories, you want to perform DataNucleus operations. 
+The primary operations are enhancement and SchemaTool. 
+If you want to use the DataNucleus Maven plugin for enhancement or SchemaTool add the following to your `pom.xml`
+
+[source,xml]
+-----
+<project>
+    ...
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.datanucleus</groupId>
+                <artifactId>datanucleus-maven-plugin</artifactId>
+                <version>5.0.2</version>
+                <configuration>
+                    <api>JPA</api>
+                    <persistenceUnitName>MyUnit</persistenceUnitName>
+                    <log4jConfiguration>${basedir}/log4j.properties</log4jConfiguration>
+                    <verbose>true</verbose>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>process-classes</phase>
+                        <goals>
+                            <goal>enhance</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>
+-----
+
+Note that this plugin step will automatically try to bring in the latest applicable version of `datanucleus-core` for use by the enhancer. 
+It does this since you don't need to have `datanucleus-core` in your POM for compilation/enhancement. 
+If you want to use an earlier version then you need to add exclusions to the _datanucleus-maven-plugin_
+
+The _executions_ part of that will make enhancement be performed immediately after compile, so automatic. 
+See also link:enhancer.html[the Enhancer docs]
+
+To run the enhancer manually you do
+
+-----
+mvn datanucleus:enhance
+-----
+
+link:persistence.html#schematool[DataNucleus SchemaTool] is achieved similarly, via
+
+-----
+mvn datanucleus:schema-create
+-----
