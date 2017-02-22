@@ -15,7 +15,7 @@ Consequently an inheritance tree cannot just have a mapped superclass on its own
 
 
 [[entity]]
-== Class: Entity
+== Entity Class
 
 Let's take a sample class (_Hotel_) as an example. We can define a class as persistable using either annotations in the class, or XML metadata.
 To achieve the above aim with XML metadata, we do this
@@ -40,7 +40,7 @@ public class Hotel
 
 
 [[mapped_superclass]]
-== Class: MappedSuperclass
+== MappedSuperclass
 
 Say we have an abstract base class _Building_ with concrete subclass _Hotel_ (as above). We want to persist some fields of _Building_, but it is abstract so
 will not have any objects of that type. So we make the class a _MappedSuperclass_, like this
@@ -67,7 +67,7 @@ This is of particular relevance when considering xref:mapping.html#inheritance_m
 
 
 [[embeddable]]
-== Class: Embeddable
+== Embeddable Class
 
 Here we have a class _ConstructionDetails_ that we never need to persist individually, and it will only ever be persisted as part of an owner object (in this case _Building_).
 Since information from objects of this class will be persisted, we need to mark the class as _Embeddable_, like this
@@ -94,7 +94,7 @@ and hereafter we can persist fields of type _ConstructionDetails_, as per link:#
 
 
 [[persistence_aware]]
-== Class: Persistence Aware
+== Persistence Aware Class
 
 image:../images/nucleus_extension.png[]
 
@@ -116,7 +116,7 @@ See also :-
 
 
 [[read_only]]
-== Class: Read-Only
+== Read-Only Class
 
 image:../images/nucleus_extension.png[]
 

@@ -1,22 +1,25 @@
-[[annotations]]
+[[metadata_xml]]
 = JDO XML MetaData
 :_basedir: ../
 :_imagesdir: images/
 
-JDO has always accepted Metadata in XML format. As described in the link:metadata.html[Metadata Overview] this has to be contained in files with
+JDO has always accepted Metadata in XML format. As described in the link:mapping.html[the Mapping Guide] this has to be contained in files with
 particular filenames in particular locations (relative to the name of the class), and that this metadata is _discovered_ at runtime. 
-You can provide JDO metadata, or alternatively ORM metadata, but with virtually identical format. 
-This page defines the format of the XML Metadata. Here is an example header for *package.jdo* files with 
-http://xmlns.jcp.org/xml/ns/jdo/jdo_3_0.xsd[JDO XSD] specification
+You can provide JDO XML metadata, or alternatively ORM XML metadata, but with virtually identical format 
+(the only difference being the top level element being _jdo_ in the former case and _orm_ in the latter case). 
 
+This page defines the format of the XML Metadata and can be used for either the JDO XML metadata or the ORM XML metadata. 
+
+
+
+Here is an example header for *package.jdo* files with http://xmlns.jcp.org/xml/ns/jdo/jdo_3_0.xsd[JDO XSD] specification
 
 [source,xml]
 -----
 <?xml version="1.0" encoding="UTF-8" ?>
 <jdo xmlns="http://xmlns.jcp.org/xml/ns/jdo/jdo"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/jdo/jdo
-        http://xmlns.jcp.org/xml/ns/jdo/jdo_3_0.xsd" version="3.0">
+    xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/jdo/jdo http://xmlns.jcp.org/xml/ns/jdo/jdo_3_1.xsd" version="3.1">
     ...
 </jdo>
 -----
@@ -28,11 +31,11 @@ Here is an example header for *package.orm* files with http://xmlns.jcp.org/xml/
 <?xml version="1.0" encoding="UTF-8" ?>
 <orm xmlns="http://xmlns.jcp.org/xml/ns/jdo/orm"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/jdo/orm
-        http://xmlns.jcp.org/xml/ns/jdo/orm_3_0.xsd" version="3.0">
+    xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/jdo/orm http://xmlns.jcp.org/xml/ns/jdo/orm_3_0.xsd" version="3.0">
     ...
 </orm>
 -----
+
 
 JDO expects the XML metadata to be specified in a file or files in particular locations in the CLASSPATH. 
 For example, if you have a class _com.mycompany.sample.MyExample_, JDO will look for any of the following resources until it finds one (in the order stated) :-
@@ -84,6 +87,7 @@ image:../images/nucleus_extension.png[]
 
 If your application doesn't make use of ORM metadata then you could turn off the searches for ORM Metadata files when a class is loaded up.
 You do this with the persistence property *datanucleus.metadata.supportORM* setting it to false.
+
 
 
 image:../images/nucleus_extension.png[]

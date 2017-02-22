@@ -1,0 +1,208 @@
+[[members]]
+= Fields/Properties
+:_basedir: ../
+:_imagesdir: images/
+
+Once we have defined a class to be persistable, we need to define how to persist the different fields/properties that are to be persisted.
+There are two distinct modes of persistence definition; the most common uses *fields*, whereas an alternative uses *properties*.
+
+
+[[fields]]
+== Persistent Fields
+
+The most common form of persistence is where you have a *field* in a class and want to persist it to the datastore. 
+With this mode of operation DataNucleus will persist the values stored in the fields into the datastore, and will set the values of the fields 
+when extracting it from the datastore.
+
+NOTE: Requirement : you have a field in the class. This can be public, protected, private or package access, but cannot be static or final.
+
+Almost all Java field types are default persistent (if DataNucleus knows how to persist a type then it defaults to persistent) 
+so there is no real need to specify @Persistent to make the field persistent.
+
+An example of how to define the persistence of a field is shown below
+
+[source,java]
+-----
+@PersistenceCapable
+public class MyClass
+{
+    @Persistent
+    Date birthday;
+
+    @NotPersistent
+    String someOtherField;
+}
+-----
+
+So, using annotations, we have marked the field _birthday_ as persistent, whereas field _someOtherField_ is not persisted.
+_Please note that in this particular case, Date is by default persistent so we could omit the @Persistent annotation_ 
+(with non-default-persistent types we would definitely need the annotation). Using XML MetaData we would have done
+
+[source,xml]
+-----
+<class name="MyClass">
+    <field name="birthday" persistence-modifier="persistent"/>
+    <field name="someOtherField" persistence-modifier="none"/>
+</class>
+-----
+
+Please note that the field Java type defines whether it is, by default, persistable.
+Look at the link:#field_types[Types Guide] and if the type has a tick in the column "Persistent?" then you don't need to mark the _persistence-modifier_ as "persistent".
+
+
+[[properties]]
+== Persistent Properties
+
+A second mode of operation is where you have Java Bean-style getter/setter for a *property*. 
+In this situation you want to persist the output from _getXXX_ to the datastore, and use the _setXXX_ to load up the value into the object when extracting it from the datastore.
+
+NOTE: Requirement : you have a property in the class with Java Bean getter/setter methods. 
+These methods can be public, protected, private or package access, but cannot be static. The class must have BOTH getter AND setter methods.</td>
+
+An example of how to define the persistence of a property is shown below
+
+[source,java]
+-----
+@PersistenceCapable
+public class MyClass
+{
+    @Persistent
+    Date getBirthday()
+    {
+        ...
+    }
+
+    void setBirthday(Date date)
+    {
+        ...
+    }
+}
+-----
+
+So, using annotations, we have marked this class as persistent, and the getter is marked as persistent.  
+By default a property is non-persistent, so we have no need in specifying the _someOtherField_ as not persistent. 
+Using XML MetaData we would have done
+
+[source,xml]
+-----
+<class name="MyClass">
+    <property name="birthday" persistence-modifier="persistent"/>
+</class>
+-----
+
+
+[[override]]
+== Overriding Superclass Field/Property MetaData
+
+If you are using XML MetaData you can also override the MetaData for fields/properties of superclasses. 
+You do this by adding an entry for _{class-name}.fieldName_, like this
+
+[source,java]
+-----
+<class name="Hotel" detachable="true">
+    ...
+    <field name="HotelSuperclass.someField" default-fetch-group="false"/>
+</class>    
+-----
+
+so we have changed the field "someField" specified in the persistent superclass "HotelSuperclass" to not be part of the DFG.
+
+
+
+[[member_position]]
+== Field/Property positioning
+
+With some datastores (notably spreadsheets) it is desirable to be able to specify the relative position of a column. 
+The default (for DataNucleus) is just to put them in ascending alphabetical order.
+JDO allows definition of this using the _position_ attribute on a *column*.
+Here's an example, using XML metadata    
+
+[source,xml]
+-----
+<jdo>
+    <package name="mydomain">
+        <class name="Person" detachable="true" table="People">
+            <field name="personNum">
+                <column position="0"/>
+            </field>
+            <field name="firstName">
+                <column position="1"/>
+            </field>
+            <field name="lastName">
+                <column position="2"/>
+            </field>
+        </class>
+    </package>
+</jdo>
+-----
+
+and with Annotations
+
+[source,java]
+-----
+@PersistenceCapable(table="People")
+public class Person
+{
+    @Column(position=0)
+    long personNum;
+
+    @Column(position=1)
+    String firstName;
+
+    @Column(position=2)
+    String lastName;
+}
+-----
+
+
+
+[[member_readonly]]
+== Making a field/property read-only
+
+image:../images/nucleus_extension.png[]
+
+If you want to make a member read-only you can do it like this.
+
+[source,xml]
+-----
+<jdo>
+    <package name="mydomain">
+        <class name="MyClass">
+            <field name="myField">
+                <extension vendor-name="datanucleus" key="insertable" value="false"/>
+                <extension vendor-name="datanucleus" key="updateable" value="false"/>
+            </field>
+        </class>
+    </package>
+</jdo>
+-----
+
+and with Annotations
+
+[source,java]
+-----
+@PersistenceCapable
+public class MyClass
+{
+    @Extension(vendorName="datanucleus", key="insertable", value="false")
+    @Extension(vendorName="datanucleus", key="insertable", value="false")
+    String myField;
+
+}
+-----
+
+alternatively using a DataNucleus convenience annotation
+
+[source,java]
+-----
+import org.datanucleus.api.jdo.annotations.ReadOnly;
+
+@PersistenceCapable
+public class MyClass
+{
+    @ReadOnly
+    String myField;
+
+}
+-----
+
