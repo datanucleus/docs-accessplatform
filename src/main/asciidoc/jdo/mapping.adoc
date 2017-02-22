@@ -1,0 +1,43 @@
+[[mapping]]
+= JDO Mapping Guide
+:_basedir: ../
+:_imagesdir: images/
+
+To implement a persistence layer with JDO you firstly need to map the classes and fields/properties that are involved in the persistence process.
+This can be as simple as marking the classes as an @PersistenceCapable, or you can configure down to the fine detail of precisely what schema it maps on to.
+The following sections deal with the many options available. This guide takes you through the many metadata options.
+
+
+When mapping a class for JDO you can make use of _metadata_. This _metadata_ can be Java annotations, or can be XML metadata, or a mixture of both,
+or you could even define it using a dynamic API. This is very much down to your own personal preference but we try to present both ways here.
+
+TIP: We advise trying to keep schema information out of annotations, so that you avoid tying compiled code to a specific datastore. That way you
+retain datastore-independence. This may not be a concern for your project however.
+
+NOTE: Whilst the JDO spec only allows you to specify your mapping information using JDO metadata (annotations, or `orm.xml`), it also allows you
+the option of using JPA metadata (annotations or JPA XML metadata). This is provided as a way of easily migrating across to JDO from JPA, for example. 
+Consult the link:../jpa/mapping.html[DataNucleus JPA mappings docs] for details.
+
+
+In terms of the relative priority of annotations, JDO XML and ORM XML metadata, the following figure highlights the process
+
+image:../images/jdo/metadata.png[]
+
+So you can provide the metadata via link:annotations.html[annotations] solely, 
+or via link:annotations.html[annotations] plus link:metadata_xml.html[ORM XML Metadata overrides], 
+or via link:metadata_xml.html[JDO XML Metadata] solely, 
+or via link:metadata_xml.html[JDO XML Metadata] plus link:metadata_xml.html]ORM XML Metadata overrides], 
+or finally via a link:metadata_api.html[Metadata API]. 
+
+If you are using XML overrides for ORM, this definition will be merged in to the base definition (annotations or JDO XML Metadata).
+Note that you can utilise annotations for one class, and then JDO XML Metadata for another class should you so wish.
+
+One further alternative is if you have annotations in your classes, you provide JDO XML Metadata (`package.jdo`), and also 
+ORM XML Metadata (`package-{mapping}.orm`). In this case the annotations are the base representation, applying overrides from JDO XML Metadata, and then overrides from the ORM XML Metadata.
+
+
+TIP: When not using the MetaData API we recommend that you use either XML or annotations for the basic persistence information, but always use XML for 
+schema information. This is because it is liable to change at deployment time and hence is accessible when in XML form whereas in annotations you add an 
+extra compile cycle (and also you may need to deploy to some other datastore at some point, hence needing a different deployment).
+
+

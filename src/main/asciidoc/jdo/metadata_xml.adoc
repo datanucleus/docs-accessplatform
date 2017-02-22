@@ -34,7 +34,69 @@ Here is an example header for *package.orm* files with http://xmlns.jcp.org/xml/
 </orm>
 -----
 
-What follows provides a reference guide to MetaData elements (refer to the relevant XSD for precise details).
+JDO expects the XML metadata to be specified in a file or files in particular locations in the CLASSPATH. 
+For example, if you have a class _com.mycompany.sample.MyExample_, JDO will look for any of the following resources until it finds one (in the order stated) :-
+
+-----
+META-INF/package.jdo
+WEB-INF/package.jdo
+package.jdo
+com/package.jdo
+com/mycompany/package.jdo
+com/mycompany/sample/package.jdo
+com/mycompany/sample/MyExample.jdo
+-----
+
+In addition to the above, you can split your metadata definitions between JDO XML MetaData files. For example if you have the following classes
+
+-----
+com/mycompany/A.java
+com/mycompany/B.java
+com/mycompany/C.java
+com/mycompany/app1/D.java
+com/mycompany/app1/E.java
+-----
+
+You could define the metadata for these 5 classes in many ways -- for example put all class definitions in *com/mycompany/package.jdo*, 
+or put the definitions for D and E in *com/mycompany/app1/package.jdo* and the definitions for A, B, C in *com/mycompany/package.jdo*, 
+or have some in their class named MetaData files e.g *com/mycompany/app1/A.jdo*, or a mixture of the above. 
+DataNucleus will always search for the metadata file containing the class definition for the class that it requires. 
+
+
+
+As well as JDO XML metadata, you can (also) use ORM XML metadata to override particular datastore-specific things like table and column names. 
+JDO expects any ORM XML metadata to be specified in a file or files in particular locations in the CLASSPATH. 
+These filenames depend on the *javax.jdo.option.mapping* persistence property.
+For example, if you have a class _com.mycompany.sample.MyExample_, and the persistence property is set to "mysql" then JDO will look for any 
+of the following resources until it finds one (in the order stated) :-
+
+-----
+META-INF/package-mysql.orm
+WEB-INF/package-mysql.orm
+package-mysql.orm
+com/package-mysql.orm
+com/mycompany/package-mysql.orm
+com/mycompany/sample/package-mysql.orm
+com/mycompany/sample/MyExample-mysql.orm
+-----
+
+image:../images/nucleus_extension.png[]
+
+If your application doesn't make use of ORM metadata then you could turn off the searches for ORM Metadata files when a class is loaded up.
+You do this with the persistence property *datanucleus.metadata.supportORM* setting it to false.
+
+
+image:../images/nucleus_extension.png[]
+
+By default any XML Metadata (JDO or ORM) will be validated for accuracy when loading it.
+Obviously XML is defined by a DTD or XSD schema and so should follow that.
+You can turn off such validations by setting the persistence property *datanucleus.metadata.xml.validate* to false when creating your PMF.
+Note that this only turns off the XML strictness validation, and _not_ the checks on inconsistency of specification of relations etc.
+
+
+
+What follows provides a reference guide to XML MetaData elements for what goes in an XML metadata file. 
+Refer to the relevant XSD for precise details.
 
 * jdo
 ** link:#package[package]
