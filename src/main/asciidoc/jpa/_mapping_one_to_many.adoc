@@ -464,6 +464,7 @@ image:../images/relationship_1_N_primitive_collection_db.png[]
 
 The ACCOUNT table is as before, but this time we only have the "join table". Use @Column on the field/method to define the column details of the element in the join table.
 
+
 [[one_many_nonpc_converter]]
 == Collection<Simple> using AttributeConverter via column
 
@@ -515,6 +516,7 @@ public class CollectionStringToStringConverter implements AttributeConverter<Col
     }
 }
 -----
+
 
 [[one_many_shared_join]]
 == Collection<Entity> via Shared JoinTable
@@ -619,6 +621,7 @@ This means we can now identify easily which join table entry represents which re
 This results in the following database schema
 
 image:../images/relationship_1_N_uni_join_shared_db.png[]
+
 
 [[one_many_shared_fk]]
 == Collection<Entity> via Shared FK

@@ -89,7 +89,7 @@ image:../images/relationship_1_1_uni_db.png[]
 NOTE: *Account* has the object reference to *User* (and so is the "owner" of the relation) and so its table holds the foreign-key
 
 NOTE: If you call _EntityManager.remove()_ on the end of a 1-1 unidirectional relation without the relation and that object is related to another object, 
-an exception will typically be thrown (assuming the RDBMS supports foreign keys). To delete this record you should remove the other objects association first.
+an exception will typically be thrown (assuming the datastore supports foreign keys). To delete this record you should remove the other objects association first.
 
 
 [[one_one_bi]]

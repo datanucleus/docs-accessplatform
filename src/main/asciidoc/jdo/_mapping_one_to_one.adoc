@@ -1,0 +1,177 @@
+[[one_one_relations]]
+= 1-1 Relations
+:_basedir: ../
+:_imagesdir: images/
+
+You have a 1-to-1 relationship when an object of a class has an associated object of another class (only one associated object). 
+It could also be between an object of a class and another object of the same class (obviously). 
+You can create the relationship in 2 ways depending on whether the 2 classes know about each other (bidirectional), 
+or whether only one of the classes knows about the other class (unidirectional). 
+These are described below.
+
+NOTE: For RDBMS a 1-1 relation is stored as a foreign-key column(s). For non-RDBMS it is stored as a String "column" storing the 'id' 
+(possibly with the class-name included in the string) of the related object.
+
+
+[[one_one_uni]]
+== Unidirectional
+
+For this case you could have 2 classes, *User* and *Account*, as below.
+
+[source,java]
+-----
+public class Account
+{
+    User user;
+}
+
+public class User
+{
+    ...
+}
+-----
+
+so the *Account* class knows about the *User* class, but not vice-versa. If you define the annotations for these classes as follows
+
+[source,java]
+-----
+public class Account
+{
+    ...
+
+    @Column(name="USER_ID")
+    User user;
+}
+
+public class User
+{
+    ...
+}
+-----
+
+or using XML metadata
+
+[source,xml]
+-----
+<package name="mydomain">
+    <class name="User" table="USER">
+        <field name="id" primary-key="true">
+            <column name="USER_ID"/>
+        </field>
+        ...
+    </class>
+
+    <class name="Account" table="ACCOUNT">
+        <field name="id" primary-key="true">
+            <column name="ACCOUNT_ID"/>
+        </field>
+        ...
+        <field name="user">
+            <column name="USER_ID"/>
+        </field>
+    </class>
+</package>
+-----
+
+This contrasts with JPA mapping where you have to _explicitly_ specify that it is a one-to-one relation!
+
+This will create 2 tables in the database, one for *User* (with name _USER_), and one for *Account* (with name _ACCOUNT_ and a column _USER_ID_), as shown below.
+
+image:../images/relationship_1_1_uni_db.png[]
+
+Things to note :-
+
+NOTE: *Account* has the object reference (and so owns the relation) to *User* and so its table holds the foreign-key
+
+NOTE: If you call _PM.deletePersistent()_ on the end of a 1-1 unidirectional relation without the relation and that object is related to another object, an exception will typically be thrown 
+(assuming the datastore supports foreign keys). To delete this record you should remove the other objects association first.
+
+TIP: If you invoke an operation that will retrieve the one-to-one field, and you only want it to get the foreign key value (and not join to the related table) 
+you can add the metadata extension _fetch-fk-only_ (set to "true") to the field/property.
+
+
+
+[[one_one_bi]]
+== Bidirectional
+
+For this case you could have 2 classes, *User* and *Account* again, but this time as below. Here the *Account* class knows about the *User* class, and also vice-versa.
+
+[source,java]
+-----
+public class Account
+{
+    User user;
+
+    ...
+}
+
+public class User
+{
+    Account account;
+
+    ...
+}
+-----
+
+
+We create the 1-1 relationship with a single foreign-key. To do this you define the annotations as
+
+[source,java]
+-----
+public class Account
+{
+    ...
+
+    @Column(name="USER_ID")
+    User user;
+}
+
+public class User
+{
+    ...
+
+    @Persistent(mappedBy="user")
+    Account account;
+}
+-----
+
+or using XML metadata
+
+[source,xml]
+-----
+<package name="mydomain">
+    <class name="User" table="USER">
+        <field name="id" primary-key="true">
+            <column name="USER_ID"/>
+        </field>
+        ...
+        <field name="account" mapped-by="user"/>
+    </class>
+
+    <class name="Account" table="ACCOUNT">
+        <field name="id" primary-key="true">
+            <column name="ACCOUNT_ID"/>
+        </field>
+        ...
+        <field name="user">
+            <column name="USER_ID"/>
+        </field>
+    </class>
+</package>
+-----
+
+The difference is that we added _mapped-by_ to the field of *User*. This represents the bidirectionality.
+
+This will create 2 tables in the database, one for *User* (with name _USER_), and one for *Account* (with name _ACCOUNT_). 
+With RDBMS the _ACCOUNT_ table will have a column _USER_ID_ (since RDBMS will place the FK on the side without the "mapped-by"). Like this
+
+image:../images/relationship_1_1_bi_db_singlefk.png[]
+
+With non-RDBMS datastores both tables will have a column containing the "id" of the related object, that is _USER_ will have an ACCOUNT column, and _ACCOUNT_ will have a USER_ID column.
+
+NOTE: When forming the relation please make sure that *you set the relation at BOTH sides* since DataNucleus would have no way of knowing which end is correct if you only set one end.
+
+TIP: If you invoke an operation that will retrieve the one-to-one field (of the non-owner side), and you only want it to get the foreign key value (and not join to the related table) you 
+can add the metadata extension _fetch-fk-only_ (set to "true") to the field/property.
+
+
