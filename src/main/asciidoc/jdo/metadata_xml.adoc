@@ -876,7 +876,7 @@ This defaults to true for primitive types, java.util.Date, java.lang.*, java.mat
 |
 
 |value-strategy
-|The strategy for populating values to this property. Is typically used for <a href="value_generation.html">generating primary key values].
+|The strategy for populating values to this property. Is typically used for link:mapping.html#value_generation[generating primary key values].
 See the definitions under "datastore-identity".
 |native, sequence, increment, identity, uuid-string, uuid-hex, _auid_, _max_, _timestamp_, _timestamp-value_, _[other values]_
 
@@ -902,8 +902,8 @@ This is to be specified when link:mapping.html#schema_constraints[defining index
 
 |table
 |Table name to use for any join table overriding the default name provided by DataNucleus.
-This is used either for <a href="orm/one_to_many_collection.html">1-N relationships with a join table] or for <a href="orm/secondary_tables.html">Secondary Tables].
-See also the property name "datanucleus.identifier.case" in the <a href="../persistence_properties.html">Persistence Properties Guide].
+This is used either for link:mapping.html#one_many_relation[1-N relationships with a join table] or for link:mapping.html#secondary_tables[Secondary Tables].
+See also the property name "datanucleus.identifier.case" in the link:persistence.html#persistence_properties.html[Persistence Properties Guide].
 |
 
 |column
@@ -1027,52 +1027,52 @@ Used when the strategy is set to _native_ or _increment_
 |*class*, table
 
 |sequence-catalog-name
-|The catalog used to store sequences for use by value generators. See <a href="value_generation.html">Value Generation].
+|The catalog used to store sequences for use by value generators. See link:mapping.html#value_generation[Value Generation].
 Default catalog for the datastore will be used if not specified.
 |
 
 |sequence-schema-name
-|The schema used to store sequences for use by value generators. See <a href="value_generation.html">Value Generation].
+|The schema used to store sequences for use by value generators. See link:mapping.html#value_generation[Value Generation].
 Default schema for the datastore will be used if not specified.
 |
 
 |sequence-table-name
-|The table used to store sequences for use by value generators. See <a href="value_generation.html">Value Generation].
+|The table used to store sequences for use by value generators. See link:mapping.html#value_generation[Value Generation].
 |*SEQUENCE_TABLE*
 
 |sequence-name-column-name
 |The column name in the sequence-table used to store the name of the sequence for use by value generators. 
-See <a href="value_generation.html">Value Generation].
+See link:mapping.html#value_generation[Value Generation].
 |*SEQUENCE_NAME*
 
 |sequence-nextval-column-name
 |The column name in the sequence-table used to store the next value in the sequence for use by value generators. 
-See <a href="value_generation.html">Value Generation].
+See link:mapping.html#value_generation[Value Generation].
 |*NEXT_VAL*
 
 |key-min-value
 |The minimum key value for use by value generators. Keys lower than this will not be generated. 
-See <a href="value_generation.html">Value Generation].
+See link:mapping.html#value_generation[Value Generation].
 |
 
 |key-max-value
 |The maximum key value for use by value generators. Keys higher than this will not be generated. 
-See <a href="value_generation.html">Value Generation].
+See link:mapping.html#value_generation[Value Generation].
 |
 
 |key-initial-value
 |The starting value for use by value generators. Keys will start from this value when being generated. 
-See <a href="value_generation.html">Value Generation].
+See link:mapping.html#value_generation[Value Generation].
 |
 
 |key-cache-size
 |The cache size for keys for use by value generators. The cache of keys will be constrained by this value. 
-See <a href="value_generation.html">Value Generation].
+See link:mapping.html#value_generation[Value Generation].
 |
 
 |key-database-cache-size
 |The database cache size for keys for use by value generators. The cache of keys will be constrained by this value. 
-See <a href="value_generation.html">Value Generation].
+See link:mapping.html#value_generation[Value Generation].
 |
 
 |mapping-class
@@ -1375,7 +1375,7 @@ This is used to define the details of a column in the datastore, and so can be u
 
 |name
 |Name of the column in the datastore. 
-See also the property name "datanucleus.identifier.case" in the <a href="../persistence_properties.html">Persistence Properties Guide].
+See also the property name "datanucleus.identifier.case" in the link:persistence.html#persistence_properties[Persistence Properties Guide].
 |
 
 |length
@@ -1461,7 +1461,7 @@ These are attributes within the *<join>* tag (jdo/package/class/field/join).
 This element is added when the field has a mapping to a "join" table (as part of a 1-N relationship). It is also used
 to specify overriding of details in an inheritance tree where the primary key columns are shared up the hierarchy.
 A further use (when specified under the <class> element) is for specifying the column details
-for joining to a <a href="orm/secondary_tables.html">Secondary Table].
+for joining to a link:mapping.htm;#secondary_tables[Secondary Table].
 
 [cols="1,3,1", options="header"]
 |===
@@ -1471,12 +1471,12 @@ for joining to a <a href="orm/secondary_tables.html">Secondary Table].
 
 |column
 |Name of the column used to join to the PK of the primary table (when only one column used).
-Used in <a href="orm/secondary_tables.html">Secondary Tables].
+Used in link:mapping.htm;#secondary_tables[Secondary Tables].
 |
 
 |table
 |Table name used when joining the PK of a FCO class table to a secondary table.
-See <a href="orm/secondary_tables.html">Secondary Tables].
+See link:mapping.htm;#secondary_tables[Secondary Tables].
 |
 
 |delete-action
@@ -1611,13 +1611,13 @@ These are attributes within the *<extension>* tag (jdo/package/class/field/colle
 
 |cache
 |Whether this SCO collection will be cached by DataNucleus or whether every access of the collection will go through to the datastore. 
-See also "datanucleus.cache.collections" in the <a href="../persistence_properties.html">Persistence Properties Guide]. 
+See also "datanucleus.cache.collections" in the link:persistence.html#persistence_properties[Persistence Properties Guide]. 
 This MetaData attribute is used to override the value used by the _PersistenceManagerFactory_
 |*true*, false
 
 |cache-lazy-loading
 |Whether objects from this SCO collection will be lazy loaded (loaded when required) or whether they should be loaded at initialisation. 
-See also "datanucleus.cache.collections.lazy" in the <a href="../persistence_properties.html">Persistence Properties Guide].
+See also "datanucleus.cache.collections.lazy" in the link:persistence.html#persistence_properties[Persistence Properties Guide].
 This MetaData attribute is used to override the value used by the _PersistenceManagerFactory_
 |*true*, false
 
@@ -1685,13 +1685,13 @@ These are attributes within the *<extension>* tag (jdo/package/class/field/map/e
 
 |cache
 |Whether this SCO map will be cached by DataNucleus or whether every access of the map will go through to the datastore. 
-See also "datanucleus.cache.collections" in the <a href="../persistence_properties.html">Persistence Properties Guide]. 
+See also "datanucleus.cache.collections" in the link:persistence.html#persistence_properties[Persistence Properties Guide]. 
 This MetaData attribute is used to override the value used by the _PersistenceManagerFactory_
 |*true*, false
 
 |cache-lazy-loading
 |Whether objects from this SCO map will be lazy loaded (loaded when required) or whether they should be loaded at initialisation. 
-See also "datanucleus.cache.collections.lazy" in the <a href="../persistence_properties.html">Persistence Properties Guide].
+See also "datanucleus.cache.collections.lazy" in the link:persistence.html#persistence_properties[Persistence Properties Guide].
 This MetaData attribute is used to override the value used by the _PersistenceManagerFactory_
 |*true*, false
 
@@ -1730,7 +1730,7 @@ either serialised into a single column, using a join table, or via a foreign-key
 
 
 [[sequence]]
-== Metadata for sequence tag">
+== Metadata for sequence tag
 
 These are attributes within the *<sequence>* tag. This is used to denote a JDO datastore sequence.
 
@@ -1749,7 +1749,7 @@ These are attributes within the *<sequence>* tag. This is used to denote a JDO d
 |
 
 |factory-class
-|Factory class for creating the sequence. Please refer to the <a href="sequences.html">Sequence guide]
+|Factory class for creating the sequence. Please refer to the link:mapping.html#sequences[Sequence guide]
 |
 
 |strategy
@@ -1779,7 +1779,7 @@ These are for controlling the datastore sequences created by DataNucleus. Please
 
 |sequence-catalog-name
 |The catalog used to store sequences for use by value generators. 
-See <a href="value_generation.html">Value Generation].
+See link:mapping.html#value_generation[Value Generation].
 Default catalog for the datastore will be used if not specified.
 |
 
@@ -1794,37 +1794,37 @@ Default schema for the datastore will be used if not specified.
 
 |sequence-name-column-name
 |The column name in the sequence-table used to store the name of the sequence for use by value generators. 
-See <a href="value_generation.html">Value Generation].
+See link:mapping.html#value_generation[Value Generation].
 |*SEQUENCE_NAME*
 
 |sequence-nextval-column-name
 |The column name in the sequence-table used to store the next value in the sequence for use by value generators. 
-See <a href="value_generation.html">Value Generation].
+See link:mapping.html#value_generation[Value Generation].
 |*NEXT_VAL*
 
 |key-min-value
 |The minimum key value for use by value generators. Keys lower than this will not be generated. 
-See <a href="value_generation.html">Value Generation].
+See link:mapping.html#value_generation[Value Generation].
 |
 
 |key-max-value
 |The maximum key value for use by value generators. Keys higher than this will not be generated. 
-See <a href="value_generation.html">Value Generation].
+See link:mapping.html#value_generation[Value Generation].
 |
 
 |key-initial-value
 |The starting value for use by value generators. Keys will start from this value when being generated. 
-See <a href="value_generation.html">Value Generation].
+See link:mapping.html#value_generation[Value Generation].
 |
 
 |key-cache-size
 |The cache size for keys for use by value generators. The cache of keys will be constrained by this value. 
-See <a href="value_generation.html">Value Generation].
+See link:mapping.html#value_generation[Value Generation].
 |
 
 |key-database-cache-size
 |The database cache size for keys for use by value generators. The cache of keys will be constrained by this value. 
-See <a href="value_generation.html">Value Generation].
+See link:mapping.html#value_generation[Value Generation].
 |
 |===
 
@@ -1886,12 +1886,12 @@ These are for controlling the class definition
 
 |view-definition
 |Definition of the VIEW to be used by the class.
-Please refer to the <a href="orm/schema_mapping.html#rdbmsviews">RDBMS Views Guide] for details. If your view already exists, then specify this as " " and have the autoStart flags set to false.
+Please refer to the link:mapping.html#rdbmsviews[RDBMS Views Guide] for details. If your view already exists, then specify this as " " and have the autoStart flags set to false.
 |
 
 |view-imports
 |Classes imported resolve macro identifiers in the definition of a RDBMS View.
-Please refer to the <a href="orm/schema_mapping.html#rdbmsviews">RDBMS Views Guide] for details.
+Please refer to the link:mapping.html#rdbmsviews[RDBMS Views Guide] for details.
 |
 
 |read-only
