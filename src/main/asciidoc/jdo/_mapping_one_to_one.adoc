@@ -55,16 +55,10 @@ or using XML metadata
 -----
 <package name="mydomain">
     <class name="User" table="USER">
-        <field name="id" primary-key="true">
-            <column name="USER_ID"/>
-        </field>
         ...
     </class>
 
     <class name="Account" table="ACCOUNT">
-        <field name="id" primary-key="true">
-            <column name="ACCOUNT_ID"/>
-        </field>
         ...
         <field name="user">
             <column name="USER_ID"/>
@@ -141,17 +135,11 @@ or using XML metadata
 -----
 <package name="mydomain">
     <class name="User" table="USER">
-        <field name="id" primary-key="true">
-            <column name="USER_ID"/>
-        </field>
         ...
         <field name="account" mapped-by="user"/>
     </class>
 
     <class name="Account" table="ACCOUNT">
-        <field name="id" primary-key="true">
-            <column name="ACCOUNT_ID"/>
-        </field>
         ...
         <field name="user">
             <column name="USER_ID"/>

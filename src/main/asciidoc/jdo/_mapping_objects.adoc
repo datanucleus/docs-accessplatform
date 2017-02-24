@@ -1,0 +1,140 @@
+[[objects]]
+= java.lang.Object
+:_basedir: ../
+:_imagesdir: images/
+
+
+JDO requires that implementations support the persistence of java.lang.Object as first class objects (FCO's). 
+DataNucleus provides this capability and also provides that java.lang.Object can be stored as serialised. 
+It follows the same general process as for link:mapping.html#interfaces[Interfaces] since both interfaces and java.lang.Object are basically _references_ to some persistable object.
+
+NOTE: java.lang.Object cannot be used to persist non-persistable types with fixed schema datastore (e.g RDBMS). Think of how you would expect it to be stored if you think it ought to
+
+
+JDO doesn't define how an object FCO is persisted in the datastore. Obviously there can be many "implementations" and so no obvious solution.
+DataNucleus allows the following ways of persisting Object fields :-
+
+* *per-implementation* : a FK is created for each "implementation" so that the datastore can provide referential integrity. The other advantage is that since there are FKs then
+querying can be performed. The disadvantage is that if there are many implementations then the table can become large with many columns not used
+* *identity* : a single column is added and this stores the class name of the "implementation" stored, as well as the identity of the object. The disadvantages are that
+no querying can be performed, and that there is no referential integrity.
+* *xcalia* : a slight variation on "identity" whereby there is a single column yet the contents of that column are consistent with what Xcalia XIC JDO implementation stored there.
+
+The user controls which one of these is to be used by specifying the _extension_ *mapping-strategy* on the field containing the interface. 
+The default is "per-implementation"
+
+
+[[objects_one_one]]
+== 1-1/N-1 Object Relation
+
+Let's suppose you have a field in a class and you have a selection of possible persistable class that could be stored there, so you decide to make the field a _java.lang.Object_. 
+So let's take an example. We have the following class
+
+[source,java]
+-----
+public class ParkingSpace
+{
+    String location;
+    Object occupier;
+}
+-----
+
+So we have a space in a car park, and in that space we have an occupier of the space. We have some legacy data and so can't make the type of this "occupier" an interface type, 
+so we just use _java.lang.Object_. Now we know that we can only have particular types of objects stored there (since there are only a few types of vehicle that can enter the car park).
+So we define our MetaData like this
+
+[source,java]
+-----
+@Persistent(types={mydomain.samples.vehicles.Car.class, mydomain.samples.vehicles.Motorbike.class})
+Object occupier;
+-----
+
+or using XML metadata
+
+[source,xml]
+-----
+<package name="mydomain.samples.object">
+    <class name="ParkingSpace">
+        <field name="location"/>
+        <field name="occupier" persistence-modifier="persistent"
+               field-type="mydomain.samples.vehicles.Car, mydomain.samples.vehicles.Motorbike"/>
+        </field>
+</class>
+-----
+
+This will result in the following database schema.
+
+image:../images/objects_db.png[]
+
+So DataNucleus adds foreign keys from the ParkingSpace table to all of the possible implementation tables for the _occupier_ field.
+
+In conclusion, when using "per-implementation" mapping for any java.lang.Object field in a class to be persisted (as non-serialised), you *must* define the possible 
+"implementation" classes that can be stored there.
+
+If we use *mapping-strategy* of "identity" then we get a different datastore schema.
+
+[source,xml]
+-----
+<class name="ParkingSpace">
+    <field name="location"/>
+    <field name="occupier" persistence-modifier="persistent">
+        <extension vendor-name="datanucleus" key="mapping-strategy" value="identity"/>
+    </field>
+</class>
+-----
+
+and the datastore schema becomes
+
+image:../images/objects_identity_1_1_db.png[]
+
+and the column "OCCUPIER" will contain strings such as _com.mydomain.samples.object.Car:1_ allowing retrieval of the related implementation object.
+
+
+
+[[objects_one_many]]
+== 1-N Object Relation
+
+You can have a Collection/Map containing elements of java.lang.Object. You specify this in the same way as you would any Collection/Map. 
+DataNucleus supports having a Collection of references with multiple implementation types as long as you use a join table relation.
+
+
+[[objects_serialised]]
+== Serialised Objects
+
+By default a field of type _java.lang.Object_ is stored as an instance of the underlying entity in the table of that object. 
+If either your Object field represents non-entities or you simply wish to serialise the Object into the same table as the owning object, 
+you need to specify it as serialized, like this
+
+[source,java]
+-----
+public class MyClass
+{
+    ...
+    @Serialized
+    Object myObject;
+}
+-----
+
+[source,xml]
+-----
+<class name="MyClass">
+    ...
+    <field name="myCollection" serialized="true"/>
+</class>
+-----
+
+Similarly, where you have a collection of Objects using a join table, the objects are, by default, stored in the table of the persistable instance. 
+If instead you want them to occupy a single BLOB column of the join table, you should specify the "embedded-element" attribute of <collection> like this
+
+[source,xml]
+-----
+<class name="MyClass">
+    <field name="myCollection">
+        <collection element-type="java.lang.Object" serialized-element="true"/>
+        <join/>
+    </field>
+</class>
+-----
+
+Please refer to the link:mapping.html#serialised[serialised fields guide] for more details of storing objects in this way.
+

@@ -90,9 +90,6 @@ or using XML
     <entity class="Account">
         <table name="ACCOUNT"/>
         <attributes>
-            <id name="id">
-                <column name="ACCOUNT_ID"/>
-            </id>
             ...
             <one-to-many name="addresses">
                 <join-table name="ACCOUNT_ADDRESSES">
@@ -105,12 +102,7 @@ or using XML
 
     <entity class="Address">
         <table name="ADDRESS"/>
-        <attributes>
-            <id name="id">
-                <column name="ADDRESS_ID"/>
-            </id>
-            ...
-        </attributes>
+         ...
     </entity>
 </entity-mappings>
 -----
@@ -165,9 +157,6 @@ or using XML metadata
     <entity class="Account">
         <table name="ACCOUNT"/>
         <attributes>
-            <id name="id">
-                <column name="ACCOUNT_ID"/>
-            </id>
             ...
             <one-to-many name="addresses">
                 <join-column name="ACCOUNT_ID"/>
@@ -177,12 +166,7 @@ or using XML metadata
 
     <entity class="Address">
         <table name="ADDRESS"/>
-        <attributes>
-            <id name="id">
-                <column name="ADDRESS_ID"/>
-            </id>
-            ...
-        </attributes>
+        ...
     </entity>
 </entity-mappings>
 -----
@@ -262,9 +246,6 @@ or alternatively using XML
     <entity class="Account">
         <table name="ACCOUNT"/>
         <attributes>
-            <id name="id">
-                <column name="ACCOUNT_ID"/>
-            </id>
             ...
             <one-to-many name="addresses" mapped-by="account">
                 <join-table name="ACCOUNT_ADDRESSES">
@@ -278,9 +259,6 @@ or alternatively using XML
     <entity class="Address">
         <table name="ADDRESS"/>
         <attributes>
-            <id name="id">
-                <column name="ADDRESS_ID"/>
-            </id>
             ...
             <many-to-one name="account"/>
         </attributes>
@@ -340,9 +318,6 @@ or alternatively using XML metadata
     <entity class="Account">
         <table name="ACCOUNT"/>
         <attributes>
-            <id name="id">
-                <column name="ACCOUNT_ID"/>
-            </id>
             ...
             <one-to-many name="addresses" mapped-by="account">
                 <join-column name="ACCOUNT_ID"/>
@@ -353,9 +328,6 @@ or alternatively using XML metadata
     <entity class="Address">
         <table name="ADDRESS"/>
         <attributes>
-            <id name="id">
-                <column name="ADDRESS_ID"/>
-            </id>
             ...
             <many-to-one name="account"/>
         </attributes>
@@ -575,9 +547,6 @@ or using XML metadata
     <entity class="Account">
         <table name="ACCOUNT"/>
         <attributes>
-            <id name="id">
-                <column name="ACCOUNT_ID"/>
-            </id>
             ...
             <one-to-many name="workAddresses">
                 <join-table name="ACCOUNT_ADDRESSES">
@@ -602,12 +571,7 @@ or using XML metadata
 
     <entity class="Address">
         <table name="ADDRESS"/>
-        <attributes>
-            <id name="id">
-                <column name="ADDRESS_ID"/>
-            </id>
-            ...
-        </attributes>
+         ...
     </entity>
 </entity-mappings>
 -----
@@ -676,9 +640,6 @@ or using XML metadata
     <entity class="Account">
         <table name="ACCOUNT"/>
         <attributes>
-            <id name="id">
-                <column name="ACCOUNT_ID"/>
-            </id>
             ...
             <one-to-many name="workAddresses">
                 <join-column name="ACCOUNT_ID_OID"/>
@@ -695,12 +656,7 @@ or using XML metadata
 
     <entity class="Address">
         <table name="ADDRESS"/>
-        <attributes>
-            <id name="id">
-                <column name="ADDRESS_ID"/>
-            </id>
-            ...
-        </attributes>
+        ...
     </entity>
 </entity-mappings>
 -----
@@ -896,9 +852,6 @@ or using XML metadata
     <entity class="Account">
         <table name="ACCOUNT"/>
         <attributes>
-            <id name="id">
-                <column name="ACCOUNT_ID"/>
-            </id>
             ...
             <one-to-many name="addresses">
                 <map-key name="alias"/>
@@ -910,9 +863,6 @@ or using XML metadata
     <entity class="Address">
         <table name="ADDRESS"/>
         <attributes>
-            <id name="id">
-                <column name="ADDRESS_ID"/>
-            </id>
             ...
             <basic name="alias">
                 <column name="KEY" length="20"/>
@@ -969,9 +919,6 @@ If you define the Meta-Data for these classes as follows
     <entity class="Account">
         <table name="ACCOUNT"/>
         <attributes>
-            <id name="id">
-                <column name="ACCOUNT_ID"/>
-            </id>
             ...
             <one-to-many name="addresses" mapped-by="account">
                 <map-key name="alias"/>
@@ -982,9 +929,6 @@ If you define the Meta-Data for these classes as follows
     <entity class="Address">
         <table name="ADDRESS"/>
         <attributes>
-            <id name="id">
-                <column name="ADDRESS_ID"/>
-            </id>
             ...
             <basic name="alias">
                 <column name="KEY" length="20"/>

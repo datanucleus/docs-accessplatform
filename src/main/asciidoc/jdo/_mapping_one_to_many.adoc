@@ -92,9 +92,6 @@ or using XML metadata
 -----
 <package name="com.mydomain">
     <class name="Account">
-        <field name="id" primary-key="true">
-            <column name="ACCOUNT_ID"/>
-        </field>
         ...
         <field name="addresses" table="ACCOUNT_ADDRESSES">
             <collection element-type="com.mydomain.Address"/>
@@ -104,9 +101,6 @@ or using XML metadata
     </class>
 
     <class name="Address">
-        <field name="id" primary-key="true">
-            <column name="ADDRESS_ID"/>
-        </field>
         ...
     </class>
 </package>
@@ -162,9 +156,6 @@ public class Address
 -----
 <package name="com.mydomain">
     <class name="Account">
-        <field name="id" primary-key="true">
-            <column name="ACCOUNT_ID"/>
-        </field>
         ...
         <field name="addresses">
             <collection element-type="com.mydomain.Address"/>
@@ -173,9 +164,6 @@ public class Address
     </class>
 
     <class name="Address">
-        <field name="id" primary-key="true">
-            <column name="ADDRESS_ID"/>
-        </field>
         ...
     </class>
 </package>
@@ -251,9 +239,6 @@ or using XML metadata
 -----
 <package name="com.mydomain">
     <class name="Account">
-        <field name="id" primary-key="true">
-            <column name="ACCOUNT_ID"/>
-        </field>
         ...
         <field name="addresses" mapped-by="account">
             <collection element-type="com.mydomain.Address"/>
@@ -262,9 +247,6 @@ or using XML metadata
     </class>
 
     <class name="Address">
-        <field name="id" primary-key="true">
-            <column name="ADDRESS_ID"/>
-        </field>
         ...
         <field name="account"/>
     </class>
@@ -324,9 +306,6 @@ or using XML metadata
 -----
 <package name="com.mydomain">
     <class name="Account">
-        <field name="id" primary-key="true">
-            <column name="ACCOUNT_ID"/>
-        </field>
         ...
         <field name="addresses" mapped-by="account">
             <collection element-type="com.mydomain.Address"/>
@@ -334,9 +313,6 @@ or using XML metadata
     </class>
 
     <class name="Address">
-        <field name="id" primary-key="true">
-            <column name="ADDRESS_ID"/>
-        </field>
         ...
         <field name="account">
             <column name="ACCOUNT_ID"/>
@@ -436,9 +412,6 @@ or using XML metadata
 -----
 <package name="com.mydomain">
     <class name="Account">
-        <field name="id" primary-key="true">
-            <column name="ACCOUNT_ID"/>
-        </field>
         ...
         <field name="addresses" persistence-modifier="persistent">
             <collection element-type="java.lang.String"/>
@@ -568,9 +541,6 @@ or using XML metadata
 -----
 <package name="com.mydomain">
     <class name="Account">
-        <field name="id" primary-key="true">
-            <column name="ACCOUNT_ID"/>
-        </field>
         ...
         <field name="workAddresses" persistence-modifier="persistent" table="ACCOUNT_ADDRESSES">
             <collection element-type="com.mydomain.Address"/>
@@ -591,9 +561,6 @@ or using XML metadata
     </class>
 
     <class name="Address">
-        <field name="id" primary-key="true">
-            <column name="ADDRESS_ID"/>
-        </field>
         ...
     </class>
 </package>
@@ -661,9 +628,6 @@ or using XML metadata
 -----
 <package name="com.mydomain">
     <class name="Account">
-        <field name="id" primary-key="true">
-            <column name="ACCOUNT_ID"/>
-        </field>
         ...
         <field name="workAddresses" persistence-modifier="persistent">
             <collection element-type="com.mydomain.Address"/>
@@ -680,9 +644,6 @@ or using XML metadata
     </class>
 
     <class name="Address">
-        <field name="id" primary-key="true">
-            <column name="ADDRESS_ID"/>
-        </field>
         ...
     </class>
 </package>
@@ -710,8 +671,7 @@ Here we have a Map field, with key and value as persistable classes.
 @PersistenceCapable
 public class Account
 {
-    String firstName;
-    String lastName;
+    ...
     Map<Name, Address> addresses;
 }
 
@@ -979,6 +939,7 @@ We define the annotations like this
 -----
 public class Account
 {
+    ...
     @Key(mappedBy="alias")
     Map<String, Address> addresses;
 }
