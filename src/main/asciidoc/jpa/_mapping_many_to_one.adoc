@@ -159,11 +159,12 @@ image:../images/relationship_N_1_uni_db.png[]
 
 == Bidirectional
 
-This relationship is described in the guide for link:mapping.html#one_to_many_collection[1-N relationships]. In particular there are 2 ways to define the 
-relationship for RDBMS : the link:mapping.html#one_to_many_collection_join_bi[first] uses a Join Table to hold the relationship, whilst the 
-link:mapping.html#one_to_many_collection_fk_bi[second] uses a Foreign Key in the "N" object to hold the relationship. 
+This relationship is described in the guide for link:mapping.html#one_to_many_collection[1-N relationships]. 
+In particular there are 2 ways to define the relationship for RDBMS : the link:mapping.html#one_many_join_bi[first] uses a Join Table to hold the relationship, 
+whilst the link:mapping.html#one_many_fk_bi[second] uses a Foreign Key in the "N" object to hold the relationship. 
 For non-RDBMS datastores each side will have a "column" (or equivalent) in the "table" of the N side storing the "id" of the related (owning) object.
 Please refer to the 1-N relationships bidirectional relations since they show this exact relationship.
+
 
 
 
