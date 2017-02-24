@@ -16,7 +16,6 @@ any _Entity_ that has its own identity, _interface_ where it represents an _Enti
 * *Secondary Types* : An object that does not have an "identity" is termed a *secondary type*. This is something like a String or Date field in a class, 
 or alternatively a Collection (that contains other objects), or an embedded _Entity_. The sections below shows the currently supported secondary java types in DataNucleus. 
 The tables in these sections show 
-** *Extension?* : whether the type is JPA standard, or is a DataNucleus extension
 ** *EAGER* : whether the field is retrieved by default when retrieving the object itself.
 ** *Persistent* : whether the field is persisted by default, or whether the user has to mark the field as persistent in XML/annotations to persist it
 ** *Proxied* : whether the field is represented by a "proxy" that intercepts any operations to detect whether it has changed internally (such as Collection, Map).
@@ -39,10 +38,9 @@ See http://blog.bolkey.com/2009/05/hibernate-datanucleus-r1[this blog entry] if 
 All primitive types and wrappers are supported and will be persisted into a single database "column".
 Arrays of these are also supported, and can either be serialised into a single column, or persisted into a join table (dependent on datastore).
 
-[cols="4,1,1,1,1,1,6", options="header"]
+[cols="4,1,1,1,1,6", options="header"]
 |===
 |Java Type
-|Extension?
 |EAGER?
 |Persistent?
 |Proxied?
@@ -50,7 +48,6 @@ Arrays of these are also supported, and can either be serialised into a single c
 |Comments
 
 |boolean
-|
 |icon:check[]
 |icon:check[]
 |icon:times[]
@@ -58,7 +55,6 @@ Arrays of these are also supported, and can either be serialised into a single c
 |Persisted as *BOOLEAN*, Integer (i.e 1,0), String (i.e 'Y','N').
 
 |byte
-|
 |icon:check[]
 |icon:check[]
 |icon:times[]
@@ -66,7 +62,6 @@ Arrays of these are also supported, and can either be serialised into a single c
 |
 
 |char
-|
 |icon:check[]
 |icon:check[]
 |icon:times[]
@@ -74,7 +69,6 @@ Arrays of these are also supported, and can either be serialised into a single c
 |
 
 |double
-|
 |icon:check[]
 |icon:check[]
 |icon:times[]
@@ -82,7 +76,6 @@ Arrays of these are also supported, and can either be serialised into a single c
 |
 
 |float
-|
 |icon:check[]
 |icon:check[]
 |icon:times[]
@@ -90,7 +83,6 @@ Arrays of these are also supported, and can either be serialised into a single c
 |
 
 |int
-|
 |icon:check[]
 |icon:check[]
 |icon:times[]
@@ -98,7 +90,6 @@ Arrays of these are also supported, and can either be serialised into a single c
 |
 
 |long
-|
 |icon:check[]
 |icon:check[]
 |icon:times[]
@@ -106,7 +97,6 @@ Arrays of these are also supported, and can either be serialised into a single c
 |
 
 |short
-|
 |icon:check[]
 |icon:check[]
 |icon:times[]
@@ -114,7 +104,6 @@ Arrays of these are also supported, and can either be serialised into a single c
 |
 
 |java.lang.Boolean
-|
 |icon:check[]
 |icon:check[]
 |icon:times[]
@@ -122,7 +111,6 @@ Arrays of these are also supported, and can either be serialised into a single c
 |Persisted as *BOOLEAN*, Integer (i.e 1,0), String (i.e 'Y','N').
 
 |java.lang.Byte
-|
 |icon:check[]
 |icon:check[]
 |icon:times[]
@@ -130,7 +118,6 @@ Arrays of these are also supported, and can either be serialised into a single c
 |
 
 |java.lang.Character
-|
 |icon:check[]
 |icon:check[]
 |icon:times[]
@@ -138,7 +125,6 @@ Arrays of these are also supported, and can either be serialised into a single c
 |
 
 |java.lang.Double
-|
 |icon:check[]
 |icon:check[]
 |icon:times[]
@@ -146,7 +132,6 @@ Arrays of these are also supported, and can either be serialised into a single c
 |
 
 |java.lang.Float
-|
 |icon:check[]
 |icon:check[]
 |icon:times[]
@@ -154,7 +139,6 @@ Arrays of these are also supported, and can either be serialised into a single c
 |
 
 |java.lang.Integer
-|
 |icon:check[]
 |icon:check[]
 |icon:times[]
@@ -162,7 +146,6 @@ Arrays of these are also supported, and can either be serialised into a single c
 |
 
 |java.lang.Long
-|
 |icon:check[]
 |icon:check[]
 |icon:times[]
@@ -170,7 +153,6 @@ Arrays of these are also supported, and can either be serialised into a single c
 |
 
 |java.lang.Short
-|
 |icon:check[]
 |icon:check[]
 |icon:times[]
@@ -178,7 +160,6 @@ Arrays of these are also supported, and can either be serialised into a single c
 |
 
 |java.lang.Number
-|
 |icon:check[]
 |icon:check[]
 |icon:times[]
@@ -187,7 +168,6 @@ Arrays of these are also supported, and can either be serialised into a single c
 the object will be returned typically as a BigDecimal since there is no mechanism for determing the type of the object that was stored.
 
 |java.lang.String
-|
 |icon:check[]
 |icon:check[]
 |icon:times[]
@@ -195,7 +175,6 @@ the object will be returned typically as a BigDecimal since there is no mechanis
 |
 
 |java.lang.StringBuffer
-|icon:check[]
 |icon:check[]
 |icon:check[]
 |icon:times[]
@@ -206,14 +185,12 @@ you must reassign it to the owner object field to make sure changes are propagat
 |java.lang.StringBuilder
 |icon:check[]
 |icon:check[]
-|icon:check[]
 |icon:times[]
 |icon:check[]
 |Persisted as String. The dirty check mechanism for this type is limited to immutable mode, which means if you change a StringBuffer object field, 
 you must reassign it to the owner object field to make sure changes are propagated to the database.
 
 |java.lang.Class
-|icon:check[]
 |icon:check[]
 |icon:check[]
 |icon:times[]
@@ -225,10 +202,9 @@ you must reassign it to the owner object field to make sure changes are propagat
 
 BigInteger and BigDecimal are supported and persisted into a single numeric column by default.
 
-[cols="4,1,1,1,1,1,6", options="header"]
+[cols="4,1,1,1,1,6", options="header"]
 |===
 |Java Type
-|Extension?
 |EAGER?
 |Persistent?
 |Proxied?
@@ -236,7 +212,6 @@ BigInteger and BigDecimal are supported and persisted into a single numeric colu
 |Comments
 
 |java.math.BigDecimal
-|
 |icon:check[]
 |icon:check[]
 |icon:times[]
@@ -244,7 +219,6 @@ BigInteger and BigDecimal are supported and persisted into a single numeric colu
 |Persisted as *DOUBLE* or String. String can be used to retain precision.
 
 |java.math.BigInteger
-|
 |icon:check[]
 |icon:check[]
 |icon:times[]
@@ -257,10 +231,9 @@ BigInteger and BigDecimal are supported and persisted into a single numeric colu
 
 DataNucleus supports a very wide range of temporal types, with flexibility in how they are persisted.
 
-[cols="4,1,1,1,1,1,6", options="header"]
+[cols="4,1,1,1,1,6", options="header"]
 |===
 |Java Type
-|Extension?
 |EAGER?
 |Persistent?
 |Proxied?
@@ -268,7 +241,6 @@ DataNucleus supports a very wide range of temporal types, with flexibility in ho
 |Comments
 
 |java.sql.Date
-|
 |icon:check[]
 |icon:check[]
 |icon:check[]
@@ -276,7 +248,6 @@ DataNucleus supports a very wide range of temporal types, with flexibility in ho
 |Persisted as *DATE*, String, DATETIME or Long.
 
 |java.sql.Time
-|
 |icon:check[]
 |icon:check[]
 |icon:check[]
@@ -284,7 +255,6 @@ DataNucleus supports a very wide range of temporal types, with flexibility in ho
 |Persisted as *TIME*, String, DATETIME or Long.
 
 |java.sql.Timestamp
-|
 |icon:check[]
 |icon:check[]
 |icon:check[]
@@ -292,7 +262,6 @@ DataNucleus supports a very wide range of temporal types, with flexibility in ho
 |Persisted as *TIMESTAMP*, String or Long.
 
 |java.util.Calendar
-|
 |icon:check[]
 |icon:check[]
 |icon:check[]
@@ -300,7 +269,6 @@ DataNucleus supports a very wide range of temporal types, with flexibility in ho
 |Persisted as *TIMESTAMP (inc Timezone)*, DATETIME, String, or as (Long, String) storing millis + timezone respectively
 
 |java.util.GregorianCalendar
-|
 |icon:check[]
 |icon:check[]
 |icon:check[]
@@ -308,7 +276,6 @@ DataNucleus supports a very wide range of temporal types, with flexibility in ho
 |Persisted as *TIMESTAMP (inc Timezone)*, DATETIME, String, or as (Long, String) storing millis + timezone respectively
 
 |java.util.Date
-|
 |icon:check[]
 |icon:check[]
 |icon:check[]
@@ -318,13 +285,11 @@ DataNucleus supports a very wide range of temporal types, with flexibility in ho
 |java.util.TimeZone
 |icon:check[]
 |icon:check[]
-|icon:check[]
 |icon:times[]
 |icon:check[]
 |Persisted as String.
 
 |java.time.LocalDateTime
-|icon:check[]
 |icon:check[]
 |icon:check[]
 |icon:times[]
@@ -334,13 +299,11 @@ DataNucleus supports a very wide range of temporal types, with flexibility in ho
 |java.time.LocalTime
 |icon:check[]
 |icon:check[]
-|icon:check[]
 |icon:times[]
 |icon:times[]
 |Persisted as *TIME*, String, or Long.
 
 |java.time.LocalDate
-|icon:check[]
 |icon:check[]
 |icon:check[]
 |icon:times[]
@@ -350,13 +313,11 @@ DataNucleus supports a very wide range of temporal types, with flexibility in ho
 |java.time.OffsetDateTime
 |icon:check[]
 |icon:check[]
-|icon:check[]
 |icon:times[]
 |icon:times[]
 |Persisted as *Timestamp*, String, or DATETIME.
 
 |java.time.OffsetTime
-|icon:check[]
 |icon:check[]
 |icon:check[]
 |icon:times[]
@@ -366,13 +327,11 @@ DataNucleus supports a very wide range of temporal types, with flexibility in ho
 |java.time.MonthDay
 |icon:check[]
 |icon:check[]
-|icon:check[]
 |icon:times[]
 |icon:times[]
 |Persisted as *String*, DATE, or as (Integer,Integer) with the latter being month+day respectively.
 
 |java.time.YearMonth
-|icon:check[]
 |icon:check[]
 |icon:check[]
 |icon:times[]
@@ -382,13 +341,11 @@ DataNucleus supports a very wide range of temporal types, with flexibility in ho
 |java.time.Year
 |icon:check[]
 |icon:check[]
-|icon:check[]
 |icon:times[]
 |icon:times[]
 |Persisted as *Integer*, or String.
 
 |java.time.Period
-|icon:check[]
 |icon:check[]
 |icon:check[]
 |icon:times[]
@@ -398,13 +355,11 @@ DataNucleus supports a very wide range of temporal types, with flexibility in ho
 |java.time.Instant
 |icon:check[]
 |icon:check[]
-|icon:check[]
 |icon:times[]
 |icon:times[]
 |Persisted as *TIMESTAMP*, String, Long, or DATETIME.
 
 |java.time.Duration
-|icon:check[]
 |icon:check[]
 |icon:check[]
 |icon:times[]
@@ -414,13 +369,11 @@ DataNucleus supports a very wide range of temporal types, with flexibility in ho
 |java.time.ZoneId
 |icon:check[]
 |icon:check[]
-|icon:check[]
 |icon:times[]
 |icon:times[]
 |Persisted as *String*.
 
 |java.time.ZoneOffset
-|icon:check[]
 |icon:check[]
 |icon:check[]
 |icon:times[]
@@ -430,13 +383,11 @@ DataNucleus supports a very wide range of temporal types, with flexibility in ho
 |java.time.ZonedDateTime
 |icon:check[]
 |icon:check[]
-|icon:check[]
 |icon:times[]
 |icon:times[]
 |Persisted as *Timestamp*, or String.
 
 |org.joda.time.DateTime
-|icon:check[]
 |icon:check[]
 |icon:check[]
 |icon:times[]
@@ -446,13 +397,11 @@ DataNucleus supports a very wide range of temporal types, with flexibility in ho
 |org.joda.time.LocalTime
 |icon:check[]
 |icon:check[]
-|icon:check[]
 |icon:times[]
 |icon:times[]
 |Requires *datanucleus-jodatime* plugin. Persisted as *TIME* or String.
 
 |org.joda.time.LocalDate
-|icon:check[]
 |icon:check[]
 |icon:check[]
 |icon:times[]
@@ -462,13 +411,11 @@ DataNucleus supports a very wide range of temporal types, with flexibility in ho
 |org.joda.time.LocalDateTime
 |icon:check[]
 |icon:check[]
-|icon:check[]
 |icon:times[]
 |icon:times[]
 |Requires *datanucleus-jodatime* plugin. Persisted as *TIMESTAMP*, or String.
 
 |org.joda.time.Duration
-|icon:check[]
 |icon:check[]
 |icon:check[]
 |icon:times[]
@@ -478,13 +425,11 @@ DataNucleus supports a very wide range of temporal types, with flexibility in ho
 |org.joda.time.Interval
 |icon:check[]
 |icon:check[]
-|icon:check[]
 |icon:times[]
 |icon:times[]
 |Requires *datanucleus-jodatime* plugin. Persisted as *String* or (TIMESTAMP, TIMESTAMP).
 
 |org.joda.time.Period
-|icon:check[]
 |icon:check[]
 |icon:check[]
 |icon:times[]
@@ -496,10 +441,9 @@ DataNucleus supports a very wide range of temporal types, with flexibility in ho
 
 DataNucleus supports a very wide range of collection, list and map types.
 
-[cols="4,1,1,1,1,1,6", options="header"]
+[cols="4,1,1,1,1,6", options="header"]
 |===
 |Java Type
-|Extension?
 |EAGER?
 |Persistent?
 |Proxied?
@@ -507,7 +451,6 @@ DataNucleus supports a very wide range of collection, list and map types.
 |Comments
 
 |java.util.ArrayList
-|
 |icon:times[]
 |icon:check[]
 |icon:check[]
@@ -515,7 +458,6 @@ DataNucleus supports a very wide range of collection, list and map types.
 |See link:mapping.html#one_many_list[the 1-N Lists Guide]
 
 |java.util.BitSet
-|
 |icon:times[]
 |icon:check[]
 |icon:check[]
@@ -523,7 +465,6 @@ DataNucleus supports a very wide range of collection, list and map types.
 |Persisted as collection by default, but will be stored as String when the datastore doesn't provide for collection storage
 
 |java.util.Collection
-|
 |icon:times[]
 |icon:check[]
 |icon:check[]
@@ -531,7 +472,6 @@ DataNucleus supports a very wide range of collection, list and map types.
 |See link:mapping.html#one_many[the 1-N Collections Guide]
 
 |java.util.HashMap
-|
 |icon:times[]
 |icon:check[]
 |icon:check[]
@@ -539,7 +479,6 @@ DataNucleus supports a very wide range of collection, list and map types.
 |See link:mapping.html#one_many_map[the 1-N Maps Guide]
 
 |java.util.HashSet
-|
 |icon:times[]
 |icon:check[]
 |icon:check[]
@@ -547,7 +486,6 @@ DataNucleus supports a very wide range of collection, list and map types.
 |See link:mapping.html#one_many[the 1-N Collections Guide]
 
 |java.util.Hashtable
-|
 |icon:times[]
 |icon:check[]
 |icon:check[]
@@ -555,7 +493,6 @@ DataNucleus supports a very wide range of collection, list and map types.
 |See link:mapping.html#one_many_map[the 1-N Maps Guide]
 
 |java.util.LinkedHashMap
-|
 |icon:times[]
 |icon:check[]
 |icon:check[]
@@ -563,7 +500,6 @@ DataNucleus supports a very wide range of collection, list and map types.
 |Persisted as a Map currently. No List-ordering is supported. See link:mapping.html#one_many_map[the 1-N Maps Guide]
 
 |java.util.LinkedHashSet
-|
 |icon:times[]
 |icon:check[]
 |icon:check[]
@@ -571,7 +507,6 @@ DataNucleus supports a very wide range of collection, list and map types.
 |Persisted as a Set currently. No List-ordering is supported. See link:mapping.html#one_many[the 1-N Collections Guide]
 
 |java.util.LinkedList
-|
 |icon:times[]
 |icon:check[]
 |icon:check[]
@@ -579,7 +514,6 @@ DataNucleus supports a very wide range of collection, list and map types.
 |See link:mapping.html#one_many_list[the 1-N Lists Guide]
 
 |java.util.List
-|
 |icon:times[]
 |icon:check[]
 |icon:check[]
@@ -587,7 +521,6 @@ DataNucleus supports a very wide range of collection, list and map types.
 |See link:mapping.html#one_many_list[the 1-N Lists Guide]
 
 |java.util.Map
-|
 |icon:times[]
 |icon:check[]
 |icon:check[]
@@ -595,7 +528,6 @@ DataNucleus supports a very wide range of collection, list and map types.
 |See link:mapping.html#one_many_map[the 1-N Maps Guide]
 
 |java.util.Properties
-|
 |icon:times[]
 |icon:check[]
 |icon:check[]
@@ -603,7 +535,6 @@ DataNucleus supports a very wide range of collection, list and map types.
 |See link:mapping.html#one_many_map[the 1-N Maps Guide]
 
 |java.util.PriorityQueue
-|
 |icon:times[]
 |icon:check[]
 |icon:check[]
@@ -611,7 +542,6 @@ DataNucleus supports a very wide range of collection, list and map types.
 |The comparator is specifiable via the metadata extension _comparator-name_ (see below). See link:mapping.html#one_many_list[the 1-N Lists Guide]
 
 |java.util.Queue
-|
 |icon:times[]
 |icon:check[]
 |icon:check[]
@@ -619,7 +549,6 @@ DataNucleus supports a very wide range of collection, list and map types.
 |The comparator is specifiable via the metadata extension _comparator-name_ (see below). See link:mapping.html#one_many_list[the 1-N Lists Guide]
 
 |java.util.Set
-|
 |icon:times[]
 |icon:check[]
 |icon:check[]
@@ -627,7 +556,6 @@ DataNucleus supports a very wide range of collection, list and map types.
 |See link:mapping.html#one_many[the 1-N Collections Guide]
 
 |java.util.SortedMap
-|
 |icon:times[]
 |icon:check[]
 |icon:check[]
@@ -635,7 +563,6 @@ DataNucleus supports a very wide range of collection, list and map types.
 |The comparator is specifiable via the metadata extension _comparator-name_ (see below). See link:mapping.html#one_many_map[the 1-N Maps Guide]
 
 |java.util.SortedSet
-|
 |icon:times[]
 |icon:check[]
 |icon:check[]
@@ -643,7 +570,6 @@ DataNucleus supports a very wide range of collection, list and map types.
 |The comparator is specifiable via the metadata extension _comparator-name_ (see below). See link:mapping.html#one_many[the 1-N Collections Guide]
 
 |java.util.Stack
-|
 |icon:times[]
 |icon:check[]
 |icon:check[]
@@ -651,7 +577,6 @@ DataNucleus supports a very wide range of collection, list and map types.
 |See link:mapping.html#one_many_list[the 1-N Lists Guide]
 
 |java.util.TreeMap
-|
 |icon:times[]
 |icon:check[]
 |icon:check[]
@@ -659,7 +584,6 @@ DataNucleus supports a very wide range of collection, list and map types.
 |The comparator is specifiable via the metadata extension _comparator-name_ (see below). See link:mapping.html#one_many_map[the 1-N Maps Guide]
 
 |java.util.TreeSet
-|
 |icon:times[]
 |icon:check[]
 |icon:check[]
@@ -667,7 +591,6 @@ DataNucleus supports a very wide range of collection, list and map types.
 |The comparator is specifiable via the metadata extension _comparator-name_ (see below). See link:mapping.html#one_many[the 1-N Collections Guide]
 
 |java.util.Vector
-|
 |icon:times[]
 |icon:check[]
 |icon:check[]
@@ -675,7 +598,6 @@ DataNucleus supports a very wide range of collection, list and map types.
 |See link:mapping.html#one_many_list[the 1-N Lists Guide]
 
 |com.google.common.collect.Multiset
-|icon:check[]
 |icon:times[]
 |icon:check[]
 |icon:check[]
@@ -690,9 +612,9 @@ Containers that support a Comparator to order the elements of the set can specif
 
 [source,java]
 -----
-    @OneToMany
-    @Extension(key="comparator-name", value="mydomain.model.MyComparator")
-    SortedSet<MyElementType> elements; 
+@OneToMany
+@Extension(key="comparator-name", value="mydomain.model.MyComparator")
+SortedSet<MyElementType> elements; 
 -----
 
 When instantiating the SortedSet field, it will create it with a comparator of the specified class (which must have a default constructor).
@@ -702,10 +624,9 @@ When instantiating the SortedSet field, it will create it with a comparator of t
 
 By default an Enum is persisted as either a String form (the name), or as an integer form (the ordinal). You control which form by specifying the *@Enumerated* annotation (or equivalent XML). 
 
-[cols="4,1,1,1,1,1,6", options="header"]
+[cols="4,1,1,1,1,6", options="header"]
 |===
 |Java Type
-|Extension?
 |EAGER?
 |Persistent?
 |Proxied?
@@ -713,7 +634,6 @@ By default an Enum is persisted as either a String form (the name), or as an int
 |Comments
 
 |java.lang.Enum
-|
 |icon:check[]
 |icon:check[]
 |icon:times[]
@@ -778,10 +698,9 @@ interface to read and manipulate any business data.
 The implementation of many of these spatial types follows the http://www.opengeospatial.org/standards/sfa[OGC Simple Feature specification], 
 but adds further types where the datastores support them.
 
-[cols="4,1,1,1,1,1,6", options="header"]
+[cols="4,1,1,1,1,6", options="header"]
 |===
 |Java Type
-|Extension?
 |EAGER?
 |Persistent?
 |Proxied?
@@ -792,12 +711,10 @@ but adds further types where the datastores support them.
 |icon:check[]
 |icon:check[]
 |icon:check[]
-|icon:check[]
 |icon:times[]
 |Requires *datanucleus-geospatial* plugin. Persisted as (int, int) on RDBMS, or as String elsewhere.
 
 |java.awt.Rectangle
-|icon:check[]
 |icon:check[]
 |icon:check[]
 |icon:check[]
@@ -808,12 +725,10 @@ but adds further types where the datastores support them.
 |icon:check[]
 |icon:check[]
 |icon:check[]
-|icon:check[]
 |icon:times[]
 |Requires *datanucleus-geospatial* plugin. Persisted as (int[], int[], int) on RDBMS, or as String elsewhere.
 
 |java.awt.geom.Line2D
-|icon:check[]
 |icon:check[]
 |icon:check[]
 |icon:check[]
@@ -824,12 +739,10 @@ but adds further types where the datastores support them.
 |icon:check[]
 |icon:check[]
 |icon:check[]
-|icon:check[]
 |icon:times[]
 |Requires *datanucleus-geospatial* plugin. Persisted as (double, double) or (float, float) on RDBMS, or as String elsewhere.
 
 |java.awt.geom.Rectangle2D
-|icon:check[]
 |icon:check[]
 |icon:check[]
 |icon:check[]
@@ -840,12 +753,10 @@ but adds further types where the datastores support them.
 |icon:check[]
 |icon:check[]
 |icon:check[]
-|icon:check[]
 |icon:times[]
 |Requires *datanucleus-geospatial* plugin. Persisted as (double, double, double, double, double, double, int) or (float, float, float, float, float, float, int) on RDBMS, or as String elsewhere.
 
 |java.awt.geom.CubicCurve2D
-|icon:check[]
 |icon:check[]
 |icon:check[]
 |icon:check[]
@@ -856,12 +767,10 @@ but adds further types where the datastores support them.
 |icon:check[]
 |icon:check[]
 |icon:check[]
-|icon:check[]
 |icon:times[]
 |Requires *datanucleus-geospatial* plugin Persisted as (double, double, double, double) or (float, float, float, float) on RDBMS, or as String elsewhere.
 
 |java.awt.geom.QuadCurve2D
-|icon:check[]
 |icon:check[]
 |icon:check[]
 |icon:check[]
@@ -872,12 +781,10 @@ but adds further types where the datastores support them.
 |icon:check[]
 |icon:check[]
 |icon:check[]
-|icon:check[]
 |icon:times[]
 |Requires *datanucleus-geospatial* plugin. Persisted as (double, double, double, double, double, double) or (float, float, float, float, float, float) on RDBMS, or as String elsewhere.
 
 |oracle.spatial.geometry.JGeometry
-|icon:check[]
 |icon:check[]
 |icon:check[]
 |icon:times[]
@@ -887,13 +794,11 @@ but adds further types where the datastores support them.
 |com.vividsolutions.jts.geom.Geometry
 |icon:check[]
 |icon:check[]
-|icon:check[]
 |icon:times[]
 |icon:times[]
 |Requires *datanucleus-geospatial* plugin. Dirty check limited to immutable mode (must reassign field to owner if you change it). Only on Oracle(SDO_GEOMETRY), MySQL(geometry), PostGIS(geometry).
 
 |com.vividsolutions.jts.geom.GeometryCollection
-|icon:check[]
 |icon:check[]
 |icon:check[]
 |icon:times[]
@@ -903,13 +808,11 @@ but adds further types where the datastores support them.
 |com.vividsolutions.jts.geom.LinearRing
 |icon:check[]
 |icon:check[]
-|icon:check[]
 |icon:times[]
 |icon:times[]
 |Requires *datanucleus-geospatial* plugin. Dirty check limited to immutable mode (must reassign field to owner if you change it). Only on Oracle(SDO_GEOMETRY), MySQL(geometry), PostGIS(geometry).
 
 |com.vividsolutions.jts.geom.LineString
-|icon:check[]
 |icon:check[]
 |icon:check[]
 |icon:times[]
@@ -919,13 +822,11 @@ but adds further types where the datastores support them.
 |com.vividsolutions.jts.geom.MultiLineString
 |icon:check[]
 |icon:check[]
-|icon:check[]
 |icon:times[]
 |icon:times[]
 |Requires *datanucleus-geospatial* plugin. Dirty check limited to immutable mode (must reassign field to owner if you change it). Only on Oracle(SDO_GEOMETRY), MySQL(geometry), PostGIS(geometry).
 
 |com.vividsolutions.jts.geom.MultiPoint
-|icon:check[]
 |icon:check[]
 |icon:check[]
 |icon:times[]
@@ -935,13 +836,11 @@ but adds further types where the datastores support them.
 |com.vividsolutions.jts.geom.MultiPolygon
 |icon:check[]
 |icon:check[]
-|icon:check[]
 |icon:times[]
 |icon:times[]
 |Requires *datanucleus-geospatial* plugin. Dirty check limited to immutable mode (must reassign field to owner if you change it). Only on Oracle(SDO_GEOMETRY), MySQL(geometry), PostGIS(geometry).
 
 |com.vividsolutions.jts.geom.Point
-|icon:check[]
 |icon:check[]
 |icon:check[]
 |icon:times[]
@@ -951,13 +850,11 @@ but adds further types where the datastores support them.
 |com.vividsolutions.jts.geom.Polygon
 |icon:check[]
 |icon:check[]
-|icon:check[]
 |icon:times[]
 |icon:times[]
 |Requires *datanucleus-geospatial* plugin. Dirty check limited to immutable mode (must reassign field to owner if you change it). Only on Oracle(SDO_GEOMETRY), MySQL(geometry), PostGIS(geometry).
 
 |org.postgis.Geometry
-|icon:check[]
 |icon:check[]
 |icon:check[]
 |icon:times[]
@@ -967,7 +864,6 @@ but adds further types where the datastores support them.
 |org.postgis.GeometryCollection
 |icon:check[]
 |icon:check[]
-|icon:check[]
 |icon:times[]
 |icon:times[]
 |Requires *datanucleus-geospatial* plugin. Dirty check limited to immutable mode (must reassign field to owner if you change it). Only on MySQL(geometry), PostGIS(geometry).
@@ -975,92 +871,74 @@ but adds further types where the datastores support them.
 |org.postgis.LinearRing
 |icon:check[]
 |icon:check[]
-|icon:check[]
 |icon:times[]
 |icon:times[]
 |Requires *datanucleus-geospatial* plugin.
-                            Dirty check limited to immutable mode (must reassign field to owner if you change it).
-                            Only on MySQL(geometry), PostGIS(geometry).
+Dirty check limited to immutable mode (must reassign field to owner if you change it). Only on MySQL(geometry), PostGIS(geometry).
 
 |org.postgis.LineString
 |icon:check[]
 |icon:check[]
-|icon:check[]
 |icon:times[]
 |icon:times[]
 |Requires *datanucleus-geospatial* plugin.
-                            Dirty check limited to immutable mode (must reassign field to owner if you change it).
-                            Only on MySQL(geometry), PostGIS(geometry).
+Dirty check limited to immutable mode (must reassign field to owner if you change it). Only on MySQL(geometry), PostGIS(geometry).
 
 |org.postgis.MultiLineString
 |icon:check[]
 |icon:check[]
-|icon:check[]
 |icon:times[]
 |icon:times[]
 |Requires *datanucleus-geospatial* plugin.
-                            Dirty check limited to immutable mode (must reassign field to owner if you change it).
-                            Only on MySQL(geometry), PostGIS(geometry).
+Dirty check limited to immutable mode (must reassign field to owner if you change it). Only on MySQL(geometry), PostGIS(geometry).
 
 |org.postgis.MultiPoint
 |icon:check[]
 |icon:check[]
-|icon:check[]
 |icon:times[]
 |icon:times[]
 |Requires *datanucleus-geospatial* plugin.
-                            Dirty check limited to immutable mode (must reassign field to owner if you change it).
-                            Only on MySQL(geometry), PostGIS(geometry).
+Dirty check limited to immutable mode (must reassign field to owner if you change it). Only on MySQL(geometry), PostGIS(geometry).
 
 |org.postgis.MultiPolygon
 |icon:check[]
 |icon:check[]
-|icon:check[]
 |icon:times[]
 |icon:times[]
 |Requires *datanucleus-geospatial* plugin.
-                            Dirty check limited to immutable mode (must reassign field to owner if you change it).
-                            Only on MySQL(geometry), PostGIS(geometry).
+Dirty check limited to immutable mode (must reassign field to owner if you change it). Only on MySQL(geometry), PostGIS(geometry).
 
 |org.postgis.Point
 |icon:check[]
 |icon:check[]
-|icon:check[]
 |icon:times[]
 |icon:times[]
 |Requires *datanucleus-geospatial* plugin.
-                            Dirty check limited to immutable mode (must reassign field to owner if you change it).
-                            Only on MySQL(geometry), PostGIS(geometry).
+Dirty check limited to immutable mode (must reassign field to owner if you change it). Only on MySQL(geometry), PostGIS(geometry).
 
 |org.postgis.Polygon
 |icon:check[]
 |icon:check[]
-|icon:check[]
 |icon:times[]
 |icon:times[]
 |Requires *datanucleus-geospatial* plugin.
-                            Dirty check limited to immutable mode (must reassign field to owner if you change it).
-                            Only on MySQL(geometry), PostGIS(geometry).
+Dirty check limited to immutable mode (must reassign field to owner if you change it). Only on MySQL(geometry), PostGIS(geometry).
 
 |org.postgis.PGbox2d
 |icon:check[]
 |icon:check[]
-|icon:check[]
 |icon:times[]
 |icon:times[]
 |Requires *datanucleus-geospatial* plugin.
-                            Dirty check limited to immutable mode (must reassign field to owner if you change it).
-                            Only on PostGIS(geometry).
+Dirty check limited to immutable mode (must reassign field to owner if you change it). Only on PostGIS(geometry).
 
 |org.postgis.PGbox3d
 |icon:check[]
 |icon:check[]
-|icon:check[]
 |icon:times[]
 |icon:times[]
 |Requires *datanucleus-geospatial* plugin.
-                            Dirty check limited to immutable mode (must reassign field to owner if you change it).
-                            Only on PostGIS(geometry).
+Dirty check limited to immutable mode (must reassign field to owner if you change it). Only on PostGIS(geometry).
 |===
 
 Some extra notes for implementation of JTS, JGeometry and PostGIS types support :-
@@ -1135,10 +1013,9 @@ If for some reason this isn't desired, the <code>mapping</code> extension can be
 
 Many other types are supported.
 
-[cols="4,1,1,1,1,1,6", options="header"]
+[cols="4,1,1,1,1,6", options="header"]
 |===
 |Java Type
-|Extension?
 |EAGER?
 |Persistent?
 |Proxied?
@@ -1146,7 +1023,6 @@ Many other types are supported.
 |Comments
 
 |java.lang.Object
-|
 |icon:times[]
 |icon:times[]
 |icon:times[]
@@ -1156,13 +1032,11 @@ Many other types are supported.
 |java.util.Currency
 |icon:check[]
 |icon:check[]
-|icon:check[]
 |icon:times[]
 |icon:check[]
 |Persisted as String.
 
 |java.util.Locale
-|icon:check[]
 |icon:check[]
 |icon:check[]
 |icon:times[]
@@ -1172,13 +1046,11 @@ Many other types are supported.
 |java.util.UUID
 |icon:check[]
 |icon:check[]
-|icon:check[]
 |icon:times[]
 |icon:check[]
 |Persisted as String, or alternatively as native _uuid_ on PostgreSQL when specifying sql-type="uuid".
 
-|java.util.Optional&lt;type&gt;
-|icon:check[]
+|java.util.Optional<type>;
 |icon:check[]
 |icon:check[]
 |icon:times[]
@@ -1188,13 +1060,11 @@ Many other types are supported.
 |java.awt.Color
 |icon:check[]
 |icon:check[]
-|icon:check[]
 |icon:times[]
 |icon:times[]
 |Persisted as String or as (Integer,Integer,Integer,Integer) storing red,green,blue,alpha respectively.
 
 |java.awt.image.BufferedImage
-|icon:check[]
 |icon:times[]
 |icon:check[]
 |icon:times[]
@@ -1204,7 +1074,6 @@ Many other types are supported.
 |java.net.URI
 |icon:check[]
 |icon:check[]
-|icon:check[]
 |icon:times[]
 |icon:check[]
 |Persisted as String.
@@ -1212,13 +1081,11 @@ Many other types are supported.
 |java.net.URL
 |icon:check[]
 |icon:check[]
-|icon:check[]
 |icon:times[]
 |icon:check[]
 |Persisted as String.
 
 |java.io.Serializable
-|
 |icon:times[]
 |icon:times[]
 |icon:times[]
@@ -1226,7 +1093,6 @@ Many other types are supported.
 |Persisted as link:mapping.html#serialised[serialised].
 
 |java.io.File
-|icon:check[]
 |icon:times[]
 |icon:times[]
 |icon:times[]
@@ -1239,10 +1105,9 @@ Many other types are supported.
 The vast majority of the secondary types can also be persisted as arrays of that type as well.
 Here we list a few of the combinations definitely supported as arrays, but others likely will work fine
 
-[cols="4,1,1,1,1,1,6", options="header"]
+[cols="4,1,1,1,1,6", options="header"]
 |===
 |Java Type
-|Extension?
 |EAGER?
 |Persistent?
 |Proxied?
@@ -1250,7 +1115,6 @@ Here we list a few of the combinations definitely supported as arrays, but other
 |Comments
 
 |boolean[]
-|
 |icon:times[]
 |icon:check[]
 |icon:times[]
@@ -1258,7 +1122,6 @@ Here we list a few of the combinations definitely supported as arrays, but other
 |See link:mapping.html#arrays[the Arrays Guide]
 
 |byte[]
-|
 |icon:times[]
 |icon:check[]
 |icon:times[]
@@ -1266,7 +1129,6 @@ Here we list a few of the combinations definitely supported as arrays, but other
 |See link:mapping.html#arrays[the Arrays Guide]
 
 |char[]
-|
 |icon:times[]
 |icon:check[]
 |icon:times[]
@@ -1274,7 +1136,6 @@ Here we list a few of the combinations definitely supported as arrays, but other
 |See link:mapping.html#arrays[the Arrays Guide]
 
 |double[]
-|
 |icon:times[]
 |icon:check[]
 |icon:times[]
@@ -1282,7 +1143,6 @@ Here we list a few of the combinations definitely supported as arrays, but other
 |See link:mapping.html#arrays[the Arrays Guide]
 
 |float[]
-|
 |icon:times[]
 |icon:check[]
 |icon:times[]
@@ -1290,7 +1150,6 @@ Here we list a few of the combinations definitely supported as arrays, but other
 |See link:mapping.html#arrays[the Arrays Guide]
 
 |int[]
-|
 |icon:times[]
 |icon:check[]
 |icon:times[]
@@ -1298,7 +1157,6 @@ Here we list a few of the combinations definitely supported as arrays, but other
 |See link:mapping.html#arrays[the Arrays Guide]
 
 |long[]
-|
 |icon:times[]
 |icon:check[]
 |icon:times[]
@@ -1306,7 +1164,6 @@ Here we list a few of the combinations definitely supported as arrays, but other
 |See link:mapping.html#arrays[the Arrays Guide]
 
 |short[]
-|
 |icon:times[]
 |icon:check[]
 |icon:times[]
@@ -1314,7 +1171,6 @@ Here we list a few of the combinations definitely supported as arrays, but other
 |See link:mapping.html#arrays[the Arrays Guide]
 
 |java.lang.Boolean[]
-|
 |icon:times[]
 |icon:check[]
 |icon:times[]
@@ -1322,7 +1178,6 @@ Here we list a few of the combinations definitely supported as arrays, but other
 |See link:mapping.html#arrays[the Arrays Guide]
 
 |java.lang.Byte[]
-|
 |icon:times[]
 |icon:check[]
 |icon:times[]
@@ -1330,7 +1185,6 @@ Here we list a few of the combinations definitely supported as arrays, but other
 |See link:mapping.html#arrays[the Arrays Guide]
 
 |java.lang.Character[]
-|
 |icon:times[]
 |icon:check[]
 |icon:times[]
@@ -1338,7 +1192,6 @@ Here we list a few of the combinations definitely supported as arrays, but other
 |See link:mapping.html#arrays[the Arrays Guide]
 
 |java.lang.Double[]
-|
 |icon:times[]
 |icon:check[]
 |icon:times[]
@@ -1346,7 +1199,6 @@ Here we list a few of the combinations definitely supported as arrays, but other
 |See link:mapping.html#arrays[the Arrays Guide]
 
 |java.lang.Float[]
-|
 |icon:times[]
 |icon:check[]
 |icon:times[]
@@ -1354,7 +1206,6 @@ Here we list a few of the combinations definitely supported as arrays, but other
 |See link:mapping.html#arrays[the Arrays Guide]
 
 |java.lang.Integer[]
-|
 |icon:times[]
 |icon:check[]
 |icon:times[]
@@ -1362,7 +1213,6 @@ Here we list a few of the combinations definitely supported as arrays, but other
 |See link:mapping.html#arrays[the Arrays Guide]
 
 |java.lang.Long[]
-|
 |icon:times[]
 |icon:check[]
 |icon:times[]
@@ -1370,7 +1220,6 @@ Here we list a few of the combinations definitely supported as arrays, but other
 |See link:mapping.html#arrays[the Arrays Guide]
 
 |java.lang.Short[]
-|
 |icon:times[]
 |icon:check[]
 |icon:times[]
@@ -1378,7 +1227,6 @@ Here we list a few of the combinations definitely supported as arrays, but other
 |See link:mapping.html#arrays[the Arrays Guide]
 
 |java.lang.String[]
-|
 |icon:times[]
 |icon:check[]
 |icon:times[]
@@ -1386,7 +1234,6 @@ Here we list a few of the combinations definitely supported as arrays, but other
 |See link:mapping.html#arrays[the Arrays Guide]
 
 |java.util.Date[]
-|
 |icon:times[]
 |icon:check[]
 |icon:times[]
@@ -1394,7 +1241,6 @@ Here we list a few of the combinations definitely supported as arrays, but other
 |See link:mapping.html#arrays[the Arrays Guide]
 
 |java.math.BigDecimal[]
-|
 |icon:times[]
 |icon:check[]
 |icon:times[]
@@ -1402,7 +1248,6 @@ Here we list a few of the combinations definitely supported as arrays, but other
 |See link:mapping.html#arrays[the Arrays Guide]
 
 |java.math.BigInteger[]
-|
 |icon:times[]
 |icon:check[]
 |icon:times[]
@@ -1410,7 +1255,6 @@ Here we list a few of the combinations definitely supported as arrays, but other
 |See link:mapping.html#arrays[the Arrays Guide]
 
 |java.lang.Enum[]
-|
 |icon:times[]
 |icon:check[]
 |icon:times[]
@@ -1418,7 +1262,6 @@ Here we list a few of the combinations definitely supported as arrays, but other
 |See link:mapping.html#arrays[the Arrays Guide]
 
 |java.util.Locale[]
-|
 |icon:times[]
 |icon:check[]
 |icon:times[]
@@ -1426,7 +1269,6 @@ Here we list a few of the combinations definitely supported as arrays, but other
 |See link:mapping.html#arrays[the Arrays Guide]
 
 |Entity[]
-|
 |icon:times[]
 |icon:times[]
 |icon:times[]
