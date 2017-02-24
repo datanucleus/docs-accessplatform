@@ -1,0 +1,173 @@
+[[datastore_identifiers]]
+= Datastore Identifiers
+:_basedir: ../
+:_imagesdir: images/
+
+A datastore identifier is a simple name of a database object, such as a column, table, index, or view, and is composed of a
+sequence of letters, digits, and underscores ( _ ) that represents it's name. DataNucleus allows users to specify the names of tables, 
+columns, indexes etc but if the user doesn't specify these DataNucleus will generate names.
+
+Generation of identifier names for RDBMS is controlled by an IdentifierFactory, and DataNucleus provides a default implementation. 
+You can link:../extensions/extensions.html#rdbms_identifier_factory[provide your own RDBMS IdentifierFactory plugin] to give your own preferred naming if so desired.
+You set the _RDBMS IdentifierFactory_ by setting the persistence property _datanucleus.identifierFactory_. 
+Set it to the symbolic name of the factory you want to use. JDO doesn't define what the names of datastore identifiers should be but DataNucleus provides the following factories for your use.
+
+* link:#rdbms_datanucleus2[datanucleus2] RDBMS IdentifierFactory (default for JDO persistence)
+* link:#rdbms_jpa[jpa] RDBMS IdentifierFactory (default for JPA persistence)
+* link:#rdbms_datanucleus1[datanucleus1] RDBMS IdentifierFactory (used in DataNucleus v1)
+* link:#rdbms_jpox[jpox] RDBMS IdentifierFactory (compatible with JPOX)
+
+Generation of identifier names for non-RDBMS datastores is controlled by an NamingFactory, and DataNucleus provides a default implementation. 
+You can link:../extensions/extensions.html#identifier_namingfactory[provide your own NamingFactory plugin] to give your own preferred naming if so desired.
+You set the _NamingFactory_ by setting the persistence property _datanucleus.identifier.namingFactory_. 
+Set it to the symbolic name of the factory you want to use. JDO doesn't define what the names of datastore identifiers should be but DataNucleus provides the following factories for your use.
+
+* link:#datanucleus2[datanucleus2] NamingFactory (default for JDO persistence for non-RDBMS)
+* link:#jpa[jpa] NamingFactory (default for JPA persistence for non-RDBMS)
+
+In describing the different possible naming conventions available out of the box with DataNucleus we'll use the following example
+
+[source,java]
+-----
+class MyClass
+{
+    String myField1;
+    Collection<MyElement> elements1; // Using join table
+    Collection<MyElement> elements2; // Using foreign-key
+}
+
+class MyElement
+{
+    String myElementField;
+    MyClass myClass2;
+}
+-----
+
+
+[[datanucleus2]]
+== NamingFactory 'datanucleus2'
+
+This is default for JDO persistence to non-RDBMS datastores.
+Using the example above, the rules in this _NamingFactory_ mean that, assuming that the user doesn't specify any <column> elements :-
+
+* _MyClass_ will be persisted into a table named *MYCLASS*
+* When using datastore identity *MYCLASS* will have a column called *MYCLASS_ID*
+* _MyClass.myField1_ will be persisted into a column called *MYFIELD1*
+* _MyElement_ will be persisted into a table named *MYELEMENT*
+* _MyClass.elements1_ will be persisted into a join table called *MYCLASS_ELEMENTS1*
+* *MYCLASS_ELEMENTS1* will have columns called *MYCLASS_ID_OID* (FK to owner table) and *MYELEMENT_ID_EID* (FK to element table)
+* *MYCLASS_ELEMENTS1* will have column names like *STRING_ELE*, *STRING_KEY*, *STRING_VAL* for non-PC elements/keys/values of collections/maps
+* *MyClass.elements2* will be persisted into a column *ELEMENTS2_MYCLASS_ID_OWN* or *ELEMENTS2_MYCLASS_ID_OID* (FK to owner) table
+* Any discriminator column will be called *DISCRIMINATOR*
+* Any index column in a List will be called *IDX*
+* Any adapter column added to a join table to form part of the primary key will be called *IDX*
+* Any version column for a table will be called *VERSION*
+
+[[jpa]]
+== NamingFactory 'jpa'
+
+The _NamingFactory_ "jpa" aims at providing a naming policy consistent with the "JPA" specification.
+Using the same example above, the rules in this _NamingFactory_ mean that, assuming that the user doesn't specify any <column> elements :-
+
+* _MyClass_ will be persisted into a table named *MYCLASS*
+* When using datastore identity *MYCLASS* will have a column called *MYCLASS_ID*
+* _MyClass.myField1_ will be persisted into a column called *MYFIELD1*
+* _MyElement_ will be persisted into a table named *MYELEMENT*
+* _MyClass.elements1_ will be persisted into a join table called *MYCLASS_MYELEMENT*
+* *MYCLASS_ELEMENTS1* will have columns called *MYCLASS_MYCLASS_ID* (FK to owner table) and *ELEMENTS1_ELEMENT_ID* (FK to element table)
+* *MyClass.elements2* will be persisted into a column *ELEMENTS2_MYCLASS_ID* (FK to owner) table
+* Any discriminator column will be called *DTYPE*
+* Any index column in a List for field _MyClass.myField1_ will be called *MYFIELD1_ORDER*
+* Any adapter column added to a join table to form part of the primary key will be called *IDX*
+* Any version column for a table will be called *VERSION*
+
+
+[[rdbms_datanucleus2]]
+== RDBMS IdentifierFactory 'datanucleus2'
+
+This became the default for JDO persistence from DataNucleus v2.x onwards and changes a few things over the previous "datanucleus1" factory, 
+attempting to make the naming more concise and consistent (we retain "datanucleus1" for backwards compatibility).
+
+Using the same example above, the rules in this _RDBMS IdentifierFactory_ mean that, assuming that the user doesnt specify any <column> elements :-
+
+* _MyClass_ will be persisted into a table named *MYCLASS*
+* When using datastore identity *MYCLASS* will have a column called *MYCLASS_ID*
+* _MyClass.myField1_ will be persisted into a column called *MYFIELD1*
+* _MyElement_ will be persisted into a table named *MYELEMENT*
+* _MyClass.elements1_ will be persisted into a join table called *MYCLASS_ELEMENTS1*
+* *MYCLASS_ELEMENTS1* will have columns called *MYCLASS_ID_OID* (FK to owner table) and *MYELEMENT_ID_EID* (FK to element table)
+* *MYCLASS_ELEMENTS1* will have column names like *STRING_ELE*, *STRING_KEY*, *STRING_VAL* for non-PC elements/keys/values of collections/maps
+* *MyClass.elements2* will be persisted into a column *ELEMENTS2_MYCLASS_ID_OWN* or *ELEMENTS2_MYCLASS_ID_OID* (FK to owner) table
+* Any discriminator column will be called *DISCRIMINATOR*
+* Any index column in a List will be called *IDX*
+* Any adapter column added to a join table to form part of the primary key will be called *IDX*
+* Any version column for a table will be called *VERSION*
+
+
+[[rdbms_datanucleus1]]
+== RDBMS IdentifierFactory 'datanucleus1'
+
+This was the default in DataNucleus v1.x for JDO persistence and provided a reasonable default naming of datastore identifiers using the class and field names as its basis.
+
+Using the example above, the rules in this _RDBMS IdentifierFactory_ mean that, assuming that the user doesnt specify any <column> elements :-
+
+* _MyClass_ will be persisted into a table named *MYCLASS*
+* When using datastore identity *MYCLASS* will have a column called *MYCLASS_ID*
+* _MyClass.myField1_ will be persisted into a column called *MY_FIELD1*
+* _MyElement_ will be persisted into a table named *MYELEMENT*
+* _MyClass.elements1_ will be persisted into a join table called *MYCLASS_ELEMENTS1*
+* *MYCLASS_ELEMENTS1* will have columns called *MYCLASS_ID_OID* (FK to owner table) and
+                        *MYELEMENT_ID_EID* (FK to element table)
+* *MYCLASS_ELEMENTS1* will have column names like *STRING_ELE*, *STRING_KEY*,
+                        *STRING_VAL* for non-PC elements/keys/values of collections/maps
+* *MyClass.elements2* will be persisted into a column *ELEMENTS2_MYCLASS_ID_OID* or *ELEMENTS2_ID_OID* (FK to owner) table
+* Any discriminator column will be called *DISCRIMINATOR*
+* Any index column in a List will be called *INTEGER_IDX*
+* Any adapter column added to a join table to form part of the primary key will be called *ADPT_PK_IDX*
+* Any version column for a table will be called *OPT_VERSION*
+
+
+[[rdbms_jpa]]
+== RDBMS IdentifierFactory 'jpa'
+
+The _RDBMS IdentifierFactory_ "jpa" aims at providing a naming policy consistent with the "JPA" specification.
+
+Using the same example above, the rules in this _RDBMS IdentifierFactory_ mean that, assuming that the user doesnt specify any <column> elements :-
+
+* _MyClass_ will be persisted into a table named *MYCLASS*
+* When using datastore identity *MYCLASS* will have a column called *MYCLASS_ID*
+* _MyClass.myField1_ will be persisted into a column called *MYFIELD1*
+* _MyElement_ will be persisted into a table named *MYELEMENT*
+* _MyClass.elements1_ will be persisted into a join table called *MYCLASS_MYELEMENT*
+* *MYCLASS_ELEMENTS1* will have columns called *MYCLASS_MYCLASS_ID* (FK to owner table) and *ELEMENTS1_ELEMENT_ID* (FK to element table)
+* *MyClass.elements2* will be persisted into a column *ELEMENTS2_MYCLASS_ID* (FK to owner) table
+* Any discriminator column will be called *DTYPE*
+* Any index column in a List for field _MyClass.myField1_ will be called *MYFIELD1_ORDER*
+* Any adapter column added to a join table to form part of the primary key will be called *IDX*
+* Any version column for a table will be called *VERSION*
+
+
+[[rdbms_jpox]]
+== RDBMS IdentifierFactory 'jpox'
+
+image:../images/nucleus_extension.png[]
+
+This _RDBMS IdentifierFactory_ exists for backward compatibility with JPOX 1.2.0.
+If you experience changes of schema identifiers when migrating from JPOX 1.2.0 to datanucleus, you should give this one a try.
+Schema compatibility between JPOX 1.2.0 and datanucleus had been broken e.g. by the number of characters used in hash codes when truncating identifiers: this has changed from 2 to 4.  
+
+
+== Controlling the Case
+
+The underlying datastore will define what case of identifiers are accepted. By default, DataNucleus will capitalise names (assuming that the datastore supports it). 
+You can however influence the case used for identifiers. This is specifiable with the persistence property _datanucleus.identifier.case_, having the following values
+
+* UpperCase: identifiers are in upper case
+* LowerCase: identifiers are in lower case
+* MixedCase: No case changes are made to the name of the identifier provided by the user (class name or metadata).
+
+NOTE: Some datastores only support UPPERCASE or lowercase identifiers and so setting this parameter may have no effect if your database doesn't support that option.
+
+NOTE: This case control only applies to DataNucleus-generated identifiers. If you provide your own identifiers for things like schema/catalog etc 
+then you need to specify those using the case you wish to use in the datastore (including quoting as necessary)
+

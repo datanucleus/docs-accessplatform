@@ -1,0 +1,112 @@
+[[secondary_tables]]
+= Secondary Tables
+:_basedir: ../
+:_imagesdir: images/
+
+NOTE: Applicable to RDBMS
+
+The standard JDO persistence strategy is to persist an object of a class into its own table. 
+In some situations you may wish to map the class to a primary table as well as one or more secondary 
+tables. For example when you have a Java class that could have been split up into 2 separate classes 
+yet, for whatever reason, has been written as a single class, however you have a legacy datastore and 
+you need to map objects of this class into 2 tables. JDO allows persistence of fields of a class 
+into _secondary_ tables.
+
+The process for managing this situation is best demonstrated with an example. Let's suppose we have 
+a class that represents a *Printer*. The *Printer* class contains within it various 
+attributes of the toner cartridge. So we have
+
+[source,java]
+-----
+package com.mydomain.samples.secondarytable;
+
+public class Printer
+{
+    long id;
+    String make;
+    String model;
+
+    String tonerModel;
+    int tonerLifetime;
+
+    ...
+}
+-----
+
+Now we have a database schema that has 2 tables (PRINTER and PRINTER_TONER) in which to store objects of this class. 
+So we need to tell DataNucleus to perform this mapping. So we define the MetaData for the *Printer* class like this
+
+[source,xml]
+-----
+<class name="Printer" table="PRINTER">
+    <join table="PRINTER_TONER" column="PRINTER_REFID"/>
+
+    <field name="id" primary-key="true" column="PRINTER_ID"/>
+    <field name="make" column="MAKE"/>
+    <field name="model" column="MODEL"/>
+    <field name="tonerModel" table="PRINTER_TONER" column="MODEL"/>
+    <field name="tonerLifetime" table="PRINTER_TONER" column="LIFETIME"/>
+</class>
+-----
+
+So here we have defined that objects of the *Printer* class will be stored in the primary table PRINTER. 
+In addition we have defined that some fields are stored in the table PRINTER_TONER. This is achieved by way of
+
+* We will store _tonerModel_ and _tonerLifetime_ in the table PRINTER_TONER. This is achieved by using <field *table="PRINTER_TONER"*>
+* The table PRINTER_TONER will use a primary key column called PRINTER_REFID. This is achieved by using <join table="PRINTER_TONER" column="PRINTER_REFID"/>
+
+You could equally specify this using annotations
+
+[source,java]
+-----
+@PersistenceCapable
+@Join(table="PRINTER_TONER", column="PRINTER_REFID")
+public class Printer
+{
+    @Persistent(primaryKey="true", column="PRINTER_ID")
+    long id;
+    @Column(name="MAKE")
+    String make;
+    @Column(name="MODEL")
+    String model;
+
+    @Persistent(table="PRINTER_TONER", column="MODEL")
+    String tonerModel;
+    @Persistent(table="PRINTER_TONER", column="LIFETIME")
+    int tonerLifetime;
+    ...
+}
+-----
+
+This results in the following database tables :-
+image:../images/secondarytables_db.png[]
+
+So we now have our primary and secondary database tables. The primary key of the PRINTER_TONER table serves as a foreign key to the primary class. 
+Whenever we persist a *Printer* object a row will be inserted into *both* of these tables.
+
+
+== Specifying the primary key
+
+You saw above how we defined the column name that will be the primary key of the secondary table (the PRINTER_REFID column). 
+What we didn't show is how to specify the name of the primary key constraint to be generated. To do this you change the MetaData to
+
+[source,xml]
+-----
+<class name="Printer" identity-type="datastore" table="PRINTER">
+    <join table="PRINTER_TONER" column="PRINTER_REFID">
+        <primary-key name="TONER_PK"/>
+    </join>
+
+    ...
+</class>
+-----
+
+So this will create the primary key constraint with the name "TONER_PK".
+
+See also :-
+
+* link:metadata_xml.html#primary-key[MetaData reference for <primary-key> element]
+* link:metadata_xml.html#join[MetaData reference for <join> element]
+* link:annotations.html#PrimaryKey[Annotations reference for @PrimaryKey]
+* link:annotations.html#Join[Annotations reference for @Join]
+

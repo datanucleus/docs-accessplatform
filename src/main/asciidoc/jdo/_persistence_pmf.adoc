@@ -1,0 +1,1487 @@
+[[pmf]]
+= PersistenceManagerFactory
+:_basedir: ../
+:_imagesdir: images/
+
+Any JDO-enabled application will require at least one _PersistenceManagerFactory_ (PMF). 
+Typically applications create one per datastore being utilised. 
+A _PersistenceManagerFactory_ provides access to _PersistenceManagers_ which allow objects to be persisted, and retrieved.
+The _PersistenceManagerFactory_ can be configured to provide particular behaviour.
+
+NOTE: A _PersistenceManagerFactory_ is designed to be thread-safe. A _PersistenceManager_ is not*
+
+There are many ways of creating a _PersistenceManagerFactory_ 
+http://www.datanucleus.org/javadocs/javax.jdo/3.2/javax/jdo/PersistenceManagerFactory.html[image:../images/javadoc.png[]]
+
+[source,java]
+-----
+Properties properties = new Properties();
+properties.setProperty("javax.jdo.PersistenceManagerFactoryClass", "org.datanucleus.api.jdo.JDOPersistenceManagerFactory");
+properties.setProperty("javax.jdo.option.ConnectionURL","jdbc:mysql://localhost/myDB");
+properties.setProperty("javax.jdo.option.ConnectionDriverName","com.mysql.jdbc.Driver");
+properties.setProperty("javax.jdo.option.ConnectionUserName","login");
+properties.setProperty("javax.jdo.option.ConnectionPassword","password");
+PersistenceManagerFactory pmf = JDOHelper.getPersistenceManagerFactory(properties);
+-----
+
+A slight variation on this, is to have a file to specify these properties in a file
+
+-----
+javax.jdo.PersistenceManagerFactoryClass=org.datanucleus.api.jdo.JDOPersistenceManagerFactory
+javax.jdo.option.ConnectionURL=jdbc:mysql://localhost/myDB
+javax.jdo.option.ConnectionDriverName=com.mysql.jdbc.Driver
+javax.jdo.option.ConnectionUserName=login
+javax.jdo.option.ConnectionPassword=password
+-----
+
+and then to create the _PersistenceManagerFactory_ using this file
+
+[source,java]
+-----
+File propsFile = new File(filename);
+PersistenceManagerFactory pmf = JDOHelper.getPersistenceManagerFactory(propsFile);
+-----
+
+or if the above file is in the CLASSPATH (at `datanucleus.properties` in the root of the CLASSPATH), then
+
+[source,java]
+-----
+PersistenceManagerFactory pmf = JDOHelper.getPersistenceManagerFactory("datanucleus.properties");
+-----
+
+If using a _named PMF_ file, you can create the PMF by providing the link:#pmf_named[name of the PMF] like this
+
+[source,java]
+-----
+PersistenceManagerFactory pmf = JDOHelper.getPersistenceManagerFactory("myNamedPMF");
+-----
+
+If using a `META-INF/persistence.xml` file, you can simply specify the link:#persistenceunit[persistence-unit] name as
+
+[source,java]
+-----
+PersistenceManagerFactory pmf = JDOHelper.getPersistenceManagerFactory("myPersistenceUnit");
+-----
+
+Another alternative, when specifying your datastore via JNDI, would be to call _JDOHelper.getPersistenceManagerFactory(jndiLocation, context);_, 
+and then set the other persistence properties on the received PMF.
+
+Whichever way we wish to obtain the _PersistenceManagerFactory_ we have defined a series of properties to give the behaviour of the _PersistenceManagerFactory_. 
+The first property specifies to use the DataNucleus implementation, and the following 4 properties define the datastore that it should connect to. 
+There are many properties available. Some of these are standard JDO properties, and some are DataNucleus extensions.
+
+
+
+[[persistenceunit]]
+== PersistenceManagerFactory for Persistence-Unit
+
+When designing an application you can usually nicely separate your persistable objects into independent groupings that can be treated separately, 
+perhaps within a different DAO object, if using DAOs. JDO uses the (JPA) idea of a _persistence-unit_. 
+A _persistence-unit_ provides a convenient way of specifying a set of metadata files, and classes, and jars that contain all classes to be persisted in a grouping. 
+The persistence-unit is named, and the name is used for identifying it.
+Consequently this name can then be used when defining what classes are to be enhanced, for example.
+
+To define a _persistence-unit_ you first need to add a file `persistence.xml` to the `META-INF/` directory of the CLASSPATH (this may mean `WEB-INF/classes/META-INF` when using a 
+web-application in such as Tomcat). This file will be used to define your _persistence-unit_s. Lets show an example
+
+[source,xml]
+-----
+<?xml version="1.0" encoding="UTF-8" ?>
+<persistence xmlns="http://xmlns.jcp.org/xml/ns/persistence"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence
+        http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd" version="2.1">
+
+    <!-- Online Store -->
+    <persistence-unit name="OnlineStore">
+        <class>org.datanucleus.samples.metadata.store.Product</class>
+        <class>org.datanucleus.samples.metadata.store.Book</class>
+        <class>org.datanucleus.samples.metadata.store.CompactDisc</class>
+        <class>org.datanucleus.samples.metadata.store.Customer</class>
+        <class>org.datanucleus.samples.metadata.store.Supplier</class>
+        <exclude-unlisted-classes/>
+        <properties>
+            <property name="datanucleus.ConnectionDriverName" value="org.h2.Driver"/>
+            <property name="datanucleus.ConnectionURL" value="jdbc:h2:mem:datanucleus"/>
+            <property name="datanucleus.ConnectionUserName" value="sa"/>
+            <property name="datanucleus.ConnectionPassword" value=""/>
+        </properties>
+    </persistence-unit>
+
+    <!-- Accounting -->
+    <persistence-unit name="Accounting">
+        <mapping-file>/com/datanucleus/samples/metadata/accounts/package.jdo</mapping-file>
+        <properties>
+            <property name="datanucleus.ConnectionDriverName" value="org.h2.Driver"/>
+            <property name="datanucleus.ConnectionURL" value="jdbc:h2:mem:datanucleus"/>
+            <property name="datanucleus.ConnectionUserName" value="sa"/>
+            <property name="datanucleus.ConnectionPassword" value=""/>
+        </properties>
+    </persistence-unit>
+
+</persistence>
+-----
+
+In this example we have defined 2 _persistence-unit_s. 
+The first has the name "OnlineStore" and contains 5 classes (annotated). 
+The second has the name "Accounting" and contains a metadata file called `package.jdo` in a particular package (which will define the classes being part of that unit). 
+This means that once we have defined this we can reference these _persistence-unit_s in our persistence operations. 
+You can find the XSD for `persistence.xml` http://http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd[here].
+
+There are several sub-elements of this `persistence.xml` file
+
+* *provider* - Not used by JDO
+* *jta-data-source* - JNDI name for JTA connections (make sure you set _transaction-type_ as *JTA* on the persistence-unit for this).
+You can alternatively specify JDO standard *javax.jdo.option.ConnectionFactoryName* to the same end.
+* *non-jta-data-source* - JNDI name for non-JTA connections.
+You can alternatively specify JDO standard *javax.jdo.option.ConnectionFactory2Name* to the same end.
+* *jar-file* - name of a JAR file to scan for annotated classes to include in this persistence-unit.
+* *mapping-file* - name of an XML "mapping" file containing persistence information to be included in this persistence-unit. 
+This is the JDO XML Metadata file (_package.jdo_) (*not* the ORM XML Metadata file)
+* *class* - name of an annotated class to include in this persistence-unit
+* *properties* - properties defining the persistence factory to be used.
+* *exclude-unlisted-classes* - when this is specified then it will only load metadata for the classes/mapping files listed.
+
+
+=== Use with JDO
+
+JDO accepts the "persistence-unit" name to be specified when creating the _PersistenceManagerFactory_, like this
+
+[source,java]
+-----
+PersistenceManagerFactory pmf = JDOHelper.getPersistenceManagerFactory("MyPersistenceUnit");
+-----
+
+=== Metadata loading using persistence unit
+
+When you specify a PMF using a `persistence.xml` it will load the metadata for all classes that are specified directly in the persistence unit,
+as well as all classes defined in JDO XML metadata files that are specified directly in the persistence unit. 
+If you don't have the _exclude-unlisted-classes_ set to true then it will also do a CLASSPATH scan to try to find any other *annotated* classes that are part of that persistence unit.
+To set the CLASSPATH scanner to a custom version use the persistence property *datanucleus.metadata.scanner* and set it to the classname of the scanner class.
+
+
+[[persistenceunit_dynamic]]
+=== Dynamically generated Persistence-Unit
+
+image:../images/nucleus_extension.png[]
+
+DataNucleus allows an extension to JDO to dynamically create persistence-units at runtime.
+Use the following code sample as a guide. Obviously any classes defined in the persistence-unit need to have been enhanced.
+
+[source,java]
+-----
+import org.datanucleus.metadata.PersistenceUnitMetaData;
+import org.datanucleus.api.jdo.JDOPersistenceManagerFactory;
+ 
+PersistenceUnitMetaData pumd = new PersistenceUnitMetaData("dynamic-unit", "RESOURCE_LOCAL", null);
+pumd.addClassName("org.datanucleus.test.A");
+pumd.setExcludeUnlistedClasses();
+pumd.addProperty("javax.jdo.ConnectionURL", "jdbc:hsqldb:mem:nucleus");
+pumd.addProperty("javax.jdo.ConnectionDriverName", "org.hsqldb.jdbcDriver");
+pumd.addProperty("javax.jdo.ConnectionUserName", "sa");
+pumd.addProperty("javax.jdo.ConnectionPassword", "");
+pumd.addProperty("datanucleus.schema.autoCreateAll", "true");
+
+PersistenceManagerFactory pmf = new JDOPersistenceManagerFactory(pumd, null);
+-----
+
+It should be noted that if you call _pumd.toString();_ then this returns the text that would have been found in a _persistence.xml_ file.
+
+
+
+[[pmf_named]]
+== Named PersistenceManagerFactory
+
+Typically applications create one PMF per datastore being utilised. An alternate to link:#persistenceunit[persistence-unit] is to use a *named PMF*, defined in a file
+`META-INF/jdoconfig.xml` at the root of the CLASSPATH (this may mean `WEB-INF/classes/META-INF` when using a web-application).
+Let's see an example of a `jdoconfig.xml`
+
+[source,xml]
+-----
+<?xml version="1.0" encoding="utf-8"?>
+<jdoconfig xmlns="http://xmlns.jcp.org/xml/ns/jdo/jdoconfig"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/jdo/jdoconfig
+        http://xmlns.jcp.org/xml/ns/jdo/jdoconfig_3_2.xsd" version="3.2">
+
+    <!-- Datastore Txn PMF -->
+    <persistence-manager-factory name="Datastore">
+        <property name="javax.jdo.PersistenceManagerFactoryClass" value="org.datanucleus.api.jdo.JDOPersistenceManagerFactory"/>
+        <property name="javax.jdo.option.ConnectionURL" value="jdbc:mysql://localhost/datanucleus?useServerPrepStmts=false"/>
+        <property name="javax.jdo.option.ConnectionDriverName" value="com.mysql.jdbc.Driver"/>
+        <property name="javax.jdo.option.ConnectionUserName" value="datanucleus"/>
+        <property name="javax.jdo.option.ConnectionPassword" value=""/>
+        <property name="javax.jdo.option.Optimistic" value="false"/>
+        <property name="datanucleus.schema.autoCreateAll" value="true"/>
+    </persistence-manager-factory>
+
+    <!-- Optimistic Txn PMF -->
+    <persistence-manager-factory name="Optimistic">
+        <property name="javax.jdo.PersistenceManagerFactoryClass" value="org.datanucleus.api.jdo.JDOPersistenceManagerFactory"/>
+        <property name="javax.jdo.option.ConnectionURL" value="jdbc:mysql://localhost/datanucleus?useServerPrepStmts=false"/>
+        <property name="javax.jdo.option.ConnectionDriverName" value="com.mysql.jdbc.Driver"/>
+        <property name="javax.jdo.option.ConnectionUserName" value="datanucleus"/>
+        <property name="javax.jdo.option.ConnectionPassword" value=""/>
+        <property name="javax.jdo.option.Optimistic" value="true"/>
+        <property name="datanucleus.schema.autoCreateAll" value="true"/>
+    </persistence-manager-factory>
+
+</jdoconfig>
+-----
+
+So in this example we have 2 named PMFs. The first is known by the name "Datastore" and utilises datastore transactions. 
+The second is known by the name "Optimistic" and utilises optimistic transactions. 
+You simply define all properties for the particular PMF within its specification block. And finally we instantiate our PMF like this
+
+[source,java]
+-----
+PersistenceManagerFactory pmf = JDOHelper.getPersistenceManagerFactory("Optimistic");
+-----
+
+That's it. The PMF we are returned from JDOHelper will have all of the properties defined in _META-INF/jdoconfig.xml_ under the name of "Optimistic".
+
+
+
+== PersistenceManagerFactory Properties
+
+An PersistenceManagerFactory is very configurable, and DataNucleus provides many properties to tailor its behaviour to your persistence needs.
+
+
+=== Specifying the datastore properties
+
+With JDO you have 3 ways of specifying the datastore via persistence properties
+
+* *Specify the connection URL/driverName/userName/password* and it will internally create a DataSource for this URL (with optional connection pooling). 
+This is achieved by specifying *javax.jdo.option.ConnectionDriverName*, *javax.jdo.option.ConnectionURL*,
+*javax.jdo.option.ConnectionUserName*, and *javax.jdo.option.ConnectionPassword*
+* *Specify the JNDI name of the connectionFactory*. This is achieved by specifying *javax.jdo.option.ConnectionFactoryName*, and *javax.jdo.option.ConnectionFactory2Name* (for secondary operations)
+* *Specify the DataSource of the connectionFactory*. This is achieved by specifying
+*javax.jdo.option.ConnectionFactory*, and *javax.jdo.option.ConnectionFactory2* (for secondary operations)
+
+The JNDI routes are typically only for use with RDBMS datastores.
+
+
+[[pmf_props_jdo]]
+=== Standard JDO Properties
+
+[cols="2,6", options="header"]
+|===
+|Parameter
+|Description + Values
+
+|javax.jdo.PersistenceManagerFactoryClass
+|The name of the PMF implementation. _org.datanucleus.api.jdo.JDOPersistenceManagerFactory_ *Only required if you have more than one JDO implementation in the CLASSPATH*
+
+|javax.jdo.option.ConnectionFactory
+|Instance of a connection factory for *transactional* connections. This is an alternative to specifying the ConnectionURL.
+*Only for RDBMS*, and it must be an instance of javax.sql.DataSource. See link:persistence.html#datastore_connection[here]
+
+|javax.jdo.option.ConnectionFactory2
+|Instance of a connection factory for *nontransactional* connections. This is an alternative to specifying the ConnectionURL.
+*Only for RDBMS*, and it must be an instance of javax.sql.DataSource. See link:persistence.html#datastore_connection[here]
+
+|javax.jdo.option.ConnectionFactoryName
+|The JNDI name for a connection factory for *transactional* connections. 
+*Only for RDBMS*, and it must be a JNDI name that points to a javax.sql.DataSource object. See link:persistence.html#datastore_connection[here]
+
+|javax.jdo.option.ConnectionFactory2Name
+|The JNDI name for a connection factory for *nontransactional* connections. 
+*Only for RDBMS*, and it must be a JNDI name that points to a javax.sql.DataSource object. See link:persistence.html#datastore_connection[here]
+
+|javax.jdo.option.ConnectionDriverName
+|The name of the driver to use for the DB (typically the JDBC driver class name for RDBMS datastores).
+
+|javax.jdo.option.ConnectionURL
+|URL specifying the datastore to use for persistence.
+Note that this will define the *type of datastore* as well as the datastore itself. Please refer to link:../datastores/index.html[the datastores guides]
+for the URL appropriate for the type of datastore you're using.
+
+|javax.jdo.option.ConnectionUserName
+|Username to use for connecting to the DB
+
+|javax.jdo.option.ConnectionPassword
+|Password to use for connecting to the DB. See *datanucleus.ConnectionPasswordDecrypter*for a way of providing an encrypted password here
+
+|javax.jdo.option.IgnoreCache
+|Whether to ignore the cache for queries. If the user sets this to _true_ then the query will evaluate in the datastore, but the instances returned will be formed
+from the datastore; this means that if an instance has been modified and its datastore values match the query then the instance returned will *not* be the currently
+cached (updated) instance, instead an instance formed using the datastore values. {true | *false*}
+
+|javax.jdo.option.Multithreaded
+|Whether to try to run the PM multithreaded.
+*Note that this is only a hint to try to allow thread-safe operations on the PM*.
+Users are always advised to run a PM as single threaded, since some operations are not currently locked and so could cause issues multi-threaded. 
+{true, *false*}
+
+|javax.jdo.option.Optimistic
+|Whether to use optimistic transactions 
+link:persistence.html#transactions_optimistic[optimistic transactions]. 
+{true, *false*}
+
+|javax.jdo.option.RetainValues
+|Whether to suppress the clearing of values from persistent instances on transaction completion.
+{true, *false*}
+
+|javax.jdo.option.RestoreValues
+|Whether persistent object have transactional field values restored when transaction rollback occurs.
+{true, *false*}
+
+|javax.jdo.option.DetachAllOnCommit
+|Allows the user to select that when a transaction is committed all objects enlisted in that transaction will be automatically detached.
+{true, *false*}
+
+|javax.jdo.option.CopyOnAttach
+|Whether, when attaching a detached object, we create an attached copy or simply migrate the detached object to attached state
+{*true*, false}
+
+|javax.jdo.option.PersistenceUnitName
+|Name of a _persistence-unit_ to be found in a `persistence.xml` file (under META-INF) that defines the persistence properties to use
+and the classes to use within the persistence process.
+
+|javax.jdo.option.ServerTimeZoneID
+|Id of the TimeZone under which the datastore server is running. If this is not specified or is set to null it is assumed that the 
+datastore server is running in the same timezone as the JVM under which DataNucleus is running.
+
+|javax.jdo.option.Name
+|Name of the named PMF to use. Refers to a PMF defined in "META-INF/jdoconfig.xml".
+
+|javax.jdo.option.ReadOnly
+|Whether the datastore is read-only or not (fixed in structure and contents).
+{true, *false*}
+
+|javax.jdo.option.TransactionType
+|Type of transaction to use.
+{RESOURCE_LOCAL, JTA}
+
+|javax.jdo.option.TransactionIsolationLevel
+|Select the default transaction isolation level for ALL PM factories. 
+Some databases do not support all isolation levels, refer to your database documentation. Please refer to the transaction guides for
+link:persistence.html#transaction_isolation[JDO]
+{read-uncommitted, *read-committed*, repeatable-read, serializable}
+
+|javax.jdo.option.NontransactionalRead
+|Whether to allow nontransactional reads
+{false, *true*}
+
+|javax.jdo.option.NontransactionalWrite
+|Whether to allow nontransactional writes
+{false, *true*}
+
+|javax.jdo.option.DatastoreReadTimeoutMillis
+|The timeout to apply to all reads (millisecs), e.g by query or by PM.getObjectById(). *Only applies if the underlying datastore supports it*
+{*0*, A positive value (MILLISECONDS)}
+
+|javax.jdo.option.DatastoreWriteTimeoutMillis
+|The timeout to apply to all writes (millisecs). *Only applies if the underlying datastore supports it*
+{*0*, A positive value (MILLISECONDS)}
+
+|javax.jdo.option.Mapping
+|Name for the ORM MetaData mapping files to use with this PMF. For example if this is set to "mysql" then the implementation looks for MetaData mapping files called 
+"{classname}-mysql.orm" or "package-mysql.orm". If this is not specified then the JDO implementation assumes that all is specified in the JDO MetaData file.
+
+|javax.jdo.mapping.Catalog
+|Name of the catalog to use by default for all classes persisted using this PMF.
+This can be overridden in the MetaData where required, and is optional.
+DataNucleus will prefix all table names with this catalog name if the RDBMS supports specification of catalog names in DDL.
+
+|javax.jdo.mapping.Schema
+|Name of the schema to use by default for all classes persisted using this PMF.
+This can be overridden in the MetaData where required, and is optional.
+DataNucleus will prefix all table names with this schema name if the RDBMS supports specification of schema names in DDL.
+|===
+
+
+[[pmf_props_dn_datastore]]
+=== DataNucleus Datastore Properties
+
+image:../images/nucleus_extension.png[]
+
+DataNucleus provides the following properties for configuring the datastore used by the PersistenceManagerFactory.
+
+[cols="2,6", options="header"]
+|===
+|Parameter
+|Description + Values
+
+|datanucleus.ConnectionURL
+|URL specifying the datastore to use for persistence.
+Note that this will define the *type of datastore* as well as the datastore itself. Please refer to <a href="datastores/index.html">the datastores guides</a>
+for the URL appropriate for the type of datastore you're using.
+
+|datanucleus.ConnectionUserName
+|Username to use for connecting to the DB
+
+|datanucleus.ConnectionPassword
+|Password to use for connecting to the DB.
+See <a href="#ConnectionPasswordDecrypter">datanucleus.ConnectionPasswordDecrypter</a> for a way of providing an encrypted password here
+
+|datanucleus.ConnectionDriverName
+|The name of the (JDBC) driver to use for the DB (for RDBMS only).
+
+|datanucleus.ConnectionFactory
+|Instance of a connection factory for *transactional* connections. This is an alternative to *datanucleus.ConnectionURL*.
+*Only for RDBMS*, and it must be an instance of javax.sql.DataSource. See <a href="jdo/datastore_connection.html#datasource">Data Sources</a>.
+
+|datanucleus.ConnectionFactory2
+|Instance of a connection factory for *nontransactional* connections. This is an alternative to *datanucleus.ConnectionURL*.
+*Only for RDBMS*, and it must be an instance of javax.sql.DataSource. See <a href="jdo/datastore_connection.html#datasource">Data Sources</a>.
+
+|datanucleus.ConnectionFactoryName
+|The JNDI name for a connection factory for *transactional* connections. 
+*Only for RDBMS*, and it must be a JNDI name that points to a javax.sql.DataSource object. See <a href="jdo/datastore_connection.html#datasource">Data Sources</a>.
+
+|datanucleus.ConnectionFactory2Name
+|The JNDI name for a connection factory for *nontransactional* connections. 
+*Only for RDBMS*, and it must be a JNDI name that points to a javax.sql.DataSource object. See <a href="jdo/datastore_connection.html#datasource">Data Sources</a>.
+
+|datanucleus.ConnectionPasswordDecrypter
+|Name of a class that implements _org.datanucleus.store.ConnectionEncryptionProvider_
+and should only be specified if the password is encrypted in the persistence properties
+|===
+
+
+
+[[pmf_props_dn_persistence]]
+=== DataNucleus Persistence Properties
+
+image:../images/nucleus_extension.png[]
+
+DataNucleus provides the following properties for configuring general persistence handling used by the PersistenceManagerFactory.
+
+[cols="2,6", options="header"]
+|===
+|Parameter
+|Description + Values
+
+|datanucleus.IgnoreCache
+|Whether to ignore the cache for queries. If the user sets this to _true_ then the query will evaluate in the datastore, but the instances returned will be formed
+from the datastore; this means that if an instance has been modified and its datastore values match the query then the instance returned will *not* be the currently
+cached (updated) instance, instead an instance formed using the datastore values. {true | *false*}
+
+|datanucleus.Multithreaded
+|Whether to run the PM/EM multithreaded.
+*Note that this is only a hint to try to allow thread-safe operations on the PM*.
+Users are always advised to run a PM/EM as single threaded, since some operations are not currently locked and so could cause issues multi-threaded. 
+{true, *false*}
+
+|datanucleus.Optimistic
+|Whether to use optimistic transactions 
+link:persistence.html#transactions_optimistic[optimistic transactions]. 
+{true, *false*}
+
+|datanucleus.RetainValues
+|Whether to suppress the clearing of values from persistent instances on transaction completion.
+{true, *false*}
+
+|datanucleus.RestoreValues
+|Whether persistent object have transactional field values restored when transaction rollback occurs.
+{true, *false*}
+
+|datanucleus.Mapping
+|Name for the ORM MetaData mapping files to use with this PMF. For example if this is set to "mysql" then the implementation looks for MetaData mapping files called 
+"{classname}-mysql.orm" or "package-mysql.orm". If this is not specified then the JDO implementation assumes that all is specified in the JDO MetaData file.
+
+|datanucleus.mapping.Catalog
+|Name of the catalog to use by default for all classes persisted using this PMF.
+This can be overridden in the MetaData where required, and is optional.
+DataNucleus will prefix all table names with this catalog name if the RDBMS supports specification of catalog names in DDL. _RDBMS datastores only_
+
+|datanucleus.mapping.Schema
+|Name of the schema to use by default for all classes persisted using this PMF.
+This can be overridden in the MetaData where required, and is optional.
+DataNucleus will prefix all table names with this schema name if the RDBMS supports specification of schema names in DDL. _RDBMS datastores only_
+
+|datanucleus.tenantId
+|String id to use as a discriminator on all persistable class tables to restrict data for the tenant using this application instance 
+(aka <a href="jdo/multitenancy.html">multi-tenancy via discriminator</a>). _RDBMS, MongoDB, HBase, Neo4j, Cassandra datastores only_
+
+|datanucleus.tenantProvider
+|Instance of a class that implements _org.datanucleus.store.schema.MultiTenancyProvider_
+which will return the tenant name to use for each call. _RDBMS, MongoDB, HBase, Neo4j, Cassandra datastores only_
+
+|datanucleus.DetachAllOnCommit
+|Allows the user to select that when a transaction is committed all objects enlisted in that transaction will be automatically detached.
+{true, *false*}
+
+|datanucleus.detachAllOnRollback
+|Allows the user to select that when a transaction is rolled back all objects enlisted in that transaction will be automatically detached.
+{true, *false*}
+
+|datanucleus.CopyOnAttach
+|Whether, when attaching a detached object, we create an attached copy or simply migrate the detached object to attached state
+{*true*, false}
+
+|datanucleus.allowAttachOfTransient
+|When you call EM.merge with a transient object (with PK fields set), if you enable this feature then it will first check for existence of an object in the datastore 
+with the same identity and, if present, will merge into that object (rather than just trying to persist a new object).
+{true, *false*}
+
+|datanucleus.attachSameDatastore
+|When attaching an object DataNucleus by default assumes that you're attaching to the same datastore as you detached from. 
+DataNucleus does though allow you to attach to a different datastore (for things like replication). 
+Set this to _false_ if you want to attach to a different datastore to what you detached from.
+This property is also useful if you are attaching and want it to check for existence of the object in the datastore
+before attaching, and create it if not present (_true_ assumes that the object exists).
+{*true*, false}
+
+|datanucleus.detachAsWrapped
+|When detaching, any mutable second class objects (Collections, Maps, Dates etc) are typically detached as the basic form (so you can use them on client-side
+of your application). This property allows you to select to detach as wrapped objects. It only works with "detachAllOnCommit" situations (not with detachCopy) currently
+{true, *false*}
+
+|datanucleus.DetachOnClose
+|This allows the user to specify whether, when a PM is closed, that all objects in the L1 cache are automatically detached.
+*Users are recommended to use the _datanucleus.DetachAllOnCommit_ wherever possible*. This will not work in JCA mode.
+{*false*, true}
+
+|datanucleus.detachmentFields
+|When detaching you can control what happens to loaded/unloaded fields of the FetchPlan. 
+The default for JDO is to load any unloaded fields of the current FetchPlan before detaching. 
+You can also unload any loaded fields that are not in the current FetchPlan (so you only get the fields you require) as well as a combination of both options
+{*load-fields*, unload-fields, load-unload-fields}
+
+|datanucleus.maxFetchDepth
+|Specifies the default maximum fetch depth to use for fetching operations.
+The JDO spec defines a default of 1, meaning that only the first level of related objects will be fetched by default.
+{-1, *1*, positive integer (non-zero)}
+
+|datanucleus.detachedState
+|Allows control over which mechanism to use to determine the fields to be detached.
+By default DataNucleus uses the defined "fetch-groups". 
+JPA doesn't have that (although it is an option with DataNucleus), so we also allow _loaded_ which will detach just the currently loaded fields, and _all_ which will
+detach all fields of the object (*be careful with this option since it, when used with maxFetchDepth of -1 will detach a whole object graph!*)
+{*fetch-groups*, all, loaded}
+
+|datanucleus.ServerTimeZoneID
+|Id of the TimeZone under which the datastore server is running. If this is not specified or is set to null it is assumed that the 
+datastore server is running in the same timezone as the JVM under which DataNucleus is running.
+
+|datanucleus.PersistenceUnitName
+|Name of a _persistence-unit_ to be found in a `persistence.xml` file (under META-INF) that defines the persistence properties to use
+and the classes to use within the persistence process.
+
+|datanucleus.PersistenceUnitLoadClasses
+|Used when we have specified the persistence-unit name for a PMF and where we want the datastore "tables" for all classes of that persistence-unit 
+loading up into the StoreManager. Defaults to false since some databases are slow so such an operation would slow down the startup process.
+{true, *false*}
+
+|datanucleus.persistenceXmlFilename
+|URL name of the _persistence.xml_ file that should be used instead of using `META-INF/persistence.xml`.
+
+|datanucleus.datastoreReadTimeout
+|The timeout to apply to all reads (millisecs), e.g by query or by PM.getObjectById(). *Only applies if the underlying datastore supports it*
+{*0*, A positive value (MILLISECONDS)}
+
+|datanucleus.datastoreWriteTimeout
+|The timeout to apply to all writes (millisecs), e.g by makePersistent, or by an update. *Only applies if the underlying datastore supports it*
+{*0*, A positive value (MILLISECONDS)}
+
+|datanucleus.singletonPMFForName
+|Whether to only allow a singleton PMF for a particular name (the name can be either the name of the PMF in `jdoconfig.xml`, or the name of the persistence-unit).
+If a subsequent request is made for a PMF with a name that already exists then a warning will be logged and the original PMF returned.
+{true, *false*}
+
+|datanucleus.allowListenerUpdateAfterInit
+|Whether you want to be able to add/remove listeners on the JDO PMF after it is marked as not configurable (when the first PM is created). 
+The default matches the JDO spec, not allowing changes to the listeners in use.
+{true, *false*}
+
+|datanucleus.storeManagerType
+|Type of the StoreManager to use for this PMF/EMF. This has typical values of "rdbms", "mongodb".
+If it isnt specified then it falls back to trying to find the StoreManager from the connection URL. 
+The associated DataNucleus plugin has to be in the CLASSPATH when selecting this.
+When using data sources (as usually done in a JavaEE container), DataNucleus cannot find out the correct type automatically and this option must be set.
+{rdbms, mongodb, alternate StoreManager key}
+
+|datanucleus.jmxType
+Which JMX server to use when hooking into JMX. Please refer to the link:persisence.html#monitoring[Monitoring Guide]
+{default, mx4j}
+
+|datanucleus.deletionPolicy
+|Allows the user to decide the policy when deleting objects. The default is "JDO2" which firstly checks if the field is dependent and if so deletes dependents, 
+and then for others will null any foreign keys out. The problem with this option is that it takes no account of whether the user has also
+defined <foreign-key> elements, so we provide a "DataNucleus" mode that does the dependent field part first and then if a FK element is defined 
+will leave it to the FK in the datastore to perform any actions, and otherwise does the nulling.
+{*JDO2*, DataNucleus}
+
+|datanucleus.identityStringTranslatorType
+|You can allow identities input to _pm.getObjectById(id)_ be translated into valid JDO ids if there is a suitable translator.
+See link:../extensions/extensions.html#identity_string_translator[Identity String Translator Plugin]
+
+|datanucleus.identityKeyTranslatorType
+|You can allow identities input to _pm.getObjectById(cls, key)_ be translated into valid JDO ids if there is a suitable key translator.
+See link:../extensions/extensions.html#identity_key_translator[Identity Key Translator Plugin]
+
+|datanucleus.datastoreIdentityType
+|Which "datastore-identity" class plugin to use to represent datastore identities. Refer to link:extensions/extensions.html#datastoreidentity[Datastore Identity extensions] for details.
+{*datanucleus*, kodo, xcalia, {user-supplied plugin}}
+
+|datanucleus.executionContext.maxIdle
+|Specifies the maximum number of ExecutionContext objects that are pooled ready for use
+{*20*, integer value greater than 0}
+
+|datanucleus.executionContext.reaperThread
+|Whether to start a reaper thread that continually monitors the pool of ExecutionContext objects and frees them off after they have surpassed their expiration period
+{*false*, true}
+
+|datanucleus.executionContext.closeActiveTxAction
+|Defines the action if a PM is closed and there is an active transaction present
+{*rollback*, exception}
+
+|datanucleus.objectProvider.className
+|Class name for the ObjectProvider to use when managing object state. The default for RDBMS is ReferentialStateManagerImpl, and is StateManagerImpl for all other datastores.
+
+|datanucleus.useImplementationCreator
+|Whether to allow use of the implementation-creator (feature of JDO to dynamically create implementations of persistent interfaces). 
+{*true*, false}
+
+|datanucleus.manageRelationships
+|This allows the user control over whether DataNucleus will try to manage bidirectional relations, correcting the input objects so that all relations are consistent.
+This process runs when flush()/commit() is called. You can set it to _false_ if you always set both sides of a relation when persisting/updating.
+{*true*, false}
+
+|datanucleus.manageRelationshipsChecks
+|This allows the user control over whether DataNucleus will make consistency checks on bidirectional relations. 
+If "datanucleus.managedRelationships" is not selected then no checks are performed. 
+If a consistency check fails at flush()/commit() then a JDOUserException is thrown.
+You can set it to _false_ if you want to omit all consistency checks.
+{*true*, false}
+
+|datanucleus.persistenceByReachabilityAtCommit
+|Whether to run the "persistence-by-reachability" algorithm at commit() time.
+This means that objects that were reachable at a call to makePersistent() but that are no longer persistent will be removed from persistence.
+For performance improvements, consider turning this off.
+{*true*, false}
+
+|datanucleus.classLoaderResolverName
+|Name of a ClassLoaderResolver to use in class loading. DataNucleus provides a default that loosely follows the JDO specification for class loading. 
+This property allows the user to override this with their own class better suited to their own loading requirements.
+{*datanucleus*, {name of class-loader-resolver plugin}}
+
+|datanucleus.primaryClassLoader
+|Sets a primary classloader for situations where a primary classloader is not accessible. 
+This ClassLoader is used when the class is not found in the default ClassLoader search path. 
+As example, when the database driver is loaded by a different ClassLoader not in the ClassLoader search path for JDO or JPA specifications.
+
+|datanucleus.plugin.pluginRegistryClassName
+|Name of a class that acts as registry for plug-ins.
+This defaults to _org.datanucleus.plugin.NonManagedPluginRegistry_ (for when not using OSGi).
+If you are within an OSGi environment you can set this to  _org.datanucleus.plugin.OSGiPluginRegistry_
+
+|datanucleus.plugin.pluginRegistryBundleCheck
+|Defines what happens when plugin bundles are found and are duplicated
+{*EXCEPTION*, LOG, NONE}
+
+|datanucleus.plugin.allowUserBundles
+|Defines whether user-provided bundles providing DataNucleus extensions will be registered. This is only respected if used in a non-Eclipse OSGi environment.
+{*true*, false}
+
+|datanucleus.plugin.validatePlugins
+|Defines whether a validation step should be performed checking for plugin dependencies etc. This is only respected if used in a non-Eclipse OSGi environment.
+{*false*, true}
+
+|datanucleus.findObject.validateWhenCached
+|When a user calls getObjectById (JDO) or findObject (JPA) and they request validation this allows the turning off of validation when an object is found in the (L2) cache.
+Can be useful for performance reasons, but should be used with care.
+{*true*, false}
+
+|datanucleus.findObject.typeConversion
+|When calling PM.getObjectById(Class, Object) or EM.find(Class, Object) the second argument really ought to be the exact type of the primary-key field. 
+This property enables conversion of basic numeric types (Long, Integer, Short) to the appropriate numeric type (if the PK is a numeric type). 
+Set this to _false_ if you want strict JPA compliance.
+{*true*, false}
+|===
+
+
+
+[[pmf_props_dn_schema]]
+=== DataNucleus Schema Properties
+
+image:../images/nucleus_extension.png[]
+
+DataNucleus provides the following properties for configuring schema handling used by the PersistenceManagerFactory.
+
+[cols="2,6", options="header"]
+|===
+|Parameter
+|Description + Values
+
+|datanucleus.schema.autoCreateAll
+|Whether to automatically generate any schema, tables, columns, constraints that don't exist. 
+Please refer to the link:persistence.html#schema[Schema Guide] for more details.
+{true, *false*}
+
+|datanucleus.schema.autoCreateDatabase
+|Whether to automatically generate any database (catalog/schema) that doesn't exist. 
+This depends very much on whether the datastore in question supports this operation. 
+Please refer to the link:persistence.html#schema[Schema Guide] for more details.
+{true, *false*}
+
+|datanucleus.schema.autoCreateTables
+|Whether to automatically generate any tables that don't exist. 
+Please refer to the link:persistence.html#schema[Schema Guide] for more details.
+{true, *false*}
+
+|datanucleus.schema.autoCreateColumns
+|Whether to automatically generate any columns that don't exist. Please refer to the link:persistence.html#schema[Schema Guide] for more details.
+{true, *false*}
+
+|datanucleus.schema.autoCreateConstraints
+|Whether to automatically generate any constraints that don't exist. Please refer to the link:persistence.html#schema[Schema Guide] for more details.
+{true, *false*}
+
+|datanucleus.autoCreateWarnOnError
+|Whether to only log a warning when errors occur during the auto-creation/validation process.
+*Please use with care since if the schema is incorrect errors will likely come up later and this will postpone those error checks til later, when it may be too late!!*
+{true, *false*}
+
+|datanucleus.schema.validateAll
+|Alias for defining *datanucleus.schema.validateTables*, *datanucleus.schema.validateColumns* and *datanucleus.schema.validateConstraints* as all true.
+Please refer to the link:persistence.html#schema[Schema Guide] for more details.
+{true, *false*}
+
+|datanucleus.schema.validateTables
+|Whether to validate tables against the persistence definition. Please refer to the link:persistence.html#schema[Schema Guide] for more details.
+{true, *false*}
+
+|datanucleus.schema.validateColumns
+|Whether to validate columns against the persistence definition. This refers to the column detail structure and NOT to whether the column exists or not. 
+Please refer to the link:persistence.html#schema[Schema Guide] for more details.
+{true, *false*}
+
+|datanucleus.schema.validateConstraints
+|Whether to validate table constraints against the persistence definition. 
+Please refer to the link:persistence.html#schema[Schema Guide] for more details.
+{true, *false*}
+
+|datanucleus.readOnlyDatastore
+|Whether the datastore is read-only or not (fixed in structure and contents).
+{true, *false*}
+
+|datanucleus.readOnlyDatastoreAction
+|What happens when a datastore is read-only and an object is attempted to be persisted.
+{*EXCEPTION*, IGNORE}
+
+|datanucleus.generateSchema.database.mode
+|Whether to perform any schema generation to the database at startup.
+Will process the schema for all classes that have metadata loaded at startup (i.e the classes specified in a persistence-unit).
+{create, drop, drop-and-create, *none*}
+
+|datanucleus.generateSchema.scripts.mode
+|Whether to perform any schema generation into scripts at startup.
+Will process the schema for all classes that have metadata loaded at startup (i.e the classes specified in a persistence-unit).
+{create, drop, drop-and-create, *none*}
+
+|datanucleus.generateSchema.scripts.create.target
+|Name of the script file to write to if doing a "create" with the target as "scripts"
+{*datanucleus-schema-create.ddl*, {filename}}
+
+|datanucleus.generateSchema.scripts.drop.target
+|Name of the script file to write to if doing a "drop" with the target as "scripts"
+{*datanucleus-schema-drop.ddl*, {filename}}
+
+|datanucleus.generateSchema.scripts.create.source
+|Name of a script file to run to create tables. Can be absolute filename, or URL string
+
+|datanucleus.generateSchema.scripts.drop.source
+|Name of a script file to run to drop tables. Can be absolute filename, or URL string
+
+|datanucleus.generateSchema.scripts.load
+|Name of a script file to run to load data into the schema. Can be absolute filename, or URL string
+
+|datanucleus.identifierFactory
+|Name of the identifier factory to use when generating table/column names etc (RDBMS datastores only). 
+See also the link:mapping.html#datastore_identifiers[JDO RDBMS Identifier Guide].
+{datanucleus1, *datanucleus2*, jpox, jpa, {user-plugin-name}}
+
+|datanucleus.identifier.namingFactory
+|Name of the identifier NamingFactory to use when generating table/column names etc (non-RDBMS datastores).
+{*datanucleus2*, jpa, {user-plugin-name}}
+
+|datanucleus.identifier.case
+|Which case to use in generated table/column identifier names. 
+See also the link:mapping.html#datastore_identifiers[Datastore Identifier Guide].
+RDBMS defaults to UPPERCASE. Cassandra defaults to lowercase
+{UPPERCASE, LowerCase, MixedCase}
+
+|datanucleus.identifier.wordSeparator
+|Separator character(s) to use between words in generated identifiers. Defaults to "_" (underscore)
+
+|datanucleus.identifier.tablePrefix
+|Prefix to be prepended to all generated table names (if the identifier factory supports it)
+
+|datanucleus.identifier.tableSuffix
+|Suffix to be appended to all generated table names (if the identifier factory supports it)
+
+|datanucleus.defaultInheritanceStrategy
+|How to choose the inheritance strategy default for classes where no strategy has been specified. 
+With _JDO2_ this will be "new-table" for base classes and "superclass-table" for subclasses.
+With _TABLE_PER_CLASS_ this will be "new-table" for all classes.
+{*JDO2*, TABLE_PER_CLASS}
+
+|datanucleus.store.allowReferencesWithNoImplementations
+|Whether we permit a reference field (1-1 relation) or collection of references where there are no defined implementations of the reference. 
+False means that an exception will be thrown during schema generation for the field
+{true, *false*}
+|===
+
+
+[[pmf_props_dn_transaction]]
+=== DataNucleus Transaction Properties
+
+image:../images/nucleus_extension.png[]
+
+DataNucleus provides the following properties for configuring transaction handling used by the PersistenceManagerFactory.
+
+[cols="2,6", options="header"]
+|===
+|Parameter
+|Description + Values
+
+|datanucleus.transaction.type
+|Type of transaction to use. If running under JavaSE the default is RESOURCE_LOCAL, and if running under JavaEE the default is JTA.
+{RESOURCE_LOCAL, JTA}
+
+|datanucleus.transaction.isolation
+|Select the default transaction isolation level for ALL PM factories. 
+Some databases do not support all isolation levels, refer to your database documentation. Please refer to the transaction guides for
+link:persistence.html#transaction_isolation[JDO]
+{read-uncommitted, *read-committed*, repeatable-read, serializable}
+
+|datanucleus.transaction.jta.transactionManagerLocator
+|Selects the locator to use when using JTA transactions so that DataNucleus can find the JTA TransactionManager.
+If this isn't specified and using JTA transactions DataNucleus will search all available locators which could have a performance impact.
+See link:../extensions/extensions.html#jta_locator[JTA Locator extension].
+If specifying "custom_jndi" please also specify "datanucleus.transaction.jta.transactionManagerJNDI"
+{*autodetect*, jboss, jonas, jotm, oc4j, orion, resin, sap, sun, weblogic, websphere, custom_jndi, alias of a JTA transaction locator}
+
+|datanucleus.transaction.jta.transactionManagerJNDI
+|Name of a JNDI location to find the JTA transaction manager from (when using JTA transactions). 
+This is for the case where you know where it is located. If not used DataNucleus will try certain well-known locations
+
+|datanucleus.transaction.nontx.read
+|Whether to allow nontransactional reads
+{false, *true*}
+
+|datanucleus.transaction.nontx.write
+|Whether to allow nontransactional writes
+{false, *true*}
+
+|datanucleus.transaction.nontx.atomic
+|When a user invokes a nontransactional operation they can choose for these changes to go straight to the datastore (atomically) or to wait until either the next transaction commit, 
+or close of the PM/EM. Disable this if you want operations to be processed with the next real transaction.
+{*true*, false}
+
+|datanucleus.SerializeRead
+|With datastore transactions you can apply locking to objects as they are read from the datastore. 
+This setting applies as the default for all PMs obtained. You can also specify this on a per-transaction or per-query basis (which is often better to avoid deadlocks etc)
+{true, *false*}
+
+|datanucleus.datastoreTransactionFlushLimit
+|For use when using datastore transactions and is the limit on number of dirty objects before a flush to the datastore will be performed.
+{*1*, positive integer}
+
+|datanucleus.flush.mode
+|Sets when persistence operations are flushed to the datastore.
+_MANUAL_ means that operations will be sent only on flush()/commit(). _AUTO_ means that operations will be sent immediately.
+{MANUAL, AUTO}
+
+|datanucleus.flush.optimised
+|Whether to use an "optimised" flush process, changing the order of persists for referential integrity (as used by RDBMS typically), 
+or whether to just build a list of deletes, inserts and updates and do them in batches. RDBMS defaults to true, whereas other datastores default to false 
+(due to not having referential integrity, so gaining from batching
+{true, false}
+
+|datanucleus.connectionPoolingType
+|This property allows you to utilise a 3rd party software package for enabling connection pooling.
+When using RDBMS you can select from DBCP, C3P0, Proxool, BoneCP, etc. You must have the 3rd party jars in the CLASSPATH to use these options.
+Please refer to the link;persistence.html#connection_pooling[Connection Pooling guide] for details.
+{None, *dbcp2-builtin*, DBCP, DBCP2, C3P0, Proxool, BoneCP, HikariCP, Tomcat, {others}}
+
+|datanucleus.connectionPoolingType.nontx
+|This property allows you to utilise a 3rd party software package for enabling connection pooling *for nontransactional connections* using a DataNucleus plugin.
+If you don't specify this value but do define the above value then that is taken by default. Refer to the above property for more details.
+{None, *dbcp2-builtin*, DBCP, DBCP2, C3P0, Proxool, BoneCP, HikariCP, Tomcat, {others}}
+
+|datanucleus.connection.nontx.releaseAfterUse
+|Applies only to non-transactional connections and refers to whether to re-use (pool) the connection internally for later use. 
+The default behaviour is to close any such non-transactional connection after use. If doing significant non-transactional processing
+in your application then this may provide performance benefits, but be careful about the number of connections being held open (if one is held open per PM).
+{*true*, false}
+
+|datanucleus.connection.singleConnectionPerExecutionContext
+|With a PM we normally allocate one connection for a transaction and close it after the transaction, then a different connection for nontransactional ops. 
+This flag acts as a hint to the store plugin to obtain and retain a single connection throughout the lifetime of the PM.
+{true, *false*}
+
+|datanucleus.connection.resourceType
+|Resource Type for primary connection
+{JTA, RESOURCE_LOCAL}
+
+|datanucleus.connection.resourceType2
+|Resource Type for secondary connection
+{JTA, RESOURCE_LOCAL}
+|===
+
+
+[[pmf_props_dn_cache]]
+=== DataNucleus Cache Properties
+
+image:../images/nucleus_extension.png[]
+
+DataNucleus provides the following properties for configuring cache handling used by the PersistenceManagerFactory.
+
+[cols="2,6", options="header"]
+|===
+|Parameter
+|Description + Values
+
+|datanucleus.cache.collections
+|SCO collections can be used in 2 modes in DataNucleus. You can allow DataNucleus to cache the collections contents, 
+or you can tell DataNucleus to access the datastore for every access of the SCO collection. The default is to use the cached collection.
+{*true*, false}
+
+|datanucleus.cache.collections.lazy
+|When using cached collections/maps, the elements/keys/values can be loaded when the object is initialised, or can be loaded when accessed (lazy loading). 
+The default is to use lazy loading when the field is not in the current fetch group, and to not use lazy loading when the field is in the current fetch group.
+{true, false}
+
+|datanucleus.cache.level1.type
+|Name of the type of Level 1 cache to use. Defines the backing map.
+See also the link:persistence.html#cache_level1[Level 1 Cache docs]
+{*soft*, weak, strong, {your-plugin-name}}
+
+|datanucleus.cache.level2.type
+|Name of the type of Level 2 Cache to use. Can be used to interface with external caching products. Use "none" to turn off L2 caching.
+See also the link:persistence.html#cache_level2[Level 2 Cache docs]
+{none, *soft*, weak, coherence, ehcache, ehcacheclassbased, cacheonix, oscache, swarmcache, javax.cache, spymemcached, xmemcached, {your-plugin-name}}
+
+|datanucleus.cache.level2.mode
+|The mode of operation of the L2 cache, deciding which entities are cached. The default (UNSPECIFIED) is the same as DISABLE_SELECTIVE.
+See also the link:persistence.html#cache_level2[Level 2 Cache docs]
+{NONE, ALL, ENABLE_SELECTIVE, DISABLE_SELECTIVE, *UNSPECIFIED*}
+
+|datanucleus.cache.level2.storeMode
+|Whether to use the L2 cache for storing values (set to "bypass" to not store within the context of the operation)
+{*use*, bypass}
+
+|datanucleus.cache.level2.retrieveMode
+|Whether to use the L2 cache for retrieving values (set to "bypass" to not retrieve from L2 cache within the context of the operation, i.e go to the datastore)
+{*use*, bypass}
+
+|datanucleus.cache.level2.updateMode
+|When the objects in the L2 cache should be updated. Defaults to updating at commit AND when fields are read from a datastore object
+{*commit-and-datastore-read*, commit}
+
+|datanucleus.cache.level2.cacheName
+|Name of the cache. This is for use with plugins such as the Tangosol cache plugin for accessing the particular cache. 
+Please refer to the link:persistence.html#cache_level2[Level 2 Cache docs]
+
+|datanucleus.cache.level2.maxSize
+|Max size for the L2 cache (supported by weak, soft, coherence, ehcache, ehcacheclassbased, javax.cache)
+{*-1*, integer value}
+
+|datanucleus.cache.level2.clearAtClose
+|Whether the close of the L2 cache (when the PMF closes) should also clear out any objects from the underlying cache mechanism. 
+By default it will clear objects out but if the user has configured an external cache product and wants to share objects across multiple PMFs then this can be set to false.
+{*true*, false}
+
+|datanucleus.cache.level2.batchSize
+|When objects are added to the L2 cache at commit they are typically batched. This property sets the max size of the batch.
+{*100*, integer value}
+
+|datanucleus.cache.level2.timeout
+|Some caches (Cacheonix, javax.cache) allow specification of an expiration time for objects in the cache. 
+This property is the timeout in milliseconds (will be unset meaning use cache default).
+{*-1*, integer value}
+
+|datanucleus.cache.level2.readThrough
+|With javax.cache L2 caches you can configure the cache to allow read-through
+{*true*, false}
+
+|datanucleus.cache.level2.writeThrough
+|With javax.cache L2 caches you can configure the cache to allow write-through
+{*true*, false}
+
+|datanucleus.cache.level2.storeByValue
+|With javax.cache L2 caches you can configure the cache to store by value (as opposed to by reference)
+{*true*, false}
+
+|datanucleus.cache.level2.statisticsEnabled
+|With javax.cache L2 caches you can configure the cache to enable statistics gathering (accessible via JMX)
+{*false*, true}
+
+|datanucleus.cache.queryCompilation.type
+|Type of cache to use for caching of generic query compilations
+{none, *soft*, weak, strong, javax.cache, {your-plugin-name}}
+
+|datanucleus.cache.queryCompilation.cacheName
+|Name of cache for generic query compilation. Used by javax.cache variant.
+{{your-cache-name}, *datanucleus-query-compilation*}
+
+|datanucleus.cache.queryCompilationDatastore.type
+|Type of cache to use for caching of datastore query compilations
+{none, *soft*, weak, strong, javax.cache, {your-plugin-name}}
+
+|datanucleus.cache.queryCompilationDatastore.cacheName
+|Name of cache for datastore query compilation. Used by javax.cache variant.
+{{your-cache-name}, *datanucleus-query-compilation-datastore*}
+
+|datanucleus.cache.queryResults.type
+|Type of cache to use for caching query results.
+{none, *soft*, weak, strong, javax.cache, spymemcached, xmemcached, cacheonix, {your-plugin-name}}
+
+|datanucleus.cache.queryResults.cacheName
+|Name of cache for caching the query results.
+{*datanucleus-query*, {your-name}}
+
+|datanucleus.cache.queryResults.maxSize
+|Max size for the query results cache (supported by weak, soft, strong)
+{*-1*, integer value}
+|===
+
+
+
+[[pmf_props_dn_validation]]
+=== DataNucleus Bean Validation Properties
+
+image:../images/nucleus_extension.png[]
+
+DataNucleus provides the following properties for configuring bean validation handling used by the PersistenceManagerFactory.
+
+[cols="2,6", options="header"]
+|===
+|Parameter
+|Description + Values
+
+|datanucleus.validation.mode
+|Determines whether the automatic lifecycle event validation is in effect. {*auto*, callback, none}
+
+|datanucleus.validation.group.pre-persist
+|The classes to validation on pre-persist callback
+
+|datanucleus.validation.group.pre-update
+|The classes to validation on pre-update callback
+
+|datanucleus.validation.group.pre-remove
+|The classes to validation on pre-remove callback
+
+|datanucleus.validation.factory
+|The validation factory to use in validation
+|===
+
+
+
+
+[[pmf_props_dn_value_generation]]
+=== DataNucleus Value Generation Properties
+
+image:../images/nucleus_extension.png[]
+
+DataNucleus provides the following properties for configuring value generation handling used by the PersistenceManagerFactory.
+
+[cols="2,6", options="header"]
+|===
+|Parameter
+|Description + Values
+
+|datanucleus.valuegeneration.transactionAttribute*
+|Whether to use the PM connection or open a new connection. Only used by value generators that require a connection to the datastore.
+{*New*, UsePM}
+
+|datanucleus.valuegeneration.transactionIsolation
+|Select the default transaction isolation level for identity generation. Must have _datanucleus.valuegeneration.transactionAttribute_ set to _New_
+Some databases do not support all isolation levels, refer to your database documentation and the link:persistence.html#transaction_isolation[transaction guide]
+{read-uncommitted, *read-committed*, repeatable-read, serializable}
+
+|datanucleus.valuegeneration.sequence.allocationSize
+|If using JDO3.0 still and not specifying the size of your sequence, this acts as the default allocation size.
+{10, (integer value)}
+
+|datanucleus.valuegeneration.increment.allocationSize
+|Sets the default allocation size for any "increment" value strategy. You can configure each member strategy individually but they fall back to this value if not set
+{10, (integer value)}
+|===
+
+
+[[pmf_props_dn_metadata]]
+=== DataNucleus Metadata Properties
+
+image:../images/nucleus_extension.png[]
+
+DataNucleus provides the following properties for configuring metadata handling used by the PersistenceManagerFactory.
+
+[cols="2,6", options="header"]
+|===
+|Parameter
+|Description + Values
+
+|datanucleus.metadata.jdoFileExtension
+|Suffix for JDO MetaData files. Provides the ability to override the default suffix and also to have one PMF with one suffix and another with a different suffix, 
+hence allowing differing persistence of the same classes using different PMF's.
+{*jdo*, {file suffix}}
+
+|datanucleus.metadata.ormFileExtension
+|Suffix for ORM MetaData files. Provides the ability to override the default suffix and also to have one PMF with one suffix and another with a different suffix, 
+hence allowing differing persistence of the same classes using different PMF's.
+{*orm*, {file suffix}}
+
+|datanucleus.metadata.jdoqueryFileExtension
+|Suffix for JDO Query MetaData files. Provides the ability to override the default suffix and also to have one PMF with one suffix and another with a different suffix, 
+hence allowing differing persistence of the same classes using different PMF's.
+{*jdoquery*, {file suffix}}
+
+|datanucleus.metadata.alwaysDetachable
+|Whether to treat all classes as detachable irrespective of input metadata. See also "alwaysDetachable" enhancer option.
+{*false*, true}
+
+|datanucleus.metadata.listener.object
+|Property specifying a org.datanucleus.metadata.MetaDataListener object that will be registered at startup and will receive notification of all metadata load activity.
+{*false*, true}
+
+|datanucleus.metadata.ignoreMetaDataForMissingClasses
+|Whether to ignore classes where metadata is specified. Default (false) is to throw an exception.
+{*false*, true}
+
+|datanucleus.metadata.xml.validate
+|Whether to validate the MetaData file(s) for XML correctness (against the DTD) when parsing.
+{true, *false*}
+
+|datanucleus.metadata.xml.namespaceAware
+|Whether to allow for XML namespaces in metadata files. The vast majority of sane people should not need this at all, but it's enabled by default to allow for those that do (since v3.2.3)
+{*true*, false}
+
+|datanucleus.metadata.allowXML
+|Whether to allow XML metadata. Turn this off if not using any, for performance.
+{*true*, false}
+
+|datanucleus.metadata.allowAnnotations
+|Whether to allow annotations metadata. Turn this off if not using any, for performance.
+{*true*, false}
+
+|datanucleus.metadata.allowLoadAtRuntime
+|Whether to allow load of metadata at runtime. This is intended for the situation where you are handling persistence of a persistence-unit and only want the
+classes explicitly specified in the persistence-unit.
+{*true*, false}
+
+|datanucleus.metadata.autoregistration
+|Whether to use the JDO auto-registration of metadata. Turned on by default
+{*true*, false}
+
+|datanucleus.metadata.supportORM
+|Whether to support "orm" mapping files. By default we use what the datastore plugin supports. 
+This can be used to turn it off when the datastore supports it but we dont plan on using it (for performance)
+{*true*, false}
+
+|datanucleus.metadata.defaultNullable
+|Whether the default nullability for the fields should be nullable or non-nullable when no metadata regarding field nullability is specified at field level. 
+The default is nullable i.e. to allow null values.
+{*true*, false}
+
+|datanucleus.metadata.scanner
+|Name of a class to use for scanning the classpath for persistent classes when using a _persistence.xml_.
+The class must implement the interface _org.datanucleus.metadata.MetaDataScanner_
+
+|datanucleus.metadata.useDiscriminatorForSingleTable
+|With JPA the spec implies that all use of "single-table" inheritance will use a discriminator. 
+DataNucleus up to and including 5.0.2 relied on the user defining the discriminator, whereas it now will add one if not supplied. Set this to _false_ to get behaviour as it was <= 5.0.2
+{*true*, false}
+|===
+
+
+[[pmf_props_dn_autostart]]
+=== DataNucleus Autostart Properties
+
+image:../images/nucleus_extension.png[]
+
+DataNucleus provides the following properties for configuring auto-start mechanism handling used by the PersistenceManagerFactory.
+
+[cols="2,6", options="header"]
+|===
+|Parameter
+|Description + Values
+
+|datanucleus.autoStartMechanism
+|How to initialise DataNucleus at startup. This allows DataNucleus to read in from some source the classes that it was persisting for this data store the previous time. 
+_XML_ stores the information in an XML file for this purpose.
+_SchemaTable_ (only for RDBMS) stores a table in the RDBMS for this purpose. 
+_Classes_ looks at the property _datanucleus.autoStartClassNames_ for a list of classes.
+_MetaData_ looks at the property _datanucleus.autoStartMetaDataFiles_ for a list of metadata files
+The other option (default) is _None_ (start from scratch each time). 
+Please refer to the link:persistence.html#autostart[Auto-Start Mechanism Guide] for more details.
+*Alternatively just use _persistence.xml_ to specify the classes and/or mapping files to load at startup.* Note also that "Auto-Start" is for RUNTIME use only (not during SchemaTool).
+{*None*, XML, Classes, MetaData, SchemaTable}
+
+|datanucleus.autoStartMechanismMode
+|The mode of operation of the auto start mode. Currently there are 3 values. "Quiet" means that at startup if any errors are encountered, they are fixed quietly. 
+"Ignored" means that at startup if any errors are encountered they are just ignored. 
+"Checked" means that at startup if any errors are encountered they are thrown as exceptions.
+{Checked, Ignored, *Quiet*}
+
+|datanucleus.autoStartMechanismXmlFile
+|Filename used for the XML file for AutoStart when using "XML" Auto-Start Mechanism
+
+|datanucleus.autoStartClassNames
+|This property specifies a list of classes (comma-separated) that are loaded at startup when using the "Classes" Auto-Start Mechanism.
+
+|datanucleus.autoStartMetaDataFiles
+|This property specifies a list of metadata files (comma-separated) that are loaded at startup when using the "MetaData" Auto-Start Mechanism.
+|===
+
+
+
+
+[[emf_props_dn_query]]
+=== DataNucleus Query Properties
+
+image:../images/nucleus_extension.png[]
+
+DataNucleus provides the following properties for configuring query handling used by the EntityManagerFactory.
+
+[cols="2,6", options="header"]
+|===
+|Parameter
+|Description + Values
+
+|datanucleus.query.flushBeforeExecution
+|This property can enforce a flush to the datastore of any outstanding changes just before executing all queries. 
+If using optimistic transactions any updates are typically held back until flush/commit and so the query would otherwise not take them into account.
+{true, *false*}
+
+|datanucleus.query.closeable
+|When set to false (the default) will simply close all results when close() is called.
+When set to true it will also close the query object making it unusable, releasing all resources as well. Also applies to a JDO Extent use of close().
+{true, *false*}
+
+|datanucleus.query.useFetchPlan
+|Whether to use the FetchPlan when executing a JDOQL query.
+The default is to use it which means that the relevant fields of the object will be retrieved. This allows the option of just retrieving the identity columns.
+{*true*, false}
+
+|datanucleus.query.compileOptimiseVarThis
+|This optimisation will detect and try to fix a query clause like "var == this" (which is pointless). It is not very advanced but may help in some situations
+{true, *false*}
+
+|datanucleus.query.jdoql.allowAll
+|javax.jdo.query.JDOQL queries are allowed by JDO only to run SELECT queries.
+This extension permits to bypass this limitation so that DataNucleus extension bulk "update" and bulk "delete" can be run.
+{*false*, true}
+
+|datanucleus.query.sql.allowAll
+|javax.jdo.query.SQL queries are allowed by JDO only to run SELECT queries. This extension permits to bypass this limitation (so for example can execute stored procedures).
+{*false*, true}
+
+|datanucleus.query.jpql.allowRange
+|JPQL queries, by the JPA spec, do not allow specification of the range in the query string.
+This extension to allow "RANGE x,y" after the ORDER BY clause of JPQL string queries.
+{*false*, true}
+
+|datanucleus.query.checkUnusedParameters
+|Whether to check for unused input parameters and throw an exception if found.
+The JDO spec requires this check and is a good guide to having misnamed a parameter name in the query for example.
+{*true*, false}
+|===
+
+
+
+[[pmf_props_specific_query]]
+=== DataNucleus Datastore-Specific Properties
+
+image:../images/nucleus_extension.png[]
+
+DataNucleus provides the following properties for configuring datastore-specific used by the PersistenceManagerFactory.
+
+[cols="2,6", options="header"]
+|===
+|Parameter
+|Description + Values
+
+|datanucleus.rdbms.datastoreAdapterClassName
+|This property allows you to supply the class name of the adapter to use for your datastore.
+The default is not to specify this property and DataNucleus will autodetect the datastore type and use its own internal datastore adapter classes. 
+This allows you to override the default behaviour where there maybe is some issue with the default adapter class.
+
+|datanucleus.rdbms.useLegacyNativeValueStrategy
+|This property changes the process for deciding the value strategy to use when the user has selected "native" to be like it was with DN version 3.0 and earlier, so using
+"increment" and "uuid-hex".
+{true, *false*}
+
+|datanucleus.rdbms.statementBatchLimit
+|Maximum number of statements that can be batched. The default is 50 and also applies to delete of objects.
+Please refer to the link:../datastores/index.html#rdbms_statement_batching[Statement Batching guide]
+{integer value (0 = no batching)}
+
+|datanucleus.rdbms.checkExistTablesOrViews
+|Whether to check if the table/view exists. If false, it disables the automatic generation of tables that don't exist.
+{*true*, false}
+
+|datanucleus.rdbms.useDefaultSqlType
+|This property applies for schema generation in terms of setting the default column "sql-type" (when you haven't defined it) and where
+the JDBC driver has multiple possible "sql-type" for a "jdbc-type".
+If the property is set to false, it will take the first provided "sql-type" from the JDBC driver.
+If the property is set to true, it will take the "sql-type" that matches what the DataNucleus "plugin.xml" implies.
+{*true*, false}
+
+|datanucleus.rdbms.initializeColumnInfo
+|Allows control over what column information is initialised when a table is loaded for the first time. 
+By default info for all columns will be loaded. Unfortunately some RDBMS are particularly poor at returning this information so we allow reduced forms to just load the 
+primary key column info, or not to load any.
+{*ALL*, PK, NONE}
+
+|datanucleus.rdbms.classAdditionMaxRetries
+|The maximum number of retries when trying to find a class to persist or when validating a class.
+{*3*, A positive integer}
+
+|datanucleus.rdbms.constraintCreateMode
+|How to determine the RDBMS constraints to be created. 
+*DataNucleus* will automatically add foreign-keys/indices to handle all relationships, and will utilise the specified MetaData foreign-key information.
+*JDO2* will only use the information in the MetaData file(s).
+{*DataNucleus*, JDO2}
+
+|datanucleus.rdbms.uniqueConstraints.mapInverse
+|Whether to add unique constraints to the element table for a map inverse field.
+{*true*, false}
+
+|datanucleus.rdbms.discriminatorPerSubclassTable
+|Property that controls if only the base class where the discriminator is defined will have a discriminator column
+{*false*, true}
+
+|datanucleus.rdbms.stringDefaultLength
+|The default (max) length to use for all strings that don't have their column length defined in MetaData.
+{*255*, A valid length}
+
+|datanucleus.rdbms.stringLengthExceededAction
+|Defines what happens when persisting a String field and its length exceeds the length of the underlying datastore column. The default is to throw an Exception. 
+The other option is to truncate the String to the length of the datastore column.
+{*EXCEPTION*, TRUNCATE}
+
+|datanucleus.rdbms.useColumnDefaultWhenNull
+|If an object is being persisted and a field (column) is null, the default behaviour is to look whether the column has a "default" value defined in the datastore and pass that in. 
+You can turn this off and instead pass in NULL for the column by setting this property to _false_.
+{*true*, false}
+
+|datanucleus.rdbms.persistEmptyStringAsNull
+|When persisting an empty string, should it be persisted as null in the datastore?
+This is to allow for datastores such as Oracle that dont differentiate between null and empty string. 
+If it is set to false and the datastore doesnt differentiate then a special character will be saved when storing an empty string (and interpreted when reading in).
+{true, *false*}
+
+|datanucleus.rdbms.query.fetchDirection
+|The direction in which the query results will be navigated.
+{*forward*, reverse, unknown}
+
+|datanucleus.rdbms.query.resultSetType
+|Type of ResultSet to create. Note 1) Not all JDBC drivers accept all options. The values correspond directly to the ResultSet options. 
+Note 2) Not all java.util.List operations are available for scrolling result sets. An Exception is raised when unsupported operations are invoked.
+{*forward-only*, scroll-sensitive, scroll-insensitive}
+
+|datanucleus.rdbms.query.resultSetConcurrency
+|Whether the ResultSet is readonly or can be updated. Not all JDBC drivers support all options.
+The values correspond directly to the ResultSet options.
+{*read-only*, updateable}
+
+|datanucleus.rdbms.query.multivaluedFetch
+|How any multi-valued field should be fetched in a query. 'exists' means use an EXISTS statement hence retrieving all elements for the queried objects in one SQL 
+with EXISTS to select the affected owner objects. 'none' means don't fetch container elements.
+{*exists*, none}
+
+|datanucleus.rdbms.oracle.nlsSortOrder
+|Sort order for Oracle String fields in queries (BINARY disables native language sorting). *Applicable for RDBMS only*
+{*LATIN*, See Oracle documentation}
+
+|datanucleus.rdbms.mysql.engineType
+|Specify the default engine for any tables created in MySQL.
+{*InnoDB*, valid engine for MySQL}
+
+|datanucleus.rdbms.mysql.collation
+|Specify the default collation for any tables created in MySQL.
+{valid collation for MySQL}
+
+|datanucleus.rdbms.mysql.characterSet
+|Specify the default charset for any tables created in MySQL.
+{valid charset for MySQL}
+
+|datanucleus.rdbms.informix.useSerialForIdentity
+|Whether we are using SERIAL for identity columns (instead of SERIAL8).
+{true, *false*}
+
+|datanucleus.rdbms.schemaTable.tableName
+|Name of the table to use when using auto-start mechanism of "SchemaTable"
+Please refer to the link:persistence.html#autostart[Auto-Start guide]
+{NUCLEUS_TABLES, Valid table name}
+
+|datanucleus.rdbms.dynamicSchemaUpdates
+|Whether to allow dynamic updates to the schema. This means that upon each insert/update the types of objects will be tested and any previously unknown implementations of
+interfaces will be added to the existing schema.
+{true, *false*}
+
+|datanucleus.rdbms.omitDatabaseMetaDataGetColumns
+|Whether to bypass all calls to DatabaseMetaData.getColumns(). This JDBC method is called to get schema information, but on some JDBC drivers (e.g Derby) it can
+take an inordinate amount of time. Setting this to true means that your datastore schema has to be correct and no checks will be performed.
+{true, *false*}
+
+|datanucleus.rdbms.sqlTableNamingStrategy
+|Name of the plugin to use for defining the names of the aliases of tables in SQL statements.
+{*alpha-scheme*, t-scheme}
+
+|datanucleus.rdbms.tableColumnOrder
+|How we should order the columns in a table. The default is to put the fields of the owning class first, followed by superclasses, then subclasses. 
+An alternative is to start from the base superclass first, working down to the owner, then the subclasses
+{*owner-first*, superclass-first}
+
+|datanucleus.rdbms.allowColumnReuse
+|This property allows you to reuse columns for more than 1 field of a class.
+It is _false_ by default to protect the user from erroneously typing in a column name. Additionally, if a column is reused, the user ought to think about
+how to determine which field is written to that column ... all reuse ought to imply the same value in those fields so it doesn't matter which field is written there, or
+retrieved from there.
+{true, *false*}
+
+|datanucleus.rdbms.statementLogging
+|How to log SQL statements. The default is to log the statement and replace any parameters with the value provided in angle brackets. 
+Alternatively you can log the statement with any parameters replaced by just the values (no brackets). The final option is to log the raw JDBC statement (with ? for parameters).
+{*values-in-brackets*, values, jdbc}
+
+|datanucleus.rdbms.fetchUnloadedAutomatically
+|If enabled will, upon a request to load a field, check for any unloaded fields that are non-relation fields or 1-1/N-1 fields and will load them in the same SQL call.
+{true, *false*}
+
+|datanucleus.cloud.storage.bucket
+|This is a mandatory property that allows you to supply the bucket name to store your data. *Applicable for Google Storage, and AmazonS3 only.*
+
+|datanucleus.hbase.relationUsesPersistableId
+|This defines how relations will be persisted. The legacy method would be just to store the "id" of the object.
+The default method is to use "persistableId" which is a form of the id but catering for datastore id and application id, and including the class of the target object to avoid subsequent lookups.
+{*true*, false}
+
+|datanucleus.hbase.enforceUniquenessInApplication
+|Setting this property to true means that when a new object is persisted (and its identity is assigned), 
+no check will be made as to whether it exists in the datastore and that the user takes responsibility for such checks.
+{true, *false*}
+
+|datanucleus.cassandra.enforceUniquenessInApplication
+|Setting this property to true means that when a new object is persisted (and its identity is assigned), 
+no check will be made as to whether it exists in the datastore (since Cassandra does an UPSERT) and that the user takes responsibility for such checks.
+{true, *false*}
+
+|datanucleus.cassandra.compression
+|Type of compression to use for the Cassandra cluster.
+{*none*, snappy}
+
+|datanucleus.cassandra.metrics
+|Whether metrics are enabled for the Cassandra cluster.
+{*true*, false}
+
+|datanucleus.cassandra.ssl
+|Whether SSL is enabled for the Cassandra cluster.
+{true, *false*}
+
+|datanucleus.cassandra.socket.readTimeoutMillis
+|Socket read timeout for the Cassandra cluster.
+
+|datanucleus.cassandra.socket.connectTimeoutMillis
+|Socket connect timeout for the Cassandra cluster.
+|===
+
+
+
+
