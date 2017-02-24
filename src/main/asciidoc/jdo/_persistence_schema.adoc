@@ -4,12 +4,11 @@
 :_imagesdir: images/
 
 
-
 Some datastores have a well-defined structure and when persisting/retrieving from these datastores
 you have to have this _schema_ in place. DataNucleus provides various controls for creation
 of any necessary schema components. This creation can be performed as follows
 
-* At runtime, link:#schema-generation[as a one-off generate-schema step]. This is the recommended option since it is standard in JPA2.1
+* At runtime, link:#schema-generation[as a one-off generate-schema step].
 * One off task before running your application using link:#schematool[SchemaTool]
 * At runtime, link:#schema-autogeneration[auto-generating tables as it requires them]
 
@@ -22,29 +21,23 @@ It minimises the addition of any implementation artifacts to the datastore, and 
 and version columns where requested) to any schema tables.
 
 
+
 [[schema-generation]]
 == Schema Generation for persistence-unit
 
-DataNucleus JPA allows you to generate the schema for your _persistence-unit_ when creating an EMF. 
+DataNucleus JDO allows you to generate the schema for your _persistence-unit_ when creating an EMF. 
 You can create, drop or drop then create the schema either directly in the datastore, or in scripts (DDL) as required.
 See the associated persistence properties (most of these only apply to RDBMS).
 
-* *javax.persistence.schema-generation.database.action* which can be set to _create_, _drop_, _drop-and-create_ 
-or _none_ to control the generation of the schema in the database.
-* *javax.persistence.schema-generation.scripts.action* which can be set to _create_, _drop_, _drop-and-create_ or 
-_none_ to control the generation of the schema as scripts (DDL). 
-See also _javax.persistence.schema-generation.scripts.create.target_ and _javax.persistence.schema-generation.scripts.drop.target_ 
+* *datanucleus.generateSchema.database.mode* which can be set to _create_, _drop_, _drop-and-create_ or _none_ to control the generation of the schema in the database.
+* *datanucleus.generateSchema.scripts.mode* which can be set to _create_, _drop_, _drop-and-create_ or _none_ to control the generation of the schema as scripts (DDL). 
+See also _datanucleus.generateSchema.scripts.create.target_ and _datanucleus.generateSchema.scripts.drop.target_ 
 which will be generated using this mode of operation.
-* *javax.persistence.schema-generation.scripts.create.target* - this should be set to the name of a DDL script file that will be generated
-when using _javax.persistence.schema-generation.scripts.action_
-* *javax.persistence.schema-generation.scripts.drop.target* - this should be set to the name of a DDL script file that will be generated
-when using _javax.persistence.schema-generation.scripts.action_
-* *javax.persistence.schema-generation.scripts.create.source* - set this to an SQL script of your own that will create some tables 
-(prior to any schema generation from the persistable objects)
-* *javax.persistence.schema-generation.scripts.drop.source* - set this to an SQL script of your own that will drop some tables
-(prior to any schema generation from the persistable objects)
-* *javax.persistence.sql-load-script-source* - set this to an SQL script of your own that
-will insert any data that you require to be available when your EMF is initialised
+* *datanucleus.generateSchema.scripts.create.target* - this should be set to the name of a DDL script file that will be generated when using _datanucleus.generateSchema.scripts.mode_
+* *datanucleus.generateSchema.scripts.drop.target* - this should be set to the name of a DDL script file that will be generated when using _datanucleus.generateSchema.scripts.mode_
+* *datanucleus.generateSchema.scripts.create.source* - set this to an SQL script of your own that will create some tables (prior to any schema generation from the persistable objects)
+* *datanucleus.generateSchema.scripts.drop.source* - set this to an SQL script of your own that will drop some tables (prior to any schema generation from the persistable objects)
+* *datanucleus.generateSchema.scripts.load* - set this to an SQL script of your own that will insert any data that you require to be available when your PMF is initialised
 
 
 [[schema-autogeneration]]
@@ -98,6 +91,7 @@ If the user already has a schema, and want to make sure that their table constra
 (from the MetaData definition) they would set this property to _true_. 
 
 
+
 == Schema Generation : Naming Issues
 
 Some datastores allow access to multiple "schemas" (such as with most RDBMS).
@@ -114,32 +108,32 @@ This will mean that all RDBMS DDL and SQL statements will prefix table names wit
 necessary catalog and schema names (specify which ones your datastore supports).
 
 
+
 == Schema Generation : Column Ordering
 
-By default all tables are generated with columns in alphabetical order, starting with root class fields followed by 
-subclass fields (if present in the same table) etc. 
-This is not part of JPA but DataNucleus allows an extension to specify the relative position, such as
+By default all tables are generated with columns in alphabetical order, starting with root class fields followed by subclass fields (if present in the same table) etc. 
+There is JDO metadata attribute that allows you to specify the order of columns for schema generation; it is achieved by specifying the metadata attribute _position_ against the column.
 
-[source,java]
+[source,xml]
 -----
-@ColumnPosition(3)
+<column position="1"/>
 -----
 
 Note that the values of the position start at 0, and should be specified completely for all columns of all fields.
 
 
+
 [[schema_read_only]]
-== Schema : Read-Only
+== Read-Only
 
-If your datastore is read-only (you can't add/update/delete any data in it), obviously you could just configure your 
-application to not perform these operations. An alternative is to set the EMF as read-only, by setting the persistence 
-property *datanucleus.ReadOnlyDatastore* to _true_.
+If your datastore is read-only (you can't add/update/delete any data in it), obviously you could just configure your application to not perform these operations. 
+An alternative is to set the PMF as "read-only". You do this by setting the persistence property *javax.jdo.option.ReadOnly* to _true_.
 
-From now on, whenever you perform a persistence operation that implies a change in datastore data, the operation will throw a _PersistenceException_.
+From now on, whenever you perform a persistence operation that implies a change in datastore data, the operation will throw a _JDOReadOnlyException_.
 
 DataNucleus provides an additional control over the behaviour when an attempt is made to change a read-only datastore. 
-The default behaviour is to throw an exception. You can change this using the persistence property _datanucleus.readOnlyDatastoreAction_ 
-with values of "EXCEPTION" (default), and "IGNORE". "IGNORE" has the effect of simply ignoring all attempted updates to readonly objects.
+The default behaviour is to throw an exception. You can change this using the persistence property _datanucleus.readOnlyDatastoreAction_ with values of 
+"EXCEPTION" (default), and "IGNORE". "IGNORE" has the effect of simply ignoring all attempted updates to readonly objects.
 
 You can take this read-only control further and specify it just on specific classes. Like this
 
@@ -171,8 +165,8 @@ create/delete the schema, but instead output the DDL for the tables/constraints 
 
 For the *create*, *delete* and *validate* modes DataNucleus SchemaTool accepts either of the following types of input.
 
-* A set of MetaData and class files. The MetaData files define the persistence of the classes they contain. The class files are provided when the classes have annotations.
-* The name of a *persistence-unit*. The link:#persistenceunit[persistence-unit] name defines all classes, metadata files, and jars that make up that unit. 
+* A set of MetaData and class files. The MetaData files define the persistence of the classes they contain. The class files are provided when the classes have annotations
+* The name of a *persistence-unit*. The link:persistence.html#persistenceunit[persistence-unit] name defines all classes, metadata files, and jars that make up that unit. 
 Consequently, running DataNucleus SchemaTool with a persistence unit name will create the schema for all classes that are part of that unit.
 
 IMPORTANT: if using SchemaTool with a persistence-unit make sure you omit _javax.persistence.schema-generation_ properties from your persistence-unit.*
@@ -193,8 +187,8 @@ Here we provide many different ways to invoke *DataNucleus SchemaTool*
 If you are using Maven to build your system, you will need the DataNucleus Maven plugin. 
 This provides 5 goals representing the different modes of *DataNucleus SchemaTool*. 
 You can use the goals *datanucleus:schema-create*, *datanucleus:schema-delete*, *datanucleus:schema-validate* depending on whether you want to 
-create, delete or validate the database tables. To use the DataNucleus Maven plugin you will may need to set properties 
-for the plugin (in your `pom.xml`). For example
+create, delete or validate the database tables. 
+To use the DataNucleus Maven plugin you will may need to set properties for the plugin (in your `pom.xml`). For example
 
 [cols="2,1,5", options="header"]
 |===
@@ -204,7 +198,19 @@ for the plugin (in your `pom.xml`). For example
 
 |api
 |JDO
-|API for the metadata being used (JDO, JPA). *Set this to JPA*
+|API for the metadata being used (JDO, JPA).
+
+|metadataDirectory
+|${project.build.outputDirectory}
+|Directory to use for schema generation files (classes/mappings)
+
+|metadataIncludes
+|**/*.jdo, **/*.class
+|Fileset to include for schema generation
+
+|metadataExcludes
+|
+|Fileset to exclude for schema generation
 
 |ignoreMetaDataForMissingClasses
 |false
@@ -217,6 +223,10 @@ for the plugin (in your `pom.xml`). For example
 |schemaName
 |
 |Name of the schema (mandatory when using _createDatabase_ or _deleteDatabase_ options)
+
+|props
+|
+|Name of a properties file for the datastore (PMF)
 
 |persistenceUnitName
 |
@@ -246,7 +256,12 @@ names from the input filenames, so you need to use a persistence.xml file defini
 |completeDdl
 |false
 |Whether to generate DDL including things that already exist? (for RDBMS)
+
+|includeAutoStart
+|false
+|Whether to include auto-start mechanisms in SchemaTool usage
 |===
+
 
 So to give an example, I add the following to my `pom.xml`
 
@@ -258,10 +273,9 @@ So to give an example, I add the following to my `pom.xml`
         <plugin>
             <groupId>org.datanucleus</groupId>
             <artifactId>datanucleus-maven-plugin</artifactId>
-            <version>5.0.1</version>
+            <version>5.0.2</version>
             <configuration>
-                <api>JPA</api>
-                <persistenceUnitName>MyUnit</persistenceUnitName>
+                <props>${basedir}/datanucleus.properties</props>
                 <log4jConfiguration>${basedir}/log4j.properties</log4jConfiguration>
                 <verbose>true</verbose>
             </configuration>
@@ -299,8 +313,12 @@ An Ant task is provided for using *DataNucleus SchemaTool*. It has classname *or
 |values
 
 |api
-|API that we are using in our use of DataNucleus. *Set this to JPA typically*
+|API that we are using in our use of DataNucleus.
 |*JDO*, JPA
+
+|props
+|The filename to use for persistence properties
+|
 
 |persistenceUnit
 |Name of the persistence-unit that we should manage the schema for (defines the classes and the properties defining the datastore).
@@ -329,7 +347,12 @@ An Ant task is provided for using *DataNucleus SchemaTool*. It has classname *or
 |completeDdl
 |Whether to output complete DDL (instead of just missing tables). Only used with ddlFile
 |true, *false*
+
+|includeAutoStart
+|Whether to include any auto-start mechanism in SchemaTool usage
+|true, *false*
 |===
+
 
 The SchemaTool task extends the Apache Ant http://ant.apache.org/manual/Tasks/java.html[Java task], 
 thus all parameters available to the Java task are also available to the SchemaTool task.
@@ -342,7 +365,7 @@ properties file, or when providing the _persistence-unit_)
 |===
 |Parameter
 |Description
-|Optional
+|Mandatory
 
 |datanucleus.ConnectionDriverName
 |Name of JDBC driver class
@@ -369,9 +392,30 @@ properties file, or when providing the _persistence-unit_)
 |icon:times[]
 |===
 
+
 So you could define something _like_ the following, setting up the parameters *schematool.classpath*, 
-*datanucleus.ConnectionDriverName*, *datanucleus.ConnectionURL*, *datanucleus.ConnectionUserName*, and *datanucleus.ConnectionPassword* 
-to suit your situation.
+*datanucleus.ConnectionDriverName*, *datanucleus.ConnectionURL*, *datanucleus.ConnectionUserName*, and *datanucleus.ConnectionPassword* to suit your situation.
+
+You define the JDO files to create the tables using *fileset*.
+
+[source,xml]
+-----
+<taskdef name="schematool" classname="org.datanucleus.store.schema.SchemaToolTask" />
+
+<schematool failonerror="true" verbose="true" mode="create">
+    <classpath>
+        <path refid="schematool.classpath"/>
+    </classpath>
+    <fileset dir="${classes.dir}">
+        <include name="**/*.jdo"/>
+    </fileset>
+    <sysproperty key="datanucleus.ConnectionDriverName" value="${datanucleus.ConnectionDriverName}"/>
+    <sysproperty key="datanucleus.ConnectionURL" value="${datanucleus.ConnectionURL}"/>
+    <sysproperty key="datanucleus.ConnectionUserName" value="${datanucleus.ConnectionUserName}"/>
+    <sysproperty key="datanucleus.ConnectionPassword" value="${datanucleus.ConnectionPassword}"/>
+    <sysproperty key="datanucleus.Mapping" value="${datanucleus.Mapping}"/>
+</schematool>
+-----
 
 
 [[schematool_manual]]
@@ -399,40 +443,44 @@ java [-cp classpath] [system_props] org.datanucleus.store.schema.SchemaTool [mod
     where options can be
         -catalog {catalogName} : Catalog name when using "createDatabase"/"deleteDatabase"
         -schema {schemaName} : Schema name when using "createDatabase"/"deleteDatabase"
-        -api : The API that is being used (default is JDO, but set this to JPA)
+        -api : The API that is being used (default is JDO)
         -pu {persistence-unit-name} : Name of the persistence unit to manage the schema for
         -ddlFile {filename} : RDBMS - only for use with "create"/"delete" mode to dump the DDL to the specified file
         -completeDdl : RDBMS - when using "ddlFile" in "create" mode to get all DDL output and not just missing tables/constraints
+        -includeAutoStart : whether to include any auto-start mechanism in SchemaTool usage
         -v : verbose output
 -----
 
-*All classes, MetaData files, `persistence.xml` files must be present in the CLASSPATH.*
-In terms of the schema to use, you either specify the "props" file (recommended), or you specify
-the System properties defining the database connection, or the properties in the "persistence-unit".
-You should only specify one of the modes above. Let's make a specific example and see the output from SchemaTool. 
-So we have the following files in our application
+
+*All classes, MetaData files, "persistence.xml" files must be present in the CLASSPATH.*
+In terms of the schema to use, you either specify the "props" file (recommended), or you specify the System properties defining the database connection, 
+or the properties in the "persistence-unit". You should only specify one of the [modes] above. 
+Let's make a specific example and see the output from SchemaTool. So we have the following files in our application
 
 -----
 src/java/...                 (source files and MetaData files)
 target/classes/...           (enhanced classes, and MetaData files)
 lib/log4j.jar                (optional, for Log4J logging)
 lib/datanucleus-core.jar
-lib/datanucleus-api-jpa.jar
+lib/datanucleus-api-jdo.jar
 lib/datanucleus-rdbms.jar, lib/datanucleus-hbase.jar,  etc
-lib/javax.persistence.jar
-lib/mysql-connector-java.jar (driver for our database)
+lib/javax.jdo.jar
+lib/mysql-connector-java.jar (driver for the datastore, whether RDBMS, HBase etc)
 log4j.properties
 -----
 
-So we want to create the schema for our persistent classes. So let's invoke 
-*DataNucleus SchemaTool* to do this, from the top level of our project. 
+We want to create the schema for our persistent classes. So let's invoke *DataNucleus SchemaTool* to do this, from the top level of our project. 
 In this example we're using Linux (change the CLASSPATH definition to suit for Windows)
 
 -----
-java -cp target/classes:lib/log4j.jar:lib/datanucleus-core.jar:lib/datanucleus-{datastore}.jar:lib/mysql-connector-java.jar
+java -cp target/classes:lib/log4j.jar:lib/javax.jdo.jar:lib/datanucleus-core.jar:lib/datanucleus-{datastore}.jar:
+                lib/mysql-connector-java.jar
       -Dlog4j.configuration=file:log4j.properties
       org.datanucleus.store.schema.SchemaTool -create
-      -api JPA -pu MyUnit
+      -props datanucleus.properties
+      target/classes/org/datanucleus/examples/normal/package.jdo
+      target/classes/org/datanucleus/examples/inverse/package.jdo
+
 
 DataNucleus SchemaTool (version 5.0.0.release) : Creation of the schema
 
@@ -440,26 +488,30 @@ DataNucleus SchemaTool : Classpath
 >>  /home/andy/work/DataNucleus/samples/packofcards/target/classes
 >>  /home/andy/work/DataNucleus/samples/packofcards/lib/log4j.jar
 >>  /home/andy/work/DataNucleus/samples/packofcards/lib/datanucleus-core.jar
->>  /home/andy/work/DataNucleus/samples/packofcards/lib/datanucleus-api-jpa.jar
->>  /home/andy/work/DataNucleus/samples/packofcards/lib/javax.persistence.jar
+>>  /home/andy/work/DataNucleus/samples/packofcards/lib/datanucleus-api-jdo.jar
 >>  /home/andy/work/DataNucleus/samples/packofcards/lib/datanucleus-rdbms.jar
+>>  /home/andy/work/DataNucleus/samples/packofcards/lib/javax.jdo.jar
 >>  /home/andy/work/DataNucleus/samples/packofcards/lib/mysql-connector-java.jar
 
-DataNucleus SchemaTool : Persistence-Unit="MyUnit"
+DataNucleus SchemaTool : Input Files
+>> /home/andy/work/DataNucleus/samples/packofcards/target/classes/org/datanucleus/examples/inverse/package.jdo
+>> /home/andy/work/DataNucleus/samples/packofcards/target/classes/org/datanucleus/examples/normal/package.jdo
+
+DataNucleus SchemaTool : Taking JDO properties from file "datanucleus.properties"
 
 SchemaTool completed successfully
 -----
 
-So as you see, *DataNucleus SchemaTool* prints out our input, the properties used, and finally a success message. 
+As you see, *DataNucleus SchemaTool* prints out our input, the properties used, and finally a success message. 
 If an error occurs, then something will be printed to the screen, and more information will be written to the log.
 
 
+
 [[schematool_programmatic]]
-=== SchemaTool API
+== SchemaTool API
 
 DataNucleus SchemaTool can also be called programmatically from an application.
-You need to get hold of the StoreManager and cast it to _SchemaAwareStoreManager_.
-The API is shown below.
+You need to get hold of the StoreManager and cast it to _SchemaAwareStoreManager_. The API is shown below.
 
 [source,java]
 -----
@@ -467,21 +519,21 @@ package org.datanucleus.store.schema;
 
 public interface SchemaAwareStoreManager
 {
-    void createDatabase(String catalogName, String schemaName, Properties props);
-    void deleteDatabase(String catalogName, String schemaName, Properties props);
+     public int createDatabase(String catalogName, String schemaName, Properties props);
+     public int deleteDatabase(String catalogName, String schemaName, Properties props);
 
-    void createSchemaForClasses(Set<String> classNames, Properties props);
-    void deleteSchemaForClasses(Set<String> classNames, Properties props);
-    void validateSchemaForClasses(Set<String> classNames, Properties props);
+     public int createSchemaForClasses(Set<String> classNames, Properties props);
+     public int deleteSchemaForClasses(Set<String> classNames, Properties props);
+     public int validateSchemaForClasses(Set<String> classNames, Properties props);
 }
 -----
 
 So for example to create the schema for classes _mydomain.A_ and _mydomain.B_ you would do something like this
-    
+
 [source,java]
 -----
-EntityManagerFactory emf = Persistence.createEntityManagerFactory("MyUnit");
-NucleusContext nucCtx = emf.unwrap(NucleusContext.class);
+JDOPersistenceManagerFactory pmf = (JDOPersistenceManagerFactory)JDOHelper.getPersistenceManagerFactory("datanucleus.properties");
+NucleusContext ctx = pmf.getNucleusContext();
 ...
 List classNames = new ArrayList();
 classNames.add("mydomain.A");
@@ -490,10 +542,12 @@ try
 {
     Properties props = new Properties();
     // Set any properties for schema generation
-    ((SchemaAwareStoreManager)nucCtx.getStoreManager()).createSchemaForClasses(classNames, props);
+    ((SchemaAwareStoreManager)ctx.getStoreManager()).createSchemaForClasses(classNames, props);
 }
 catch(Exception e)
 {
     ...
 }
 -----
+
+

@@ -305,7 +305,7 @@ for the URL appropriate for the type of datastore you're using.
 |javax.jdo.option.IgnoreCache
 |Whether to ignore the cache for queries. If the user sets this to _true_ then the query will evaluate in the datastore, but the instances returned will be formed
 from the datastore; this means that if an instance has been modified and its datastore values match the query then the instance returned will *not* be the currently
-cached (updated) instance, instead an instance formed using the datastore values. {true | *false*}
+cached (updated) instance, instead an instance formed using the datastore values. {true, *false*}
 
 |javax.jdo.option.Multithreaded
 |Whether to try to run the PM multithreaded.
@@ -456,7 +456,7 @@ DataNucleus provides the following properties for configuring general persistenc
 |datanucleus.IgnoreCache
 |Whether to ignore the cache for queries. If the user sets this to _true_ then the query will evaluate in the datastore, but the instances returned will be formed
 from the datastore; this means that if an instance has been modified and its datastore values match the query then the instance returned will *not* be the currently
-cached (updated) instance, instead an instance formed using the datastore values. {true | *false*}
+cached (updated) instance, instead an instance formed using the datastore values. {true, *false*}
 
 |datanucleus.Multithreaded
 |Whether to run the PM/EM multithreaded.
@@ -594,7 +594,7 @@ When using data sources (as usually done in a JavaEE container), DataNucleus can
 {rdbms, mongodb, alternate StoreManager key}
 
 |datanucleus.jmxType
-Which JMX server to use when hooking into JMX. Please refer to the link:persisence.html#monitoring[Monitoring Guide]
+|Which JMX server to use when hooking into JMX. Please refer to the link:persisence.html#monitoring[Monitoring Guide]
 {default, mx4j}
 
 |datanucleus.deletionPolicy

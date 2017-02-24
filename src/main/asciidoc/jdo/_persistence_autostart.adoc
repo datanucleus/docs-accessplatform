@@ -1,0 +1,109 @@
+[[autostart]]
+= AutoStart Mechanism
+:_basedir: ../
+:_imagesdir: images/
+
+image:../images/nucleus_extension.png[]
+
+By default with JDO implementations when you open a _PersistenceManagerFactory_ and obtain a _PersistenceManager_ 
+DataNucleus knows nothing about which classes are to be persisted to that datastore (unless you created the PMF using a persistence-unit). 
+JDO implementations only load the Meta-Data for any class when the class is first enlisted in a _PersistenceManager_ operation. 
+For example you call _makePersistent_ on an object. The first time a particular class is encountered DataNucleus will dynamically load the Meta-Data for that class. 
+This typically works well since in an application in a particular operation the _PersistenceManagerFactory_ may well not encounter all classes that are persistable to that datastore. 
+The reason for this dynamic loading is that JDO implementations can't be expected to scan through the whole Java CLASSPATH for classes that could be persisted there. 
+That would be inefficient.
+
+There are situations however where it is desirable for DataNucleus to have knowledge about what is to be persisted, or what subclasses of a candidate are 
+possible on executing a query, so that it can load the Meta-Data at initialisation of the persistence factory and hence when the classes are encountered 
+for the first time nothing needs doing. There are several ways of achieving this
+
+* Define your classes/MetaData in a link:persistence.html#persistenceunit[Persistence Unit] and when the _PersistenceManagerFactory_ is initialised it loads the persistence
+unit, and hence the MetaData for the defined classes and mapping files. *This is standardised, and hence is the recommended way.*
+* Put a `package.jdo` at the root of the CLASSPATH, containing all classes, and when the first class is encountered it searches for its metadata, 
+encounters and parses the root `package.jdo`, and consequently loads the metadata for all classes mentioned in that file.
+* Use a DataNucleus extension known as *Auto-Start Mechanism*. This is set with the persistence property *datanucleus.autoStartMechanism*. 
+This can be set to _None_, _XML_, _Classes_, _MetaData_. In addition we have _SchemaTable_ for RDBMS datastores. These are described below.
+
+
+
+== AutoStartMechanism : None
+
+With this property set to "None" DataNucleus will have no knowledge about classes that are to be persisted into that datastore 
+and so will add the classes when the user utilises them in calls to the various _PersistenceManager_ methods.
+
+
+
+== AutoStartMechanism : XML
+
+With _XML_, DataNucleus stores the information for starting up DataNucleus in an XML file. 
+This is, by default, located in `datanucleusAutoStart.xml` in the current working directory. The file name can be configured using the 
+persistence property *datanucleus.autoStartMechanismXmlFile*.
+The file is read at startup and DataNucleus loads the classes using this information.
+
+If the user changes their persistence definition a problem can occur when starting up DataNucleus. 
+DataNucleus loads up its existing data from the XML configuration file and finds that a table/class required by the this file data no longer exists. 
+There are 3 options for what DataNucleus will do in this situation. 
+The property *datanucleus.autoStartMechanismMode* defines the behaviour of DataNucleus for this situation. 
+
+* *Checked* will mean that DataNucleus will throw an exception and the user will be expected to manually fix their database mismatch (perhaps by removing the existing tables).
+* *Quiet* (the default) will simply remove the entry from the XML file and continue without exception.
+* *Ignored* will simply continue without doing anything.
+
+
+See the DTD at https://github.com/datanucleus/datanucleus-core/blob/master/src/main/resources/org/datanucleus/store/autostart/datanucleus_autostart_1_0.dtd[this link].
+A sample file would look something like
+
+[source,xml]
+-----
+<datanucleus_autostart>
+    <class name="mydomain.MyClass" table="MY_TABLE_1" type="FCO" version="3.1.1"/>
+</datanucleus_autostart>
+-----
+
+
+== AutoStartMechanism : Classes
+
+With _Classes_, the user provides to the persistence factory the list of classes to use as the initial list of classes to be persisted. 
+They specify this via the persistence property *datanucleus.autoStartClassNames*, specifying the list of classes as comma-separated. 
+This gives DataNucleus a head start meaning that it will not need to "discover" these classes later.
+
+
+== AutoStartMechanism : MetaData
+
+With _MetaData_, the user provides to the persistence factory the list of metadata files to use as the initial list of classes to be persisted. 
+They specify this via the persistence property _datanucleus.autoStartMetaDataFiles_, specifying the list of metadata files as comma-separated. 
+This gives DataNucleus a head start meaning that it will not need to "discover" these classes later.
+
+
+== AutoStartMechanism : SchemaTable (RDBMS only)
+
+*When using an RDBMS datastore* the _SchemaTable_ auto-start mechanism stores the list of classes (and their tables, types and version of DataNucleus) in a datastore table 
+*NUCLEUS_TABLES*. This table is read at startup of DataNucleus, and provides DataNucleus with the necessary knowledge it needs to continue persisting these classes. 
+This table is continuously updated during a session of a DataNucleus-enabled application.
+
+If the user changes their persistence definition a problem can occur when starting up DataNucleus. 
+DataNucleus loads up its existing data from NUCLEUS_TABLES and finds that a table/class required by the NUCLEUS_TABLES data no longer exists.
+There are 3 options for what DataNucleus will do in this situation. 
+The property *datanucleus.autoStartMechanismMode* defines the behaviour of DataNucleus for this situation. 
+
+* *Checked* will mean that DataNucleus will throw an exception and the user will be expected to manually fix their database mismatch (perhaps by removing the existing tables).
+* *Quiet* (the default) will simply remove the entry from NUCLEUS_TABLES and continue without exception.
+* *Ignored* will simply continue without doing anything.
+
+The default database schema used the _SchemaTable_ is described below:
+
+-----
+TABLE : NUCLEUS_TABLES
+(
+    COLUMN : CLASS_NAME VARCHAR(128) PRIMARY KEY,  -- Fully qualified persistent Class name
+    COLUMN : TABLE_NAME VARCHAR(128),              -- Table name
+    COLUMN : TYPE VARCHAR(4),                      -- FCO | SCO
+    COLUMN : OWNER VARCHAR(2),                     -- 1 | 0
+    COLUMN : VERSION VARCHAR(20),                  -- DataNucleus version
+    COLUMN : INTERFACE_NAME VARCHAR(255)           -- Fully qualified persistent Class type 
+                                                   -- of the persistent Interface implemented
+)
+-----
+
+If you want to change the table name (from NUCLEUS_TABLES) you can set the persistence property _datanucleus.rdbms.schemaTable.tableName_
+
