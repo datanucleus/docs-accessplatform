@@ -4,7 +4,7 @@
 :_imagesdir: images/
 
 Now that we have our link:#emf[EntityManagerFactory], providing the connection for our _persistence-unit_ to our datastore, we need
-to obtain an _EntityManager_ to manage the persistence of objects. Here we describe the majority of operations that you will are likely
+to obtain an _EntityManager_ (EM) to manage the persistence of objects. Here we describe the majority of operations that you will are likely
 to need to know about.
 
 NOTE: An _EntityManagerFactory_ is designed to be thread-safe. An _EntityManager_ is not.* 
@@ -99,7 +99,8 @@ coll.add(mandela);
 em.persist(coll);
 -----
 
-As above, the objects are persisted to the datastore. The LifecycleState of the objects change from _Transient_ to _PersistentClean_ (after persist()), to _Hollow_ (at commit).
+As above, the objects are persisted to the datastore. 
+The link:#lifecycle[Lifecycle State] of the objects change from _Transient_ to _Persistent_ (after persist()), to _Persistent_/_Detached_ (at commit).
 
 
 == Finding an object by its identity
@@ -154,15 +155,15 @@ em.remove(people);
 
 == Modifying a persisted Object
 
-To modify a previously persisted object you take the object and update it in your code. When you are ready to persist the changes you do the following
+To modify a previously persisted object you take the object and update it in your code. 
+If the object is in "detached" state (not managed by a particular _EntityManager_) then when you are ready to persist the changes you do the following
 
 [source,java]
 -----
 Object updatedObj = em.merge(obj);
 -----
 
-This does, however, depend on the link:#lifecycle[lifecycle state] of the object. In the example above we assume the object is _detached_, so not managed by 
-a particular _EntityManager_. If however the object was already managed, then 
+If however the object was already managed at the point of updating its fields, then 
 
 [source,java]
 -----

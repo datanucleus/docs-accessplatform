@@ -3,19 +3,19 @@
 :_basedir: ../
 :_imagesdir: images/
 
-
-Persistence operations performed by the _EntityManager_ are typically managed in a _transaction_, allowing operations to be grouped together.
+Persistence operations performed by the _PersistenceManager_ are typically managed in a _transaction_, allowing operations to be grouped together.
 A Transaction forms a unit of work. The Transaction manages what happens within that unit of work, and when an error occurs the Transaction can roll back any changes performed. 
 Transactions can be managed by the users application, or can be managed by a framework (such as Spring), or can be managed by a JavaEE container. 
 These are described below.
 
-* link:#transaction_local[Local transactions] : managed using the JPA Transaction API
-* link:#transaction_jta[JTA transactions] : managed using the JTA UserTransaction API
+* link:#transaction_local[Local transactions] : managed using the JDO Transaction API
+* link:#transaction_jta[JTA transactions] : managed using the JTA UserTransaction API, or using the JDO Transaction API
 * link:#transaction_container[Container-managed transactions] : managed by a JavaEE environment
 * link:#transaction_spring[Spring-managed transactions] : managed by SpringFramework
 * link:#transaction_nontransactional[No transactions] : "auto-commit" mode
 * link:#transaction_flushing[Flushing a Transaction]
 * link:#transaction_isolation[Controlling transaction isolation level]
+* link:#transaction_synchronisation[Synchronising with transaction commit]
 * link:#transaction_readonly[Read-Only transactions]
 * link:#transaction_savepoint[RDBMS : Savepoints]
 * link:#locking_pessimistic[Pessimistic Locking of objects]
@@ -25,15 +25,15 @@ These are described below.
 [[transaction_local]]
 == Locally-Managed Transactions
 
-If using DataNucleus JPA in a J2SE environment the normal type of transaction is _RESOURCE_LOCAL_.
-With this type of transaction the user manages the transactions themselves, starting, committing or rolling back the transaction. 
-With these transactions with JPA http://www.datanucleus.org/javadocs/javax.persistence/2.1/javax/persistence/EntityTransaction.html[image:../images/javadoc.png[Javadoc]] 
+When using a JDO implementation such as DataNucleus in a JavaSE environment, the transactions are by default *Locally Managed Transactions*. 
+The users code will manage the transactions by starting, commiting or rolling back the transaction itself. 
+With these transactions with JDO http://www.datanucleus.org/javadocs/javax.jdo/3.2/javax/jdo/Transaction.html[image:../images/javadoc.png[]]
 you would do something like
 
 [source,java]
 -----
-EntityManager em = emf.createEntityManager();
-EntityTransaction tx = em.getTransaction();
+PersistenceManager pm = pmf.getPersistenceManager();
+Transaction tx = pm.currentTransaction();
 try
 {
     tx.begin();
@@ -48,27 +48,8 @@ finally
     {
         tx.rollback();
     }
+    pm.close();
 }
-em.close();
------
-
-In this case you will have defined your link:#persistenceunit[persistence-unit] to be like this
-
-[source,xml]
------
-<persistence-unit name="MyUnit" transaction-type="RESOURCE_LOCAL">
-    <properties>
-        <property key="javax.persistence.jdbc.url" value="jdbc:mysql:..."/>
-        ...
-    </properties>
-    ...
-</persistence-unit>]]></source>
-                <p>or</p>
-<source><![CDATA[
-<persistence-unit name="MyUnit" transaction-type="RESOURCE_LOCAL">
-    <non-jta-data-source>java:comp/env/myDS</properties>
-    ...
-</persistence-unit>
 -----
 
 The basic idea with *Locally-Managed transactions* is that you are managing the transaction start and end.
@@ -77,70 +58,53 @@ The basic idea with *Locally-Managed transactions* is that you are managing the 
 [[transaction_jta]]
 == JTA Transactions
 
-NOTE: Strict JPA does not support use of JTA transactions in a JavaSE environment. DataNucleus does however allow JTA transactions in a JavaSE environment.
-
-The other type of transaction with JPA is using JTA. With this type, where you have a JTA data source from which you have a _UserTransaction_. 
-This _UserTransaction_ can have resources "joined" to it. In the case of JPA, you have two scenarios. 
-The first scenario is where you have the _UserTransaction_ created before you create your _EntityManager_. 
-The create of the _EntityManager_ will automatically join it to the current _UserTransaction_, like this
+When using a JDO implementation such as DataNucleus in a JavaSE environment, you can also make use of *JTA Transactions*. 
+You need to define the persistence property *javax.jdo.option.TransactionType* setting it to _JTA_. 
+Then you make use of JTA (or JDO) to demarcate the transactions. So you could do something like
 
 [source,java]
 -----
 UserTransaction ut = (UserTransaction)new InitialContext().lookup("java:comp/UserTransaction");
-ut.setTransactionTimeout(300);
-
-EntityManager em = emf.createEntityManager();
+PersistenceManager pm = pmf.getPersistenceManager();
 try
 {
     ut.begin();
-
-    .. perform persistence/query operations
-
+    
+    {users code to persist objects}
+    
     ut.commit();
 }
 finally
 {
-    em.close();
+    pm.close();
 }
 -----
 
-so we control the transaction using the _UserTransaction_.
+So here we used the JTA API to begin/commit the controlling (_javax.transaction.UserTransaction_).
 
-The second scenario is where the _UserTransaction_ is started after you have the _EntityManager_. 
-In this case we need to join our _EntityManager_ to the newly created _UserTransaction_, like this
+
+An alternative is where you don't have a UserTransaction started and just use the JDO API, which will start the UserTransaction for you.
 
 [source,java]
 -----
-EntityManager em = emf.createEntityManager();
+UserTransaction ut = (UserTransaction)new InitialContext().lookup("java:comp/UserTransaction");
+PersistenceManager pm = pmf.getPersistenceManager();
+Transaction tx = pm.currentTransaction();
 try
 {
-    .. perform persistence, query operations
-
-    UserTransaction ut = (UserTransaction)new InitialContext().lookup("java:comp/UserTransaction");
-    ut.setTransactionTimeout(300);
-    ut.begin();
-
-    // Join the EntityManager operations to this UserTransaction
-    em.joinTransaction();
-
-    // Commit the persistence/query operations performed above
-    ut.commit();
+    tx.begin(); // Starts the UserTransaction
+    
+    {users code to persist objects}
+    
+    tx.commit(); // Commits the UserTransaction
 }
 finally
 {
-    em.close();
+    pm.close();
 }
 -----
 
-In the JTA case you will have defined your link:#persistenceunit[persistence-unit] to be like this
-
-[source,xml]
------
-<persistence-unit name="MyUnit" transaction-type="JTA">
-    <jta-data-source>java:comp/env/myDS</properties>
-    ...
-</persistence-unit>
------
+IMPORTANT: You need to set both transactional and nontransactional datasources, and *the nontransactional cannot be JTA. The nontransactional is used for schema and sequence operations.
 
 === JTA TransactionManager
 
@@ -170,21 +134,22 @@ you would not need to specify the _tx.begin(), tx.commit(), tx.rollback()_ since
 == No Transactions
 
 DataNucleus allows the ability to operate without transactions. 
-With JPA this is enabled by default (see the 2 properties *datanucleus.transaction.nontx.read*, *datanucleus.transaction.nontx.write* set to _true_, the default). 
-This means that you can read objects and make updates outside of transactions. This is effectively an "auto-commit" mode.
+With DataNucleus JDO this is enabled by default (see the 2 properties *datanucleus.transaction.nontx.read*, *datanucleus.transaction.nontx.write* set to _true_, the default). 
+This means that you can read objects and make updates outside of transactions. This is effectively "auto-commit" mode.
 
 [source,java]
 -----
-EntityManager em = emf.createEntityManager();
+PersistenceManager pm = pmf.getPersistenceManager();
     
 {users code to persist objects}
 
-em.close();
+pm.close();
 -----
 
 When using non-transactional operations, you need to pay attention to the persistence property *datanucleus.transaction.nontx.atomic*. 
 If this is true then any persist/delete/update will be committed to the datastore immediately. 
-If this is false then any persist/delete/update will be queued up until the next transaction (or _em.close()_) and committed with that.
+If this is false then any persist/delete/update will be queued up until the next transaction (or _pm.close()_) and committed with that.
+
 
 
 [[transaction_flushing]]
@@ -196,8 +161,9 @@ In this case you can *flush* all outstanding changes to the datastore using
 
 [source,java]
 -----
-em.flush();
+pm.flush();
 -----
+
 
 image:../images/nucleus_extension.png[]
 
@@ -205,44 +171,90 @@ A convenient vendor extension is to find which objects are waiting to be flushed
 
 [source,java]
 -----
-List<ObjectProvider> objs = 
-    ((JPAEntityManager)pm).getExecutionContext().getObjectsToBeFlushed();
+List<ObjectProvider> objs = ((JDOPersistenceManager)pm).getExecutionContext().getObjectsToBeFlushed();
 -----
 
 
 [[transaction_isolation]]
 == Transaction Isolation
 
-image:../images/nucleus_extension.png[]
+JDO provides a mechanism for specification of the transaction isolation level. 
+This can be specified globally via the persistence property *datanucleus.transaction.isolation* (javax.jdo.option.TransactionIsolationLevel).
+It accepts the following values
 
-DataNucleus also allows specification of the transaction isolation level. 
-This is specified via the persistence property _datanucleus.transaction.isolation_. It accepts the standard JDBC values of
+* *read-uncommitted* : dirty reads, non-repeatable reads and phantom reads can occur
+* *read-committed* : dirty reads are prevented; non-repeatable reads and phantom reads can occur
+* *repeatable-read* : dirty reads and non-repeatable reads are prevented; phantom reads can occur
+* *serializable* : dirty reads, non-repeatable reads and phantom reads are prevented
 
-* *read-uncommitted (1)* : dirty reads, non-repeatable reads and phantom reads can occur
-* *read-committed (2)* : dirty reads are prevented; non-repeatable reads and phantom reads can occur
-* *repeatable-read (4)* : dirty reads and non-repeatable reads are prevented; phantom reads can occur
-* *serializable (8)* : dirty reads, non-repeatable reads and phantom reads are prevented
-
-The default is _read-committed_. If the datastore doesn't support a particular isolation level then it will silently be changed to one that is supported. 
-As an alternative you can also specify it on a per-transaction basis as follows (using the values in parentheses above).
+The default (in DataNucleus) is *read-committed*. An attempt to set the isolation level to an unsupported value (for the datastore) will throw a JDOUserException.
+As an alternative you can also specify it on a per-transaction basis as follows (using the names above).
 
 [source,java]
 -----
-org.datanucleus.api.jpa.JPAEntityTransaction tx = (org.datanucleus.api.jpa.JPAEntityTransaction)pm.currentTransaction();
-tx.setOption("transaction.isolation", 2);
+Transaction tx = pm.currentTransaction();
+...
+tx.setIsolationLevel("read-committed");
+-----
+
+
+[[transaction_synchronisation]]
+== JDO Transaction Synchronisation
+
+There are situations where you may want to get notified that a transaction is in course of being committed or rolling back. 
+To make that happen, you would do something like
+
+[source,java]
+-----
+PersistenceManager pm = pmf.getPersistenceManager();
+Transaction tx = pm.currentTransaction();
+try
+{
+    tx.begin();
+
+    tx.setSynchronization(new javax.transaction.Synchronization()
+    {
+        public void beforeCompletion()
+        {
+             // before commit or rollback
+        }
+
+        public void afterCompletion(int status)
+        {
+            if (status == javax.transaction.Status.STATUS_ROLLEDBACK)
+            {
+                // rollback
+            }
+            else if (status == javax.transaction.Status.STATUS_COMMITTED)
+            {
+                // commit
+            }
+        }
+    });
+    
+    tx.commit();
+}
+finally
+{
+    if (tx.isActive())
+    {
+        tx.rollback();
+    }
+}
+pm.close();
 -----
 
 
 [[transaction_readonly]]
 == Read-Only Transactions
 
-Obviously transactions are intended for committing changes. 
-If you come across a situation where you don't want to commit anything under any circumstances you can mark the transaction as "read-only" by calling
+Obviously transactions are intended for committing changes. If you come across a situation where you don't want to commit anything under any 
+circumstances you can mark the transaction as "read-only" by calling
 
 [source,java]
 -----
-EntityManager em = emf.createEntityManager();
-Transaction tx = em.getTransaction();
+PersistenceManager pm = pmf.getPersistenceManager();
+Transaction tx = pm.currentTransaction();
 try
 {
     tx.begin();
@@ -259,10 +271,11 @@ finally
         tx.rollback();
     }
 }
-em.close();
+pm.close();
 -----
 
 Any call to _commit_ on the transaction will throw an exception forcing the user to roll it back.
+
 
 
 [[transaction_savepoint]]
@@ -273,12 +286,12 @@ image:../images/nucleus_extension.png[]
 JDBC provides the ability to specify a point in a transaction and rollback to that point if required, assuming the JDBC driver supports it.
 DataNucleus provides this as a vendor extension, as follows
 
-[source,java]
+[source,javva]
 -----
-import org.datanucleus.api.jpa.JPAEntityTransaction;
+import org.datanucleus.api.jdo.JDOTransaction;
 
-EntityManager em = emf.createEntityManager();
-JPAEntityTransaction tx = (JPAEntityTransaction)pm.getTransaction();
+PersistenceManager pm = pmf.getPersistenceManager();
+JDOTransaction tx = (JDOTransaction)pm.currentTransaction();
 try
 {
     tx.begin();
@@ -299,7 +312,7 @@ finally
         tx.rollback();
     }
 }
-em.close();
+pm.close();
 -----
 
 
@@ -315,23 +328,33 @@ These are known as link:#locking_pessimistic[Pessimistic (or datastore) Locking]
 then just before committing make a check for changes. This is known as link:#locking_optimistic[Optimistic Locking].
 
 
+
 [[locking_pessimistic]]
 === Pessimistic (Datastore) Locking
-image:../images/nucleus_extension.png[]
 
-*Pessimistic* locking isn't directly supported in JPA but are provided as a vendor extension. 
-It is suitable for short lived operations where no user interaction is taking place and 
-so it is possible to block access to datastore entities for the duration of the transaction.
-You would select pessimistic locking by adding the persistence property *datanucleus.Optimistic* as _false_.
-
-By default DataNucleus does not currently lock the objects fetched in pessimistic locking, 
-but you can configure this behaviour for RDBMS datastores by setting the persistence property _datanucleus.rdbms.useUpdateLock_ to <u>true</u>. 
+Pessimistic locking is suitable for short lived operations where no user interaction is taking place and so it is possible to block access to datastore entities 
+for the duration of the transaction. By default DataNucleus does not currently lock the objects fetched with pessimistic locking, but you can configure this 
+behaviour for RDBMS datastores by setting the persistence property *datanucleus.SerializeRead* to _true_. 
 This will result in all "SELECT ... FROM ..." statements being changed to be "SELECT ... FROM ... FOR UPDATE". 
-This will be applied only where the underlying RDBMS supports the "FOR UPDATE" syntax.
+This will be applied only where the underlying RDBMS supports the "FOR UPDATE" syntax. This can be done on a transaction-by-transaction basis by doing
+
+[source,java]
+-----
+Transaction tx = pm.currentTransaction();
+tx.setSerializeRead(true);
+-----
+
+Alternatively, on a per query basis, you would do
+
+[source,java]
+-----
+Query q = pm.newQuery(...);
+q.setSerializeRead(true);
+-----
 
 With pessimistic locking DataNucleus will grab a datastore connection at the first operation, and maintain it for the duration of the transaction. 
-A single connection is used for the transaction (with the exception of any link:mapping.html#value_generation[Value Generation] operations which need datastore 
-access, so these can use their own connection).
+A single connection is used for the transaction (with the exception of any link:mapping.html#value_generation[Value Generation] operations which need 
+datastore access, so these can use their own connection).
 
 In terms of the process of pessimistic (datastore) locking, we demonstrate this below.
 
@@ -347,7 +370,7 @@ In terms of the process of pessimistic (datastore) locking, we demonstrate this 
 
 |Persist object
 |Prepare object (1) for persistence
-|*Open connection.*
+|*Open connection*
 Insert the object (1) into the datastore
 
 |Update object
@@ -393,9 +416,12 @@ It should be noted that DataNucleus provides two persistence properties that all
 * _datanucleus.datastoreTransactionFlushLimit_ represents the number of dirty objects before a flush is performed. This defaults to 1.
 
 
+
+
 [[locking_optimistic]]
 === Optimistic Locking
 
+*Optimistic* locking is the other option in JDO. 
 It is suitable for longer lived operations maybe where user interaction is taking place and where it would be undesirable to block access to 
 datastore entities for the duration of the transaction. The assumption is that data altered in this transaction will not be updated by 
 other transactions during the duration of this transaction, so the changes are not propagated to the datastore until commit()/flush(). 
@@ -403,11 +429,18 @@ The data is checked just before commit to ensure the integrity in this respect.
 The most convenient way of checking data for updates is to maintain a column on each table that handles optimistic locking data. 
 The user will decide this when generating their MetaData.
 
-Rather than placing version/timestamp columns on all user datastore tables, JPA allows the user to notate particular classes as requiring *optimistic* treatment. 
+Rather than placing version/timestamp columns on all user datastore tables, JDO allows the user to notate particular classes as requiring *optimistic* treatment. 
 This is performed by specifying in MetaData or annotations the details of the field/column to use for storing the version - see link:mapping.html#versioning[versioning]. 
-With JPA you must have a field in your class ready to store the version.
+With JDO the version is added in a surrogate column, whereas a vendor extension allows you to have a field in your class ready to store the version.
 
-In JPA you can read the version by inspecting the field marked as storing the version value.
+When the version is stored in a surrogate column in the datastore, JDO provides a helper method for accessing this version.
+You can call 
+[source,java]
+-----
+JDOHelper.getVersion(object);
+-----
+and this returns the version as an Object (typically Long or Timestamp). 
+It will return null for a transient object, and will return the version for a persistent object. If the object is not _persistable_ then it will also return null.
 
 In terms of the process of optimistic locking, we demonstrate this below.
 
@@ -470,6 +503,7 @@ In terms of the process of optimistic locking, we demonstrate this below.
 * *Commit connection*
 |===
 
+
 Here no changes make it to the datastore until the user either commits the transaction, or they invoke flush(). 
 The impact of this is that when performing a query, by default, the results may not contain the modified objects unless they are flushed 
 to the datastore before invoking the query. 
@@ -480,5 +514,6 @@ all changes are made in a block and version checking of objects is performed bef
 Please note that for some datastores (e.g RDBMS) the version check followed by update/delete is performed in a single statement.
 See also :-
 
-* link:metadata_xml.html#version[JPA MetaData reference for <version> element]
-* link:annotations.html#Version[JPA Annotations reference for @Version]
+* link:metadata_xml.html#version[JDO MetaData reference for <version> element]
+* link:annotations.html#Version[JDO Annotations reference for @Version]
+
