@@ -1,0 +1,177 @@
+[[replication]]
+= Replication
+:_basedir: ../
+:_imagesdir: images/
+
+
+image:../images/nucleus_extension.png[]
+
+
+Many applications make use of multiple datastores. It is a common requirement to be able to replicate parts of one datastore in another datastore.
+Obviously, depending on the datastore, you could make use of the datastores own capabilities for replication. 
+DataNucleus provides its own extension to JDO to allow replication from one datastore to another. 
+This extension doesn't restrict you to using 2 datastores of the same type. 
+You could replicate from RDBMS to XML for example, or from MySQL to HSQLDB.
+
+*You need to make sure you have the persistence property _datanucleus.attachSameDatastore_ set to _false_ if using replication*
+
+NOTE: the case of replication between two RDBMS of the same type is usually way more efficiently replicated using the capabilities of the datastore itself
+
+The following sample code will replicate all objects of type _Product_ and _Employee_ from PMF1 to PMF2. 
+These PMFs are created in the normal way so, as mentioned above, PMF1 could be for a MySQL datastore, and PMF2 for XML.
+By default this will replicate the complete object graphs reachable from these specified types.
+
+[source,java]
+-----
+import org.datanucleus.api.jdo.JDOReplicationManager;
+
+...
+
+JDOReplicationManager replicator = new JDOReplicationManager(pmf1, pmf2);
+replicator.replicate(new Class[]{Product.class, Employee.class});
+-----
+
+
+== Example without using the JDOReplicationManager helper
+
+If we just wanted to use pure JDO, we would handle replication like this. Let's take an example
+
+[source,java]
+-----
+public class ElementHolder
+{
+    long id;
+    private Set elements = new HashSet();
+
+    ...
+}
+
+public class Element
+{
+    String name;
+
+    ...
+}
+
+public class SubElement extends Element
+{
+    double value;
+
+    ...
+}
+-----
+
+so we have a 1-N unidirectional (Set) relation, and we define the metadata like this
+
+[source,xml]
+-----
+<jdo>
+    <package name="org.datanucleus.samples">
+        <class name="ElementHolder" identity-type="application" detachable="true">
+            <inheritance strategy="new-table"/>
+            <field name="id" primary-key="true"/>
+            <field name="elements" persistence-modifier="persistent">
+                <collection element-type="org.datanucleus.samples.Element"/>
+                <join/>
+            </field>
+        </class>
+
+        <class name="Element" identity-type="application" detachable="true">
+            <inheritance strategy="new-table"/>
+            <field name="name" primary-key="true"/>
+        </class>
+
+        <class name="SubElement">
+            <inheritance strategy="new-table"/>
+            <field name="value"/> 
+        </class>
+    </package>
+</jdo>
+-----
+
+so in our application we create some objects in _datastore1_, like this
+
+[source,java]
+-----
+PersistenceManagerFactory pmf1 = JDOHelper.getPersistenceManagerFactory("dn.1.properties");
+PersistenceManager pm1 = pmf1.getPersistenceManager();
+Transaction tx1 = pm1.currentTransaction();
+Object holderId = null;
+try
+{
+    tx1.begin();
+
+    ElementHolder holder = new ElementHolder(101);
+    holder.addElement(new Element("First Element"));
+    holder.addElement(new Element("Second Element"));
+    holder.addElement(new SubElement("First Inherited Element"));
+    holder.addElement(new SubElement("Second Inherited Element"));
+    pm1.makePersistent(holder);
+
+    tx1.commit();
+    holderId = JDOHelper.getObjectId(holder);
+}
+finally
+{
+    if (tx1.isActive())
+    {
+        tx1.rollback();
+    }
+    pm1.close();
+}
+-----
+
+and now we want to replicate these objects into _datastore2_, so we detach them from _datastore1_ and attach them to _datastore2_, like this
+
+[source,java]
+-----
+// Detach the objects from "datastore1"
+ElementHolder detachedHolder = null;
+pm1 = pmf1.getPersistenceManager();
+tx1 = pm1.currentTransaction();
+try
+{
+    pm1.getFetchPlan().setGroups(new String[] {FetchPlan.DEFAULT, FetchPlan.ALL});
+    pm1.getFetchPlan().setMaxFetchDepth(-1);
+
+    tx1.begin();
+
+    ElementHolder holder = (ElementHolder) pm1.getObjectById(holderID);
+    detachedHolder = (ElementHolder) pm1.detachCopy(holder);
+
+    tx1.commit();
+}
+finally
+{
+    if (tx1.isActive())
+    {
+        tx1.rollback();
+    }
+    pm1.close();
+}
+
+// Attach the objects to datastore2
+PersistenceManagerFactory pmf2 = JDOHelper.getPersistenceManagerFactory("dn.2.properties");
+PersistenceManager pm2 = pmf2.getPersistenceManager();
+Transaction tx2 = pm2.currentTransaction();
+try
+{
+    tx2.begin();
+
+    pm2.makePersistent(detachedHolder);
+
+    tx2.commit();
+}
+finally
+{
+    if (tx2.isActive())
+    {
+        tx2.rollback();
+    }
+    pm2.close();
+}
+-----
+
+That's all there is. These objects are now replicated into _datastore2_.
+Clearly you can extend this basic idea and replicate large amounts of data.
+
