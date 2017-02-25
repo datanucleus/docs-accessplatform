@@ -1484,4 +1484,324 @@ no check will be made as to whether it exists in the datastore (since Cassandra 
 
 
 
+[[cache_level2]]
+== Level 2 Cache
 
+The _EntityManagerFactory_ has an optional cache of all objects across all _EntityManager_s.
+This cache is called the Level 2 (L2) cache, and JPA doesn't define whether this should be enabled or not. With DataNucleus it defaults to enabled.
+The user can configure the L2 cache if they so wish; by use of the persistence property *datanucleus.cache.level2.type*. You set this to "type" of cache required.
+You currently have the following options.
+
+* *soft* - use the internal (soft reference based) L2 cache. *This is the default L2 cache in DataNucleus.*
+Provides support for the JPA interface of being able to put objects into the cache, and evict them when required.
+This option does not support distributed caching, solely running within the JVM of the client application. 
+Soft references are held to non pinned objects.
+* *weak* - use the internal (weak reference based) L2 cache. 
+Provides support for the JPA interface of being able to put objects into the cache, and evict them when required.
+This option does not support distributed caching, solely running within the JVM of the client application. 
+Weak references are held to non pinned objects.
+* link:#cache_level2_javax_cache[javax.cache] - a simple wrapper to the Java standard "javax.cache" Temporary Caching API.
+* link:#cache_level2_ehcache[EHCache] - a simple wrapper to EHCache's caching product.
+* link:#cache_level2_ehcache>EHCacheClassBased] - similar to the EHCache option but class-based.
+* link:#cache_level2_oscache[OSCache] - a simple wrapper to OSCache's caching product.
+* link:#cache_level2_swarmcache[SwarmCache] - a simple wrapper to SwarmCache's caching product.
+* link:#cache_level2_coherence[Oracle Coherence] - a simple wrapper to Oracle's Coherence caching product. 
+Oracle's caches support distributed caching, so you could, in principle, use DataNucleus in a distributed environment with this option.
+* link:#cache_level2_memcached">spymemcached] - a simple wrapper to the "spymemcached" client for memcached caching product.
+* link:#cache_level2_memcached">xmemcached] - a simple wrapper to the "xmemcached" client for memcached caching product. 
+* link:#cache_level2_cacheonix">cacheonix] - a simple wrapper to the Cacheonix distributed caching software.
+* *none* - turn OFF Level 2 caching.
+
+The weak, soft and javax.cache caches are available in the datanucleus-core plugin.
+The EHCache, OSCache, SwarmCache, Coherence, Cacheonix, and Memcache caches are available in the http://github.com/datanucleus/datanucleus-cache[datanucleus-cache] plugin.
+
+In addition you can control the _mode_ of operation of the L2 cache. You do this using the persistence property *datanucleus.cache.level2.mode* (or *javax.persistence.sharedCache.mode*).
+The default is _UNSPECIFIED_ which means that DataNucleus will cache all objects of entities unless the entity is explicitly marked as not cacheable. 
+The other options are _NONE_ (don't cache ever), _ALL_ (cache all entities regardless of annotations),
+_ENABLE_SELECTIVE_ (cache entities explicitly marked as cacheable), or _DISABLE_SELECTIVE_ (cache entities unless explicitly marked as not cacheable - i.e same as our default).
+
+Objects are placed in the L2 cache when you commit() the transaction of a EntityManager. 
+This means that you only have datastore-persisted objects in that cache. 
+Also, if an object is deleted during a transaction then at commit it will be removed from the L2 cache if it is present.
+
+link:../extensions/extensions.html#cache_level2[image:../images/nucleus_plugin.png[]]
+The Level 2 cache is a DataNucleus plugin point allowing you to provide your own cache where you require it. Use the examples of the EHCache, Coherence caches etc as reference.
+
+            
+=== Controlling the Level 2 Cache
+
+The majority of times when using a JDO-enabled system you will not have to take control over 
+any aspect of the caching other than specification of whether to use a *Level 2* Cache or 
+not. With JDO and DataNucleus you have the ability to control which objects remain in the cache. 
+This is available via a method on the _PersistenceManagerFactory_.
+
+[source,java]
+-----
+PersistenceManagerFactory pmf = JDOHelper.getPersistenceManagerFactory(props);
+DataStoreCache cache = pmf.getDataStoreCache();
+-----
+
+The _DataStoreCache_ interface http://www.datanucleus.org/javadocs/javax.jdo/3.2/javax/jdo/datastore/DataStoreCache.html[image:../images/javadoc.png[Javadoc]]
+provides methods to control the retention of objects in the cache. You have 3 groups of methods
+
+* *evict* - used to remove objects from the Level 2 Cache
+* *pin* - used to pin objects into the cache, meaning that they will not get removed by garbage collection, and will remain in the Level 2 cache until removed.
+* *unpin* - used to reverse the effects of pinning an object in the Level 2 cache. This will mean that the object can thereafter be garbage collected if not being used.
+
+These methods can be called to _pin_ objects into the cache that will be much used. Clearly 
+this will be very much application dependent, but it provides a mechanism for users to exploit 
+the caching features of JDO. If an object is not "pinned" into the L2 cache then it can typically 
+be garbage collected at any time, so you should utilise the pinning capability for objects that 
+you wish to retain access to during your application lifetime. For example, if you have an object 
+that you want to be found from the cache you can do
+
+[source,java]
+-----
+PersistenceManagerFactory pmf = JDOHelper.getPersistenceManagerFactory(props);
+DataStoreCache cache = pmf.getDataStoreCache();
+cache.pinAll(MyClass.class, false); // Pin all objects of type MyClass from now on
+PersistenceManager pm = pmf.getPersistenceManager();
+Transaction tx = pm.currentTransaction();
+try
+{
+    tx.begin();
+
+    pm.makePersistent(myObject);
+    // "myObject" will now be pinned since we are pinning all objects of type MyClass.
+
+    tx.commit();
+}
+finally
+{
+    if (tx.isActive())
+    {
+    	tx.close();
+    }
+}
+-----
+
+Thereafter, whenever something refers to _myObject_, it will find it in the Level 2 cache. 
+To turn this behaviour off, the user can either *unpin* it or *evict* it.
+
+JDO allows control over which classes are put into a Level 2 cache. You do this by specifying the *cacheable* attribute to _false_ (defaults to true).
+So with the following specification, no objects of type _MyClass_ will be put in the L2 cache.
+
+[source,java]
+-----
+@Cacheable("false")
+public class MyClass
+{
+    ...
+}
+-----
+
+or using XML metadata
+
+[source,xml]
+-----
+<class name="MyClass" cacheable="false">
+    ...
+</class>
+-----
+
+JDO allows you control over which fields of an object are put in the Level 2 cache.
+You do this by specifying the *cacheable* attribute to _false_ (defaults to true).
+This setting is only required for fields that are relationships to other persistable objects. Like this
+
+[source,java]
+-----
+public class MyClass
+{
+    ...
+
+    Collection values;
+
+    @Cacheable("false")
+    Collection elements;
+}
+-----
+
+or using XML metadata
+
+[source,xml]
+-----
+<class name="MyClass">
+    <field name="values"/>
+    <field name="elements" cacheable="false"/>
+    ...
+</class>
+-----
+
+So in this example we will cache "values" but not "elements". If a field is _cacheable_ then
+
+* If it is a persistable object, the "identity" of the related object will be stored in the Level 2 cache for this field of this object
+* If it is a Collection of persistable elements, the "identity" of the elements will be stored in the Level 2 cache for this field of this object
+* If it is a Map of persistable keys/values, the "identity" of the keys/values will be stored in the Level 2 cache for this field of this object
+
+When pulling an object in from the Level 2 cache and it has a reference to another object DataNucleus uses the "identity" to find that object in the 
+Level 1 or Level 2 caches to re-relate the objects.
+
+
+[[cache_level2_javax_cache]]
+=== L2 Cache using javax.cache
+
+DataNucleus provides a simple wrapper to any compliant
+http://jcp.org/en/jsr/detail?id=107[javax.cache implementation], for example
+https://apacheignite.readme.io/[Apache Ignite] or https://hazelcast.org/[HazelCast].
+To enable this you should put a "javax.cache" implementation in your CLASSPATH, and set the persistence properties
+
+-----
+datanucleus.cache.level2.type=javax.cache
+datanucleus.cache.level2.cacheName={cache name}
+datanucleus.cache.level2.timeout={expiration time in millis - optional}
+-----
+
+As an example, you could simply add the following to a Maven POM, together with those persistence properties above to use HazelCast "javax.cache" implementation
+
+[source,xml]
+-----
+<dependency>
+    <groupId>javax.cache</groupId>
+    <artifactId>cache-api</artifactId>
+    <version>1.0.0</version>
+</dependency>
+<dependency>
+    <groupId>com.hazelcast</groupId>
+    <artifactId>hazelcast</artifactId>
+    <version>3.7.3</version>
+</dependency>
+-----
+
+
+[[cache_level2_ehcache]]
+=== L2 Cache using EHCache
+
+DataNucleus provides a simple wrapper to http://www.sf.net/projects/ehcache[EHCache's own API caches] (not the javax.cache API variant). 
+To enable this you should set the persistence properties
+
+-----
+datanucleus.cache.level2.type=ehcache
+datanucleus.cache.level2.cacheName={cache name}
+datanucleus.cache.level2.configurationFile={EHCache configuration file (in classpath)}
+-----
+
+The EHCache plugin also provides an alternative L2 Cache that is class-based. 
+To use this you would need to replace "ehcache" above with "ehcacheclassbased".
+
+
+[[cache_level2_memcached]]
+=== L2 Cache using Spymemcached/Xmemcached
+
+DataNucleus provides a simple wrapper to http://code.google.com/p/spymemcached/[Spymemcached caches] and http://code.google.com/p/xmemcached/[Xmemcached caches].
+To enable this you should set the persistence properties
+
+-----
+datanucleus.cache.level2.type=spymemcached         [or "xmemcached"]
+datanucleus.cache.level2.cacheName={prefix for keys, to avoid clashes with other memcached objects}
+datanucleus.cache.level2.memcached.servers=...
+datanucleus.cache.level2.memcached.expireSeconds=...
+-----
+
+*datanucleus.cache.level2.memcached.servers* is a space separated list of memcached hosts/ports, e.g. host:port host2:port.
+*datanucleus.cache.level2.memcached.expireSeconds* if not set or set to 0 then no expire
+
+
+[[cache_level2_cacheonix]]
+=== L2 Cache using Cacheonix
+
+DataNucleus provides a simple wrapper to http://www.cacheonix.com/[Cacheonix].
+To enable this you should set the persistence properties
+
+-----
+datanucleus.cache.level2.type=cacheonix
+datanucleus.cache.level2.cacheName={cache name}
+-----
+
+Note that you can optionally also specify
+
+-----
+datanucleus.cache.level2.timeout={timeout-in-millis (default=60)}
+datanucleus.cache.level2.configurationFile={Cacheonix configuration file (in classpath)}
+-----
+
+and define a _cacheonix-config.xml_ like
+
+[source,xml]
+-----
+<?xml version="1.0"?>
+<cacheonix>
+   <local>
+      <!-- One cache per class being stored. -->
+      <localCache name="mydomain.MyClass">
+         <store>
+            <lru maxElements="1000" maxBytes="1mb"/>
+            <expiration timeToLive="60s"/>
+         </store>
+      </localCache>
+
+      <!-- Fallback cache for classes indeterminable from their id. -->
+      <localCache name="datanucleus">
+         <store>
+            <lru maxElements="1000" maxBytes="10mb"/>
+            <expiration timeToLive="60s"/>
+         </store>
+      </localCache>
+
+      <localCache name="default" template="true">
+         <store>
+            <lru maxElements="10" maxBytes="10mb"/>
+            <overflowToDisk maxOverflowBytes="1mb"/>
+            <expiration timeToLive="1s"/>
+         </store>
+      </localCache>
+   </local>
+
+</cacheonix>
+-----
+
+
+[[cache_level2_oscache]]
+=== L2 Cache using OSCache
+
+DataNucleus provides a simple wrapper to http://www.opensymphony.com/oscache/[OSCache's caches]. 
+To enable this you should set the persistence properties
+
+-----
+datanucleus.cache.level2.type=oscache
+datanucleus.cache.level2.cacheName={cache name}
+-----
+
+
+[[cache_level2_swarmcache]]
+=== L2 Cache using SwarmCache
+
+DataNucleus provides a simple wrapper to http://swarmcache.sourceforge.net/[SwarmCache's caches]. 
+To enable this you should set the persistence properties
+
+-----
+datanucleus.cache.level2.type=swarmcache
+datanucleus.cache.level2.cacheName={cache name}
+-----
+
+
+[[cache_level2_coherence]]
+=== L2 Cache using Oracle Coherence
+
+DataNucleus provides a simple wrapper to http://www.oracle.com/technology/products/coherence/index.html[Oracle's Coherence caches].
+This currently takes the _NamedCache_ interface in Coherence and instantiates a cache of a user provided name.
+To enabled this you should set the following persistence properties
+
+-----
+datanucleus.cache.level2.type=coherence
+datanucleus.cache.level2.cacheName={coherence cache name}
+-----
+
+The _Coherence cache name_ is the name that you would normally put into a call to CacheFactory.getCache(name). 
+You have the benefits of Coherence's distributed/serialized caching. 
+If you require more control over the Coherence cache whilst using it with DataNucleus, you can just access the cache directly via
+
+[source,java]
+-----
+DataStoreCache cache = pmf.getDataStoreCache();
+NamedCache tangosolCache = ((TangosolLevel2Cache)cache).getTangosolCache();
+-----
