@@ -441,3 +441,22 @@ particular identity at any one time for that _PersistenceManager_. When the _Per
 link:../extensions/extensions.html#cache_level1[image:../images/nucleus_plugin.png[]]
 The L1 cache is a DataNucleus plugin point allowing you to provide your own cache where you require it.
 
+== PersistenceManagerProxy
+
+As we have already described for normal persistence, you perform all operations using a _PersistenceManager_, needing to obtain this when you want to start datastore operations.
+
+In some architectures (e.g in a web environment) it can be convenient to maintain a single _PersistenceManager_ for use in a servlet init() method to initialise a static variable. 
+Alternatively for use in a SessionBean to initialise a static variable. 
+The JDO API provides a "proxy" object that can be used for this purpose. Thereafter you just refer to the proxy. 
+The proxy isn't the actual _PersistenceManager_ just a proxy, delegating to the real object. 
+If you call close() on the proxy the real PM will be closed, and when you next invoke an operation on the proxy it will create a new PM delegate and work with that.
+
+To create a PM proxy is simple
+
+[source,java]
+-----
+PersistenceManager pm = pmf.getPersistenceManagerProxy();
+-----
+
+So we have our proxy, and now we can perform operations in the same way as we do with any _PersistenceManager_.
+
