@@ -8,7 +8,7 @@ image:../images/nucleus_extension.png[]
 
 image:../images/query_compilation.png[]
 
-JPA doesn't currently define a mechanism for caching of queries. DataNucleus provides 3 levels of caching
+JDO doesn't currently define a mechanism for caching of queries. DataNucleus provides 3 levels of caching
 
 * link:#cache_genericcompilation[Generic Compilation] : when a query is compiled it is initially compiled _generically_ into expression trees. 
 This generic compilation is independent of the datastore in use, so can be used for other datastores. This can be cached.
@@ -56,15 +56,17 @@ Obviously with a cache of query results, you don't necessarily want to retain th
 
 [source,java]
 -----
-import org.datanucleus.api.jpa.JPAQueryCache;
-import org.datanucleus.api.jpa.JPAEntityManagerFactory;
+import org.datanucleus.api.jdo.JDOQueryCache;
+import org.datanucleus.api.jdo.JDOPersistenceanagerFactory;
 
 ...
-JPAQueryCache cache = ((JPAEntityManagerFactory)emf).getQueryCache();
+JDOQueryCache cache = ((JDOPersistenceManagerFactory)pmf).getQueryCache();
 
 cache.evict(query);
 -----
 
-which evicts the results of the specific query. The JPAQueryCache has more options available should you need them ...
+which evicts the results of the specific query. The JDOQueryCache has more options available should you need them ...
 
-http://www.datanucleus.org/javadocs/api.jpa/latest/org/datanucleus/jpa/JPAQueryCache.html[image:../images/javadoc.png[Javadoc]]
+http://www.datanucleus.org/javadocs/api.jdo/latest/org/datanucleus/jdo/JDOQueryCache.html[image:../images/javadoc.png[Javadoc]]
+
+

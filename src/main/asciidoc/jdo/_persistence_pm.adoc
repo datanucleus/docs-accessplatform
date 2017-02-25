@@ -94,6 +94,9 @@ As above, the objects are persisted to the datastore.
 The LifecycleState of the objects change from _Transient_ to _PersistentClean_ (after persist()), to _Hollow_ (at commit).
 
 
+
+
+
 == Finding an object by its identity
 
 Once you have persisted an object, it has an "identity". This is a unique way of identifying it. You can obtain the identity by calling
@@ -162,6 +165,8 @@ where 1 is the value of the primary key field (numeric).
 Note that the first argument could be a base class and the real object could be an instance of a subclass of that.
 
 
+
+
 == Deleting an Object
 
 When you need to delete an object that you had previous persisted, deleting it is simple.
@@ -174,6 +179,68 @@ pm.deletePersistent(lincoln);
 -----
 
 Don't forget that you can also use link:query.html#jdoql_deletepersistent[deletion by query] to delete objects. Alternatively use link:query.html#jdoql_bulkdelete[bulk deletion].
+
+Please note that when deleting a persist object the default is to *not* delete related objects.
+
+=== Dependent Fields
+
+If you want the deletion of a persistent object to cause the deletion of related objects then you need to mark the related fields in the mapping to be "dependent".
+For example with our example, if we modify it to be like this
+
+[source,java]
+-----
+@PersistenceCapable
+public class Account
+{
+    ...
+
+    @Persistent(dependent="true")
+    Person person;
+}
+-----
+
+so now if we call 
+
+[source,java]
+-----
+Account lincolnAcct = pm.getObjectById(Account.class, 1);  // Retrieves the Account to delete
+pm.deletePersistent(lincolnAcct);
+-----
+
+This will delete the _Account_ object as well as the _Person_ account.
+The same applies on 1-N/M-N relations where you set the `@Element`, `@Key`, `@Value` dependent attribute accordingly.
+Some things to note about dependent fields.
+
+* An object is deleted (using _deletePersistent()_) and that object has relations to other objects. 
+If the other objects (either 1-1, 1-N, or M-N) are dependent then they are also deleted.
+* An object has a 1-1 relation with another object, but the other object relation is nulled out. 
+If the other object is dependent then it is deleted when the relation is nulled.
+* An object has a 1-N collection relation with other objects and the element is removed from the collection. 
+If the element is dependent then it will be deleted when removed from the collection. The same happens when the collections is cleared.
+* An object has a 1-N map relation with other objects and the key is removed from the map. 
+If the key or value are dependent and they are not present in the map more than once they will be deleted when they are removed. The same happens when the map is cleared.
+
+[[deletion+fk]]
+=== Deletion using RDBMS Foreign Keys
+
+With JDO you can use "dependent-field" as shown above. As an alternative (but not as a complement), when using RDBMS,
+you can use the datastore-defined foreign keys and let the datastore built-in "referential integrity" look after such deletions. 
+DataNucleus provides a persistence property *datanucleus.deletionPolicy* allowing enabling of this mode of operation.
+The default setting of this property is "JDO2" which performs deletion of related objects as follows
+
+*If _dependent-field_ is true then use that to define the related objects to be deleted.
+* Else, if the column of the foreign-key field is NULLable then NULL it and leave the related object alone
+* Else deleted the related object (and throw exceptions if this fails for whatever datastore-related reason)
+
+The other setting of this property is "DataNucleus" which performs deletion of related objects as follows
+
+* If _dependent-field_ is true then use that to define the related objects to be deleted
+* If a _foreign-key_ is specified (in MetaData) for the relation field then leave any deletion to the datastore to perform (or throw exceptions as necessary)
+* Else, if the column of the foreign-key field is NULLable then NULL it and leave the related object alone
+* Else deleted the related object (and throw exceptions if this fails for whatever datastore-related reason)
+
+As you can see, with the second option you have the ability to utilise datastore "referential integrity" checking using your MetaData-specified <foreign-key> elements.
+
 
 
 == Modifying a persisted Object
@@ -202,10 +269,13 @@ to call any _PersistenceManager_ method to push the changes. This is part of the
 TIP: Don't forget that you can also use link:query.html#jdoql_bulkupdate[bulk update] to update a group of objects of a type.
 
 
+
+
 [[pm_detach]]
 == Detaching a persisted Object
 
-You often have a previously persisted object and you want to use it away from the data-access layer of your application (where the _PersistenceManager_ is not present). 
+As long as your persistable class is _detachable_ (see the link:mapping.html[mapping guide]) then you can _detach_ objects of that type. This means
+that your object is no longer managed by a particular _PersistenceManager_ and hence usable in other tiers of your application.
 In this case you want to _detach_ the object (and its related sub-objects) so that they can be passed across to the part of the application that requires it.
 To do this you do
 
@@ -218,8 +288,65 @@ The detached object is like the original object except that it has no StateManag
 It retains a list of all fields that are modified while it is detached. 
 This means that when you want to "attach" it to the data-access layer it knows what to update.
 
-As an alternative, to make the detachment process transparent, you can set the PMF property *datanucleus.DetachAllOnCommit* to true and when you commit your transaction all objects
-enlisted in the transaction will be detached.
+As an alternative, to make the detachment process transparent, you can set the persistence property *datanucleus.DetachAllOnCommit* to true and when you commit your transaction all objects
+enlisted in the transaction will be detached. If you just want to apply this setting for a _PersistenceManager_ then there is a _setDetachAllOnCommit_ method on the _PersistenceManager_.
+
+
+Some things to be aware of with the _detachment_ process.
+
+* Calling _detachCopy_ on an object that is not detachable will return a *transient* instance that is a COPY of the original, so use the COPY thereafter.
+* Calling _detachCopy_ on an object that is detachable will return a *detached* instance that is a COPY of the original, so use this COPY thereafter
+* A _detached_ object retains the id of its datastore entity. Detached objects should be used where you want to update the objects and attach them later 
+(updating the associated object in the datastore. If you want to create copies of the objects in the datastore with their own identities you should use _makeTransient_ instead of _detachCopy_.
+* Calling _detachCopy_ will detach all fields of that object that are in the current link:persistence.html#fetch_groups[Fetch Groups] for that class for that _PersistenceManager_.
+* By default the fields of the object that will be detached are those in the _Default Fetch Group_.
+* You should choose your link:persistence.html#fetch_groups[Fetch Group] carefully, bearing in mind which object(s) you want to access whilst detached. 
+Detaching a relation field will detach the related object as well.
+* If you don't detach a field of an object, you *cannot* access the value for that field while the object is detached.
+* If you don't detach a field of an object, you *can* update the value for that field while detached, and thereafter you can access the value for that field.
+
+=== Detached Fields
+
+image:../images/nucleus_extension.png[]
+
+When an object is detached it is typically passed to a different layer of an application and potentially changed. 
+During the course of the operation of the system it may be required to know what is loaded in the object and what is dirty (has been changed since detaching). 
+DataNucleus provides an extension to allow interrogation of the detached object.
+
+[source,java]
+-----
+String[] loadedFieldNames = NucleusJDOHelper.getLoadedFields(obj, pm);
+String[] dirtyFieldNames = NucleusJDOHelper.getDirtyFields(obj, pm);
+-----
+
+So you have access to the names of the fields that were loaded when detaching the object, and also to the names of the fields that have been updated since detaching.
+
+
+=== Serialization of Detachable classes
+
+During enhancement of Detachable classes, a field called _jdoDetachedState_ is added to the class definition. 
+This field allows reading and changing tracking of detached objects while they are not managed by a PersistenceManager.
+
+When serialization occurs on a Detachable object, the _jdoDetachedState_ field is written to the serialized object stream. 
+On deserialize, this field is written back to the new deserialized instance. 
+This process occurs transparently to the application. However, if deserialization occurs with an un-enhanced version of the class, the detached state is lost.
+
+Serialization and deserialization of Detachable classes and un-enhanced versions of the same class is only possible if the field _serialVersionUID_ is added. 
+It's recommended during development of the class, to define the _serialVersionUID_ and make the class implement the _java.io.Serializable_ interface.
+
+
+=== Detach On Close
+
+image:../images/nucleus_extension.png[]
+
+A further variation is known as "detachOnClose" and means that if enabled (setting persistence property *datanucleus.DetachOnClose* to _true_), 
+when you close your _PersistenceManager_ you are opting to have all instances currently cached in the Level 1 Cache of that _PersistenceManager_ to be detached automatically.
+
+WARNING: This will not work in a JavaEE environment when using JCA.
+
+NOTE: It is recommended that you use "detachAllOnCommit" instead of this since that is standard JDO and would work in all JavaEE environments also.
+
+
 
 
 [[pm_attach]]
@@ -231,6 +358,34 @@ As you saw above, when we update an object in detached state we can update it in
 -----
 Person attachedLincoln = pm.makePersistent(lincoln); // Returns a copy of the detached object, in attached state
 -----
+
+Once the object is _attached_ it is then managed by the _PersistenceManager_, and in _PersistentClean_ state.
+
+Some things to be aware of with the _attachment_ process.
+
+* Calling _makePersistent_ will return an (attached) copy of the detached object. 
+It will attach all fields that were originally detached, and will also attach any other fields that were modified whilst detached.
+
+
+[[copy_on_attach]]
+=== Copy On Attach
+
+By default when you are attaching a detached object it will return an attached copy of the detached object. 
+JDO provides a feature called _copy-on-attach_ that allows this attachment to just migrate the existing detached object into attached state.
+
+You enable this by setting the persistence property *datanucleus.CopyOnAttach* to _false_. 
+Alternatively you can use the methods _PersistenceManagerFactory.setCopyOnAttach(boolean flag)_ or _PersistenceManager.setCopyOnAttach(boolean flag)_.
+Consequently our attach code would become
+
+[source,java]
+-----
+pm.makePersistent(lincoln); // object "lincoln" is now in attached state after this call
+-----
+
+NOTE: if using this feature and you try to attach two detached objects representing the same underlying persistent object within the same transaction 
+(i.e a persistent object with the same identity already exists in the level 1 cache), then a JDOUserException will be thrown.
+
+
 
 
 [[pm_refresh]]
