@@ -616,3 +616,167 @@ PersistenceManager pm = pmf.getPersistenceManagerProxy();
 
 So we have our proxy, and now we can perform operations in the same way as we do with any _PersistenceManager_.
 
+
+[[sequences_api]]
+== Datastore Sequences API
+
+Particularly when specifying the identity of an object, sequences are a very useful facility. 
+DataNucleus supports the link:mapping.html#value_generation[automatic assignment of sequence values for object identities]. 
+However such sequences may also have use when a user wishes to assign such identity values themselves, or for other roles within an application. 
+JDO defines an interface for sequences for use in an application - known as *Sequence*.
+http://www.datanucleus.org/javadocs/javax.jdo/3.2/javax/jdo/datastore/Sequence.html[image:../images/javadoc.png[Javadoc]].
+There are 2 forms of "sequence" available through this interface - the ones that DataNucleus provides utilising datastore capabilities, 
+and ones that a user provides using something known as a "factory class".
+
+
+=== DataNucleus Sequences
+
+DataNucleus internally provides 2 forms of sequences. 
+When the underlying datastore supports native sequences, then these can be leveraged through this interface. 
+Alternatively, where the underlying datastore doesn't support native sequences, then a table-based incrementing sequence can be used. 
+The first thing to do is to specify the *Sequence* in the Meta-Data for the package requiring the sequence. This is done as follows
+
+[source,xml]
+-----
+<jdo>
+    <package name="MyPackage">
+        <class name="MyClass">
+            ...
+        </class>
+
+        <sequence name="ProductSequence" datastore-sequence="PRODUCT_SEQ" strategy="contiguous"/>
+        <sequence name="ProductSequenceNontrans" datastore-sequence="PRODUCT_SEQ_NONTRANS" strategy="nontransactional"/>
+    </package>
+</jdo>
+-----
+
+So we have defined two *Sequences* for the package _MyPackage_. 
+Each sequence has a symbolic name that is referred to within JDO (within DataNucleus), and it has a name in the datastore. 
+The final attribute represents whether the sequence is transactional or not.
+
+All we need to do now is to access the *Sequence* in our persistence code in our application. This is done as follows
+
+[source,java]
+-----
+PersistenceManager pm = pmf.getPersistenceManager();
+
+Sequence seq = pm.getSequence("MyPackage.ProductSequence");
+-----
+
+and this *Sequence* can then be used to provide values.
+
+[source,java]
+-----
+long value = seq.nextValue();
+-----
+
+Please be aware that when you have a *Sequence* declared with a strategy of "contiguous" this means "transactional contiguous" 
+and that you need to have a Transaction open when you access it.
+
+JDO allows control over the allocation size (default=50) and initial value (default=1) for the sequence. So we can do
+
+[source,xml]
+-----
+<sequence name="ProductSequence" datastore-sequence="PRODUCT_SEQ" strategy="contiguous" allocation-size="10"/>
+-----
+
+which will allocate 10 new sequence values each time the allocated sequence values is exhausted.
+
+
+
+=== Factory Class Sequences
+
+It is equally possible to provide your own *Sequence* capability using a _factory class_. 
+This is a class that creates an implementation of the JDO *Sequence*. 
+Let's give an example of what you need to provide. Firstly you need an implementation of the JDO *Sequence* interface, so we define ours like this
+
+[source,java]
+-----
+public class SimpleSequence implements Sequence
+{
+    String name;
+    long current = 0;
+
+    public SimpleSequence(String name)
+    {
+        this.name = name;
+    }
+
+    public String getName()
+    {
+        return name;
+    }
+
+    public Object next()
+    {
+        current++;
+        return new Long(current);
+    }
+
+    public long nextValue()
+    {
+        current++;
+        return current;
+    }
+
+    public void allocate(int arg0)
+    {
+    }
+
+    public Object current()
+    {
+        return new Long(current);
+    }
+
+    public long currentValue()
+    {
+        return current;
+    }
+}
+-----
+
+So our sequence simply increments by 1 each call to _next()_. 
+The next thing we need to do is provide a _factory class_ that creates this *Sequence*. 
+This factory needs to have a static _newInstance_ method that returns the *Sequence* object. 
+We define our factory like this
+
+[source,java]
+-----
+package org.datanucleus.samples.sequence;
+
+import javax.jdo.datastore.Sequence;
+
+public class SimpleSequenceFactory
+{
+    public static Sequence newInstance()
+    {
+        return new SimpleSequence("MySequence");
+    }
+}
+-----
+
+and now we define our MetaData like this
+
+[source,xml]
+-----
+<jdo>
+    <package name="MyPackage">
+        <class name="MyClass">
+            ...
+        </class>
+
+        <sequence name="ProductSequenceFactory" strategy="nontransactional"
+            factory-class="org.datanucleus.samples.sequence.SimpleSequenceFactory"/>
+    </package>
+</jdo>
+-----
+
+So now we can call 
+
+[source,java]
+-----
+PersistenceManager pm = pmf.getPersistenceManager();
+
+Sequence seq = pm.getSequence("MyPackage.ProductSequenceFactory");
+-----
+
