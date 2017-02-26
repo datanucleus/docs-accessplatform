@@ -31,10 +31,11 @@ then you can add the extension _"strategy-when-notnull"_ as _false_
 == ValueGeneration Strategy AUTO
 
 With this strategy DataNucleus will choose the most appropriate strategy for the datastore being used.
-If you define the field as String-based then it will choose <a href="#uuidhex">uuid-hex</a>. Otherwise
-the field is numeric in which case it chooses <a href="#identity">identity</a> if supported, otherwise
-<a href="#sequence">sequence</a> if supported, otherwise <a href="#increment">increment</a> if supported
-otherwise throws an exception. 
+If you define the field as String-based then it will choose link:../jdo/mapping.html#valuegen_uuidhex[uuid-hex]. 
+Otherwise the field is numeric in which case it chooses link:#valuegen_identity[identity] if supported, 
+otherwise link:#valuegen_sequence[sequence] if supported, otherwise link:#valuegen_increment[table] if supported
+otherwise throws an exception.
+
 On RDBMS you can get the behaviour used up until DN v3.0 by specifying the persistence property 
 *datanucleus.rdbms.useLegacyNativeValueStrategy* as _true_.
 For a class using *application identity* you need to set the _value-strategy_ attribute 

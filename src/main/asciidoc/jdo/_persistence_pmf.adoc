@@ -241,7 +241,7 @@ PersistenceManagerFactory pmf = JDOHelper.getPersistenceManagerFactory("Optimist
 That's it. The PMF we are returned from JDOHelper will have all of the properties defined in _META-INF/jdoconfig.xml_ under the name of "Optimistic".
 
 
-
+[[persistence_properties]]
 == PersistenceManagerFactory Properties
 
 An PersistenceManagerFactory is very configurable, and DataNucleus provides many properties to tailor its behaviour to your persistence needs.
@@ -405,7 +405,7 @@ DataNucleus provides the following properties for configuring the datastore used
 
 |datanucleus.ConnectionURL
 |URL specifying the datastore to use for persistence.
-Note that this will define the *type of datastore* as well as the datastore itself. Please refer to <a href="datastores/index.html">the datastores guides</a>
+Note that this will define the *type of datastore* as well as the datastore itself. Please refer to link:../datastores/index.html[the datastores guide]
 for the URL appropriate for the type of datastore you're using.
 
 |datanucleus.ConnectionUserName
@@ -413,26 +413,26 @@ for the URL appropriate for the type of datastore you're using.
 
 |datanucleus.ConnectionPassword
 |Password to use for connecting to the DB.
-See <a href="#ConnectionPasswordDecrypter">datanucleus.ConnectionPasswordDecrypter</a> for a way of providing an encrypted password here
+See property *datanucleus.ConnectionPasswordDecrypter* for a way of providing an encrypted password here
 
 |datanucleus.ConnectionDriverName
 |The name of the (JDBC) driver to use for the DB (for RDBMS only).
 
 |datanucleus.ConnectionFactory
 |Instance of a connection factory for *transactional* connections. This is an alternative to *datanucleus.ConnectionURL*.
-*Only for RDBMS*, and it must be an instance of javax.sql.DataSource. See <a href="jdo/datastore_connection.html#datasource">Data Sources</a>.
+*Only for RDBMS*, and it must be an instance of javax.sql.DataSource. See link:persistence.html#datasource[Data Sources].
 
 |datanucleus.ConnectionFactory2
 |Instance of a connection factory for *nontransactional* connections. This is an alternative to *datanucleus.ConnectionURL*.
-*Only for RDBMS*, and it must be an instance of javax.sql.DataSource. See <a href="jdo/datastore_connection.html#datasource">Data Sources</a>.
+*Only for RDBMS*, and it must be an instance of javax.sql.DataSource. See link:persistence.html#datasource[Data Sources].
 
 |datanucleus.ConnectionFactoryName
 |The JNDI name for a connection factory for *transactional* connections. 
-*Only for RDBMS*, and it must be a JNDI name that points to a javax.sql.DataSource object. See <a href="jdo/datastore_connection.html#datasource">Data Sources</a>.
+*Only for RDBMS*, and it must be a JNDI name that points to a javax.sql.DataSource object. See link:persistence.html#datasource[Data Sources].
 
 |datanucleus.ConnectionFactory2Name
 |The JNDI name for a connection factory for *nontransactional* connections. 
-*Only for RDBMS*, and it must be a JNDI name that points to a javax.sql.DataSource object. See <a href="jdo/datastore_connection.html#datasource">Data Sources</a>.
+*Only for RDBMS*, and it must be a JNDI name that points to a javax.sql.DataSource object. See link:persistence.html#datasource[Data Sources].
 
 |datanucleus.ConnectionPasswordDecrypter
 |Name of a class that implements _org.datanucleus.store.ConnectionEncryptionProvider_
@@ -493,7 +493,7 @@ DataNucleus will prefix all table names with this schema name if the RDBMS suppo
 
 |datanucleus.tenantId
 |String id to use as a discriminator on all persistable class tables to restrict data for the tenant using this application instance 
-(aka <a href="jdo/multitenancy.html">multi-tenancy via discriminator</a>). _RDBMS, MongoDB, HBase, Neo4j, Cassandra datastores only_
+(aka link:persistence.html#multitenancy[multi-tenancy via discriminator]). _RDBMS, MongoDB, HBase, Neo4j, Cassandra datastores only_
 
 |datanucleus.tenantProvider
 |Instance of a class that implements _org.datanucleus.store.schema.MultiTenancyProvider_

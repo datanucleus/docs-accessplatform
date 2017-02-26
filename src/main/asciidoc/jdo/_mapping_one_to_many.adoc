@@ -122,7 +122,7 @@ If you wish to fully define the schema table and column names etc, follow these 
 * To specify the names of the join table columns, use the _column_ attribute of _join_, _element_ elements.
 * To specify the foreign-key between container table and join table, specify <foreign-key> below the <join> element.
 * To specify the foreign-key between join table and element table, specify <foreign-key> below either the <field> element or the <element> element.
-* If you wish to share the join table with another relation then use the <a href="#shared_join">DataNucleus "shared join table" extension]
+* If you wish to share the join table with another relation then use the link:#one_many_shared_join[DataNucleus "shared join table" extension]
 * The join table will, by default, be given a primary key. If you want to omit this then you can turn it off using the 
 DataNucleus metadata extension "primary-key" (within <join>) set to false.
 * The column "ADPT_PK_IDX" is added by DataNucleus so that duplicates can be stored. You can control this by adding an <order> element and 
@@ -268,7 +268,7 @@ If you wish to fully define the schema table and column names etc, follow these 
 * To specify the names of the join table columns, use the _column_ attribute of _join_, _element_ elements.
 * To specify the foreign-key between container table and join table, specify <foreign-key> below the <join> element.
 * To specify the foreign-key between join table and element table, specify <foreign-key> below either the <field> element or the <element> element.
-* If you wish to share the join table with another relation then use the <a href="#shared_join">DataNucleus "shared join table" extension]
+* If you wish to share the join table with another relation then use the link:#one_many_shared_join[DataNucleus "shared join table" extension]
 * The join table will, by default, be given a primary key. If you want to omit this then you can turn it off using the DataNucleus metadata extension "primary-key" (within <join>) set to false.
 * The column "ADPT_PK_IDX" is added by DataNucleus so that duplicates can be stored. You can control this by adding an <order> element and 
 specifying the column name for the order column (within <field>).
