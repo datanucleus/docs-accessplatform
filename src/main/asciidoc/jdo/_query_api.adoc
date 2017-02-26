@@ -67,6 +67,28 @@ List<Product> results = q.filter(cand.field2.lt(q.doubleParameter("threshold")))
 -----
 
 
+== Closing a query
+
+When a query is executed it will have access to the results of that query.
+Each time it is executed (maybe with different parameters) it will have separate results.
+This can consume significant resources if the query returned a lot of records.
+
+You close a query (and all query results) like this
+
+[source,java]
+-----
+q.close();
+-----
+
+If you just wanted to close a specific query result you would call
+
+[source,java]
+-----
+q.close(queryResult);
+-----
+where the _queryResult_ is what you were returned from executing the query.
+
+
 
 [[named]]
 == Named Query
