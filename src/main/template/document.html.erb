@@ -30,6 +30,12 @@
     <link href="<%= (attr :_basedir) %>css/datanucleus_theme.css" rel="stylesheet"/>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
 
+    <%
+       def is_toc?
+         not (attributes.has_key?('notoc'))
+       end
+    %>
+
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <script src="<%= (attr :_basedir) %>js/bootstrap/3.3.7/bootstrap.min.js"></script>
     <script src="<%= (attr :_basedir) %>js/bootstrap-toc/0.4.1/bootstrap-toc.min.js"></script>
@@ -120,43 +126,56 @@
 
 
 <div class="container">
-    <div class="row-fluid">
-        <div class="col-sm-9">
-            <div class="page-title">
-                <h1><%= document.name %></h1>
+    <% if is_toc? then %>
+        <div class="row-fluid">
+            <div class="col-sm-9">
+                <div class="page-title">
+                    <h1><%= document.name %></h1>
+                </div>
+                <div id="doc-content">
+                    <%= document.content %>
+                </div>
             </div>
-            <div id="doc-content">
-                <%= document.content %>
+            <div class="col-sm-3">
+                <nav id="toc" data-spy="affix" data-toggle="toc"></nav>
             </div>
         </div>
-        <div class="col-sm-3">
-            <nav id="toc" data-spy="affix" data-toggle="toc"></nav>
+    <% else %>
+        <div class="row-fluid">
+            <div class="col-sm-12">
+                <div class="page-title">
+                    <h1><%= document.name %></h1>
+                </div>
+                <div id="doc-content">
+                    <%= document.content %>
+                </div>
+            </div>
         </div>
-    </div>
+    <% end %>
 </div>
 
 <footer style="background-color:#c0e8e1; padding: 5px;">
 <div class="container">
     <div class="row">
 		<div class="col-sm-6 text-center-mobile">
-			<h4>DataNucleus : flexible persistence</h4>
-			<ul class="social-footer">
+			<ul class="list-unstyled">
+			    <li><b>DataNucleus : flexible persistence</b></li>
 				<li><a href="https://twitter.com/datanucleus"><i class="fa fa-twitter"></i></a></li>
 			</ul>
 		</div>
 		<div class="col-sm-6 text-center-mobile">
 			<div class="row">
 				<div class="col-sm-6 text-center-mobile">
-				    <h5>Support</h5>
 					<ul class="list-unstyled">
+				        <li><b>Support</b></li>
 						<li><a href="http://forum.datanucleus.org">DataNucleus Forum</a></li>
 						<li><a href="https://gitter.im/datanucleus/Lobby">Gitter (DataNucleus/Lobby)</a></li>
                         <li><a href="https://stackoverflow.com/questions/tagged/datanucleus"><i>Stackoverflow</i></a></li>
 			        </ul>
 			    </div>
 				<div class="col-sm-6 text-center-mobile">
-				    <h5>Information</h5>
 					<ul class="list-unstyled">
+				        <li><b>Information</b></li>
 						<li><a href="../../documentation/license.html">License (Apache 2)</a></li>
 						<li><a href="../../documentation/problem_reporting.html">Problem Reporting</a></li>
 			        </ul>
