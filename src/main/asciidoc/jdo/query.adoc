@@ -12,6 +12,7 @@ This requires you to query the datastore for these products. JDO specifies suppo
 * link:#jdoql_typed[Typed] : following JDOQL syntax but providing an API supporting refactoring of classes and the queries they are used in.
 * link:#sql[SQL] typically only for RDBMS
 * link:#jpql[JPQL] : not explicitly part of the JDO spec, but provided by DataNucleus JDO.
+* link:#stored_procedures[Stored Procedures] : not explicitly part of the JDO spec, but provided by DataNucleus JDO as an option for RDBMS.
 
 Which query language is used is down to the developer. 
 The data-tier of an application could be written by a primarily Java developer, who would typically think in an object-oriented way and so would likely prefer *JDOQL*. 
@@ -28,8 +29,8 @@ NOTE: For some datastores additional query languages may be available specific t
 
 There are 2 categories of queries with JDO :-
 
-* *Programmatic Query* where the query is defined using the link:query.html#query_api[JDO Query API].
-* *Named Query* where the query is link:query.html#named[defined in MetaData and referred to by its name at runtime].
+* link:query.html#query_api[*Programmatic Query*] where the query is defined using the JDO Query API.
+* link:query.html#named[*Named Query*] where the query is defined in MetaData and referred to by its name at runtime.
 
 
 include::_query_api.adoc[leveloffset=+1]
@@ -38,7 +39,7 @@ include::_query_jdoql.adoc[leveloffset=+1]
 include::_query_jdoql_typed.adoc[leveloffset=+1]
 include::_query_sql.adoc[leveloffset=+1]
 include::_query_jpql.adoc[leveloffset=+1]
-// include::_query_stored_procedures.adoc[leveloffset=+1]
+include::_query_stored_procedures.adoc[leveloffset=+1]
 
 include::_query_cache.adoc[leveloffset=+1]
 
