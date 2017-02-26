@@ -1,0 +1,254 @@
+[[jdoql_typed]]
+= JDOQL Typed
+:_basedir: ../
+:_imagesdir: images/
+
+
+JDO 3.2 introduces a way of performing queries using a JDOQLTypedQuery API, that copes with refactoring of classes/fields.
+The API follows the same link:query.html#jdoql[JDOQL] syntax that we have seen earlier in terms of the components of the query etc.
+It produces queries that are much more elegant and simpler than the equivalent "Criteria" API in JPA, or the Hibernate Criteria API.
+See this http://datanucleus.wordpress.com/2010/11/jdo-typesafe-vs-jpa-criteria.html[comparison of JPA Criteria and JDO Typesafe] which
+compares a prototype of this JDOQLTypedQuery API against JPA Criteria.
+
+== Preparation
+
+To set up your environment to use this JDOQLTypedQuery API you need to enable annotation processing, place some DataNucleus jars in your build path, 
+and specify a _@PersistenceCapable_ annotation on your classes to be used in queries (you can still provide the remaining information in XML metadata if you wish to).
+This annotation processor will (just before compile of your persistable classes), create a query metamodel "Q" class for each persistable class. This is similar
+step to what QueryDSL requires, or indeed the JPA Criteria static metamodel.
+
+
+With Maven you need to have the following in your POM
+
+[source,xml]
+-----
+<dependencies>
+    <dependency>
+        <groupId>org.datanucleus</groupId>
+        <artifactId>datanucleus-jdo-query</artifactId>
+        <version>[5.0.0-release, )</version>
+    </dependency>
+    <dependency>
+        <groupId>org.datanucleus</groupId>
+        <artifactId>javax.jdo</artifactId>
+        <version>[3.2.0-m4, 3.9)</version>
+    </dependency>
+    ...
+ </dependencies>
+
+<plugins>
+    <plugin>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <configuration>
+            <source>1.8</source>
+            <target>1.8</target>
+        </configuration>
+    </plugin>
+</plugins>
+-----
+
+With Eclipse you need to
+
+* Go to _Java Compiler_ and make sure the compiler compliance level is 1.8 or above
+* Go to _Java Compiler -> Annotation Processing_ and enable the project specific settings and enable annotation processing
+* Go to _Java Compiler -> Annotation Processing -> Factory Path_, enable the project specific settings and then add the following jars to the list: `datanucleus-jdo-query.jar`, `javax.jdo.jar`
+
+
+
+== Query Classes
+
+The above preparation will mean that whenever you compile, the DataNucleus annotation processor (in `datanucleus-jdo-query.jar`) will generate a *query class* 
+for each model class that is annotated as persistable. So what is a *query class* you ask. 
+It is simply a mechanism for providing an intuitive API to generating queries. If we have the following model class
+
+[source,java]
+-----
+@PersistenceCapable
+public class Product
+{
+    @PrimaryKey
+    long id;
+    String name;
+    double value;
+
+    ...
+}
+-----
+
+then the (generated) *query class* for this will be
+
+[source,java]
+-----
+public class QProduct extends org.datanucleus.api.jdo.query.PersistableExpressionImpl<Product> 
+    implements PersistableExpression<Product>
+{
+    public static QProduct candidate(String name) {...}
+    public static QProduct candidate() {...}
+    public static QProduct variable(String name) {...}
+    public static QProduct parameter(String name) {...}
+
+    public NumericExpression<Long> id;
+    public StringExpression name;
+    public NumericExpression<Double> value;
+
+    ...
+}
+-----
+
+Note that it has the name _*Q*{className}_.
+Also the generated class, by default, has a public field for each persistable field/property and is of a type _XXXExpression_. 
+These expressions allow us to give Java like syntax when defining your queries (see below). 
+So you access your persistable members in a query as *candidate.name* for example.
+
+As mentioned above this is the default style of query class. However you can also create it in _property_ style, 
+where you access your persistable members as *candidate.name()* for example. 
+The benefit of this approach is that if you have 1-1, N-1 relationship fields then it only initialises the members when called, whereas in the _field_
+case above it has to initialise all in the constructor, so at static initialisation.
+You enable use of _property_ mode by adding the compiler argument *-AqueryMode=PROPERTY*. 
+All examples below use _field_ mode but just add _()_ after the field to see the equivalent in _property_ mode
+
+*Note that we currently only support generation of Q classes for persistable classes that are in their own source file, so no support for inline static persistable classes is available currently*
+
+
+== Query API - Filtering and Ordering
+
+Let's provide a sample usage of this query API. 
+We want to construct a query for all products with a value below a certain level, and where the name starts with "Wal", and then order the results by the product name. 
+So a typical query in a JDO-enabled application
+
+[source,java]
+-----
+pm = pmf.getPersistenceManager();
+
+JDOQLTypedQuery<Product> tq = pm.newJDOQLTypedQuery(Product.class);
+QProduct cand = QProduct.candidate();
+List<Product> results = tq.filter(cand.value.lt(40.00).and(cand.name.startsWith("Wal"))).orderBy(cand.name.asc())
+        .executeList();
+-----
+
+This equates to the single-string query
+
+-----
+SELECT FROM mydomain.Product WHERE this.value < 40.0 && this.name.startsWith("Wal") ORDER BY this.name ASCENDING
+-----
+
+As you see, we create a parametrised query, and then make use of the *query class* to access the candidate, 
+and from that make use of its fields, and the various Java methods present for the types of those fields.
+Note that the API is _fluent_, meaning you can chain calls easily.
+
+
+
+== Query API - Results
+
+Let's take the query in the above example and return the name and value of the Products only
+
+[source,java]
+-----
+JDOQLTypedQuery<Product> tq = pm.newJDOQLTypedQuery(Product.class);
+QProduct cand = QProduct.candidate();
+List<Object[]> results = tq.filter(cand.value.lt(40.00).and(cand.name.startsWith("Wal"))).orderBy(cand.name.asc())
+        .result(false, cand.name, cand.value).executeResultList();
+-----
+
+This equates to the single-string query
+
+-----
+SELECT this.name,this.value FROM mydomain.Product WHERE this.value < 40.0 && this.name.startsWith("Wal") ORDER BY this.name ASCENDING
+-----
+
+A further example using aggregates
+
+[source,java]
+-----
+JDOQLTypedQuery<Product> tq = pm.newJDOQLTypedQuery(Product.class);
+Object results = 
+    tq.result(false, QProduct.candidate().max(), QProduct.candidate().min()).executeResultUnique();
+-----
+
+                    This equates to the single-string query
+
+-----
+SELECT max(this.value), min(this.value) FROM mydomain.Product
+-----
+
+
+== Query API - Parameters
+
+It is important to note that JDOQLTypedQuery only accepts *named* parameters. 
+You obtain a named parameter from the JDOQLTypedQuery, and then use it in the specification of the filter, ordering, grouping etc.
+Let's take the query in the above example and specify the "Wal" in a parameter.
+
+[source,java]
+-----
+JDOQLTypedQuery<Product> tq = pm.newJDOQLTypedQuery(Product.class);
+QProduct cand = QProduct.candidate();
+List<Product> results = 
+    tq.filter(cand.value.lt(40.00).and(cand.name.startsWith(tq.stringParameter("prefix"))))
+        .orderBy(cand.name.asc())
+        .setParameter("prefix", "Wal").executeList();
+-----
+
+This equates to the single-string query
+
+-----
+SELECT FROM mydomain.Product WHERE this.value < 40.0 && this.name.startsWith(:prefix) ORDER BY this.name ASCENDING
+-----
+
+
+== Query API - Variables
+
+Let's try to find all Inventory objects containing a Product with a particular name.
+This means we need to use a variable. Just like with a parameter, we obtain a _variable_ from the Q class.
+
+[source,java]
+-----
+JDOQLTypedQuery<Inventory> tq = pm.newJDOQLTypedQuery(Inventory.class);
+QProduct var = QProduct.variable("var");
+QInventory cand = QInventory.candidate();
+List<Inventory> results = tq.filter(cand.products.contains(var).and(var.name.startsWith("Wal"))).executeList();
+-----
+
+This equates to the single-string query
+
+[source,java]
+-----
+SELECT FROM mydomain.Inventory WHERE this.products.contains(var) && var.name.startsWith("Wal")
+-----
+
+
+== Query API - Subqueries
+
+Let's try to find all Products that have a value below the average of all Products. This means we need to use a subquery
+
+[source,java]
+-----
+JDOQLTypedQuery<Product> tq = pm.newJDOQLTypedQuery(Product.class);
+QProduct cand = QProduct.candidate();
+TypesafeSubquery<Product> tqsub = tq.subquery(Product.class, "p");
+QProduct candsub = QProduct.candidate("p");
+List<Product> results = tq.filter(cand.value.lt(tqsub.selectUnique(candsub.value.avg()))).executeList();
+-----
+
+Note that where we want to refer to the candidate of the subquery, we specify the alias ("p") explicitly.
+This equates to the single-string query
+
+-----
+SELECT FROM mydomain.Product WHERE this.value < (SELECT AVG(p.value) FROM mydomain.Product p)
+-----
+
+
+
+[[jdoql_typed_Candidates]]
+== Query API - Candidates
+
+If you don't want to query instances in the datastore but instead query a collection of candidate instances, you can do this by setting the candidates, like this
+
+[source,java]
+-----
+JDOQLTypedQuery<Product> tq = pm.newJDOQLTypedQuery(Product.class);
+QProduct cand = QProduct.candidate();
+List<Product> results = tq.filter(cand.value.lt(40.00)).setCandidates(myCandidates).executeList();
+-----
+
+This will process the query link:query.html#jdoql_inmemory[in-memory].
+

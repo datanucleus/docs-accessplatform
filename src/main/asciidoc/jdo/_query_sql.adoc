@@ -1,0 +1,314 @@
+[[sql]]
+= SQL
+:_basedir: ../
+:_imagesdir: images/
+
+As we have described earlier, JDO allows access to many query languages to give the user full flexibility over what they utilise.
+Sometimes an object-based query language (such as JDOQL) is not considered suitable, maybe due to the lack of familiarity of the application developer with such a query language. 
+In the case where you are using an RDBMS it is sometimes desirable to query using *SQL*. 
+JDO standardises this as a valid query mechanism, and DataNucleus supports this.
+
+NOTE: Please be aware that the SQL query that you invoke has to be valid for your RDBMS, and that the SQL syntax differs across almost all RDBMS.
+
+To utilise *SQL* syntax in queries, you create a Query as follows
+
+[source,java]
+-----
+Query q = pm.newQuery("javax.jdo.query.SQL", the_sql_query);
+-----
+
+You have several forms of SQL queries, depending on what form of output you require.
+
+* *No candidate class and no result class* - the result will be a List of Objects (when there is a single column in the query), 
+or a List of Object[]s (when there are multiple columns in the query)
+* *Candidate class specified, no result class* - the result will be a List of candidate class objects, or will be a single candidate class object (when you have specified "unique"). 
+The columns of the querys result set are matched up to the fields of the candidate class by name. You need to select a minimum of the PK columns in the SQL statement.
+* *No candidate class, result class specified* - the result will be a List of result class objects, or will be a single result class object (when you have specified "unique"). 
+Your result class has to abide by the rules of JDO result classes (see link:query.html#jdoql_resultclass[Result Class specification]) - this
+typically means either providing public fields matching the columns of the result, or providing setters/getters for the columns of the result.
+* *Candidate class and result class specified* - the result will be a List of result class objects, or will be a single result class object (when you have specified "unique"). 
+The result class has to abide by the rules of JDO result classes (see link:query.html#jdoql_resultclass[Result Class specification]).
+
+
+
+[[sql_candidate]]
+== Setting candidate class
+
+If you want to return instances of persistable types, then you can set the candidate class.
+
+[source,java]
+-----
+Query query = pm.newQuery("javax.jdo.query.SQL", "SELECT MY_ID, MY_NAME FROM MYTABLE");
+query.setClass(MyClass.class);
+List<MyClass> results = query.executeList();
+-----
+
+
+[[sql_unique]]
+== Unique results
+
+If you know that there will only be a single row returned from the SQL query then you can set the query as _unique_. 
+Note that the query will return null if the SQL has no results.
+
+Sometimes you know that the query can only every return 0 or 1 objects. In this case you can simplify your job by adding
+
+[source,java]
+-----
+// Using traditional JDO Query API
+Query query = pm.newQuery("javax.jdo.query.SQL", "SELECT MY_ID, MY_NAME FROM MYTABLE");
+query.setClass(MyClass.class);
+query.setUnique(true);
+MyClass obj = (MyClass) query.execute();
+
+// Using JDO3.2 Query API
+Query query = pm.newQuery("javax.jdo.query.SQL", "SELECT MY_ID, MY_NAME FROM MYTABLE");
+query.setClass(MyClass.class);
+MyClass obj = query.executeUnique();
+-----
+
+
+[[sql_result_class]]
+== Defining a result type
+
+If you want to dump each row of the SQL query results into an object of a particular type then you can set the result class. 
+
+[source,java]
+-----
+// Using traditional JDO Query API
+Query query = pm.newQuery("javax.jdo.query.SQL", "SELECT MY_ID, MY_NAME FROM MYTABLE");
+query.setResultClass(MyResultClass.class);
+List<MyResultClass> results = (List<MyClass>) query.execute();
+
+
+// Using JDO3.2 Query API
+Query query = pm.newQuery("javax.jdo.query.SQL", "SELECT MY_ID, MY_NAME FROM MYTABLE");
+List<MyResultClass> results = query.executeResultList(MyResultClass.class);
+-----
+
+The _Result Class_ has to meet certain requirements. These are
+
+* Can be one of Integer, Long, Short, Float, Double, Character, Byte, Boolean, String, java.math.BigInteger, java.math.BigDecimal, 
+java.util.Date, java.sql.Date, java.sql.Time, java.sql.Timestamp, or Object[]
+* Can be a user defined class, that has either a constructor taking arguments of the same type as those returned by the query (in the same order), 
+or has a public put(Object, Object) method, or public setXXX() methods, or public fields.
+
+For example, if we are returning two columns like above, an _int_ and a _String_ then we define our result class like this
+
+[source,java]
+-----
+public class MyResultClass
+{
+    protected int id = 0;
+    protected String name = null;
+
+    public MyResultClass(int id, String name)
+    {
+        this.id = id;
+        this.name = name;
+    }
+
+    ...
+}
+-----
+
+So here we have a result class using the constructor arguments. 
+We could equally have provided a class with public fields instead, or provided _setXXX_ methods or a _put_ method. They all work in the same way.
+
+
+
+[[sql_updates]]
+== Inserting/Updating/Deleting
+
+In strict JDO all SQL queries must begin "SELECT ...", and consequently it is not possible to execute queries that change data. 
+In DataNucleus we have an extension that allows this to be overridden; to enable this you should specify the persistence property *datanucleus.query.sql.allowAll* as _true_, 
+and thereafter you just invoke your statements like this
+
+[source,java]
+-----
+Query q = pm.newQuery("javax.jdo.query.SQL", "UPDATE MY_TABLE SET MY_COLUMN = ? WHERE MY_ID = ?");
+-----
+
+you then pass any parameters in as normal for an SQL query.
+If your query starts with "SELECT" then it is invoked using _preparedStatement.executeQuery(...)_.
+If your query starts with "UPDATE", "INSERT", "MERGE", "DELETE" it is treated as a bulk update/delete query and is invoked using _preparedStatement.executeUpdate(...)_. 
+All other statements will be invoked using _preparedStatement.execute(...)_ and true returned.
+
+*If your statement really needs to be executed differently to these basic rules then you should look at contributing support for those statements to DataNucleus.*
+
+
+
+[[sql_parameters]]
+== Parameters
+
+In JDO SQL queries can have parameters but must be _positional_. This means that you do as follows
+
+[source,java]
+-----
+Query q = pm.newQuery("javax.jdo.query.SQL", "SELECT col1, col2 FROM MYTABLE WHERE col3 = ? AND col4 = ? and col5 = ?");
+List results = q.setParameters(val1, val2, val3).executeList();
+-----
+
+So we used traditional JDBC form of parametrisation, using "?".
+
+
+
+image:../images/nucleus_extension.png[]
+
+DataNucleus also supports two further variations. The first is called _numbered_ parameters where we assign numbers to them, so the previous example could have been written like this
+
+[source,java]
+-----
+Query q = pm.newQuery("javax.jdo.query.SQL", "SELECT col1, col2 FROM MYTABLE WHERE col3 = ?1 AND col4 = ?2 and col5 = ?1");
+List results = q.setParameters(val1, val2).executeList();
+-----
+
+so we can reuse parameters in this variation.
+The second variation  is called _named_ parameters where we assign names to them, and so the example can be further rewritten like this
+
+[source,java]
+-----
+Query q = pm.newQuery("javax.jdo.query.SQL", "SELECT col1, col2 FROM MYTABLE WHERE col3 = :firstVal AND col4 = :secondVal and col5 = :firstVal");
+Map params = new HashMap();
+params.put("firstVal", val1);
+params.put("secondVal", val1);
+List results = q.setNamedParameters(params).executeList();
+-----
+
+
+== Example 1 - Using SQL aggregate functions, without candidate class
+
+Here's an example for getting the size of a table without a candidate class.
+
+[source,java]
+-----
+Query query = pm.newQuery("javax.jdo.query.SQL", "SELECT count(*) FROM MYTABLE");
+List results = query.executeList();
+Integer tableSize = (Integer) result.iterator().next();
+-----
+
+Here's an example for getting the maximum and miminum of a parameter without a candidate class.
+
+[source,java]
+-----
+Query query = pm.newQuery("javax.jdo.query.SQL", "SELECT max(PARAM1), min(PARAM1) FROM MYTABLE");
+List results = query.executeList();
+Object[] measures = (Object[])result.iterator().next();
+Double maximum = (Double)measures[0];
+Double minimum = (Double)measures[1];
+-----
+
+
+== Example 2 - Using SQL aggregate functions, with result class
+
+Here's an example for getting the size of a table with a result class. So we have a result class of
+
+[source,java]
+-----
+public class TableStatistics
+{
+    private int total;
+
+    public setTotal(int total);
+}
+-----
+
+So we define our query to populate this class
+
+[source,java]
+-----
+Query query = pm.newQuery("javax.jdo.query.SQL", "SELECT count(*) AS total FROM MYTABLE");
+List<TableStatistics> results = query.executeResultList(TableStatistics.class);
+TableStatistics tableStats = result.iterator().next();
+-----
+
+Each row of the results is of the type of our result class. Since our query is for an aggregate, there is actually only 1 row.
+
+
+
+== Example 3 - Retrieval using candidate class
+
+When we want to retrieve objects of a particular persistable class we specify the candidate class. Here we need to select, as a minimum, the identity columns for the class.
+
+[source,java]
+-----
+Query query = pm.newQuery("javax.jdo.query.SQL", "SELECT MY_ID, MY_NAME FROM MYTABLE");
+query.setClass(MyClass.class);
+List<MyClass> results = query.executeList();
+Iterator resultsIter = results.iterator();
+while (resultsIter.hasNext())
+{
+    MyClass obj = resultsIter.next();
+}
+-----
+
+[source,java]
+-----
+class MyClass
+{
+    String name;
+    ...
+}
+-----
+
+[source,xml]
+-----
+<package name="org.datanucleus.samples.sql">
+    <class name="MyClass" identity-type="datastore" table="MYTABLE">
+        <datastore-identity strategy="identity">
+            <column name="MY_ID"/>
+        </datastore-identity>
+        <field name="name" persistence-modifier="persistent">
+            <column name="MY_NAME"/>
+        </field>
+    </class>
+</package>
+-----
+
+
+== Example 4 - Using parameters, without candidate class
+
+Here's an example for getting the number of people with a particular email address.
+You simply add a "?" for all parameters that are passed in, and these are substituted at execution time.
+
+[source,java]
+-----
+Query query = pm.newQuery("javax.jdo.query.SQL", "SELECT count(*) FROM PERSON WHERE EMAIL_ADDRESS = ?");
+List results = query.setParameters("nobody@datanucleus.org").executeList();
+Integer tableSize = (Integer) result.iterator().next();
+-----
+
+
+== Example 5 - Named Query
+
+While "named" queries were introduced primarily for JDOQL queries, we can define "named" queries for SQL also. 
+So let's take a _Product_ class, and we want to define a query for all products that are "sold out". We firstly add this to our MetaData
+
+[source,xml]
+-----
+<package name="org.datanucleus.samples.store">
+    <class name="Product" identity-type="datastore" table="PRODUCT">
+        <datastore-identity strategy="identity">
+            <column name="PRODUCT_ID"/>
+        </datastore-identity>
+        <field name="name" persistence-modifier="persistent">
+            <column name="NAME"/>
+        </field>
+        <field name="status" persistence-modifier="persistent">
+            <column name="STATUS"/>
+        </field>
+
+        <query name="SoldOut" language="javax.jdo.query.SQL">
+            SELECT PRODUCT_ID FROM PRODUCT WHERE STATUS == "Sold Out"
+        </query>
+    </class>
+</package>
+-----
+
+And then in our application code we utilise the query
+
+[source,java]
+-----
+Query q = pm.newNamedQuery(Product.class, "SoldOut");
+List<Product> results = q.executeList();
+-----
+

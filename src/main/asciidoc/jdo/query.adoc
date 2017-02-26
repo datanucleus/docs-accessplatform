@@ -9,7 +9,7 @@ For example if you have a web application representing an online store, the user
 This requires you to query the datastore for these products. JDO specifies support for 
 
 * link:#jdoql[JDOQL] : a string-based query language using Java syntax.
-* link:#typed[Typed] : following JDOQL syntax but providing an API supporting refactoring of classes and the queries they are used in.
+* link:#jdoql_typed[Typed] : following JDOQL syntax but providing an API supporting refactoring of classes and the queries they are used in.
 * link:#sql[SQL] typically only for RDBMS
 * link:#jpql[JPQL] : not explicitly part of the JDO spec, but provided by DataNucleus JDO.
 
@@ -19,18 +19,25 @@ On the other hand the data-tier could be written by a datastore developer who is
 This is the power of an implementation like DataNucleus in that it provides the flexibility for different people to develop the data-tier utilising their own skills 
 to the full without having to learn totally new concepts.
 
+TIP: We recommend using JDOQL for queries wherever possible since it is object-based and datastore agnostic, giving you extra flexibility in the future. 
+If not possible using JDOQL, only then use a language appropriate to the datastore in question
+
+NOTE: For some datastores additional query languages may be available specific to that datastore - please check the link:../datastores/index.html[datastores documentation].
+
+
+
 There are 2 categories of queries with JDO :-
 
-* *Programmatic Query* where the query is defined using the JDO Query API.
-* *Named Query* where the query is defined in MetaData and referred to by its name at runtime(for link:#jdoql_named[JDOQL], link:#sql_named[SQL].
+* *Programmatic Query* where the query is defined using the link:query.html#query_api[JDO Query API].
+* *Named Query* where the query is link:query.html#named[defined in MetaData and referred to by its name at runtime].
 
 
-// include::_query_api.adoc[leveloffset=+1]
+include::_query_api.adoc[leveloffset=+1]
 
-// include::_query_jdoql.adoc[leveloffset=+1]
-// include::_query_typed.adoc[leveloffset=+1]
-// include::_query_sql.adoc[leveloffset=+1]
-// include::_query_jpql.adoc[leveloffset=+1]
+include::_query_jdoql.adoc[leveloffset=+1]
+include::_query_jdoql_typed.adoc[leveloffset=+1]
+include::_query_sql.adoc[leveloffset=+1]
+include::_query_jpql.adoc[leveloffset=+1]
 // include::_query_stored_procedures.adoc[leveloffset=+1]
 
 include::_query_cache.adoc[leveloffset=+1]

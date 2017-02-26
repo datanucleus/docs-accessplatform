@@ -1,5 +1,5 @@
-[[jpql_geospatial_functions]]
-= Geospatial Functions
+[[jdoql_geospatial_methods]]
+= Geospatial Methods
 :_basedir: ../
 :_imagesdir: images/
 
@@ -7,19 +7,18 @@
 image:../images/nucleus_extension.png[]
 
 When querying spatial data you can make use of a set of spatial methods on the various Java geometry types. 
-The list contains all of the functions detailed in Section 3.2 of the http://www.opengeospatial.org/standards/sfa[OGC Simple Features specification]. 
-Additionally DataNucleus provides some commonly required methods like bounding box test and datastore specific functions. 
-The following tables list all available functions as well as information about which RDBMS implement them. 
-An entry in the "Result" column indicates, whether the funcion may be used in the result part of a JPQL query.
+The list contains all of the methods detailed in Section 3.2 of the http://www.opengeospatial.org/standards/sfa[OGC Simple Features specification].
+Additionally DataNucleus provides some commonly required methods like bounding box test and datastore specific methods. 
+The following tables list all available methods as well as information about which RDBMS implement them. 
+An entry in the "Result" column indicates, whether the funcion may be used in the result part of a JDOQL query.
 
+== Methods for Constructing a Geometry Value given its Well-known Text Representation (OGC SF 3.2.6)
 
-== Functions for Constructing a Geometry Value given its Well-known Text Representation (OGC SF 3.2.6)
-
-[cols="7,10,2,1,1,1,1", options="header"]
+[cols="7,10,1,1,1,1,1", options="header"]
 |===
 |Method
 |Description
-|Specification
+|Spec
 |Result [1]
 |PostGIS
 |MySQL
@@ -90,15 +89,16 @@ An entry in the "Result" column indicates, whether the funcion may be used in th
 |icon:check[]
 |===
 
-[1] These functions can't be used in the return part because it's not possible to determine the return type from the parameters.</p>
+[1] These methods can't be used in the return part because it's not possible to determine the return type from the parameters.
 
-== Functions for Constructing a Geometry Value given its Well-known Binary Representation (OGC SF 3.2.7)
 
-[cols="7,10,2,1,1,1,1", options="header"]
+== Methods for Constructing a Geometry Value given its Well-known Binary Representation (OGC SF 3.2.7)
+
+[cols="7,10,1,1,1,1,1", options="header"]
 |===
 |Method
 |Description
-|Specification
+|Spec
 |Result [1]
 |PostGIS
 |MySQL
@@ -169,17 +169,17 @@ An entry in the "Result" column indicates, whether the funcion may be used in th
 |icon:check[]
 |===
 
-[1] These functions can't be used in the return part because it's not possible to determine the return type from the parameters.
+[1] These methods can't be used in the return part because it's not possible to determine the return type from the parameters.
 
 
-== Functions on Type Geometry (OGC SF 3.2.10)
+== Methods on Type Geometry (OGC SF 3.2.10)
 
-[cols="7,10,2,1,1,1,1", options="header"]
+[cols="7,10,1,1,1,1,1", options="header"]
 |===
 |Method
 |Description
-|Specification
-|Result [1]
+|Spec
+|Result
 |PostGIS
 |MySQL
 |Oracle Spatial
@@ -260,13 +260,13 @@ An entry in the "Result" column indicates, whether the funcion may be used in th
 [1] Oracle does not allow boolean expressions in the SELECT-list.
 
 
-== Functions on Type Point (OGC SF 3.2.11)
+== Methods on Type Point (OGC SF 3.2.11)
 
-[cols="7,10,2,1,1,1,1", options="header"]
+[cols="7,10,1,1,1,1,1", options="header"]
 |===
 |Method
 |Description
-|Specification
+|Spec
 |Result [1]
 |PostGIS
 |MySQL
@@ -290,14 +290,14 @@ An entry in the "Result" column indicates, whether the funcion may be used in th
 |===
 
 
-== Functions on Type Curve (OGC SF 3.2.12)
+== Methods on Type Curve (OGC SF 3.2.12)
 
-[cols="7,10,2,1,1,1,1", options="header"]
+[cols="7,10,1,1,1,1,1", options="header"]
 |===
 |Method
 |Description
-|Specification
-|Result [1]
+|Spec
+|Result
 |PostGIS
 |MySQL
 |Oracle Spatial
@@ -330,14 +330,14 @@ An entry in the "Result" column indicates, whether the funcion may be used in th
 [1] Oracle does not allow boolean expressions in the SELECT-list.
 
 
-== Functions on Type Curve and Type MultiCurve (OGC SF 3.2.12, 3.2.17)
+== Methods on Type Curve and Type MultiCurve (OGC SF 3.2.12, 3.2.17)
 
-[cols="7,10,2,1,1,1,1", options="header"]
+[cols="7,10,1,1,1,1,1", options="header"]
 |===
 |Method
 |Description
-|Specification
-|Result [1]
+|Spec
+|Result
 |PostGIS
 |MySQL
 |Oracle Spatial
@@ -362,13 +362,13 @@ An entry in the "Result" column indicates, whether the funcion may be used in th
 [1] Oracle does not allow boolean expressions in the SELECT-list.
 
 
-== Functions on Type LineString (OGC SF 3.2.13)
+== Methods on Type LineString (OGC SF 3.2.13)
 
-[cols="7,10,2,1,1,1,1", options="header"]
+[cols="7,10,1,1,1,1,1", options="header"]
 |===
 |Method
 |Description
-|Specification
+|Spec
 |Result [1]
 |PostGIS
 |MySQL
@@ -392,14 +392,14 @@ An entry in the "Result" column indicates, whether the funcion may be used in th
 |===
 
 
-== Functions on Type Surface and Type MultiSurface (OGC SF 3.2.14, 3.2.18)
+== Methods on Type Surface and Type MultiSurface (OGC SF 3.2.14, 3.2.18)
 
-[cols="7,10,2,1,1,1,1", options="header"]
+[cols="7,10,1,1,1,1,1", options="header"]
 |===
 |Method
 |Description
-|Specification
-|Result [1]
+|Spec
+|Result
 |PostGIS
 |MySQL
 |Oracle Spatial
@@ -429,17 +429,17 @@ An entry in the "Result" column indicates, whether the funcion may be used in th
 |icon:check[]
 |===
 
-[1] MySQL does not implement these functions.
+[1] MySQL does not implement these methods.
 
 
-== Functions on Type Polygon (OGC SF 3.2.15)
+== Methods on Type Polygon (OGC SF 3.2.15)
 
-[cols="7,10,2,1,1,1,1", options="header"]
+[cols="7,10,1,1,1,1,1", options="header"]
 |===
 |Method
 |Description
-|Specification
-|Result [1]
+|Spec
+|Result
 |PostGIS
 |MySQL
 |Oracle Spatial
@@ -470,14 +470,14 @@ An entry in the "Result" column indicates, whether the funcion may be used in th
 |===
 
 
-== Functions on Type GeomCollection (OGC SF 3.2.16)
+== Methods on Type GeomCollection (OGC SF 3.2.16)
 
-[cols="7,10,2,1,1,1,1", options="header"]
+[cols="7,10,1,1,1,1,1", options="header"]
 |===
 |Method
 |Description
-|Specification
-|Result [1]
+|Spec
+|Result
 |PostGIS
 |MySQL
 |Oracle Spatial
@@ -500,13 +500,13 @@ An entry in the "Result" column indicates, whether the funcion may be used in th
 |===
 
 
-== Functions that test Spatial Relationships (OGC SF 3.2.19)
+== Methods that test Spatial Relationships (OGC SF 3.2.19)
 
-[cols="7,10,2,1,1,1,1", options="header"]
+[cols="7,10,1,1,1,1,1", options="header"]
 |===
 |Method
 |Description
-|Specification
+|Spec
 |Result [1]
 |PostGIS
 |MySQL
@@ -543,7 +543,8 @@ An entry in the "Result" column indicates, whether the funcion may be used in th
 |icon:check[]
 |icon:exclamation[] [2]
 |icon:check[]
-
+                </tr>
+                <tr>
 |Spatial.overlaps(Geometry, Geometry)
 |TRUE if first Geometries is spatially overlapping the other Geometry.
 |OGC SF
@@ -557,7 +558,7 @@ An entry in the "Result" column indicates, whether the funcion may be used in th
 |OGC SF
 |icon:exclamation[]
 |icon:check[]
-|icon:times[] [3]
+|icon:check[]
 |icon:check[]
 
 |Spatial.intersects(Geometry, Geometry)
@@ -586,17 +587,18 @@ An entry in the "Result" column indicates, whether the funcion may be used in th
 |===
 
 [1] Oracle does not allow boolean expressions in the SELECT-list.
-[2] MySQL does not implement these functions according to the specification. They return the same result as the corresponding MBR-based functions.
+
+[2] MySQL does not implement these methods according to the specification. They return the same result as the corresponding MBR-based methods.
 
 
-== Function on Distance Relationships (OGC SF 3.2.20)    
+== Methods on Distance Relationships (OGC SF 3.2.20)
 
-[cols="7,10,2,1,1,1,1", options="header"]
+[cols="7,10,1,1,1,1,1", options="header"]
 |===
 |Method
 |Description
-|Specification
-|Result [1]
+|Spec
+|Result
 |PostGIS
 |MySQL
 |Oracle Spatial
@@ -613,14 +615,14 @@ An entry in the "Result" column indicates, whether the funcion may be used in th
 [1] MariaDB 5.3.3+ implements this.
 
 
-== Functions that implement Spatial Operators (OGC SF 3.2.21)
+== Methods that implement Spatial Operators (OGC SF 3.2.21)
 
-[cols="7,10,2,1,1,1,1", options="header"]
+[cols="7,10,1,1,1,1,1", options="header"]
 |===
 |Method
 |Description
-|Specification
-|Result [1]
+|Spec
+|Result
 |PostGIS
 |MySQL
 |Oracle Spatial
@@ -630,7 +632,7 @@ An entry in the "Result" column indicates, whether the funcion may be used in th
 |OGC SF
 |icon:check[]
 |icon:check[]
-|icon:times[]
+|icon:times[] [1]
 |icon:check[]
 
 |Spatial.difference(Geometry, Geometry)
@@ -638,7 +640,7 @@ An entry in the "Result" column indicates, whether the funcion may be used in th
 |OGC SF
 |icon:check[]
 |icon:check[]
-|icon:times[]
+|icon:times[] [1]
 |icon:check[]
 
 |Spatial.union(Geometry, Geometry)
@@ -646,7 +648,7 @@ An entry in the "Result" column indicates, whether the funcion may be used in th
 |OGC SF
 |icon:check[]
 |icon:check[]
-|icon:times[]
+|icon:times[] [1]
 |icon:check[]
 
 |Spatial.symDifference(Geometry, Geometry)
@@ -654,7 +656,7 @@ An entry in the "Result" column indicates, whether the funcion may be used in th
 |OGC SF
 |icon:check[]
 |icon:check[]
-|icon:times[]
+|icon:times[] [1]
 |icon:check[]
 
 |Spatial.buffer(Geometry, Double)
@@ -662,7 +664,7 @@ An entry in the "Result" column indicates, whether the funcion may be used in th
 |OGC SF
 |icon:check[]
 |icon:check[]
-|icon:times[]
+|icon:times[] [1]
 |icon:check[]
 
 |Spatial.convexHull(Geometry)
@@ -670,22 +672,21 @@ An entry in the "Result" column indicates, whether the funcion may be used in th
 |OGC SF
 |icon:check[]
 |icon:check[]
-|icon:times[]
+|icon:times[] [1]
 |icon:check[]
 |===
 
-[1] These functions are currently not implemented in MySQL. They may appear in future releases.
+[1] These methods are currently not implemented in MySQL. They may appear in future releases.
 
 
+== Test whether the bounding box of one geometry intersects the bounding box of another
 
-*Test whether the bounding box of one geometry intersects the bounding box of another*
-
-[cols="7,10,2,1,1,1,1", options="header"]
+[cols="7,10,1,1,1,1,1", options="header"]
 |===
 |Method
 |Description
-|Specification
-|Result [1]
+|Spec
+|Result
 |PostGIS
 |MySQL
 |Oracle Spatial
@@ -703,7 +704,7 @@ An entry in the "Result" column indicates, whether the funcion may be used in th
 
 == PostGIS Spatial Operators
 
-NOTE: These functions are only supported on PostGIS.
+These methods are only supported on PostGIS.
 
 [cols="7,10,1", options="header"]
 |===
@@ -712,59 +713,58 @@ NOTE: These functions are only supported on PostGIS.
 |Result
 
 |PostGIS.bboxOverlapsLeft(Geometry, Geometry)
-|The PostGIS &amp;< operator returns TRUE if the bounding box of the first Geometry overlaps or is to the left of second Geometry's bounding box
+|The PostGIS _&amp;<_ operator returns TRUE if the bounding box of the first Geometry overlaps or is to the left of second Geometry's bounding box
 |icon:check[]
 
 |PostGIS.bboxOverlapsRight(Geometry, Geometry)
-|The PostGIS &amp;< operator returns TRUE if the bounding box of the first Geometry overlaps or is to the right of second Geometry's bounding box
+|The PostGIS _&amp;<_ operator returns TRUE if the bounding box of the first Geometry overlaps or is to the right of second Geometry's bounding box
 |icon:check[]
 
 |PostGIS.bboxLeft(Geometry, Geometry)
-|The PostGIS << operator returns TRUE if the bounding box of the first Geometry overlaps or is strictly to the left of second Geometry's bounding box
+|The PostGIS _<<_ operator returns TRUE if the bounding box of the first Geometry overlaps or is strictly to the left of second Geometry's bounding box
 |icon:check[]
 
 |PostGIS.bboxRight(Geometry, Geometry)
-|The PostGIS << operator returns TRUE if the bounding box of the first Geometry overlaps or is strictly to the right of second Geometry's bounding box
+|The PostGIS _<<_ operator returns TRUE if the bounding box of the first Geometry overlaps or is strictly to the right of second Geometry's bounding box
 |icon:check[]
 
 |PostGIS.bboxOverlapsBelow(Geometry, Geometry)
-|The PostGIS &amp;<@ operator returns TRUE if the bounding box of the first Geometry overlaps or is below second Geometry's bounding box
+|The PostGIS _&amp;<@_ operator returns TRUE if the bounding box of the first Geometry overlaps or is below second Geometry's bounding box
 |icon:check[]
 
 |PostGIS.bboxOverlapsAbove(Geometry, Geometry)
-|The PostGIS {vbar}&amp;< operator returns TRUE if the bounding box of the first Geometry overlaps or is above second Geometry's bounding box
+|The PostGIS _|&amp;<_ operator returns TRUE if the bounding box of the first Geometry overlaps or is above second Geometry's bounding box
 |icon:check[]
 
 |PostGIS.bboxBelow(Geometry, Geometry)
-|The PostGIS <<{vbar} operator returns TRUE if the bounding box of the first Geometry is strictly below second Geometry's bounding box
+|The PostGIS _<<|_ operator returns TRUE if the bounding box of the first Geometry is strictly below second Geometry's bounding box
 |icon:check[]
 
 |PostGIS.bboxAbove(Geometry, Geometry)
-|The PostGIS {vbar}<< operator returns TRUE if the bounding box of the first Geometry is strictly above second Geometry's bounding box
+|The PostGIS _|<<_ operator returns TRUE if the bounding box of the first Geometry is strictly above second Geometry's bounding box
 |icon:check[]
 
 |PostGIS.sameAs(Geometry, Geometry)
-|The PostGIS ~= operator returns TRUE if the two geometries are vertex-by-vertex equal.
+|The PostGIS _~=_ operator returns TRUE if the two geometries are vertex-by-vertex equal.
 |icon:check[]
 
 |PostGIS.bboxWithin(Geometry, Geometry)
-|The PostGIS @ operator returns TRUE if the bounding box of the first Geometry overlaps or is completely contained by second Geometry's bounding box
+|The PostGIS _@_ operator returns TRUE if the bounding box of the first Geometry overlaps or is completely contained by second Geometry's bounding box
 |icon:check[]
 
 |PostGIS.bboxContains(Geometry, Geometry)
-|The PostGIS ~ operator returns TRUE if the bounding box of the first Geometry completely contains second Geometry's bounding box
+|The PostGIS _~_ operator returns TRUE if the bounding box of the first Geometry completely contains second Geometry's bounding box
 |icon:check[]
 |===
 
 
-== MySQL specific Functions for Testing Spatial Relationships between Minimal Bounding Boxes
+== MySQL specific Methods for Testing Spatial Relationships between Minimal Bounding Boxes
 
-NOTE: These functions are only supported on MySQL
 
 [cols="7,10,1", options="header"]
 |===
 |Method
-|Desription
+|Description
 |Result
 
 |MySQL.mbrEqual(Geometry, Geometry)
@@ -797,14 +797,14 @@ NOTE: These functions are only supported on MySQL
 |===
 
 
-== Oracle specific Functions for Constructing SDO_GEOMETRY types
+== Oracle specific Methods for Constructing SDO_GEOMETRY types
 
-NOTE: These functions are only supported on Oracle Geospatial.
 
 [cols="7,10", options="header"]
 |===
 |Method
-|Desription
+|Description
+
 |Oracle.sdo_geometry(Integer gtype, Integer srid, SDO_POINT point, SDO_ELEM_INFO_ARRAY elem_info, SDO_ORDINATE_ARRAY ordinates)
 |Creates a SDO_GEOMETRY geometry from the passed geometry type, srid, point, element infos and ordinates.
 
@@ -821,15 +821,15 @@ NOTE: These functions are only supported on Oracle Geospatial.
 
 == Examples
 
-The following sections provide some examples of what can be done using spatial methods in JPQL queries. In the examples we use a class from the test suite. Here's the source code for reference:
+The following sections provide some examples of what can be done using spatial methods in JDOQL queries. 
+In the examples we use a class from the test suite. Here's the source code for reference:
 
 [source,java]
 -----
-package mydomain.samples.pggeometry;
-
+package org.datanucleus.samples.pggeometry;
 import org.postgis.LineString;
-
-public class SampleLineString
+                
+public class SampleLineString 
 {			
     private long id;
     private String name;
@@ -849,60 +849,57 @@ public class SampleLineString
     ....
 }
 -----
-
 [source,xml]
 -----
-<entity-mappings>
-    <package>mydomain.samples.pggeometry</package>
-
-    <entity class="mydomain.samples.pggeometry.SampleLineString">
+<jdo>
+    <package name="org.datanucleus.samples.pggeometry">	
         <extension vendor-name="datanucleus" key="spatial-dimension" value="2"/>
         <extension vendor-name="datanucleus" key="spatial-srid" value="4326"/>
-        <attributes>
-            <id name="id"/>
-            <basic name="name"/>
-            <basic name="geom">
-                <extension vendor-name="datanucleus" key="mapping" value="no-userdata"/> [2]
-            </basic>
-        </attributes>
-    </entity>
-</entity-mappings>
+
+        <class name="SampleLineString" table="samplepglinestring" detachable="true">
+            <field name="id"/>
+            <field name="name"/>
+            <field name="geom" persistence-modifier="persistent"/>
+        </class>
+    </package>
+</jdo>
 -----
 
+=== Example 1 - Spatial Method in the Filter of a Query
 
-=== Example 1 - Spatial Function in the Filter of a Query
-
-This example shows how to use spatial functions in the filter of a query. The query returns a list of _SampleLineString_s whose line string has a length less than the given limit.
+This example shows how to use spatial methods in the filter of a query. The query returns a list of _SampleLineString_s whose line string has a length less than the given limit.
 
 [source,java]
 -----
-Query q = em.createQuery("SELECT s FROM SampleLineString s WHERE geom IS NOT NULL AND Spatial.length(geom) < :limit");
-q.setParameter("limit", new Double(100.0));
-List list = q.getResultList();
+Double limit = new Double(100.0);
+Query query = pm.newQuery(SampleLineString.class, "geom != null && geom.length() < :limit");
+List list = (List) query.execute(limit);
 -----
 
 
-=== Example 2 - Spatial Function in the Result Part of a Query
+=== Example 2 - Spatial Method in the Result Part of a Query
 
-This time we use a spatial function in the result part of a query. The query returns the length of the line string from the selected _SampleLineString_
+This time we use a spatial method in the result part of a query. The query returns the length of the line string from the selected _SampleLineString_
 
 [source,java]
 -----
-q = em.createQuery("SELECT Spatial.pointN(geom, 2) FROM SampleLineString s WHERE id == :id");
-q.setParameter("id", new Long(1001));
-Geometry point = q.getSingleResult();
+query = pm.newQuery(SampleLineString.class, "id == :id");
+query.setResult("geom.pointN(2)");
+query.setUnique(true);
+Geometry point = (Geometry) query.execute(new Long(1001));
 -----
 
 
-=== Example 3 - Nested Functions
+=== Example 3 - Nested Methods
 
-You may want to use nested functions in your query. This example shows how to do that. The query returns a list of _SampleLineString_s, whose end point spatially equals a given point.
+You may want to use nested methods in your query. This example shows how to do that. 
+The query returns a list of _SampleLineString_s, whose end point spatially equals a given point.
 
 [source,java]
 -----
 Point point = new Point("SRID=4326;POINT(110 45)");
-Query q = em.createQuery("SELECT s FROM SampleLineString s WHERE geom IS NOT NULL AND Spatial.equals(Spatial.endPoint(geom), :point)");
-q.setParameter("point", point);
-List list = q.getResultList();
+Query query = pm.newQuery(SampleLineString.class, "geom != null && Spatial.equals(geom.endPoint(), :point)");
+List list = (List) query.execute(point);
 -----
+
 

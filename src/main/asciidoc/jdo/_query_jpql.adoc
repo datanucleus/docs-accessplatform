@@ -1,0 +1,45 @@
+[[jpql]]
+= JPQL
+:_basedir: ../
+:_imagesdir: images/
+
+As we have described earlier, JDO allows access to many query languages to give the user full flexibility over what they utilise.
+It may be that the developers of your project are familiar with the JPA query language _JPQL_. 
+DataNucleus allows full support for this syntax.
+
+image:../images/nucleus_extension.png[]
+
+You would create and execute a JPQL query using the JDO API like this
+
+[source,java]
+-----
+Query q = pm.newQuery("JPQL", "SELECT p FROM Person p WHERE p.lastName = 'Jones'");
+List results = (List)q.execute();
+-----
+
+This finds all "Person" objects with surname of "Jones". You specify all details in the query.
+
+You can find full details of the JPQL syntax in the link:../jpa/query.html#jpql[JPQL Query Guide for JPA]
+
+Since you are using the JDO API here, there may be some parts of JPA mapping metadata that is not available for use with JDO, so we note some known differences below.
+
+== Entity Name
+
+In the example shown you note that we did not specify the full class name. We used _Person p_ and thereafter could refer to _p_ as the alias. 
+The _Person_ is called the *entity name* and in JPA MetaData this can be defined against each class in its definition. 
+With JDO we don't have this MetaData attribute so we simply define the *entity name* as _the name of the class omitting the package name_. 
+So _org.datanucleus.test.samples.Person_ will have an entity name of _Person_.
+
+
+[[jpql_fetchplan]]
+== Fetched Fields
+
+By default a query will fetch fields according to their defined EAGER/LAZY setting, so fields like primitives, wrappers, Dates, and 1-1/N-1 relations will be fetched, 
+whereas 1-N/M-N fields will not be fetched. JPQL allows you to include _FETCH JOIN_ as a hint to include 1-N/M-N fields where possible. 
+All non-RDBMS datastores do respect this FETCH JOIN setting, since a collection/map is stored in a single "column" in the object and so is readily retrievable.
+For RDBMS, we respect this in some specific situations only.
+
+Note that you can also make use of link:persistence.html#fetch_groups[Fetch Groups] to have fuller control over what is retrieved from each query.
+
+
+
