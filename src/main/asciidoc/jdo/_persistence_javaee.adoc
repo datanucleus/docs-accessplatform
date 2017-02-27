@@ -46,13 +46,15 @@ ejb-jar.xml should contain the following configuration elements:
 [source,xml]
 -----
 <session>
-	<ejb-name>DataNucleusBean</ejb-name>
-	...
-	<transaction-type>Container</transaction-type>
-	...
-<session>]]></source>
-                <p>Imagine your bean defines a method called testDataNucleusTrans():</p>
-	            <source><![CDATA[
+    <ejb-name>DataNucleusBean</ejb-name>
+    ...
+    <transaction-type>Container</transaction-type>
+    ...
+<session>
+-----
+Imagine your bean defines a method called testDataNucleusTrans():
+[source,xml]
+-----
 <container-transaction>
     <method >
         <ejb-name>DataNucleusBean</ejb-name>
@@ -71,7 +73,7 @@ A potential SessionBean implementation containing methods to retrieve a Persiste
 -----
 public abstract class DataNucleusBean implements SessionBean 
 {
-    // EJB methods	
+    // EJB methods  
     public void ejbCreate() 
     throws CreateException
     {
@@ -89,7 +91,7 @@ public abstract class DataNucleusBean implements SessionBean
      * static final for the JNDI name of the PersistenceManagerFactory
      */
     private static final String PMF_JNDI_NAME = "java:/datanucleus1";
-	
+    
     /**
      * Method to get the current InitialContext
      */
@@ -108,7 +110,7 @@ public abstract class DataNucleusBean implements SessionBean
     {
         return (PersistenceManagerFactory) context.lookup(PMF_JNDI_NAME);
     }
-	
+    
     /**
      * Method to get a PersistenceManager
      */
