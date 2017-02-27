@@ -33,7 +33,7 @@ https://sourceforge.net/projects/datanucleus/files/datanucleus-samples/[SourceFo
 
 
 [[step0]]
-== Prerequisite : Download DataNucleus AccessPlatform
+== Step 0 : Download DataNucleus AccessPlatform
 
 You can download DataNucleus in many ways, but the simplest is to download the distribution zip appropriate to your datastore. 
 You can do this from https://sourceforge.net/projects/datanucleus/files/datanucleus-accessplatform/[SourceForge DataNucleus download page].
@@ -184,6 +184,7 @@ You do this via a file `META-INF/persistence.xml` at the root of the CLASSPATH. 
         <class>org.datanucleus.samples.jdo.tutorial.Book</class>
         <exclude-unlisted-classes/>
         <properties>
+            <!-- Properties for runtime configuration will be added here later, see below -->
         </properties>
     </persistence-unit>
 </persistence>
@@ -398,7 +399,7 @@ Firstly for RDBMS (H2 in this case)
 
 If we had wanted to persist to Cassandra then this would be
 
-[source,java]
+[source,xml]
 -----
 <properties>
     <property name="javax.jdo.option.ConnectionURL" value="cassandra:"/>
@@ -409,7 +410,7 @@ If we had wanted to persist to Cassandra then this would be
 
 or for MongoDB then this would be
 
-[source,java]
+[source,xml]
 -----
 <properties>
     <property name="javax.jdo.option.ConnectionURL" value="mongodb:/nucleus1"/>

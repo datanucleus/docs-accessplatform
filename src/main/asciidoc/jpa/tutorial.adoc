@@ -386,7 +386,7 @@ In our case we firstly need to update the `persistence.xml` with the persistence
 
 If we had wanted to persist to Cassandra then this would be
 
-[source,java]
+[source,xml]
 -----
 <properties>
     <property name="javax.persistence.jdbc.url" value="cassandra:"/>
@@ -397,7 +397,7 @@ If we had wanted to persist to Cassandra then this would be
 
 or for MongoDB then this would be
 
-[source,java]
+[source,xml]
 -----
 <properties>
     <property name="javax.persistence.jdbc.url" value="mongodb:/nucleus1"/>
