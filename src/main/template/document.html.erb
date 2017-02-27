@@ -98,6 +98,8 @@
                         <li><a href="http://www.datanucleus.org/javadocs/javax.jdo/3.2/">JDO Javadocs</a></li>
                         <li role="separator" class="divider"></li>
                         <li><a href="<%= (attr :_basedir) %>jdo/tutorial.html">JDO Tutorial</a></li>
+                        <li><a href="http://db.apache.org/jdo/">Apache JDO project</a></li>
+                        <li><a href="https://github.com/datanucleus/samples-jdo">JDO Samples</a></li>
                     </ul>
                 </li>
                 <li class="dropdown">
@@ -116,10 +118,12 @@
                         <li><a href="http://www.datanucleus.org/javadocs/javax.persistence/2.1/">JPA Javadocs</a></li>
                         <li role="separator" class="divider"></li>
                         <li><a href="<%= (attr :_basedir) %>jpa/tutorial.html">JPA Tutorial</a></li>
+                        <li><a href="http://jcp.org/aboutJava/communityprocess/final/jsr338/index.html">JPA 2.1 spec</a></li>
+                        <li><a href="https://github.com/datanucleus/samples-jpa">JPA Samples</a></li>
                     </ul>
                 </li>
                 <li><a href="<%= (attr :_basedir) %>rest/rest.html">REST API</a></li>
-                <li><a href="<%= (attr :_basedir) %>datastores/index.html">Datastores</a></li>
+                <li><a href="<%= (attr :_basedir) %>datastores/datastores.html">Datastores</a></li>
                 <li><a href="<%= (attr :_basedir) %>extensions/extensions.html">Extensions</a></li>
             </ul>
         </div>
@@ -143,11 +147,9 @@
             </div>
         </div>
     <% else %>
+        <!-- Front Page, no TOC and no heading -->
         <div class="row-fluid">
             <div class="col-sm-12">
-                <div class="page-title">
-                    <h1><%= document.name %></h1>
-                </div>
                 <div id="doc-content">
                     <%= document.content %>
                 </div>
