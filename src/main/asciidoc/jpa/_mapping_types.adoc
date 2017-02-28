@@ -1005,8 +1005,8 @@ you use them inside the &lt;package&gt;-tag the values are in effect for all (ge
 
 * *[1]* - The srid &amp; dimension values are used in various places. One of them is schema creation, when using PostGIS, another is when you query the SpatialHelper.
 * *[2]* - Every JTS geometry object can have a user data object attached to it. The default behaviour is to serialize that object and store it in a separate column in the database. 
-If for some reason this isn't desired, the <code>mapping</code> extension can be used with value &quot;no-mapping&quot; and datanucleus-geospatial will ignore the user data objects.
-* *[3]* - If you want to use measure types in PostGIS you have to define that using the <code>postgis-hasMeasure</code> extension.
+If for some reason this isn't desired, the *mapping* extension can be used with value &quot;no-mapping&quot; and datanucleus-geospatial will ignore the user data objects.
+* *[3]* - If you want to use measure types in PostGIS you have to define that using the *postgis-hasMeasure* extension.
 
 
 == Other Types
