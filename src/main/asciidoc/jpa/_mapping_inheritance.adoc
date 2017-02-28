@@ -83,43 +83,20 @@ and want everything stored in a single table _PRODUCT_. We change our MetaData a
         <id name="id">
             <column name="PRODUCT_ID"/>
         </id>
-        <basic name="price">
-            <column name="PRICE"/>
-        </basic>
+        ...
     </attributes>
 </entity>
 <entity name="Book">
     <discriminator-value>BOOK</discriminator-value>
-    <attributes>
-        <basic name="isbn">
-            <column name="ISBN"/>
-        </basic>
-        <basic name="author">
-            <column name="AUTHOR"/>
-        </basic>
-        <basic name="title">
-            <column name="TITLE"/>
-        </basic>
-    </attributes>
+     ...
 </entity>
 <entity name="TravelGuide">
     <discriminator-value>TRAVELGUIDE</discriminator-value>
-    <attributes>
-        <basic name="country">
-            <column name="COUNTRY"/>
-        </basic>
-    </attributes>
+    ...
 </entity>
 <entity name="CompactDisc">
     <discriminator-value>COMPACTDISC</discriminator-value>
-    <attributes>
-        <basic name="artist">
-            <column name="ARTIST"/>
-        </basic>
-        <basic name="title">
-            <column name="DISCTITLE"/>
-        </basic>
-    </attributes>
+    ...
 </entity>
 -----
 
@@ -184,50 +161,20 @@ We define the Meta-Data for our classes like this</p>
         <id name="id">
             <column name="PRODUCT_ID"/>
         </id>
-        <basic name="name">
-            <column name="NAME"/>
-        </basic>
-        <basic name="description">
-            <column name="DESCRIPTION"/>
-        </basic>
+        ...
     </attributes>
 </entity>
 <entity class="Product">
-    <attributes>
-        <basic name="price">
-            <column name="PRICE"/>
-        </basic>
-    </attributes>
+    ...
 </entity>
 <entity class="Book">
-    <attributes>
-        <basic name="isbn">
-            <column name="ISBN"/>
-        </basic>
-        <basic name="author">
-            <column name="AUTHOR"/>
-        </basic>
-        <basic name="title">
-            <column name="TITLE"/>
-        </basic>
-    </attributes>
+    ...
 </entity>
 <entity class="TravelGuide">
-    <attributes>
-        <basic name="country">
-            <column name="COUNTRY"/>
-        </basic>
-    </attributes>
+    ...
 </entity>
 <entity class="CompactDisc">
-    <attributes>
-        <basic name="artist">
-            <column name="ARTIST"/>
-        </basic>
-        <basic name="title">
-            <column name="TITLE"/>
-        </basic>
-    </attributes>
+    ...
 </entity>
 -----
 
@@ -263,50 +210,20 @@ So taking the same classes as used above
         <id name="id">
             <column name="PRODUCT_ID"/>
         </id>
-        <basic name="name">
-            <column name="NAME"/>
-        </basic>
-        <basic name="description">
-            <column name="DESCRIPTION"/>
-        </basic>
+        ...
     </attributes>
 </entity>
 <entity class="Product">
-    <attributes>
-        <basic name="price">
-            <column name="PRICE"/>
-        </basic>
-    </attributes>
+    ...
 </entity>
 <entity class="Book">
-    <attributes>
-        <basic name="isbn">
-            <column name="ISBN"/>
-        </basic>
-        <basic name="author">
-            <column name="AUTHOR"/>
-        </basic>
-        <basic name="title">
-            <column name="TITLE"/>
-        </basic>
-    </attributes>
+    ...
 </entity>
 <entity class="TravelGuide">
-    <attributes>
-        <basic name="country">
-            <column name="COUNTRY"/>
-        </basic>
-    </attributes>
+    ...
 </entity>
 <entity class="CompactDisc">
-    <attributes>
-        <basic name="artist">
-            <column name="ARTIST"/>
-        </basic>
-        <basic name="title">
-            <column name="TITLE"/>
-        </basic>
-    </attributes>
+    ...
 </entity>
 -----
 
@@ -343,21 +260,12 @@ its subclasses. Let's take an example
         <id name="id">
             <column name="PRODUCT_ID"/>
         </id>
-        <basic name="name">
-            <column name="NAME"/>
-        </basic>
-        <basic name="description">
-            <column name="DESCRIPTION"/>
-        </basic>
+        ...
     </attributes>
 </mapped-superclass>
 
 <entity class="Product">
-    <attributes>
-        <basic name="price">
-            <column name="PRICE"/>
-        </basic>
-    </attributes>
+    ...
 </entity>
 -----
 

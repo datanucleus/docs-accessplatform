@@ -111,45 +111,23 @@ We have the classes defined above, and we want to persist our classes each in th
     <field name="id" primary-key="true">
         <column name="PRODUCT_ID"/>
     </field>
-    <field name="name">
-        <column name="NAME"/>
-    </field>
-    <field name="description">
-        <column name="DESCRIPTION"/>
-    </field>
+    ...
 </class>
 <class name="Product">
     <inheritance strategy="new-table"/>
-    <field name="price">
-        <column name="PRICE"/>
-    </field>
+    ...
 </class>
 <class name="Book">
     <inheritance strategy="new-table"/>
-    <field name="isbn">
-        <column name="ISBN"/>
-    </field>
-    <field name="author">
-        <column name="AUTHOR"/>
-    </field>
-    <field name="title">
-        <column name="TITLE"/>
-    </field>
+    ...
 </class>
 <class name="TravelGuide">
     <inheritance strategy="new-table"/>
-    <field name="country">
-        <column name="COUNTRY"/>
-    </field>
+    ...
 </class>
 <class name="CompactDisc">
     <inheritance strategy="new-table"/>
-    <field name="artist">
-        <column name="ARTIST"/>
-    </field>
-    <field name="title">
-        <column name="TITLE"/>
-    </field>
+    ...
 </class>
 -----
 
@@ -208,12 +186,7 @@ We now change the definition of *AbstractProduct* as follows
     <field name="id" primary-key="true">
         <column name="PRODUCT_ID"/>
     </field>
-    <field name="name">
-        <column name="NAME"/>
-    </field>
-    <field name="description">
-        <column name="DESCRIPTION"/>
-    </field>
+    ...
 </class>
 -----
 
@@ -260,36 +233,19 @@ We change our MetaData as follows
     <field name="id" primary-key="true">
         <column name="PRODUCT_ID"/>
     </field>
-    <field name="price">
-        <column name="PRICE"/>
-    </field>
+    ...
 </class>
 <class name="Book">
     <inheritance strategy="superclass-table"/>
-    <field name="isbn">
-        <column name="ISBN"/>
-    </field>
-    <field name="author">
-        <column name="AUTHOR"/>
-    </field>
-    <field name="title">
-        <column name="TITLE"/>
-    </field>
+    ...
 </class>
 <class name="TravelGuide">
     <inheritance strategy="superclass-table"/>
-    <field name="country">
-        <column name="COUNTRY"/>
-    </field>
+    ...
 </class>
 <class name="CompactDisc">
     <inheritance strategy="superclass-table"/>
-    <field name="artist">
-        <column name="ARTIST"/>
-    </field>
-    <field name="title">
-        <column name="DISCTITLE"/>
-    </field>
+    ...
 </class>
 -----
 
@@ -347,42 +303,25 @@ The only thing here is that we have to define the "value" in the MetaData for AL
     <field name="id" primary-key="true">
         <column name="PRODUCT_ID"/>
     </field>
-    <field name="price">
-        <column name="PRICE"/>
-    </field>
+    ...
 </class>
 <class name="Book">
     <inheritance strategy="superclass-table">
         <discriminator value="BOOK"/>
     </inheritance>
-    <field name="isbn">
-        <column name="ISBN"/>
-    </field>
-    <field name="author">
-        <column name="AUTHOR"/>
-    </field>
-    <field name="title">
-        <column name="TITLE"/>
-    </field>
+    ...
 </class>
 <class name="TravelGuide">
     <inheritance strategy="superclass-table">
         <discriminator value="TRAVELGUIDE"/>
     </inheritance>
-    <field name="country">
-        <column name="COUNTRY"/>
-    </field>
+    ...
 </class>
 <class name="CompactDisc">
     <inheritance strategy="superclass-table">
         <discriminator value="COMPACTDISC"/>
     </inheritance>
-    <field name="artist">
-        <column name="ARTIST"/>
-    </field>
-    <field name="title">
-        <column name="DISCTITLE"/>
-    </field>
+    ...
 </class>
 -----
 
@@ -405,33 +344,16 @@ Each class is persisted into its own table, having columns for all fields (of th
     <field name="id" primary-key="true">
         <column name="PRODUCT_ID"/>
     </field>
-    <field name="price">
-        <column name="PRICE"/>
-    </field>
+    ...
 </class>
 <class name="Book">
-    <field name="isbn">
-        <column name="ISBN"/>
-    </field>
-    <field name="author">
-        <column name="AUTHOR"/>
-    </field>
-    <field name="title">
-        <column name="TITLE"/>
-    </field>
+    ...
 </class>
 <class name="TravelGuide">
-    <field name="country">
-        <column name="COUNTRY"/>
-    </field>
+    ...
 </class>
 <class name="CompactDisc">
-    <field name="artist">
-        <column name="ARTIST"/>
-    </field>
-    <field name="title">
-        <column name="DISCTITLE"/>
-    </field>
+    ...
 </class>
 -----
 
