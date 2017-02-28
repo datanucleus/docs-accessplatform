@@ -175,6 +175,7 @@ If using any of the DataNucleus extensions, then the XSD is http://www.datanucle
 ***** link:#order-by[order-by]
 ***** link:#order-column[order-column]
 ***** link:#map-key[map-key]
+***** link:#map-key-class[map-key-class]
 ***** link:#map-key-temporal[map-key-temporal]
 ***** link:#map-key-enumerated[map-key-enumerated]
 ***** link:#join-table[join-table]
@@ -189,6 +190,7 @@ If using any of the DataNucleus extensions, then the XSD is http://www.datanucle
 ***** link:#order-by[order-by]
 ***** link:#order-column[order-column]
 ***** link:#map-key[map-key]
+***** link:#map-key-class[map-key-class]
 ***** link:#map-key-temporal[map-key-temporal]
 ***** link:#map-key-enumerated[map-key-enumerated]
 ***** link:#join-table[join-table]
@@ -222,6 +224,7 @@ If using any of the DataNucleus extensions, then the XSD is http://www.datanucle
 ***** link:#order-by[order-by]
 ***** link:#order-column[order-column]
 ***** link:#map-key[map-key]
+***** link:#map-key-class[map-key-class]
 ***** link:#map-key-temporal[map-key-temporal]
 ***** link:#map-key-enumerated[map-key-enumerated]
 ***** link:#join-table[join-table]
@@ -1432,6 +1435,24 @@ These are attributes within the *<map-key>* tag (under <one-to-many> or <many-to
 
 |name
 |Name of the field (required)
+|
+|===
+
+
+
+[[map-key-class]]
+== Metadata for map-key-class tag
+
+These are attributes within the *<map-key-class>* tag (under <one-to-many> or <many-to-many>). This is used to define the key type for a Map.
+
+[cols="1,3,1", options="header"]
+|===
+|Attribute
+|Description
+|Values
+
+|class
+|Type used for the key (required)
 |
 |===
 

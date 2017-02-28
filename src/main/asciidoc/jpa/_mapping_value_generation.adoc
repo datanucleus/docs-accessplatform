@@ -105,10 +105,10 @@ public class MyClass
 }
 -----
 
-If the sequence does not yet exist in the database at the time DataNucleus needs a new unique 
-identifier, a new sequence is created in the database based on the JPA Meta-Data configuration. 
-Additional properties for configuring sequences are set in the JPA Meta-Data, see the available 
-properties below. Unsupported properties by a database are silently ignored by DataNucleus.
+If the sequence does not yet exist in the database at the time DataNucleus needs a new unique identifier, a new sequence is created in the database based on the JPA Meta-Data configuration. 
+
+Extension properties for configuring sequences can be set in the JPA Meta-Data (via @Extension or <extension>), see the available properties below. 
+Unsupported properties by a database are silently ignored by DataNucleus.
 
 [cols="1,2,1", options="header"]
 |===
@@ -119,23 +119,17 @@ properties below. Unsupported properties by a database are silently ignored by D
 |key-database-cache-size
 |specifies how many sequence numbers are to be preallocated and stored in memory for faster access. This is an optimization feature provided by the database
 |No
-
-|sequence-catalog-name
-|Name of the catalog where the sequence is.
-|No.
-
-|sequence-schema-name
-|Name of the schema where the sequence is.
-|No.
 |===
-
-TODO Describe @SequenceGenerator
 
 To configure a class to use this generation using *datastore identity* you need to look at the @DatastoreId extension annotation or the XML <datastore-id> tag.
 
 This value generator will generate values unique across different JVMs
 
 Values generated using this generator are available in @PrePersist.
+
+See also:-
+* metadata_xml.html#sequence-generator[JPA MetaData reference for <sequence-generator>]
+* annotations.html#SequenceGenerator[JPA Annotation reference for @SequenceGenerator]
 
 
 [[valuegen_identity]]
@@ -205,6 +199,7 @@ tree you should define this for the base class only.
 [source,xml]
 -----
 <entity class="MyClass">
+    <table-generator name="myGenerator" table=TABLE_VALUE_GEN" pkColumnName="GEN_KEY" valueColumnName="GEN_VALUE" pkColumnValue="MyClass" allocationSize="1"/>
     <attributes>
         <id name="myId">
             <generated-value strategy="TABLE"/>
@@ -218,18 +213,22 @@ or using annotations
 [source,java]
 -----
 @Entity
+@TableGenerator(name="myGenerator", table="TABLE_VALUE_GEN", pkColumnName="GEN_KEY", valueColumnName="GEN_VALUE", pkColumnValue="MyClass", allocationSize=1)
 public class MyClass
 {
     @Id
-    @GeneratedValue(strategy=GenerationType.TABLE)
+    @GeneratedValue(strategy=GenerationType.TABLE, generator="myGenerator")
     private long myId;
     ...
 }
 -----
 
-Additional properties for configuring this generator are set in the JPA Meta-Data, see the available properties below. Unsupported properties are silently ignored by DataNucleus.
+This will create a table in the datastore called "TABLE_VALUE_GEN" with columns "GEN_KEY", "GEN_VALUE" with the key for the row for this class being "MyClass".
 
-TODO Describe TableGenerator
+
+
+Extension properties for configuring sequences can be set in the JPA Meta-Data (via @Extension or <extension>), see the available properties below. 
+Unsupported properties by a database are silently ignored by DataNucleus.
 
 [cols="1,2,1", options="header"]
 |===
@@ -251,30 +250,6 @@ If _key-cache-size_ is greater than 1, it may generate holes in the object keys 
 Since there is no "base table name" when the root class has "subclass-table" this should be set to "class" when the root class has "subclass-table" inheritance
 |No. Defaults to _class_, but the other option is _table_
 
-|sequence-name
-|name for the sequence (overriding the "sequence-table-basis" above). The row in the table will use this in the PK column
-|No
-
-|sequence-table-name
-|Table name for storing the sequence.
-|No. Defaults to _SEQUENCE_TABLE_
-
-|sequence-catalog-name
-|Name of the catalog where the table is.
-|No.
-
-|sequence-schema-name
-|Name of the schema where the table is.
-|No.
-
-|sequence-name-column-name
-|Name for the column that represent sequence names.
-|No. Defaults to _SEQUENCE_NAME_
-
-|sequence-nextval-column-name
-|Name for the column that represent incremeting sequence values.
-|No. Defaults to _NEXT_VAL_
-
 |table-name
 |Name of the table whose column we are generating the value for (used when we have no previous sequence value and want a start point.
 |No.
@@ -289,6 +264,11 @@ To configure a class to use this generation using *datastore identity* you need 
 This value generator will generate values unique across different JVMs
 
 Values generated using this generator are available in @PrePersist.
+
+See also:-
+* metadata_xml.html#table-generator[JPA MetaData reference for <table-generator>]
+* annotations.html#TableGenerator[JPA Annotation reference for @TableGenerator]
+
 
 
 [[valuegen_custom]]

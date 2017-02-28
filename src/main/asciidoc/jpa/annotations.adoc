@@ -18,8 +18,8 @@ Instead it would be better to put such information in an ORM file.
 * You have to import "javax.persistence.XXX" where XXX is the annotation name of a JPA annotation
 * You have to import "org.datanucleus.api.jpa.annotations.XXX" where XXX is the annotation name of a DataNucleus value-added annotation
 
+
 Annotations supported by DataNucleus are shown below. Not all have their documentation written yet.
-The annotations/attributes coloured in brighter green are ORM and really should be placed in XML rather than directly in the class using annotations. TODO Fix this
 
 
 [[jpa_class]]
@@ -1160,6 +1160,16 @@ It is scoped to the persistence unit. Specified on the *class/field/method*.
 |int
 |Number of values to be allocated each time (optional)
 |50
+
+|schema
+|String
+|Name of the schema where the sequence will be stored (optional)
+|
+
+|catalog
+|String
+|Name of the catalog where the sequence will be stored (optional)
+|
 |===
 
 [source,java]
@@ -1198,12 +1208,12 @@ It is scoped to the persistence unit. Specified on the *class/field/method*.
 
 |catalog
 |String
-|Catalog of the table to use
+|Catalog of the table to use (optional)
 |
 
 |schema
 |String
-|Schema of the table to use
+|Schema of the table to use (optional)
 |
 
 |pkColumnName
@@ -1319,6 +1329,10 @@ Using these provide portability for your application.
 |xref:annotations.html#MapKey[@MapKey]
 |Field/Method
 |Defines that this field is the key to a map
+
+|xref:annotations.html#MapKeyClass[@MapKeyClass]
+|Field/Method
+|Defines that the key type for the map in this field
 
 |xref:annotations.html#MapKeyEnumerated[@MapKeyEnumerated]
 |Field/Method
@@ -2233,6 +2247,40 @@ public class Person
     ...
 }
 -----
+
+
+[[MapKeyClass]]
+=== @MapKeyClass
+
+This annotation is used to define the key type for a map field when generics have not been specified. Specified on the *field/method*.
+
+[cols="1,1,3,1", options="header"]
+|===
+|Attribute
+|Type
+|Description
+|Default
+
+|class
+|String
+|Class to be used for the key of the map.
+|
+|===
+
+[source,java]
+-----
+@Entity
+public class Person
+{
+    @OneToMany(targetEntity=Person.class)
+    @MapKeyClass(String.class)
+    Map friends;
+    ...
+}
+-----
+
+TIP: Avoid use of this class and use Java generics! This is the 21st century after all
+
 
 
 [[MapKeyTemporal]]
