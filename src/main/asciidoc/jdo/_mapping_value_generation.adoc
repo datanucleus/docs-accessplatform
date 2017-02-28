@@ -17,7 +17,7 @@ The available strategies for JDO are :-
 * link:#valuegen_uuidstring[*uuid-string*] - this is a UUID in string form
 * link:#valuegen_uuidhex[*uuid-hex*] - this is a UUID in hexadecimal form
 * link:#valuegen_uuid[*uuid*] - provides a pure UUID String utilising the JDK UUID class (DataNucleus extension)
-* link:#valuegen_uuid-object[*uuid-object*] - provides a pure UUID object utilising the JDK1.5 UUID class (DataNucleus extension)
+* link:#valuegen_uuid_object[*uuid-object*] - provides a pure UUID object utilising the JDK1.5 UUID class (DataNucleus extension)
 * link:#valuegen_auid[*auid*] - provides a pure UUID following the OpenGroup standard (DataNucleus extension)
 * link:#valuegen_timestamp[*timestamp*] - creates a java.sql.Timestamp of the current time (DataNucleus extension)
 * link:#valuegen_timestamp-value[*timestamp-value*] - creates a long (millisecs) of the current time (DataNucleus extension)
@@ -511,7 +511,7 @@ public class MyClass
 This value generator will generate values unique across different JVMs
 
 
-[[valuegen_uuid-object]]
+[[valuegen_uuid_object]]
 == uuid-object
 
 image:../images/nucleus_extension.png[]
