@@ -18,16 +18,8 @@ Consequently an inheritance tree cannot just have a mapped superclass on its own
 == Entity Class
 
 Let's take a sample class (_Hotel_) as an example. We can define a class as persistable using either annotations in the class, or XML metadata.
-To achieve the above aim with XML metadata, we do this
+Using annotations
 
-[source,xml]
------
-<entity class="org.datanucleus.test.Hotel">
-    ...
-</entity>
------
-
-Alternatively, using link:annotations.html[JPA Annotations], like this
 [source,java]
 -----
 @Entity
@@ -37,6 +29,14 @@ public class Hotel
 }
 -----
 
+or using XML metadata
+
+[source,xml]
+-----
+<entity class="org.datanucleus.test.Hotel">
+    ...
+</entity>
+-----
 
 
 [[mapped_superclass]]
@@ -45,14 +45,6 @@ public class Hotel
 Say we have an abstract base class _Building_ with concrete subclass _Hotel_ (as above). We want to persist some fields of _Building_, but it is abstract so
 will not have any objects of that type. So we make the class a _MappedSuperclass_, like this
 
-[source,xml]
------
-<mapped-superclass class="org.datanucleus.test.Building">
-    ...
-</mapped-superclass>
------
-
-Alternatively, using link:annotations.html[JPA Annotations], like this
 [source,java]
 -----
 @MappedSuperclass
@@ -60,6 +52,15 @@ public abstract class Building
 {
     ...
 }
+-----
+
+or using XML metadata
+
+[source,xml]
+-----
+<mapped-superclass class="org.datanucleus.test.Building">
+    ...
+</mapped-superclass>
 -----
 
 This is of particular relevance when considering xref:mapping.html#inheritance_mappedsuperclass[inheritance].
@@ -72,14 +73,6 @@ This is of particular relevance when considering xref:mapping.html#inheritance_m
 Here we have a class _ConstructionDetails_ that we never need to persist individually, and it will only ever be persisted as part of an owner object (in this case _Building_).
 Since information from objects of this class will be persisted, we need to mark the class as _Embeddable_, like this
 
-[source,xml]
------
-<embeddable class="org.datanucleus.test.ConstructionDetails">
-    ...
-</mapped-superclass>
------
-
-Alternatively, using link:annotations.html[JPA Annotations], like this
 [source,java]
 -----
 @Embeddable
@@ -87,6 +80,15 @@ public class ConstructionDetails
 {
     ...
 }
+-----
+
+or using XML metadata
+
+[source,xml]
+-----
+<embeddable class="org.datanucleus.test.ConstructionDetails">
+    ...
+</embeddable>
 -----
 
 and hereafter we can persist fields of type _ConstructionDetails_, as per link:#embedded[the Embedded Object guide].
