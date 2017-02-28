@@ -251,11 +251,11 @@ Since there is no "base table name" when the root class has "subclass-table" thi
 |No. Defaults to _class_, but the other option is _table_
 
 |table-name
-|Name of the table whose column we are generating the value for (used when we have no previous sequence value and want a start point.
+|Name of the table whose column we are generating the value for (used when we have no previous sequence value and want a start point).
 |No.
 
 |column-name
-|Name of the column we are generating the value for (used when we have no previous sequence value and want a start point.
+|Name of the column we are generating the value for (used when we have no previous sequence value and want a start point).
 |No.
 |===
 
@@ -266,6 +266,7 @@ This value generator will generate values unique across different JVMs
 Values generated using this generator are available in @PrePersist.
 
 See also:-
+
 * metadata_xml.html#table-generator[JPA MetaData reference for <table-generator>]
 * annotations.html#TableGenerator[JPA Annotation reference for @TableGenerator]
 
