@@ -199,7 +199,7 @@ tree you should define this for the base class only.
 [source,xml]
 -----
 <entity class="MyClass">
-    <table-generator name="myGenerator" table=TABLE_VALUE_GEN" pkColumnName="GEN_KEY" valueColumnName="GEN_VALUE" pkColumnValue="MyClass" allocationSize="1"/>
+    <table-generator name="myGenerator" table="TABLE_VALUE_GEN" pkColumnName="GEN_KEY" valueColumnName="GEN_VALUE" pkColumnValue="MyClass"/>
     <attributes>
         <id name="myId">
             <generated-value strategy="TABLE"/>
@@ -213,7 +213,7 @@ or using annotations
 [source,java]
 -----
 @Entity
-@TableGenerator(name="myGenerator", table="TABLE_VALUE_GEN", pkColumnName="GEN_KEY", valueColumnName="GEN_VALUE", pkColumnValue="MyClass", allocationSize=1)
+@TableGenerator(name="myGenerator", table="TABLE_VALUE_GEN", pkColumnName="GEN_KEY", valueColumnName="GEN_VALUE", pkColumnValue="MyClass")
 public class MyClass
 {
     @Id
