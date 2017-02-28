@@ -151,11 +151,15 @@ See also :-
 
 DataNucleus will provide a default type for any columns that it creates, but it will allow users to override this default. 
 The default that DataNucleus chooses is always based on the Java type for the field being mapped. 
-For example a Java field of type "int" will be mapped to a column type of INTEGER in RDBMS datastores. 
-Similarly String will be mapped to VARCHAR. JPA does NOT allow detailed control over the JDBC type as such, with the exception of distinguishing BLOB/CLOB/TIME/TIMESTAMP types. 
-Fortunately DataNucleus provides an extension to overcome this flaw in the JPA spec.
-Here we make use of a DataNucleus annotation *@JdbcType*
+For example a Java field of type "int" will be mapped to a column type of INTEGER in RDBMS datastores. Similarly String will be mapped to VARCHAR. 
 
+JPA provides 2 ways of influencing the column DDL generated.
+
+* You can specify the _columnDefinition_ of @Column/<column> but you have to provide the complete DDL for that column (without the column name), and hence
+can lose database independence by using this route. e.g "VARCHAR(255)"
+* Use @Column/<column> attributes and specify the _length_/_precision_/_scale_ of the column, as well as whether it is unique etc. It will make use of the Java type
+to come up with a default datastore type for the column. Sadly JPA doesn't allow specification of the precise datastore type (except for BLOB/CLOB/TIME/TIMESTAMP cases).
+DataNucleus provides an extension to overcome this gap in the JPA spec. Here we make use of a DataNucleus extension annotation *@JdbcType*
 [source,java]
 -----
 public class Payment
@@ -166,11 +170,7 @@ public class Payment
     ...
 }
 -----
-
-So we defined the JDBC type that this field will use (rather than the default of VARCHAR).
-
-JPA does allow permit control over the length/precision/scale of columns. So we define this as follows
-
+So we defined the JDBC type that this field will use (rather than the default of VARCHAR). Now we turn our attention to the _length_, _precision_ and _scale_.
 [source,xml]
 -----
 <entity name="Payment">
@@ -190,9 +190,10 @@ JPA does allow permit control over the length/precision/scale of columns. So we 
     </attributes>
 </entity>
 -----
+You could alternatively specify these using annotations should you so wish. So we have defined TRANSFER_REF to use VARCHAR(255) column type, CURRENCY to use (VAR)CHAR(3) column type, 
+and AMOUNT to use DECIMAL(10,2) column type.
 
-Alternatively, you can specify these using annotations should you so wish.
-So we have defined TRANSFER_REF to use VARCHAR(255) column type, CURRENCY to use (VAR)CHAR(3) column type, and AMOUNT to use DECIMAL(10,2) column type.
+
 
 See also :-
 

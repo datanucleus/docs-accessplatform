@@ -29,26 +29,31 @@ public class Printer
     String tonerModel;
     int tonerLifetime;
 
-    /**
-     * Constructor.
-     * @param make Make of printer (e.g Hewlett-Packard)
-     * @param model Model of Printer (e.g LaserJet 1200L)
-     * @param tonerModel Model of toner cartridge
-     * @param tonerLifetime lifetime of toner (number of prints)
-     */
-    public Printer(String make, String model, String tonerModel, int tonerLifetime)
-    {
-        this.make = make;
-        this.model = model;
-        this.tonerModel = tonerModel;
-        this.tonerLifetime = tonerLifetime;
-    }
-
+    ....
 }
 -----
 
 Now we have a database schema that has 2 tables (PRINTER and PRINTER_TONER) in which to store objects of this class.
 So we need to tell DataNucleus to perform this mapping. So we define the MetaData for the *Printer* class like this
+
+[source,java]
+-----
+@Entity
+@Table(name="PRINTER")
+@SecondaryTable(name="PRINTER_TONER", pkJoinColumns=@PrimaryKeyJoinColumn(name="PRINTER_REFID"))
+public class Printer
+{
+    ...
+
+    @Column(name="MODEL", table="PRINTER_TONER")
+    String tonerModel;
+
+    @Column(name="LIFETIME", table="PRINTER_TONER")
+    int tonerLifetime;
+}
+-----
+
+or using XML metadata
 
 [source,xml]
 -----
@@ -59,15 +64,7 @@ So we need to tell DataNucleus to perform this mapping. So we define the MetaDat
     </secondary-table>
 
     <attributes>
-        <id name="id">
-            <column name="PRINTER_ID"/>
-        </id>
-        <basic name="make">
-            <column name="MAKE" length="40"/>
-        </basic>
-        <basic name="model">
-            <column name="MODEL" length="100"/>
-        </basic>
+        ...
         <basic name="tonerModel">
             <column name="MODEL" table="PRINTER_TONER"/>
         </basic>
@@ -81,9 +78,9 @@ So we need to tell DataNucleus to perform this mapping. So we define the MetaDat
 Here we have defined that objects of the *Printer* class will be stored in the primary table PRINTER. 
 In addition we have defined that some fields are stored in the table PRINTER_TONER.
 
-<li>We declare the "secondary-table"(s) that we will be using at the start of the definition.
-<li>We define _tonerModel_ and _tonerLifetime_ to use columns in the table PRINTER_TONER. This uses the "table" attribute of <column>
-<li>Whilst defining the secondary table(s) we will be using, we also define the join column to be called "PRINTER_REFID".
+* We declare the "secondary-table"(s) that we will be using at the start of the definition.
+* We define _tonerModel_ and _tonerLifetime_ to use columns in the table PRINTER_TONER. This uses the "table" attribute of <column>
+* Whilst defining the secondary table(s) we will be using, we also define the join column to be called "PRINTER_REFID".
 
 This results in the following database tables :-
 
