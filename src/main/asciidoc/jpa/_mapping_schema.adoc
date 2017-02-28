@@ -159,18 +159,8 @@ JPA provides 2 ways of influencing the column DDL generated.
 can lose database independence by using this route. e.g "VARCHAR(255)"
 * Use @Column/<column> attributes and specify the _length_/_precision_/_scale_ of the column, as well as whether it is unique etc. It will make use of the Java type
 to come up with a default datastore type for the column. Sadly JPA doesn't allow specification of the precise datastore type (except for BLOB/CLOB/TIME/TIMESTAMP cases).
-DataNucleus provides an extension to overcome this gap in the JPA spec. Here we make use of a DataNucleus extension annotation *@JdbcType*
-[source,java]
------
-public class Payment
-{
-    @JdbcType("CHAR")
-    String currency;
-
-    ...
-}
------
-So we defined the JDBC type that this field will use (rather than the default of VARCHAR). Now we turn our attention to the _length_, _precision_ and _scale_.
+DataNucleus provides an extension to overcome this gap in the JPA spec. Here we make use of a DataNucleus extension annotation @JdbcType or "jdbc-type" extension attribute for <column>.
+Like this
 [source,xml]
 -----
 <entity name="Payment">
@@ -182,7 +172,7 @@ So we defined the JDBC type that this field will use (rather than the default of
             <column name="TRANSFER_REF" nullable="true" length="255"/>
         </basic>
         <basic name="currency">
-            <column name="CURRENCY" default-value="GBP" length="3"/>
+            <column name="CURRENCY" default-value="GBP" length="3" jdbc-type="CHAR"/>
         </basic>
         <basic name="amount">
             <column name="AMOUNT" precision="10" scale="2"/>
@@ -190,8 +180,8 @@ So we defined the JDBC type that this field will use (rather than the default of
     </attributes>
 </entity>
 -----
-You could alternatively specify these using annotations should you so wish. So we have defined TRANSFER_REF to use VARCHAR(255) column type, CURRENCY to use (VAR)CHAR(3) column type, 
-and AMOUNT to use DECIMAL(10,2) column type.
+You could alternatively specify these using annotations should you so wish. 
+So we have defined TRANSFER_REF to use VARCHAR(255) column type, CURRENCY to use (VAR)CHAR(3) column type, and AMOUNT to use DECIMAL(10,2) column type.
 
 
 
