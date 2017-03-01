@@ -459,9 +459,9 @@ from the datastore; this means that if an instance has been modified and its dat
 cached (updated) instance, instead an instance formed using the datastore values. {true, *false*}
 
 |datanucleus.Multithreaded
-|Whether to run the PM/EM multithreaded.
+|Whether to run the PM multithreaded.
 *Note that this is only a hint to try to allow thread-safe operations on the PM*.
-Users are always advised to run a PM/EM as single threaded, since some operations are not currently locked and so could cause issues multi-threaded. 
+Users are always advised to run a PM as single threaded, since some operations are not currently locked and so could cause issues multi-threaded. 
 {true, *false*}
 
 |datanucleus.Optimistic
@@ -512,7 +512,7 @@ which will return the tenant name to use for each call. _RDBMS, MongoDB, HBase, 
 {*true*, false}
 
 |datanucleus.allowAttachOfTransient
-|When you call EM.merge with a transient object (with PK fields set), if you enable this feature then it will first check for existence of an object in the datastore 
+|When you call PM.makePersistent with a transient object (with PK fields set), if you enable this feature then it will first check for existence of an object in the datastore 
 with the same identity and, if present, will merge into that object (rather than just trying to persist a new object).
 {true, *false*}
 
@@ -586,13 +586,6 @@ If a subsequent request is made for a PMF with a name that already exists then a
 The default matches the JDO spec, not allowing changes to the listeners in use.
 {true, *false*}
 
-|datanucleus.storeManagerType
-|Type of the StoreManager to use for this PMF/EMF. This has typical values of "rdbms", "mongodb".
-If it isnt specified then it falls back to trying to find the StoreManager from the connection URL. 
-The associated DataNucleus plugin has to be in the CLASSPATH when selecting this.
-When using data sources (as usually done in a JavaEE container), DataNucleus cannot find out the correct type automatically and this option must be set.
-{rdbms, mongodb, alternate StoreManager key}
-
 |datanucleus.jmxType
 |Which JMX server to use when hooking into JMX. Please refer to the link:persisence.html#monitoring[Monitoring Guide]
 {default, mx4j}
@@ -661,7 +654,7 @@ This property allows the user to override this with their own class better suite
 |datanucleus.primaryClassLoader
 |Sets a primary classloader for situations where a primary classloader is not accessible. 
 This ClassLoader is used when the class is not found in the default ClassLoader search path. 
-As example, when the database driver is loaded by a different ClassLoader not in the ClassLoader search path for JDO or JPA specifications.
+As example, when the database driver is loaded by a different ClassLoader not in the ClassLoader search path for JDO specification.
 
 |datanucleus.plugin.pluginRegistryClassName
 |Name of a class that acts as registry for plug-ins.
@@ -681,14 +674,13 @@ If you are within an OSGi environment you can set this to  _org.datanucleus.plug
 {*false*, true}
 
 |datanucleus.findObject.validateWhenCached
-|When a user calls getObjectById (JDO) or findObject (JPA) and they request validation this allows the turning off of validation when an object is found in the (L2) cache.
+|When a user calls getObjectById (JDO) and they request validation this allows the turning off of validation when an object is found in the (L2) cache.
 Can be useful for performance reasons, but should be used with care.
 {*true*, false}
 
 |datanucleus.findObject.typeConversion
-|When calling PM.getObjectById(Class, Object) or EM.find(Class, Object) the second argument really ought to be the exact type of the primary-key field. 
+|When calling PM.getObjectById(Class, Object) the second argument really ought to be the exact type of the primary-key field. 
 This property enables conversion of basic numeric types (Long, Integer, Short) to the appropriate numeric type (if the PK is a numeric type). 
-Set this to _false_ if you want strict JPA compliance.
 {*true*, false}
 |===
 
@@ -869,7 +861,7 @@ This is for the case where you know where it is located. If not used DataNucleus
 
 |datanucleus.transaction.nontx.atomic
 |When a user invokes a nontransactional operation they can choose for these changes to go straight to the datastore (atomically) or to wait until either the next transaction commit, 
-or close of the PM/EM. Disable this if you want operations to be processed with the next real transaction.
+or close of the PM. Disable this if you want operations to be processed with the next real transaction.
 {*true*, false}
 
 |datanucleus.SerializeRead
@@ -1236,7 +1228,7 @@ Please refer to the link:persistence.html#autostart[Auto-Start Mechanism Guide] 
 
 image:../images/nucleus_extension.png[]
 
-DataNucleus provides the following properties for configuring query handling used by the EntityManagerFactory.
+DataNucleus provides the following properties for configuring query handling used by the PersistenceManagerFactory.
 
 [cols="2,6", options="header"]
 |===
@@ -1499,17 +1491,17 @@ pmf.close();
 [[cache_level2]]
 == Level 2 Cache
 
-The _EntityManagerFactory_ has an optional cache of all objects across all _EntityManager_s.
-This cache is called the Level 2 (L2) cache, and JPA doesn't define whether this should be enabled or not. With DataNucleus it defaults to enabled.
+The _PersistenceManagerFactory_ has an optional cache of all objects across all _PersistenceManager_s.
+This cache is called the Level 2 (L2) cache, and JDO doesn't define whether this should be enabled or not. With DataNucleus it defaults to enabled.
 The user can configure the L2 cache if they so wish; by use of the persistence property *datanucleus.cache.level2.type*. You set this to "type" of cache required.
 You currently have the following options.
 
 * *soft* - use the internal (soft reference based) L2 cache. *This is the default L2 cache in DataNucleus.*
-Provides support for the JPA interface of being able to put objects into the cache, and evict them when required.
+Provides support for the JDO interface of being able to put objects into the cache, and evict them when required.
 This option does not support distributed caching, solely running within the JVM of the client application. 
 Soft references are held to non pinned objects.
 * *weak* - use the internal (weak reference based) L2 cache. 
-Provides support for the JPA interface of being able to put objects into the cache, and evict them when required.
+Provides support for the JDO interface of being able to put objects into the cache, and evict them when required.
 This option does not support distributed caching, solely running within the JVM of the client application. 
 Weak references are held to non pinned objects.
 * link:#cache_level2_javax_cache[javax.cache] - a simple wrapper to the Java standard "javax.cache" Temporary Caching API.
@@ -1532,7 +1524,7 @@ The default is _UNSPECIFIED_ which means that DataNucleus will cache all objects
 The other options are _NONE_ (don't cache ever), _ALL_ (cache all entities regardless of annotations),
 _ENABLE_SELECTIVE_ (cache entities explicitly marked as cacheable), or _DISABLE_SELECTIVE_ (cache entities unless explicitly marked as not cacheable - i.e same as our default).
 
-Objects are placed in the L2 cache when you commit() the transaction of a EntityManager. 
+Objects are placed in the L2 cache when you commit() the transaction of a PersistenceManager. 
 This means that you only have datastore-persisted objects in that cache. 
 Also, if an object is deleted during a transaction then at commit it will be removed from the L2 cache if it is present.
 
