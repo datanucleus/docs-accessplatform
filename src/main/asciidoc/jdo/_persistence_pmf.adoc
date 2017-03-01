@@ -459,9 +459,9 @@ from the datastore; this means that if an instance has been modified and its dat
 cached (updated) instance, instead an instance formed using the datastore values. {true, *false*}
 
 |datanucleus.Multithreaded
-|Whether to run the PM/EM multithreaded.
+|Whether to run the PM multithreaded.
 *Note that this is only a hint to try to allow thread-safe operations on the PM*.
-Users are always advised to run a PM/EM as single threaded, since some operations are not currently locked and so could cause issues multi-threaded. 
+Users are always advised to run a PM as single threaded, since some operations are not currently locked and so could cause issues multi-threaded. 
 {true, *false*}
 
 |datanucleus.Optimistic
@@ -512,7 +512,7 @@ which will return the tenant name to use for each call. _RDBMS, MongoDB, HBase, 
 {*true*, false}
 
 |datanucleus.allowAttachOfTransient
-|When you call EM.merge with a transient object (with PK fields set), if you enable this feature then it will first check for existence of an object in the datastore 
+|When you call PM.makePersistent with a transient object (with PK fields set), if you enable this feature then it will first check for existence of an object in the datastore 
 with the same identity and, if present, will merge into that object (rather than just trying to persist a new object).
 {true, *false*}
 
@@ -587,7 +587,7 @@ The default matches the JDO spec, not allowing changes to the listeners in use.
 {true, *false*}
 
 |datanucleus.storeManagerType
-|Type of the StoreManager to use for this PMF/EMF. This has typical values of "rdbms", "mongodb".
+|Type of the StoreManager to use for this PMF. This has typical values of "rdbms", "mongodb".
 If it isnt specified then it falls back to trying to find the StoreManager from the connection URL. 
 The associated DataNucleus plugin has to be in the CLASSPATH when selecting this.
 When using data sources (as usually done in a JavaEE container), DataNucleus cannot find out the correct type automatically and this option must be set.
@@ -681,14 +681,13 @@ If you are within an OSGi environment you can set this to  _org.datanucleus.plug
 {*false*, true}
 
 |datanucleus.findObject.validateWhenCached
-|When a user calls getObjectById (JDO) or findObject (JPA) and they request validation this allows the turning off of validation when an object is found in the (L2) cache.
+|When a user calls getObjectById (JDO) and they request validation this allows the turning off of validation when an object is found in the (L2) cache.
 Can be useful for performance reasons, but should be used with care.
 {*true*, false}
 
 |datanucleus.findObject.typeConversion
-|When calling PM.getObjectById(Class, Object) or EM.find(Class, Object) the second argument really ought to be the exact type of the primary-key field. 
+|When calling PM.getObjectById(Class, Object) the second argument really ought to be the exact type of the primary-key field. 
 This property enables conversion of basic numeric types (Long, Integer, Short) to the appropriate numeric type (if the PK is a numeric type). 
-Set this to _false_ if you want strict JPA compliance.
 {*true*, false}
 |===
 
@@ -869,7 +868,7 @@ This is for the case where you know where it is located. If not used DataNucleus
 
 |datanucleus.nontx.atomic
 |When a user invokes a nontransactional operation they can choose for these changes to go straight to the datastore (atomically) or to wait until either the next transaction commit, 
-or close of the PM/EM. Disable this if you want operations to be processed with the next real transaction.
+or close of the PM. Disable this if you want operations to be processed with the next real transaction.
 {*true*, false}
 
 |datanucleus.SerializeRead

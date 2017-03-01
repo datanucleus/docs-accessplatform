@@ -450,7 +450,7 @@ detach all fields of the object (*be careful with this option since it, when use
 as the JVM under which DataNucleus is running.
 
 |datanucleus.PersistenceUnitLoadClasses
-|Used when we have specified the persistence-unit name for a PMF/EMF and where we want the datastore "tables" for all classes of that persistence-unit loading up into the 
+|Used when we have specified the persistence-unit name for a EMF and where we want the datastore "tables" for all classes of that persistence-unit loading up into the 
 StoreManager. Defaults to false since some databases are slow so such an operation would slow down the startup process.
 {true, *false*}
 
@@ -468,10 +468,6 @@ StoreManager. Defaults to false since some databases are slow so such an operati
 |datanucleus.singletonEMFForName
 |Whether to only allow a singleton EMF for persistence-unit. If a subsequent request is made for an EMF with a name that already exists then a 
 warning will be logged and the original EMF returned.
-{true, *false*}
-
-|datanucleus.allowListenerUpdateAfterInit
-|Whether you want to be able to add/remove listeners on the JDO PMF after it is marked as not configurable (when the first PM is created).
 {true, *false*}
 
 |datanucleus.storeManagerType
