@@ -340,7 +340,7 @@ NOTE: A CLASSPATH should contain a set of JAR's, and a set of directories. It sh
 [[runtime]]
 == Runtime Enhancement
 
-When operating in a JavaEE environment (JBoss, WebSphere, etc) instead set the persistence property link:emf.html[datanucleus.jpa.addClassTransformer] to _true_.
+When operating in a JavaEE environment (JBoss, WebSphere, etc) instead set the persistence property link:persistence.html#emf[datanucleus.jpa.addClassTransformer] to _true_.
 Note that this is only for a real JavaEE server that implements the JavaEE parts of the JPA spec.
 
 To enable runtime enhancement in other environments, the _javaagent_ option must be set in the java command line. For example,
