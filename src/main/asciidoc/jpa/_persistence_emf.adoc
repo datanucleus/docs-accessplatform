@@ -230,40 +230,43 @@ schema generation and/or sequence handling will need to use that.
 |JNDI name of a (non-transactional) data source.
 
 |javax.persistence.jdbc.url
-|Alias for link:persistence_properties.html#ConnectionURL[datanucleus.ConnectionURL]. Note that this is (also) used to define which type of datastore is being used
+|URL specifying the datastore to use for persistence. Note that this will define the *type of datastore* as well as the datastore itself. 
+Please refer to link:../datastores/datastores.html[the datastores guides] for the URL appropriate for the type of datastore you're using.
 
 |javax.persistence.jdbc.driver
-|Alias for link:persistence_properties.html#ConnectionDriverName[datanucleus.ConnectionDriverName]
+|The name of the (JDBC) driver to use for the DB (for RDBMS only).
 
 |javax.persistence.jdbc.user
-|Alias for link:persistence_properties.html#ConnectionUserName[datanucleus.ConnectionUserName]
+|Username to use for connecting to the DB
 
 |javax.persistence.jdbc.password
-|Alias for link:persistence_properties.html#ConnectionPassword[datanucleus.ConnectionPassword]
+|Password to use for connecting to the DB
 
 |javax.persistence.query.timeout
-|Alias for link:persistence_properties.html#QueryTimeout[datanucleus.query.timeout]
+|Timeout for queries (global)
 
 |javax.persistence.sharedCache.mode
-|Alias for link:persistence_properties.html#cache[datanucleus.cache.level2.mode]
+|The mode of operation of the L2 cache, deciding which entities are cached. The default (UNSPECIFIED) is the same as DISABLE_SELECTIVE.
+See also Cache docs link:#cache_level2">for JPA]
+_{NONE, ALL, ENABLE_SELECTIVE, DISABLE_SELECTIVE, *UNSPECIFIED*}_
 
 |javax.persistence.validation.mode
-|Alias for link:persistence_properties.html#validation[datanucleus.validation.mode]
+|Determines whether the automatic lifecycle event validation is in effect. _{*auto*, callback, none}_
 
 |javax.persistence.validation.group.pre-persist
-|Alias for link:persistence_properties.html#validation[datanucleus.validation.group.pre-persist]
+|The classes to validation on pre-persist callback
 
 |javax.persistence.validation.group.pre-update
-|Alias for link:persistence_properties.html#validation[datanucleus.validation.group.pre-update]
+|The classes to validation on pre-update callback
 
 |javax.persistence.validation.group.pre-remove
-|Alias for link:persistence_properties.html#validation[datanucleus.validation.group.pre-remove]
+|The classes to validation on pre-remove callback
 
 |javax.persistence.validation.factory
-|Alias for link:persistence_properties.html#validation[datanucleus.validation.factory]
+|The validation factory to use in validation
 
 |javax.persistence.schema-generation.database.action
-|Alias for link:persistence_properties.html#schema[datanucleus.generateSchema.database.mode] 
+|Whether to perform any schema generation to the database at startup. Will process the schema for all classes that have metadata loaded at startup (i.e the classes specified in a persistence-unit).
 _{create, drop, drop-and-create, *none*}_
 
 |javax.persistence.schema-generation.scripts.action
@@ -271,23 +274,23 @@ _{create, drop, drop-and-create, *none*}_
 _{create, drop, drop-and-create, *none*}_
 
 |javax.persistence.schema-generation.scripts.create-target
-|Alias for link:persistence_properties.html#schema[datanucleus.generateSchema.scripts.create.target]
-_{filename}_
+|Name of the script file to write to if doing a "create" with the target as "scripts"
+_{*datanucleus-schema-create.ddl*, {filename}}_
 
 |javax.persistence.schema-generation.scripts.drop-target
-|Alias for link:persistence_properties.html#schema[datanucleus.generateSchema.scripts.drop.target]
-_{filename}_
+|Name of the script file to write to if doing a "drop" with the target as "scripts"
+_{*datanucleus-schema-drop.ddl*, {filename}}_
 
 |javax.persistence.schema-generation.create-script-source
-|Alias for link:persistence_properties.html#schema[datanucleus.generateSchema.scripts.create.source]
+|Name of a script file to run to create tables. Can be absolute filename, or URL string
 _{filename}_
 
 |javax.persistence.schema-generation.drop-script-source
-|Alias for link:persistence_properties.html#schema[datanucleus.generateSchema.scripts.drop.source]
+|Name of a script file to run to drop tables. Can be absolute filename, or URL string
 _{filename}_
 
 |javax.persistence.sql-load-script-source
-|Alias for link:persistence_properties.html#schema[datanucleus.generateSchema.scripts.load]
+|Name of a script file to run to load data into the schema. Can be absolute filename, or URL string
 _{filename}_
 |===
 
@@ -696,33 +699,33 @@ DataNucleus provides the following properties for configuring transaction handli
 |Parameter
 |Description + Values
 
-|datanucleus.transaction.type
+|datanucleus.transactionType
 |Type of transaction to use. If running under JavaSE the default is RESOURCE_LOCAL, and if running under JavaEE the default is JTA.
 {RESOURCE_LOCAL, JTA}
 
-|datanucleus.transaction.isolation
+|datanucleus.transactionIsolation
 |Select the default transaction isolation level for ALL EntityManagers. Some databases do not support all isolation levels, refer to your database documentation. 
 Please refer to the link:#transaction_isolation[transaction guide]
 {read-uncommitted, *read-committed*, repeatable-read, serializable}
 
-|datanucleus.transaction.jta.transactionManagerLocator
+|datanucleus.jtaLocator
 |Selects the locator to use when using JTA transactions so that DataNucleus can find the JTA TransactionManager.
 If this isn't specified and using JTA transactions DataNucleus will search all available locators which could have a performance impact.
 See link:extensions/extension.html#jta_locator[JTA Locator extension].
-If specifying "custom_jndi" please also specify "datanucleus.transaction.jta.transactionManagerJNDI"
+If specifying "custom_jndi" please also specify "datanucleus.jtaJndiLocation"
 {*autodetect*, jboss, jonas, jotm, oc4j, orion, resin, sap, sun, weblogic, websphere, custom_jndi, alias of a JTA transaction locator}
 
-|datanucleus.transaction.jta.transactionManagerJNDI
+|datanucleus.jtaJndiLocation
 |Name of a JNDI location to find the JTA transaction manager from (when using JTA transactions). 
 This is for the case where you know where it is located. If not used DataNucleus will try certain well-known locations
 
-|datanucleus.transaction.nontx.read
+|datanucleus.nontransactionalRead
 |Whether to allow nontransactional reads {false, *true*}
 
-|datanucleus.transaction.nontx.write
+|datanucleus.nontransactionalWrite
 |Whether to allow nontransactional writes {false, *true*}
 
-|datanucleus.transaction.nontx.atomic
+|datanucleus.nontx.atomic
 |When a user invokes a nontransactional operation they can choose for these changes to go straight to the datastore (atomically) or to wait until either the next transaction commit, 
 or close of the EM. Disable this if you want operations to be processed with the next real transaction. {true, *false*}
  
