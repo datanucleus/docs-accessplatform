@@ -25,6 +25,8 @@ Migrating will require the following changes.
 * The persistence property _datanucleus.transactionIsolation_ is renamed to *datanucleus.transaction.isolation*
 * The persistence property _datanucleus.jtaLocator_ is renamed to *datanucleus.transaction.jta.transactionManagerLocator*
 * The persistence property _datanucleus.jtaJndiLocation_ is renamed to *datanucleus.transaction.jta.transactionManagerJNDI*
+* The extension point "org.datanucleus.store.rdbms.connectionprovider" allowing a simple form of _failover_ is now removed
+(previously enabled by specifying _datanucleus.ConnectionFactoryName_ as a comma-separated list of JNDI names).
 
 
 [[five_zero]]
