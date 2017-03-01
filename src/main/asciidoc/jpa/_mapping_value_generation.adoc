@@ -237,15 +237,6 @@ Unsupported properties by a database are silently ignored by DataNucleus.
 |Description
 |Required
 
-|key-initial-value
-|First value to be allocated.
-|No. Defaults to 1
-
-|key-cache-size
-|number of unique identifiers to cache. The keys are pre-allocated, cached and used on demand. 
-If _key-cache-size_ is greater than 1, it may generate holes in the object keys in the database, if not all keys are used.
-|No. Default is 50
-
 |sequence-table-basis
 |Whether to define uniqueness on the base class name or the base table name.
 Since there is no "base table name" when the root class has "subclass-table" this should be set to "class" when the root class has "subclass-table" inheritance

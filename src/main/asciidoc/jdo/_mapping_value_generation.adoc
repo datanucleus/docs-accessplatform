@@ -116,16 +116,6 @@ Unsupported properties by a database are silently ignored by DataNucleus.
 |Description
 |Required
 
-|key-initial-value
-|the initial value for the sequence. In JDO3.1 this is specified in the standard metadata (_initialValue_)
-|No
-
-|key-cache-size
-|number of unique identifiers to cache in the PersistenceManagerFactory instance.
-The keys are pre-allocated, cached and used on demand. If _key-cache-size_ is greater than 1, it may generate holes in the object keys in the database, if not all keys are used.
-In JDO3.1 this is specified in the standard metadata (_allocationSize_)
-|No.
-
 |key-min-value
 |determines the minimum value a sequence can generate
 |No
