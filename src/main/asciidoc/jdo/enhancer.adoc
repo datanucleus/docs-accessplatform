@@ -6,7 +6,7 @@
 
 DataNucleus requires that all classes that are persisted implement 
 http://www.datanucleus.org/javadocs/core/5.0/org/datanucleus/enhancement/Persistable.html[Persistable].
-Rather than requiring that a user add this themself, we provide an link:#DataNucleus_Enhancer[enhancer] that will modify your compiled classes to implement all required methods.
+Rather than requiring that a user add this themself, we provide an enhancer that will modify your compiled classes to implement all required methods.
 
 * The use of this interface means that you get *transparent persistence*, and your classes always remain _your_ classes; ORM tools that use a mix of 
 reflection and/or proxies are not totally transparent.
@@ -55,13 +55,13 @@ IMPORTANT: If the MetaData is changed in any way during development, the classes
 How to use the DataNucleus Enhancer depends on what environment you are using. Below are some typical examples. 
 
 * Post-compilation
-** xref:#maven[Using Maven via the DataNucleus Maven plugin]
-** xref:#ant[Using Ant]
-** xref:#manual[Manual invocation at the command line]
+** link:#maven[Using Maven via the DataNucleus Maven plugin]
+** link:#ant[Using Ant]
+** link:#manual[Manual invocation at the command line]
 ** link:guides/eclipse.html[Using the Eclipse DataNucleus plugin]
 * At runtime
-** xref:#runtime[Runtime Enhancement]
-** xref:#api[Programmatically via an API]
+** link:#runtime[Runtime Enhancement]
+** link:#api[Programmatically via an API]
 
 
 [[maven]]
