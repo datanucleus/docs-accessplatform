@@ -1483,6 +1483,18 @@ no check will be made as to whether it exists in the datastore (since Cassandra 
 |===
 
 
+[[pmf_close]]
+== Closing PersistenceManagerFactory
+
+Since the PMF has significant resources associated with it, it should always be closed when you no longer need to perform any more persistence operations.
+For most operations this will be when closing your application. Whenever it is you do it like this
+
+[source,java]
+-----
+pmf.close();
+-----
+
+
 
 [[cache_level2]]
 == Level 2 Cache

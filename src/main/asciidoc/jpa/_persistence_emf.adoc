@@ -1219,6 +1219,21 @@ This persistence property allows that inflexible behaviour to be turned off leav
 |===
 
 
+
+[[emf_close]]
+== Closing EntityManagerFactory
+
+Since the EMF has significant resources associated with it, it should always be closed when you no longer need to perform any more persistence operations.
+For most operations this will be when closing your application. Whenever it is you do it like this
+
+[source,java]
+-----
+emf.close();
+-----
+
+
+
+
 [[cache_level2]]
 == Level 2 Cache
 
