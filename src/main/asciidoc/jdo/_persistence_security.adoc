@@ -1,34 +1,22 @@
-<?xml version="1.0" encoding="iso-8859-1"?>
-<document xmlns="http://maven.apache.org/XDOC/2.0"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
-    <properties>
-        <title>Security</title>
-    </properties>
+[[security]]
+= Java Security
+:_basedir: ../
+:_imagesdir: images/
 
-    <body>
-        <section name="Java Security Manager">
-            <p>
-                The Java Security Manager can be used with DataNucleus to provide a security platform to sensitive 
-                applications.
-            </p>
-            <p>
-            	To use the Security Manager, specify the <i>java.security.manager</i> and <i>java.security.policy</i> 
-                arguments when starting the JVM. e.g.
-            </p>
-<source>
+The Java Security Manager can be used with DataNucleus JDO to provide a security platform to sensitive applications.
+
+To use the Security Manager, specify the _java.security.manager_ and _java.security.policy_ arguments when starting the JVM. e.g.
+
+-----
 java -Djava.security.manager -Djava.security.policy==/etc/apps/security/security.policy ...
-</source>
-            <p>
-            	Note that when you use <i>-Djava.security.policy==...</i> (double equals sign) you override the 
-                default JVM security policy files, while if you use <i>-Djava.security.policy=...</i> (single 
-                equals sign), you append the security policy file to any existing ones.
-            </p>
-            <p>
-                The following is a sample security policy file to be used with DataNucleus.
-            </p>
-<source>
-<![CDATA[
+-----
+
+Note that when you use _-Djava.security.policy==..._ (double equals sign) you override the default JVM security policy files, 
+while if you use _-Djava.security.policy=..._ (single equals sign), you append the security policy file to any existing ones.
+
+The following is a sample security policy file to be used with DataNucleus.
+
+-----
 grant codeBase "file:${/}jdo2-api-2.0.jar" {
 
     //jdo API needs datetime (timezone class needs the following)
@@ -73,9 +61,4 @@ grant codeBase "file:${/}datanucleus-hbase*.jar" {
     //HBASE does not run in a doPrivileged, so we do...
     permission java.net.SocketPermission "*", "connect,resolve";
 };
-
-]]>
-</source>
-        </section>
-    </body>
-</document>
+-----
