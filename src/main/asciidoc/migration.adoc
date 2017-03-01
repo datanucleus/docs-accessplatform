@@ -1,0 +1,737 @@
+[[migration]]
+= Migration Guide
+:_basedir: 
+:_imagesdir: images/
+
+This version of DataNucleus AccessPlatform builds on the v4.x releases, adding future flexibility.
+All releases are checked regularly against the JDO/JPA TCKs, meaning that DataNucleus is always stable in terms of functionality.
+Occasionally, due to unknown bugs, or due to new functionality being introduced we need to change some aspects of DataNucleus. 
+As a result sometimes users will have to make some changes to move between versions of DataNucleus. We aim to keep this to a minimum.
+
+
+[[five_zero]]
+== Migration to v5.0
+
+Migration to 5.0 involves the following steps
+
+
+=== Migration from 5.0.5 to 5.0.6
+
+Migrating will require the following changes.
+
+* Default JDBC type for java Serialized fields for SQLServer is changed to _VARBINARY_ from _LONGVARBINARY_.
+
+
+=== Migration from 5.0.4 to 5.0.5
+
+Migrating will require the following changes.
+
+* Support for the McKoi RDBMS database has been removed. The McKoiAdapter is still present in GitHub if requiring this.
+* The MSSQLServerAdapter for support of SQLServer RDBMS databases has been renamed to SQLServerAdapter.
+
+
+=== Migration from 5.0.3 to 5.0.4
+
+Migrating will require no changes.
+
+
+=== Migration from 5.0.2 to 5.0.3
+
+Migrating will require the following changes.
+
+* The JPA spec implies that when you specify SINGLE-TABLE inheritance for a tree then a discriminator will be used. DataNucleus previously
+left it to a user to define the discriminator, but now adds it for them. See persistence property *datanucleus.metadata.useDiscriminatorForSingleTable*
+(set to _false_) to get old behaviour
+* The JPA spec implies that if no discriminator value(s) are provided then the provider should use entity-name. DataNucleus has not done this thus far, instead
+using class-name. We now swap to entity-name, but allow a persistence property *datanucleus.metadata.useDiscriminatorClassNameByDefault* that you
+can set to _true_ to get old behaviour.
+* DatastoreAdapter method _getRangeByLimitEndOfStatementClause_ now has an extra argument added, for people who are overriding an adapter
+* The builtin DBCP connection pool has been removed and replaced by a builtin DBCP2 connection pool. DBCP2 is recommended over DBCP for all JRE's 1.7+ so
+this switch was long overdue.
+* SchemaTool was changed to have options "createDatabase"/"deleteDatabase" instead of "createSchema"/"deleteSchema", and to accept the catalog as input.
+To be consistent the persistence property _datanucleus.schema.autoCreateSchema_ is now renamed to *datanucleus.schema.autoCreateDatabase*.
+
+
+=== Migration from 5.0.1 to 5.0.2
+
+Migrating will require the following changes.
+
+* When mapping a field of type Map&lt;PC,?&gt; with the key being embedded into a join table, this would previously have added an extra column to
+be part of the PK of the join table (certainly for JPA). It no longer does this, and instead uses all fields of the key in the PK. You can get previous handling
+by specifying extension _surrogate-pk-column_ to _true_ on the metadata for the field.
+
+
+=== Migration from 5.0.0.RELEASE to 5.0.1
+
+Migrating will require the following changes.
+
+* Persistence property _datanucleus.query.compileOptimiser_ renamed to *datanucleus.query.compileOptimiseVarThis*
+
+
+=== Migration from 5.0.0.M5 to 5.0.0.RELEASE
+
+Migrating will require the following changes.
+
+* "JCache" (javax.cache v0.1) is no longer supported. Use "javax.cache" instead.
+* Persistence property _datanucleus.rdbms.adapter.informixUseSerialForIdentity_ renamed to *datanucleus.rdbms.informix.useSerialForIdentity*
+* Persistence property _datanucleus.rdbms.oracleNlsSortOrder_ renamed to *datanucleus.rdbms.oracle.nlsSortOrder*
+
+
+=== Migration from 5.0.0.M4 to 5.0.0.M5
+
+Migrating will require the following changes.
+
+* Cassandra : requires Datastax v3.0+ now.
+* Refactor org.datanucleus.query.cache to org.datanucleus.query.compiler
+* Refactor org.datanucleus.query.symbol to org.datanucleus.query.compiler
+* Refactor org.datanucleus.store.encryption to org.datanucleus.store
+* Refactor org.datanucleus.store.scostore to org.datanucleus.store.types.scostore
+* Refactor org.datanucleus.store.exceptions to org.datanucleus.exceptions
+
+
+
+=== Migration from 5.0.0.M2 to 5.0.0.M3
+
+Migrating will require the following changes.
+
+* HBase : changed default storage of relations to use "persistableId" to be consistent with Cassandra, Neo4j, MongoDB, Excel, ODF, JSON etc.
+Use persistence property *datanucleus.hbase.relationUsesPersistableId* as _false_ to get old storage method.
+
+
+
+=== Migration from 5.0.0.M1 to 5.0.0.M2
+
+Migrating will require the following changes.
+
+* The internal conversion mechanism for some java.time types has changed to improve timezone handling. If this causes issues with existing
+data, then extract the internal TypeConverter for DN 5.0.0.M1 and use that in your application.
+* JPQL "MONTH" function was changed to return (1, 12) rather than (0, 11). To obtain previous handling use the JPQL function "MONTH_JAVA".
+* REST : "/jdoql" URL now takes parameter "query={the_query}" rather than assuming the query string starts with it.
+* REST : "/jpql" URL now takes parameter "query={the_query}" rather than assuming the query string starts with it.
+* REST : "/query" URL is no longer supported, use /jdoql or /jpql.
+
+
+
+=== Migration from 4.2.0.RELEASE to 5.0.0.M1
+
+Migrating will require the following changes.
+
+* JDK : The JDK must be 1.8 or above now.
+* Use _javax.persistence_ v2.1.2+ if having problems with signatures of JPA EntityGraph "addAttributeNodes" method, since this fixes a bug in JPA2.1 (that should be fixed in JPA 2.2 one day).
+
+
+[[four_two]]
+== Migration to v4.2
+
+Migration to 4.2 involves the following steps
+
+
+=== Migration from 4.2.0.M2 to 4.2.0.RELEASE
+
+Migrating will require no changes.
+
+
+
+=== Migration from 4.2.0.M1 to 4.2.0.M2
+
+Migrating will require no changes.
+
+
+=== Migration from 4.1.1 to 4.2.0.M1
+
+Migrating will require the following changes.
+
+* JDO : Removed support for DataNucleus JDO "Typesafe" Query. This is replaced by link:jdo/jdoql_typesafe.html[JDO 3.2 JDOQLTypedQuery]
+
+
+[[four_one]]
+== Migration to v4.1
+
+Migration to 4.1 involves the following steps
+
+
+
+=== Migration from 4.1.1 to 4.1.2
+
+Migrating will require the following changes.
+
+* JPA : The JPA extension annotation @DatastoreIdentity is renamed @DatastoreId
+
+
+=== Migration from 4.1.0.M4 to 4.1.0.RELEASE
+
+Migrating will require no changes.
+
+
+=== Migration from 4.1.0.M3 to 4.1.0.M4
+
+Migrating will require the following changes.
+
+* RDBMS : if persisting java.sql.Timestamp field as VARCHAR, the conversion method has changed slightly to pass a String to JDBC and not rely on JDBC drivers
+* RDBMS : new persistence property added "datanucleus.rdbms.useDefaultSqlType" with default value of _true_. This could impact on schema generation
+if your JDBC driver has multiple possible "sql-type" for a specific "jdbc-type". Set it to _false_ if you want the previous (4.0, 4.1) behaviour.
+
+
+=== Migration from 4.1.0.M2 to 4.1.0.M3
+
+Migrating will require the following changes.
+
+* HikariCP : requires HikariCP v2.3.5+ if using that connection pool
+
+
+=== Migration from 4.1.0.M1 to 4.1.0.M2
+
+Migrating will require the following changes.
+
+* The query hint "datanucleus.multivaluedFetch" is renamed to *datanucleus.rdbms.query.multivaluedFetch* and also can be specified as a persistence property.
+It also now defaults to 'EXISTS' (meaning perform an EXISTS query for single SQL retrieval of a container field).
+* The metadata extension "adapter-column-name" for overriding the order column name in join tables has been removed - just use the column name within "order"
+* MongoDB : any fields of type java.sql.Time/java.sql.Date were previously defaulted to storing as String, yet now default to the internal MongoDB date type. Set
+"jdbcType" to "varchar" on all fields that need to be stored as String for backwards compatibility.
+* MongoDB : now require Mongo driver v2.13 or above (including v3)
+* Jodatime : now requires Jodatime v2.0+ (if using LocalDateTime support)
+
+
+=== Migration from 4.0.4 to 4.1.0.M1
+
+Migrating will require the following changes.
+
+* The bytecode enhancement contract has been revised slightly, so all classes will need re-enhancement for use with this release.
+* A query hint has been added "datanucleus.useIsNullWhenEqualsNullParameter" for particular use by JPA for compatibility. It defaults to false.
+
+
+[[four_zero]]
+== Migration to v4.0
+
+Migration to 4.0 involves the following steps
+
+
+=== Migration from 4.0.3 to 4.0.4
+
+Migrating will require the following changes.
+
+* The default naming for JPA "element collection" tables has changed to make it consistent with the spec. If you had a table generated using the earlier
+default naming and want to keep that name then you should explicitly specify the table name in annoations/XML to avoid problems.
+
+
+=== Migration from 4.0.2 to 4.0.3
+
+Migrating should require no changes.
+
+
+=== Migration from 4.0.1 to 4.0.2
+
+Migrating will require the following changes.
+
+* JPA plugin handling of nulls allowed was not very predictable before and the code has been changed to work simpler. If you get a field that is now 
+different to 4.0.1 or earlier then you should explicitly specify "allows-null".
+
+
+=== Migration from 4.0.0.RELEASE to 4.0.1
+
+Migrating will require the following changes.
+
+* For the Cassandra plugin, the default data type for UUID fields has changed from "text" to "uuid". If you have used UUID fields on v4.0.0-release you should
+specify jdbc-type as "varchar" in column metadata when migrating to 4.0.1.
+
+
+=== Migration from 4.0.0.M4 to 4.0.0.RELEASE
+
+Migrating will require the following changes.
+
+* For MongoDB, JSON, Neo4J, HBase the process for table/column naming has changed, particularly for embedded fields. This may result in slightly
+different default table/column names (for example, the case of the name). To avoid problems use the metadata to explicitly set the column names (or
+check that the new behaviour matches your expectations).
+
+
+=== Migration from 4.0.0.M3 to 4.0.0.M4
+
+Migrating will require the following changes
+
+* Fields of type Calendar were previously persisted using 2 columns (millisecs, timezone) by default. The default is now changed to use a single column (Timestamp). 
+If you want 2 columns then either specify 2 column metadata for the field, or set the extension metadata *calendar-one-column* as _false_
+* The persistence properties _datanucleus.localisation.language_ and _datanucleus.localisation.messageCodes_ are removed.
+You can now specify either of these as Java system properties since they apply for the JVM as a whole.
+* All 'boolean' fields with JPA (when using annotations) were previously defaulted to use _jdbc-type_ of SMALLINT for some reason. 
+This is now changed to just use the DataNucleus default, and you can get the old behaviour by either specifying @JdbcType or by setting the persistence property
+*datanucleus.jpa.legacy.mapBooleanToSmallint* to _true_
+
+
+=== Migration from 4.0.0.M2 to 4.0.0.M3
+
+Migrating will require the following changes
+
+* The EclipsePluginRegistry is now removed, and anyone using OSGi should use OSGiPluginRegistry. Should this not provide for your requirements 
+the EclipsePluginRegistry class is in DataNucleus GitHub for earlier releases so you could simply include it.
+* The bytecode enhancement contract has changed, so you should re-enhance any classes for use with this version of DataNucleus
+* The previously supported JDO metadata _vendor-name="jpox"_ is now no longer supported. Set the vendor-name to _datanucleus_
+
+
+=== Migration from 4.0.0.M1 to 4.0.0.M2
+
+Migrating will require the following changes
+
+* Persistence property *datanucleus.identifier.case* value _PreserveCase_ is now *MixedCase*
+* User mapping extensions are now not needed if there is a TypeConverter that does the conversion. Also the helper mapping classes ObjectAsStringMapping etc are now removed.
+* DataNucleus now uses ASM v5 so should, in principle, be JDK1.8-ready (as well as backwards compatible). Report any problems in the normal way
+* ODF/Excel : The previously permitted extension of specifying the column "name" to be the position of that column is now no longer supported; 
+specify the column 'position' attribute if wanting to specify the position.
+
+
+=== Migration from 3.3.7 to 4.0.0.M1
+
+Migrating will require the following changes
+
+* Persistence property *datanucleus.allowAttachOfTransient* now defaults to _true_ for JPA usage; set it explicitly to get old behaviour
+* Persistence property _datanucleus.metadata.validate_ was removed (replaced by *datanucleus.metadata.xml.validate* some time back)
+* Persistence property _datanucleus.defaultInheritanceStrategy_ is renamed to *datanucleus.metadata.defaultInheritanceStrategy*
+* Persistence property _datanucleus.autoCreateSchema_ is renamed to *datanucleus.schema.autoCreateAll*
+* Persistence property _datanucleus.autoCreateTables_ is renamed to *datanucleus.schema.autoCreateTables*
+* Persistence property _datanucleus.autoCreateColumns_ is renamed to *datanucleus.schema.autoCreateColumns*
+* Persistence property _datanucleus.autoCreateConstraints_ is renamed to *datanucleus.schema.autoCreateConstraints*
+* Persistence property _datanucleus.validateSchema_ is renamed to *datanucleus.schema.validateAll*
+* Persistence property _datanucleus.validateTables_ is renamed to *datanucleus.schema.validateTables*
+* Persistence property _datanucleus.validateColumns_ is renamed to *datanucleus.schema.validateColumns*
+* Persistence property _datanucleus.validateConstraints_ is renamed to *datanucleus.schema.validateConstraints*
+* Persistence property _datanucleus.fixedDatastore_ is now removed, since it only equated to setting the "autoCreate" properties to false.
+
+
+[[three_three]]
+== Migration to v3.3
+
+Migration to 3.3 involves the following steps
+
+
+=== Migration from 3.3.6 to 3.3.7
+
+Migrating will require the following changes
+
+* Persistence property *datanucleus.jpa.findTypeConversion* is now removed and replaced with *datanucleus.findObject.typeConversion*, defaulting to _true_
+
+=== Migration from 3.3.5 to 3.3.6
+
+Migrating will require the following changes
+
+* The _spatial_ and _awtgeom_ plugins have been merged, to be _datanucleus-geospatial_
+
+
+=== Migration from 3.3.4 to 3.3.5
+
+Migrating will require the following changes
+
+* RDBMS : where you have a query that has a collection member in the FetchPlan it previously would have been ignored. Now it is used to attempt a bulk-fetch of the collection. 
+Since this is new functionality there may be cases where the syntax is not optimal; remove the collection field from the query FetchPlan to get the previous behaviour.
+
+
+=== Migration from 3.3.3 to 3.3.4
+
+Migrating will require the following changes
+
+* RDBMS : default mapping for Boolean/boolean java types is now JDBC type BOOLEAN for H2 database; previously this was unspecified so most likely fell back to CHAR for that database.
+Specify the jdbc-type explicitly if you want to have CHAR
+
+
+=== Migration from 3.3.2 to 3.3.3
+
+Migrating from AccessPlatform 3.3.2 to 3.3.3 will require the following changes
+
+* _datanucleus-googlecollections_ plugin is now renamed to _datanucleus-guava_
+
+
+=== Migration from 3.3.1 to 3.3.2
+
+Migrating will require no changes except to internal API(s).
+
+
+=== Migration from 3.3.0.RELEASE to 3.3.1
+
+Migrating will require no changes except to internal API(s).
+
+
+=== Migration from 3.3.0.M1 to 3.3.0.RELEASE
+
+Migrating will require the following changes
+
+* DataNucleus @FetchGroup extension annotation for JPA is now dropped and people should use the official JPA 2.1 @NamedEntityGraph annotation instead (or XML equivalent of course)
+
+
+=== Migration from 3.2.3 to 3.3.0.M1
+
+Migrating will require the following changes
+
+* *Now requires a compliant JPA 2.1 API jar*. An official JPA 2.1 API jar is not yet available, but as a stop-gap there is a Eclipse javax.persistence v2.1.0 jar.
+If using the Maven plugin with JPA, note that you also require v3.3.0.m1 of that plugin
+* DataNucleus @Index extension annotation for JPA is now dropped and people should use the official JPA 2.1 @Index annotation instead (or XML equivalent of course)
+
+
+
+[[three_two]]
+== Migration to v3.2
+
+Migration to 3.2 involves the following steps
+
+
+=== Migration from 3.2.8 to 3.2.9
+
+Migrating will require the following changes
+
+* RDBMS : where you have a query that has a collection member in the FetchPlan it previously would have been ignored. 
+Now it is used to attempt a bulk-fetch of the collection. Since this is new functionality there may be cases where the syntax is not optimal; 
+remove the collection field from the query FetchPlan to get the previous behaviour.
+
+
+=== Migration from 3.2.7 to 3.2.8
+
+Migrating will require the following changes
+
+* RDBMS : default mapping for Boolean/boolean java types is now JDBC type BOOLEAN for H2 database; previously this was unspecified so most likely 
+fell back to CHAR for that database. Specify the jdbc-type explicitly if you want to have CHAR
+
+
+=== Migration from 3.2.6 to 3.2.7
+
+Migrating from AccessPlatform 3.2.6 to 3.2.7 will require the following changes
+
+* _datanucleus-googlecollections_ plugin is now renamed to _datanucleus-guava_
+
+
+=== Migration from 3.2.2 to 3.2.3
+
+Migrating will require the following changes
+
+* The persistence property _datanucleus.metadata.validate_ is renamed to *datanucleus.metadata.xml.validate* to better describe its usage. 
+The original name is still supported but you are advised to move to this new naming as the old one can be removed in a future release.
+
+
+=== Migration from 3.2.1 to 3.2.2
+
+Migrating will require no changes.
+
+
+=== Migration from 3.2.0.RELEASE to 3.2.1
+
+Migrating will require the following changes
+
+* The persistence property _datanucleus.attachSameDatastore_ defaults to _true_ with _datanucleus-core_ version 3.2.1 and later.
+Set it to _false_ if you require replicating objects into other datastores
+* The JDOQL method _Date.getDay_ is now deprecated and _Date.getDate_ should be used instead (day of the month). _Date.getDay_ is likely to be converted to return
+the day of the week in a later release, so fixing any use of this now makes sense
+* PreparedStatement pooling is turned now turned OFF by default due to the fact that DBCP has a bug where it isn't closing ResultSets correctly when this is enabled.
+
+
+=== Migration from 3.2.0.M4 to 3.2.0.RELEASE
+
+Migrating will require no changes.
+
+
+=== Migration from 3.2.0.M3 to 3.2.0.M4
+
+Migrating will require the following changes.
+
+* The RDBMS persistence property _datanucleus.rdbms.sqlParamValuesInBrackets_ is now removed, and replaced by *datanucleus.rdbms.statementLogging* (see the docs)
+* The persistence property _datanucleus.rdbms.useUpdateLock_ is now removed (was deprecated many releases back). Use standard JDO/JPA locking mechanisms instead.
+* Any user-defined RDBMS mapping plugins will need updating to match some minor type changes to the "datanucleus-rdbms" plugin API.
+
+
+=== Migration from 3.2.0.M2 to 3.2.0.M3
+
+Migrating will require no changes.
+
+
+=== Migration from 3.2.0.M1 to 3.2.0.M2
+
+Migrating will require the following changes.
+
+* The Maven plugin has been renamed to *datanucleus-maven-plugin* from _maven-datanucleus-plugin_ to match Maven3 naming policies.
+* You no longer require to include *asm.jar* since version 4.1 of ASM is now repackaged into _datanucleus-core.jar_
+* Added persistence property "datanucleus.useImplementationCreator" to allow turning off the persistent interface implementation creator.
+* All java type mappings used by the RDBMS plugin are now moved from _org.datanucleus.store.mapped.mapping_ in the core plugin, 
+to _org.datanucleus.store.rdbms.mapping.java_ in the RDBMS plugin. Related classes only for "mapped" datastores are also now in the RDBMS plugin
+
+
+=== Migration from 3.1.x to 3.2.0.M1
+
+Migrating will require the following changes.
+
+* The Enhancer plugin is now merged into "datanucleus-core". Note also that the "pre-compilation" enhancement process is now discontinued.
+* The Enhancer Ant task is now moved to _org.datanucleus.enhancer.EnhancerTask_
+* Various DataNucleus internal classes have been refactored. 
+Please refer to http://www.datanucleus.org/documentation/plugin_migration.html[this guide] for details of upgrading DataNucleus internal API calls
+* Many "simple" Java field types now default to persistent (all supported types are now set to default persistent). 
+Additionally many "simple" types default to being in the DFG whereas they used not to (i.e you had to enable the persistence of them, e.g java.sql.Date)
+
+
+[[three_one]]
+== Migration to v3.1
+
+Migration to 3.1 involves the following steps
+
+
+=== Migration from 3.1.1 to 3.1.2
+
+Migrating will require no changes.
+
+
+=== Migration from 3.1.0.RELEASE to 3.1.1
+
+Migrating will require no changes.
+
+
+=== Migration from 3.1.0.M5 to 3.1.0.RELEASE
+
+Migrating will require the following changes.
+
+* You no longer are required to specify the persistence property *datanucleus.rdbms.stringDefaultLength* as 255 for JDO; this is its new default
+
+
+=== Migration from 3.1.0.M4 to 3.1.0.M5
+
+Migrating will require no changes.
+
+
+=== Migration from 3.1.0.M3 to 3.1.0.M4
+
+Migrating will require the following changes.
+
+* The enhancer (v3.1) is now upgraded and requires ASM v4.0+. You can continue to use the v3.0 enhancer with ASM v3.x but that will not work completely with JDK1.7
+* The RDBMS plugin now requires JDK1.6+ to run. Use v3.0 if you are still using JDK1.5
+
+
+=== Migration from 3.1.0.M2 to 3.1.0.M3
+
+Migrating will require the following changes.
+
+* Persistence property _datanucleus.managedRuntime_ replaced by *datanucleus.jmxType* defining the JMX server to use.
+* Persistence property _datanucleus.datastoreTransactionDelayOperations_ is removed and replaced by *datanucleus.flush.mode* with values of MANUAL and AUTO. 
+MANUAL means that operations will only go to the datastore on flush/commit, whereas AUTO will send them immediately.
+* The persistence property *datanucleus.nontx.atomic* previously only included persists and deletes. It now also encompasses field updates. 
+Bear this in mind when considering behaviour
+* The value strategy chosen when "native"(JDO)/"auto"(JPA) is specified has changed. It will now take "identity"/"sequence"/"increment" when 
+numeric-based (first that is supported for that datastore) and "uuid-hex" when string-based. 
+For RDBMS, use persistence property *datanucleus.rdbms.useLegacyNativeValueStrategy* as _true_ if wanting the old process.
+
+
+=== Migration from 3.1.0.M1 to 3.1.0.M2
+
+Migrating will require the following changes.
+
+* "javax.cache" is now split into "jcache" (old API) and "javax.cache" (standard API) and the standard API is now supported in _datanucleus-core_
+* _datanucleus-management_ plugin is now merged into _datanucleus-core_
+
+
+=== Migration from 3.0.x to 3.1.0.M1
+
+Migrating will require the following changes.
+
+* Excel, ODF, MongoDB and HBase plugins now respect JDO/JPA table/column naming strategies. 
+Make sure that you set the table/column names explicitly if requiring some other naming that was default with v3.0 and earlier plugins
+* If you have any "type" plugins using the ObjectStringConverter or ObjectLongConverter interface please rewrite them to use the new TypeConverter interface (minimal changes).
+
+
+[[three_zero]]
+== Migration to v3.0
+
+Migration to 3.0 involves the following steps
+
+
+=== Migration from 3.0.3 to 3.0.4
+
+Migrating will require the following changes.
+
+* Move java.awt geometric type support into *datanucleus-awtgeom* plugin
+
+
+=== Migration from 3.0.2 to 3.0.3
+
+Migrating will require no changes.
+
+
+=== Migration from 3.0.1 to 3.0.2
+
+Migrating will require the following changes.
+
+* HBase : Default behaviour was to use Java serialisation to get the bytes of the PK of objects. This is changed to now use HBase Bytes.toBytes resulting in cleaner PK ROW ID. 
+To get the old behaviour set the persistence property _datanucleus.hbase.serialisePK_
+* HBase : default behaviour used to be to persist primitive wrapper fields as serialized.
+They are now persisted as serialised if specified in metadata, otherwise using HBase Bytes handler
+
+
+=== Migration from 3.0.0 M6 to 3.0.0 RELEASE
+
+Migrating will require no changes.
+
+
+=== Migration from 3.0.0 M5 to 3.0.0 M6
+
+Migrating will require the following changes.
+
+* The plugin attribute "override" utilised by "java_type", "store_mapping" and "rdbms_mapping" is now removed, and users should make use of the 
+attribute "priority" (specify a number and the higher the number the higher the priority that plugin extension gets.
+* JPA usage now defaults to use "datanucleus.RetainValues". This means that when an object leaves a transaction it will not move to HOLLOW state, but instead to PERSISTENT NONTRANSACTIONAL
+and has its field values intact.
+* If using an identity string translator, note that this is now a IdentityStringTranslator and the persistence property is now "datanucleus.identityStringTranslatorType"
+
+
+=== Migration from 3.0.0 M4 to 3.0.0 M5
+
+Migrating should require no changes.
+
+
+=== Migration from 3.0.0 M3 to 3.0.0 M4
+
+Migrating will require the following changes.
+
+* Maven2 plugin option "outputFile" is renamed to "ddlFile" for consistency with all docs/tools
+
+
+=== Migration from 3.0.0 M2 to 3.0.0 M3
+
+Migrating will require the following changes.
+
+* Anyone using "memcache" cache provider should rename it to "spymemcached". This renaming is to clarify which implementation of "memcached" is actually being used. Similarly the
+persistence properties are now spelt "memcached" instead of "memcache". Also the former property _datanucleus.cache.level2.memcached.keyprefix_ is dropped and users should use
+ _datanucleus.cache.level2.cacheName_ instead
+* HBase : previously all primitives were stored serialised. Set the metadata 'serialized' flag on the field/property to continue doing that.
+* Queries are no longer run in a separate thread (which was the previous way of supporting query cancellation, now reworked for RDBMS to use SQL error codes).
+* Persistence properties for schema validation *datanucleus.validateXXX* now default to false
+
+
+=== Migration from 3.0.0 M1 to 3.0.0 M2
+
+Migrating will require the following changes.
+
+* The connection password decryption interface has been repackaged/renamed to _org.datanucleus.store.encryption.ConnectionEncryptionProvider_ so if you were
+providing your own decryption of passwords then rebuild to this
+* If using your own DataNucleus plugins, make sure you specify the persistence property *datanucleus.plugin.allowUserBundles* as _true_ since the default is now to just
+use official DataNucleus plugins.
+* The identifier naming strategy *datanucleus* has been renamed to _datanucleus1_ to make it clearer that it was used as the default for DataNucleus v1.x but no longer
+
+
+=== Migration from 2.2.x to 3.0.0 M1
+
+Migrating will require the following changes.
+
+* JDO API has been moved into its own plugin "datanucleus-api-jdo" and you will need this if using the JDO API. 
+JDO classes have been repackaged to _org.datanucleus.api.jdo_ and this is of particular importance for your PMF class (*org.datanucleus.api.jdo.JDOPersistenceManagerFactory*)
+* "datanucleus-jpa" jar has been repackaged as "datanucleus-api-jpa" and the classes within
+                        repackaged to "org.datanucleus.api.jpa". In particular your JPA persistence provider
+                        class should reference this new package name 
+                        (*org.datanucleus.api.jpa.PersistenceProviderImpl*)
+* "datanucleus-rest" jar has been repackaged as "datanucleus-api-rest".
+* SchemaTool (and its Ant task) has been moved in package to _org.datanucleus.store.schema_
+* HBase : generation of "family name" has changed when previously specifying a column name without a colon; previously used that as 
+family name and qualifier name, but now uses the table name as the family name in that situation.
+* HBase : previously all relationships were stored serialised. Set the metadata 'serialized' flag on the field/property to continue doing that.
+
+
+[[two_two]]
+== Migration to v2.2
+
+Migration to 2.2 involves the following steps
+
+
+=== Migration from 2.2.0 RELEASE to 2.2.1
+
+Migrating will require the following changes.
+
+* JDO 3.1 changes the return type of JDOQL "AVG" to be double or BigDecimal depending on the type being averaged (previously just returned the same type as the averaged type).
+
+
+=== Migration from 2.2.0 Milestone3 to 2.2.0 RELEASE
+
+Migrating will require the following changes.
+
+* *datanucleus-connectionpool* is no longer provided/needed, and is included within *datanucleus-rdbms*. 
+In addition, if using JDK1.6 you can use a builtin DBCP connection pool. You still need to include the relevant connection pool (e.g DBCP) in your CLASSPATH if using JDK1.5
+* If you experience different behaviour with delete of objects with Excel or ODF, this is because they now support cascade-delete
+* Major changes have been made to the use of the L2 cache (so that fields are used from there rather than from the datastore wherever possible) 
+and also to Managed Relations. Please report any problems
+
+
+=== Migration from 2.2.0 Milestone2 to 2.2.0 Milestone3
+
+Migrating will require the following changes.
+
+* Persistence property *datanucleus.attachPolicy* was removed since no longer needed - the default attach handler copes with all situations.
+* Much improved support for collections/arrays/maps containing nulls is now present to better match the Java spec for types. 
+If any problems come up, make use of the "allow-nulls" extension metadata
+* JPA Criteria query annotation processor is now in its own plugin jar known as *datanucleus-jpa-query*
+* JDO Typesafe query annotation processor is now in its own plugin jar known as *datanucleus-jdo-query*
+
+
+=== Migration from 2.2.0 Milestone1 to 2.2.0 Milestone2
+
+Migrating will require the following changes.
+
+* NucleusJDOHelper methods for getting dirty/loaded fields have been improved. Check the docs for the new method names.
+* JDO3.1 sequence changes allow specification of "allocationSize" and "initialValue".
+These default to 50 and 1 respectively. Set them for your sequences as required. The persistence properties now become only fallback values
+
+
+=== Migration from 2.1.x to 2.2.0 Milestone1
+
+Migrating will require the following changes.
+
+* Legacy JDOQL implementation for RDBMS is now dropped. Use AccessPlatform 2.1 if you require it
+
+
+[[two_one]]
+== Migration to v2.1
+
+Migration to 2.1 involves the following steps
+
+
+=== Migration from 2.1.2 to 2.1.3
+
+Migrating will require the following changes.
+
+* Persistence property *datanucleus.attachPolicy* is now removed, and the default handling should work fine
+
+
+=== Migration from 2.1.1 to 2.1.2
+
+Migrating will require the following changes.
+
+* The metadata extension _index_ that is used to specify a column position (in table)
+was previously required under "field" for Excel/ODF plugins. It should be under "column" now
+
+
+=== Migration from 2.1.0 RELEASE to 2.1.1
+
+Migrating will require the following changes.
+
+* Default allocation size for _increment_ and _sequence_ value strategies have been changed for JDO usage to 10 and 10 respectively (from 5 and 1). 
+You can configure the global defaults via persistence properties
+
+
+=== Migration from 2.1.0 Milestone3 to 2.1.0 RELEASE
+
+Migrating will require the following changes.
+
+* Move to using JDO3 jar instead of JDO 2.3 "ec"
+* Dropped support for class-level metadata extension "cacheable"; use standardised _cacheable_ attribute (or annotation) instead.
+
+
+=== Migration from 2.1.0 Milestone2 to 2.1.0 Milestone3
+
+Migrating will require no changes.
+
+
+=== Migration from 2.1.0 Milestone1 to 2.1.0 Milestone2
+
+Migrating will require the following changes.
+
+* JPQL "CASE" statements are now supported
+* JPA2 static metamodel is now supported, and so can be used with criteria queries alongside the string-based field specification method
+* Runtime enhancement is now turned off by default even when you use JDK1.6+ and have the enhancer/core jars in the CLASSPATH. Specify the compiler argument *processor*
+to enable it (see link:jdo/enhancer.html[the docs])
+
+
+=== Migration from 2.0.x to 2.1.0 Milestone1
+
+Migrating will require the following changes.
+
+* The JDOQL implementation used for RDBMS is now the rewritten "generic" implementation. To use the old implementation, set the JDOQL implementation as "JDOQL-Legacy"
+* Use of JPA should be run against the JPA2 "final" jar (or its Apache Geronimo specs equivalent)
+* Heavy refactoring has been done internally so if relying on DataNucleus APIs you should check against SVN for changes. In particular, plugins should be using ObjectProvider
+instead of StateManager, and ExecutionContext in place of ObjectManager.

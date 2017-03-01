@@ -1,0 +1,681 @@
+[[rdbms]]
+= RDBMS Datastores
+:_basedir: ../
+:_imagesdir: images/
+
+
+image:../images/datastore/mysql.png[]
+image:../images/datastore/mariadb.png[]
+image:../images/datastore/sqlserver.png[]
+image:../images/datastore/oracle.png[]
+image:../images/datastore/sybase.png[]
+image:../images/datastore/hsql.png[]
+image:../images/datastore/h2.png[]
+image:../images/datastore/postgresql.png[]
+image:../images/datastore/postgis.png[]
+image:../images/datastore/maxdb.png[]
+image:../images/datastore/derby.png[]
+image:../images/datastore/db2.png[]
+image:../images/datastore/informix.png[]
+image:../images/datastore/sqlite.png[]
+image:../images/datastore/firebird.png[]
+image:../images/datastore/nuodb.png[]
+
+
+DataNucleus supports persisting objects to RDBMS datastores (using the https://github.com/datanucleus/datanucleus-rdbms[datanucleus-rdbms] plugin). 
+It supports the vast majority of RDBMS products available today. 
+DataNucleus communicates with the RDBMS datastore using JDBC. 
+RDBMS systems accept varying standards of SQL and so DataNucleus will support particular RDBMS/JDBC combinations only, though clearly we try to support as many as possible.
+
+The jars required to use DataNucleus RDBMS persistence are `datanucleus-core`, `datanucleus-api-jdo`/`datanucleus-api-jpa`, `datanucleus-rdbms` and `JDBC driver`.
+
+There are tutorials available for use of DataNucleus with RDBMS link:../jdo/tutorial.html[for JDO] and link:../jpa/tutorial.html[for JPA]
+
+By default when you create a PersistenceManagerFactory or EntityManagerFactory to connect to a particular datastore DataNucleus will automatically 
+detect the _datastore adapter_ to use and will use its own internal adapter for that type of datastore. 
+If you find that either DataNucleus has incorrectly detected the adapter to use, you can override the default behaviour using the persistence property
+*datanucleus.rdbms.datastoreAdapterClassName*.
+
+Using an RDBMS datastore DataNucleus allows you to query the objects in the datastore using the following
+
+* link:../jdo/query.html#jdoql[JDOQL] - language based around the objects that are persisted and using Java-type syntax
+* link:../jdo/query.html#sql[SQL] - language found on alomst all RDBMS.
+* link:../jpa/query.html#jpql[JPQL] - language defined in the JPA specification which closely mirrors SQL.
+
+The following RDBMS have support built in to DataNucleus. 
+Click on the one of interest to see details of any provisos for its support, as well as the JDBC connection information
+
+* link:#mysql[MySQL/MariaDB]
+* link:#postgresql[PostgreSQL Database]
+* link:#postgis[PostgreSQL+PostGIS Database]
+* link:#hsqldb[HSQL DB]
+* link:#h2[H2 Database]
+* link:#sqlite[SQLite]
+* link:#derby[Apache Derby]
+* link:#sqlserver[Microsoft SQLServer]
+* link:#sybase[Sybase]
+* link:#sqlanywhere[SQL Anywhere]
+* link:#oracle[Oracle]
+* link:#db2[IBM DB2]
+* link:#informix[IBM Informix]
+* link:#firebird[Firebird]
+* link:#nuodb[NuoDB]
+* link:#maxdb[SAPDB/MaxDB]
+* link:#virtuoso[Virtuoso]
+* link:#pointbase[Pointbase]
+* link:#timesten[Oracle TimesTen]
+
+image:../images/nucleus_plugin.png[] 
+
+Note that if your RDBMS is not listed or currently supported you can easily write your own link:../extensions/extensions.html#rdbms_datastore_adapter[Datastore Adapter] for it
+raise an issue in GitHub when you have it working and attach a patch to contribute it.
+Similarly if you are using an adapter that has some problem on your case you could use the same plugin mechanism to override the non-working feature.
+
+
+[[db2]]
+== DB2
+    
+To specify DB2 as your datastore, you will need something like the following specifying (where "mydb1" is the name of the database)
+
+-----
+datanucleus.ConnectionDriverName=com.ibm.db2.jcc.DB2Driver
+datanucleus.ConnectionURL=jdbc:db2://localhost:50002/mydb1
+datanucleus.ConnectionUserName='username'     (e.g db2inst1)
+datanucleus.ConnectionPassword='password'
+-----
+
+With DB2 Express-C v9.7 you need to have db2jcc.jar and db2jcc_license_cu.jar in the CLASSPATH.
+
+
+[[mysql]]
+== MySQL
+    
+http://www.mysql.com[MySQL] and its more developed drop in replacement https://mariadb.org[MariaDB] are supported as an RDBMS datastore by DataNucleus with the following provisos
+
+* You can set the table (engine) type for any created tables via persistence property *datanucleus.rdbms.mysql.engineType* or by setting the 
+extension metadata on a class with key _mysql-engine-type_. The default is INNODB
+* You can set the collation type for any created tables via persistence property *datanucleus.rdbms.mysql.collation*
+or by setting the extension metadata on a class with key _mysql-collation_
+* You can set the character set for any created tables via persistence property *datanucleus.rdbms.mysql.characterSet*
+or by setting the extension metadata on a class with key _mysql-character-set_
+* JDOQL.isEmpty()/contains() will not work in MySQL 4.0 (or earlier) since the query uses EXISTS and that is only available from MySQL 4.1
+* MySQL on Windows MUST specify _datanucleus.identifier.case_ as "LowerCase" since the MySQL server stores all identifiers in lowercase 
+BUT the mysql-connector-java JDBC driver has a bug (in versions up to and including 3.1.10) where it claims that the MySQL server stores things in mixed case when it doesnt
+* MySQL 3.* will not work reliably with inheritance cases since DataNucleus requires UNION and this doesn't exist in MySQL 3.*
+* MySQL before version 4.1 will not work correctly on JDOQL Collection.size(), Map.size() operations since this requires subqueries, which are not supported before MySQL 4.1.
+* If you receive an error "Incorrect arguments to mysql_stmt_execute" then this is a bug in MySQL and you need to update your JDBC URL to append "?useServerPrepStmts=false".
+* MySQL throws away the milliseconds on a Date and so cannot be used reliably for Optimistic locking using strategy "date-time" (use "version" instead)
+* You can specify "BLOB", "CLOB" JDBC types when using MySQL with DataNucleus but you must turn validation of columns OFF. 
+This is because these types are not supported by the MySQL JDBC driver and it returns them as LONGVARBINARY/LONGVARCHAR when querying the column type
+
+To specify MySQL as your datastore, you will need something like the following specifying (replacing 'db-name' with name of your database etc)
+
+-----
+datanucleus.ConnectionDriverName=com.mysql.jdbc.Driver
+datanucleus.ConnectionURL=jdbc:mysql://'host':'port'/'db-name'
+datanucleus.ConnectionUserName='user-name'
+datanucleus.ConnectionPassword='password'
+-----
+
+
+[[sqlserver]]
+== SQL Server
+    
+http://www.microsoft.com/sql[Microsoft SQLServer] is supported as an RDBMS datastore by DataNucleus with the following proviso
+
+* SQLServer 2000 does not keep accuracy on _datetime_ datatypes. This is an SQLServer 2000 issue. In order to keep the accuracy when storing _java.util.Date_ java types, use _int_ datatype.
+
+To specify SQLServer as your datastore, you will need something like the following specifying (replacing 'db-name' with name of your database etc)
+    
+Microsoft SQLServer 2005 JDBC Driver (Recommended)
+-----
+datanucleus.ConnectionDriverName=com.microsoft.sqlserver.jdbc.SQLServerDriver
+datanucleus.ConnectionURL=jdbc:sqlserver://'host':'port';DatabaseName='db-name';SelectMethod=cursor
+datanucleus.ConnectionUserName='user-name'
+datanucleus.ConnectionPassword='password'
+-----
+
+Microsoft SQLServer 2000 JDBC Driver
+-----
+datanucleus.ConnectionDriverName=com.microsoft.jdbc.sqlserver.SQLServerDriver
+datanucleus.ConnectionURL=jdbc:microsoft:sqlserver://'host':'port';DatabaseName='db-name';SelectMethod=cursor
+datanucleus.ConnectionUserName='user-name'
+datanucleus.ConnectionPassword='password'
+-----
+
+
+[[oracle]]
+== Oracle
+
+To specify http://www.oracle.com/database/[Oracle] as your datastore, you will need something like the following specifying (replacing 'db-name' with name of your database etc) ... 
+you can also use 'oci' instead of 'thin' depending on your driver.
+
+-----
+datanucleus.ConnectionDriverName=oracle.jdbc.driver.OracleDriver
+datanucleus.ConnectionURL=jdbc:oracle:thin:@'host':'port':'db-name'
+datanucleus.ConnectionUserName='user-name'
+datanucleus.ConnectionPassword='password'
+-----
+
+
+[[sybase]]
+== Sybase
+
+To specify http://www.sybase.com[Sybase] as your datastore, you will need something like the following specifying (replacing 'db-name' with name of your database etc)
+
+-----
+datanucleus.ConnectionDriverName=com.sybase.jdbc2.jdbc.SybDriver
+datanucleus.ConnectionURL=jdbc:sybase:Tds:'host':'port'/'db-name'
+datanucleus.ConnectionUserName='user-name'
+datanucleus.ConnectionPassword='password'
+-----
+
+
+[[sqlanywhere]]
+== SAP SQL Anywhere
+
+To specify http://www.sap.com/pc/tech/database/software/sybase-sql-anywhere/index.html[SQL Anywhere] as your datastore, 
+you will need something like the following specifying (replacing 'db-name' with name of your database etc)
+
+-----
+datanucleus.ConnectionDriverName=sybase.jdbc4.sqlanywhere.IDriver
+datanucleus.ConnectionURL=jdbc:sqlanywhere:uid=DBA;pwd=sql;eng=demo
+datanucleus.ConnectionUserName='user-name'
+datanucleus.ConnectionPassword='password'
+-----
+
+
+[[hsqldb]]
+== HSQLDB
+
+http://hsqldb.org[HSQLDB] is supported as an RDBMS datastore by DataNucleus with the following proviso
+
+* Use of batched statements is disabled since HSQLDB has a bug where it throws exceptions "batch failed" (really informative). Still waiting for this to be fixed in HSQLDB
+* Use of JDOQL/JPQL subqueries cannot be used where you want to refer back to the parent query since HSQLDB up to and including version 1.8 don't support this.
+
+To specify HSQL (1.x) as your datastore, you will need something like the following specifying (replacing 'db-name' with name of your database etc)
+
+-----
+datanucleus.ConnectionDriverName=org.hsqldb.jdbcDriver
+datanucleus.ConnectionURL=jdbc:hsqldb:hsql://'host':'port'/'db-name'
+datanucleus.ConnectionUserName='user-name'
+datanucleus.ConnectionPassword='password'
+-----
+
+Note that in HSQLDB v2.x the driver changes to _org.hsqldb.jdbc.JDBCDriver_</p>
+
+
+[[h2]]
+== H2
+
+http://www.h2database.com[H2] is supported as an RDBMS datastore by DataNucleus.
+
+To specify H2 as your datastore, you will need something like the following specifying (replacing 'db-name' with name of your database etc)
+
+-----
+datanucleus.ConnectionDriverName=org.h2.Driver
+datanucleus.ConnectionURL=jdbc:h2:'db-name'
+datanucleus.ConnectionUserName=sa
+datanucleus.ConnectionPassword=
+-----
+
+
+[[informix]]
+== Informix
+
+Informix is supported as an RDBMS datastore by DataNucleus.
+
+To specify Informix as your datastore, you will need something like the following specifying (replacing 'db-name' with name of your database etc)
+
+-----
+datanucleus.ConnectionDriverName=com.informix.jdbc.IfxDriver
+datanucleus.ConnectionURL=jdbc:informix-sqli://[{ip|host}:port][/dbname]:INFORMIXSERVER=servername[;name=value[;name=value]...]
+datanucleus.ConnectionUserName=informix
+datanucleus.ConnectionPassword=password
+-----
+
+For example
+-----
+datanucleus.ConnectionDriverName=com.informix.jdbc.IfxDriver
+datanucleus.ConnectionURL=jdbc:informix-sqli://192.168.254.129:9088:informixserver=demo_on;database=buf_log_db
+datanucleus.ConnectionUserName=informix
+datanucleus.ConnectionPassword=password
+-----
+
+Note that some database logging options in Informix do not allow changing autoCommit dinamically. You need to rebuild the database to support it. 
+To rebuild the database refer to Informix documention, but as example, 
+-----
+run $INFORMIXDIR\bin\dbaccess and execute the command "CREATE DATABASE mydb WITH BUFFERED LOG".
+-----
+ 
+*INDEXOF*: Informix 11.x does not have a function to search a string in another string. DataNucleus defines a user defined function, DATANUCLEUS_STRPOS, which is automatically created 
+on startup. The SQL for the UDF function is:
+
+-----
+create function DATANUCLEUS_STRPOS(str char(40),search char(40),from smallint) returning smallint
+    define i,pos,lenstr,lensearch smallint;
+    let lensearch = length(search);
+    let lenstr = length(str);
+
+    if lenstr=0 or lensearch=0 then return 0; end if;
+
+    let pos=-1;
+    for i=1+from to lenstr
+        if substr(str,i,lensearch)=search then
+            let pos=i;
+            exit for;
+        end if;
+    end for;
+    return pos;
+end function;
+-----
+
+
+[[postgresql]]
+== PostgreSQL
+
+To specify http://www.postgresql.org[PostgreSQL] as your datastore, you will need something like the following specifying (replacing 'db-name' with name of your database etc)
+
+-----
+datanucleus.ConnectionDriverName=org.postgresql.Driver
+datanucleus.ConnectionURL=jdbc:postgresql://'host':'port'/'db-name'
+datanucleus.ConnectionUserName='user-name'
+datanucleus.ConnectionPassword='password'
+-----
+
+
+[[postgis]]
+== PostgreSQL with PostGIS extension
+
+To specify http://www.postgis.org[PostGIS] as your datastore, you will need to decide first which geometry library you want to use and then set the connection url accordingly.
+
+For the PostGIS JDBC geometries you will need something like the following specifying (replacing 'db-name' with name of your database etc)
+
+-----
+datanucleus.ConnectionDriverName=org.postgresql.Driver
+datanucleus.ConnectionURL=jdbc:postgresql://'host':'port'/'db-name'
+datanucleus.ConnectionUserName='user-name'
+datanucleus.ConnectionPassword='password'
+-----
+
+For Oracle's JGeometry you will need something like the following specifying (replacing 'db-name' with name of your database etc)
+-----
+datanucleus.ConnectionDriverName=org.postgresql.Driver
+datanucleus.ConnectionURL=jdbc:postgres_jgeom://'host':'port'/'db-name'
+datanucleus.ConnectionUserName='user-name'
+datanucleus.ConnectionPassword='password'
+-----
+
+For the JTS (Java Topology Suite) geometries you will need something like the following specifying (replacing 'db-name' with name of your database etc)
+-----
+datanucleus.ConnectionDriverName=org.postgresql.Driver
+datanucleus.ConnectionURL=jdbc:postgres_jts://'host':'port'/'db-name'
+datanucleus.ConnectionUserName='user-name'
+datanucleus.ConnectionPassword='password'
+-----
+
+
+[[derby]]
+== Apache Derby
+
+To specify http://db.apache.org/derby/[Apache Derby] as your datastore, you will need something like the following specifying (replacing 'db-name' with filename of your database etc)
+
+-----
+datanucleus.ConnectionDriverName=org.apache.derby.jdbc.EmbeddedDriver
+datanucleus.ConnectionURL=jdbc:derby:'db-name';create=true
+datanucleus.ConnectionUserName='user-name'
+datanucleus.ConnectionPassword='password'
+-----
+
+Above settings are used together with the Apache Derby in embedded mode. The below settings are used in network mode, where the default port number is 1527.
+
+-----
+datanucleus.ConnectionDriverName=org.apache.derby.jdbc.ClientDriver
+datanucleus.ConnectionURL=jdbc:derby://'hostname':'portnumber'/'db-name';create=true
+datanucleus.ConnectionUserName='user-name'
+datanucleus.ConnectionPassword='password'
+-----
+
+org.apache.derby.jdbc.ClientDriver
+
+*ASCII*: Derby 10.1 does not have a function to convert a char into ascii code. DataNucleus needs such function to converts chars to int values when performing queries converting chars to ints. 
+DataNucleus defines a user defined function, DataNucleus_ASCII, which is automatically created on startup. The SQL for the UDF function is:
+
+-----
+DROP FUNCTION NUCLEUS_ASCII;
+CREATE FUNCTION NUCLEUS_ASCII(C CHAR(1)) RETURNS INTEGER
+EXTERNAL NAME 'org.datanucleus.store.rdbms.adapter.DerbySQLFunction.ascii'
+CALLED ON NULL INPUT
+LANGUAGE JAVA PARAMETER STYLE JAVA;
+-----
+
+*String.matches(pattern)*: When pattern argument is a column, DataNucleus defines a function that allows Derby 10.1 to perform the matches function. The SQL for the UDF function is:
+
+-----
+DROP FUNCTION NUCLEUS_MATCHES;
+CREATE FUNCTION NUCLEUS_MATCHES(TEXT VARCHAR(8000), PATTERN VARCHAR(8000)) RETURNS INTEGER
+EXTERNAL NAME 'org.datanucleus.store.rdbms.adapter.DerbySQLFunction.matches'
+CALLED ON NULL INPUT
+LANGUAGE JAVA PARAMETER STYLE JAVA;
+-----
+
+
+[[firebird]]
+== Firebird
+
+http://www.firebirdsql.org[Firebird] is supported as an RDBMS datastore by DataNucleus with the proviso that
+
+* Auto-table creation is severely limited with Firebird. In Firebird, DDL statements are not auto-committed and are executed at the end of a transaction, after any DML statements. 
+This makes "on the fly" table creation in the middle of a DML transaction not work. 
+You must make sure that "autoStartMechanism" is NOT set to "SchemaTable" since this will use DML. 
+You must also make sure that nobody else is connected to the database at the same time.
+Don't ask us why such limitations are in a RDBMS, but then it was you that chose to use it ;-)
+
+To specify Firebird as your datastore, you will need something like the following specifying (replacing 'db-name' with filename of your database etc) </p>
+
+-----
+datanucleus.ConnectionDriverName=org.firebirdsql.jdbc.FBDriver
+datanucleus.ConnectionURL=jdbc:firebirdsql://localhost/'db-name'
+datanucleus.ConnectionUserName='user-name'
+datanucleus.ConnectionPassword='password'
+-----
+
+
+[[nuodb]]
+== NuoDB
+
+To specify NuoDB as your datastore, you will need something like the following specifying (replacing 'db-name' with filename of your database etc) </p>
+
+-----
+datanucleus.ConnectionDriverName=com.nuodb.jdbc.Driver
+datanucleus.ConnectionURL=jdbc:com.nuodb://localhost/'db-name'
+datanucleus.ConnectionUserName='user-name'
+datanucleus.ConnectionPassword='password'
+datanucleus.Schema={my-schema-name}
+-----
+
+
+[[maxdb]]
+== SAPDB/MaxDB
+
+To specify SAPDB/MaxDB as your datastore, you will need something like the following specifying (replacing 'db-name' with filename of your database etc)
+
+-----
+datanucleus.ConnectionDriverName=com.sap.dbtech.jdbc.DriverSapDB
+datanucleus.ConnectionURL=jdbc:sapdb://localhost/'db-name'
+datanucleus.ConnectionUserName='user-name'
+datanucleus.ConnectionPassword='password'
+-----
+
+
+[[sqlite]]
+== SQLite
+
+http://www.sqlite.org/[SQLite] is supported as an RDBMS datastore by DataNucleus with the proviso that
+
+* When using sequences, you must set the persistence property *datanucleus.valuegeneration.transactionAttribute* to *UsePM*
+
+To specify SQLite as your datastore, you will need something like the following specifying (replacing 'db-name' with filename of your database etc) </p>
+
+-----
+datanucleus.ConnectionDriverName=org.sqlite.JDBC
+datanucleus.ConnectionURL=jdbc:sqlite:'db-name'
+datanucleus.ConnectionUserName=
+datanucleus.ConnectionPassword=
+-----
+
+
+[[virtuoso]]
+== Virtuoso
+
+To specify http://virtuoso.openlinksw.com/dataspace/dav/wiki/Main/[Virtuoso] as your datastore, you will need something like the following specifying 
+(replacing 'db-name' with filename of your database etc) 
+
+-----
+datanucleus.ConnectionDriverName=virtuoso.jdbc.Driver
+datanucleus.ConnectionURL=jdbc:virtuoso://127.0.0.1/{dbname}
+datanucleus.ConnectionUserName=
+datanucleus.ConnectionPassword=
+-----
+
+
+[[pointbase]]
+== Pointbase
+
+To specify http://docs.oracle.com/cd/E13218_01/wlp/docs92/db/pointbase.html#wp1058500[Pointbase] as your datastore, you will need 
+something like the following specifying (replacing 'db-name' with filename of your database etc)
+
+-----
+datanucleus.ConnectionDriverName=com.pointbase.jdbc.jdbcUniversalDriver
+datanucleus.ConnectionURL=jdbc:pointbase://127.0.0.1/{dbname}
+datanucleus.ConnectionUserName=
+datanucleus.ConnectionPassword=
+-----
+
+
+== JDBC Driver parameters
+
+If you need to pass additional parameters to the JDBC driver you can append these to the end of the *datanucleus.ConnectionURL*. For example,
+
+-----
+datanucleus.ConnectionURL=jdbc:mysql://localhost?useUnicode=true&amp;characterEncoding=UTF-8
+-----
+
+
+[[statement_batching]]
+== RDBMS : Statement Batching
+
+image:../images/nucleus_extension.png[]
+
+When changes are required to be made to an underlying RDBMS datastore, statements are sent via JDBC.
+A statement is, in general, a single SQL command, and is then executed. 
+In some circumstances the statements due to be sent to the datastore are the same JDBC statement several times. In this case the statement can be _batched_. 
+This means that a statement is created for the SQL, and it is passed to the datastore with multiple sets of values before being executed. 
+When it is executed the SQL is executed for each of the sets of values. 
+DataNucleus allows statement batching under certain circumstances.
+
+The maximum number of statements that can be included in a _batch_ can be set via a persistence property *datanucleus.rdbms.statementBatchLimit*. This defaults to 50. 
+If you set it to -1 then there is no maximum limit imposed. Setting it to 0 means that batching is turned off.
+
+*It should be noted that while batching sounds essential, it is only of any possible use when the exact same SQL is required to be executed more than 1 times in a row. 
+If a different SQL needs executing between 2 such statements then no batching is possible anyway.*. Let's take an example
+
+-----
+INSERT INTO MYTABLE VALUES(?,?,?,?)
+INSERT INTO MYTABLE VALUES(?,?,?,?)
+SELECT ID, NAME FROM MYOTHERTABLE WHERE VALUE=?
+INSERT INTO MYTABLE VALUES(?,?,?,?)
+SELECT ID, NAME FROM MYOTHERTABLE WHERE VALUE=?
+-----
+
+In this example the first two statements can be batched together since they are identical and nothing else separates them.
+All subsequent statements cannot be batched since no two identical statements follow each other.
+
+The statements that DataNucleus currently allows for batching are
+
+* Insert of objects. This is not enabled when objects being inserted are using _identity_ value generation strategy
+* Delete of objects
+* Insert of container elements/keys/values
+* Delete of container elements/keys/values
+
+*Please note that if using MySQL, you should also specify the connection URL with the argument _rewriteBatchedStatements=true_ since MySQL won't actually batch without this*
+
+
+
+[[schema_api]]
+=== RDBMS : Datastore Schema API
+
+image:../images/nucleus_extension.png[]
+
+JDO/JPA are APIs for persisting and retrieving objects to/from datastores. They don't provide a way of accessing the schema of the datastore itself (if it has one). 
+In the case of RDBMS it is useful to be able to find out what columns there are in a table, or what data types are supported for example. 
+DataNucleus Access Platform provides an API for this.
+
+The first thing to do is get your hands on the DataNucleus _StoreManager_ and from that the _StoreSchemaHandler_. 
+You do this as follows
+
+[source,java]
+-----
+import org.datanucleus.api.jdo.JDOPersistenceManagerFactory;
+import org.datanucleus.store.StoreManager;
+import org.datanucleus.store.schema.StoreSchemaHandler;
+
+[assumed to have "pmf"]
+...
+
+StoreManager storeMgr = ((JDOPersistenceManagerFactory)pmf).getStoreManager();
+StoreSchemaHandler schemaHandler = storeMgr.getSchemaHandler();
+-----
+
+So now we have the _StoreSchemaHandler_ what can we do with it? Well start with the javadoc for the implementation that is used for RDBMS
+http://www.datanucleus.org/javadocs/store.rdbms/latest/org/datanucleus/store/rdbms/schema/RDBMSSchemaHandler.html[image:../images/javadoc.png[Javadoc]]
+
+
+=== Datastore Types Information
+    
+So we now want to find out what JDBC/SQL types are supported for our RDBMS. This is simple.
+
+[source,java]
+-----
+import org.datanucleus.store.rdbms.schema.RDBMSTypesInfo;
+
+Connection conn = (Connection)pm.getDataStoreConnection().getNativeConnection();
+RDBMSTypesInfo typesInfo = schemaHandler.getSchemaData(conn, "types");
+-----
+
+As you can see from the javadocs for _RDBMSTypesInfo_
+http://www.datanucleus.org/javadocs/store.rdbms/latest/org/datanucleus/store/rdbms/schema/RDBMSTypesInfo.html[image:../images/javadoc.png[Javadoc]]
+we can access the JDBC types information via the "children". They are keyed by the JDBC type number of the JDBC type (see java.sql.Types). So we can just iterate it
+
+[source,java]
+-----
+Iterator jdbcTypesIter = typesInfo.getChildren().values().iterator();
+while (jdbcTypesIter.hasNext())
+{
+    JDBCTypeInfo jdbcType = (JDBCTypeInfo)jdbcTypesIter.next();
+
+    // Each JDBCTypeInfo contains SQLTypeInfo as its children, keyed by SQL name
+    Iterator sqlTypesIter = jdbcType.getChildren().values().iterator();
+    while (sqlTypesIter.hasNext())
+    {
+        SQLTypeInfo sqlType = (SQLTypeInfo)sqlTypesIter.next();
+        ... inspect the SQL type info
+    }
+}
+-----
+
+
+=== Column information for a table
+
+Here we have a table in the datastore and want to find the columns present. So we do this
+
+[source,java]
+-----
+import org.datanucleus.store.rdbms.schema.RDBMSTableInfo;
+
+Connection conn = (Connection)pm.getDataStoreConnection().getNativeConnection();
+RDBMSTableInfo tableInfo = schemaHandler.getSchemaData(conn, "columns", 
+    new Object[] {catalogName, schemaName, tableName});
+-----
+    
+As you can see from the javadocs for _RDBMSTableInfo_
+http://www.datanucleus.org/javadocs/store.rdbms/latest/org/datanucleus/store/rdbms/schema/RDBMSTableInfo.html[image:../images/javadoc.png[Javadoc]]
+we can access the columns information via the "children".
+
+[source,java]
+-----
+Iterator columnsIter = tableInfo.getChildren().iterator();
+while (columnsIter.hasNext())
+{
+    RDBMSColumnInfo colInfo = (RDBMSColumnInfo)columnsIter.next();
+
+    ...
+}
+-----
+
+=== Index information for a table
+
+Here we have a table in the datastore and want to find the indices present. So we do this
+
+[source,java]
+-----
+import org.datanucleus.store.rdbms.schema.RDBMSTableInfo;
+
+Connection conn = (Connection)pm.getDataStoreConnection().getNativeConnection();
+RDBMSTableIndexInfo tableInfo = schemaHandler.getSchemaData(conn, "indices", 
+    new Object[] {catalogName, schemaName, tableName});
+-----
+
+As you can see from the javadocs for _RDBMSTableIndexInfo_
+http://www.datanucleus.org/javadocs/store.rdbms/latest/org/datanucleus/store/rdbms/schema/RDBMSTableIndexInfo.htm[image:../images/javadoc.png[Javadoc]]
+we can access the index information via the "children".
+
+[source,java]
+-----
+Iterator indexIter = tableInfo.getChildren().iterator();
+while (indexIter.hasNext())
+{
+    IndexInfo idxInfo = (IndexInfo)indexIter.next();
+
+    ...
+}
+-----
+
+
+=== ForeignKey information for a table
+
+Here we have a table in the datastore and want to find the FKs present. So we do this
+
+[source,java]
+-----
+import org.datanucleus.store.rdbms.schema.RDBMSTableInfo;
+
+Connection conn = (Connection)pm.getDataStoreConnection().getNativeConnection();
+RDBMSTableFKInfo tableInfo = schemaHandler.getSchemaData(conn, "foreign-keys", 
+    new Object[] {catalogName, schemaName, tableName});
+-----
+
+As you can see from the javadocs for _RDBMSTableFKInfo_
+http://www.datanucleus.org/javadocs/store.rdbms/latest/org/datanucleus/store/rdbms/schema/RDBMSTableFKInfo.html[image:../images/javadoc.png[Javadoc]]
+we can access the foreign-key information via the "children".
+
+[source,java]
+-----
+Iterator fkIter = tableInfo.getChildren().iterator();
+while (fkIter.hasNext())
+{
+    ForeignKeyInfo fkInfo = (ForeignKeyInfo)fkIter.next();
+
+    ...
+}
+-----
+
+
+=== PrimaryKey information for a table
+    
+Here we have a table in the datastore and want to find the PK present. So we do this
+
+[source,java]
+-----
+import org.datanucleus.store.rdbms.schema.RDBMSTableInfo;
+
+Connection conn = (Connection)pm.getDataStoreConnection().getNativeConnection();
+RDBMSTablePKInfo tableInfo = schemaHandler.getSchemaData(conn, "primary-keys", 
+    new Object[] {catalogName, schemaName, tableName});
+-----
+
+As you can see from the javadocs for _RDBMSTablePKInfo_
+http://www.datanucleus.org/javadocs/store.rdbms/latest/org/datanucleus/store/rdbms/schema/RDBMSTablePKInfo.html[image:../images/javadoc.png[Javadoc]]
+we can access the foreign-key information via the "children".
+
+[source,java]
+-----
+Iterator pkIter = tableInfo.getChildren().iterator();
+while (pkIter.hasNext())
+{
+    PrimaryKeyInfo pkInfo = (PrimaryKeyInfo)pkIter.next();
+
+    ...
+}
+-----
+

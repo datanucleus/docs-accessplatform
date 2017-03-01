@@ -1,0 +1,156 @@
+[[mongodb]]
+= MongoDB Datastores
+:_basedir: ../
+:_imagesdir: images/
+
+
+image:../images/datastore/mongodb.png[]
+
+DataNucleus supports persisting/retrieving objects to/from MongoDB datastores (using the 
+https://github.com/datanucleus/datanucleus-mongodb[datanucleus-mongodb] plugin, which utilises the Mongo Java driver). 
+Simply specify your "connectionURL" as follows
+
+-----
+datanucleus.ConnectionURL=mongodb:[{server}][/{dbName}] [,{server2}[,server3}]]
+-----
+
+For example, to connect to a local server, with database called "myMongoDB"
+
+-----
+datanucleus.ConnectionURL=mongodb:/myMongoDB
+-----
+
+If you just specify the URL as _mongodb_ then you have a local MongoDB datastore 
+called "DataNucleus", otherwise it tries to connect to the datastore _{dbName}_ at _{server}_. 
+The multiple _{server}_ option allows you to run against MongoDB http://www.mongodb.org/display/DOCS/Replica+Sets[replica sets]. 
+You then create your PMF/EMF as normal and use JDO/JPA as normal.
+
+The jars required to use DataNucleus MongoDB persistence are `datanucleus-core`, `datanucleus-api-jdo`/`datanucleus-api-jpa`, `datanucleus-mongodb` and `mongo-java-driver`.
+
+There are tutorials available for use of DataNucleus with MongoDB link:../jdo/tutorial.html[for JDO] and link:../jpa/tutorial.html[for JPA]
+
+Things to bear in mind with MongoDB usage :-
+
+* Creation of a PMF/EMF will create a _MongoClient_. This will be closed then the PMF/EMF is closed.
+* Creation of a PM/EM and performing an operation will obtain a _DB_ object from the _MongoClient_.
+This is pooled by the MongoClient so is managed by MongoDB. Closing the PM/EM will stop using that _DB_
+* You can set the number of connections per host with the persistence property *datanucleus.mongodb.connectionsPerHost*
+* Querying can be performed using JDOQL or JPQL. 
+Some components of a filter are handled in the datastore, and the remainder in-memory.
+Currently any expression of a field (in the same table), or a literal are handled *in-datastore*, as are the operators &amp;&amp;, ||, >, >=, <, <=, ==, and !=.
+Note that if something falls back to being evaluated *in-memory* then it can be much slower, and this will be noted in the log, so people are advised to design 
+their models and queries to avoid that happening if performance is a top priority.
+* If you want a query to be runnable on a slave MongoDB instance then you should set the query extension (JDO) / hint (JPA) 
+*slave-ok* as _true_, and when executed it can be run on a slave instance.
+* All objects of a class are persisted to a particular "document" (specifiable with the "table" in metadata), 
+and a field of a class is persisted to a particular "field" ("column" in the metadata).
+* Relations : DataNucleus stores the id of the related object(s) in a field of the owning object.
+When a relation is bidirectional both ends of the relation will store the relation information.
+* http://www.mongodb.org/display/DOCS/Capped+Collections[Capped collections] : you can specify the extension metadata key _mongodb.capped.size_
+as the number of bytes of the size of the collection for the class in question.
+* If you want to specify the max number of connections per host with MongoDB then set the persistence property *datanucleus.mongodb.connectionsPerHost*
+* If you want to specify the MongoDB _threadsAllowedToBlockForConnectionMultiplier_, then set the persistence property *datanucleus.mongodb.threadsAllowedToBlockForConnectionMultiplier*
+
+
+== Mapping : Embedded Persistable fields
+
+When you have a field in a class that is of a persistable type you sometimes want to store it with the owning object. 
+In this case you can use link:../jdo/mapping.html#embedded_pc[JDO] / link:../jpa/mapping.html#embedded_entity[JPA] embedding of the field. 
+DataNucleus offers two ways of performing this embedding
+
+* The default is to store the object in the field as a sub-document (nested) of the owning document. 
+Similarly if that sub-object has a field of a persistable type then that can be further nested.
+* The alternative is to store each field of the sub-object as a field of the owning document (flat embedding). 
+Similarly if that sub-object has a field of a persistable type then it can be flat embedded in the same way
+
+For JDO this would be defined as follows (for JPA just swap @PersistenceCapable for @Entity)
+
+[source,java]
+-----
+@PersistenceCapable
+public class A
+{
+    @Embedded
+    B b;
+
+    ...
+}
+-----
+
+This example uses the default embedding, using a nested document within the owner document, and could look something like this
+
+-----
+{ "name" : "A Name" ,
+  "id" : 1 ,
+  "b" : { "b_name" : "B name" ,
+          "b_description" : "the description"}
+}
+-----
+
+The alternative for JDO would be as follows (for JPA just swap @PersistenceCapable for @Entity)
+
+[source,java]
+-----
+@PersistenceCapable
+public class A
+{
+    @Embedded
+    @Extension(vendorName="datanucleus", key="nested", value="false")
+    B b;
+
+    ...
+}
+-----
+
+and this will use _flat embedding_, looking something like this
+
+-----
+{ "name" : "A Name" ,
+  "id" : 1 ,
+  "b_name" : "B name" ,
+  "b_description" : "the description"
+}
+-----
+
+
+== Mapping : Embedded Collection elements
+
+When you have a field in a class that is of a Collection type you sometimes want to store it with the owning object. 
+In this case you can use link:../jdo/mapping.html#embedded_collection[JDO] / link:../jpa/mapping.html#embedded_collection[JPA] embedding of the field.
+So if we have
+
+[source,java]
+-----
+@PersistenceCapable
+public class A
+{
+    @Element(embedded="true")
+    Collection* bs;
+
+    ...
+}
+-----
+
+and would look something like this
+
+-----
+{ "name" : "A Name" ,
+  "id" : 1 ,
+  "bs" :
+      [
+        { "name" : "B Name 1" ,
+          "description" : "desc 1"} ,
+        { "name" : "B Name 2" ,
+          "description" : "desc 2"} ,
+        { "name" : "B Name 3" ,
+          "description" : "desc 3"}
+      ]
+}
+-----
+
+== References
+
+Below are some references using this support
+
+http://sasajovancic.blogspot.com/2011/06/use-jpa-with-mongodb-and-datanucleus.html[Sasa Jovancic - Use JPA with MongoDb and Datanucleus]
+

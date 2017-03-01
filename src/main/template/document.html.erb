@@ -1,0 +1,184 @@
+<%#encoding:UTF-8%><!DOCTYPE html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- No caching headers -->
+    <meta http-equiv="cache-control" content="no-cache"/>
+    <meta http-equiv="pragma" content="no-cache"/>
+    <meta http-equiv="expires" content="-1"/>
+
+    <title><%= document.name %></title>
+
+    <link rel="icon" type="image/png" href="http://www.datanucleus.org/images/datanucleus_favicon.png"/>
+
+    <!--
+        DataNucleus Documentation Template
+        ==================================
+        This template uses 
+        * Bootstrap v3.3.7 (https://getbootstrap.com/) for navbar.
+        * Bootswatch "cosmo" theme for Bootstrap (https://bootswatch.com/cosmo).
+        * Bootstrap TOC plugin v0.4.1 (https://afeld.github.io/bootstrap-toc/)
+          for the table of contents.
+        * jQuery (necessary for Bootstrap's JavaScript plugins)
+        * Font-Awesome for some icons used by Asciidoctor
+        NOTE: tried using Font-Awesome CSS locally but then fails to work!
+    -->
+    <link href="<%= (attr :_basedir) %>css/bootswatch/3.3.7/bootstrap-cosmo.css" rel="stylesheet"/>
+    <link href="<%= (attr :_basedir) %>css/bootstrap-toc/0.4.1/bootstrap-toc.min.css" rel="stylesheet"/>
+
+    <link href="<%= (attr :_basedir) %>css/asciidoctor/foundation.css" rel="stylesheet"/>
+    <link href="<%= (attr :_basedir) %>css/datanucleus_theme.css" rel="stylesheet"/>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
+
+    <%
+       def is_toc?
+         not (attributes.has_key?('notoc'))
+       end
+    %>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="<%= (attr :_basedir) %>js/bootstrap/3.3.7/bootstrap.min.js"></script>
+    <script src="<%= (attr :_basedir) %>js/bootstrap-toc/0.4.1/bootstrap-toc.min.js"></script>
+
+    <!-- Coderay syntax formatter -->
+    <style type="text/css">
+        <%= ::Asciidoctor::Stylesheets.instance.coderay_stylesheet_data %>
+    </style>
+</head>
+
+<body data-spy="scroll" data-target="#toc">
+
+<!-- Navbar -->
+<nav class="navbar navbar-default navbar-static-top">
+    <div class="container">
+        <div class="navbar-header">
+            <!-- Three line menu button for use on mobile screens -->
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+
+            <!-- 'style' added to align image with navbar. FIX THIS -->
+            <a class="navbar-brand" href="http://www.datanucleus.org/index.html">
+                <img style="margin-top: -12px;" alt="Brand" src="<%= (attr :_basedir) %>images/datanucleus_icon.png"/>
+            </a>
+
+            <!-- TODO Any way to abstract the version from Maven? -->
+            <a class="navbar-brand" href="<%= (attr :_basedir) %>index.html">DataNucleus v5.0</a>
+
+            <!-- 'style' added to fix height of input box. FIX THIS -->
+            <form class="navbar-form navbar-left" role="search" id="search-form" action="https://www.google.com/search" method="get" style="padding: 1px 15px;">
+                <div class="form-group">
+                    <input name="sitesearch" value="www.datanucleus.org" type="hidden">
+                    <input name="q" type="text" class="form-control" placeholder="Search" style="margin-top: 7px; padding: 1px; border-radius: 5px; height: 30px; vertical-align: middle;">
+                </div>
+            </form>
+        </div>
+
+        <!-- Navbar that will collapse on mobile screens -->
+        <div id="navbar" class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">JDO API <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="<%= (attr :_basedir) %>jdo/getting_started.html">Getting Started</a></li>
+                        <li><a href="<%= (attr :_basedir) %>jdo/mapping.html">Mapping</a></li>
+                        <li><a href="<%= (attr :_basedir) %>jdo/enhancer.html">Enhancer</a></li>
+                        <li><a href="<%= (attr :_basedir) %>jdo/persistence.html">Persistence</a></li>
+                        <li><a href="<%= (attr :_basedir) %>jdo/query.html">Queries</a></li>
+                        <li><a href="<%= (attr :_basedir) %>jdo/tools.html">Tools</a></li>
+                        <li role="separator" class="divider"></li>
+                        <li class="dropdown-header">Reference Documents</li>
+                        <li><a href="<%= (attr :_basedir) %>jdo/annotations.html">Annotations Reference</a></li>
+                        <li><a href="<%= (attr :_basedir) %>jdo/metadata_xml.html">XML Metadata Reference</a></li>
+                        <li><a href="http://www.datanucleus.org/javadocs/javax.jdo/3.2/">JDO Javadocs</a></li>
+                        <li role="separator" class="divider"></li>
+                        <li><a href="<%= (attr :_basedir) %>jdo/tutorial.html">JDO Tutorial</a></li>
+                        <li><a href="http://db.apache.org/jdo/">Apache JDO project</a></li>
+                        <li><a href="https://github.com/datanucleus/samples-jdo">JDO Samples</a></li>
+                    </ul>
+                </li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">JPA API <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="<%= (attr :_basedir) %>jpa/getting_started.html">Getting Started</a></li>
+                        <li><a href="<%= (attr :_basedir) %>jpa/mapping.html">Mapping</a></li>
+                        <li><a href="<%= (attr :_basedir) %>jpa/enhancer.html">Enhancer</a></li>
+                        <li><a href="<%= (attr :_basedir) %>jpa/persistence.html">Persistence</a></li>
+                        <li><a href="<%= (attr :_basedir) %>jpa/query.html">Queries</a></li>
+                        <li><a href="<%= (attr :_basedir) %>jpa/tools.html">Tools</a></li>
+                        <li role="separator" class="divider"></li>
+                        <li class="dropdown-header">Reference Documents</li>
+                        <li><a href="<%= (attr :_basedir) %>jpa/annotations.html">Annotations Reference</a></li>
+                        <li><a href="<%= (attr :_basedir) %>jpa/metadata_xml.html">ORM.XML Reference</a></li>
+                        <li><a href="http://www.datanucleus.org/javadocs/javax.persistence/2.1/">JPA Javadocs</a></li>
+                        <li role="separator" class="divider"></li>
+                        <li><a href="<%= (attr :_basedir) %>jpa/tutorial.html">JPA Tutorial</a></li>
+                        <li><a href="http://jcp.org/aboutJava/communityprocess/final/jsr338/index.html">JPA 2.1 spec</a></li>
+                        <li><a href="https://github.com/datanucleus/samples-jpa">JPA Samples</a></li>
+                    </ul>
+                </li>
+                <li><a href="<%= (attr :_basedir) %>rest/rest.html">REST API</a></li>
+                <li><a href="<%= (attr :_basedir) %>datastores/datastores.html">Datastores</a></li>
+                <li><a href="<%= (attr :_basedir) %>extensions/extensions.html">Extensions</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+
+<div class="container">
+    <% if is_toc? then %>
+        <div class="row-fluid">
+            <div class="col-sm-9">
+                <div class="page-title">
+                    <h1><%= document.name %></h1>
+                </div>
+                <div id="doc-content">
+                    <%= document.content %>
+                </div>
+            </div>
+            <div class="col-sm-3">
+                <nav id="toc" data-spy="affix" data-toggle="toc"></nav>
+            </div>
+        </div>
+    <% else %>
+        <!-- Front Page, no TOC and no heading -->
+        <div class="row-fluid">
+            <div class="col-sm-12">
+                <div id="doc-content">
+                    <%= document.content %>
+                </div>
+            </div>
+        </div>
+    <% end %>
+</div>
+
+<footer style="background-color:#97d5ca; padding: 5px;">
+<div class="container">
+    <hr/>
+    <div class="row">
+        <div class="col-sm-2">
+            Support : 
+        </div>
+        <div class="col-sm-3">
+            <a href="http://forum.datanucleus.org">DataNucleus Forum</a>
+        </div>
+        <div class="col-sm-3">
+            <a href="https://gitter.im/datanucleus/Lobby">Gitter</a>
+        </div>
+        <div class="col-sm-4">
+            <a href="../../documentation/problem_reporting.html">Problem Reporting</a>
+        </div>
+    </div>
+    <hr/>
+    <p class="text-center">&copy; 2008-2017 DataNucleus, Licensed under the <a href="../../documentation/license.html">Apache License, Version 2.0.</a></p>
+</div>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,105 @@
+[[type_converter]]
+= Extension: Type Converter
+:_basedir: ../
+:_imagesdir: images/
+
+
+DataNucleus allows you to provide alternate ways of persisting Java types. Whilst it includes the majority of normal converters built-in, 
+you can extend DataNucleus capabilities using the plugin extension *org.datanucleus.type_converter*.
+
+
+== TypeConverter Interface
+
+Any type converter plugin will need to implement _org.datanucleus.store.types.converters.TypeConverter_
+http://www.datanucleus.org/javadocs/core/latest/org/datanucleus/store/types/converters/TypeConverter.html[image:../images/javadoc.png[Javadoc]].
+So you need to implement the following interface
+
+[source,java]
+------------
+public interface TypeConverter<X, Y> extends Serializable
+{
+    /**
+     * Method to convert the passed member value to the datastore type.
+     * @param memberValue Value from the member
+     * @return Value for the datastore
+     */
+    Y toDatastoreType(X memberValue);
+
+    /**
+     * Method to convert the passed datastore value to the member type.
+     * @param datastoreValue Value from the datastore
+     * @return Value for the member
+     */
+    X toMemberType(Y datastoreValue);
+}
+------------
+
+== TypeConverter Implementation Example
+
+Let's take an example. If we look at the Java type URI we want to persist it as a String since a native URI type isn't present in datastores. We define our class as
+
+[source,java]
+------------
+public class URIStringConverter implements TypeConverter<URI, String>
+{
+    public URI toMemberType(String str)
+    {
+        if (str == null)
+        {
+            return null;
+        }
+
+        return java.net.URI.create(str.trim());
+    }
+
+    public String toDatastoreType(URI uri)
+    {
+        return uri != null ? uri.toString() : null;
+    }
+}
+------------
+
+So when converting it for the datastore it will use the _toString()_ form of the URI,
+and will be converted back to a URI (on retrieval from the datastore) using the _URI.create_ method. 
+Obviously this particular TypeConverter is included in DataNucleus, but hopefully it gives an idea of what to do to provide your own.
+
+== Controlling default column length
+
+Some datastore plugins may support schemas where you can put an upper limit on the length of columns (e.g RDBMS). You can build this information
+into your TypeConverter plugin by also implementing the interface ColumnLengthDefiningTypeConverter
+http://www.datanucleus.org/javadocs/core/latest/org/datanucleus/store/types/converters/ColumnLengthDefiningTypeConverter.html[image:../images/javadoc.png[Javadoc]]
+which simply means adding the method _int getDefaultColumnLength(int columnPosition)_.
+
+
+
+== Converting a member to multiple columns
+
+The default is to convert a member type to a single column type in the datastore. DataNucleus allows you to convert to multiple columns, for example imagine
+a type Point that has an _x_ and _y_. You want to persist this into 2 columns, the _x_ stored in column 0, and the _y_ stored in column 1. So now you update your
+TypeConverter to also implement MultiColumnConverter
+http://www.datanucleus.org/javadocs/core/latest/org/datanucleus/store/types/converters/MultiColumnConverter.html[image:../images/javadoc.png[Javadoc]]
+which simply means adding the method _Class[] getDatastoreColumnTypes()_.
+
+
+
+== Plugin Specification
+
+So we now have our custom "value generator" and we just need to make this into a DataNucleus plugin. To do this you simply add a file 
+`plugin.xml` to your JAR at the root. The file `plugin.xml` should look like this
+
+[source,xml]
+------------
+<?xml version="1.0"?>
+<plugin id="mydomain" name="DataNucleus plug-ins" provider-name="My Company">
+    <extension point="org.datanucleus.type_converter">
+        <type-converter name="dn.uri-string" member-type="java.net.URI" datastore-type="java.lang.String"
+            converter-class="mydomain.converters.URIStringConverter"/>
+    </extension>
+</plugin>
+------------
+
+Note that you also require a `MANIFEST.MF` file as xref:extensions.adoc#MANIFEST[described above].
+
+The name "dn.uri-string" can be used to refer to this converter from within a #type_converter[java_types extension point] definition 
+for the default converter to use for a Java type.
+

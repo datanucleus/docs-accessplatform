@@ -1,0 +1,426 @@
+[[em]]
+= EntityManager
+:_basedir: ../
+:_imagesdir: images/
+
+Now that we have our link:#emf[EntityManagerFactory], providing the connection for our _persistence-unit_ to our datastore, we need
+to obtain an _EntityManager_ (EM) to manage the persistence of objects. Here we describe the majority of operations that you will are likely
+to need to know about.
+
+NOTE: An _EntityManagerFactory_ is designed to be thread-safe. An _EntityManager_ is not.* 
+If you set the persistence property *datanucleus.Multithreaded* this acts as a hint to the EMF to provide _EntityManager_s that are usable with multiple threads. 
+While DataNucleus makes efforts to make this _EntityManager_ usable with multiple threads, it is not guaranteed to work multi-threaded in all situations, 
+particularly around second class collection/map fields.
+
+To take an example, suppose we have the following (abbreviated) entities
+
+[source,java]
+-----
+@Entity
+public class Person
+{
+    @Id
+    long id;
+    
+    String firstName;
+    String lastName;
+}
+
+@Entity
+public class Account
+{
+    @Id
+    long id;
+
+    @OneToOne
+    Person person;
+}
+-----
+
+== Opening/Closing an EntityManager
+
+You obtain an _EntityManager_
+http://www.datanucleus.org/javadocs/javax.persistence/2.1/javax/persistence/EntityManager.html[image:../images/javadoc.png[]]
+from the _EntityManagerFactory_ as follows
+
+[source,java]
+-----
+EntityManager em = emf.createEntityManager();
+-----
+
+In the case of using container-managed JavaEE, you would instead obtain the _EntityManager_ by injection
+
+[source,java]
+-----
+@PersistenceContext(unitName="myPU")
+EntityManager em;
+-----
+
+You then perform all operations that you need using this _EntityManager_ and finally you must *close* it. Forgetting to close it will lead to memory/resource leaks.
+
+[source,java]
+-----
+em.close();
+-----
+
+In general you will be performing all operations on a _EntityManager_ within a link:#transaction[transaction], whether your transactions are controlled by your JavaEE container, 
+by a framework such as Spring, or by locally defined transactions. In the examples below we will omit the transaction demarcation for clarity.
+
+
+== Persisting an Object
+
+The main thing that you will want to do with the data layer of a JPA-enabled application is persist your objects into the datastore. 
+As we mentioned earlier, a _EntityManagerFactory_ represents the datastore where the objects will be persisted. 
+So you create a normal Java object in your application, and you then persist this as follows
+
+[source,java]
+-----
+Person lincoln = new Person(1, "Abraham", "Lincoln");
+em.persist(lincoln);
+-----
+
+This will result in the object being persisted into the datastore, though clearly it will not be persistent until you commit the transaction. 
+The link:#lifecycle[Lifecycle State] of the object changes from _Transient_ to _Persistent_ (after persist()), to _Persistent_/_Detached_ (at commit).
+
+
+== Persisting multiple Objects in one call
+
+image:../images/nucleus_extension.png[]
+
+When you want to persist multiple objects with standard JPA you have to call _persist_ multiple times. 
+Fortunately DataNucleus extends this to take in a Collection or an array of entities, so you can do
+
+[source,java]
+-----
+Collection<Person> coll = new HashSet<>();
+coll.add(lincoln);
+coll.add(mandela);
+
+em.persist(coll);
+-----
+
+As above, the objects are persisted to the datastore. 
+The link:#lifecycle[Lifecycle State] of the objects change from _Transient_ to _Persistent_ (after persist()), to _Persistent_/_Detached_ (at commit).
+
+
+== Finding an object by its identity
+
+Once you have persisted an object, it has an "identity". This is a unique way of identifying it.
+When you specify the persistence for the entity you specified an id field (or fields, together with an _IdClass_) so you can create the identity from that.
+So what ? Well the identity can be used to retrieve the object again at some other part in your application. 
+So you pass the identity into your application, and the user clicks on some button on a web page and that button corresponds to a particular object identity. 
+You can then go back to your data layer and retrieve the object as follows
+
+[source,java]
+-----
+Person p = em.find(Person.class, 1);
+-----
+
+which will try to retrieve the _Person_ object with identity of 1. If there is no _Person_ object with that identity then it returns _null_.
+
+
+NOTE: the first argument could be a base class and the real object could be an instance of a subclass of that.
+
+NOTE: the second argument is either the value of the single primary-key field (when it has only one `@Id` field), 
+or is the value of the _object-id-class_ (when it has multiple `@Id` fields).
+
+
+== Deleting an Object
+
+When you need to delete an object that you had previous persisted, deleting it is simple.
+Firstly you need to get the object itself, and then delete it as follows
+
+[source,java]
+-----
+Person lincoln = em.find(Person.class, 1);  // Retrieves the object to delete
+em.remove(lincoln);
+-----
+
+
+== Deleting multiple Objects
+
+image:../images/nucleus_extension.png[]
+
+When you want to delete multiple objects with standard JPA you have to call _remove_ multiple times. 
+Fortunately DataNucleus extends this to take in a Collection or an array of entities, so you can do
+
+[source,java]
+-----
+Collection<Person> people = new HashSet<>();
+people.add(lincoln);
+people.add(mandela);
+em.remove(people);
+-----
+
+
+== Modifying a persisted Object
+
+To modify a previously persisted object you take the object and update it in your code. 
+If the object is in "detached" state (not managed by a particular _EntityManager_) then when you are ready to persist the changes you do the following
+
+[source,java]
+-----
+Object updatedObj = em.merge(obj);
+-----
+
+If however the object was already managed at the point of updating its fields, then 
+
+[source,java]
+-----
+Person lincoln = em.find(Person.class, 1); // "lincoln" is now managed by "em", and in "persistent" state.
+
+lincoln.setAddress("The White House");
+-----
+
+when the _setAddress_ has been called, this is intercepted by DataNucleus, and the changes will be stored for persisting. There is no need
+to call any _EntityManager_ method to push the changes. This is part of the mechanism known as _transparent persistence_.
+
+
+== Modifying multiple persisted Objects
+
+image:../images/nucleus_extension.png[]
+
+When you want to attach multiple modified objects with standard JPA you have to call _merge_ multiple times. 
+Fortunately DataNucleus extends this to take in a Collection or an array of entities, so you can do
+
+[source,java]
+-----
+Object updatedObj = em.merge(coll);
+-----
+
+
+== Refreshing a persisted Object
+
+An application that has sole access to the datastore, in general, does not need to check for updated values from the datastore.
+In more complicated situations the datastore may be updated by another application for example, so it may be necessary at times
+to check for more up-to-date values for the fields of an entity. You do that like this
+
+[source,java]
+-----
+em.refresh(lincoln);
+-----
+
+This will do the following
+
+* Refresh all fields that are to be eagerly fetched from the datastore
+* Unload all loaded fields that are to be lazily fetched.
+
+If the object had any changes they will be thrown away by this step, and replaced by the latest datastore values.
+
+
+== Getting EntityManager for an object
+
+image:../images/nucleus_extension.png[]
+
+JPA doesn't provide a method for getting the EntityManager of an object as such. Fortunately DataNucleus provides the following
+
+[source,java]
+-----
+import org.datanucleus.api.jpa.NucleusJPAHelper;
+
+...
+
+EntityManager em = NucleusJPAHelper.getEntityManager(obj);
+-----
+
+If you have an _EntityManager_ object and want to check if it is managing a particular object you can call
+
+[source,java]
+-----
+boolean managedByThisEM = em.contains(lincoln);
+-----
+
+
+[[cascading]]
+== Cascading Operations
+
+When you have relationships between entities, and you persist one entity, by default the related entity will _not_ be persisted.
+For each of the relation annotations `@OneToOne`, `@OneToMany`, `@ManyToOne` and `@ManyToMany` there is an attribute _cascade_ which defaults to null
+but you can control what operations cascade (persist, remove, merge, detach, refresh).
+
+Let's use our example above, and create new _Person_ and _Account_ objects.
+
+[source,java]
+-----
+Person lincoln = new Person(1, "Abraham", "Lincoln");
+Account acct1 = new Account(1, lincoln); // Second argument sets the relation between the objects
+-----
+
+now to persist them both we have two options. Firstly with the default cascade setting
+
+[source,java]
+-----
+em.persist(lincoln);
+em.persist(acct1);
+-----
+
+The second option is to set the metadata on _Account_ as
+
+[source,java]
+-----
+@Entity
+public class Account
+{
+    @Id
+    long id;
+
+    @OneToOne(cascade={CascadeType.PERSIST, CascadeType.MERGE})
+    Person person;
+}
+-----
+
+now we can simply do this (since the _Account_ has a reference to _Person_);
+
+[source,java]
+-----
+em.persist(acct1);
+-----
+
+
+[[orphanremoval]]
+== Orphans
+
+When an element is removed from a collection, or when a 1-1 relation is nulled, sometimes it is desirable to delete the other object.
+JPA defines a facility of removing "orphans" by specifying metadata for a 1-1 or 1-N relation. Let's take our example. 
+In the above relation between _Account_ and _Person_ if we set the "person" field to null, this should mean that the _Person_ record is deleted.
+So we could change the metadata to
+
+[source,java]
+-----
+@Entity
+public class Account
+{
+    @Id
+    long id;
+
+    @OneToOne(cascade={CascadeType.PERSIST, CascadeType.MERGE}, `orphanRemoval`=true)
+    Person person;
+}
+-----
+
+So from now on, if we delete the _Account_ we delete the _Person_, and if we set the "person" field of _Account_ to null then we also delete the _Person_.
+
+
+
+== Managing Relationships
+
+The power of a Java persistence solution like DataNucleus is demonstrated when persisting relationships between objects.
+There are many types of relationships.
+
+* link:mapping.html#one_one_relations[1-1 relationships] - this is where you have an object A relates to a second object B. 
+The relation can be _unidirectional_ where A knows about B, but B doesnt know about A.
+The relation can be _bidirectional_ where A knows about B and B knows about A.
+* link:mapping.html#one_many_relations[1-N relationships] - this is where you have an object A that has a collection of other objects of type B. 
+The relation can be _unidirectional_ where A knows about the objects B but the Bs dont know about A. 
+The relation can be _bidirectional_ where A knows about the objects B and the Bs know about A
+* link:mapping.html#many_one_relations[N-1 relationships] - this is where you have an object B1 that relates to an object A, 
+and an object B2 that relates to A also etc.
+The relation can be _unidirectional_ where the A doesnt know about the Bs.
+The relation can be _bidirectional_ where the A has a collection of the Bs.
+i.e a 1-N relationship but from the point of view of the element.
+* link:mapping.html#many_many_relations[M-N relationships] - this is where you have objects of type A that have a collection of objects 
+of type B and the objects of type B also have a collection of objects of type A.
+The relation is always _bidirectional_ by definition
+* link:mapping.html#derived_identity[Derived Identity relationships] when you have a relation and part of the
+primary key of the related object is the other persistent object.
+
+
+=== Assigning Relationships
+
+When the relation is _unidirectional_ you simply set the related field to refer to the other object.
+For example we have classes A and B and the class A has a field of type B. So we set it like this
+
+[source,java]
+-----
+A a = new A();
+B b = new B();
+a.setB(b); // "a" knows about "b"
+-----
+
+When the relation is _bidirectional_ you *have to set both sides* of the relation.
+For example, we have classes A and B and the class A has a collection of elements of type B, and B has a field of type A. 
+So we set it like this
+
+[source,java]
+-----
+A a = new A();
+B b1 = new B();
+a.addElement(b1); // "a" knows about "b1"
+b1.setA(a); // "b1" knows about "a"
+-----
+
+NOTE: With a _bidirectional_ relation you must set both sides of the relation
+
+
+=== Persisting Relationships - Reachability
+
+To persist an object with JPA you call the _EntityManager_ method _persist_ (or _merge_ if wanting to update a detached object).
+The object passed in will be persisted. By default all related objects will *not* be persisted with that object. 
+You can however change this by specifying the _cascade_ PERSIST (and/or MERGE) property for that field. 
+With this the related object(s) would also be persisted (or updated with any new values if they are already persistent).
+This process is called *persistence-by-reachability*.
+For example we have classes A and B and class A has a field of type B and this field has the _cascade_ property PERSIST set.
+To persist them we could do
+
+[source,java]
+-----
+A a = new A();
+B b = new B();
+a.setB(b);
+em.persist(a); // "a" and "b" are provisionally persistent
+-----
+
+A further example where you don't have the _cascade_ PERSIST set, but still want to persist both ends of a relation.
+
+[source,java]
+-----
+A a = new A();
+B b = new B();
+a.setB(b);
+em.persist(a); // "a" is provisionally persistent
+em.persist(b); // "b" is provisionally persistent
+-----
+
+
+=== Managed Relationships
+
+As we have mentioned above, it is for the user to set both sides of a bidirectional relation.
+If they don't and object A knows about B, but B doesnt know about A then what is the persistence solution to do ? 
+It doesn't know which side of the relation is correct. JPA doesn't define the behaviour for this situation.
+DataNucleus has two ways of handling this situation. 
+If you have the persistence property *datanucleus.manageRelationships* set to true then it will make sure that 
+the other side of the relation is set correctly, correcting obvious omissions, and giving exceptions for obvious errors.
+If you set that persistence property to false then it will assume that your
+objects have their bidirectional relationships consistent and will just persist what it finds.
+
+NOTE: When performing management of relations there are some checks implemented to spot typical errors in user operations 
+e.g add an element to a collection and then remove it (why?!). You can disable these checks using *datanucleus.manageRelationshipsChecks*, set to false.
+
+
+
+        
+[[level1_cache]]
+== Level 1 Cache
+
+Each EntityManager maintains a cache of the objects that it has encountered (or have been "enlisted") during its lifetime. 
+This is termed the *Level 1 Cache*. It is enabled by default and you should only ever disable it if you really know what you are doing.
+There are inbuilt types for the Level 1 (L1) Cache available for selection.
+DataNucleus supports the following types of L1 Cache :-
+
+* _weak_ - uses a weak reference backing map. If JVM garbage collection clears the reference, then the object is removed from the cache.
+* _soft_ - uses a soft reference backing map. If the map entry value object is not being actively used, then garbage collection _may_ garbage collect the reference, 
+in which case the object is removed from the cache.
+* _strong_ - uses a normal HashMap backing. With this option all references are strong meaning that objects stay in the cache until they are explicitly removed by calling 
+remove() on the cache.
+
+You can specify the type of L1 Cache by providing the persistence property *datanucleus.cache.level1.type*. You set this to the value of the type required. 
+If you want to remove all objects from the L1 cache programmatically you should use _em.clear()_ but bear in mind the other things that this will impact on.
+
+Objects are placed in the L1 Cache (and updated there) during the course of the transaction.
+This provides rapid access to the objects in use in the users application and is used to guarantee that there is only one object with a particular identity at any one time
+for that EntityManager. When the EntityManager is closed the cache is cleared.
+
+link:../extensions/extensions.html#cache_level1[image:../images/nucleus_plugin.png[]]
+The L1 cache is a DataNucleus plugin point allowing you to provide your own cache where you require it.
+
+

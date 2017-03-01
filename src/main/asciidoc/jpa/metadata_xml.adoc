@@ -1,0 +1,1748 @@
+[[orm_xml]]
+= JPA ORM XML MetaData
+:_basedir: ../
+:_imagesdir: images/
+
+JPA XML MetaData allows you to define mapping information but in a separate file (`orm.xml`) separating persistence mapping from your model. 
+What follows provides a reference guide to `orm.xml` MetaData elements. Here is an example header for `orm.xml` files with 
+http://xmlns.jcp.org/xml/ns/persistence/orm_2_1.xsd[XSD] specification
+
+[source,xml]
+-----
+<?xml version="1.0" encoding="UTF-8" ?>
+<entity-mappings xmlns="http://xmlns.jcp.org/xml/ns/persistence/orm"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence/orm
+        http://xmlns.jcp.org/xml/ns/persistence/orm_2_1.xsd" version="2.1">
+    ...
+</entity-mappings>
+-----
+
+If using any of the DataNucleus extensions, then the XSD is http://www.datanucleus.org/xsd/jpa/orm_2_1.xsd[defined here], in which case you would define your header as :-
+
+[source,xml]
+-----
+<?xml version="1.0" encoding="UTF-8" ?>
+<entity-mappings xmlns="http://www.datanucleus.org/xsd/jpa/orm"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.datanucleus.org/xsd/jpa/orm
+        http://www.datanucleus.org/xsd/jpa/orm_2_1.xsd" version="2.1">
+    ...
+</entity-mappings>
+-----
+
+* entity-mappings
+** link:#description[description]
+** persistence-unit-metadata
+*** link:#xml-mapping-metadata-complete[xml-mapping-metadata-complete]
+** link:#package[package]
+** link:#schema[schema]
+** link:#catalog[catalog]
+** link:#access[access]
+** link:#sequence-generator[sequence-generator]
+** link:#table-generator[table-generator]
+** link:#named-query[named-query]
+*** query
+** link:#named-native-query[named-native-query]
+*** query
+** link:#sql-result-set-mapping[sql-result-set-mapping]
+*** link:#entity-result[entity-result]
+**** link:#field-result[field-result]
+*** link:#column-result[column-result]
+** link:#mapped-superclass[mapped-superclass]
+*** link:#entity-description[description]
+*** link:#id-class[id-class]
+*** link:#datastore-id[datastore-id]
+**** link:#column[column]
+**** link:#generated-value[generated-value]
+*** link:#surrogate-version[surrogate-version]
+**** link:#column[column]
+*** link:#exclude-default-listeners[exclude-default-listeners]
+*** link:#exclude-superclass-listeners[exclude-superclass-listeners]
+*** entity-listeners
+**** link:#entity-listener[entity-listener]
+***** link:#pre-persist[pre-persist]
+***** link:#post-persist[post-persist]
+***** link:#pre-remove[pre-remove]
+***** link:#post-remove[post-remove]
+***** link:#pre-update[pre-update]
+***** link:#post-update[post-update]
+***** link:#post-load[post-load]
+*** link:#pre-persist[pre-persist]
+*** link:#post-persist[post-persist]
+*** link:#pre-remove[pre-remove]
+*** link:#post-remove[post-remove]
+*** link:#pre-update[pre-update]
+*** link:#post-update[post-update]
+*** link:#post-load[post-load]
+*** attributes
+**** Same elements as under <entity>-><attributes>
+** link:#entity[entity]
+*** link:#entity-description[description]
+*** link:#table[table]
+**** link:#unique-constraint[unique-constraint]
+***** column-name
+**** link:#index[index]
+*** link:#secondary-table[secondary-table]
+**** link:#primary-key-join-column[primary-key-join-column]
+**** link:#foreign-key[primary-key-foreign-key]
+**** link:#unique-constraint[unique-constraint]
+***** column-name
+**** link:#index[index]
+*** link:#primary-key-join-column[primary-key-join-column]
+*** link:#foreign-key[primary-key-foreign-key]
+*** link:#id-class[id-class]
+*** link:#datastore-id[datastore-id]
+**** link:#column[column]
+**** link:#generated-value[generated-value]
+*** link:#surrogate-version[surrogate-version]
+**** link:#column[column]
+*** link:#inheritance[inheritance]
+*** link:#discriminator-value[discriminator-value]
+*** link:#discriminator-column[discriminator-column]
+*** link:#sequence-generator[sequence-generator]
+*** link:#table-generator[table-generator]
+**** link:#index[index]
+*** link:#named-query[named-query]
+**** query
+*** link:#named-native-query[named-native-query]
+**** query
+*** link:#sql-result-set-mapping[sql-result-set-mapping]
+**** link:#entity-result[entity-result]
+***** link:#field-result[field-result]
+**** link:#column-result[column-result]
+*** link:#named-entity-graph[named-entity-graph]
+**** link:#named-attribute-node[named-attribute-node]
+**** link:#named-subgraph[subgraph]
+***** link:#named-attribute-node[named-attribute-node]
+**** link:#named-subgraph[subclass-subgraph]
+***** link:#named-attribute-node[named-attribute-node]
+*** link:#exclude-default-listeners[exclude-default-listeners]
+*** link:#exclude-superclass-listeners[exclude-superclass-listeners]
+*** entity-listeners
+**** link:#entity-listener[entity-listener]
+***** link:#pre-persist[pre-persist]
+***** link:#post-persist[post-persist]
+***** link:#pre-remove[pre-remove]
+***** link:#post-remove[post-remove]
+***** link:#pre-update[pre-update]
+***** link:#post-update[post-update]
+***** link:#post-load[post-load]
+*** link:#pre-persist[pre-persist]
+*** link:#post-persist[post-persist]
+*** link:#pre-remove[pre-remove]
+*** link:#post-remove[post-remove]
+*** link:#pre-update[pre-update]
+*** link:#post-update[post-update]
+*** link:#post-load[post-load]
+*** link:#attribute-override[attribute-override]
+**** link:#column[column]
+*** link:#association-override[association-override]
+**** link:#join-column[join-column]
+*** attributes
+**** link:#id[id]
+***** link:#column[column]
+***** link:#generated-value[generated-value]
+***** link:#sequence-generator[sequence-generator]
+***** link:#table-generator[table-generator]
+**** link:#embedded-id[embedded-id]
+**** link:#basic[basic]
+***** link:#column[column]
+***** lob
+***** link:#temporal[temporal]
+***** link:#enumerated[enumerated]
+***** link:#convert[convert]
+**** link:#version[version]
+***** link:#column[column]
+**** link:#many-to-one[many-to-one]
+***** link:#join-column[join-column]
+***** link:#join-table[join-table]
+****** link:#join-column[join-column]
+****** link:#inverse-join-column[inverse-join-column]
+****** link:#unique-constraint[unique-constraint]
+******* column-name
+***** cascade
+****** cascade-all
+****** cascade-persist
+****** cascade-merge
+****** cascade-remove
+****** cascade-refresh
+**** link:#element-collection[element-collection]
+***** link:#collection-table[collection-table]
+****** link:#join-column[join-column]
+****** link:#index[index]
+****** link:#foreign-key[foreign-key]
+***** link:#order-by[order-by]
+***** link:#order-column[order-column]
+***** link:#map-key[map-key]
+***** link:#map-key-class[map-key-class]
+***** link:#map-key-temporal[map-key-temporal]
+***** link:#map-key-enumerated[map-key-enumerated]
+***** link:#join-table[join-table]
+****** link:#join-column[join-column]
+****** link:#foreign-key[foreign-key]
+****** link:#inverse-join-column[inverse-join-column]
+****** link:#foreign-key[inverse-foreign-key]
+****** link:#unique-constraint[unique-constraint]
+******* column-name
+***** link:#join-column[join-column]
+**** link:#one-to-many[one-to-many]
+***** link:#order-by[order-by]
+***** link:#order-column[order-column]
+***** link:#map-key[map-key]
+***** link:#map-key-class[map-key-class]
+***** link:#map-key-temporal[map-key-temporal]
+***** link:#map-key-enumerated[map-key-enumerated]
+***** link:#join-table[join-table]
+****** link:#join-column[join-column]
+****** link:#inverse-join-column[inverse-join-column]
+****** link:#unique-constraint[unique-constraint]
+******* column-name
+***** link:#join-column[join-column]
+***** cascade
+****** cascade-all
+****** cascade-persist
+****** cascade-merge
+****** cascade-remove
+****** cascade-refresh
+***** link:#shared-relation[shared-relation]
+**** link:#one-to-one[one-to-one]
+***** link:#join-column[join-column]
+***** link:#foreign-key[foreign-key]
+***** link:#join-table[join-table]
+****** link:#join-column[join-column]
+****** link:#inverse-join-column[inverse-join-column]
+****** link:#unique-constraint[unique-constraint]
+******* column-name
+***** cascade
+****** cascade-all
+****** cascade-persist
+****** cascade-merge
+****** cascade-remove
+****** cascade-refresh
+**** link:#many-to-many[many-to-many]
+***** link:#order-by[order-by]
+***** link:#order-column[order-column]
+***** link:#map-key[map-key]
+***** link:#map-key-class[map-key-class]
+***** link:#map-key-temporal[map-key-temporal]
+***** link:#map-key-enumerated[map-key-enumerated]
+***** link:#join-table[join-table]
+****** link:#join-column[join-column]
+****** link:#inverse-join-column[inverse-join-column]
+****** link:#unique-constraint[unique-constraint]
+******* column-name
+***** cascade
+****** cascade-all
+****** cascade-persist
+****** cascade-merge
+****** cascade-remove
+****** cascade-refresh
+***** link:#shared-relation[shared-relation]
+**** link:#embedded[embedded]
+***** link:#attribute-override[attribute-override]
+**** link:#transient[transient]
+** link:#embeddable[embeddable]
+*** embeddable-attributes
+**** link:#basic[basic]
+**** link:#transient[transient]
+
+
+[[description]]
+== Metadata for description tag
+
+The *<description>* element (<entity-mappings>) contains the text describing all classes (and hence entities) defined in this file. 
+It serves no useful purpose other than descriptive.
+
+
+[[xml-mapping-metadata-complete]]
+== Metadata for xml-mapping-metadata-complete tag
+
+The *<xml-mapping-metadata-complete>* element (under <persistence-unit-metadata>) when specified defines that the classes in this file are 
+fully specified with just their metadata and that any annotations should be ignored.
+
+
+[[package]]
+== Metadata for package tag
+
+The *<package>* element (under <entity-mappings>) contains the text defining the package into which all classes in this file belong.
+
+
+[[schema]]
+== Metadata for schema tag
+
+The *<schema>* element (under <entity-mappings>) contains the default schema for all classes in this file.
+
+
+[[catalog]]
+== Metadata for catalog tag
+
+The *<catalog>* element (under <entity-mappings>) contains the default catalog for all classes in this file.
+
+
+[[access]]
+== Metadata for access tag
+
+The *<access>* element (under <entity-mappings>) contains the setting for how to access
+the persistent fields/properties. This can be set to either "FIELD" or "PROPERTY".
+
+
+[[sequence-generator]]
+== Metadata for sequence-generator tag
+
+The *<sequence-generator>* element (under <entity-mappings>, or <entity> or
+<id>) defines a generator of sequence values, for use elsewhere in this persistence-unit.
+
+[cols="1,3,1", options="header"]
+|===
+|Attribute
+|Description
+|Values
+
+|name
+|Name of the generator (required)
+|
+
+|sequence-name
+|Name of the sequence
+|
+
+|initial-value
+|Initial value for the sequence
+|1
+
+|allocation-size
+|Number of values that the sequence allocates when needed
+|50
+|===
+
+
+
+[[table-generator]]
+== Metadata for table-generator tag
+
+The *<table-generator>* element (under <entity-mappings>, or <entity> or
+<id>) defines a generator of sequence values using a datastore table, for use elsewhere in 
+this persistence-unit.
+
+[cols="1,3,1", options="header"]
+|===
+|Attribute
+|Description
+|Values
+
+|name
+|Name of the generator (required)
+|
+
+|table
+|name of the table to use for sequences
+|SEQUENCE_TABLE
+
+|catalog
+|Catalog to store the sequence table
+|
+
+|schema
+|Schema to store the sequence table
+|
+
+|pk-column-name
+|Name of the primary-key column in the table
+|SEQUENCE_NAME
+
+|value-column-name
+|Name of the value column in the table
+|NEXT_VAL
+
+|pk-column-value
+|Name of the value to use in the primary key column (for this row)
+|{name of the class}
+
+|initial-value
+|Initial value to use in the table
+|0
+
+|allocation-size
+|Number of values to allocate when needed
+|50
+|===
+
+
+
+[[named-query]]
+== Metadata for named-query tag
+
+The *<named-query>* element (under <entity-mappings> or under <entity>) defines 
+a JPQL query that will be accessible at runtime via the name. The element itself will contain the text 
+of the query. It has the following attributes
+
+[cols="1,3,1", options="header"]
+|===
+|Attribute
+|Description
+|Values
+
+|name
+|Name of the query
+|
+|===
+
+
+
+[[named-native-query]]
+== Metadata for named-native-query tag
+
+The *<named-native-query>* element (under <entity-mappings> or under <entity>) 
+defines an SQL query that will be accessible at runtime via the name. The element itself will contain 
+the text of the query. It has the following attributes
+
+[cols="1,3,1", options="header"]
+|===
+|Attribute
+|Description
+|Values
+
+|name
+|Name of the query
+|
+|===
+
+
+
+[[sql-result-set-mapping]]
+== Metadata for sql-result-set-mapping tag
+
+The *<sql-result-set-mapping>* element (under <entity-mappings> or under <entity>) 
+defines how the results of the SQL query are output to the user per row of the result set. 
+It will contain sub-elements. It has the following attributes
+
+[cols="1,3,1", options="header"]
+|===
+|Attribute
+|Description
+|Values
+
+|name
+|Name of the SQL result-set mapping (referenced by native queries)
+|
+|===
+
+
+
+[[named-entity-graph]]
+== Metadata for named-entity-graph tag
+
+The *<named-entity-graph>* element (under <entity>) 
+defines an entity graph with root as that entity, accessible at runtime via the name. 
+It has the following attributes
+
+[cols="1,3,1", options="header"]
+|===
+|Attribute
+|Description
+|Values
+
+|name
+|Name of the entity graph
+|
+|===
+
+
+
+[[named-attribute-node]]
+== Metadata for named-attribute-node tag
+
+The *<named-attribute-node>* element (under <named-entity-graph>) 
+defines a node in the entity graph.
+It has the following attributes
+
+[cols="1,3,1", options="header"]
+|===
+|Attribute
+|Description
+|Values
+
+|name
+|Name of the node (field/property)
+|
+
+|subgraph
+|Name of a subgraph that maps this attribute fully (optional)
+|
+|===
+
+
+[[named-subgraph]]
+== Metadata for subgraph/subclass-subgraph tag
+
+The *<subgraph>*/*subclass-subgraph* element (under <named-entity-graph>) 
+defines a subgraph in the entity graph.
+It has the following attributes
+
+[cols="1,3,1", options="header"]
+|===
+|Attribute
+|Description
+|Values
+
+|name
+|Name of the subgraph (referenced in the named-attribute-node)
+|
+
+|class
+|Type of the subgraph attribute
+|
+|===
+
+
+
+[[entity-result]]
+== Metadata for entity-result tag
+
+The *<entity-result>* element (under <sql-result-set-mapping>) 
+defines an entity that is output from an SQL query per row of the result set. 
+It can contain sub-elements of type <field-result>. It has the following attributes
+
+[cols="1,3,1", options="header"]
+|===
+|Attribute
+|Description
+|Values
+
+|entity-class
+|Class of the entity
+|
+
+|discriminator-column
+|Column containing any discriminator (so subclasses of the entity type can be distinguished)
+|
+|===
+
+
+
+[[field-result]]
+== Metadata for field-result tag
+
+The *<field-result>* element (under <entity-result>) 
+defines a field of an entity and the column representing it in an SQL query. 
+It has the following attributes
+
+[cols="1,3,1", options="header"]
+|===
+|Attribute
+|Description
+|Values
+
+|name
+|Name of the entity field
+|
+
+|column
+|Name of the SQL column
+|
+|===
+
+
+
+[[column-result]]
+== Metadata for column-result tag
+
+The *<column-result>* element (under <sql-result-set-mapping>) 
+defines a column that is output directly from an SQL query per row of the result set. 
+It has the following attributes
+
+[cols="1,3,1", options="header"]
+|===
+|Attribute
+|Description
+|Values
+
+|name
+|Name of the SQL column
+|
+|===
+
+
+
+[[mapped-superclass]]
+== Metadata for mapped-superclass tag
+
+These are attributes within the *<mapped-superclass>* tag (under <entity-mappings>). 
+This is used to define the persistence definition for a class that has no table but is mapped.
+
+[cols="1,3,1", options="header"]
+|===
+|Attribute
+|Description
+|Values
+
+|class
+|Name of the class (required)
+|
+
+|metadata-complete
+|Whether the definition of persistence of this class is complete with this MetaData definition. That is, should any annotations be ignored.
+|true, *false*
+|===
+
+
+
+[[entity]]
+== Metadata for entity tag
+
+These are attributes within the *<entity>* tag (under <entity-mappings>). 
+This is used to define the persistence definition for this class.
+
+[cols="1,3,1", options="header"]
+|===
+|Attribute
+|Description
+|Values
+
+|class
+|Name of the class (required)
+|
+
+|name
+|Name of the entity. Used by JPQL queries
+|
+
+|metadata-complete
+|Whether the definition of persistence of this class is complete with this MetaData definition. That is, should any annotations be ignored.
+|true, *false*
+
+|cacheable
+|Whether instances of this class should be cached in the L2 cache. New in JPA2
+|*true*, false
+|===
+
+
+
+[[entity-description]]
+== Metadata for description tag
+
+The *<description>* element (under <entity>) contains the text describing
+the class being persisted. It serves no useful purpose other than descriptive.
+
+
+
+
+[[table]]
+== Metadata for table tag
+
+These are attributes within the *<table>* tag (under <entity>). 
+This is used to define the table where this class will be persisted.
+
+[cols="1,3,1", options="header"]
+|===
+|Attribute
+|Description
+|Values
+
+|name
+|Name of the table
+|
+
+|catalog
+|Catalog where the table is stored
+|
+
+|schema
+|Schema where the table is stored
+|
+|===
+
+
+
+[[secondary-table]]
+== Metadata for secondary-table tag
+
+These are attributes within the *<secondary-table>* tag (under <entity>). 
+This is used to define the join of a secondary table back to the primary table where this class will be 
+persisted.
+
+[cols="1,3,1", options="header"]
+|===
+|Attribute
+|Description
+|Values
+
+|name
+|Name of the table
+|
+
+|catalog
+|Catalog where the table is stored
+|
+
+|schema
+|Schema where the table is stored
+|
+|===
+
+
+
+[[join-table]]
+== Metadata for join-table tag
+
+These are attributes within the *<join-table>* tag 
+(under <one-to-one>, <one-to-many>, <many-to-many>). 
+This is used to define the join table where a collection/maps relationship will be persisted.
+
+[cols="1,3,1", options="header"]
+|===
+|Attribute
+|Description
+|Values
+
+|name
+|Name of the join table
+|
+
+|catalog
+|Catalog where the join table is stored
+|
+
+|schema
+|Schema where the join table is stored
+|
+
+|orphan-removal
+|Whether to remove orphans when either removing the owner or nulling the relation
+|false
+|===
+
+
+
+[[collection-table]]
+== Metadata for collection-table tag
+
+These are attributes within the *<collection-table>* tag 
+(under <element-collection>). 
+This is used to define the join table where a collections relationship will be persisted.
+
+[cols="1,3,1", options="header"]
+|===
+|Attribute
+|Description
+|Values
+
+|name
+|Name of the join table
+|
+
+|catalog
+|Catalog where the join table is stored
+|
+
+|schema
+|Schema where the join table is stored
+|
+|===
+
+
+
+[[unique-constraint]]
+== Metadata for unique-constraint tag
+
+This element is specified under the <table>, <secondary-table> or
+<join-table> tags. This is used to define a unique constraint on the table.
+No attributes are provided, just sub-element(s) "column-name"
+
+
+
+[[column]]
+== Metadata for column tag
+
+These are attributes within the *<column>* tag (under <basic>).
+This is used to define the column where the data will be stored.
+
+[cols="1,3,1", options="header"]
+|===
+|Attribute
+|Description
+|Values
+
+|name
+|Name of the column
+|
+
+|unique
+|Whether the column is unique
+|true, *false*
+
+|nullable
+|Whether the column is nullable
+|*true*, false
+
+|insertable
+|Whether the column is insertable
+|*true*, false
+
+|updatable
+|Whether the column is updatable
+|*true*, false
+
+|column-definition
+|Some vague JPA term that you put anything in and get any unexpected results from
+|
+
+|table
+|Table for the column ?
+|
+
+|length
+|Length for the column (when string type)
+|255
+
+|precision
+|Precision for the column (when numeric type)
+|0
+
+|scale
+|Scale for the column (when numeric type)
+|0
+
+|jdbc-type
+|The JDBC Type to use for this column (*DataNucleus extension*)
+|
+
+|position
+|The position to use for this column (first=0) (*DataNucleus extension*)
+|
+|===
+
+
+
+[[primary-key-join-column]]
+== Metadata for primary-key-join-column tag
+
+These are attributes within the *<primary-join-key-column>* tag 
+(under <secondary-table> or <entity>).
+This is used to define the join of PK columns between secondary and primary tables, or
+between table of subclass and table of base class.
+
+[cols="1,3,1", options="header"]
+|===
+|Attribute
+|Description
+|Values
+
+|name
+|Name of the column
+|
+
+|referenced-column-name
+|Name of column in primary table
+|
+|===
+
+
+
+[[join-column]]
+== Metadata for join-column tag
+
+These are attributes within the *<join-column>* tag (under <join-table>). 
+This is used to define the join column.
+
+[cols="1,3,1", options="header"]
+|===
+|Attribute
+|Description
+|Values
+
+|name
+|Name of the column
+|
+
+|referenced-column-name
+|Name of the column at the other side of the relation that this is a FK to
+|
+
+|unique
+|Whether the column is unique
+|true, *false*
+
+|nullable
+|Whether the column is nullable
+|*true*, false
+
+|insertable
+|Whether the column is insertable
+|*true*, false
+
+|updatable
+|Whether the column is updatable
+|*true*, false
+
+|column-definition
+|Some vague JPA term that you put anything in and get any unexpected results from.
+|
+
+|table
+|Table for the column ?
+|
+|===
+
+
+
+[[inverse-join-column]]
+== Metadata for inverse-join-column tag
+
+These are attributes within the *<inverse-join-column>* tag (under <join-table>).
+This is used to define the join column to the element.
+
+[cols="1,3,1", options="header"]
+|===
+|Attribute
+|Description
+|Values
+
+|name
+|Name of the column
+|
+
+|referenced-column-name
+|Name of the column at the other side of the relation that this is a FK to
+|
+
+|unique
+|Whether the column is unique
+|true, *false*
+
+|nullable
+|Whether the column is nullable
+|*true*, false
+
+|insertable
+|Whether the column is insertable
+|*true*, false
+
+|updatable
+|Whether the column is updatable
+|*true*, false
+
+|column-definition
+|Some vague JPA term that you put anything in and get any unexpected results from.
+|
+
+|table
+|Table for the column ?
+|
+|===
+
+
+
+[[shared-relation]]
+== Metadata for shared-relation tag
+
+These are attributes within the *<shared-relation>* tag 
+(under <one-to-many> or <many-to-many>).
+*This is a DataNucleus Extension*.
+This is used to define a relation as being shared, with a distinguisher column.
+
+[cols="1,3,1", options="header"]       
+|===
+|Attribute
+|Description
+|Values
+
+|column
+|Name of the distinguisher column
+|
+
+|value
+|Value to store in the distinguisher column for this field
+|
+
+|primary-key
+|Whether the distinguisher column is part of the primary key (when join table).
+|
+|===
+
+
+
+[[id-class]]
+== Metadata for id-class tag
+
+These are attributes within the *<id-class>* tag (under <entity>).
+This defines a identity class to be used for this entity.
+
+[cols="1,3,1", options="header"]
+|===
+|Attribute
+|Description
+|Values
+
+|class
+|Name of the identity class (required)
+|
+|===
+
+
+
+[[inheritance]]
+== Metadata for inheritance tag
+
+These are attributes within the *<inheritance>* tag (under <entity>).
+This defines the inheritance of the class.
+
+[cols="1,3,1", options="header"]
+|===
+|Attribute
+|Description
+|Values
+
+|strategy
+|Strategy for inheritance in terms of storing this class
+|SINGLE_TABLE, JOINED, TABLE_PER_CLASS
+|===
+
+
+
+[[discriminator-value]]
+== Metadata for discriminator-value tag
+
+These are attributes within the *<discriminator-value>* tag (under <entity>).
+This defines the value used in a discriminator. The value is contained in the element.
+Specification of the value will result in a "value-map" discriminator strategy being adopted.
+If no discriminator-value is present, but discriminator-column is then "class-name" discriminator 
+strategy is used.
+
+
+
+[[discriminator-column]]
+== Metadata for discriminator-column tag
+
+These are attributes within the *<discriminator-column>* tag (under <entity>).
+This defines the column used for a discriminator.
+
+[cols="1,3,1", options="header"]
+|===
+|Attribute
+|Description
+|Values
+
+|name
+|Name of the discriminator column
+|DTYPE
+
+|discriminator-type
+|Type of data stored in the discriminator column
+|STRING, CHAR, INTEGER
+
+|length
+|Length of the discriminator column
+|
+|===
+
+
+[[id]]
+== Metadata for id tag
+
+These are attributes within the *<id>* tag (under <attributes>).
+This is used to define the field used to be the identity of the class.
+
+[cols="1,3,1", options="header"]
+|===
+|Attribute
+|Description
+|Values
+
+|name
+|Name of the field (required)
+|
+|===
+
+
+[[generated-value]]
+== Metadata for generated-value tag
+
+These are attributes within the *<generated-value>* tag (under <id>). This is used to define how to generate the value for the identity field.
+
+[cols="1,3,1", options="header"]
+|===
+|Attribute
+|Description
+|Values
+
+|strategy
+|Generation strategy. Please refer to the link:mapping.html#value_generation[Identity Generation Guide]
+|*auto*, identity, sequence, table
+
+|generator
+|Name of the generator to use if wanting to override the default DataNucleus generator for the specified strategy. 
+Please refer to the link:#sequence-generator[<sequence-generator>] and link:#table-generator[<table-generator>]
+|
+|===
+
+
+[[datastore-id]]
+== Metadata for datastore-id tag
+
+These are attributes within the *<datastore-id>* tag (under <entity>). This is used to define the entity is using datastore identity (DataNucleus extension).
+
+[cols="1,3,1", options="header"]
+|===
+|Attribute
+|Description
+|Values
+
+|column
+|Name of the surrogate column to add for the datastore identity.
+|
+
+|generated-value
+|Details of the generated value strategy and generator. Please refer to the link:#generated-value[<generated-value>]
+|
+|===
+
+
+
+[[surrogate-version]]
+== Metadata for surrogate-version tag
+
+These are attributes within the *<surrogate-version>* tag (under <entity>).
+This is used to define the entity has a surrogate version column (DataNucleus extension).
+
+[cols="1,3,1", options="header"]
+|===
+|Attribute
+|Description
+|Values
+
+|column
+|Name of the surrogate column to add for the version.
+|
+
+|indexed
+|Whether the surrogate version column should be indexed.
+|true, *false*
+|===
+
+
+
+[[embedded-id]]
+== Metadata for embedded-id tag
+
+These are attributes within the *<embedded-id>* tag (under <attributes>). This is used to define the field used to be the (embedded) identity of the class.
+*Note that this is not yet fully supported - specify the fields in the class*
+
+[cols="1,3,1", options="header"]
+|===
+|Attribute
+|Description
+|Values
+
+|name
+|Name of the field (required)
+|
+|===
+
+
+
+[[version]]
+== Metadata for version tag
+
+These are attributes within the *<version>* tag (under <attributes>). This is used to define the field used to be hold the version of the class.
+
+[cols="1,3,1", options="header"]
+|===
+|Attribute
+|Description
+|Values
+
+|name
+|Name of the field (required)
+|
+|===
+
+
+
+[[basic]]
+== Metadata for basic tag
+
+These are attributes within the *<basic>* tag (under <attributes>). This is used to define the persistence information for the field.
+
+[cols="1,3,1", options="header"]
+|===
+|Attribute
+|Description
+|Values
+
+|name
+|Name of the field (required)
+|
+
+|fetch
+|Fetch type for this field
+|LAZY, EAGER
+
+|optional
+|Whether this field may be null and may be used in schema generation
+|true, false
+|===
+
+
+
+[[temporal]]
+== Metadata for temporal tag
+
+These are attributes within the *<temporal>* tag (under <basic>). This is used to define the details of persistence as a temporal type. 
+The contents of the element can be one of DATE, TIME, TIMESTAMP.
+
+
+
+[[enumerated]]
+== Metadata for enumerated tag
+
+These are attributes within the *<enumerated>* tag (under <basic>). This is used to define the details of persistence as an enum type. 
+The contents of the element can be one of *ORDINAL* or STRING to represent whether the enum is persisted as an integer-based or the actual string.
+
+
+[[one-to-one]]
+== Metadata for one-to-one tag
+
+These are attributes within the *<one-to-one>* tag (under <attributes>). This is used to define that the field is part of a 1-1 relation.
+
+[cols="1,3,1", options="header"]
+|===
+|Attribute
+|Description
+|Values
+
+|name
+|Name of the field (required)
+|
+
+|target-entity
+|Class name of the related entity
+|
+
+|fetch
+|Whether the field should be fetched immediately
+|*EAGER*, LAZY
+
+|optional
+|Whether the field can store nulls.
+|*true*, false
+
+|mapped-by
+|Name of the field that owns the relation (specified on the inverse side)
+|
+|===
+
+
+
+[[many-to-one]]
+== Metadata for many-to-one tag
+
+These are attributes within the *<many-to-one>* tag (under <attributes>). This is used to define that the field is part of a N-1 relation.
+
+[cols="1,3,1", options="header"]
+|===
+|Attribute
+|Description
+|Values
+
+|name
+|Name of the field (required)
+|
+
+|target-entity
+|Class name of the related entity
+|
+
+|fetch
+|Whether the field should be fetched immediately
+|*EAGER*, LAZY
+
+|optional
+|Whether the field can store nulls.
+|*true*, false
+|===
+
+
+
+[[element-collection]]
+== Metadata for element-collection tag
+
+These are attributes within the *<element-collection>* tag (under <attributes>). This is used to define that the field is part of a 1-N non-PC relation.
+
+[cols="1,3,1", options="header"]
+|===
+|Attribute
+|Description
+|Values
+
+|name
+|Name of the field (required)
+|
+
+|target-class
+|Class name of the related object
+|
+
+|fetch
+|Whether the field should be fetched immediately
+|EAGER, *LAZY*
+|===
+
+
+
+[[one-to-many]]
+== Metadata for one-to-many tag
+
+These are attributes within the *<one-to-many>* tag (under <attributes>). This is used to define that the field is part of a 1-N relation.
+
+[cols="1,3,1", options="header"]
+|===
+|Attribute
+|Description
+|Values
+
+|name
+|Name of the field (required)
+|
+
+|target-entity
+|Class name of the related entity
+|
+
+|fetch
+|Whether the field should be fetched immediately
+|EAGER, *LAZY*
+
+|mapped-by
+|Name of the field that owns the relation (specified on the inverse side)
+|
+
+|orphan-removal
+|Whether to remove orphans when either removing the owner or removing the element
+|false
+|===
+
+
+
+[[many-to-many]]
+== Metadata for many-to-many tag
+
+These are attributes within the *<many-to-many>* tag (under <attributes>). This is used to define that the field is part of a M-N relation.
+
+[cols="1,3,1", options="header"]
+|===
+|Attribute
+|Description
+|Values
+
+|name
+|Name of the field (required)
+|
+
+|target-entity
+|Class name of the related entity
+|
+
+|fetch
+|Whether the field should be fetched immediately
+|EAGER, *LAZY*
+
+|mapped-by
+|Name of the field on the non-owning side that completes the relation. Specified on the owner side
+|
+|===
+
+
+
+[[embedded]]
+== Metadata for embedded tag
+
+These are attributes within the *<embedded>* tag (under <attributes>). This is used to define that the field is part of an embedded relation.
+
+[cols="1,3,1", options="header"]
+|===
+|Attribute
+|Description
+|Values
+
+|name
+|Name of the field (required)
+|
+|===
+
+
+
+[[order-by]]
+== Metadata for order-by tag
+
+This element is specified under <one-to-many> or <many-to-many>. 
+It is used to define the field(s) of the element class that is used for ordering the elements when they are retrieved from the datastore. 
+It has no attributes and the ordering is specified within the element itself. 
+It should be a comma-separated list of field names (of the element) with optional "ASC" or "DESC" to signify ascending or descending
+
+
+
+[[order-column]]
+== Metadata for order-column tag
+
+This element is specified under <one-to-many> or <many-to-many>. 
+It is used to define that the List will be ordered with the ordering stored in a surrogate column in the other table.
+
+[cols="1,3,1", options="header"]
+|===
+|Attribute
+|Description
+|Values
+
+|name
+|Name of the column
+|{fieldName}_ORDER
+
+|nullable
+|Whether the column is nullable
+|*true*, false
+
+|insertable
+|Whether the column is insertable
+|*true*, false
+
+|updatable
+|Whether the column is updatable
+|*true*, false
+
+|column-definition
+|Some vague JPA term that you put anything in and get any unexpected results from
+|
+
+|base
+|Origin of the ordering (value for the first element)
+|0
+|===
+
+
+
+[[map-key]]
+== Metadata for map-key tag
+
+These are attributes within the *<map-key>* tag (under <one-to-many> or <many-to-many>). This is used to define the field of the value class that is the key of a Map.
+
+[cols="1,3,1", options="header"]
+|===
+|Attribute
+|Description
+|Values
+
+|name
+|Name of the field (required)
+|
+|===
+
+
+
+[[map-key-class]]
+== Metadata for map-key-class tag
+
+These are attributes within the *<map-key-class>* tag (under <one-to-many> or <many-to-many>). This is used to define the key type for a Map.
+
+[cols="1,3,1", options="header"]
+|===
+|Attribute
+|Description
+|Values
+
+|class
+|Type used for the key (required)
+|
+|===
+
+
+
+[[map-key-temporal]]
+== Metadata for map-key-temporal tag
+
+Within the *<map-key-temporal>* tag (under <element-collection>, <one-to-many> or <many-to-many>) you put the TemporalType value.
+
+
+
+[[map-key-enumerated]]
+== Metadata for map-key-enumerated tag
+
+Within the *<map-key-enumerated>* tag (under <element-collection>, <one-to-many> or <many-to-many>) you put the EnumType value.
+
+
+[[transient]]
+== Metadata for transient tag
+
+These are attributes within the *<transient>* tag (under <attributes>). This is used to define that the field is not to be persisted.
+
+[cols="1,3,1", options="header"]
+|===
+|Attribute
+|Description
+|Values
+
+|name
+|Name of the field (required)
+|
+|===
+
+
+[[index]]
+== Metadata for index tag
+
+These are attributes within the *<index>* element. This is used to define the details of an index when overriding the provider default.
+
+[cols="1,3,1", options="header"]
+|===
+|Attribute
+|Description
+|Values
+
+|name
+|Name of the index
+|
+
+|unique
+|Whether the index is unique
+|
+
+|column-list
+|List of columns (including any ASC, DESC specifications for each column)
+|
+|===
+
+
+
+[[foreign-key]]
+== Metadata for foreign-key tag
+
+These are attributes within the *<foreign-key>* element. This is used to define the details of a foreign-key when overriding the provider default.
+
+[cols="1,3,1", options="header"]
+|===
+|Attribute
+|Description
+|Values
+
+|name
+|Name of the foreign-key
+|
+
+|value
+|Constraint mode
+|
+
+|foreignKeyDefinition
+|The DDL for the foreign key
+|
+|===
+
+
+
+[[convert]]
+== Metadata for convert tag
+
+These are attributes within the *<convert>* element, under *<basic>*. This is used to define the use of type conversion on this field.
+
+[cols="1,3,1", options="header"]
+|===
+|Attribute
+|Description
+|Values
+
+|converter
+|Class name of the converter
+|
+
+|attribute-name
+|Name of the embedded field to convert (optional). *Not yet supported*
+|
+
+|disable-conversion
+|Whether to disable any auto-apply converters for this field
+|true, *false*
+|===
+
+
+
+[[exclude-default-listeners]]
+== Metadata for exclude-default-listeners tag
+
+This element is specified under <mapped-superclass> or <entity> and is used to denote that any default listeners defined in this file will be ignored.
+
+
+[[exclude-superclass-listeners]]
+== Metadata for exclude-superclass-listeners tag
+
+This element is specified under <mapped-superclass> or <entity> and is used to denote that any listeners of superclasses will be ignored.
+
+
+[[entity-listener]]
+== Metadata for entity-listener tag
+
+These are attributes within the *<entity-listener>* tag (under <entity-listeners>). This is used to an EntityListener class and the methods it uses
+
+[cols="1,3,1", options="header"]
+|===
+|Attribute
+|Description
+|Values
+
+|class
+|Name of the EntityListener class that receives the callbacks for this Entity
+|
+|===
+
+
+[[pre-persist]]
+== Metadata for pre-persist tag
+
+These are attributes within the *<pre-persist>* tag (under <entity>). This is used to define any "PrePersist" method callback.
+
+[cols="1,3,1", options="header"]
+|===
+|Attribute
+|Description
+|Values
+
+|method-name
+|Name of the method (required)
+|
+|===
+
+
+[[post-persist]]
+== Metadata for post-persist tag
+
+These are attributes within the *<post-persist>* tag (under <entity>). This is used to define any "PostPersist" method callback.
+
+[cols="1,3,1", options="header"]
+|===
+|Attribute
+|Description
+|Values
+
+|method-name
+|Name of the method (required)
+|
+|===
+
+
+[[pre-remove]]
+== Metadata for pre-remove tag
+
+These are attributes within the *<pre-remove>* tag (under <entity>). This is used to define any "PreRemove" method callback.
+
+[cols="1,3,1", options="header"]
+|===
+|Attribute
+|Description
+|Values
+
+|method-name
+|Name of the method (required)
+|
+|===
+
+
+[[post-remove]]
+== Metadata for post-remove tag
+
+These are attributes within the *<post-remove>* tag (under <entity>). This is used to define any "PostRemove" method callback.
+
+[cols="1,3,1", options="header"]
+|===
+|Attribute
+|Description
+|Values
+
+|method-name
+|Name of the method (required)
+|
+|===
+
+
+[[pre-update]]
+== Metadata for pre-update tag
+
+These are attributes within the *<pre-remove>* tag (under <entity>). This is used to define any "PreUpdate" method callback.
+
+[cols="1,3,1", options="header"]
+|===
+|Attribute
+|Description
+|Values
+
+|method-name
+|Name of the method (required)
+|
+|===
+
+
+[[post-update]]
+== Metadata for post-update tag
+
+These are attributes within the *<post-update>* tag (under <entity>). This is used to define any "PostUpdate" method callback.
+
+[cols="1,3,1", options="header"]
+|===
+|Attribute
+|Description
+|Values
+
+|method-name
+|Name of the method (required)
+|
+|===
+
+
+[[post-load]]
+== Metadata for post-load tag
+
+These are attributes within the *<post-load>* tag (under <entity>). This is used to define any "PostLoad" method callback.
+
+[cols="1,3,1", options="header"]
+|===
+|Attribute
+|Description
+|Values
+
+|method-name
+|Name of the method (required)
+|
+|===
+
+
+[[attribute-override]]
+== Metadata for attribute-override tag
+
+These are attributes within the *<attribute-override>* tag (under <entity>). This is used to override the columns for any fields in superclasses
+
+[cols="1,3,1", options="header"]
+|===
+|Attribute
+|Description
+|Values
+
+|name
+|Name of the field/property (required)
+|
+|===
+
+
+[[association-override]]
+== Metadata for association-override tag
+
+These are attributes within the *<association-override>* tag (under <entity>). This is used to override the columns for any N-1/1-1 fields in superclasses
+
+[cols="1,3,1", options="header"]
+|===
+|Attribute
+|Description
+|Values
+
+|name
+|Name of the field/property (required)
+|
+|===

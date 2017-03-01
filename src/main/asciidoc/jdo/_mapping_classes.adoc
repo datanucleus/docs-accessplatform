@@ -1,0 +1,102 @@
+[[classes]]
+= Classes
+:_basedir: ../
+:_imagesdir: images/
+
+We have the following types of classes in DataNucleus JDO.
+
+* link:#persistence_capable[PersistenceCapable] - persistable class with full control over its persistence.
+* link:#persistence_aware[PersistenceAware] - a class that is not itself persisted, but that needs to access internals of persistable classes. 
+
+
+[[persistence_capable]]
+== Persistence Capable Classes
+
+The first thing to decide when implementing your persistence layer is which classes are to be persisted.
+Let's take a sample class (_Hotel_) as an example. We can define a class as persistable using either annotations in the class, or XML metadata.
+
+To achieve the above aim with XML metadata, we do this
+
+[source,xml]
+-----
+<class name="Hotel">
+    ...
+</class>
+-----
+
+Alternatively, using link:annotations.html[JDO Annotations], like this
+
+[source,java]
+-----
+@PersistenceCapable
+public class Hotel
+{
+    ...
+}
+-----
+
+See also :-
+
+* link:metadata_xml.html#class[MetaData reference for <class> element]
+* link:annotations.html#PersistenceCapable[Annotations reference for @PersistenceCapable]
+
+NOTE: If any of your other classes *access the fields of these persistable classes directly* then these other classes should be defined as _PersistenceAware_.
+
+
+
+[[persistence_aware]]
+== Persistence-Aware Classes
+
+If a class is not itself persistable but it interacts with _fields_ of persistable classes then it should be marked as _Persistence Aware_.
+You do this as follows, with XML
+
+[source,xml]
+-----
+<class name="MyClass" persistence-modifier="persistence-aware">
+    ...
+</class>
+-----
+
+or with annotations
+
+[source,java]
+-----
+@PersistenceAware
+public class MyClass
+{
+    ...
+}
+-----
+
+See also :-
+
+* link:annotations.html#PersistenceAware[Annotations reference for @PersistenceAware]
+
+
+[[read_only]]
+== Read-Only Classes
+
+image:../images/nucleus_extension.png[]
+
+You can, if you wish, make a class /read-only_. This is a DataNucleus extension and you set it as follows
+
+[source,xml]
+-----
+<class name="MyClass">
+    ...
+    <extension vendor-name="datanucleus" key="read-only" value="true"/>
+</class>
+-----
+
+or with annotations
+
+[source,java]
+-----
+@PersistenceCapable
+@Extension(vendorName="datanucleus", key="read-only", value="true")
+public class MyClass
+{
+    ...
+}
+-----
+

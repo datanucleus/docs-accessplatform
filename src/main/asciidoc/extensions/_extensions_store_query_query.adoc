@@ -1,0 +1,90 @@
+[[store_query_query]]
+= Extension: Query Language
+:_basedir: ../
+:_imagesdir: images/
+
+
+DataNucleus provides support for query languages to allow access to the persisted objects.
+DataNucleus Core understands JDOQL, SQL and JPQL for use with the whichever StoreManager you decide to implement them for.
+You can extend DataNucleus's capabilities using the plugin extension *org.datanucleus.store_query_query* to achieve this.
+
+[cols="2,1,1,2,1", options="header"]
+|===
+|Plugin extension-point
+|Key
+|Datastore
+|Description
+|Location
+
+|org.datanucleus.store_query_query
+|JDOQL
+|rdbms
+|Query support for JDOQL
+|datanucleus-rdbms
+
+|org.datanucleus.store_query_query
+|SQL
+|rdbms
+|Query support for SQL
+|datanucleus-rdbms
+
+|org.datanucleus.store_query_query
+|JPQL
+|rdbms
+|Query support for JPQL
+|datanucleus-rdbms
+
+|org.datanucleus.store_query_query
+|JDOQL
+|db4o
+|Query support for JDOQL
+|datanucleus-cassandra
+
+|org.datanucleus.store_query_query
+|JPQL
+|cassandra
+|Query support for JPQL
+|datanucleus-cassandra
+
+|org.datanucleus.store_query_query
+|JDOQL
+|ldap
+|Query support for JDOQL
+|datanucleus-ldap
+
+|org.datanucleus.store_query_query
+|JDOQL
+|excel
+|Query support for JDOQL
+|datanucleus-excel
+
+|org.datanucleus.store_query_query
+|JDOQL
+|xml
+|Query support for JDOQL
+|datanucleus-xml
+
+|org.datanucleus.store_query_query
+|Native
+|neodatis
+|NeoDatis Native query support
+|datanucleus-neodatis
+
+|org.datanucleus.store_query_query
+|Criteria
+|neodatis
+|NeoDatis Criteria query support
+|datanucleus-neodatis
+
+|org.datanucleus.store_query_query
+|JDOQL
+|neodatis
+|Query support for JDOQL
+|datanucleus-neodatis
+
+|org.datanucleus.store_query_query
+|JDOQL
+|json
+|Query support for JDOQL
+|datanucleus-json
+|===

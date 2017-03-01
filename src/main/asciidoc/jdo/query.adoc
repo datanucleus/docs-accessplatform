@@ -1,0 +1,46 @@
+[[query]]
+= JDO Query Guide
+:_basedir: ../
+:_imagesdir: images/
+
+
+Once you have persisted objects you need to query them. 
+For example if you have a web application representing an online store, the user asks to see all products of a particular type, ordered by the price. 
+This requires you to query the datastore for these products. JDO specifies support for 
+
+* link:#jdoql[JDOQL] : a string-based query language using Java syntax.
+* link:#jdoql_typed[Typed] : following JDOQL syntax but providing an API supporting refactoring of classes and the queries they are used in.
+* link:#sql[SQL] typically only for RDBMS
+* link:#jpql[JPQL] : not explicitly part of the JDO spec, but provided by DataNucleus JDO.
+* link:#stored_procedures[Stored Procedures] : not explicitly part of the JDO spec, but provided by DataNucleus JDO as an option for RDBMS.
+
+Which query language is used is down to the developer. 
+The data-tier of an application could be written by a primarily Java developer, who would typically think in an object-oriented way and so would likely prefer *JDOQL*. 
+On the other hand the data-tier could be written by a datastore developer who is more familiar with SQL concepts and so could easily make more use of *SQL*.
+This is the power of an implementation like DataNucleus in that it provides the flexibility for different people to develop the data-tier utilising their own skills 
+to the full without having to learn totally new concepts.
+
+TIP: We recommend using JDOQL for queries wherever possible since it is object-based and datastore agnostic, giving you extra flexibility in the future. 
+If not possible using JDOQL, only then use a language appropriate to the datastore in question
+
+NOTE: For some datastores additional query languages may be available specific to that datastore - please check the link:../datastores/datastores.html[datastores documentation].
+
+
+
+There are 2 categories of queries with JDO :-
+
+* link:query.html#api[*Programmatic Query*] where the query is defined using the JDO Query API.
+* link:query.html#named[*Named Query*] where the query is defined in MetaData and referred to by its name at runtime.
+
+
+include::_query_api.adoc[leveloffset=+1]
+
+include::_query_jdoql.adoc[leveloffset=+1]
+include::_query_jdoql_typed.adoc[leveloffset=+1]
+include::_query_sql.adoc[leveloffset=+1]
+include::_query_jpql.adoc[leveloffset=+1]
+include::_query_stored_procedures.adoc[leveloffset=+1]
+
+include::_query_cache.adoc[leveloffset=+1]
+
+

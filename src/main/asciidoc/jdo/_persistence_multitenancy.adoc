@@ -1,0 +1,102 @@
+[[multitenancy]]
+= Multitenancy
+:_basedir: ../
+:_imagesdir: images/
+
+
+On occasion you need to share a data model with other user-groups or other applications and where the model is persisted to the same structure of datastore. 
+There are three ways of handling this with DataNucleus.
+
+* *Separate Database per Tenant* - have a different database per user-group/application.
+* *Separate Schema per Tenant* - as the first option, except use different schemas.
+* *Same Database/Schema but with a Discriminator in affected Table(s)* - this is described below.
+
+
+== Multitenancy via Discriminator in Table
+
+NOTE: Applicable to RDBMS, HBase, MongoDB, Neo4j, Cassandra
+
+If you specify the persistence property *datanucleus.tenantId* as an identifier for your user-group/application then DataNucleus 
+will know that it needs to provide a tenancy discriminator to all primary tables of persisted classes. 
+This discriminator is then used to separate the data of the different user-groups.
+
+By default this will add a column *TENANT_ID* to each primary table, of String-based type.
+You can control this by specifying extension metadata for each persistable class
+
+[source,xml]
+-----
+<class name="MyClass">
+     <extension vendor-name="datanucleus" key="multitenancy-column-name" value="TENANT"/>
+     <extension vendor-name="datanucleus" key="multitenancy-column-length" value="24"/>
+     ...
+</class>
+-----
+
+or using annotations
+
+[source,java]
+-----
+@PersistenceCapable
+@MultiTenant(column="TENANT", columnLength=24)
+public class MyClass
+{
+    ...
+}
+-----
+
+In all subsequent use of DataNucleus, any "insert" to the primary "table"(s) will also include the TENANT column value. 
+Additionally any query will apply a WHERE clause restricting to a particular value of TENANT column.
+
+If you have enabled multi-tenancy as above but want to disable multitenancy on a class, just specify the following metadata on the class in question
+
+[source,xml]
+-----
+<class name="MyClass">
+     <extension vendor-name="datanucleus" key="multitenancy-disable" value="true"/>
+     ...
+</class>
+-----
+
+or using annotations
+
+[source,java]
+-----
+@PersistenceCapable
+@MultiTenant(disable=true)
+public class MyClass
+{
+    ...
+}
+-----
+
+Note that the *Tenant ID* can be set in one of three ways.
+
+* Per PersistenceManagerFactory : just set the persistence property *datanucleus.tenantId* when you start up the PMF, and all access for this PMF will use this Tenant ID
+* Per PersistenceManager : set the persistence property *datanucleus.tenantId* when you start up the PMF as the default Tenant ID, 
+and set a property on any PM that you want a different Tenant ID specifying for. Like this
+[source,java]
+-----
+PersistenceManager pm = pmf.getPersistenceManager();
+... // All operations will apply to default tenant specified in persistence property for PMF
+pm.close();
+
+PersistenceManager pm1 = pmf.getPersistenceManager();
+pm1.setProperty("datanucleus.tenantId", "John");
+... // All operations will apply to tenant "John"
+pm1.close();
+
+PersistenceManager pm2 = pmf.getPersistenceManager();
+pm2.setProperty("datanucleus.tenantId", "Chris");
+... // All operations will apply to tenant "Chris"
+pm2.close();
+-----
+* Per datastore access : When creating the PMF set the persistence property _datanucleus.tenantProvider_ and set it to an instance of _org.datanucleus.store.schema.MultiTenancyProvider_.
+[source,java]
+-----
+public interface MultiTenancyProvider
+{
+    String getTenantId(ExecutionContext ec);
+}
+-----
+Now the programmer can set a different Tenant ID for each datastore access, maybe based on some session variable for example?
+

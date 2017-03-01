@@ -1,0 +1,782 @@
+[[pm]]
+= PersistenceManager
+:_basedir: ../
+:_imagesdir: images/
+
+Now that we have our link:#pmf[PersistenceManagerFactory], providing the connection for our persistence context to our datastore, we need
+to obtain a _PersistenceManager_ (PM) to manage the persistence of objects. Here we describe the majority of operations that you will are likely
+to need to know about.
+
+NOTE: *Important : A _PersistenceManagerFactory_ is designed to be thread-safe. A _PersistenceManager_ is not.*
+Note that if you set the persistence property *javax.jdo.option.Multithreaded* this acts as a hint to the PMF to provide _PersistenceManager_s that are usable with multiple threads. 
+While DataNucleus makes efforts to make this _PersistenceManager_ usable with multiple threads, it is not guaranteed to work multi-threaded in all situations, 
+particularly around second class collection/map fields.
+
+TIP: A _PersistenceManager_ is cheap to create and it is a common pattern for web applications to open a _PersistenceManager_ per web request, and close it before the response.
+
+To take an example, suppose we have the following (abbreviated) entities
+
+[source,java]
+-----
+@PersistenceCapable
+public class Person
+{
+    @PrimaryKey
+    long id;
+    
+    String firstName;
+    String lastName;
+}
+
+@PersistenceCapable
+public class Account
+{
+    @PrimaryKey
+    long id;
+
+    Person person;
+}
+-----
+
+
+== Opening/Closing a PersistenceManager
+
+You obtain a _PersistenceManager_ http://www.datanucleus.org/javadocs/javax.jdo/3.2/javax/jdo/PersistenceManager.html[image:../images/javadoc.png[Javadoc]]
+as follows
+
+[source,java]
+-----
+PersistenceManager pm = pmf.getPersistenceManager();
+-----
+
+You then perform all operations that you need using this _PersistenceManager_ and finally you must *close* it.
+Forgetting to close it will lead to memory/resource leaks.
+
+[source,java]
+-----
+pm.close();
+-----
+
+You likely will be performing the majority of operations on a _PersistenceManager_ within a transaction, whether your transactions are controlled by a JavaEE container, 
+by a framework such as Spring, or by locally defined transactions. Alternatively you can perform your operations non-transactional.
+In the examples below we will omit the transaction demarcation for clarity.
+
+
+== Persisting an Object
+
+The main thing that you will want to do with the data layer of a JDO-enabled application is persist your objects into the datastore. 
+We have obtained a _PersistenceManager_ to manage such interaction with the datastore, and now we persist our object
+
+[source,java]
+-----
+Person lincoln = new Person(1, "Abraham", "Lincoln");
+pm.makePersistent(person);
+-----
+
+This will result in the object being persisted into the datastore, though clearly it will not be persistent until you commit the transaction. 
+The link:#lifecycle[Lifecycle State] of the object changes from _Transient_ to _PersistentClean_ (after makePersistent()), to _Hollow_/_Detached_ (at commit).
+
+
+== Persisting multiple Objects in one call
+
+When you want to persist multiple objects you simply call a different method on the _PersistenceManager_, like this
+
+[source,java]
+-----
+Collection<Person> coll = new HashSet<>();
+coll.add(lincoln);
+coll.add(mandela);
+
+pm.makePersistentAll(coll);
+-----
+
+As above, the objects are persisted to the datastore. 
+The LifecycleState of the objects change from _Transient_ to _PersistentClean_ (after persist()), to _Hollow_ (at commit).
+
+
+
+
+
+== Finding an object by its identity
+
+Once you have persisted an object, it has an "identity". This is a unique way of identifying it. You can obtain the identity by calling
+
+[source,java]
+-----
+Object lincolnID = pm.getObjectId(lincoln);
+-----
+
+Alternatively you can create an identity to represent this object by calling
+
+[source,java]
+-----
+Object lincolnID = pm.newObjectIdInstance(Person.class, 1);
+-----
+
+So what ? Well the identity can be used to retrieve the object again at some other part in your application. 
+So you pass the identity into your application, and the user clicks on some button on a web page and that button corresponds to a particular object identity. 
+You can then go back to your data layer and retrieve the object as follows
+
+[source,java]
+-----
+Person lincoln = (Person)pm.getObjectById(lincolnID);
+-----
+
+                
+image:../images/nucleus_extension.png[]
+
+A DataNucleus extension is to pass in a String form of the identity to the above method. It accepts identity strings of the form
+
+* _{fully-qualified-class-name}:{key}_
+* _{discriminator-name}:{key}_
+
+where the _key_ is the identity value (datastore-identity) or the result of PK.toString() (application-identity). So for example we could input
+
+[source,java]
+-----
+Object obj = pm.getObjectById("mydomain.Person:1");
+-----
+
+There is, of course, a bulk load variant too
+
+[source,java]
+-----
+Object[] objs = pm.getObjectsById(ids);
+-----
+
+
+image:../images/nucleus_extension.png[]
+
+When you call the method _getObjectById_ if an object with that identity is found in the cache then a call is, by default, made to validate it still exists. 
+You can avoid this call to the datastore by setting the persistence property *datanucleus.findObject.validateWhenCached* to _false_.
+
+
+== Finding an object by its class and primary-key value
+
+An alternate form of the _getObjectById_ method is taking in the class of the object, and the "identity". This is for use where you have a _single field_ that is primary key. 
+Like this
+
+[source,java]
+-----
+Person lincoln = pm.getObjectById(Person.class, 1);
+-----
+
+where 1 is the value of the primary key field (numeric).
+Note that the first argument could be a base class and the real object could be an instance of a subclass of that.
+
+
+
+
+== Deleting an Object
+
+When you need to delete an object that you had previous persisted, deleting it is simple.
+Firstly you need to get the object itself, and then delete it as follows
+
+[source,java]
+-----
+Person lincoln = pm.getObjectById(Person.class, 1);  // Retrieves the object to delete
+pm.deletePersistent(lincoln);
+-----
+
+Don't forget that you can also use link:query.html#jdoql_deletepersistent[deletion by query] to delete objects. Alternatively use link:query.html#jdoql_bulkdelete[bulk deletion].
+
+Please note that when deleting a persist object the default is to *not* delete related objects.
+
+[[dependent_fields]]
+=== Dependent Fields
+
+If you want the deletion of a persistent object to cause the deletion of related objects then you need to mark the related fields in the mapping to be "dependent".
+For example with our example, if we modify it to be like this
+
+[source,java]
+-----
+@PersistenceCapable
+public class Account
+{
+    ...
+
+    @Persistent(dependent="true")
+    Person person;
+}
+-----
+
+so now if we call 
+
+[source,java]
+-----
+Account lincolnAcct = pm.getObjectById(Account.class, 1);  // Retrieves the Account to delete
+pm.deletePersistent(lincolnAcct);
+-----
+
+This will delete the _Account_ object as well as the _Person_ account.
+The same applies on 1-N/M-N relations where you set the `@Element`, `@Key`, `@Value` dependent attribute accordingly.
+Some things to note about dependent fields.
+
+* An object is deleted (using _deletePersistent()_) and that object has relations to other objects. 
+If the other objects (either 1-1, 1-N, or M-N) are dependent then they are also deleted.
+* An object has a 1-1 relation with another object, but the other object relation is nulled out. 
+If the other object is dependent then it is deleted when the relation is nulled.
+* An object has a 1-N collection relation with other objects and the element is removed from the collection. 
+If the element is dependent then it will be deleted when removed from the collection. The same happens when the collections is cleared.
+* An object has a 1-N map relation with other objects and the key is removed from the map. 
+If the key or value are dependent and they are not present in the map more than once they will be deleted when they are removed. The same happens when the map is cleared.
+
+[[deletion+fk]]
+=== Deletion using RDBMS Foreign Keys
+
+With JDO you can use "dependent-field" as shown above. As an alternative (but not as a complement), when using RDBMS,
+you can use the datastore-defined foreign keys and let the datastore built-in "referential integrity" look after such deletions. 
+DataNucleus provides a persistence property *datanucleus.deletionPolicy* allowing enabling of this mode of operation.
+The default setting of this property is "JDO2" which performs deletion of related objects as follows
+
+*If _dependent-field_ is true then use that to define the related objects to be deleted.
+* Else, if the column of the foreign-key field is NULLable then NULL it and leave the related object alone
+* Else deleted the related object (and throw exceptions if this fails for whatever datastore-related reason)
+
+The other setting of this property is "DataNucleus" which performs deletion of related objects as follows
+
+* If _dependent-field_ is true then use that to define the related objects to be deleted
+* If a _foreign-key_ is specified (in MetaData) for the relation field then leave any deletion to the datastore to perform (or throw exceptions as necessary)
+* Else, if the column of the foreign-key field is NULLable then NULL it and leave the related object alone
+* Else deleted the related object (and throw exceptions if this fails for whatever datastore-related reason)
+
+As you can see, with the second option you have the ability to utilise datastore "referential integrity" checking using your MetaData-specified <foreign-key> elements.
+
+
+
+== Modifying a persisted Object
+
+To modify a previously persisted object you take the object and update it in your code. 
+If the object is in "detached" state (not managed by a particular _PersistenceManager_) then when you are ready to persist the changes you do the following
+
+[source,java]
+-----
+Person updatedLincoln = pm.makePersistent(lincoln);
+-----
+
+If however the object was already managed at the point of updating its fields, then 
+
+[source,java]
+-----
+Person lincoln = pm.getObjectById(Person.class, 1); // "lincoln" is now managed by "pm", and in "hollow/persistent-clean" state.
+
+lincoln.setAddress("The White House");
+-----
+
+when the _setAddress_ has been called, this is intercepted by DataNucleus, and the changes will be stored for persisting. There is no need
+to call any _PersistenceManager_ method to push the changes. This is part of the mechanism known as _transparent persistence_.
+
+
+TIP: Don't forget that you can also use link:query.html#jdoql_bulkupdate[bulk update] to update a group of objects of a type.
+
+
+
+
+[[pm_detach]]
+== Detaching a persisted Object
+
+As long as your persistable class is _detachable_ (see the link:mapping.html[mapping guide]) then you can _detach_ objects of that type. This means
+that your object is no longer managed by a particular _PersistenceManager_ and hence usable in other tiers of your application.
+In this case you want to _detach_ the object (and its related sub-objects) so that they can be passed across to the part of the application that requires it.
+To do this you do
+
+[source,java]
+-----
+Person detachedLincoln = pm.detachCopy(lincoln); // Returns a copy of the persisted object, in detached state
+-----
+
+The detached object is like the original object except that it has no StateManager connected, and it stores its JDO identity and version. 
+It retains a list of all fields that are modified while it is detached. 
+This means that when you want to "attach" it to the data-access layer it knows what to update.
+
+As an alternative, to make the detachment process transparent, you can set the persistence property *datanucleus.DetachAllOnCommit* to true and when you commit your transaction all objects
+enlisted in the transaction will be detached. If you just want to apply this setting for a _PersistenceManager_ then there is a _setDetachAllOnCommit_ method on the _PersistenceManager_.
+
+
+Some things to be aware of with the _detachment_ process.
+
+* Calling _detachCopy_ on an object that is not detachable will return a *transient* instance that is a COPY of the original, so use the COPY thereafter.
+* Calling _detachCopy_ on an object that is detachable will return a *detached* instance that is a COPY of the original, so use this COPY thereafter
+* A _detached_ object retains the id of its datastore entity. Detached objects should be used where you want to update the objects and attach them later 
+(updating the associated object in the datastore. If you want to create copies of the objects in the datastore with their own identities you should use _makeTransient_ instead of _detachCopy_.
+* Calling _detachCopy_ will detach all fields of that object that are in the current link:persistence.html#fetch_groups[Fetch Groups] for that class for that _PersistenceManager_.
+* By default the fields of the object that will be detached are those in the _Default Fetch Group_.
+* You should choose your link:persistence.html#fetch_groups[Fetch Group] carefully, bearing in mind which object(s) you want to access whilst detached. 
+Detaching a relation field will detach the related object as well.
+* If you don't detach a field of an object, you *cannot* access the value for that field while the object is detached.
+* If you don't detach a field of an object, you *can* update the value for that field while detached, and thereafter you can access the value for that field.
+
+=== Detached Fields
+
+image:../images/nucleus_extension.png[]
+
+When an object is detached it is typically passed to a different layer of an application and potentially changed. 
+During the course of the operation of the system it may be required to know what is loaded in the object and what is dirty (has been changed since detaching). 
+DataNucleus provides an extension to allow interrogation of the detached object.
+
+[source,java]
+-----
+String[] loadedFieldNames = NucleusJDOHelper.getLoadedFields(obj, pm);
+String[] dirtyFieldNames = NucleusJDOHelper.getDirtyFields(obj, pm);
+-----
+
+So you have access to the names of the fields that were loaded when detaching the object, and also to the names of the fields that have been updated since detaching.
+
+
+=== Serialization of Detachable classes
+
+During enhancement of Detachable classes, a field called _jdoDetachedState_ is added to the class definition. 
+This field allows reading and changing tracking of detached objects while they are not managed by a PersistenceManager.
+
+When serialization occurs on a Detachable object, the _jdoDetachedState_ field is written to the serialized object stream. 
+On deserialize, this field is written back to the new deserialized instance. 
+This process occurs transparently to the application. However, if deserialization occurs with an un-enhanced version of the class, the detached state is lost.
+
+Serialization and deserialization of Detachable classes and un-enhanced versions of the same class is only possible if the field _serialVersionUID_ is added. 
+It's recommended during development of the class, to define the _serialVersionUID_ and make the class implement the _java.io.Serializable_ interface.
+
+
+=== Detach On Close
+
+image:../images/nucleus_extension.png[]
+
+A further variation is known as "detachOnClose" and means that if enabled (setting persistence property *datanucleus.DetachOnClose* to _true_), 
+when you close your _PersistenceManager_ you are opting to have all instances currently cached in the Level 1 Cache of that _PersistenceManager_ to be detached automatically.
+
+WARNING: This will not work in a JavaEE environment when using JCA.
+
+NOTE: It is recommended that you use "detachAllOnCommit" instead of this since that is standard JDO and would work in all JavaEE environments also.
+
+
+
+
+[[pm_attach]]
+== Attaching a persisted Object
+
+As you saw above, when we update an object in detached state we can update it in the datastore by _attaching_ it to a _PersistenceManager_.
+
+[source,java]
+-----
+Person attachedLincoln = pm.makePersistent(lincoln); // Returns a copy of the detached object, in attached state
+-----
+
+Once the object is _attached_ it is then managed by the _PersistenceManager_, and in _PersistentClean_ state.
+
+Some things to be aware of with the _attachment_ process.
+
+* Calling _makePersistent_ will return an (attached) copy of the detached object. 
+It will attach all fields that were originally detached, and will also attach any other fields that were modified whilst detached.
+
+
+[[copy_on_attach]]
+=== Copy On Attach
+
+By default when you are attaching a detached object it will return an attached copy of the detached object. 
+JDO provides a feature called _copy-on-attach_ that allows this attachment to just migrate the existing detached object into attached state.
+
+You enable this by setting the persistence property *datanucleus.CopyOnAttach* to _false_. 
+Alternatively you can use the methods _PersistenceManagerFactory.setCopyOnAttach(boolean flag)_ or _PersistenceManager.setCopyOnAttach(boolean flag)_.
+Consequently our attach code would become
+
+[source,java]
+-----
+pm.makePersistent(lincoln); // object "lincoln" is now in attached state after this call
+-----
+
+NOTE: if using this feature and you try to attach two detached objects representing the same underlying persistent object within the same transaction 
+(i.e a persistent object with the same identity already exists in the level 1 cache), then a JDOUserException will be thrown.
+
+
+
+
+[[pm_refresh]]
+== Refresh of objects
+
+An application that has sole access to the datastore, in general, does not need to check for updated values from the datastore.
+In more complicated situations the datastore may be updated by another application for example, so it may be necessary at times
+to check for more up-to-date values for the fields of an entity. You do that like this
+
+[source,java]
+-----
+pm.refresh(lincoln);
+-----
+
+This will do the following
+
+* Refresh the values of all FetchPlan fields in the object
+* Unload all non-FetchPlan fields in the object
+
+If the object had any changes they will be thrown away by this step, and replaced by the latest datastore values.
+
+
+[[cascading]]
+== Cascading Operations
+
+When you have relationships between entities, and you persist one entity, by default the related entity _will_ be persisted.
+This is referred to as *persistence-by-reachability*.
+
+Let's use our example above, and create new _Person_ and _Account_ objects.
+
+[source,java]
+-----
+Person lincoln = new Person(1, "Abraham", "Lincoln");
+Account acct1 = new Account(1, lincoln); // Second argument sets the relation between the objects
+-----
+
+now to persist them both we have two options. Firstly with the default cascade setting
+
+[source,java]
+-----
+pm.makePersistent(acct1);
+-----
+
+This will persist the _Account_ object and since it refers to the _Person_ object, that will be persisted also.
+
+
+
+image:../images/nucleus_extension.png[]
+
+DataNucleus allows you to disable cascading of persist/update operations by using the `@Extension` metadata. So if we change our class like this
+
+[source,java]
+-----
+@PersistenceCapable
+public class Account
+{
+    @PrimaryKey
+    long id;
+
+    @Extension(vendorName="datanucleus", key="cascade-persist", value="false")
+    @Extension(vendorName="datanucleus", key="cascade-update", value="false")
+    Person person;
+}
+-----
+
+now when we do this
+
+[source,java]
+-----
+em.persist(acct1);
+-----
+
+it will not persist the related _Person_ object (but will likely throw an exception due to it being present).
+
+
+== Managing Relationships
+
+The power of a Java persistence solution like DataNucleus is demonstrated when persisting relationships between objects.
+There are many types of relationships.
+
+* link:mapping.html#one_one_relations[1-1 relationships] - this is where you have an object A relates to a second object B. 
+The relation can be _unidirectional_ where A knows about B, but B doesnt know about A. The relation can be _bidirectional_ where A knows about B and B knows about A.
+* link:mapping.html#one_many_relations[1-N relationships] - this is where you have an object A that has a collection of other objects of type B. 
+The relation can be _unidirectional_ where A knows about the objects B but the Bs dont know about A. 
+The relation can be _bidirectional_ where A knows about the objects B and the Bs know about A
+* link:mapping.html#many_one_relations[N-1 relationships] - this is where you have an object B1 that relates to an object A, and an object B2 that relates to A also etc.
+The relation can be _unidirectional_ where the A doesnt know about the Bs.
+The relation can be _bidirectional_ where the A has a collection of the Bs. [i.e a 1-N relationship but from the point of view of the element]
+* link:mapping.html#many_many_relations[M-N relationships] - this is where you have objects of type A that have a collection of objects of type B and the 
+objects of type B also have a collection of objects of type A. The relation is always _bidirectional_ by definition
+* link:mapping.html#compound_icentity[Compound Identity relationships] when you have a relation and part of the primary key of the related object is the other persistent object.
+
+=== Assigning Relationships
+
+When the relation is _unidirectional_ you simply set the related field to refer to the other object.
+For example we have classes A and B and the class A has a field of type B. So we set it like this
+
+[source,java]
+-----
+A a = new A();
+B b = new B();
+a.setB(b); // "a" knows about "b"
+-----
+
+
+IMPORTANT: With a _bidirectional_ relation you must set both sides of the relation
+
+For example, we have classes A and B and the class A has a collection of elements of type B, and B has a field of type A. So we set it like this
+
+[source,java]
+-----
+A a = new A();
+B b1 = new B();
+a.addElement(b1); // "a" knows about "b1"
+b1.setA(a); // "b1" knows about "a"
+-----
+
+
+[[persistence_by_reachability]]
+=== Reachability
+
+With JDO, when you persist an object, all related objects (reachable from the fields of the object being persisted) will be persisted at the same time (unless already persistent). 
+This is called _persistence-by-reachability_. For example
+
+[source,java]
+-----
+A a = new A();
+B b = new B();
+a.setB(b);
+pm.makePersistent(a); // "a" and "b" are now provisionally persistent
+-----
+
+This additionally applies when you have an object managed by the _PersistenceManager_, and you set a field to refer to a related object - 
+this will make the related object provisionally persistent also. For example
+
+[source,java]
+-----
+A a = new A();
+pm.makePersistent(a); // "a" is now provisionally persistent
+B b = new B();
+a.setB(b); // "b" is now provisionally persistent
+-----
+
+==== Persistence-By-Reachability-At-Commit
+
+An additional feature of JDO is the ability to re-run the _persistence-by-reachability_ algorithm *at commit* so as to check whether the objects being made persistent 
+should definitely be persisted. This is for the following situation.
+
+* Start a transaction
+* Persist object A. This persists related object B.
+* Delete object A from persistence
+* Commit the transaction.
+
+If you have property *datanucleus.persistenceByReachabilityAtCommit* set to true (default) then this will recheck the persisted objects should remain persistent. 
+In this case it will find B and realise that it was only persisted due to A (which has since been deleted), hence B will not remain persistent after the transaction.
+If you had property *datanucleus.persistenceByReachabilityAtCommit* set to false then B will remain persistent after the transaction. 
+
+
+
+[[managed_relationships]]
+== Managed Relationships
+
+As previously mentioned, users should really set both sides of a bidirectional relation.
+DataNucleus provides a good level of _managed relations_ in that it will _attempt_ to correct any missing information in relations to make both sides consistent.
+What it provides is defined below
+
+For a _1-1 bidirectional relation_, at persist you should set one side of the relation and the other side will be set to make it consistent. 
+If the respective sides are set to inconsistent objects then an exception will be thrown at persist. 
+At update of owner/non-owner side the other side will also be updated to make them consistent.
+
+For a _1-N bidirectional relation_ and you only specify the element owner then the collection must be Set-based since DataNucleus cannot generate 
+indexing information for you in that situation (you must position the elements).
+At update of element or owner the other side will also be updated to make them consistent.
+At delete of element the owner collection will also be updated to make them consistent.
+*If you are using a List you MUST set both sides of the relation*
+
+For an _M-N bidirectional relation_, at persist you MUST set one side and the other side will be populated at commit/flush to make them consistent.
+
+This management of relations can be turned on/off using a persistence property *datanucleus.manageRelationships*. 
+If you always set both sides of a relation at persist/update then you could safely turn it off.
+
+
+NOTE: When performing management of relations there are some checks implemented to spot typical errors in user operations e.g add an element to a collection and then remove it (why?!). 
+You can disable these checks using *datanucleus.manageRelationshipsChecks*, set to false.
+
+
+[[level1_cache]]
+== Level 1 Cache
+
+Each _PersistenceManager_ maintains a cache of the objects that it has encountered (or have been "enlisted") during its lifetime. 
+This is termed the *Level 1 Cache*. It is enabled by default and you should only ever disable it if you really know what you are doing.
+There are inbuilt types for the Level 1 (L1) Cache available for selection. DataNucleus supports the following types of L1 Cache :-
+
+* _weak_ - uses a weak reference backing map. If JVM garbage collection clears the reference, then the object is removed from the cache.
+* _soft_ - uses a soft reference backing map. If the map entry value object is not being actively used, then garbage collection _may_ garbage collect the reference, 
+in which case the object is removed from the cache.
+* _strong_ - uses a normal HashMap backing. With this option all references are strong meaning that objects stay in the cache until they are explicitly removed by calling 
+remove() on the cache.
+* _none_ - will turn off L1 caching. *Only ever use this where the cache is of no use and you are performing bulk operations and not requiring objects returned*
+
+You can specify the type of L1 cache by providing the persistence property *datanucleus.cache.level1.type*. You set this to the value of the type required. 
+If you want to remove objects from the L1 cache programmatically you should use the _pm.evict_ or _pm.evictAll_ methods.
+
+Objects are placed in the L1 cache (and updated there) during the course of the transaction.
+This provides rapid access to the objects in use in the users application and is used to guarantee that there is only one object with a 
+particular identity at any one time for that _PersistenceManager_. When the _PersistenceManager_ is closed the L1 cache is cleared.
+
+link:../extensions/extensions.html#cache_level1[image:../images/nucleus_plugin.png[]]
+The L1 cache is a DataNucleus plugin point allowing you to provide your own cache where you require it.
+
+== PersistenceManagerProxy
+
+As we have already described for normal persistence, you perform all operations using a _PersistenceManager_, needing to obtain this when you want to start datastore operations.
+
+In some architectures (e.g in a web environment) it can be convenient to maintain a single _PersistenceManager_ for use in a servlet init() method to initialise a static variable. 
+Alternatively for use in a SessionBean to initialise a static variable. 
+The JDO API provides a "proxy" object that can be used for this purpose. Thereafter you just refer to the proxy. 
+The proxy isn't the actual _PersistenceManager_ just a proxy, delegating to the real object. 
+If you call close() on the proxy the real PM will be closed, and when you next invoke an operation on the proxy it will create a new PM delegate and work with that.
+
+To create a PM proxy is simple
+
+[source,java]
+-----
+PersistenceManager pm = pmf.getPersistenceManagerProxy();
+-----
+
+So we have our proxy, and now we can perform operations in the same way as we do with any _PersistenceManager_.
+
+
+[[sequences_api]]
+== Datastore Sequences API
+
+Particularly when specifying the identity of an object, sequences are a very useful facility. 
+DataNucleus supports the link:mapping.html#value_generation[automatic assignment of sequence values for object identities]. 
+However such sequences may also have use when a user wishes to assign such identity values themselves, or for other roles within an application. 
+JDO defines an interface for sequences for use in an application - known as *Sequence*.
+http://www.datanucleus.org/javadocs/javax.jdo/3.2/javax/jdo/datastore/Sequence.html[image:../images/javadoc.png[Javadoc]].
+There are 2 forms of "sequence" available through this interface - the ones that DataNucleus provides utilising datastore capabilities, 
+and ones that a user provides using something known as a "factory class".
+
+
+=== DataNucleus Sequences
+
+DataNucleus internally provides 2 forms of sequences. 
+When the underlying datastore supports native sequences, then these can be leveraged through this interface. 
+Alternatively, where the underlying datastore doesn't support native sequences, then a table-based incrementing sequence can be used. 
+The first thing to do is to specify the *Sequence* in the Meta-Data for the package requiring the sequence. This is done as follows
+
+[source,xml]
+-----
+<jdo>
+    <package name="MyPackage">
+        <class name="MyClass">
+            ...
+        </class>
+
+        <sequence name="ProductSequence" datastore-sequence="PRODUCT_SEQ" strategy="contiguous"/>
+        <sequence name="ProductSequenceNontrans" datastore-sequence="PRODUCT_SEQ_NONTRANS" strategy="nontransactional"/>
+    </package>
+</jdo>
+-----
+
+So we have defined two *Sequences* for the package _MyPackage_. 
+Each sequence has a symbolic name that is referred to within JDO (within DataNucleus), and it has a name in the datastore. 
+The final attribute represents whether the sequence is transactional or not.
+
+All we need to do now is to access the *Sequence* in our persistence code in our application. This is done as follows
+
+[source,java]
+-----
+PersistenceManager pm = pmf.getPersistenceManager();
+
+Sequence seq = pm.getSequence("MyPackage.ProductSequence");
+-----
+
+and this *Sequence* can then be used to provide values.
+
+[source,java]
+-----
+long value = seq.nextValue();
+-----
+
+Please be aware that when you have a *Sequence* declared with a strategy of "contiguous" this means "transactional contiguous" 
+and that you need to have a Transaction open when you access it.
+
+JDO allows control over the allocation size (default=50) and initial value (default=1) for the sequence. So we can do
+
+[source,xml]
+-----
+<sequence name="ProductSequence" datastore-sequence="PRODUCT_SEQ" strategy="contiguous" allocation-size="10"/>
+-----
+
+which will allocate 10 new sequence values each time the allocated sequence values is exhausted.
+
+
+
+=== Factory Class Sequences
+
+It is equally possible to provide your own *Sequence* capability using a _factory class_. 
+This is a class that creates an implementation of the JDO *Sequence*. 
+Let's give an example of what you need to provide. Firstly you need an implementation of the JDO *Sequence* interface, so we define ours like this
+
+[source,java]
+-----
+public class SimpleSequence implements Sequence
+{
+    String name;
+    long current = 0;
+
+    public SimpleSequence(String name)
+    {
+        this.name = name;
+    }
+
+    public String getName()
+    {
+        return name;
+    }
+
+    public Object next()
+    {
+        current++;
+        return new Long(current);
+    }
+
+    public long nextValue()
+    {
+        current++;
+        return current;
+    }
+
+    public void allocate(int arg0)
+    {
+    }
+
+    public Object current()
+    {
+        return new Long(current);
+    }
+
+    public long currentValue()
+    {
+        return current;
+    }
+}
+-----
+
+So our sequence simply increments by 1 each call to _next()_. 
+The next thing we need to do is provide a _factory class_ that creates this *Sequence*. 
+This factory needs to have a static _newInstance_ method that returns the *Sequence* object. 
+We define our factory like this
+
+[source,java]
+-----
+package org.datanucleus.samples.sequence;
+
+import javax.jdo.datastore.Sequence;
+
+public class SimpleSequenceFactory
+{
+    public static Sequence newInstance()
+    {
+        return new SimpleSequence("MySequence");
+    }
+}
+-----
+
+and now we define our MetaData like this
+
+[source,xml]
+-----
+<jdo>
+    <package name="MyPackage">
+        <class name="MyClass">
+            ...
+        </class>
+
+        <sequence name="ProductSequenceFactory" strategy="nontransactional"
+            factory-class="org.datanucleus.samples.sequence.SimpleSequenceFactory"/>
+    </package>
+</jdo>
+-----
+
+So now we can call 
+
+[source,java]
+-----
+PersistenceManager pm = pmf.getPersistenceManager();
+
+Sequence seq = pm.getSequence("MyPackage.ProductSequenceFactory");
+-----
+

@@ -1,0 +1,87 @@
+[[metadata_xml]]
+= JDO MetaData API
+:_basedir: ../
+:_imagesdir: images/
+
+
+The JDO API provides a dynamic API for defining metadata for classes, as an alternative to using annotations or XML metadata.
+
+== Defining Metadata for classes
+
+The basic idea behind the Metadata API is that the developer obtains a metadata object from the PersistenceManagerFactory, 
+and adds the definition to that as required, before registering it for use in the persistence process.
+
+[source,java]
+-----
+PersistenceManagerFactory pmf = JDOHelper.getPersistenceManagerFactory(propsFile);
+...
+JDOMetadata md = pmf.newMetadata();
+-----
+
+So we have a _JDOMetadata_ object and want to define the persistence for our class _mydomain.MyClass_, so we do as follows
+
+[source,java]
+-----
+PackageMetadata pmd = md.newPackageMetadata("mydomain");
+ClassMetadata cmd = pmd.newClassMetadata("MyClass");
+-----
+
+So we follow the same structure of the JDO link:metadata_xml.html[XML Metadata file] adding packages to the top level,
+and classes to the respective package. Note that we could have achieved this by a simple typesafe invocation
+
+[source,java]
+-----
+ClassMetadata cmd = md.newClassMetadata(MyClass.class);
+-----
+
+So now we have the class defined, we need to set its key information
+
+[source,java]
+-----
+cmd.setTable("CLIENT").setDetachable(true).setIdentityType(IdentityType.DATASTORE);
+cmd.setPersistenceModifier(ClassPersistenceModifier.PERSISTENCE_CAPABLE);
+
+InheritanceMetadata inhmd = cmd.newInheritanceMetadata();
+inhmd.setStrategy(InheritanceStrategy.NEW_TABLE);
+DiscriminatorMetadata dmd = inhmd.newDiscriminatorMetadata();
+dmd.setColumn("disc").setValue("Client");
+dmd.setStrategy(DiscriminatorStrategy.VALUE_MAP).setIndexed(Indexed.TRUE);
+
+VersionMetadata vermd = cmd.newVersionMetadata();
+vermd.setStrategy(VersionStrategy.VERSION_NUMBER);
+vermd.setColumn("version").setIndexed(Indexed.TRUE);
+-----
+
+And we define also define fields/properties via the API in a similar way
+
+[source,java]
+-----
+FieldMetadata fmd = cmd.newFieldMetadata("name");
+fmd.setNullValue(NullValue.DEFAULT).setColumn("client_name");
+fmd.setIndexed(true).setUnique(true);
+-----
+
+Note that, just like with XML metadata, we don't need to add information for all fields
+since they have their own default persistence settings based on the type of the field.
+
+All that remains is to register the metadata with the persistence process
+
+[source,java]
+-----
+pmf.registerMetadata(md);
+-----
+
+
+== Accessing Metadata for classes
+
+Maybe you have a class with its persistence defined in XML or annotations and you want to check its persistence information at runtime. 
+With the JDO Metadata API you can do that
+
+[source,java]
+-----
+TypeMetadata compmd = pmf.getMetadata("mydomain.MyOtherClass");
+-----
+
+and we can now inspect the information, casting the _compmd_ to either _javax.jdo.metadata.ClassMetadata_ or _javax.jdo.metadata.InterfaceMetadata_.
+
+NOTE: you cannot currently change metadata retrieved in this way, only view it

@@ -1,0 +1,439 @@
+[[javaee]]
+= JavaEE Environments
+:_basedir: ../
+:_imagesdir: images/
+
+The JavaEE framework is widely used, providing a container within which java processes operate and it provides mechanisms for, amongst other things, 
+transactions (JTA), and for connecting to other (3rd party) utilities (using Java Connector Architecture, JCA). 
+DataNucleus Access Platform can be utilised within a JavaEE environment either in the same way as you use it for JavaSE, or via this JCA system,
+and we provide a Resource Adaptor (RAR file) containing this JCA adaptor allowing Access Platform to be used with the likes of WebLogic and JBoss.
+Instructions are provided for the following JavaEE servers
+
+* link:#weblogic[WebLogic]
+* link:#jboss3[JBoss 3.0/3.2]
+* link:#jboss4[JBoss 4.0]
+* link:#jboss7[JBoss 7.0]
+* link:#jonas[Jonas 4.8]
+
+NOTE: The main thing to mention here is that you can use DataNucleus in a JavaEE environment just like you use any other library, following the
+documentation for JavaSE. Consequently you do not _need_ the JCA Adaptor for this usage. You solely use the JCA Adaptor if you want to fully integrate with JavaEE.
+
+The remainder of these notes refer to JCA usage.
+The provided DataNucleus JCA rar provides default resource adapter descriptors, one general, and the other for the WebLogic JavaEE server. 
+These resource adapter descriptors can be configured to meet your needs, for example allowing XA transactions instead of the default Local transactions.
+
+
+== Requirements
+
+To use DataNucleus with JCA the first thing that you will require is the `datanucleus-jdo-jca-{version}.rar` file 
+(available from the http://www.datanucleus.org/download.html[downloads]).
+
+
+
+== DataNucleus Resource Adaptor and transactions
+
+A great advantage of DataNucleus implementing the ManagedConnection interface is that the JavaEE 
+container manages transactions for you (no need to call the begin/commit/rollback-methods).
+Currently, local transactions and distributed (XA) transactions are supported.
+Within a JavaEE environment, JDO transactions are nested in JavaEE transactions.
+All you have to do is to declare that a method needs transaction management. This is done in 
+the EJB meta data. Here you will see, how a SessionBean implementation could look like.
+
+The EJB meta data is defined in a file called ejb-jar.xml and can be found in the META-INF 
+directory of the jar you deploy. Suppose you deploy a bean called DataNucleusBean, your 
+ejb-jar.xml should contain the following configuration elements:
+
+[source,xml]
+-----
+<session>
+    <ejb-name>DataNucleusBean</ejb-name>
+    ...
+    <transaction-type>Container</transaction-type>
+    ...
+<session>
+-----
+Imagine your bean defines a method called testDataNucleusTrans():
+[source,xml]
+-----
+<container-transaction>
+    <method >
+        <ejb-name>DataNucleusBean</ejb-name>
+        ...
+        <method-name>testDataNucleusTrans</method-name>
+    </method>
+    <trans-attribute>Required</trans-attribute>
+</container-transaction>
+-----
+
+You hereby define that transaction management is required for this method. 
+The container will automatically begin a transaction for this method. It will be commited if no error occurs or rolled back otherwise. 
+A potential SessionBean implementation containing methods to retrieve a PersistenceManager then could look like this:
+
+[source,java]
+-----
+public abstract class DataNucleusBean implements SessionBean 
+{
+    // EJB methods  
+    public void ejbCreate() 
+    throws CreateException
+    {
+    }
+
+    public void ejbRemove() 
+    throws EJBException, RemoteException 
+    { 
+    }
+
+    // convenience methods to get
+    // a PersistenceManager
+
+    /**
+     * static final for the JNDI name of the PersistenceManagerFactory
+     */
+    private static final String PMF_JNDI_NAME = "java:/datanucleus1";
+    
+    /**
+     * Method to get the current InitialContext
+     */
+    private InitialContext getInitialContext() throws NamingException 
+    {
+        InitialContext initialContext = new InitialContext();
+        // or other code to create the InitialContext eg. new InitialContext(myProperies);
+        return initialContext;
+    }
+
+    /**
+     * Method to lookup the PersistenceManagerFactory
+     */
+    private PersistenceManagerFactory getPersitenceManagerFactory(InitialContext context) 
+    throws NamingException 
+    {
+        return (PersistenceManagerFactory) context.lookup(PMF_JNDI_NAME);
+    }
+    
+    /**
+     * Method to get a PersistenceManager
+     */
+    public PersistenceManager getPersistenceManager() 
+    throws NamingException 
+    {
+        return getPersitenceManagerFactory(getInitialContext()).getPersistenceManager();
+    }
+
+    // Now finally the bean method within a transaction
+    public void testDataNucleusTrans() 
+    throws Exception
+    {
+        PersistenceManager pm = getPersistenceManager()
+        try 
+        {
+            // Do something with your PersistenceManager
+        } 
+        finally
+        {
+            // close the PersistenceManager
+            pm.close();
+        }
+    }
+}
+-----
+
+Make sure that you close the PersistenceManager in your bean methods. 
+If you don't, the JavaEE server will usually close it for you (one of the advantages), but of course not without a warning or error message.
+
+_These instructions were adapted from a contribution by a DataNucleus user Alexander Bieber_
+
+
+== Persistence Properties
+
+When creating a PMF using the JCA adaptor, you should specify your persistence properties using a link:persistence.html#persistenceunit[persistence.xml] 
+or link:persistence.html#pmf_named[jdoconfig.xml]. This is because DataNucleus JCA adapter from version 1.2.2 does not support Java bean setters/getters for all properties - 
+since it is an inefficient and inflexible mechanism for property specification. 
+The more recent `persistence.xml` and `jdoconfig.xml` methods lead to more extensible code.
+
+
+== General configuration
+
+A resource adapter has one central configuration file `/META-INF/ra.xml` which is located 
+within the rar file and which defines the default values for all instances of the resource 
+adapter (i.e. all instances of _PersistenceManagerFactory_). Additionally, it uses one or 
+more deployment descriptor files (in JBoss, for example, they are named `*-ds.xml`)
+to set up the instances. In these files you can override the default values from the `ra.xml`.
+
+Since it is bad practice (and inconvenient) to edit a library's archive (in this case the `datanucleus-jdo-jca-${version}.rar`) 
+for changing the configuration (it makes updates more complicated, for example), it is recommended, not to edit the `ra.xml` 
+within DataNucleus' rar file, but instead put all your configuration into your deployment descriptors. 
+This way, you have a clean separation of which files you maintain (your deployment descriptors)
+and which files are maintained by others (the libraries you use and which you simply replace in case of an update).
+
+Nevertheless, you might prefer to declare default values in the `ra.xml` in certain circumstances, so here's an example:
+
+[source,xml]
+-----
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE connector PUBLIC "-//Sun Microsystems, Inc.//DTD Connector 1.0//EN" 
+    "http://java.sun.com/dtd/connector_1_0.dtd">
+<connector>
+    <display-name>DataNucleus Connector</display-name>
+    <description></description>
+    <vendor-name>DataNucleus Team</vendor-name>
+    <spec-version>1.0</spec-version>
+    <eis-type>JDO Adaptor</eis-type>
+    <version>1.0</version>
+    <resourceadapter>
+        <managedconnectionfactory-class>org.datanucleus.jdo.connector.ManagedConnectionFactoryImpl</managedconnectionfactory-class>
+        <connectionfactory-interface>javax.resource.cci.ConnectionFactory</connectionfactory-interface>
+        <connectionfactory-impl-class>org.datanucleus.jdo.connector.PersistenceManagerFactoryImpl</connectionfactory-impl-class>
+        <connection-interface>javax.resource.cci.Connection</connection-interface>
+        <connection-impl-class>org.datanucleus.jdo.connector.PersistenceManagerImpl</connection-impl-class>
+        <transaction-support>LocalTransaction</transaction-support>
+        <config-property>
+          <config-property-name>ConnectionFactoryName</config-property-name>
+          <config-property-type>java.lang.String</config-property-type>
+          <config-property-value>jdbc/ds</config-property-value>
+        </config-property>
+        <authentication-mechanism>
+          <authentication-mechanism-type>BasicPassword</authentication-mechanism-type>
+          <credential-interface>javax.resource.security.PasswordCredential</credential-interface>
+        </authentication-mechanism>
+        <reauthentication-support>false</reauthentication-support>
+    </resourceadapter>
+</connector>
+-----
+
+To define persistence properties you should make use of `persistence.xml` or `jdoconfig.xml`
+and refer to the documentation for link:persistence.html#pmf_props_jdo[persistence properties] for full details of the properties.
+
+
+[[weblogic]]
+== WebLogic
+
+To use DataNucleus on Weblogic the first thing that you will require is the `datanucleus-jdo-jca-{version}.rar` file. 
+You then may need to edit the `/META-INF/weblogic-ra.xml` file to suit the exact version of your WebLogic server (the included file is for WebLogic 8.1).
+
+You then deploy the RAR file on your WebLogic server.
+
+
+
+[[jboss3]]
+== JBoss 3.0/3.2
+
+To use DataNucleus on JBoss (Ver 3.2) the first thing that you will require is the `datanucleus-jdo-jca-{version}.rar` file. 
+You should put this in the _deploy ("${JBOSS}/server/default/deploy/")_ directory of your JBoss installation. 
+
+You then create a file, also in the _deploy_ directory with name `datanucleus-ds.xml`. 
+To give a guide on what this file will typically include, see the following
+
+[source,xml]
+-----
+<?xml version="1.0" encoding="UTF-8"?>
+<connection-factories>
+    <tx-connection-factory>
+        <jndi-name>datanucleus</jndi-name>
+        <adapter-display-name>DataNucleus Connector</adapter-display-name>
+        <config-property name="ConnectionDriverName" 
+            type="java.lang.String">com.mysql.jdbc.Driver</config-property>
+        <config-property name="ConnectionURL"
+            type="java.lang.String">jdbc:mysql://localhost/yourdbname</config-property>
+        <config-property name="UserName"
+            type="java.lang.String">yourusername</config-property>
+        <config-property name="Password"
+            type="java.lang.String">yourpassword</config-property>
+    </tx-connection-factory>
+  
+    <tx-connection-factory>
+        <jndi-name>datanucleus1</jndi-name>
+        <adapter-display-name>DataNucleus Connector</adapter-display-name>
+        <config-property name="ConnectionDriverName"
+            type="java.lang.String">com.mysql.jdbc.Driver</config-property>
+        <config-property name="ConnectionURL"
+            type="java.lang.String">jdbc:mysql://localhost/yourdbname1</config-property>
+        <config-property name="UserName"
+            type="java.lang.String">yourusername</config-property>
+        <config-property name="Password"
+            type="java.lang.String">yourpassword</config-property>
+    </tx-connection-factory>
+  
+    <tx-connection-factory>
+        <jndi-name>datanucleus2</jndi-name>
+        <adapter-display-name>DataNucleus Connector</adapter-display-name>
+        <config-property name="ConnectionDriverName"
+            type="java.lang.String">com.mysql.jdbc.Driver</config-property>
+        <config-property name="ConnectionURL"
+            type="java.lang.String">jdbc:mysql://localhost/yourdbname2</config-property>
+        <config-property name="UserName"
+            type="java.lang.String">yourusername</config-property>
+        <config-property name="Password"
+            type="java.lang.String">yourpassword</config-property>
+    </tx-connection-factory>
+</connection-factories>
+-----
+
+This example creates 3 connection factories to MySQL databases, but you can create as many or 
+as few as you require for your system to whichever databases you prefer (as long as they are link:../datastores/datastores.html[supported by DataNucleus]). 
+With the above definition we can then use the JNDI names _java:/datanucleus_, _java:/datanucleus1_, and _java:/datanucleus2_ to refer to our datastores.
+
+Note, that you can use separate deployment descriptor files. 
+That means, you could for example create the three files `datanucleus1-ds.xml`, `datanucleus2-ds.xml` and `datanucleus3-ds.xml` 
+with each declaring one _PersistenceManagerFactory_ instance. 
+This is useful (or even required) if you need a distributed configuration. 
+In this case, you can use JBoss' hot deployment feature and deploy a new _PersistenceManagerFactory_, while the server is running (and working with the existing PMFs): 
+If you create a new `*-ds.xml` file (instead of modifying an existing one), the server does not undeploy anything (and thus not interrupt ongoing work), 
+but will only add the new connection factory to the JNDI.
+
+You are now set to work on DataNucleus-enabling your actual application. 
+As we have said, you can use the above JNDI names to refer to the datastores, so you could do something like the following 
+to access the PersistenceManagerFactory to one of your databases.
+
+[source,java]
+-----
+import javax.jdo.PersistenceManagerFactory;
+
+InitialContext context = new InitialContext();
+PersistenceManagerFactory pmf = (PersistenceManagerFactory)context.lookup("java:/datanucleus1");
+-----
+
+These instructions were adapted from a contribution by a DataNucleus user Marco Schulze.
+
+
+[[jboss4]]
+== JBoss 4.0
+
+With JBoss 4.0 there are some changes in configuration relative to JBoss 3.2 in order to allow use some new features of JCA 1.5. 
+Here you will see how to configure JBoss 4.0 to use with DataNucleus JCA adapter for DB2.
+
+To use DataNucleus on JBoss 4.0 the first thing that you will require is the `datanucleus-jdo-jca-{version}.rar` file. 
+You should put this in the deploy directory ("${JBOSS}/server/default/deploy/") of your JBoss installation. 
+Additionally, you have to remember to put any JDBC driver files to lib directory ("${JBOSS}/server/default/lib/") 
+if JBoss does not have them installed by default. 
+In case of DB2 you need to copy `db2jcc.jar` and `db2jcc_license_c.jar`.
+
+You then create a file, also in the deploy directory with name `datanucleus-ds.xml`. 
+To give a guide on what this file will typically include, see the following 
+
+[source,xml]
+-----
+<?xml version="1.0" encoding="UTF-8"?>
+<connection-factories>
+    <tx-connection-factory>
+        <jndi-name>datanucleus</jndi-name>
+        <rar-name>datanucleus-jca-version}.rar</rar-name> <!-- the name here must be the same as JCA adapter filename -->
+        <connection-definition>javax.resource.cci.ConnectionFactory</connection-definition>
+        <config-property name="ConnectionDriverName" 
+            type="java.lang.String">com.ibm.db2.jcc.DB2Driver</config-property>
+        <config-property name="ConnectionURL"
+            type="java.lang.String">jdbc:derby:net://localhost:1527/"directory_of_your_db_files"</config-property>
+        <config-property name="UserName"
+            type="java.lang.String">app</config-property>
+        <config-property name="Password"
+            type="java.lang.String">app</config-property>
+        </tx-connection-factory>
+</connection-factories>
+-----
+
+You are now set to work on DataNucleus-enabling your actual application. 
+You can use the above JNDI name to refer to the datastores, and so you could do something like the following to access the PersistenceManagerFactory to one of your databases.
+
+[source,java]
+-----
+import javax.jdo.PersistenceManagerFactory;
+
+InitialContext context=new InitialContext();
+PersistenceManagerFactory pmFactory=(PersistenceManagerFactory)context.lookup("java:/datanucleus");
+-----
+
+_These instructions were adapted from a contribution by a DataNucleus user Maciej Wegorkiewicz_
+
+
+
+[[jboss7]]
+== JBoss 7.0
+
+A http://jkook.blogspot.com/2011/07/getting-started-with-jdo-on-jboss-as7.html[tutorial for running DataNucleus under JBoss 7]
+is available on the internet, provided by a DataNucleus user Kiran Kumar.
+
+
+
+[[jonas]]
+== Jonas
+
+To use DataNucleus on Jonas the first thing that you will require is the `datanucleus-jdo-jca-{version}.rar` file. 
+You then may need to edit the `/META-INF/jonas-ra.xml` file to suit the exact version of your Jonas server (the included file is tested for Jonas 4.8).
+
+You then deploy the RAR file on your Jonas server.
+
+
+[[transaction_support]]
+== Transaction Support
+
+DataNucleus JCA adapter supports both Local and XA transaction types. 
+Local means that a transaction will not have more than one resource managed by a Transaction Manager and XA means that multiple resources are managed by the Transaction Manager. 
+Use XA transaction if DataNucleus is configured to use data sources deployed in application servers, or if other resources such as JMS connections 
+are used in the same transaction, otherwise use Local transaction.
+
+You need to configure the _ra.xml_ file with the appropriate transaction support, which is either _XATransaction_ or _LocalTransaction_. See the example:
+
+[source,xml]
+-----
+<connector>
+    <display-name>DataNucleus Connector</display-name>
+    <description></description>
+    <vendor-name>DataNucleus Team</vendor-name>
+    <spec-version>1.0</spec-version>
+    <eis-type>JDO Adaptor</eis-type>
+    <version>1.0</version>
+    <resourceadapter>
+        <managedconnectionfactory-class>org.datanucleus.jdo.connector.ManagedConnectionFactoryImpl</managedconnectionfactory-class>
+        <connectionfactory-interface>javax.resource.cci.ConnectionFactory</connectionfactory-interface>
+        <connectionfactory-impl-class>org.datanucleus.jdo.connector.PersistenceManagerFactoryImpl</connectionfactory-impl-class>
+        <connection-interface>javax.resource.cci.Connection</connection-interface>
+        <connection-impl-class>org.datanucleus.jdo.connector.PersistenceManagerImpl</connection-impl-class>
+        <transaction-support>XATransaction</transaction-support> <!-- change this line -->
+    ...
+-----
+
+
+[[data_source]]
+== Data Source
+
+To use a data source, you have to configure the connection factory name in `ra.xml` file. See the example:
+
+[source,xml]
+-----
+<connector>
+    <display-name>DataNucleus Connector</display-name>
+    <description></description>
+    <vendor-name>DataNucleus Team</vendor-name>
+    <spec-version>1.0</spec-version>
+    <eis-type>JDO Adaptor</eis-type>
+    <version>1.0</version>
+    <resourceadapter>
+        <managedconnectionfactory-class>org.datanucleus.jdo.connector.ManagedConnectionFactoryImpl</managedconnectionfactory-class>
+        <connectionfactory-interface>javax.resource.cci.ConnectionFactory</connectionfactory-interface>
+        <connectionfactory-impl-class>org.datanucleus.jdo.connector.PersistenceManagerFactoryImpl</connectionfactory-impl-class>
+        <connection-interface>javax.resource.cci.Connection</connection-interface>
+        <connection-impl-class>org.datanucleus.jdo.connector.PersistenceManagerImpl</connection-impl-class>
+        <transaction-support>XATransaction</transaction-support>
+
+        <config-property>
+            <config-property-name>ConnectionFactoryName</config-property-name>
+            <config-property-type>java.lang.String</config-property-type>
+            <config-property-value>jndiName_for_datasource_1</config-property-value>
+        </config-property>
+            <config-property>
+            <config-property-name>ConnectionResourceType</config-property-name>
+            <config-property-type>java.lang.String</config-property-type>
+            <config-property-value>JTA</config-property-value>
+        </config-property>
+        <config-property>
+            <config-property-name>ConnectionFactory2Name</config-property-name>
+            <config-property-type>java.lang.String</config-property-type>
+            <config-property-value>jndiName_for_datasource_2</config-property-value>
+        </config-property>
+    ...
+-----
+
+See also :
+
+* link:persistence.html#datasource[(RDBMS) Data Sources usage with DataNucleus]
+

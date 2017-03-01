@@ -1,0 +1,27 @@
+[[ooxml]]
+= OOXML Datastores
+:_basedir: ../
+:_imagesdir: images/
+
+image:../images/datastore/excel.png[]
+
+DataNucleus supports persisting/retrieving objects to/from OOXML documents (using the https://github.com/datanucleus/datanucleus-excel[datanucleus-excel] plugin) 
+which makes use of the Apache POI project. Simply specify your "connectionURL" as follows
+
+-----
+datanucleus.ConnectionURL=excel:file:myfile.xlsx
+-----
+
+replacing `myfile.xlsx` with your filename, which can be absolute or relative. This connects to a file on your local machine. 
+You then create your PMF/EMF as normal and use JDO/JPA as normal.
+
+The jars required to use DataNucleus OOXML persistence are `datanucleus-core`, `datanucleus-api-jdo`/`datanucleus-api-jpa`, `datanucleus-excel` and `apache-poi`.
+
+There are tutorials available for use of DataNucleus with Excel link:../jdo/tutorial.html[for JDO] andlink:../jpa/tutorial.html[for JPA]
+
+Things to bear in mind with OOXML usage :-
+
+* Querying can be performed using JDOQL or JPQL. Any filtering/ordering will be performed *in-memory*
+* Relations : A spreadsheet cannot store related objects directly, since each object is a row of a particular worksheet. 
+DataNucleus gets around this by storing the String-form of the identity of the related object in the relation cell.
+

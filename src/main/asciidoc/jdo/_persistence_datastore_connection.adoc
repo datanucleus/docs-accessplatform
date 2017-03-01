@@ -1,0 +1,563 @@
+[[datastore_connection]]
+= Datastore Connections
+:_basedir: ../
+:_imagesdir: images/
+
+
+DataNucleus utilises datastore connections as follows
+
+* PMF : single connection at any one time for datastore-based value generation. Obtained just for the operation, then released
+* PMF : single connection at any one time for schema-generation. Obtained just for the operation, then released
+* PM  : single connection at any one time. When in a transaction the connection is held from the point of retrieval until the transaction commits or rolls back; 
+the exact point at which the connection is obtained is defined more fully below.
+When used for non-transactional operations the connection is obtained just for the specific operation (unless configured to retain it).
+
+
+NOTE: If you have multiple threads using the same PersistenceManager then you can get "ConnectionInUse" problems where another operation on another thread comes in 
+and tries to perform something while that first operation is still in use. 
+This happens because the JDO spec requires an implementation to use a single datastore connection at any one time. 
+When this situation crops up the user ought to use multiple _PersistenceManagers_.
+
+Another important aspect is use of queries for Optimistic transactions, or for non-transactional contexts. 
+In these situations it isn't possible to keep the datastore connection open indefinitely and so when the Query is executed the ResultSet 
+is then read into core making the queried objects available thereafter.
+
+
+== Transactional Context
+
+For pessimistic/datastore transactions a connection will be obtained from the datastore when the first persistence operation is initiated. 
+This datastore connection will be held *for the duration of the transaction* until such time as either _commit()_ or _rollback()_ are called.
+
+
+For optimistic transactions the connection is only obtained when flush()/commit() is called. 
+When flush() is called, or the transaction committed a datastore connection is finally obtained and it is held open until commit/rollback completes. 
+When a datastore operation is required, the connection is typically released after performing that operation. 
+So datastore connections, in general, are held for much smaller periods of time. 
+This is complicated slightly by use of the persistence property *datanucleus.IgnoreCache*. 
+When this is set to _false_, the connection, once obtained, is not released until the call to commit()/rollback().
+
+NOTE: For Neo4j/MongoDB a single connection is used for the duration of the EM for all transactional and nontransactional operations.
+
+
+== Nontransactional Context
+
+When performing non-transactional operations, the default behaviour is to obtain a connection when needed, and release it after use. 
+With RDBMS you have the option of retaining this connection ready for the next operation to save the time needed to obtain it; this is enabled by setting the
+persistence property *datanucleus.connection.nontx.releaseAfterUse* to _false_.
+
+NOTE: For Neo4j/MongoDB a single connection is used for the duration of the EM for all transactional and nontransactional operations.
+
+
+== User Connection
+
+JDO defines a mechanism for users to access the native connection to the datastore, so that they can perform other operations as necessary. 
+You obtain a connection as follows (for RDBMS)
+
+[source,java]
+-----
+// Obtain the connection from the JDO implementation
+JDOConnection conn = pm.getDataStoreConnection();
+try
+{
+    Object native = conn.getNativeConnection();
+    // Cast "native" to the required type for the datastore, see below
+    
+    ... use the "sqlConn" connection to perform some operations.
+}
+finally
+{
+    // Hand the connection back to the JDO implementation
+    conn.close();
+}
+-----
+
+The "JDOConnection" http://www.datanucleus.org/javadocs/javax.jdo/3.2/javax/jdo/datastore/JDOConnection.html[image:../images/javadoc.png[Javadoc]]
+in the case of DataNucleus is a wrapper to the native connection for the type of datastore being used. 
+For the datastores supported by DataNucleus, the "native" object is of the following types
+
+* RDBMS : java.sql.Connection
+* Excel : org.apache.poi.hssf.usermodel.HSSFWorkbook
+* OOXML : org.apache.poi.hssf.usermodel.XSSFWorkbook
+* ODF : org.odftoolkit.odfdom.doc.OdfDocument
+* LDAP : javax.naming.ldap.LdapContext
+* MongoDB : com.mongodb.DB
+* HBase : NOT SUPPORTED
+* JSON : NOT SUPPORTED
+* XML : org.w3c.dom.Document
+* Neo4j : org.neo4j.graphdb.GraphDatabaseService
+* Cassandra : com.datastax.driver.core.Session
+* NeoDatis : org.neodatis.odb.ODB
+* GAE Datastore : com.google.appengine.api.datastore.DatastoreService
+
+You now have a connection allowing direct access to the datastore. Things to bear in mind with this connection
+                
+* You *must* return the connection back to the PersistenceManager before performing any PersistenceManager operation. You do this by calling _conn.close()_
+* If you don't return the connection and try to perform an PersistenceManager operation which requires the connection then a JDOUserException is thrown.
+
+
+[[connection_pooling]]
+== Connection Pooling
+
+When you create a _PersistenceManagerFactory_ using a connection URL, driver name, and the username/password, this does not necessarily pool the connections 
+(so they would be efficiently opened/closed when needed to utilise datastore resources in an optimum way). 
+For some of the supported datastores DataNucleus allows you to utilise a connection pool to efficiently manage the connections to the datastore 
+when specifying the datastore via the URL. We currently provide support for the following
+
+
+* RDBMS : link:#connection_pooling_rdbms_dbcp[Apache DBCP]
+* RDBMS : link:#connection_pooling_rdbms_dbcp2[Apache DBCP v2], we allow use of externally-defined DBCP2, but also provide a builtin DBCP v2.1.1
+* RDBMS : link:#connection_pooling_rdbms_c3p0[C3P0]
+* RDBMS : link:#connection_pooling_rdbms_proxool[Proxool]
+* RDBMS : link:#connection_pooling_rdbms_bonecp[BoneCP]
+* RDBMS : link:#connection_pooling_rdbms_hikaricp[HikariCP]
+* RDBMS : link:#connection_pooling_rdbms_tomcat[Tomcat]
+* RDBMS : link:#connection_pooling_rdbms_manual[Manually creating a DataSource] for a 3rd party software package
+* RDBMS : link:../extensions/extensions.html#rdbms_connectionpool[Custom Connection Pooling Plugins for RDBMS] using the DataNucleus ConnectionPoolFactory interface
+* RDBMS : link:#connection_pooling_rdbms_jndi[Using JNDI], and lookup a connection DataSource.
+* LDAP : link:#connection_pooling_ldap_jndi[Using JNDI]
+
+You need to specify the persistence property *datanucleus.connectionPoolingType* to be whichever of the external pooling libraries you wish to use 
+(or "None" if you explicitly want no pooling). 
+DataNucleus provides two sets of connections to the datastore - one for transactional usage, and one for non-transactional usage. 
+If you want to define a different pooling for nontransactional usage then you can also specify the persistence property *datanucleus.connectionPoolingType.nontx* to 
+whichever is required.
+
+
+=== RDBMS : JDBC driver properties with connection pool
+                
+If using RDBMS and you have a JDBC driver that supports custom properties, you can still use DataNucleus connection pooling and you need to s
+pecify the properties in with your normal persistence properties, but add the prefix *datanucleus.connectionPool.driver.* to the property name that the driver requires. 
+For example, if an Oracle JDBC driver accepts _defaultRowPrefetch_, then you would specify something like
+
+[source,java]
+-----
+datanucleus.connectionPool.driver.defaultRowPrefetch=50
+-----
+                
+and it will pass in _defaultRowPrefetch_ as "50" into the driver used by the connection pool.
+
+
+[[connection_pooling_rdbms_dbcp2]]
+=== RDBMS : Apache DBCP v2+
+
+DataNucleus provides a builtin version of DBCP2 to provide pooling. This is automatically selected if using RDBMS, unless you specify otherwise. 
+An alternative is to use an external http://jakarta.apache.org/commons/dbcp/[DBCP2]. 
+This is accessed by specifying the persistence property *datanucleus.connectionPoolingType*. To utilise DBCP2-based connection pooling we do this
+
+[source,java]
+-----
+// Specify our persistence properties used for creating our PMF
+Properties props = new Properties();
+properties.setProperty("javax.persistence.jdbc.driver","com.mysql.jdbc.Driver");
+properties.setProperty("javax.persistence.jdbc.url","jdbc:mysql://localhost/myDB");
+properties.setProperty("javax.persistence.jdbc.user","login");
+properties.setProperty("javax.persistence.jdbc.password","password");
+properties.setProperty("datanucleus.connectionPoolingType", "dbcp2");
+-----
+
+So the _PMF_ will use connection pooling using DBCP version 2. To do this you will need `commons-dbcp2`, `commons-pool2` JARs to be in the CLASSPATH.
+
+You can also specify persistence properties to control the actual pooling. The currently supported properties for DBCP2 are shown below
+
+[source,java]
+-----
+# Pooling of Connections
+datanucleus.connectionPool.maxIdle=10
+datanucleus.connectionPool.minIdle=3
+datanucleus.connectionPool.maxActive=5
+datanucleus.connectionPool.maxWait=60
+
+datanucleus.connectionPool.testSQL=SELECT 1
+
+datanucleus.connectionPool.timeBetweenEvictionRunsMillis=2400000
+-----
+
+
+[[connection_pooling_rdbms_dbcp]]
+=== RDBMS : Apache DBCP
+
+DataNucleus allows you to utilise a connection pool using http://jakarta.apache.org/commons/dbcp/[DBCP] (v1) to efficiently manage the connections to the datastore. 
+It is recommended to use DBCP v2 instead of DBCP v1 for all JRE's 1.7+.
+This is accessed by specifying the persistence property *datanucleus.connectionPoolingType* etc like this
+
+[source,java]
+-----
+// Specify our persistence properties used for creating our PMF
+Properties props = new Properties();
+properties.setProperty("javax.persistence.jdbc.driver","com.mysql.jdbc.Driver");
+properties.setProperty("javax.persistence.jdbc.url","jdbc:mysql://localhost/myDB");
+properties.setProperty("javax.persistence.jdbc.user","login");
+properties.setProperty("javax.persistence.jdbc.password","password");
+properties.setProperty("datanucleus.connectionPoolingType", "DBCP");
+-----
+
+So the _PMF_ will use connection pooling using DBCP. To do this you will need `commons-dbcp`, `commons-pool` and `commons-collections` JARs to be in the CLASSPATH.
+
+You can also specify persistence properties to control the actual pooling. The currently supported properties for DBCP are shown below
+
+-----
+# Pooling of Connections
+datanucleus.connectionPool.maxIdle=10
+datanucleus.connectionPool.minIdle=3
+datanucleus.connectionPool.maxActive=5
+datanucleus.connectionPool.maxWait=60
+
+# Pooling of PreparedStatements
+datanucleus.connectionPool.maxStatements=0
+
+datanucleus.connectionPool.testSQL=SELECT 1
+
+datanucleus.connectionPool.timeBetweenEvictionRunsMillis=2400000
+datanucleus.connectionPool.minEvictableIdleTimeMillis=18000000
+-----
+
+
+[[connection_pooling_rdbms_c3p0]]
+=== RDBMS : C3P0
+
+DataNucleus allows you to utilise a connection pool using C3P0 to efficiently manage the connections to the datastore.
+http://www.sf.net/projects/c3p0[C3P0] is a third-party library providing connection pooling. 
+This is accessed by specifying the persistence property *datanucleus.connectionPoolingType*.
+To utilise C3P0-based connection pooling we do this
+
+[source,java]
+-----
+// Specify our persistence properties used for creating our PMF
+Properties props = new Properties();
+properties.setProperty("javax.persistence.jdbc.driver","com.mysql.jdbc.Driver");
+properties.setProperty("javax.persistence.jdbc.url","jdbc:mysql://localhost/myDB");
+properties.setProperty("javax.persistence.jdbc.user","login");
+properties.setProperty("javax.persistence.jdbc.password","password");
+properties.setProperty("datanucleus.connectionPoolingType", "C3P0");
+-----
+
+So the _PMF_ will use connection pooling using C3P0. To do this you will need the `c3p0` JAR to be in the CLASSPATH. 
+If you want to configure C3P0 further you can include a `c3p0.properties` in your CLASSPATH - see the C3P0 documentation for details.
+
+
+You can also specify persistence properties to control the actual pooling. The currently supported properties for C3P0 are shown below
+
+-----
+# Pooling of Connections
+datanucleus.connectionPool.maxPoolSize=5
+datanucleus.connectionPool.minPoolSize=3
+datanucleus.connectionPool.initialPoolSize=3
+
+# Pooling of PreparedStatements
+datanucleus.connectionPool.maxStatements=20
+-----
+
+
+[[connection_pooling_rdbms_proxool]]
+=== RDBMS : Proxool
+
+DataNucleus allows you to utilise a connection pool using Proxool to efficiently manage the connections to the datastore.
+http://proxool.sourceforge.net/[Proxool] is a third-party library providing connection pooling. 
+This is accessed by specifying the persistence property *datanucleus.connectionPoolingType*. To utilise Proxool-based connection pooling we do this
+
+[source,java]
+-----
+// Specify our persistence properties used for creating our PMF
+Properties props = new Properties();
+properties.setProperty("javax.persistence.jdbc.driver","com.mysql.jdbc.Driver");
+properties.setProperty("javax.persistence.jdbc.url","jdbc:mysql://localhost/myDB");
+properties.setProperty("javax.persistence.jdbc.user","login");
+properties.setProperty("javax.persistence.jdbc.password","password");
+properties.setProperty("datanucleus.connectionPoolingType", "Proxool");
+-----
+
+So the _PMF_ will use connection pooling using Proxool. To do this you will need the `proxool` and `commons-logging` JARs to be in the CLASSPATH.
+
+You can also specify persistence properties to control the actual pooling. The currently supported properties for Proxool are shown below
+
+-----
+datanucleus.connectionPool.maxConnections=10
+datanucleus.connectionPool.testSQL=SELECT 1
+-----
+
+
+[[connection_pooling_rdbms_bonecp]]
+=== RDBMS : BoneCP
+
+DataNucleus allows you to utilise a connection pool using BoneCP to efficiently manage the connections to the datastore.
+http://www.jolbox.com[BoneCP] is a third-party library providing connection pooling. 
+This is accessed by specifying the persistence property *datanucleus.connectionPoolingType*. 
+To utilise BoneCP-based connection pooling we do this
+
+[source,java]
+-----
+// Specify our persistence properties used for creating our PMF
+Properties props = new Properties();
+properties.setProperty("javax.persistence.jdbc.driver","com.mysql.jdbc.Driver");
+properties.setProperty("javax.persistence.jdbc.url","jdbc:mysql://localhost/myDB");
+properties.setProperty("javax.persistence.jdbc.user","login");
+properties.setProperty("javax.persistence.jdbc.password","password");
+properties.setProperty("datanucleus.connectionPoolingType", "BoneCP");
+-----
+                
+So the _PMF_ will use connection pooling using BoneCP. To do this you will need the `bonecp` JAR (and `slf4j`, `google-collections`) to be in the CLASSPATH.
+
+You can also specify persistence properties to control the actual pooling. The currently supported properties for BoneCP are shown below
+
+-----
+# Pooling of Connections
+datanucleus.connectionPool.maxPoolSize=5
+datanucleus.connectionPool.minPoolSize=3
+
+# Pooling of PreparedStatements
+datanucleus.connectionPool.maxStatements=20
+-----
+
+
+[[connection_pooling_rdbms_hikaricp]]
+=== RDBMS : HikariCP
+
+DataNucleus allows you to utilise a connection pool using HikariCP to efficiently manage the connections to the datastore.
+https://github.com/brettwooldridge/HikariCP[HikariCP] is a third-party library providing connection pooling. 
+This is accessed by specifying the persistence property *datanucleus.connectionPoolingType*.
+To utilise this connection pooling we do this
+
+[source,java]
+-----
+// Specify our persistence properties used for creating our PMF
+Properties props = new Properties();
+properties.setProperty("datanucleus.ConnectionDriverName","com.mysql.jdbc.Driver");
+properties.setProperty("datanucleus.ConnectionURL","jdbc:mysql://localhost/myDB");
+properties.setProperty("datanucleus.ConnectionUserName","login");
+properties.setProperty("datanucleus.ConnectionPassword","password");
+properties.setProperty("datanucleus.connectionPoolingType", "HikariCP");
+-----
+
+So the _PMF_ will use connection pooling using HikariCP. To do this you will need the `hikaricp` JAR (and `slf4j`, `javassist` as required) to be in the CLASSPATH.
+You can also specify persistence properties to control the actual pooling.
+The currently supported properties for HikariCP are shown below
+
+-----
+# Pooling of Connections
+datanucleus.connectionPool.maxPoolSize=5
+datanucleus.connectionPool.maxIdle=5
+datanucleus.connectionPool.leakThreshold=1
+datanucleus.connectionPool.maxLifetime=240
+-----
+
+
+[[connection_pooling_rdbms_tomcat]]
+=== RDBMS : Tomcat
+
+DataNucleus allows you to utilise a connection pool using Tomcat JDBC Pool to efficiently manage the connections to the datastore. 
+This is accessed by specifying the persistence property *datanucleus.connectionPoolingType*.
+To utilise Tomcat-based connection pooling we do this
+
+[source,java]
+-----
+// Specify our persistence properties used for creating our PMF
+Properties props = new Properties();
+properties.setProperty("javax.persistence.jdbc.driver","com.mysql.jdbc.Driver");
+properties.setProperty("javax.persistence.jdbc.url","jdbc:mysql://localhost/myDB");
+properties.setProperty("javax.persistence.jdbc.user","login");
+properties.setProperty("javax.persistence.jdbc.password","password");
+properties.setProperty("datanucleus.connectionPoolingType", "tomcat");
+-----
+
+So the _PMF_ will use a DataSource with connection pooling using Tomcat. To do this you will need the `tomcat-jdbc` JAR to be in the CLASSPATH.
+
+You can also specify persistence properties to control the actual pooling, like with the other pools.
+
+
+[[connection_pooling_rdbms_manual]]
+=== RDBMS : Manually create a DataSource ConnectionFactory
+
+We could have used the built-in DBCP2 support which internally creates a DataSource ConnectionFactory, alternatively the support for external DBCP, C3P0, Proxool, BoneCP etc, 
+however we can also do this manually if we so wish. Let's demonstrate how to do this with one of the most used pools http://commons.apache.org/dbcp[Apache Commons DBCP]
+
+With DBCP you need to generate a *javax.sql.DataSource*, which you will then pass to DataNucleus. You do this as follows
+                
+[source,java]
+-----
+// Load the JDBC driver
+Class.forName(dbDriver);
+
+// Create the actual pool of connections 
+ObjectPool connectionPool = new GenericObjectPool(null);
+
+// Create the factory to be used by the pool to create the connections
+ConnectionFactory connectionFactory = new DriverManagerConnectionFactory(dbURL, dbUser, dbPassword);
+
+// Create a factory for caching the PreparedStatements
+KeyedObjectPoolFactory kpf = new StackKeyedObjectPoolFactory(null, 20);
+
+// Wrap the connections with pooled variants
+PoolableConnectionFactory pcf = 
+    new PoolableConnectionFactory(connectionFactory, connectionPool, kpf, null, false, true);
+
+// Create the datasource
+DataSource ds = new PoolingDataSource(connectionPool);
+
+// Create our PMF
+Map properties = new HashMap();
+properties.put("datanucleus.ConnectionFactory", ds);
+
+PersistenceManagerFactory pmf = JDOHelper.createPersistenceManagerFactory("myPersistenceUnit", properties);
+-----
+
+Note that we haven't passed the _dbUser_ and _dbPassword_ to the PMF since we no longer need to specify them - they are defined for the pool so we let it do the work.
+As you also see, we set the data source for the PMF. Thereafter we can sit back and enjoy the performance benefits. 
+Please refer to the documentation for DBCP for details of its configurability (you will need `commons-dbcp`, `commons-pool`, and `commons-collections` in your CLASSPATH to use this above example).
+
+
+[[connection_pooling_rdbms_jndi]]
+=== RDBMS : Lookup a DataSource using JNDI
+
+DataNucleus allows you to use connection pools (java.sql.DataSource) bound to a *javax.naming.InitialContext* with a JNDI name. 
+You first need to create the DataSource in the container (application server/web server), and secondly you specify the _jta-data-source_ in the 
+link:#persistence_unit[persistenceunit] with the DataSource JNDI name.
+Please read more about this in link:#datasource[RDBMS DataSources].
+
+
+[[connection_pooling_ldap_jndi]]
+=== LDAP : JNDI
+
+If using an LDAP datastore you can use the following persistence properties to enable connection pooling
+
+-----
+datanucleus.connectionPoolingType=JNDI
+-----
+
+Once you have turned connection pooling on if you want more control over the pooling you can also set the following persistence properties
+
+* *datanucleus.connectionPool.maxPoolSize* : max size of pool
+* *datanucleus.connectionPool.initialPoolSize* : initial size of pool
+
+
+
+
+[[datasource]]
+== RDBMS : Data Sources
+
+DataNucleus allows use of a _data source_ that represents the datastore in use. This is often just a URL defining the location of the datastore, 
+but there are in fact several ways of specifying this _data source_ depending on the environment in which you are running.
+
+* link:#datasource_nonmanaged_client[Nonmanaged Context - Java Client]
+* link:#datasource_managed_servlet[Managed Context - Servlet]
+* link:#datasource_managed_javaee[Managed Context - JavaEE]
+
+
+[[datasource_nonmanaged_client]]
+=== Java Client Environment : Non-managed Context
+                
+DataNucleus permits you to take advantage of using database connection pooling that is available on an application server. 
+The application server could be a full JavaEE server (e.g WebLogic) or could equally be a servlet engine (e.g Tomcat, Jetty). 
+Here we are in a non-managed context, and we use the following properties when creating our EntityManagerFactory, and refer to the JNDI data source of the server.
+
+If the data source is avaiable in WebLogic, the simplest way of using a data source outside the application server is as follows.
+
+[source,java]
+-----
+Map ht = new Hashtable();
+ht.put(Context.INITIAL_CONTEXT_FACTORY,"weblogic.jndi.WLInitialContextFactory");
+ht.put(Context.PROVIDER_URL,"t3://localhost:7001");
+Context ctx = new InitialContext(ht);
+DataSource ds = (DataSource) ctx.lookup("jdbc/datanucleus");
+
+Map properties = new HashMap();
+properties.setProperty("datanucleus.ConnectionFactory",ds);
+PersistenceManagerFactory pmf = JDOHelper.getPersistenceManagerFactory(properties);
+-----
+                
+If the data source is available in Websphere, the simplest way of using a data source outside the application server is as follows.
+
+[source,java]
+-----
+Map ht = new Hashtable();
+ht.put(Context.INITIAL_CONTEXT_FACTORY,"com.ibm.websphere.naming.WsnInitialContextFactory");
+ht.put(Context.PROVIDER_URL,"iiop://server:orb port");
+
+Context ctx = new InitialContext(ht);
+DataSource ds = (DataSource) ctx.lookup("jdbc/datanucleus");
+
+Map properties = new HashMap();
+properties.setProperty("datanucleus.ConnectionFactory",ds);
+PersistenceManagerFactory pmf = JDOHelper.getPersistenceManagerFactory(properties);
+-----
+
+
+[[datasource_managed_servlet]]
+=== Servlet Environment : Managed Context
+
+As an example of setting up such a JNDI data source for Tomcat 5.0, here we would add the following file to _$TOMCAT/conf/Catalina/localhost/_ as `datanucleus.xml`
+                
+[source,xml]
+-----
+<?xml version='1.0' encoding='utf-8'?>
+<Context docBase="/home/datanucleus/" path="/datanucleus">
+    <Resource name="jdbc/datanucleus" type="javax.sql.DataSource"/>
+    <ResourceParams name="jdbc/datanucleus">
+        <parameter>
+            <name>maxWait</name>
+            <value>5000</value>
+        </parameter>
+        <parameter>
+            <name>maxActive</name>
+            <value>20</value>
+        </parameter>
+        <parameter>
+            <name>maxIdle</name>
+            <value>2</value>
+        </parameter>
+
+        <parameter>
+            <name>url</name>
+            <value>jdbc:mysql://127.0.0.1:3306/datanucleus?autoReconnect=true</value>
+        </parameter>
+        <parameter>
+            <name>driverClassName</name>
+            <value>com.mysql.jdbc.Driver</value>
+        </parameter>
+        <parameter>
+            <name>username</name>
+            <value>mysql</value>
+        </parameter>
+        <parameter>
+            <name>password</name>
+            <value></value>
+        </parameter>
+    </ResourceParams>
+</Context>
+-----
+
+With this Tomcat JNDI data source we would then specify the data source (name) as _java:comp/env/jdbc/datanucleus_.
+
+[source,java]
+-----
+Properties properties = new Properties();
+properties.setProperty("javax.persistence.jtaDataSource","java:comp/env/jdbc/datanucleus");
+PersistenceManagerFactory pmf = JDOHelper.getPersistenceManagerFactory(properties);
+-----
+
+
+[[datasource_managed_javaee]]
+=== JavaEE : Managed Context
+
+As in the above example, we can also run in a managed context, in a JavaEE/Servlet environment, and here we would make a minor change to the specification 
+of the JNDI data source depending on the application server or the scope of the _jndi:_ global or component.
+
+Using JNDI deployed in global environment:                
+
+[source,java]
+-----
+Properties properties = new Properties();
+properties.setProperty("javax.persistence.jtaDataSource","jdbc/datanucleus");
+PersistenceManagerFactory pmf = JDOHelper.getPersistenceManagerFactory(properties);
+-----
+
+Using JNDI deployed in component environment:                
+
+[source,java]
+-----
+Properties properties = new Properties();
+properties.setProperty("javax.persistence.jtaDataSource","java:comp/env/jdbc/datanucleus");
+PersistenceManagerFactory pmf = JDOHelper.getPersistenceManagerFactory(properties);
+-----
+
+
+

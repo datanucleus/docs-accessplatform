@@ -1,0 +1,281 @@
+[[arrays]]
+= Arrays
+:_basedir: ../
+:_imagesdir: images/
+
+JDO allows implementations to *optionally* support the persistence of arrays. DataNucleus provides full support for arrays in similar ways that collections are supported. 
+DataNucleus supports persisting arrays as
+
+* link:#array_singlecolumn[Single Column] - the array is byte-streamed into a single column in the table of the containing object.
+* link:#array_serialised[Serialised] - the array is serialised into single column in the table of the containing object.
+* link:#array_join[Using a Join Table] - where the array relation is persisted into the join table, with foreign-key links to an element table where the elements of the array are _persistable_
+* link:#array_fk[Using a Foreign-Key in the element] - only available where the array is of a _persistable_ type
+* link:#array_join_nonpc[Simple array stored in JoinTable] - the array is stored in a "join" table, with a column in that table storing each element of the array
+
+
+NOTE: JDO has no simple way of detecting _changes_ to an arrays contents. To update an array you must EITHER replace the array field with the new array value 
+OR update the array element and then call _JDOHelper.makeDirty(obj, "fieldName");_
+
+
+[[array_singlecolumn]]
+== Single Column Arrays
+
+Let's suppose you have a class something like this
+
+[source,java]
+-----
+public class Account
+{
+    byte[] permissions;
+
+    ...
+}
+-----
+
+So we have an *Account* and it has a number of permissions, each expressed as a byte. We want to persist the permissions in a single-column into the table of the account 
+(but we don't want them serialised). 
+
+In terms of metadata required we simply define the field as "persistent". You could add _<array>_ to be explicit but the type of the field is an array, and 
+the type declaration also defines the component type so nothing more is needed. This results in a datastore schema as follows
+
+image:../images/array_serialised_db.png[]
+
+DataNucleus supports persistence of the following array types in this way :_
+boolean[], byte[], char[], double[], float[], int[], long[], short[], Boolean[], Byte[], Character[], Double[], Float[], Integer[], Long[], Short[], BigDecimal[], BigInteger[]_
+
+See also :-
+
+* link:metadata_xml.html#array[MetaData reference for <array> element]
+* link:annotations.html#Element[Annotations reference for @Element]
+
+
+
+[[array_serialised]]
+== Serialised Arrays
+
+Let's suppose you have a class something like the previous example
+
+[source,java]
+-----
+public class Account
+{
+    byte[] permissions;
+
+    ...
+}
+-----
+
+and now we want to persist the permissions as *serialised* into the table of the account.
+We define metadata like this
+
+[source,java]
+-----
+public class Account
+{
+    @Serialized
+    byte[] permissions;
+    ...
+}
+-----
+
+or using XML metadata
+
+[source,xml]
+-----
+<class name="Account" identity-type="datastore">
+    ...
+    <field name="permissions" serialized="true" column="PERMISSIONS"/>
+</class>
+-----
+
+That is, you define the field as *serialized*. To define arrays of short, long, int, or indeed any other supported array type you would do the same as above. 
+This results in a datastore schema as follows
+
+image:../images/array_serialised_db.png[]
+
+DataNucleus supports persistence of many array types in this way, including :_
+boolean[], byte[], char[], double[], float[], int[], long[], short[], Boolean[], Byte[], Character[], Double[], Float[], Integer[], Long[], Short[],
+BigDecimal[], BigInteger[], String[], java.util.Date[], java.util.Locale[]_
+
+See also :-
+
+* link:metadata_xml.html#field[MetaData reference for <field> element]
+* link:metadata_xml.html#array[MetaData reference for <array> element]
+* link:annotations.html#Persistent[Annotations reference for @Persistent]
+* link:annotations.html#Element[Annotations reference for @Element]
+* link:annotations.html#Serialized[Annotations reference for @Serialized]
+
+
+
+[[array_join"/>
+== Arrays persisted into Join Tables">
+
+DataNucleus will support arrays persisted into a join table. Let's take the example above and make the "permission" a class in its own right, so we have
+
+[source,java]
+-----
+public class Account
+{
+    ...
+
+    Permission[] permissions;
+}
+
+public class Permission
+{
+    ...
+}
+-----
+
+So an *Account* has an array of *Permission*s, and both of these objects are entities. We want to persist the relationship using a join table. We define the MetaData as follows
+
+[source,java]
+-----
+public class Account
+{
+    ...
+
+    @Join(column="ACCOUNT_ID")
+    @Element(column="PERMISSION_ID")
+    @Order(column="PERMISSION_ORDER_IDX")
+    Permission[] permissions;
+}
+-----
+
+or using XML metadata
+
+[source,xml]
+-----
+<class name="Account" table="ACCOUNT">
+    <field name="permissions" table="ACCOUNT_PERMISSIONS">
+        <array/>
+        <join column="ACCOUNT_ID"/>
+        <element column="PERMISSION_ID"/>
+        <order column="PERMISSION_ORDER_IDX"/>
+    </field>
+</class>
+<class name="Permission" table="PERMISSION">
+    <field name="name"/>
+</class>
+-----
+
+This results in a datastore schema as follows
+
+image:../images/array_jointable_db.png[]
+
+See also :-
+
+* link:metadata_xml.html#array[MetaData reference for <array> element]
+* link:metadata_xml.html#element[MetaData reference for <element> element]
+* link:metadata_xml.html#join[MetaData reference for <join> element]
+* link:metadata_xml.html#order[MetaData reference for <order> element]
+* link:annotations.html#Element[Annotations reference for @Element]
+* link:annotations.html#Order[Annotations reference for @Order]
+
+
+
+[[array_fk]]
+== Arrays persisted using Foreign-Keys
+
+DataNucleus will support arrays persisted via a foreign-key in the element table. This is only applicable when the array is of a _persistable_ type. 
+Let's take the same example above. So we have
+
+[source,java]
+-----
+public class Account
+{
+    ...
+
+    Permission[] permissions;
+}
+
+public class Permission
+{
+    ...
+}
+-----
+
+and the metadata is
+
+[source,java]
+-----
+public class Account
+{
+    ...
+
+    @Element(column="ACCOUNT_ID")
+    @Order(column="ACCOUNT_PERMISSION_ORDER_IDX")
+    Permission[] permissions;
+}
+-----
+
+or using XML metadata
+
+[source,xml]
+-----
+<class name="Account" table="ACCOUNT">
+    ...
+    <field name="permissions">
+        <array/>
+        <element column="ACCOUNT_ID"/>
+        <order column="ACCOUNT_PERMISSION_ORDER_IDX"/>
+    </field>
+</class>
+<class name="Permission" table="PERMISSION">
+    <field name="name"/>
+</class>
+-----
+
+This results in a datastore schema as follows
+
+image:../images/array_foreignkey_db.png[]
+
+See also :-
+
+* link:metadata_xml.html#array[MetaData reference for <array> element]
+* link:metadata_xml.html#element[MetaData reference for <element> element]
+* link:metadata_xml.html#order[MetaData reference for <order> element]
+* link:annotations.html#Element[Annotations reference for @Element]
+* link:annotations.html#Order[Annotations reference for @Order]
+
+
+
+[[array_join_nonpc]]
+== Simple array stored in join table
+
+If you want an array of non-entity objects be stored in a "join" table, you can follow this example.
+We have an *Account* that stores a Collection of addresses. These addresses are simply Strings. We define the annotations like this
+
+[source,java]
+-----
+public class Account
+{
+    ...
+
+    @Join(table="ACCOUNT_ADDRESSES")
+    String[] addresses;
+}
+-----
+
+or using XML metadata
+
+[source,xml]
+-----
+<class name="Account" table="ACCOUNT">
+    ...
+    <field name="permissions">
+        <array/>
+        <join table="ACCOUNT_ADDRESSES"/>
+        <element column="ACCOUNT_ID"/>
+        <order column="ACCOUNT_PERMISSION_ORDER_IDX"/>
+    </field>
+</class>
+
+-----
+
+In the datastore the following is created
+
+image:../images/relationship_1_N_primitive_collection_db.png[]
+
+Use @Column on the field/method to define the column details of the element in the join table.
+

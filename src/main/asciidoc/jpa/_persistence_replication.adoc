@@ -1,0 +1,31 @@
+[[replication]]
+= Replication
+:_basedir: ../
+:_imagesdir: images/
+
+
+image:../images/nucleus_extension.png[]
+
+Many applications make use of multiple datastores. It is a common requirement to be able to replicate parts of one datastore in another datastore.
+Obviously, depending on the datastore, you could make use of the datastores own capabilities for replication. 
+DataNucleus provides its own extension to JPA to allow replication from one datastore to another. 
+This extension doesn't restrict you to using 2 datastores of the same type. 
+You could replicate from RDBMS to XML for example, or from MySQL to HSQLDB.
+
+*You need to make sure you have the persistence property _datanucleus.attachSameDatastore_ set to _false_ if using replication*
+
+*Note that the case of replication between two RDBMS of the same type is usually way more efficiently replicated using the capabilities of the datastore itself*
+
+The following sample code will replicate all objects of type _Product_ and _Employee_ from EMF1 to EMF2. 
+These EMFs are created in the normal way so, as mentioned above, EMF1 could be for a MySQL datastore, and EMF2 for XML.
+By default this will replicate the complete object graphs reachable from these specified types.
+
+[source,java]
+-----
+import org.datanucleus.api.jpa.JPAReplicationManager;
+
+...
+
+JPAReplicationManager replicator = new JPAReplicationManager(emf1, emf2);
+replicator.replicate(new Class[]{Product.class, Employee.class});
+-----

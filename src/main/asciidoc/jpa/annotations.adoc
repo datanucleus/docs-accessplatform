@@ -1,0 +1,3265 @@
+[[annotations]]
+= JPA Annotations
+:_basedir: ../
+:_imagesdir: images/
+
+JPA provides the ability to use annotations to define the persistence of entities, and DataNucleus JPA supports both JPA and JDO annotations. 
+In this section we provide a reference to the primary JPA annotations. When selecting to use annotations please bear in mind the following :-
+
+* You must have the *datanucleus-api-jpa* jar available in your CLASSPATH.
+* You must have the *javax.persistence* jar in your CLASSPATH since this provides the annotations
+* Annotations should really only be used for attributes of persistence that you won't be changing at deployment. 
+Things such as table and column names shouldn't really be specified using annotations although it is permitted.
+Instead it would be better to put such information in an ORM file.
+* Annotations can be added in two places - for the class as a whole, or for a field in particular.
+* You can annotate fields or getters with field-level information. It doesn't matter which.
+* Annotations are prefixed by the @ symbol and can take attributes (in brackets after the name, comma-separated)
+* JPA doesn't provide for some key JDO concepts and DataNucleus provides its own annotations for these cases.
+* You have to import "javax.persistence.XXX" where XXX is the annotation name of a JPA annotation
+* You have to import "org.datanucleus.api.jpa.annotations.XXX" where XXX is the annotation name of a DataNucleus value-added annotation
+
+
+Annotations supported by DataNucleus are shown below. Not all have their documentation written yet.
+
+
+[[jpa_class]]
+== JPA Class-Level Annotations
+
+The following annotations are specified at class-level and are JPA standard.
+Using these provide portability for your application.
+
+[cols="1,1,3", options="header"]
+|===
+|Annotation
+|Class/Field
+|Description
+
+|xref:annotations.html#Entity[@Entity]
+|Class
+|Specifies that the class is persistent
+
+|xref:annotations.html#MappedSuperclass[@MappedSuperclass]
+|Class
+|Specifies that this class contains persistent information to be mapped
+
+|xref:annotations.html#Embeddable[@Embeddable]
+|Class
+|Specifies that the class is persistent embedded in another persistent class
+
+|xref:annotations.html#IdClass[@IdClass]
+|Class
+|Defines the primary key class for this class
+
+|xref:annotations.html#Cacheable[@Cacheable]
+|Class
+|Specifies that instances of this class can be cached in the L2 cache
+
+|xref:annotations.html#EntityListeners[@EntityListeners]
+|Class
+|Specifies class(es) that are listeners for events from instances of this class
+
+|xref:annotations.html#NamedQueries[@NamedQueries]
+|Class
+|Defines a series of named JPQL queries for use in the current persistence unit
+
+|xref:annotations.html#NamedQuery[@NamedQuery]
+|Class
+|Defines a named JPQL query for use in the current persistence unit
+
+|xref:annotations.html#NamedNativeQuery[@NamedNativeQuery]
+|Class
+|Defines a named SQL query for use in the current persistence unit
+
+|xref:annotations.html#NamedNativeQueries[@NamedNativeQueries]
+|Class
+|Defines a series of named SQL queries for use in the current persistence unit
+
+|xref:annotations.html#NamedStoredProcedureQuery[@NamedStoredProcedureQuery]
+|Class
+|Defines a named stored procedure query for use in the current persistence unit
+
+|xref:annotations.html#NamedStoredProcedureQueries[@NamedStoredProcedureQueries]
+|Class
+|Defines a series of named stored procedure queries for use in the current persistence unit
+
+|xref:annotations.html#SqlResultSetMapping[@SqlResultSetMapping]
+|Class
+|Defines a result mapping for an SQL query for use in the current persistence unit
+
+|xref:annotations.html#SqlResultSetMappings[@SqlResultSetMappings]
+|Class
+|Defines a series of mappings for SQL queries for use in the current persistence unit
+
+|xref:annotations.html#NamedEntityGraph[@NamedEntityGraph]
+|Class
+|Defines a named entity graph with root of the class it is specifed on
+
+|xref:annotations.html#NamedEntityGraphs[@NamedEntityGraphs]
+|Class
+|Defines named entity graphs with root of the class it is specifed on
+
+|xref:annotations.html#Converter[@Converter]
+|Class
+|Defines a java type converter for a field type
+
+|xref:annotations.html#Inheritance[@Inheritance]
+|Class
+|Specifies the inheritance model for persisting this class
+
+|xref:annotations.html#Table[@Table]
+|Class
+|Defines the table where this class will be stored
+
+|xref:annotations.html#SecondaryTable[@SecondaryTable]
+|Class
+|Defines a secondary table where some fields of this class will be stored
+
+|xref:annotations.html#DiscriminatorColumn[@DiscriminatorColumn]
+|Class
+|Defines the column where any discriminator will be stored
+
+|xref:annotations.html#DiscriminatorValue[@DiscriminatorValue]
+|Class
+|Defines the value to be used in the discriminator for objects of this class
+
+|xref:annotations.html#PrimaryKeyJoinColumns_Class[@PrimaryKeyJoinColumns]
+|Class
+|Defines the names of the PK columns when this class has a superclass
+
+|xref:annotations.html#PrimaryKeyJoinColumn_Class[@PrimaryKeyJoinColumn]
+|Class
+|Defines the name of the PK column when this class has a superclass
+
+|xref:annotations.html#AttributeOverride[@AttributeOverride]
+|Class
+|Defines a field in a superclass that will have its column overridden
+
+|xref:annotations.html#AttributeOverrides[@AttributeOverrides]
+|Class
+|Defines the field(s) of superclasses that will have their columns overridden
+
+|xref:annotations.html#AssociationOverride[@AssociationOverride]
+|Class
+|Defines a N-1/1-1 field in a superclass that will have its column overridden
+
+|xref:annotations.html#AssociationOverrides[@AssociationOverrides]
+|Class
+|Defines the N-1/1-1 field(s) of superclasses that will have their columns overridden
+
+|xref:annotations.html#SequenceGenerator[@SequenceGenerator]
+|Class/Field/Method
+|Defines a generator of values using sequences in the datastore for use with persistent entities
+
+|xref:annotations.html#TableGenerator[@TableGenerator]
+|Class/Field/Method
+|Defines a generator of sequences using a table in the datastore for use with persistent entities
+|===
+
+
+[[Entity]]
+=== @Entity
+
+This annotation is used when you want to mark a class as persistent. Specified on the *class*.
+
+[cols="1,1,3,1", options="header"]
+|===
+|Attribute
+|Type
+|Description
+|Default
+
+|name
+|String
+|Name of the entity (used in JPQL to refer to the class)
+|
+|===
+
+[source,java]
+-----
+@Entity
+public class MyClass
+{
+    ...
+}
+-----
+
+See the documentation for link:mapping.html#classes[Class Mapping]
+
+
+[[MappedSuperclass]]
+=== @MappedSuperclass
+
+This annotation is used when you want to mark a class as persistent but without a table of its own and being the superclass of the class that has a table, 
+meaning that all of its fields are persisted into the table of its subclass. Specified on the *class*.
+
+[source,java]
+-----
+@MappedSuperclass
+public class MyClass
+{
+    ...
+}
+-----
+See the documentation for link:mapping.html#inheritance[Inheritance]
+
+
+[[Embeddable]]
+=== @Embeddable
+
+This annotation is used when you want to mark a class as persistent and only storable embedded in another object. Specified on the *class*.
+
+[source,java]
+-----
+@Embeddable
+public class MyClass
+{
+    ...
+}
+-----
+
+
+[[IdClass]]
+=== @IdClass
+
+This annotation is used to define a primary-key class for the identity of this class.
+Specified on the *class*.
+
+[cols="1,1,3,1", options="header"]
+|===
+|Attribute
+|Type
+|Description
+|Default
+
+|value
+|Class
+|Identity class
+|
+|===
+
+[source,java]
+-----
+@Entity
+@IdClass(org.datanucleus.samples.MyIdentity.class)
+public class MyClass
+{
+    ...
+}
+-----
+
+See the documentation for link:mapping.html#application_identity_primarykey[Primary Keys]
+
+
+[[Cacheable]]
+=== @Cacheable
+
+This annotation is used when you want to mark a class so that instance of that class can be cached. Specified on the *class*.
+
+[source,java]
+-----
+@Cacheable
+public class MyClass
+{
+    ...
+}
+-----
+See the documentation for link:persistence.html#cache_level2[L2 Cache]
+
+
+[[EntityListeners]]
+=== @EntityListeners
+
+This annotation is used to define a class or classes that are listeners for events from instances of this class. Specified on the *class*.
+
+[cols="1,1,3,1", options="header"]
+|===
+|Attribute
+|Type
+|Description
+|Default
+
+|value
+|Class[]
+|Entity listener class(es)
+|
+|===
+
+[source,java]
+-----
+@Entity
+@EntityListeners(org.datanucleus.MyListener.class)
+public class MyClass
+{
+    ...
+}
+-----
+See the documentation for link:persistence.html#lifecycle_callbacks[Lifecycle Callbacks]
+
+
+[[NamedQueries]]
+=== @NamedQueries
+
+This annotation is used to define a series of named (JPQL) queries that can be used in this persistence unit. Specified on the *class*.
+
+[cols="1,1,3,1", options="header"]
+|===
+|Attribute
+|Type
+|Description
+|Default
+
+|value
+|NamedQuery[]
+|The named queries
+|
+|===
+
+[source,java]
+-----
+@Entity
+@NamedQueries({
+     @NamedQuery(name="AllPeople", 
+                 query="SELECT p FROM Person p"),
+     @NamedQuery(name="PeopleCalledJones", 
+                 query="SELECT p FROM Person p WHERE p.surname = 'Jones'")})
+public class Person
+{
+    ...
+}
+-----
+
+*Note that with DataNucleus you can also specify @NamedQueries on non-persistable classes* See the documentation for link:query.html#jpql_named[Named Queries]
+
+
+[[NamedQuery]]
+=== @NamedQuery
+
+This annotation is used to define a named (JPQL) query that can be used in this persistence unit. Specified on the *class*.
+
+[cols="1,1,3,1", options="header"]
+|===
+|Attribute
+|Type
+|Description
+|Default
+
+|name
+|String
+|Symbolic name for the query. The query will be referred to under this name
+|
+
+|query
+|String
+|The JPQL query
+|
+|===
+
+[source,java]
+-----
+@Entity
+@NamedQuery(name="AllPeople", query="SELECT p FROM Person p")
+public class Person
+{
+    ...
+}
+-----
+*Note that with DataNucleus you can also specify @NamedQuery on non-persistable classes*
+See the documentation for link:query.html#jpql_named[Named Queries]
+
+
+[[NamedNativeQueries]]
+=== @NamedNativeQueries
+
+This annotation is used to define a series of named native (SQL) queries that can be used in this persistence unit. Specified on the *class*.
+
+[cols="1,1,3,1", options="header"]
+|===
+|Attribute
+|Type
+|Description
+|Default
+
+|value
+|NamedNativeQuery[]
+|The named native queries
+|
+|===
+
+[source,java]
+-----
+@Entity
+@NamedNativeQueries({
+     @NamedNativeQuery(name="AllPeople", query="SELECT * FROM PERSON WHERE SURNAME = 'Smith'"),
+     @NamedNativeQuery(name="PeopleCalledJones", query="SELECT * FROM PERSON WHERE SURNAME = 'Jones')})
+public class Person
+{
+    ...
+}
+-----
+*Note that with DataNucleus you can also specify @NamedNativeQueries on non-persistable classes*
+See the documentation for link:query.html#native_named[Named Native Queries]
+
+
+[[NamedNativeQuery]]
+=== @NamedNativeQuery
+
+This annotation is used to define a named (SQL) query that can be used in this persistence unit. Specified on the *class*.
+
+[cols="1,1,3,1", options="header"]
+|===
+|Attribute
+|Type
+|Description
+|Default
+
+|name
+|String
+|Symbolic name for the query. The query will be referred to under this name
+|
+
+|query
+|String
+|The SQL query
+|
+
+|resultClass
+|Class
+|Class into which the result rows will be placed
+|void.class
+|===
+
+[source,java]
+-----
+@Entity
+@NamedNativeQuery(name="PeopleCalledSmith", query="SELECT * FROM PERSON WHERE SURNAME = 'Smith'")
+public class Person
+{
+    ...
+}
+-----
+*Note that with DataNucleus you can also specify @NamedNativeQuery on non-persistable classes*
+See the documentation for link:query.html#native_named[Named Native Queries]
+
+
+[[NamedStoredProcedureQueries]]
+=== @NamedStoredProcedureQueries
+
+This annotation is used to define a series of named native stored procedure queries that can be used in this persistence unit. Specified on the *class*.
+
+[cols="1,1,3,1", options="header"]
+|===
+|Attribute
+|Type
+|Description
+|Default
+
+|value
+|NamedStoredProcedureQuery[]
+|The named stored procedure queries
+|
+|===
+
+[source,java]
+-----
+@Entity
+@NamedStoredProcedureQueries({
+     @NamedStoredProcedureQuery(name="MyProc", procedureName="MY_PROC_SP1",
+       parameters={@StoredProcedureParameter(name="PARAM1", mode=ParameterMode.IN, type=String.class)}),
+     @NamedStoredProcedureQuery(name="MyProc2", procedureName="MY_PROC_SP2",
+       parameters={@StoredProcedureParameter(name="PARAM1", mode=ParameterMode.IN, type=Long.class)})})
+public class Person
+{
+    ...
+}
+-----
+*Note that with DataNucleus you can also specify @NamedStoredProcedureQueries on non-persistable classes*
+See the documentation for link:query.html#stored_procedures_named[Named Stored procedures]
+
+
+[[NamedStoredProcedureQuery]]
+=== @NamedStoredProcedureQuery
+
+This annotation is used to define a named stored procedure query that can be used in this persistence unit. Specified on the *class*.
+
+[cols="1,1,3,1", options="header"]
+|===
+|Attribute
+|Type
+|Description
+|Default
+
+|name
+|String
+|Symbolic name for the query. The query will be referred to under this name
+|
+
+|procedureName
+|String
+|Name of the stored procedure in the datastore
+|
+
+|parameters
+|StoredProcedureParameter[]
+|Any parameter definitions for this stored procedure
+|
+
+|resultClasses
+|Class[]
+|Any result class(es) for this stored procedure (one per result set)
+|
+
+|resultSetMappings
+|Class[]
+|Any result set mapping(s) for this stored procedure (one per result set)
+|
+
+|hints
+|QueryHint[]
+|Any query hints for this stored procedure
+|
+|===
+
+[source,java]
+-----
+@Entity
+@NamedStoredProcedureQuery(name="MyProc", procedureName="MY_PROC_SP1",
+       parameters={@StoredProcedureParameter(name="PARAM1", mode=ParameterMode.IN, type=String.class)})
+public class Person
+{
+    ...
+}
+-----
+*Note that with DataNucleus you can also specify @NamedStoredProcedureQuery on non-persistable classes*
+See the documentation for link:query.html#stored_procedures_named[Named StoredProcedures]
+
+
+[[SqlResultSetMappings]]
+=== @SqlResultSetMappings
+
+This annotation is used to define a series of result mappings for SQL queries that can be used in this persistence unit. Specified on the *class*.
+
+[cols="1,1,3,1", options="header"]
+|===
+|Attribute
+|Type
+|Description
+|Default
+
+|value
+|SqlResultSetMapping[]
+|The SQL result mappings
+|
+|===
+
+[source,java]
+-----
+@Entity
+@SqlResultSetMappings({
+    @SqlResultSetMapping(name="PEOPLE_PLUS_AGE",
+        entities={@EntityResult(entityClass=Person.class)}, columns={@ColumnResult(name="AGE")}),
+    @SqlResultSetMapping(name="FIRST_LAST_NAMES",
+        columns={@ColumnResult(name="FIRSTNAME"), @ColumnResult(name="LASTNAME")})
+    })
+public class Person
+{
+    ...
+}
+-----
+
+
+[[SqlResultSetMapping]]
+=== @SqlResultSetMapping
+
+This annotation is used to define a mapping for the results of an SQL query and can be used in this persistence unit. Specified on the *class*.
+
+[cols="1,1,3,1", options="header"]
+|===
+|Attribute
+|Type
+|Description
+|Default
+
+|name
+|String
+|Symbolic name for the mapping. The mapping will be referenced under this name
+|
+
+|entities
+|EntityResult[]
+|Set of entities extracted from the SQL query
+|
+
+|columns
+|ColumnResult[]
+|Set of columns extracted directly from the SQL query
+|
+|===
+
+[source,java]
+-----
+@Entity
+@SqlResultSetMapping(name="PEOPLE_PLUS_AGE",
+    entities={@EntityResult(entityClass=Person.class)}, columns={@ColumnResult(name="AGE")})
+public class Person
+{
+    ...
+}
+-----
+
+
+[[NamedEntityGraphs]]
+=== @NamedEntityGraphs
+
+This annotation is used to define a series of named EntityGraphs that can be used in this persistence unit. Specified on the *class*.
+
+[cols="1,1,3,1", options="header"]
+|===
+|Attribute
+|Type
+|Description
+|Default
+
+|value
+|NamedEntityGraph[]
+|The named EntityGraphs
+|
+|===
+
+[source,java]
+-----
+@Entity
+@NamedEntityGraph({
+    @NamedEntityGraph(name="PERSON_FULL",
+        attributeNodes={@NamedAttributeNode(name="friends"), @NamedAttributeNode(name="parents")}),
+    @NamedEntityGraph(name="PERSON_BASIC",
+        attributeNodes={@NamedAttributeNode(name="parents")})
+    })
+public class Person
+{
+    ...
+}
+-----
+
+
+[[NamedEntityGraph]]
+=== @NamedEntityGraph
+
+This annotation is used to define a named EntityGraph and can be used in this persistence unit. Specified on the *class*.
+
+[cols="1,1,3,1", options="header"]
+|===
+|Attribute
+|Type
+|Description
+|Default
+
+|name
+|String
+|name for the Entity Graph.
+|
+
+|attributeNodes
+|AttributeNode[]
+|Set of nodes in this EntityGraph
+|
+|===
+
+[source,java]
+-----
+@Entity
+@NamedEntityGraph(name="PERSON_FULL",
+    attributeNodes={@NamedAttributeNode(name="friends"), @NamedAttributeNode(name="parents")})
+public class Person
+{
+    ...
+}
+-----
+
+
+[[Converter]]
+=== @Converter
+
+This annotation is used to mark a class as being an link:mapping.html#attributeconverter[attribute converter].
+_Note that DataNucleus doesn't require this specifying against a converter class except if you want to set the "autoApply"_. Specified on the *class*.
+
+[cols="1,1,3,1", options="header"]
+|===
+|Attribute
+|Type
+|Description
+|Default
+
+|autoApply
+|boolean
+|Whether this converter should always be used when storing this java type
+|false
+|===
+
+[source,java]
+-----
+@Converter
+public class MyConverter
+{
+    ...
+}
+-----
+
+
+[[Inheritance]]
+=== @Inheritance
+
+This annotation is used to define the inheritance persistence for this class. Specified on the *class*.
+
+[cols="1,1,3,1", options="header"]
+|===
+|Attribute
+|Type
+|Description
+|Default
+
+|strategy
+|InheritanceType
+|Inheritance strategy
+|*SINGLE_TABLE*, JOINED, TABLE_PER_CLASS
+|===
+
+[source,java]
+-----
+@Entity
+@Inheritance(strategy=InheritanceType.JOINED)
+public class MyClass
+{
+    ...
+}
+-----
+See the documentation for link:mapping.html#inheritance[Inheritance]
+
+
+[[Table]]
+=== @Table
+
+This annotation is used to define the table where objects of a class will be stored. Specified on the *class*.
+
+[cols="1,1,3,1", options="header"]
+|===
+|Attribute
+|Type
+|Description
+|Default
+
+|name
+|String
+|Name of the table
+|
+
+|catalog
+|String
+|Name of the catalog
+|
+
+|schema
+|String
+|Name of the schema
+|
+
+|uniqueConstraints
+|UniqueConstraint[]
+|Any unique constraints to apply to the table
+|
+
+|indexes
+|Index[]
+|Details of indexes if wanting to override provider default
+|
+|===
+
+[source,java]
+-----
+@Entity
+@Table(name="MYTABLE", schema="PUBLIC")
+public class MyClass
+{
+    ...
+}
+-----
+
+
+[[SecondaryTable]]
+=== @SecondaryTable
+
+This annotation is used to define a secondary table where some fields of this class are stored in another table. Specified on the *class*.
+
+[cols="1,1,3,1", options="header"]
+|===
+|Attribute
+|Type
+|Description
+|Default
+
+|name
+|String
+|Name of the table
+|
+
+|catalog
+|String
+|Name of the catalog
+|
+
+|schema
+|String
+|Name of the schema
+|
+
+|pkJoinColumns
+|PrimaryKeyJoinColumns[]
+|Join columns for the PK of the secondary table back to the primary table
+|
+
+|uniqueConstraints
+|UniqueConstraint[]
+|Any unique constraints to apply to the table
+|
+
+|indexes
+|Index[]
+|Details of indexes if wanting to override provider default
+|
+
+|foreignKey
+|ForeignKey
+|Foreign key details if wanting to override provider default
+|
+|===
+
+[source,java]
+-----
+@Entity
+@Table(name="MYTABLE", schema="PUBLIC")
+@SecondaryTable(name="MYOTHERTABLE", schema="PUBLIC", columns={@PrimaryKeyJoinColumn(name="MYCLASS_ID")})
+public class MyClass
+{
+    ...
+}
+-----
+See the documentation for link:mapping.html#secondary_tables[Secondary Tables]
+
+
+[[DiscriminatorColumn]]
+=== @DiscriminatorColumn
+
+This annotation is used to define the discriminator column for a class. Specified on the *class*.
+
+[cols="1,1,3,1", options="header"]
+|===
+|Attribute
+|Type
+|Description
+|Default
+
+|name
+|String
+|Name of the discriminator column
+|DTYPE
+
+|discriminatorType
+|DiscriminatorType
+|Type of the discriminator column
+|STRING, CHAR, INTEGER
+
+|length
+|String
+|Length of the discriminator column
+|31
+|===
+
+[source,java]
+-----
+@Entity
+@Inheritance(strategy=InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name="OBJECT_TYPE", discriminatorType=DiscriminatorType.STRING)
+public class MyClass
+{
+    ...
+}
+-----
+See the documentation for link:mapping.html#inheritance_discriminator[Inheritance]
+
+
+[[DiscriminatorValue]]
+=== @DiscriminatorValue
+
+This annotation is used to define the value to be stored in the discriminator column for a class (when used). Specified on the *class*.
+
+[cols="1,1,3,1", options="header"]
+|===
+|Attribute
+|Type
+|Description
+|Default
+
+|value
+|String
+|Value for the discriminator column
+|
+|===
+
+[source,java]
+-----
+@Entity
+@Inheritance(strategy=InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name="OBJECT_TYPE", discriminatorType=DiscriminatorType.STRING)
+@DiscriminatorValue("MyClass")
+public class MyClass
+{
+    ...
+}
+-----
+See the documentation for link:mapping.html#inheritance_discriminator[Inheritance]
+
+
+[[PrimaryKeyJoinColumns_Class]]
+=== @PrimaryKeyJoinColumns
+
+This annotation is used to define the names of the primary key columns when this class has a superclass. Specified on the *class*.
+
+[cols="1,1,3,1", options="header"]
+|===
+|Attribute
+|Type
+|Description
+|Default
+
+|value
+|PrimaryKeyJoinColumn[]
+|Array of column definitions for the primary key
+|
+
+|foreignKey
+|ForeignKey
+|Foreign key details if wanting to override provider default
+|
+|===
+
+[source,java]
+-----
+@Entity
+@Inheritance(strategy=InheritanceType.TABLE_PER_CLASS)
+@PrimaryKeyJoinColumns({@PrimaryKeyJoinColumn(name="PK_FIELD_1", referredColumnName="BASE_1_ID"),
+                        @PrimaryKeyJoinColumn(name="PK_FIELD_2", referredColumnName="BASE_2_ID")})
+public class MyClass
+{
+    ...
+}
+-----
+
+
+[[PrimaryKeyJoinColumn_Class]]
+=== @PrimaryKeyJoinColumn
+
+This annotation is used to define the name of the primary key column when this class has a superclass. Specified on the *class*.
+
+[cols="1,1,3,1", options="header"]
+|===
+|Attribute
+|Type
+|Description
+|Default
+
+|name
+|String
+|Name of the column
+|
+
+|referencedColumnName
+|String
+|Name of the associated PK column in the superclass. This is for use when you have a composite PK so acts as a way of aligning the respective columns.
+*It is not to allow joining to some non-PK column*
+|
+
+|columnDefinition
+|String
+|DDL to use for the column (everything except the column name). This must include the SQL type of the column
+|
+
+|foreignKey
+|ForeignKey
+|Foreign key details if wanting to override provider default
+|
+|===
+
+[source,java]
+-----
+@Entity
+@Inheritance(strategy=InheritanceType.TABLE_PER_CLASS)
+@PrimaryKeyJoinColumn(name="PK_FIELD_1")
+public class MyClass
+{
+    ...
+}
+-----
+
+
+[[AttributeOverride]]
+=== @AttributeOverride
+
+This annotation is used to define a field of a superclass that has its column overridden. Specified on the *class*.
+
+[cols="1,1,3,1", options="header"]
+|===
+|Attribute
+|Type
+|Description
+|Default
+
+|name
+|String
+|Name of the field
+|
+
+|column
+|Column
+|Column information
+|
+|===
+
+[source,java]
+-----
+@Entity
+@AttributeOverride(name="attr", column=@Column(name="NEW_NAME"))
+public class MyClass extends MySuperClass
+{
+    ...
+}
+-----
+
+
+[[AttributeOverrides]]
+=== @AttributeOverrides
+
+This annotation is used to define fields of a superclass that have their columns overridden. Specified on the *class*.
+
+[cols="1,1,3,1", options="header"]
+|===
+|Attribute
+|Type
+|Description
+|Default
+
+|value
+|AttributeOverride[]
+|The overrides
+|
+|===
+
+[source,java]
+-----
+@Entity
+@AttributeOverrides({@AttributeOverride(name="attr1", column=@Column(name="NEW_NAME_1")),
+                     @AttributeOverride(name="attr2", column=@Column(name="NEW_NAME_2"))})
+public class MyClass extends MySuperClass
+{
+    ...
+}
+-----
+
+
+[[AssociationOverride]]
+=== @AssociationOverride
+
+This annotation is used to define a 1-1/N-1 field of a superclass that has its column overridden. Specified on the *class*.
+
+[cols="1,1,3,1", options="header"]
+|===
+|Attribute
+|Type
+|Description
+|Default
+
+|name
+|String
+|Name of the field
+|
+
+|joinColumn
+|JoinColumn
+|Column information for the FK column
+|
+|===
+
+[source,java]
+-----
+@Entity
+@AssociationOverride(name="friend", joinColumn=@JoinColumn(name="FRIEND_ID"))
+public class Employee extends Person
+{
+    ...
+}
+-----
+
+
+[[AssociationOverrides]]
+=== @AssociationOverrides
+
+This annotation is used to define 1-1/N-1 fields of a superclass that have their columns overridden. Specified on the *class*.
+
+[cols="1,1,3,1", options="header"]
+|===
+|Attribute
+|Type
+|Description
+|Default
+
+|value
+|AssociationOverride[]
+|The overrides
+|
+|===
+
+[source,java]
+-----
+@Entity
+@AssociationOverrides({@AssociationOverride(name="friend", joinColumn=@JoinColumn(name="FRIEND_ID")),
+                       @AssociationOverride(name="teacher", joinColumn=@JoinColumn(name="TEACHER_ID"))})
+public class Employee extends Person
+{
+    ...
+}
+-----
+
+
+[[SequenceGenerator]]
+=== @SequenceGenerator
+
+This annotation is used to define a generator using sequences in the datastore.
+It is scoped to the persistence unit. Specified on the *class/field/method*.
+
+[cols="1,1,3,1", options="header"]
+|===
+|Attribute
+|Type
+|Description
+|Default
+
+|name
+|String
+|Name for the generator (required)
+|
+
+|sequenceName
+|String
+|Name of the underlying sequence that will be used
+|
+
+|initialValue
+|int
+|Initial value for the sequence (optional)
+|1
+
+|allocationSize
+|int
+|Number of values to be allocated each time (optional)
+|50
+
+|schema
+|String
+|Name of the schema where the sequence will be stored (optional)
+|
+
+|catalog
+|String
+|Name of the catalog where the sequence will be stored (optional)
+|
+|===
+
+[source,java]
+-----
+@Entity
+@SequenceGenerator(name="MySeq", sequenceName="SEQ_2")
+public class MyClass
+{
+    ...
+}
+-----
+
+
+[[TableGenerator]]
+=== @TableGenerator
+
+This annotation is used to define a generator using a table in the datastore for storing the values.
+It is scoped to the persistence unit. Specified on the *class/field/method*.
+
+[cols="1,1,3,1", options="header"]
+|===
+|Attribute
+|Type
+|Description
+|Default
+
+|name
+|String
+|Name for the generator (required)
+|
+
+|table
+|String
+|Name of the table to use
+|SEQUENCE_TABLE
+
+|catalog
+|String
+|Catalog of the table to use (optional)
+|
+
+|schema
+|String
+|Schema of the table to use (optional)
+|
+
+|pkColumnName
+|String
+|Name of the primary key column for the table
+|SEQUENCE_NAME
+
+|valueColumnName
+|String
+|Name of the value column for the table
+|NEXT_VAL
+
+|pkColumnValue
+|String
+|Value to store in the PK column for the row used by this generator
+|{name of the class}
+
+|initialValue
+|int
+|Initial value for the table row (optional)
+|0
+
+|allocationSize
+|int
+|Number of values to be allocated each time (optional)
+|50
+
+|indexes
+|Index[]
+|Index(es) if wanting to override the provider default
+|
+|===
+
+[source,java]
+-----
+@Entity
+@TableGenerator(name="MySeq", table="MYAPP_IDENTITIES", pkColumnValue="MyClass")
+public class MyClass
+{
+    ...
+}
+-----
+
+
+[[jpa_member]]
+== JPA Field-Level Annotations
+
+The following annotations are specified at field/method-level and are JPA standard.
+Using these provide portability for your application.
+
+[cols="1,1,3", options="header"]
+|===
+|Annotation
+|Class/Field
+|Description
+
+|xref:annotations.html#SequenceGenerator[@SequenceGenerator]
+|Class/Field/Method
+|Defines a generator of values using sequences in the datastore for use with persistent entities
+
+|xref:annotations.html#TableGenerator[@TableGenerator]
+|Class/Field/Method
+|Defines a generator of sequences using a table in the datastore for use with persistent entities
+
+|xref:annotations.html#Embedded[@Embedded]
+|Field/Method
+|Defines this field as being embedded
+
+|xref:annotations.html#Id[@Id]
+|Field/Method
+|Defines this field as being (part of) the identity for the class
+
+|xref:annotations.html#EmbeddedId[@EmbeddedId]
+|Field/Method
+|Defines this field as being (part of) the identity for the class, and being embedded into this class.
+
+|xref:annotations.html#Version[@Version]
+|Field/Method
+|Defines this field as storing the version for the class
+
+|xref:annotations.html#Basic[@Basic]
+|Field/Method
+|Defines this field as being persistent
+
+|xref:annotations.html#Transient[@Transient]
+|Field/Method
+|Defines this field as being transient (not persisted)
+
+|xref:annotations.html#OneToOne[@OneToOne]
+|Field/Method
+|Defines this field as being a 1-1 relation with another persistent entity
+
+|xref:annotations.html#OneToMany[@OneToMany]
+|Field/Method
+|Defines this field as being a 1-N relation with other persistent entities
+
+|xref:annotations.html#ManyToMany[@ManyToMany]
+|Field/Method
+|Defines this field as being a M-N relation with other persistent entities
+
+|xref:annotations.html#ManyToOne[@ManyToOne]
+|Field/Method
+|Defines this field as being a N-1 relation with another persistent entity
+
+|xref:annotations.html#ElementCollection[@ElementCollection]
+|Field/Method
+|Defines this field as being a 1-N relation of Objects that are not Entities.
+
+|xref:annotations.html#GeneratedValue[@GeneratedValue]
+|Field/Method
+|Defines that this field has its value generated using a generator
+
+|xref:annotations.html#MapKey[@MapKey]
+|Field/Method
+|Defines that this field is the key to a map
+
+|xref:annotations.html#MapKeyClass[@MapKeyClass]
+|Field/Method
+|Defines that the key type for the map in this field
+
+|xref:annotations.html#MapKeyEnumerated[@MapKeyEnumerated]
+|Field/Method
+|Defines the datastore type for the map key when it is an enum
+
+|xref:annotations.html#MapKeyTemporal[@MapKeyTemporal]
+|Field/Method
+|Defines the datastore type for the map key when it is a temporal type
+
+|xref:annotations.html#MapKeyColumn[@MapKeyColumn]
+|Field/Method
+|Defines the column details for the map key when stored in a join table
+
+|xref:annotations.html#OrderBy[@OrderBy]
+|Field/Method
+|Defines the field(s) used for ordering the elements in this collection
+
+|xref:annotations.html#OrderColumn[@OrderColumn]
+|Field/Method
+|Defines that ordering should be attributed by the implementation using a surrogate column.
+
+|xref:annotations.html#PrePersist[@PrePersist]
+|Field/Method
+|Defines this method as being a callback for pre-persist events
+
+|xref:annotations.html#PostPersist[@PostPersist]
+|Field/Method
+|Defines this method as being a callback for post-persist events
+
+|xref:annotations.html#PreRemove[@PreRemove]
+|Field/Method
+|Defines this method as being a callback for pre-remove events
+
+|xref:annotations.html#PostRemove[@PostRemove]
+|Field/Method
+|Defines this method as being a callback for post-remove events
+
+|xref:annotations.html#PreUpdate[@PreUpdate]
+|Field/Method
+|Defines this method as being a callback for pre-update events
+
+|xref:annotations.html#PostUpdate[@PostUpdate]
+|Field/Method
+|Defines this method as being a callback for post-update events
+
+|xref:annotations.html#PostLoad[@PostLoad]
+|Field/Method
+|Defines this method as being a callback for post-load events
+
+|xref:annotations.html#JoinTable[@JoinTable]
+|Field/Method
+|Defines this field as being stored using a join table
+
+|xref:annotations.html#CollectionTable[@CollectionTable]
+|Field/Method
+|Defines this field as being stored using a join table when containing non-entity objects.
+
+|xref:annotations.html#Lob[@Lob]
+|Field/Method
+|Defines this field as being stored as a large object
+
+|xref:annotations.html#Temporal[@Temporal]
+|Field/Method
+|Defines this field as storing temporal data
+
+|xref:annotations.html#Enumerated[@Enumerated]
+|Field/Method
+|Defines this field as storing enumerated data
+
+|xref:annotations.html#Convert[@Convert]
+|Field/Method
+|Defines a converter for this field/property
+
+|xref:annotations.html#Column[@Column]
+|Field/Method
+|Defines the column where this field is stored
+
+|xref:annotations.html#JoinColumn[@JoinColumn]
+|Field/Method
+|Defines a column for joining to either a join table or foreign key relation
+
+|xref:annotations.html#JoinColumns[@JoinColumns]
+|Field/Method
+|Defines the columns for joining to either a join table or foreign key relation (1-1, 1-N, N-1)
+
+|xref:annotations.html#Index[@Index]
+|-
+|Defines the details of an index when overriding the provider default.
+
+|xref:annotations.html#ForeignKey[@ForeignKey]
+|-
+|Defines the details of a foreign key when overriding the provider default.
+|===
+
+
+[[PrePersist]]
+=== @PrePersist
+
+This annotation is used to define a method that is a callback for pre-persist events. Specified on the *method*. It has no attributes.
+
+[source,java]
+-----
+@Entity
+public class MyClass
+{
+    ...
+
+    @PrePersist
+    void registerObject()
+    {
+        ...
+    }
+}
+-----
+See the documentation for link:persistence.html#lifecycle_callbacks[Lifecycle Callbacks]
+
+
+[[PostPersist]]
+=== @PostPersist
+
+This annotation is used to define a method that is a callback for post-persist events. Specified on the *method*. It has no attributes.
+
+[source,java]
+-----
+@Entity
+public class MyClass
+{
+    ...
+
+    @PostPersist
+    void doSomething()
+    {
+        ...
+    }
+}
+-----
+See the documentation for link:persistence.html#lifecycle_callbacks[Lifecycle Callbacks]
+
+
+[[PreRemove]]
+=== @PreRemove
+
+This annotation is used to define a method that is a callback for pre-remove events. Specified on the *method*. It has no attributes.
+
+[source,java]
+-----
+@Entity
+public class MyClass
+{
+    ...
+
+    @PreRemove
+    void registerObject()
+    {
+        ...
+    }
+}
+-----
+See the documentation for link:persistence.html#lifecycle_callbacks[Lifecycle Callbacks]
+
+
+[[PostRemove]]
+=== @PostRemove
+
+This annotation is used to define a method that is a callback for post-remove events. Specified on the *method*. It has no attributes.
+
+[source,java]
+-----
+@Entity
+public class MyClass
+{
+    ...
+
+    @PostRemove
+    void doSomething()
+    {
+        ...
+    }
+}
+-----
+See the documentation for link:persistence.html#lifecycle_callbacks[Lifecycle Callbacks]
+
+
+[[PreUpdate]]
+=== @PreUpdate
+
+This annotation is used to define a method that is a callback for pre-update events. Specified on the *method*. It has no attributes.
+
+[source,java]
+-----
+@Entity
+public class MyClass
+{
+    ...
+
+    @PreUpdate
+    void registerObject()
+    {
+        ...
+    }
+}
+-----
+See the documentation for link:persistence.html#lifecycle_callbacks[Lifecycle Callbacks]
+
+
+[[PostUpdate]]
+=== @PostUpdate
+
+This annotation is used to define a method that is a callback for post-update events. Specified on the *method*. It has no attributes.
+
+[source,java]
+-----
+@Entity
+public class MyClass
+{
+    ...
+
+    @PostUpdate
+    void doSomething()
+    {
+        ...
+    }
+}
+-----
+See the documentation for link:persistence.html#lifecycle_callbacks[Lifecycle Callbacks].
+
+
+[[PostLoad]]
+=== @PostLoad
+
+This annotation is used to define a method that is a callback for post-load events.
+Specified on the *method*. It has no attributes.
+
+[source,java]
+-----
+@Entity
+public class MyClass
+{
+    ...
+
+    @PostLoad
+    void registerObject()
+    {
+        ...
+    }
+}
+-----
+See the documentation for link:persistence.html#lifecycle_callbacks[Lifecycle Callbacks]
+
+
+[[Id]]
+=== @Id
+
+This annotation is used to define a field to use for the identity of the class. Specified on the *field/method*.
+
+[source,java]
+-----
+@Entity
+public class MyClass
+{
+    @Id
+    long id;
+    ...
+}
+-----
+
+
+[[Embedded]]
+=== @Embedded
+
+This annotation is used to define a field as being embedded. Specified on the *field/method*.
+
+[source,java]
+-----
+@Entity
+public class MyClass
+{
+    @Embedded
+    Object myField;
+    ...
+}
+-----
+
+
+[[EmbeddedId]]
+=== @EmbeddedId
+
+This annotation is used to define a field to use for the identity of the class when embedded. Specified on the *field/method*.
+
+[source,java]
+-----
+@Entity
+public class MyClass
+{
+    @EmbeddedId
+    MyPrimaryKey pk;
+    ...
+}
+-----
+
+
+[[Version]]
+=== @Version
+
+This annotation is used to define a field as holding the version for the class. Specified on the *field/method*.
+
+[source,java]
+-----
+@Entity
+public class MyClass
+{
+    @Id
+    long id;
+
+    @Version
+    int ver;
+    ...
+}
+-----
+
+
+[[Basic]]
+=== @Basic
+
+This annotation is used to define a field of the class as persistent. Specified on the *field/method*.
+
+[cols="1,1,3,1", options="header"]
+|===
+|Attribute
+|Type
+|Description
+|Default
+
+|fetch
+|FetchType
+|Type of fetching for this field
+|LAZY, *EAGER*
+
+|optional
+|boolean
+|Whether this field having a value is optional (can it have nulls)
+|*true*, false
+|===
+
+[source,java]
+-----
+@Entity
+public class Person
+{
+    @Id
+    long id;
+
+    @Basic(optional=false)
+    String forename;
+    ...
+}
+-----
+See the documentation for link:mapping.html#members[Fields/Properties]
+
+
+[[Transient]]
+=== @Transient
+
+This annotation is used to define a field of the class as not persistent. Specified on the *field/method*.
+
+[source,java]
+-----
+@Entity
+public class Person
+{
+    @Id
+    long id;
+
+    @Transient
+    String personalInformation;
+    ...
+}
+-----
+See the documentation for link:mapping.html#members[Fields/Properties]
+
+
+[[JoinTable]]
+=== @JoinTable
+
+This annotation is used to define that a collection/map is stored using a join table.
+Specified on the *field/method*.
+
+[cols="1,1,3,1", options="header"]
+|===
+|Attribute
+|Type
+|Description
+|Default
+
+|name
+|String
+|Name of the table
+|
+
+|catalog
+|String
+|Name of the catalog
+|
+
+|schema
+|String
+|Name of the schema
+|
+
+|joinColumns
+|JoinColumn[]
+|Columns back to the owning object (with the collection/map)
+|
+
+|inverseJoinColumns
+|JoinColumn[]
+|Columns to the element object (stored in the collection/map)
+|
+
+|uniqueConstraints
+|UniqueConstraint[]
+|Any unique constraints to apply to the table
+|
+
+|indexes
+|Index[]
+|Details of indexes if wanting to override provider default
+|
+
+|foreignKey
+|ForeignKey
+|Foreign key details if wanting to override provider default for the join columns
+|
+
+|inverseForeignKey
+|ForeignKey
+|Foreign key details if wanting to override provider default for the inverse join columns
+|
+|===
+
+[source,java]
+-----
+@Entity
+public class Person
+{
+    @OneToMany
+    @JoinTable(name="PEOPLES_FRIENDS")
+    Collection friends;
+    ...
+}
+-----
+
+
+[[CollectionTable]]
+=== @CollectionTable
+
+This annotation is used to define that a collection/map of non-entities is stored using a join table. Specified on the *field/method*.
+
+[cols="1,1,3,1", options="header"]
+|===
+|Attribute
+|Type
+|Description
+|Default
+
+|name
+|String
+|Name of the table
+|
+
+|catalog
+|String
+|Name of the catalog
+|
+
+|schema
+|String
+|Name of the schema
+|
+
+|joinColumns
+|JoinColumn[]
+|Columns back to the owning object (with the collection/map)
+|
+
+|uniqueConstraints
+|UniqueConstraint[]
+|Any unique constraints to apply to the table
+|
+
+|indexes
+|Index[]
+|Details of indexes if wanting to override provider default
+|
+
+|foreignKey
+|ForeignKey
+|Details of foreign key if wanting to override provider default
+|
+|===
+
+[source,java]
+-----
+@Entity
+public class Person
+{
+    @ElementCollection
+    @CollectionTable(name="PEOPLES_FRIENDS")
+    Collection<String> values;
+    ...
+}
+-----
+
+
+[[Lob]]
+=== @Lob
+
+This annotation is used to define that a field will be stored using a large object in the datastore. Specified on the *field/method*.
+
+[source,java]
+-----
+@Entity
+public class Person
+{
+    @Lob
+    byte[] photo;
+    ...
+}
+-----
+
+
+[[Temporal]]
+=== @Temporal
+
+This annotation is used to define that a field is stored as a temporal type.
+It specifies the JDBC type to use for storage of this type, so whether it stores the date, the time, or both. Specified on the *field/method*.
+
+[cols="1,1,3,1", options="header"]
+|===
+|Attribute
+|Type
+|Description
+|Default
+
+|value
+|TemporalType
+|Type for storage
+|DATE, TIME, TIMESTAMP
+|===
+
+[source,java]
+-----
+@Entity
+public class Person
+{
+    @Temporal(TemporalType.TIMESTAMP)
+    java.util.Date dateOfBirth;
+    ...
+}
+-----
+
+
+[[Enumerated]]
+=== @Enumerated
+
+This annotation is used to define that a field is stored enumerated (not that it wasnt obvious from the type!). Specified on the *field/method*.
+
+[cols="1,1,3,1", options="header"]
+|===
+|Attribute
+|Type
+|Description
+|Default
+
+|value
+|EnumType
+|Type for storage
+|*ORDINAL*, STRING
+|===
+
+[source,java]
+-----
+enum Gender {MALE, FEMALE};
+
+@Entity
+public class Person
+{
+    @Enumerated
+    Gender gender;
+    ...
+}
+-----
+
+
+[[OneToOne]]
+=== @OneToOne
+
+This annotation is used to define that a field represents a 1-1 relation. Specified on the *field/method*.
+
+[cols="1,1,3,1", options="header"]
+|===
+|Attribute
+|Type
+|Description
+|Default
+
+|targetEntity
+|Class
+|Class at the other side of the relation
+|
+
+|fetch
+|FetchType
+|Whether the field should be fetched immediately
+|*EAGER*, LAZY
+
+|optional
+|boolean
+|Whether the field can store nulls.
+|*true*, false
+
+|mappedBy
+|String
+|Name of the field that owns the relation (specified on the inverse side).
+If the field that owns the relation is stored in an embedded object on the other side, use DOT notation to identify it.
+|
+
+|link:persistence.html#cascading[cascade]
+|CascadeType[]
+|Whether persist, update, delete, refresh operations are cascaded
+|
+
+|link:persistence.html#orphanremoval[orphanRemoval]
+|boolean
+|Whether to remove orphans when either removing this side of the relation or when nulling the relation
+|true, *false*
+|===
+
+[source,java]
+-----
+@Entity
+public class Person
+{
+    @OneToOne
+    Person bestFriend;
+    ...
+}
+-----
+See the documentation for link:mapping.html#one_one_relations[1-1 Relations]
+
+
+[[OneToMany]]
+=== @OneToMany
+
+This annotation is used to define that a field represents a 1-N relation. Specified on the *field/method*.
+
+[cols="1,1,3,1", options="header"]
+|===
+|Attribute
+|Type
+|Description
+|Default
+
+|targetEntity
+|Class
+|Class at the other side of the relation
+|
+
+|fetch
+|FetchType
+|Whether the field should be fetched immediately
+|EAGER, *LAZY*
+
+|mappedBy
+|String
+|Name of the field that owns the relation (specified on the inverse side).
+If the field that owns the relation is stored in an embedded object on the other side, use DOT notation to identify it.
+|
+
+|link:persistence.html#cascading[cascade]
+|CascadeType[]
+|Whether persist, update, delete, refresh operations are cascaded
+|
+
+|link:persistence.html#orphanremoval[orphanRemoval]
+|boolean
+|Whether to remove orphans when either removing this side of the relation or when nulling the relationremoving an element
+|true, *false*
+|===
+
+[source,java]
+-----
+@Entity
+public class Person
+{
+    @OneToMany
+    Collection<Person> friends;
+    ...
+}
+-----
+See the documentation for link:mapping.html#one_many_relations[1-N Relations]
+
+
+[[ManyToMany]]
+=== @ManyToMany
+
+This annotation is used to define that a field represents a M-N relation.
+Specified on the *field/method*.
+
+[cols="1,1,3,1", options="header"]
+|===
+|Attribute
+|Type
+|Description
+|Default
+
+|targetEntity
+|Class
+|Class at the other side of the relation
+|
+
+|fetch
+|FetchType
+|Whether the field should be fetched immediately
+|EAGER, *LAZY*
+
+|mappedBy
+|String
+|Name of the field on the non-owning side that completes the relation. Specified on the owner side.
+If the field that owns the relation is stored in an embedded object on the other side, use DOT notation to identify it.
+|
+
+|link:persistence.html#cascading[cascade]
+|CascadeType[]
+|Whether persist, update, delete, refresh operations are cascaded
+|
+|===
+
+[source,java]
+-----
+@Entity
+public class Customer
+{
+    @ManyToMany(mappedBy="customers")
+    Collection<Supplier> suppliers;
+    ...
+}
+
+@Entity
+public class Supplier
+{
+    @ManyToMany
+    Collection<Customer> customers;
+    ...
+}
+-----
+See the documentation for link:mapping.html#many_many_relations[M-N Relations]
+
+
+[[ManyToOne]]
+=== @ManyToOne
+
+This annotation is used to define that a field represents a N-1 relation. Specified on the *field/method*.
+
+[cols="1,1,3,1", options="header"]
+|===
+|Attribute
+|Type
+|Description
+|Default
+
+|targetEntity
+|Class
+|Class at the other side of the relation
+|
+
+|fetch
+|FetchType
+|Whether the field should be fetched immediately
+|*EAGER*, LAZY
+
+|optional
+|boolean
+|Whether the field can store nulls.
+|*true*, false
+
+|link:persistence.html#cascading[cascade]
+|CascadeType[]
+|Whether persist, update, delete, refresh operations are cascaded
+|
+|===
+
+[source,java]
+-----
+@Entity
+public class House
+{
+    @OneToMany(mappedBy="house")
+    Collection<Window> windows;
+    ...
+}
+
+@Entity
+public class Window
+{
+    @ManyToOne
+    House house;
+    ...
+}
+-----
+See the documentation for link:mapping.html#many_one_relations[N-1 Relations]
+
+
+[[ElementCollection]]
+=== @ElementCollection
+
+This annotation is used to define that a field represents a 1-N relation to non-entity objects. Specified on the *field/method*.
+
+[cols="1,1,3,1", options="header"]
+|===
+|Attribute
+|Type
+|Description
+|Default
+
+|targetClass
+|Class
+|Class at the other side of the relation
+|
+
+|fetch
+|FetchType
+|Whether the field should be fetched immediately
+|EAGER, *LAZY*
+|===
+
+[source,java]
+-----
+@Entity
+public class Person
+{
+    @ElementCollection
+    Collection<String> values;
+    ...
+}
+-----
+
+
+[[GeneratedValue]]
+=== @GeneratedValue
+
+This annotation is used to define the generation of a value for a (PK) field. Specified on the *field/method*.
+
+[cols="1,1,3,1", options="header"]
+|===
+|Attribute
+|Type
+|Description
+|Default
+
+|strategy
+|GenerationType
+|Strategy to use when generating the values for this field. Has possible values of GenerationType TABLE, SEQUENCE, IDENTITY, AUTO.
+|GenerationType.AUTO
+
+|generator
+|String
+|Name of the generator to use. See @TableGenerator and @SequenceGenerator
+|
+|===
+
+[source,java]
+-----
+@Entity
+public class Person
+{
+    @Id
+    @GeneratedValue(strategy=GenerationType.TABLE)
+    long id;
+    ...
+}
+-----
+
+
+[[MapKey]]
+=== @MapKey
+
+This annotation is used to define the field in the value class that represents the key in a Map. Specified on the *field/method*.
+
+[cols="1,1,3,1", options="header"]
+|===
+|Attribute
+|Type
+|Description
+|Default
+
+|name
+|String
+|Name of the field in the value class to use for the key. If no value is supplied and the field is a Map then it is assumed that the key will be the primary key
+of the value class. DataNucleus only supports this null value treatment if the primary key of the value has a single field.
+|
+|===
+
+[source,java]
+-----
+@Entity
+public class Person
+{
+    @OneToMany
+    @MapKey(name="nickname")
+    Map<String, Person> friends;
+    ...
+}
+-----
+
+
+[[MapKeyClass]]
+=== @MapKeyClass
+
+This annotation is used to define the key type for a map field when generics have not been specified. Specified on the *field/method*.
+
+[cols="1,1,3,1", options="header"]
+|===
+|Attribute
+|Type
+|Description
+|Default
+
+|class
+|String
+|Class to be used for the key of the map.
+|
+|===
+
+[source,java]
+-----
+@Entity
+public class Person
+{
+    @OneToMany(targetEntity=Person.class)
+    @MapKeyClass(String.class)
+    Map friends;
+    ...
+}
+-----
+
+TIP: Avoid use of this class and use Java generics! This is the 21st century after all
+
+
+
+[[MapKeyTemporal]]
+=== @MapKeyTemporal
+
+This annotation is used to define the datastore type used for the key of a map when it is a temporal type. Specified on the *field/method*.
+
+[source,java]
+-----
+@Entity
+public class Person
+{
+    @ElementCollection
+    @MapKeyTemporal(TemporalType.DATE)
+    Map<Date, String> dateMap;
+    ...
+}
+-----
+
+
+[[MapKeyEnumerated]]
+=== @MapKeyEnumerated
+
+This annotation is used to define the datastore type used for the key of a map when it is an enum. Specified on the *field/method*.
+
+[source,java]
+-----
+@Entity
+public class Person
+{
+    @ElementCollection
+    @MapKeyEnumerated(EnumType.STRING)
+    Map<MyEnum, String> dateMap;
+    ...
+}
+-----
+
+
+[[MapKeyColumn]]
+=== @MapKeyColumn
+
+This annotation is used to define the column details for a key of a Map when stored in a join table. Specified on the *field/method*.
+
+[cols="1,1,3,1", options="header"]
+|===
+|Attribute
+|Type
+|Description
+|Default
+
+|name
+|String
+|Name of the column for the key
+|
+|===
+
+[source,java]
+-----
+@Entity
+public class Person
+{
+    @OneToMany
+    @MapKeyColumn(name="FRIEND_NAME")
+    Map<String, Person> friends;
+    ...
+}
+-----
+
+
+[[OrderBy]]
+=== @OrderBy
+
+This annotation is used to define a field in the element class that is used for ordering the elements of the List when it is retrieved. Specified on the *field/method*.
+
+[cols="1,1,3,1", options="header"]
+|===
+|Attribute
+|Type
+|Description
+|Default
+
+|value
+|String
+|Name of the field(s) in the element class to use for ordering the elements of the List when retrieving them from the datastore. This is used by JPA "ordered lists" as opposed
+to "indexed lists" (which always return the elements in the same order as they were persisted. The value will be a comma separated list of fields and optionally
+have ASC/DESC to signify ascending or descending
+|
+|===
+
+[source,java]
+-----
+@Entity
+public class Person
+{
+    @OneToMany
+    @OrderBy(value="nickname")
+    List<Person> friends;
+    ...
+}
+-----
+
+
+[[OrderColumn]]
+=== @OrderColumn
+
+This annotation is used to define that the JPA implementation will handle the ordering of the List elements using a surrogate column ("ordered list"). Specified on the *field/method*.
+
+[cols="1,1,3,1", options="header"]
+|===
+|Attribute
+|Type
+|Description
+|Default
+
+|name
+|String
+|Name of the column to use.
+|_{fieldName}_ORDER_
+
+|nullable
+|boolean
+|Whether the column is nullable
+|*true*, false
+
+|insertable
+|boolean
+|Whether the column is insertable
+|*true*, false
+
+|updatable
+|boolean
+|Whether the column is updatable
+|*true*, false
+
+|base
+|int
+|Base for ordering (not currently supported)
+|0
+|===
+
+[source,java]
+-----
+@Entity
+public class Person
+{
+    @OneToMany
+    @OrderColumn
+    List<Person> friends;
+    ...
+}
+-----
+
+
+[[Convert]]
+=== @Convert
+
+This annotation is used to define a link:mapping.html#attributeconverter[converter] for the field/property. Specified on the *field/method*.
+
+[cols="1,1,3,1", options="header"]
+|===
+|Attribute
+|Type
+|Description
+|Default
+
+|converter
+|Class
+|Converter class
+|
+
+|attributeName
+|String
+|Name of the embedded field to be converted (NOT YET SUPPORTED)
+|
+
+|disableConversion
+|boolean
+|Whether we should disable any use of @Converter set to auto-apply
+|
+|===
+
+[source,java]
+-----
+@Entity
+public class Person
+{
+    @Basic
+    @Convert(converter=MyURLConverter.class)
+    URL website;
+    ...
+}
+-----
+
+
+[[Column]]
+=== @Column
+
+This annotation is used to define the column where a field is stored. Specified on the *field/method*.
+
+[cols="1,1,3,1", options="header"]
+|===
+|Attribute
+|Type
+|Description
+|Default
+
+|name
+|String
+|Name for the column
+|
+
+|unique
+|boolean
+|Whether the field is unique
+|true, *false*
+
+|nullable
+|boolean
+|Whether the field is nullable
+|*true*, false
+
+|insertable
+|boolean
+|Whether the field is insertable
+|*true*, false
+
+|updatable
+|boolean
+|Whether the field is updatable
+|*true*, false
+
+|table
+|String
+|Name of the table
+|
+
+|length
+|int
+|Length for the column
+|255
+
+|precision
+|int
+|Decimal precision for the column
+|0
+
+|scale
+|int
+|Decimal scale for the column
+|0
+
+|columnDefinition
+|String
+|DDL to use for the column (everything except the column name). This must include the SQL type of the column
+|
+|===
+
+[source,java]
+-----
+@Entity
+public class Person
+{
+    @Basic
+    @Column(name="SURNAME", length=100, nullable=false)
+    String surname;
+    ...
+}
+-----
+
+
+[[JoinColumn]]
+=== @JoinColumn
+
+This annotation is used to define the FK column for joining to another table. This is part of a 1-1, 1-N, or N-1 relation. Specified on the *field/method*.
+
+[cols="1,1,3,1", options="header"]
+|===
+|Attribute
+|Type
+|Description
+|Default
+
+|name
+|String
+|Name for the column
+|
+
+|referencedColumnName
+|String
+|Name of the column in the other table that this is the FK for. This is for use when you have a composite PK so acts as a way of aligning the respective columns.
+*It is not to allow joining to some non-PK column*
+|
+
+|unique
+|boolean
+|Whether the field is unique
+|true, *false*
+
+|nullable
+|boolean
+|Whether the field is nullable
+|*true*, false
+
+|insertable
+|boolean
+|Whether the field is insertable
+|*true*, false
+
+|updatable
+|boolean
+|Whether the field is updatable
+|*true*, false
+
+|columnDefinition
+|String
+|DDL to use for the column (everything except the column name). This must include the SQL type of the column
+|
+
+|foreignKey
+|ForeignKey
+|Foreign key details if wanting to override provider default
+|
+|===
+
+[source,java]
+-----
+@Entity
+public class Person
+{
+    @OneToOne
+    @JoinColumn(name="PET_ID", nullable=true)
+    Animal pet;
+    ...
+}
+-----
+
+
+[[JoinColumns]]
+=== @JoinColumns
+
+This annotation is used to define the FK columns for joining to another table. This is part of a 1-1, 1-N, or N-1 relation. Specified on the *field/method*.
+
+[cols="1,1,3,1", options="header"]
+|===
+|Attribute
+|Type
+|Description
+|Default
+
+|value
+|JoinColumn[]
+|Details of the columns
+|
+
+|foreignKey
+|ForeignKey
+|Foreign key details if wanting to override provider default
+|
+|===
+
+[source,java]
+-----
+@Entity
+public class Person
+{
+    @OneToOne
+    @JoinColumns({@JoinColumn(name="PET1_ID"), @JoinColumn(name="PET2_ID")})
+    Animal pet; // composite PK
+    ...
+}
+-----
+
+
+[[UniqueConstraint]]
+=== @UniqueConstraint
+
+This annotation is used to define a unique constraint to apply to a table. It is specified as part of @Table, @JoinTable or @SecondaryTable.
+
+[cols="1,1,3,1", options="header"]
+|===
+|Attribute
+|Type
+|Description
+|Default
+
+|columnNames
+|String[]
+|Names of the column(s)
+|
+|===
+
+[source,java]
+-----
+@Entity
+@Table(name="PERSON", uniqueConstraints={@UniqueConstraint(columnNames={"firstName","lastName"})})
+public class Person
+{
+    @Basic
+    String firstName;
+
+    @Basic
+    String lastName;
+    ...
+}
+-----
+See the documentation for link:mapping.html#constraints[Schema Constraints]
+
+
+[[Index]]
+=== @Index
+
+This annotation is used to define the details for an Index. It is specified as part of @Table, @JoinTable, @CollectionTable or @SecondaryTable.
+
+[cols="1,1,3,1", options="header"]
+|===
+|Attribute
+|Type
+|Description
+|Default
+
+|name
+|String
+|Name of the index
+|
+
+|columnList
+|String
+|Columns to be included in this index of the form
+_colName1, colName2_
+|
+
+|unique
+|boolean
+|Whether the index is unique
+|false
+|===
+
+See the documentation for link:mapping.html#constraints[Schema Constraints]
+
+
+[[ForeignKey]]
+=== @ForeignKey
+
+This annotation is used to define the details for a ForeignKey. It is specified as part of @JoinColumn, @JoinTable, @CollectionTable or @SecondaryTable.
+
+[cols="1,1,3,1", options="header"]
+|===
+|Attribute
+|Type
+|Description
+|Default
+
+|name
+|String
+|Name of the foreign key
+|
+
+|value
+|ConstraintMode
+|Constraint mode
+|ConstraintMode.CONSTRAINT
+
+|foreignKeyDefinition
+|String
+|DDL for the FOREIGN KEY statement of the form
+_FOREIGN KEY ( colExpr1 {, colExpr2}... ) REFERENCES tblIdentifier {( otherColExpr1 {, otherColExpr2}... ) } { ON UPDATE updateAction } { ON DELETE deleteAction }_
+|
+|===
+
+See the documentation for link:mapping.html#constraints[Schema Constraints]
+
+
+[[dn_class_extensions]]
+== DataNucleus Class-Level Extensions
+
+The following annotations are specified at class-level and are vendor extensions providing more functionality than the JPA spec defines. 
+Using these will reduce the portability of your application.
+
+[cols="1,1,3", options="header"]
+|===
+|Annotation
+|Class/Field
+|Description
+
+|xref:annotations.html#PersistenceAware[@PersistenceAware]
+|Class
+|Specifies that the class is not persistent but needs to be able to access fields of persistent classes (DataNucleus extension).
+
+|xref:annotations.html#DatastoreId[@DatastoreId]
+|Class
+|Defines a class as using datastore-identity (DataNucleus extension).
+
+|xref:annotations.html#NonDurableId[@NonDurableId]
+|Class
+|Defines a class as using nondurable identity (DataNucleus extension).
+
+|xref:annotations.html#ReadOnly_Class[@ReadOnly]
+|Class
+|Specifies that this class is "read-only" (DataNucleus extension).
+
+|xref:annotations.html#MultiTenant_Class[@MultiTenant]
+|Class
+|Specifies multi-tenancy details for this class (DataNucleus extension).
+|===
+
+
+[[PersistenceAware]]
+=== @PersistenceAware
+
+This annotation is used when you want to mark a class as knowing about persistence but not persistent itself. 
+That is, it manipulates the fields of a persistent class directly rather than using accessors.
+*This is a DataNucleus extension*. Specified on the *class*.
+
+[source,java]
+-----
+@PersistenceAware
+public class MyClass
+{
+    ...
+}
+-----
+See the documentation for link:class_mapping.html[Class Mapping]
+
+
+[[DatastoreId]]
+=== @DatastoreId
+
+This DataNucleus-extension annotation is used to define that the class uses datastore-identity. Specified on the *class*.
+
+[cols="1,1,3,1", options="header"]
+|===
+|Attribute
+|Type
+|Description
+|Default
+
+|generationType
+|GenerationType
+|Strategy to use when generating the values for this field. Has possible values of GenerationType TABLE, SEQUENCE, IDENTITY, AUTO.
+|*AUTO*, TABLE, SEQUENCE
+
+|generator
+|String
+|Name of the generator to use. See @TableGenerator and @SequenceGenerator
+|
+
+|column
+|String
+|Name of the column for persisting the datastore identity value
+|
+|===
+
+[source,java]
+-----
+@Entity
+@DatastoreId(column="MY_ID")
+public class MyClass
+{
+    ...
+}
+-----
+
+
+[[NonDurableId]]
+=== @NonDurableId
+
+This DataNucleus-extension annotation is used to define that the class uses nondurable identity. Specified on the *class*.
+
+[source,java]
+-----
+@Entity
+@NonDurableId
+public class MyClass
+{
+    ...
+}
+-----
+
+
+[[ReadOnly_Class]]
+=== @ReadOnly
+
+This DataNucleus-extension annotation is used to define a class as being read-only (equivalent as read-only="true"). Specified on the *class*.
+
+[source,java]
+-----
+@Entity
+@ReadOnly
+public class MyClass
+{
+    ...
+}
+-----
+
+
+[[MultiTenant_Class]]
+=== @MultiTenant
+
+This DataNucleus-extension annotation is used specify multi-tenancy details for a class. Specified on the *class*.
+
+[cols="1,1,3,1", options="header"]
+|===
+|Attribute
+|Type
+|Description
+|Default
+
+|column
+|String
+|Name of the multi-tenancy column for this class.
+|TENANT_ID
+
+|columnName
+|int
+|Length of the multi-tenancy column.
+|
+
+|disabled
+|boolean
+|Whether the multi-tenancy for this class is disabled.
+|false
+|===
+
+[source,java]
+-----
+@Entity
+@MultiTenant(column="TENANT", columnLength=255)
+public class MyClass
+{
+    ...
+}
+-----
+
+
+[[dn_member_extensions]]
+== DataNucleus Field-Level Extensions
+
+The following annotations are specified at field/method-level and are vendor extensions providing more functionality than the JPA spec defines. 
+Using these will reduce the portability of your application.
+
+[cols="1,1,3", options="header"]
+|===
+|Annotation
+|Class/Field
+|Description
+
+|xref:annotations.html#SharedRelation[@SharedRelation]
+|Field/Method
+|Specifies that the relation for this field/property is "shared" (DataNucleus extension).
+
+|xref:annotations.html#ReadOnly[@ReadOnly]
+|Field/Method
+|Specifies that this field/property is "read-only" (DataNucleus extension).
+
+|xref:annotations.html#Index_Field[@Index]
+|Field/Method
+|Specifies an index on this field/property (DataNucleus extension).
+
+|xref:annotations.html#JdbcType[@JdbcType]
+|Field/Method
+|Specifies the JDBC Type to use on this field/property (DataNucleus extension).
+
+|xref:annotations.html#ColumnPosition[@ColumnPosition]
+|Field/Method
+|Specifies the column position to use on this field/property (DataNucleus extension).
+
+|xref:annotations.html#ValueGenerator[@ValueGenerator]
+|Field/Method
+|Specifies a non-JPA-standard value generator to use on this field/property (DataNucleus extension).
+
+|xref:annotations.html#Extensions[@Extensions]
+|Class/Field/Method
+|Defines a series of DataNucleus extensions (DataNucleus extension).
+
+|xref:annotations.html#Extension[@Extension]
+|Class/Field/Method
+|Defines a DataNucleus extension (DataNucleus extension).
+
+|xref:annotations.html#CreateTimestamp[@CreateTimestamp]
+|Field/Method
+|Specifies that this field/property should store a creation timestamp when inserting (DataNucleus extension).
+
+|xref:annotations.html#UpdateTimestamp[@UpdateTimestamp]
+|Field/Method
+|Specifies that this field/property should store an update timestamp when updating (DataNucleus extension).
+|===
+
+
+[[SharedRelation]]
+=== @SharedRelation
+
+This DataNucleus-extension annotation is used to define a field with a (1-N/M-N) relation as being "shared" so that a distinguisher column is added.
+Specified on the *field/property*.
+
+[cols="1,1,3,1", options="header"]
+|===
+|Attribute
+|Type
+|Description
+|Default
+
+|value
+|String
+|value to be stored in the distinguisher column for this relation field
+|
+
+|column
+|String
+|Name of the distinguisher column for this relation field
+|
+|primaryKey
+|boolean
+|Whether the distinguisher column should be part of the PK (when in a join table)
+|
+|===
+
+[source,java]
+-----
+@Entity
+public class MyClass
+{
+    @OneToMany
+    @JoinTable
+    @SharedRelation(column="ADDRESS_TYPE", value="home")
+    Collection<Address> homeAddresses;
+
+    @OneToMany
+    @JoinTable
+    @SharedRelation(column="ADDRESS_TYPE", value="work")
+    Collection<Address> workAddresses;
+    ...
+}
+-----
+
+
+[[ValueGenerator]]
+=== @ValueGenerator
+
+This DataNucleus-extension annotation is used to allow use of non-JPA-standard value generators on a field/property.
+Specified on the *field/property*.
+
+[cols="1,1,3,1", options="header"]
+|===
+|Attribute
+|Type
+|Description
+|Default
+
+|strategy
+|String
+|Name of the strategy e.g "uuid"
+|
+|===
+
+[source,java]
+-----
+@Entity
+public class MyClass
+{
+    @ValueGenerator(strategy="uuid")
+    String id;
+    ...
+}
+-----
+
+
+[[ReadOnly]]
+=== @ReadOnly
+
+This DataNucleus-extension annotation is used to define a field as being read-only (equivalent as insertable="false", updateable="false").
+Specified on the *field/property*.
+
+[source,java]
+-----
+@Entity
+public class MyClass
+{
+    @Basic
+    @ReadOnly
+    String someValue;
+
+    ...
+}
+-----
+
+
+[[CreateTimestamp]]
+=== @CreateTimestamp
+
+This DataNucleus-extension annotation is used to define this field as being persisted with a timestamp of the creation time of this object. Specified on the *field/property*.
+
+[source,java]
+-----
+@Entity
+public class MyClass
+{
+    @CreateTimestamp
+    Timestamp createTime;
+    ...
+}
+-----
+
+
+[[UpdateTimestamp]]
+=== @UpdateTimestamp
+
+This DataNucleus-extension annotation is used to define this field as being persisted with a timestamp of the update time of this object. Specified on the *field/property*.
+
+[source,java]
+-----
+@Entity
+public class MyClass
+{
+    @UpdateTimestamp
+    Timestamp updateTime;
+    ...
+}
+-----
+
+
+[[Index_Field]]
+=== @Index (field/method - extension)
+
+This DataNucleus-extension annotation is used to define an index for this field/property. Specified on the *field/property*.
+
+[cols="1,1,3,1", options="header"]
+|===
+|Attribute
+|Type
+|Description
+|Default
+
+|name
+|String
+|Name of the index
+|
+
+|unique
+|boolean
+|Whether the index is unique
+|false
+|===
+
+[source,java]
+-----
+@Entity
+public class MyClass
+{
+    @Index(name="ENABLED_IDX")
+    boolean enabled;
+    ...
+}
+-----
+
+
+[[JdbcType]]
+=== @JdbcType
+
+This DataNucleus-extension annotation is used to define the jdbc-type to use for this field/property. Specified on the *field/property*.
+
+[cols="1,1,3,1", options="header"]
+|===
+|Attribute
+|Type
+|Description
+|Default
+
+|value
+|String
+|JDBC Type (VARCHAR, INTEGER, BLOB, etc)
+|
+|===
+
+[source,java]
+-----
+@Entity
+public class MyClass
+{
+    @JdbcType("CHAR")
+    boolean enabled;
+    ...
+}
+-----
+
+
+[[ColumnPosition]]
+=== @ColumnPosition
+
+This DataNucleus-extension annotation is used to define the column position to use for this field/property. Specified on the *field/property*.
+
+[cols="1,1,3,1", options="header"]
+|===
+|Attribute
+|Type
+|Description
+|Default
+
+|value
+|Integer
+|position of the column (first is "0", increasing)
+|
+|===
+
+[source,java]
+-----
+@Entity
+public class MyClass
+{
+    @ColumnPosition(0)
+    boolean enabled;
+    ...
+}
+-----
+
+
+[[Extensions]]
+=== @Extensions
+
+_DataNucleus Extension Annotation_ used to define a set of extensions specific to DataNucleus. Specified on the *class* or *field*.
+
+[cols="1,1,3,1", options="header"]
+|===
+|Attribute
+|Type
+|Description
+|Default
+
+|value
+|Extension[]
+|Array of extensions - see @Extension annotation
+|
+|===
+                
+[source,java]
+-----
+@Entity
+@Extensions({@Extension(key="firstExtension", value="myValue"),
+             @Extension(key="secondExtension", value="myValue")})
+public class Person
+{
+    ...
+}
+-----
+
+
+[[Extension]]
+=== @Extension
+
+_DataNucleus Extension Annotation_  used to define an extension specific to DataNucleus. Specified on the *class* or *field*.
+
+[cols="1,1,3,1", options="header"]
+|===
+|Attribute
+|Type
+|Description
+|Default
+
+|vendorName
+|String
+|Name of the vendor
+|datanucleus
+
+|key
+|String
+|Key for the extension
+|
+
+|value
+|String
+|Value of the extension
+|
+|===
+
+[source,java]
+-----
+@Entity
+@Extension(key="RunFast", value="true")
+public class Person
+{
+    ...
+}
+-----

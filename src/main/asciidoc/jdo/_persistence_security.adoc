@@ -1,0 +1,64 @@
+[[security]]
+= Java Security
+:_basedir: ../
+:_imagesdir: images/
+
+The Java Security Manager can be used with DataNucleus JDO to provide a security platform to sensitive applications.
+
+To use the Security Manager, specify the _java.security.manager_ and _java.security.policy_ arguments when starting the JVM. e.g.
+
+-----
+java -Djava.security.manager -Djava.security.policy==/etc/apps/security/security.policy ...
+-----
+
+Note that when you use _-Djava.security.policy==..._ (double equals sign) you override the default JVM security policy files, 
+while if you use _-Djava.security.policy=..._ (single equals sign), you append the security policy file to any existing ones.
+
+The following is a sample security policy file to be used with DataNucleus.
+
+-----
+grant codeBase "file:${/}jdo2-api-2.0.jar" {
+
+    //jdo API needs datetime (timezone class needs the following)
+    permission java.util.PropertyPermission "user.country", "read";
+    permission java.util.PropertyPermission "user.variant", "read";
+    permission java.util.PropertyPermission "user.timezone", "read,write";
+    permission java.util.PropertyPermission "java.home", "read";
+};
+grant codeBase "file:${/}datanucleus*.jar" {
+
+     //jdo
+    permission javax.jdo.spi.JDOPermission "getMetadata";
+    permission javax.jdo.spi.JDOPermission "setStateManager";
+	
+    //DataNucleus needs to get classloader of classes
+    permission java.lang.RuntimePermission "getClassLoader";
+	
+    //DataNucleus needs to detect the java and os version
+    permission java.util.PropertyPermission "java.version", "read";
+    permission java.util.PropertyPermission "os.name", "read";
+
+    //DataNucleus reads these system properties
+    permission java.util.PropertyPermission "datanucleus.*", "read";	
+    permission java.util.PropertyPermission "javax.jdo.*", "read";	
+	
+    //DataNucleus runtime enhancement (needs read access to all jars/classes in classpath, 
+    // so use <<ALL FILES>> to facilitate config)
+    permission java.lang.RuntimePermission "createClassLoader";
+    permission java.io.FilePermission "<<ALL FILES>>", "read";
+	
+    //DataNucleus needs to read manifest files (read permission to location of MANIFEST.MF files) 
+    permission java.io.FilePermission "${user.dir}${/}-", "read";
+    permission java.io.FilePermission "<<ALL FILES>>", "read";
+	
+    //DataNucleus uses reflection!!!
+    permission java.lang.reflect.ReflectPermission "suppressAccessChecks";
+    permission java.lang.RuntimePermission "accessDeclaredMembers";
+};
+
+grant codeBase "file:${/}datanucleus-hbase*.jar" {
+
+    //HBASE does not run in a doPrivileged, so we do...
+    permission java.net.SocketPermission "*", "connect,resolve";
+};
+-----

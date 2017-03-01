@@ -1,0 +1,306 @@
+[[query_method_evaluators]]
+= Extension: InMemory Query Methods
+:_basedir: ../
+:_imagesdir: images/
+
+
+JDOQL/JPQL are defined to support particular methods/functions as part of the supported syntax.
+This support is provided by way of an extension point, with support for these methods/functions
+added via extensions. You can make use of this extension point to add on your own methods/functions - obviously this will be DataNucleus specific.
+
+__This plugin extension point is currently only for evaluation of queries in-memory__. It will have no effect where the query is evaluated in the datastore.
+The plugin extension used here is *org.datanucleus.query_method_evaluators*.
+
+[cols="2,1,1,2,1", options="header"]
+|===
+|Plugin extension-point
+|Class
+|Name
+|Description
+|Location
+
+|org.datanucleus.query_method_evaluators
+|(static)
+|Math.abs
+|Use of Math functions for JDO
+|datanucleus-core
+
+|org.datanucleus.query_method_evaluators
+|(static)
+|Math.sqrt
+|Use of Math functions for JDO
+|datanucleus-core
+
+|org.datanucleus.query_method_evaluators
+|(static)
+|JDOHelper.getObjectId
+|Use of JDOHelper functions for JDO
+|datanucleus-core
+
+|org.datanucleus.query_method_evaluators
+|(static)
+|JDOHelper.getVersion
+|Use of JDOHelper functions for JDO
+|datanucleus-core
+
+|org.datanucleus.query_method_evaluators
+|(static)
+|CURRENT_DATE
+|JPQL functions
+|datanucleus-core
+
+|org.datanucleus.query_method_evaluators
+|(static)
+|CURRENT_TIME
+|JPQL functions
+|datanucleus-core
+
+|org.datanucleus.query_method_evaluators
+|(static)
+|CURRENT_TIMESTAMP
+|JPQL functions
+|datanucleus-core
+
+|org.datanucleus.query_method_evaluators
+|(static)
+|ABS
+|JPQL functions
+|datanucleus-core
+
+|org.datanucleus.query_method_evaluators
+|(static)
+|SQRT
+|JPQL functions
+|datanucleus-core
+
+|org.datanucleus.query_method_evaluators
+|(static)
+|MOD
+|JPQL functions
+|datanucleus-core
+
+|org.datanucleus.query_method_evaluators
+|(static)
+|SIZE
+|JPQL functions
+|datanucleus-core
+
+|org.datanucleus.query_method_evaluators
+|(static)
+|UPPER
+|JPQL functions
+|datanucleus-core
+
+|org.datanucleus.query_method_evaluators
+|(static)
+|LOWER
+|JPQL functions
+|datanucleus-core
+
+|org.datanucleus.query_method_evaluators
+|(static)
+|LENGTH
+|JPQL functions
+|datanucleus-core
+
+|org.datanucleus.query_method_evaluators
+|(static)
+|CONCAT
+|JPQL functions
+|datanucleus-core
+
+|org.datanucleus.query_method_evaluators
+|(static)
+|SUBSTRING
+|JPQL functions
+|datanucleus-core
+
+|org.datanucleus.query_method_evaluators
+|(static)
+|LOCATE
+|JPQL functions
+|datanucleus-core
+
+|org.datanucleus.query_method_evaluators
+|(static)
+|TRIM
+|JPQL functions
+|datanucleus-core
+
+|org.datanucleus.query_method_evaluators
+|java.lang.String
+|startsWith
+|JDOQL methods
+|datanucleus-core
+
+|org.datanucleus.query_method_evaluators
+|java.lang.String
+|endsWith
+|JDOQL methods
+|datanucleus-core
+
+|org.datanucleus.query_method_evaluators
+|java.lang.String
+|indexOf
+|JDOQL methods
+|datanucleus-core
+
+|org.datanucleus.query_method_evaluators
+|java.lang.String
+|substring
+|JDOQL methods
+|datanucleus-core
+
+|org.datanucleus.query_method_evaluators
+|java.lang.String
+|toUpperCase
+|JDOQL methods
+|datanucleus-core
+
+|org.datanucleus.query_method_evaluators
+|java.lang.String
+|toLowerCase
+|JDOQL methods
+|datanucleus-core
+
+|org.datanucleus.query_method_evaluators
+|java.lang.String
+|matches
+|JDOQL methods
+|datanucleus-core
+
+|org.datanucleus.query_method_evaluators
+|java.lang.String
+|trim
+|JDOQL methods
+|datanucleus-core
+
+|org.datanucleus.query_method_evaluators
+|java.lang.String
+|length
+|JDOQL methods
+|datanucleus-core
+
+|org.datanucleus.query_method_evaluators
+|java.util.Collection
+|size
+|JDOQL methods
+|datanucleus-core
+
+|org.datanucleus.query_method_evaluators
+|java.util.Collection
+|isEmpty
+|JDOQL methods
+|datanucleus-core
+
+|org.datanucleus.query_method_evaluators
+|java.util.Collection
+|contains
+|JDOQL methods
+|datanucleus-core
+
+|org.datanucleus.query_method_evaluators
+|java.util.Map
+|size
+|JDOQL methods
+|datanucleus-core
+
+|org.datanucleus.query_method_evaluators
+|java.util.Map
+|isEmpty
+|JDOQL methods
+|datanucleus-core
+
+|org.datanucleus.query_method_evaluators
+|java.util.Map
+|containsKey
+|JDOQL methods
+|datanucleus-core
+
+|org.datanucleus.query_method_evaluators
+|java.util.Map
+|containsValue
+|JDOQL methods
+|datanucleus-core
+
+|org.datanucleus.query_method_evaluators
+|java.util.Map
+|get
+|JDOQL methods
+|datanucleus-core
+|===
+
+
+== Interface
+
+Any query method/function plugin will need to implement _org.datanucleus.query.evaluator.memory.InvocationEvaluator_.
+http://www.datanucleus.org/javadocs/core/latest/org/datanucleus/query/evaluator/memory/InvocationEvaluator.html[image:../images/javadoc.png[Javadoc]].
+So you need to implement the following interface
+
+[source,java]
+-----
+public interface InvocationEvaluator
+{
+    /**
+     * Method to evaluate the InvokeExpression, as part of the overall evaluation
+     * defined by the InMemoryExpressionEvaluator.
+     * @param expr The expression for invocation
+     * @param invokedValue Value on which we are invoking this method
+     * @param eval The overall evaluator for in-memory
+     * @return The result
+     */
+    Object evaluate(InvokeExpression expr, Object invokedValue, InMemoryExpressionEvaluator eval);
+}
+-----
+
+== Implementation
+
+Let's assume that you want to provide your own method for "String" _toUpperCase : obviously this is provided out of the box, but is here as an example.
+
+[source,java]
+-----
+public class StringToUpperCaseMethodEvaluator implements InvocationEvaluator
+{
+    public Object evaluate(InvokeExpression expr, Object invokedValue, InMemoryExpressionEvaluator eval)
+    {
+        String method = expr.getOperation(); // Will be "toUpperCase"
+
+        if (invokedValue == null)
+        {
+            return null;
+        }
+        if (!(invokedValue instanceof String))
+        {
+            throw new NucleusException(Localiser.msg("021011", method, invokedValue.getClass().getName()));
+        }
+        return ((String)invokedValue).toUpperCase();
+    }
+}
+-----
+
+== Plugin Specification
+
+When we have defined our query method we just need to make it into a DataNucleus plugin. 
+To do this you simply add a file `plugin.xml` to your JAR at the root, like this
+
+[source,xml]
+-----
+<?xml version="1.0"?>
+<plugin id="mydomain" name="DataNucleus plug-ins" provider-name="My Company">
+    <extension point="org.datanucleus.query_method_evaluators">
+        <query-method-evaluator class="java.lang.String" method="toUpperCase" evaluator="org.datanucleus.query.evaluator.memory.StringToUpperCaseMethodEvaluator"/>
+    </extension>
+</plugin>
+-----
+
+Note that you also require a `MANIFEST.MF` file as xref:extensions.adoc#MANIFEST[described above].
+
+== Plugin Usage
+
+The only thing remaining is to use your method in a JDOQL/JPQL query, like this
+[source,java]
+-----
+Query q = pm.newQuery("SELECT FROM mydomain.Product WHERE name.toUpperCase() == 'KETTLE'");
+-----
+
+so when evaluating the query in memory it will call this evaluator class for the field 'name'.

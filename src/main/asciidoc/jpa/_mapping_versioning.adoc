@@ -1,0 +1,88 @@
+[[versioning]]
+= Versioning
+:_basedir: ../
+:_imagesdir: images/
+
+JPA allows objects of classes to be versioned. The version is typically used as a way of detecting if the object has been updated by another thread or 
+EntityManager since retrieval using the current EntityManager - for use by Optimistic Transactions.
+
+[[version_member]]
+== Version Field/Property
+
+The standard JPA mechanism for versioning of objects is to mark a field of the class to store the version. The field must be Integer/Long based.
+With JPA you can specify the details of this *version field* as follows
+
+[source,xml]
+-----
+<entity name="mydomain.User">
+    <attributes>
+        <id name="id"/>
+        <version name="version"/>
+    </attributes>
+</entity>
+-----
+
+or alternatively using annotations
+
+[source,java]
+-----
+@Entity
+public class User
+{
+    @Id
+    long id;
+
+    @Version
+    int version;
+
+    ...
+}
+-----
+
+The specification above will use the "version" field for storing the version of the object. DataNucleus will use a "version-number" strategy for populating the value.
+
+
+[[surrogate_version]]
+== Surrogate Version for Class
+
+image:../images/nucleus_extension.png[]
+
+While the above mechanism should always be used for portability, DataNucleus also supports a surrogate version for objects of a class. 
+With this you don't have a particular field that stores the version and instead DataNucleus persists the version in the datastore with the
+field values in its own "column". You do this as follows.
+
+[source,xml]
+-----
+<entity name="mydomain.User">
+    <surrogate-version column="version"/>
+    <attributes>
+        <id name="id"/>
+    </attributes>
+</entity>
+-----
+
+or alternatively using annotations
+
+[source,java]
+-----
+import org.datanucleus.api.jpa.annotations.SurrogateVersion;
+
+@Entity
+@SurrogateVersion
+public class User
+{
+    @Id
+    long id;
+
+    ...
+}
+-----
+
+To access the "surrogate" version, you can make use of the following method
+
+[source,java]
+-----
+import org.datanucleus.api.jpa.NucleusJPAHelper;
+
+Object version = NucleusJPAHelper.getSurrogateVersionForEntity(obj);
+-----

@@ -1,0 +1,118 @@
+[[neodatis]]
+= NeoDatis Datastores
+:_basedir: ../
+:_imagesdir: images/
+
+NeoDatis is an object-oriented database for Java and .Net. It is simple and fast and supports various query mechanisms.
+
+DataNucleus supports persisting/retrieving objects to http://www.neodatis.org[Neodatis] datastores (using the https://github.com/datanucleus/datanucleus-neodatis[datanucleus-neodatis] plugin).
+
+The jars required to use DataNucleus NeoDatis persistence are `datanucleus-core`, `datanucleus-api-jdo`/`datanucleus-api-jpa`, `datanucleus-neodatis` and `neodatis`.
+
+
+== Datastore Connection
+
+DataNucleus supports 2 modes of operation of _neodatis_ - file-based, and client-server based. 
+In order to do so and to fit in with the JDO/JPA APIs we have defined the following means of connection.
+
+The following persistence properties will connect to a *file-based* Neodatis running on your local machine
+
+-----
+datanucleus.ConnectionURL=neodatis:file:neodatisdb.odb
+-----
+
+Replacing `neodatisdb.odb` by your filename for the datastore, and can be absolute OR relative.
+
+The following persistence properties will connect to *embedded-server-based* NeoDatis running with a local file
+
+-----
+datanucleus.ConnectionURL=neodatis:server:{my_neodatis_file}
+datanucleus.ConnectionUserName=
+datanucleus.ConnectionPassword=
+-----
+
+The filename {my_neodatis_file} can be absolute OR relative.
+
+The following persistence properties will connect as a client to a *TCP/IP NeoDatis Server*
+
+-----
+datanucleus.ConnectionURL=neodatis:{neodatis_host}:{neodatis_port}/{identifier}
+datanucleus.ConnectionUserName=
+datanucleus.ConnectionPassword=
+-----
+
+Neodatis doesn't itself use such URLs so it was necessary to define this DataNucleus-specific way of addressing Neodatis.
+
+So you create your link:../jdo/persistence.html#pmf[PersistenceManagerFactory] or link:../jpa/persistence.html#emf[EntityManagerFactory] with these properties. 
+Thereafter you have the full power of the JDO or JPA APIs at your disposal, for your NeoDatis datastore.
+
+
+== Queries
+
+AccessPlatform allows you to query the objects in the datastore using the following
+
+* link:../jdo/query.html#jdoql[JDOQL] - language based around the objects that are persisted and using Java-type syntax
+* link:../jpa/query.html#jpql[JPQL] - language based around the objects that are persisted and using SQL-like syntax
+* link:#neodatis_native[Native] - NeoDatis' own type-safe query language
+* link:#neodatis_criteria[Criteria] - NeoDatis' own Criteria query language
+
+
+[[neodatis_native]]
+== Queries : NeoDatis Native Queries
+
+NOTE: If you choose to use NeoDatis Native Queries then these are not portable to any other datastore. Use JDOQL/JPQL for portability
+
+
+NeoDatis provides its own "native" query interface, and if you are using the JDO API you can utilise this for querying. To take a simple example
+
+[source,java]
+-----
+// Find all employees older than 31
+Query q = pm.newQuery("Native", new NativeQuery()
+    {
+        public boolean match(Object e)
+        {
+            if (!(e instanceof Employee))
+            {
+                return false;
+            }
+            return ((Employee)e).getAge() >= 32;
+        }
+        public Class getObjectType()
+        {
+            return Employee.class;
+        }
+    });
+
+List results = (List)q.execute();
+-----
+
+So we are utilising the JDO API to generate a query and passing in the NeoDatis "NativeQuery".
+
+
+[[neodatis_criteria]]
+## Queries : NeoDatis Criteria Queries
+
+NOTE: If you choose to use NeoDatis Criteria Queries then these are not portable to any other datastore. Use JDOQL/JPQL for portability
+
+
+NeoDatis provides its own "criteria" query interface, and if you are using the JDO API you can utilise this for querying. To take a simple example
+
+[source,java]
+-----
+// Find all employees older than 31
+Query q = pm.newQuery("Criteria", new CriteriaQuery(Employee.class, Where.ge("age", 32)));
+
+List results = (List)q.execute();
+-----
+
+So we are utilising the JDO API to generate a query and passing in the NeoDatis "CriteriaQuery".
+
+
+== Known Limitations
+
+The following are known limitations of the current implementation
+
+* NeoDatis doesn't have the concept of an "unloaded" field and so when you request an object from the datastore it comes with its graph of objects. 
+Consequently there is no "lazy loading" and the consequent impact that can have on memory utilisation.</li>
+

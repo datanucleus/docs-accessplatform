@@ -1,0 +1,128 @@
+[[serialised]]
+= Serialised Fields
+:_basedir: ../
+:_imagesdir: images/
+
+
+JPA provides a way for users to specify that a field will be persisted _serialised_. This is of use, for example, to collections/maps/arrays which typically 
+are stored using join tables or foreign-keys to other records. By specifying that a field is serialised a column will be added to store that field and the 
+field will be serialised into it.
+
+JPA's definition of serialising applies to any field and all in the same way, unlike the situation with JDO which provides much more flexibility. 
+Perhaps the most important thing to bear in mind when deciding to serialise a field is that that object in the field being serialised must implement 
+_java.io.Serializable_.
+
+
+[[serialise_field]]
+== Serialised Fields
+
+NOTE: Applicable to RDBMS, HBase, MongoDB
+
+If you wish to serialise a particular field into a single column (in the table of the class), you need to simply mark the field as a "lob" (large object). 
+Let's take an example. We have the following classes
+
+[source,java]
+-----
+public class Farm
+{
+    Collection<Animal> animals;
+
+    ...
+}
+
+public class Animal
+{
+    ...
+}
+-----
+
+and we want the _animals_ collection to be serialised into a single column in the table storing the *Farm* class, so we define our MetaData like this
+
+[source,java]
+-----
+@Entity
+public class Farm
+{
+    @Lob
+    Collection<Animal> animals;
+
+    ...
+}
+-----
+
+or using XML metadata
+
+[source,xml]
+-----
+<entity class="Farm">
+    <table name="FARM"/>
+    <attributes>
+        ...
+        <basic name="animals">
+            <column name="ANIMALS"/>
+            <lob/>
+        </basic>
+        ...
+    </attributes>
+</entity>
+-----
+
+So we make use of the _lob_ element / @Lob annotation. This specification results in a table like this
+
+image:../images/serialised_collection_db.png[]
+
+WARNING: Queries cannot be performed on collections stored as serialised.
+
+NOTE: If the field that we want to serialise is of type String, byte array, char array, Byte array or Character array then the field will be serialised into a CLOB column rather than BLOB.
+
+See also :-
+
+* link:metadata_xml.html#basic[MetaData reference for <basic> element]
+* link:annotations.html#Lob[Annotations reference for @Lob]
+
+
+[[serialise_to_file]]
+== Serialise to File
+
+NOTE: Applicable to RDBMS
+
+*Note this is not part of the JPA spec, but is available in DataNucleus to ease your usage.*
+If you have a non-relation field that implements Serializable you have the option of serialising it into a file on the local disk. 
+This could be useful where you have a large file and don't want to persist very large objects into your RDBMS. 
+Obviously this will mean that the field is no longer queryable, but then if its a large file you likely don't care about that. 
+So let's give an example
+
+[source,java]
+-----
+@Entity
+public class Person
+{
+    @Id
+    long id;
+
+    @Basic
+    @Lob
+    @Extension(vendorName="datanucleus", key="serializeToFileLocation", value="person_avatars")
+    AvatarImage image;
+}
+-----
+
+or using XML metadata
+
+[source,xml]
+-----
+<entity class="Person">
+    <attributes>
+        ...
+        <basic name="image">
+            <lob/>
+            <extension key="serializeToFileLocation" value="person_avatars"
+        </basic>
+        ...
+    </attributes>
+</entity>
+-----
+
+So this will now persist a file into a folder /person_avatars_ with filename as the String form of the identity of the owning object. 
+In a real world example you likely will specify the extension value as an absolute path name, so you can place it anywhere in the local disk.
+

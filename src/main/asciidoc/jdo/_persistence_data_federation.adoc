@@ -1,0 +1,57 @@
+[[data_federation]]
+= Data Federation
+:_basedir: ../
+:_imagesdir: images/
+
+
+
+image:../images/nucleus_extension.png[]
+
+By default JDO provides a link:persistence.html#pmf[PersistenceManagerFactory] (PMF) to represent a single datastore.
+Some applications need access to multiple datastores and the standard way of handling this is to have one PMF for each datastore.
+
+As an alternative DataNucleus allows having a PMF represent multiple datastores. 
+
+WARNING: This is functionality that is work-in-progress and only tested for basic persist/retrieve operations using different schemas of the same datastore.
+It may work for some things but you need to treat it with caution.
+
+NOTE: Obviously if you have relations between one object in one datastore and another object in another datastore you cannot have _foreign-keys_ (or equivalent).
+
+
+== Defining Primary and Secondary Datastores
+
+You could specify the datastores to be used for the PMF like this. Here we have `datanucleus.properties` defining the *primary datastore*
+
+-----
+javax.jdo.option.ConnectionDriverName=com.mysql.jdbc.Driver
+javax.jdo.option.ConnectionURL=jdbc:mysql://127.0.0.1/nucleus?useServerPrepStmts=false
+javax.jdo.option.ConnectionUserName=mysql
+javax.jdo.option.ConnectionPassword=
+
+datanucleus.datastore.store2=datanucleus2.properties
+-----
+
+You note that this refers to a *store2*, which is defined by `datanucleus2.properties`.
+So the *secondary datastore* is then defined by another file.
+-----
+javax.jdo.option.ConnectionURL=mongodb:/nucleus
+-----
+
+
+== Defining which class is persisted to which datastore
+
+Now we need to notate which class is persisted to the *primary* datastore and which is persisted to *secondary* datastores. 
+We do it like this, for the classes persisted to the secondary datastore.
+
+[source,java]
+-----
+@PersistenceCapable
+@Extension(vendorName="datanucleus", key="datastore", value="store2")
+public class MyOtherClass
+{
+    ...
+}
+-----
+
+So for any persistence of objects of type _MyOtherClass_, they will be persisted into the MongoDB secondary datastore.
+

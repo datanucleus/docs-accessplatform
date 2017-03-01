@@ -1,0 +1,540 @@
+[[api]]
+= Query API
+:_basedir: ../
+:_imagesdir: images/
+
+
+Let's now try to understand the Query API in JDO
+http://www.datanucleus.org/javadocs/javax.jdo/3.2/javax/jdo/Query.html[image:../images/javadoc.png[Javadoc]].
+We firstly need to look at a typical Query.
+
+Let's create a JDOQL string-based query to highlight its usage
+
+[source,java]
+-----
+Query q = pm.newQuery("SELECT FROM mydomain.Product p WHERE p.price <= :threshold ORDER BY p.price ASC");
+List results = q.execute(my_threshold);
+-----
+
+In this Query, we implicitly select JDOQL by just passing in a query string to the method _PersistenceManager.newQuery(String)_, and the query is specified
+to return all objects of type _Product_ (or subclasses) which have the price less than or equal to some threshold value and ordering the results by the price. 
+We've specified the query like this because we want to pass the threshold value in as a parameter (so maybe running it once with one value, and once with a different value).
+We then set the parameter value of our _threshold_ parameter. The Query is then executed to return a List of results. 
+The example is to highlight the typical methods specified for a (JDOQL) string-based Query.
+
+
+
+
+== Creating a query
+
+The principal ways of creating a query are
+
+
+* Specifying the query language, and using a single-string form of the query
+[source,java]
+-----
+Query q = pm.newQuery("javax.jdo.query.JDOQL", 
+    "SELECT FROM mydomain.MyClass WHERE field2 < threshold PARAMETERS java.util.Date threshold");
+-----
+or alternatively
+[source,java]
+-----
+Query q = pm.newQuery("SQL", "SELECT * FROM MYTABLE WHERE COL1 == 25);
+-----
+* A link:query.html#named["named" query], (pre-)defined in metadata (refer to metadata docs).
+[source,java]
+-----
+Query<MyClass> q = pm.newNamedQuery(MyClass.class, "MyQuery1");
+-----
+* JDOQL : Use the link:query.html#jdoql[single-string] form of the query
+[source,java]
+-----
+Query q = pm.newQuery("SELECT FROM mydomain.MyClass WHERE field2 < threshold PARAMETERS java.util.Date threshold");
+-----
+* JDOQL : Use the link:query.html#jdoql[declarative API] to define the query
+[source,java]
+-----
+Query<MyClass> q = pm.newQuery(MyClass.class);
+q.setFilter("field2 < threshold");
+q.declareParameters("java.util.Date threshold");
+-----
+* JDOQL : Use the link:query.html#jdoql_typed[Typed Query API] to define the query
+[source,java]
+-----
+JDOQLTypedQuery<MyClass> q = pm.newJDOQLTypedQuery(MyClass.class);
+QMyClass cand = QMyClass.candidate();
+List<Product> results = q.filter(cand.field2.lt(q.doubleParameter("threshold"))).executeList();
+-----
+
+
+== Closing a query
+
+When a query is executed it will have access to the results of that query.
+Each time it is executed (maybe with different parameters) it will have separate results.
+This can consume significant resources if the query returned a lot of records.
+
+You close a query (and all query results) like this
+
+[source,java]
+-----
+q.close();
+-----
+
+If you just wanted to close a specific query result you would call
+
+[source,java]
+-----
+q.close(queryResult);
+-----
+where the _queryResult_ is what you were returned from executing the query.
+
+
+
+[[named]]
+== Named Query
+
+With the JDO query API you can either define a query at runtime, or define it in the MetaData/annotations for a class and refer to it at runtime using a symbolic name. 
+This second option means that the method of invoking the query at runtime is much simplified. 
+To demonstrate the process, lets say we have a class called _Product_ (something to sell in a store). 
+We define the JDO Meta-Data for the class in the normal way, but we also have some query that we know we will require, so we define the following in the Meta-Data.
+
+[source,xml]
+-----
+<package name="mydomain">
+    <class name="Product">
+        ...
+        <query name="SoldOut" language="javax.jdo.query.JDOQL"><![CDATA[
+        SELECT FROM mydomain.Product WHERE status == "Sold Out"
+        ]]></query>
+    </class>
+</package>
+-----
+
+So we have a JDOQL query called "SoldOut" defined for the class _Product_ that returns all Products (and subclasses) that have a _status_ of "Sold Out". 
+Out of interest, what we would then do in our application to execute this query woule be
+
+[source,java]
+-----
+Query<Product> q = pm.newNamedQuery(mydomain.Product.class,"SoldOut");
+List<Product> results = q.executeList();
+-----
+
+The above example was for the JDOQL object-based query language. We can do a similar thing using SQL, so we define the following in our MetaData for our _Product_ class
+
+[source,xml]
+-----
+<jdo>
+    <package name="mydomain">
+        <class name="Product">
+            ...
+            <query name="PriceBelowValue" language="javax.jdo.query.SQL"><![CDATA[
+            SELECT NAME FROM PRODUCT WHERE PRICE < ?
+            ]]></query>
+        </class>
+    </package>
+</jdo>
+-----
+
+So here we have an SQL query that will return the names of all Products that have a price less than a specified value. 
+This leaves us the flexibility to specify the value at runtime. So here we run our named query, asking for the names of all Products with price below 20 euros.
+
+[source,java]
+-----
+Query<Product> q = pm.newNamedQuery(mydomain.Product.class, "PriceBelowValue");
+q.setParameters(20.0);
+List<Product> results = q.executeList();
+-----
+
+All of the examples above have been specifed within the <class> element of the MetaData. 
+You can, however, specify queries below <jdo> in which case the query is not scoped by a particular candidate class. 
+In this case you must put your queries in any of the following MetaData files
+
+-----
+/META-INF/package.jdo
+/WEB-INF/package.jdo
+/package.jdo
+/META-INF/package-{mapping}.orm
+/WEB-INF/package-{mapping}.orm
+/package-{mapping}.orm
+/META-INF/package.jdoquery
+/WEB-INF/package.jdoquery
+/package.jdoquery
+-----
+
+
+
+[[save_as_named]]
+=== Saving a Query as a Named Query
+
+DataNucleus JDO also allows you to create a query, and then save it as a "named" query for later reuse. You do this as follows
+
+[source,java]
+-----
+Query q = pm.newQuery("SELECT FROM Product p WHERE ...");
+q.saveAsNamedQuery("MyQuery");
+-----
+
+and you can thereafter access the query via
+
+[source,java]
+-----
+Query q = pm.newNamedQuery(Product.class, "MyQuery");
+-----
+
+
+
+[[query_extensions]]
+== Query Extensions
+
+The JDO query API allows implementations to support "extensions" and provides a simple interface for enabling the use of such extensions on queries.
+An extension specifies additional information to the query mechanism about how to perform the query. 
+Individual extensions will be explained later in this guide.
+
+You set an extension like this
+
+[source,java]
+-----
+q.extension("extension_name", value);
+-----
+
+[source,java]
+-----
+Map exts = new HashMap();
+exts.put("extension1", value1);
+exts.put("extension2", value2);
+q.extensions(exts);
+-----
+
+With DataNucleus, all _extension names_ will begin with "datanucleus.".
+
+The Query API also has methods _setExtensions_ and _addExtension_ that are from the original version of the API, but function the same as these methods quoted.
+
+
+== Setting query parameters
+
+Queries can be made flexible and reusable by defining parameters as part of the query, so that we can execute the same query
+with different sets of parameters and minimise resources.
+
+[source,java]
+-----
+// JDOQL Using named parameters
+Query<Product> q = pm.newQuery(Product.class);
+q.setFilter("this.name == :name && this.serialNo == :serial");
+
+Map params = new HashMap();
+params.put("name", "Walkman");
+params.put("serial", "123021");
+q.setNamedParameters(params);
+
+
+// JDOQL Using numbered parameters
+Query<Product> q = pm.newQuery(Product.class);
+q.setFilter("this.name == ?1 && this.serialNo == ?2");
+
+q.setParameters("Walkman", "123021");
+-----
+
+Alternatively you can specify the query parameters in the _execute_ method call.
+
+
+[[compile]]
+== Compiling a query
+
+An intermediate step once you have your query defined, if you want to check its validity, is to _compile_ it. You do this as follows
+
+[source,java]
+-----
+q.compile();
+-----
+
+If the query is invalid, then a JDOException will be thrown.
+
+
+
+== Executing a query
+
+So we have set up our query. We now execute it. We have various methods to do this, depending on what result we are expecting etc
+
+[source,java]
+-----
+// Simple execute
+Object result = q.execute();
+
+// Execute with 1 parameter passed in
+Object result = q.execute(paramVal1);
+
+// Execute with multiple parameters passed in 
+Object result = q.execute(paramVal1, paramVal2);
+
+// Execute with an array of parameters passed in (positions match the query parameter position)
+Object result = q.executeWithArray(new Object[]{paramVal1, paramVal2});
+
+// Execute with a map of parameters keyed by their name in the query
+Object result = q.executeWithMap(paramMap);
+
+// Execute knowing we want to receive a list of results
+List results = q.executeList();
+
+// Execute knowing there is 1 result row
+Object result = q.executeUnique();
+
+// Execute where we want a list of results and want each result row of a particular type
+List<ResultClass> results = q.executeResultList(ResultClass.class);
+
+// Execute where we want a single result and want the result row of a particular type
+ResultClass result = q.executeResultUnique(ResultClass.class);
+-----
+
+
+[[flushBeforeExecution]]
+=== Extension : Flush before query execution
+
+image:../images/nucleus_extension.png[]
+
+When using optimistic transactions all updates to persistent objects are held until flush()/commit(). 
+This means that executing a query may not take into account changes made during that transaction in some objects. 
+DataNucleus allows an extension for calling flush() just before execution of queries so that all updates are taken into account.
+You could specify this as a persistence property *datanucleus.query.flushBeforeExecution* (defaults to _false_) and it will apply to all queries.
+Alternatively, to do this on a per query basis you would do
+
+[source,java]
+-----
+query.extension("datanucleus.query.flushBeforeExecution","true");
+-----
+
+
+
+
+[[FetchPlan]]
+== Controlling the execution : FetchPlan
+
+When a Query is executed it executes in the datastore, which returns a set of results. 
+DataNucleus could clearly read all results from this ResultSet in one go and return them all to the user, or could allow control over this fetching process. 
+JDO provides a _fetch size_ on the link:persistence.html#fetch_groups[Fetch Plan] to allow this control. You would set this as follows
+
+[source,java]
+-----
+Query q = pm.newQuery(...);
+q.getFetchPlan().setFetchSize(FetchPlan.FETCH_SIZE_OPTIMAL);
+-----
+
+_fetch size_ has 3 possible values. 
+
+* *FETCH_SIZE_OPTIMAL* - allows DataNucleus full control over the fetching. 
+In this case DataNucleus will fetch each object when they are requested, and then when the owning transaction is committed will retrieve all remaining rows 
+(so that the Query is still usable after the close of the transaction).
+* *FETCH_SIZE_GREEDY* - DataNucleus will read all objects in at query execution.
+This can be efficient for queries with few results, and very inefficient for queries returning large result sets.
+* *A positive value* - DataNucleus will read this number of objects at query execution. Thereafter it will read the objects when requested.
+
+
+In addition to the number of objects fetched, you can also control which fields are fetched for each object of the candidate type. 
+This is controlled via the _FetchPlan_.
+For RDBMS any single-valued member will be fetched in the original SQL query, but with multiple-valued members this is not supported. 
+However what will happen is that any collection field will be retrieved in a single SQL query for all candidate objects; this avoids the "N+1" problem, 
+resulting in 1 original SQL query plus 1 SQL query per collection member. Note that you can disable this by either not putting multi-valued fields in the FetchPlan, 
+or by setting the query extension "datanucleus.rdbms.query.multivaluedFetch" to "none" (default is "exists" using the single SQL per field).
+For non-RDBMS datastores the collection/map is stored by way of a Collection of ids of the related objects in a single "column" of the object and so is retrievable in the same query.
+See also link:persistence.html#fetch_groups[Fetch Groups].
+
+=== Extension: Load results at commit
+
+image:../images/nucleus_extension.png[]
+
+DataNucleus also allows an extension to give further control. As mentioned above, when the transaction containing the Query is committed, 
+all remaining results are read so that they can then be accessed later (meaning that the query is still usable). 
+Where you have a large result set and you don't want this behaviour you can turn it off by specifying a Query extension
+
+[source,java]
+-----
+q.extension("datanucleus.query.loadResultsAtCommit", "false");
+-----
+
+so when the transaction is committed, no more results will be available from the query.
+
+
+=== Extension: Ignore FetchPlan
+
+image:../images/nucleus_extension.png[]
+
+In some situations you don't want all _FetchPlan_ fields retrieving, and DataNucleus provides an extension to turn this off, like this
+
+[source,java]
+-----
+q.extension("datanucleus.query.useFetchPlan", "false");
+-----
+
+
+[[ignore_cache]]
+== ignoreCache(), setIgnoreCache()
+
+The ignoreCache option setting specifies whether the query should execute entirely in the back end, instead of in the cache.
+If this flag is set to _true_, DataNucleus may be able to optimize the query execution by ignoring changed values in the cache.  
+For optimistic transactions, this can dramatically improve query response times.
+
+[source,java]
+-----
+q.ignoreCache(true);
+-----
+
+
+
+[[locking]]
+== Control over locking of fetched objects
+
+JDO allows control over whether objects found by a query are locked during that transaction so that other transactions can't update them in the meantime. 
+To do this you would do
+
+[source,java]
+-----
+Query q = pm.newQuery(...);
+q.serializeRead(true);
+-----
+
+You can also specify this for all queries for all PMs using the persistence property *datanucleus.SerializeRead*.
+In addition you can perform this on a per-transaction basis by doing
+
+[source,java]
+-----
+tx.setSerializeRead(true);
+-----
+
+NOTE: If the datastore in use doesn't support locking of objects then this will do nothing
+
+
+
+[[read_timeout]]
+== Timeout on query execution for reads
+
+[source,java]
+-----
+q.datastoreReadTimeoutMillis(1000);
+-----
+
+_Sets the timeout for this query (in milliseconds)._ 
+Will throw a JDOUnsupportedOperationException if the query implementation doesn't support timeouts (for the current datastore).
+
+
+
+[[write_timeout]]
+== Timeout on query execution for writes
+
+[source,java]
+-----
+q.datastoreWriteTimeoutMillis(1000);
+-----
+
+_Sets the timeout for this query (in milliseconds) when it is a delete/update._ 
+Will throw a JDOUnsupportedOperationException if the query implementation doesn't support timeouts (for the current datastore).
+
+
+
+[[loadResultsAtCommit]]
+== Extension: Loading Large Result Sets at Commit()
+
+image:../images/nucleus_extension.png[]
+
+When a transaction is committed by default all remaining results for a query are loaded so that the query is usable thereafter. 
+With a large result set you clearly don't want this to happen. So in this case you should set the extension *datanucleus.query.loadResultsAtCommit* to _false_.
+
+To do this on a per query basis you would do
+
+[source,java]
+-----
+query.addExtension("datanucleus.query.loadResultsAtCommit", "false");
+-----
+
+
+
+[[resultCacheType]]
+== Extension: Caching of Results
+
+image:../images/nucleus_extension.png[]
+
+When you execute a query, the query results are typically loaded when the user accesses each row. 
+Results that have been read can then be cached locally.
+You can control this caching to optimise it for your memory requirements. 
+You can set the query extension *datanucleus.query.resultCacheType* and it has the following possible values
+
+* _weak_ : use a weak reference map for caching (default)
+* _soft_ : use a soft reference map for caching
+* _hard_ : use a Map for caching (objects not garbage collected)
+* _none_ : no caching (hence uses least memory)
+
+To do this on a per query basis, you would do
+
+[source,java]
+-----
+query.addExtension("datanucleus.query.resultCacheType", "weak");
+-----
+
+
+
+[[resultSizeMethod]]
+== Extension: Size of Large Result Sets
+
+image:../images/nucleus_extension.png[]
+
+If you have a large result set you clearly don't want to instantiate all objects since this would hit the memory footprint of your application. 
+To get the number of results many JDBC drivers, for example, will load all rows of the result set. 
+This is to be avoided so DataNucleus provides control over the mechanism for getting the size of results.
+The persistence property *datanucleus.query.resultSizeMethod* has a default of _last_ (which means navigate to the last object, hence hitting the JDBC driver problem). 
+On RDBMS, if you set this to _count_ then it will use a simple "count()" query to get the size.
+
+To do this on a per query basis you would do
+
+[source,java]
+-----
+query.addExtension("datanucleus.query.resultSizeMethod", "count");
+-----
+
+
+[[resultSetType]]
+== Extension: Type of Result Set (RDBMS)
+
+image:../images/nucleus_extension.png[]
+
+For RDBMS datastores, _java.sql.ResultSet_ defines three possible result set types.
+
+* _forward-only_ : the result set is navegable forwards only
+* _scroll-sensitive_ : the result set is scrollable in both directions and is sensitive to changes in the datastore
+* _scroll-insensitive_ : the result set is scrollable in both directions and is insensitive to changes in the datastore
+
+DataNucleus allows specification of this type as a query extension *datanucleus.rdbms.query.resultSetType*.
+
+To do this on a per query basis you would do
+
+[source,java]
+-----
+query.addExtension("datanucleus.rdbms.query.resultSetType", "scroll-insensitive");
+-----
+
+The default is _forward-only_. 
+The benefit of the other two is that the result set will be scrollable and hence objects will only be read in to memory when accessed. 
+So if you have a large result set you should set this to one of the scrollable values.
+
+
+
+[[resultSetControl]]
+== Extension: Result Set Control (RDBMS)
+
+image:../images/nucleus_extension.png[]
+
+DataNucleus RDBMS provides a useful extension allowing control over the ResultSet's that are created by queries. 
+Some properties are available that give you the power to control whether the result set is read only, whether it can be read forward only, the direction of fetching etc. 
+
+To do this on a per query basis you would do
+
+[source,java]
+-----
+query.addExtension("datanucleus.rdbms.query.fetchDirection", "forward");
+query.addExtension("datanucleus.rdbms.query.resultSetConcurrency", "read-only");
+-----
+
+Alternatively you can specify these as persistence properties so that they apply to all queries for that PMF. Again, the properties are
+
+* *datanucleus.rdbms.query.fetchDirection* - controls the direction that the ResultSet is navigated. By default this is forwards only. Use this property to change that.
+* *datanucleus.rdbms.query.resultSetConcurrency* - controls whether the ResultSet is read only or updateable.
+
+Bear in mind that not all RDBMS support all of the possible values for these options. That said, they do add a degree of control that is often useful.
+

@@ -1,0 +1,86 @@
+[[stored_procedures]]
+= Stored Procedures
+:_basedir: ../
+:_imagesdir: images/
+
+JDO doesn't include explicit support for stored procedures. However DataNucleus provides two options for allowing use of stored procedures with RDBMS datastores.
+
+
+[[stored_procedures_api]]
+== Using DataNucleus Stored Procedure API
+
+image:../images/nucleus_extension.png[]
+
+Obviously JDO allows potentially any "query language" to be invoked using its API. With DataNucleus and RDBMS datastores we can do the following
+
+[source,java]
+-----
+Query q = pm.newQuery("STOREDPROC", "MY_TEST_SP_1");
+-----
+
+Now on its own this will simply invoke the define stored procedure (_MY_TEST_SP_1_) in the datastore. 
+Obviously we want more control than that, so this is where you use DataNucleus specifics. Let's start by accessing the internal stored procedure query
+
+[source,java]
+-----
+import org.datanucleus.api.jdo.JDOQuery;
+import org.datanucleus.store.rdbms.query.StoredProcedureQuery;
+...
+StoredProcedureQuery spq = (StoredProcedureQuery)((JDOQuery)q).getInternalQuery());
+-----
+
+Now we can control things like parameters, and what is returned from the stored procedure query.
+Let's start by registering any parameters (IN, OUT, or INOUT) for our stored proc. In our example we use named parameters, but you can also use positional parameters.
+
+[source,java]
+-----
+spq.registerParameter("PARAM1", String.class, StoredProcQueryParameterMode.IN);
+spq.registerParameter("PARAM2", Integer.class, StoredProcQueryParameterMode.OUT);
+-----
+
+Simple execution is like this (where you omit the paramValueMap if you have no input parameters).
+
+[source,java]
+-----
+boolean hasResultSet = spq.executeWithMap(paramValueMap);
+-----
+
+That method returns whether a result set is returned from the stored procedure (some return results, but some return an update count, and/or output parameters). 
+If we are expecting a result set we then do
+
+[source,java]
+-----
+List results = (List)spq.getNextResults();
+-----
+
+and if we are expecting output parameter values then we get them using the API too. Note again that you can also access via position rather than name.
+
+[source,java]
+-----
+Object val = spq.getOutputParameterValue("PARAM2");
+-----
+
+That summarises our stored procedure API. It also allows things like multiple result sets for a stored procedure, all using the _StoredProcedureQuery_ API.
+
+
+[[stored_procedures_as_sql]]
+== Using JDO SQL Query API to invoke stored procedures
+
+In JDO all SQL queries must begin "SELECT ...", and consequently it is not possible to execute stored procedures by default. 
+In DataNucleus we have an extension that allows this to be overridden, to call stored procedures. 
+
+NOTE: This is strongly discouraged now that we provide the mechanism above
+
+To enable this you should specify the persistence property *datanucleus.query.sql.allowAll* as _true_ when creating the PMF. 
+Thereafter you can invoke your stored procedures like this
+
+[source,java]
+-----
+Query q = pm.newQuery("javax.jdo.query.SQL", "EXECUTE sp_who");
+((org.datanucleus.api.jdo.JDOQuery)q).getInternalQuery().setType(org.datanucleus.store.query.Query.SELECT);
+-----
+
+Where "sp_who" is the stored procedure being invoked. 
+The syntax of calling a stored procedure differs across RDBMS, some require "CALL ..." and some "EXECUTE ..."; Go consult your manual.
+Clearly the same rules will apply regarding the results of the stored procedure and mapping them to any result class. 
+

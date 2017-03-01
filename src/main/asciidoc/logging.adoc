@@ -1,0 +1,205 @@
+[[logging]]
+= DataNucleus Logging
+:_basedir: 
+:_imagesdir: images/
+
+
+DataNucleus can be configured to log significant amounts of information regarding its process.
+This information can be very useful in tracking the persistence process, and particularly if you have problems. DataNucleus will log as follows :-
+
+* *Log4J* - if you have Log4J in the CLASSPATH, http://jakarta.apache.org/log4j[Apache Log4J] will be used
+* *java.util.logging* - if you don't have Log4J in the CLASSPATH, then _java.util.logging_ will be used
+
+DataNucleus logs messages to various categories (in Log4J and java.util.logging these correspond to a "Logger"), allowing you to filter the logged messages 
+by these categories - so if you are only interested in a particular category you can effectively turn the others off. 
+DataNucleus's log is written by default in English. 
+If your JRE is running in a Spanish locale then your log will be written in Spanish. 
+
+*If you have time to translate our log messages into other languages, please contact one of the developers via the http://forum.datanucleus.org[Online Forum].*
+
+
+== Logging Categories
+    
+DataNucleus uses a series of *categories*, and logs all messages to these *categories*. 
+Currently DataNucleus uses the following
+    
+* *DataNucleus.Persistence* - All messages relating to the persistence process
+* *DataNucleus.Transaction* - All messages relating to transactions
+* *DataNucleus.Connection* - All messages relating to Connections.
+* *DataNucleus.Query* - All messages relating to queries
+* *DataNucleus.Cache* - All messages relating to the DataNucleus Cache
+* *DataNucleus.MetaData* - All messages relating to MetaData
+* *DataNucleus.Datastore* - All general datastore messages
+* *DataNucleus.Datastore.Schema* - All schema related datastore log messages
+* *DataNucleus.Datastore.Persist* - All datastore persistence messages
+* *DataNucleus.Datastore.Retrieve* - All datastore retrieval messages
+* *DataNucleus.Datastore.Native* - Log of all 'native' statements sent to the datastore
+* *DataNucleus.General* - All general operational messages
+* *DataNucleus.Lifecycle* - All messages relating to object lifecycle changes
+* *DataNucleus.ValueGeneration* - All messages relating to value generation
+* *DataNucleus.Enhancer* - All messages from the DataNucleus Enhancer.
+* *DataNucleus.SchemaTool* - All messages from DataNucleus SchemaTool
+* *DataNucleus.JDO* - All messages general to JDO
+* *DataNucleus.JPA* - All messages general to JPA
+* *DataNucleus.JCA* - All messages relating to Connector JCA.
+* *DataNucleus.IDE* - Messages from the DataNucleus IDE.
+
+
+== Using Log4J
+    
+Log4J allows logging messages at various severity levels. The levels used by Log4J, and by DataNucleus's use of Log4J are *DEBUG*, *INFO*, *WARN*, *ERROR*, *FATAL*. 
+Each message is logged at a particular level to a *category* (as described above). 
+The other setting is *OFF* which turns off a logging category; very useful in a production situation where maximum performance is required.    
+
+To enable the DataNucleus log, you need to provide a Log4J configuration file when starting up your application. 
+This may be done for you if you are running within a JavaEE application server (check your manual for details). 
+If you are starting your application yourself, you would set a JVM parameter as
+
+-----
+-Dlog4j.configuration=file:log4j.properties
+-----
+
+where `log4j.properties` is the name of your Log4J configuration file. 
+Please note the _file:_ prefix to the file since a URL is expected.
+
+The Log4J configuration file is very simple in nature, and you typically define where the log goes to (e.g to a file), and which logging level messages you want to see. 
+Here's an example
+
+-----
+# Define the destination and format of our logging
+log4j.appender.A1=org.apache.log4j.FileAppender
+log4j.appender.A1.File=datanucleus.log
+log4j.appender.A1.layout=org.apache.log4j.PatternLayout
+log4j.appender.A1.layout.ConversionPattern=%d{HH:mm:ss,SSS} (%t) %-5p [%c] - %m%n
+
+# DataNucleus Categories
+log4j.category.DataNucleus.JDO=INFO, A1
+log4j.category.DataNucleus.Cache=INFO, A1
+log4j.category.DataNucleus.MetaData=INFO, A1
+log4j.category.DataNucleus.General=INFO, A1
+log4j.category.DataNucleus.Transaction=INFO, A1
+log4j.category.DataNucleus.Datastore=DEBUG, A1
+log4j.category.DataNucleus.ValueGeneration=DEBUG, A1
+
+log4j.category.DataNucleus.Enhancer=INFO, A1
+log4j.category.DataNucleus.SchemaTool=INFO, A1
+-----
+
+In this example, I am directing my log to a file (`datanucleus.log`). 
+I have defined a particular "pattern" for the messages that appear in the log (to contain the date, level, category, and the message itself). 
+In addition I have assigned a level "threshold" for each of the DataNucleus *categories*. 
+So in this case I want to see all messages down to DEBUG level for the DataNucleus RDBMS persister.
+
+TIP: Turning OFF the logging, or at least down to ERROR level provides a _significant_ improvement in performance. With Log4J you do this via
+-----
+log4j.category.DataNucleus=OFF
+-----
+
+== Using java.util.logging
+
+_java.util.logging_ allows logging messages at various severity levels. 
+The levels used by java.util.logging, and by DataNucleus's internally are *fine*, *info*, *warn*, *severe*. 
+Each message is logged at a particular level to a *category* (as described above).
+
+By default, the _java.util.logging_ configuration is taken from a properties file `<JRE_DIRECTORY>/lib/logging.properties`. 
+Modify this file and configure the categories to be logged, or use the *java.util.logging.config.file* system property to specify a properties file 
+(in java.util.Properties format) where the logging configuration will be read from.
+Here is an example:                      
+
+-----
+handlers=java.util.logging.FileHandler, java.util.logging.ConsoleHandler
+DataNucleus.General.level=fine 
+DataNucleus.JDO.level=fine 
+
+# --- ConsoleHandler ---
+# Override of global logging level
+java.util.logging.ConsoleHandler.level=SEVERE
+java.util.logging.ConsoleHandler.formatter=java.util.logging.SimpleFormatter
+
+# --- FileHandler ---
+# Override of global logging level
+java.util.logging.FileHandler.level=SEVERE
+
+# Naming style for the output file:
+java.util.logging.FileHandler.pattern=datanucleus.log
+
+# Limiting size of output file in bytes:
+java.util.logging.FileHandler.limit=50000
+
+# Number of output files to cycle through, by appending an
+# integer to the base file name:
+java.util.logging.FileHandler.count=1
+
+# Style of output (Simple or XML):
+java.util.logging.FileHandler.formatter=java.util.logging.SimpleFormatter
+-----
+
+Please read the http://java.sun.com/j2se/1.4.2/docs/api/java/util/logging/LogManager.html[javadocs] for _java.util.logging_ for additional details on its configuration.
+
+
+== Sample Log Output
+
+Here is a sample of the type of information you may see in the DataNucleus log when using Log4J.
+
+-----
+21:26:09,000 (main) INFO  DataNucleus.Datastore.Schema - Adapter initialised : MySQLAdapter, MySQL version 4.0.11
+21:26:09,365 (main) INFO  DataNucleus.Datastore.Schema - Creating table null.DELETE_ME1080077169045
+21:26:09,370 (main) DEBUG DataNucleus.Datastore.Schema - CREATE TABLE DELETE_ME1080077169045
+(
+    UNUSED INTEGER NOT NULL
+) TYPE=INNODB
+21:26:09,375 (main) DEBUG DataNucleus.Datastore.Schema - Execution Time = 3 ms
+21:26:09,388 (main) WARN  DataNucleus.Datastore.Schema - Schema Name could not be determined for this datastore
+21:26:09,388 (main) INFO  DataNucleus.Datastore.Schema - Dropping table null.DELETE_ME1080077169045
+21:26:09,388 (main) DEBUG DataNucleus.Datastore.Schema - DROP TABLE DELETE_ME1080077169045
+21:26:09,392 (main) DEBUG DataNucleus.Datastore.Schema - Execution Time = 3 ms
+21:26:09,392 (main) INFO  DataNucleus.Datastore.Schema - Initialising Schema "" using "SchemaTable" auto-start
+21:26:09,401 (main) DEBUG DataNucleus.Datastore.Schema - Retrieving type for table DataNucleus_TABLES
+21:26:09,406 (main) INFO  DataNucleus.Datastore.Schema - Creating table null.DataNucleus_TABLES
+21:26:09,406 (main) DEBUG DataNucleus.Datastore.Schema - CREATE TABLE DataNucleus_TABLES
+(
+    CLASS_NAME VARCHAR (128) NOT NULL UNIQUE ,
+    `TABLE_NAME` VARCHAR (127) NOT NULL UNIQUE 
+) TYPE=INNODB
+21:26:09,416 (main) DEBUG DataNucleus.Datastore.Schema - Execution Time = 10 ms
+21:26:09,417 (main) DEBUG DataNucleus.Datastore - Retrieving type for table DataNucleus_TABLES
+21:26:09,418 (main) DEBUG DataNucleus.Datastore - Validating table : null.DataNucleus_TABLES
+21:26:09,425 (main) DEBUG DataNucleus.Datastore - Execution Time = 7 ms
+-----
+
+So you see the time of the log message, the level of the message (DEBUG, INFO, etc), the category (DataNucleus.Datastore, etc), and the message itself. 
+For example, if I had set the _DataNucleus.Datastore.Schema_ to DEBUG and all other categories to INFO I would see *all* DDL statements sent to the database and very little else.
+
+
+[[logging_osgi]]
+== HOWTO : Log with log4j and DataNucleus under OSGi
+
+_This guide was provided by Marco Lopes, when using DataNucleus v2.2_.
+All of the bundles which use log4j should have _org.apache.log4j_ in their Import-Package attribute!
+(use: _org.apache.log4j;resolution:=optional_ if you don't want to be stuck with log4j whenever you use an edited bundle in your project!).
+    
+=== Method 1
+
+* Create a new "Fragment Project". Call it whatever you want (ex: log4j-fragment)
+* You have to define a "Plugin-ID", that's the plugin where DN will run
+* Edit the MANIFEST
+* Under RUNTIME add log4j JAR to the Classpath
+* Under Export-Packages add org.apache.log4j
+* Save MANIFEST
+* PASTE the log4j PROPERTIES file into the SRC FOLDER of the Project
+
+    
+=== Method 2
+
+* Get an "OSGI Compliant" log4j bundle (you can get it from the http://ebr.springsource.com/repository/app/[SpringSource Enterprise Bundle Repository]
+* Open the Bundle JAR with WINRAR (others might work)
+* PASTE the log4j PROPERTIES file into the ROOT of the bundle
+* Exit. Winrar will ask to UPDATE the JAR. Say YES.
+* Add the updated OSGI compliant Log4j bundle to your Plugin Project Dependencies (Required-Plugins)
+
+    
+Each method has it's own advantages.
+Use method 1 if you need to EDIT the log4j properties file ON-THE-RUN. 
+The disadvantage: it can only "target" one project at a time (but very easy to edit the MANIFEST and select a new Host Plugin!). 
+Use method 2 if you want to have log4j support in every project with only one file. 
+The disadvantage: it's not very practical to edit the log4j PROPERTIES file (not because of the bundle EDIT, but because you have to restart eclipse in order for the new bundle to be recognized).

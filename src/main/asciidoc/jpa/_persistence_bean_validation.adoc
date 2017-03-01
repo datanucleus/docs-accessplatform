@@ -1,0 +1,40 @@
+[[bean_validation]]
+= Bean Validation
+:_basedir: ../
+:_imagesdir: images/
+
+
+The http://beanvalidation.org/[Bean Validation API (JSR0303/JSR0349)] can be hooked up with JPA so that you have validation of an objects values 
+prior to persistence, update and deletion. To do this
+
+* Put the *javax.validation* `validation-api` jar in your CLASSPATH, along with the Bean Validation implementation jar of your choice (e.g Apache BVal)
+* Set the persistence property _javax.persistence.validation.mode_ to one of _auto_ (default), _none_, or _callback_
+* Optionally set the persistence property(s) *javax.persistence.validation.group.pre-persist*, *javax.persistence.validation.group.pre-update*,
+*javax.persistence.validation.group.pre-remove_ to fine tune the behaviour (the default is to run validation on pre-persist and pre-update if you don't specify these).
+* Use JPA as you normally would for persisting objects
+
+To give a simple example of what you can do with the Bean Validation API
+
+[source,java]
+-----
+@Entity
+public class Person 
+{
+    @Id
+    @NotNull
+    private Long id;
+
+    @NotNull
+    @Size(min = 3, max = 80)
+    private String name;
+
+    ...
+}
+-----
+
+So we are validating that instances of the _Person_ class will have an "id" that is not null and that the "name" field is not null and between 3 and 80 characters. 
+If it doesn't validate then at persist/update an exception will be thrown.
+You can add bean validation annotations to classes marked as @Entity, @MappedSuperclass or @Embeddable.
+
+A further use of the Bean Validation annotations @Size(max=...) and @NotNull is that if you specify these then you have no need to specify the equivalent JPA attributes 
+since they equate to the same thing.

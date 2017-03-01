@@ -1,0 +1,83 @@
+[[cassandra]]
+= Cassandra Datastores
+:_basedir: ../
+:_imagesdir: images/
+
+
+image:../images/datastore/cassandra.png[]
+
+DataNucleus supports a limited for of persisting/retrieving objects to/from Cassandra datastores 
+(using the https://github.com/datanucleus/datanucleus-cassandra[datanucleus-cassandra] plugin, which utilises the DataStax Java driver). 
+Simply specify your "connectionURL" as follows
+
+-----
+datanucleus.ConnectionURL=cassandra:[{host1}[:{port}] [,{host2} [,{host3}]]]
+-----
+
+where it will create a Cassandra _cluster_ with contact points of _host1_ (_host2_, _host3_ etc), 
+and if the port is specified on the first host then will use that as the port (no port specified on alternate hosts).
+
+For example, to connect to a local server
+
+-----
+datanucleus.ConnectionURL=cassandra:
+-----
+
+The jars required to use DataNucleus Cassandra persistence are `datanucleus-core`, `datanucleus-api-jdo`/`datanucleus-api-jpa`, `datanucleus-cassandra` and `cassandra-driver-core`.
+
+There are tutorials available for use of DataNucleus with Cassandra link:../jdo/tutorial.html[for JDO] and link:../jpa/tutorial.html[for JPA]
+
+Things to bear in mind with Cassandra usage :-
+
+* Creation of a PMF/EMF will create a _Cluster_. This will be closed then the PMF/EMF is closed.
+* Any PM/EM will use a single _Session_, by default, shared amongst all PM/EMs.
+* If you specify the persistence property *datanucleus.cassandra.sessionPerManager* to _true_ then each PM/EM will have its own _Session_ object.
+* You can set the number of connections per host with the persistence property *datanucleus.mongodb.connectionsPerHost*
+* Cassandra doesn't use transactions, so any JDO/JPA transaction operation is a no-op (i.e will be ignored).
+* This uses Cassandra 3.x (and CQL v3.x), not Thrift (like the previous unofficial attempts at a datanucleus-cassandra plugin used)
+* You need to specify the "schema" (_datanucleus.mapping.Schema_)
+* Queries are evaluated in-datastore when they only have (indexed) members and literals and using the operators ==, !=, &gt;, &gt;=, &lt;, &lt;=, &amp;&amp;, ||.
+* You can query the datastore using link:../jdo/query.html#jdoql[JDOQL], link:../jpa/query.html#jpql[JPQL], or link:../jpa/query.html#native[CQL]
+
+[[cassandra_native]]
+== Queries : Cassandra CQL Queries
+
+NOTE: If you choose to use Cassandra CQL Queries then these are not portable to any other datastore. Use JDOQL/JPQL for portability
+
+Cassandra provides the CQL query language. To take a simple example using the JDO API
+
+[source,java]
+-----
+// Find all employees
+PersistenceManager persistenceManager = pmf.getPersistenceManager();
+Query q = pm.newQuery("CQL", "SELECT * FROM schema1.Employee");
+// Fetch 10 Employee rows at a time
+query.getFetchPlan().setFetchSize(10);
+query.setResultClass(Employee.class);
+List<Employee> results = (List)q.execute();
+-----
+
+You can also query results as List&lt;Object[]&gt; without specifying a specific result type as shown below.
+
+[source,java]
+-----
+// Find all employees
+PersistenceManager persistenceManager = pmf.getPersistenceManager();
+Query q = pm.newQuery("CQL", "SELECT * FROM schema1.Employee");
+// Fetch all Employee rows as Object[] at a time.
+query.getFetchPlan().setFetchSize(-1);
+List<Object[]> results = (List)q.execute();
+-----
+
+So we are utilising the JDO API to generate a query and passing in the Cassandra "CQL".
+
+If you wanted to use CQL with the JPA API, you would do
+
+[source,java]
+-----
+// Find all employees
+Query q = em.createNativeQuery("SELECT * FROM schema1.Employee", Employee.class);
+List<Employee> results = q.getResultList();
+-----
+
+Note that the last argument to _createNativeQuery_ is optional and you would get _List<Object[]></Object>_ returned otherwise.

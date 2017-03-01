@@ -1,0 +1,36 @@
+[[auditing]]
+= Auditing
+:_basedir: ../
+:_imagesdir: images/
+
+NOTE: Applicable to RDBMS
+
+With standard JPA you have no annotations available to automativelly add timestamps into the datastore against each record
+when it is persisted or updated. Whilst you can do this manually, setting the field(s) in prePersist callbacks etc, DataNucleus
+provides some simple annotations to make it simpler still.
+
+[source,java]
+-----
+import org.datanucleus.api.jpa.annotations.CreateTimestamp;
+import org.datanucleus.api.jpa.annotations.UpdateTimestamp;
+
+@Entity
+public class Hotel
+{
+    @Id
+    long id;
+
+    @CreateTimestamp
+    Timestamp createTimestamp;
+
+    @UpdateTimestamp
+    Timestamp updateTimestamp;
+
+    ...
+}
+-----
+
+In the above example we have 2 fields in the class that will have columns in the datastore. 
+The field _createTimestamp_ will be persisted at INSERT with the Timestamp of the insert. 
+The field _updateTimestamp_ will be persisted whenever any update is made to the object in the datastore, with the Timestamp of the update.
+
