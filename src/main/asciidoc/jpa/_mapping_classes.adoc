@@ -13,6 +13,9 @@ Consequently an inheritance tree cannot just have a mapped superclass on its own
 *This is a DataNucleus extension, not part of the JPA standard*.
 
 
+NOTE: In strict JPA all persistable classes need to have a _default constructor_. With DataNucleus JPA this is not necessary, since all classes are enhanced before persistence and
+the enhancer adds on a default constructor if one is not defined.
+
 
 [[entity]]
 == Entity Class

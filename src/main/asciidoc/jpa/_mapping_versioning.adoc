@@ -12,31 +12,31 @@ EntityManager since retrieval using the current EntityManager - for use by Optim
 The standard JPA mechanism for versioning of objects is to mark a field of the class to store the version. The field must be Integer/Long based.
 With JPA you can specify the details of this *version field* as follows
 
-[source,xml]
------
-<entity name="mydomain.User">
-    <attributes>
-        <id name="id"/>
-        <version name="version"/>
-    </attributes>
-</entity>
------
-
-or alternatively using annotations
-
 [source,java]
 -----
 @Entity
 public class User
 {
-    @Id
-    long id;
+    ...
 
     @Version
     int version;
 
     ...
 }
+-----
+
+or using XML metadata
+
+[source,xml]
+-----
+<entity name="mydomain.User">
+    <attributes>
+        ...
+        <version name="version"/>
+        ...
+    </attributes>
+</entity>
 -----
 
 The specification above will use the "version" field for storing the version of the object. DataNucleus will use a "version-number" strategy for populating the value.
@@ -51,18 +51,6 @@ While the above mechanism should always be used for portability, DataNucleus als
 With this you don't have a particular field that stores the version and instead DataNucleus persists the version in the datastore with the
 field values in its own "column". You do this as follows.
 
-[source,xml]
------
-<entity name="mydomain.User">
-    <surrogate-version column="version"/>
-    <attributes>
-        <id name="id"/>
-    </attributes>
-</entity>
------
-
-or alternatively using annotations
-
 [source,java]
 -----
 import org.datanucleus.api.jpa.annotations.SurrogateVersion;
@@ -71,11 +59,18 @@ import org.datanucleus.api.jpa.annotations.SurrogateVersion;
 @SurrogateVersion
 public class User
 {
-    @Id
-    long id;
-
     ...
 }
+-----
+
+or using XML metadata
+
+[source,xml]
+-----
+<entity name="mydomain.User">
+    <surrogate-version column="version"/>
+    ...
+</entity>
 -----
 
 To access the "surrogate" version, you can make use of the following method
