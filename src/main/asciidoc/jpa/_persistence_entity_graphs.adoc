@@ -33,7 +33,7 @@ For example, if we have the following class
 class MyClass
 {
     String name;
-    HashSet coll;
+    Set coll;
     MyOtherClass other;
 }
 -----
@@ -67,7 +67,7 @@ This means that it will fetch all fields in the _default_ EntityGraph, *plus* al
 If we had provided the property *javax.persistence.fetchgraph* set to our EntityGraph it would have fetched just the fields defined in that EntityGraph.
 
 
-Note that you can also make use of EntityGraphs when using the JPA Query API, specifying the same properties above but as query _hints_.
+Note that you can also make use of EntityGraphs when using the link:query.html[JPA Query API], specifying the same properties above but as query _hints_.
 
 
 [[entity_graphs_unnamed]]
@@ -108,7 +108,7 @@ This means that it will fetch all fields in the _default_ EntityGraph, *plus* al
 If we had provided the property *javax.persistence.fetchgraph* set to our EntityGraph it would have fetched just the fields defined in that EntityGraph.
     
     
-Note that you can also make use of EntityGraphs when using the JPA Query API, specifying the same properties above but as query _hints_, like this
+Note that you can also make use of EntityGraphs when using the link:query.html[JPA Query API], specifying the same properties above but as query _hints_, like this
     
 [source,java]
 -----

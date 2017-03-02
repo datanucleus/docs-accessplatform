@@ -9,7 +9,7 @@ The http://beanvalidation.org/[Bean Validation API (JSR0303/JSR0349)] can be hoo
 prior to persistence, update and deletion. To do this
 
 * Put the *javax.validation* `validation-api` jar in your CLASSPATH, along with the Bean Validation implementation jar of your choice (e.g Apache BVal)
-* Set the persistence property _datanucleus.validation.mode_ to one of _auto_ (default), _none_, or _callback_
+* Set the persistence property *datanucleus.validation.mode* to one of _auto_ (default), _none_, or _callback_
 * Optionally set the persistence property(s) *datanucleus.validation.group.pre-persist*, *datanucleus.validation.group.pre-update*,
 *datanucleus.validation.group.pre-remove* to fine tune the behaviour (the default is to run validation on pre-persist and pre-update if you don't specify these).
 * Use JDO as you normally would for persisting objects
