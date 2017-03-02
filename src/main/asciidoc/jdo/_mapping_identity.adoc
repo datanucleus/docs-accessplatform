@@ -836,7 +836,7 @@ For that reason we have the "id" field too.
 [[compound_identity_1_N_map_bi]]
 === 1-N Map Relationship
 
-Lets take the same classes as we have in the linke:mapping.html#one_many_map_fk_bi_key[1-N Relationships (FK)]. 
+Lets take the same classes as we have in the link:mapping.html#one_many_map_fk_bi_key[1-N Relationships (FK)]. 
 In this guide we note that in the datastore representation of the *Account* and *Address* classes the *ADDRESS* table has a primary key as well as a foreign-key to *ACCOUNT*. 
 In our example here we want to have the primary-key to *ACCOUNT* to _include_ the foreign-key. 
 To do this we need to modify the classes slightly, adding primary-key fields to both classes, and use "application-identity" for both.
