@@ -8,7 +8,7 @@ to obtain a _PersistenceManager_ (PM) to manage the persistence of objects. Here
 to need to know about.
 
 NOTE: *Important : A _PersistenceManagerFactory_ is designed to be thread-safe. A _PersistenceManager_ is not.*
-Note that if you set the persistence property *javax.jdo.option.Multithreaded* this acts as a hint to the PMF to provide _PersistenceManager_s that are usable with multiple threads. 
+Note that if you set the persistence property *javax.jdo.option.Multithreaded* this acts as a hint to the PMF to provide _PersistenceManager(s)_ that are usable with multiple threads. 
 While DataNucleus makes efforts to make this _PersistenceManager_ usable with multiple threads, it is not guaranteed to work multi-threaded in all situations, 
 particularly around second class collection/map fields.
 
@@ -477,7 +477,7 @@ The relation can be _unidirectional_ where the A doesnt know about the Bs.
 The relation can be _bidirectional_ where the A has a collection of the Bs. [i.e a 1-N relationship but from the point of view of the element]
 * link:mapping.html#many_many_relations[M-N relationships] - this is where you have objects of type A that have a collection of objects of type B and the 
 objects of type B also have a collection of objects of type A. The relation is always _bidirectional_ by definition
-* link:mapping.html#compound_icentity[Compound Identity relationships] when you have a relation and part of the primary key of the related object is the other persistent object.
+* link:mapping.html#compound_identity[Compound Identity relationships] when you have a relation and part of the primary key of the related object is the other persistent object.
 
 === Assigning Relationships
 

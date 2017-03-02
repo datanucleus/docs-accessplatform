@@ -8,8 +8,11 @@ On occasion you need to share a data model with other user-groups or other appli
 There are three ways of handling this with DataNucleus.
 
 * *Separate Database per Tenant* - have a different database per user-group/application.
+In this case you will have a separate PMF for each database, and manage use of the appropriate PMF yourself.
 * *Separate Schema per Tenant* - as the first option, except use different schemas.
+In this case you will have a separate PMF for each database schema, and manage use of the appropriate PMF yourself.
 * *Same Database/Schema but with a Discriminator in affected Table(s)* - this is described below.
+In this case you will have a single PMF, and DataNucleus will manage selecting appropriate data for the tenant in question. This is described below.
 
 
 == Multitenancy via Discriminator in Table
@@ -90,7 +93,8 @@ pm2.setProperty("datanucleus.tenantId", "Chris");
 ... // All operations will apply to tenant "Chris"
 pm2.close();
 -----
-* Per datastore access : When creating the PMF set the persistence property _datanucleus.tenantProvider_ and set it to an instance of _org.datanucleus.store.schema.MultiTenancyProvider_.
+* Per datastore access : When creating the PMF set the persistence property _datanucleus.tenantProvider_ and set it to an instance of _org.datanucleus.store.schema.MultiTenancyProvider_
+http://www.datanucleus.org/javadocs/core/latest/org/datanucleus/store/schema/MultiTenancyProvider.html[image:../images/javadoc.png[Javadoc]]
 [source,java]
 -----
 public interface MultiTenancyProvider
