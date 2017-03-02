@@ -202,7 +202,7 @@ datanucleus.ConnectionUserName='user-name'
 datanucleus.ConnectionPassword='password'
 -----
 
-Note that in HSQLDB v2.x the driver changes to _org.hsqldb.jdbc.JDBCDriver_</p>
+Note that in HSQLDB v2.x the driver changes to _org.hsqldb.jdbc.JDBCDriver_
 
 
 [[h2]]
@@ -371,7 +371,7 @@ You must make sure that "autoStartMechanism" is NOT set to "SchemaTable" since t
 You must also make sure that nobody else is connected to the database at the same time.
 Don't ask us why such limitations are in a RDBMS, but then it was you that chose to use it ;-)
 
-To specify Firebird as your datastore, you will need something like the following specifying (replacing 'db-name' with filename of your database etc) </p>
+To specify Firebird as your datastore, you will need something like the following specifying (replacing 'db-name' with filename of your database etc) 
 
 -----
 datanucleus.ConnectionDriverName=org.firebirdsql.jdbc.FBDriver
@@ -384,7 +384,7 @@ datanucleus.ConnectionPassword='password'
 [[nuodb]]
 == NuoDB
 
-To specify NuoDB as your datastore, you will need something like the following specifying (replacing 'db-name' with filename of your database etc) </p>
+To specify NuoDB as your datastore, you will need something like the following specifying (replacing 'db-name' with filename of your database etc) 
 
 -----
 datanucleus.ConnectionDriverName=com.nuodb.jdbc.Driver
@@ -415,7 +415,7 @@ http://www.sqlite.org/[SQLite] is supported as an RDBMS datastore by DataNucleus
 
 * When using sequences, you must set the persistence property *datanucleus.valuegeneration.transactionAttribute* to *UsePM*
 
-To specify SQLite as your datastore, you will need something like the following specifying (replacing 'db-name' with filename of your database etc) </p>
+To specify SQLite as your datastore, you will need something like the following specifying (replacing 'db-name' with filename of your database etc) 
 
 -----
 datanucleus.ConnectionDriverName=org.sqlite.JDBC

@@ -32,9 +32,13 @@ Things to bear in mind with Cassandra usage :-
 * Creation of a PMF/EMF will create a _Cluster_. This will be closed then the PMF/EMF is closed.
 * Any PM/EM will use a single _Session_, by default, shared amongst all PM/EMs.
 * If you specify the persistence property *datanucleus.cassandra.sessionPerManager* to _true_ then each PM/EM will have its own _Session_ object.
-* You can set the number of connections per host with the persistence property *datanucleus.mongodb.connectionsPerHost*
 * Cassandra doesn't use transactions, so any JDO/JPA transaction operation is a no-op (i.e will be ignored).
 * This uses Cassandra 3.x (and CQL v3.x), not Thrift (like the previous unofficial attempts at a datanucleus-cassandra plugin used)
+* Specify persistence property *datanucleus.cassandra.metrics* to enable/disable metrics
+* Specify persistence property *datanucleus.cassandra.compression* to enable/disable compression
+* Specify persistence property *datanucleus.cassandra.ssl* to enable/disable SSL
+* Specify persistence property *datanucleus.cassandra.socket.readTimeoutMillis* to set the timeout for reads (in ms)
+* Specify persistence property *datanucleus.cassandra.socket.connectTimeoutMillis* to set the timeout for connecting (in ms)
 * You need to specify the "schema" (_datanucleus.mapping.Schema_)
 * Queries are evaluated in-datastore when they only have (indexed) members and literals and using the operators ==, !=, &gt;, &gt;=, &lt;, &lt;=, &amp;&amp;, ||.
 * You can query the datastore using link:../jdo/query.html#jdoql[JDOQL], link:../jpa/query.html#jpql[JPQL], or link:../jpa/query.html#native[CQL]

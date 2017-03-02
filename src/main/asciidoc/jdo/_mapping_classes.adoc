@@ -13,18 +13,7 @@ We have the following types of classes in DataNucleus JDO.
 == Persistence Capable Classes
 
 The first thing to decide when implementing your persistence layer is which classes are to be persisted.
-Let's take a sample class (_Hotel_) as an example. We can define a class as persistable using either annotations in the class, or XML metadata.
-
-To achieve the above aim with XML metadata, we do this
-
-[source,xml]
------
-<class name="Hotel">
-    ...
-</class>
------
-
-Alternatively, using link:annotations.html[JDO Annotations], like this
+Let's take a sample class (_Hotel_) as an example. We can define a class as persistable using either annotations in the class, or XML metadata. Like this
 
 [source,java]
 -----
@@ -34,6 +23,16 @@ public class Hotel
     ...
 }
 -----
+
+or using XML metadata
+
+[source,xml]
+-----
+<class name="Hotel">
+    ...
+</class>
+-----
+
 
 See also :-
 
@@ -48,16 +47,7 @@ NOTE: If any of your other classes *access the fields of these persistable class
 == Persistence-Aware Classes
 
 If a class is not itself persistable but it interacts with _fields_ of persistable classes then it should be marked as _Persistence Aware_.
-You do this as follows, with XML
-
-[source,xml]
------
-<class name="MyClass" persistence-modifier="persistence-aware">
-    ...
-</class>
------
-
-or with annotations
+You do this as follows
 
 [source,java]
 -----
@@ -66,6 +56,15 @@ public class MyClass
 {
     ...
 }
+-----
+
+or using XML metadata
+
+[source,xml]
+-----
+<class name="MyClass" persistence-modifier="persistence-aware">
+    ...
+</class>
 -----
 
 See also :-
@@ -78,17 +77,7 @@ See also :-
 
 image:../images/nucleus_extension.png[]
 
-You can, if you wish, make a class /read-only_. This is a DataNucleus extension and you set it as follows
-
-[source,xml]
------
-<class name="MyClass">
-    ...
-    <extension vendor-name="datanucleus" key="read-only" value="true"/>
-</class>
------
-
-or with annotations
+You can, if you wish, make a class "read-only". This is a DataNucleus extension and you set it as follows
 
 [source,java]
 -----
@@ -99,4 +88,15 @@ public class MyClass
     ...
 }
 -----
+
+or using XML metadata
+
+[source,xml]
+-----
+<class name="MyClass">
+    ...
+    <extension vendor-name="datanucleus" key="read-only" value="true"/>
+</class>
+-----
+
 
