@@ -128,7 +128,7 @@ also since any schema generation and/or sequence handling will need to use that 
 * *jar-file* - name of a JAR file to scan for annotated classes to include in this persistence-unit.
 * *mapping-file* - name of an XML "mapping" file containing persistence information to be included in this persistence-unit.
 * *class* - name of an annotated class to include in this persistence-unit
-* *properties* - properties defining the persistence factory to be used. Please refer to link:persistence_properties.html[Persistence Properties Guide] for details
+* *properties* - properties defining the persistence factory to be used. Please refer to link:emf_properties.html[EMF Properties] for details
 
 
 === Metadata loading using persistence unit
@@ -270,7 +270,8 @@ _{NONE, ALL, ENABLE_SELECTIVE, DISABLE_SELECTIVE, *UNSPECIFIED*}_
 _{create, drop, drop-and-create, *none*}_
 
 |javax.persistence.schema-generation.scripts.action
-|Alias for link:persistence_properties.html#schema[datanucleus.generateSchema.scripts.mode]
+|Whether to perform any schema generation into scripts at startup.
+Will process the schema for all classes that have metadata loaded at startup (i.e the classes specified in a persistence-unit).
 _{create, drop, drop-and-create, *none*}_
 
 |javax.persistence.schema-generation.scripts.create-target
