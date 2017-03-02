@@ -24,16 +24,7 @@ NOTE: Applicable to RDBMS, ODF, Excel, OOXML, HBase, Neo4j, MongoDB, XML, Cassan
 With *datastore identity* you are leaving the assignment of id's to DataNucleus and your class will *not* have a field for this identity - it will be added to the 
 datastore representation by DataNucleus. 
 It is, to all extents and purposes, a _surrogate key_ that will have its own column in the datastore. 
-To specify that a class is to use *datastore identity* with JDO, you add the following to the MetaData for the class.
-
-[source,xml]
------
-<class name="MyClass" identity-type="datastore">
-...
-</class>
------
-
-or using JDO annotations
+To specify that a class is to use *datastore identity* with JDO, you do it like this
 
 [source,java]
 -----
@@ -42,6 +33,15 @@ public class MyClass
 {
     ...
 }
+-----
+
+or using XML metadata
+
+[source,xml]
+-----
+<class name="MyClass" identity-type="datastore">
+...
+</class>
 -----
 
 So you are specifying the *identity-type* as _datastore_. 
@@ -56,23 +56,7 @@ By choosing *datastore identity* you are handing the process of identity generat
 This does not mean that you haven't got any control over how it does this. 
 JDO defines many ways of generating these identities and DataNucleus supports all of these and provides some more of its own besides.
 
-Defining which one to use is a simple matter of adding a MetaData element to your classes definition, like this
-
-[source,xml]
------
-<class name="MyClass" identity-type="datastore">
-    <datastore-identity strategy="sequence" sequence="MY_SEQUENCE"/>
-    ...
-</class>
-
-
-<class name="MyClass" identity-type="datastore">
-    <datastore-identity strategy="identity"/>
-    ...
-</class>
------
-
-or using annotations, for example
+Defining which one to use is a simple matter of specifying its metadata, like this
 
 [source,java]
 -----
@@ -82,6 +66,16 @@ public class MyClass
 {
     ...
 }
+-----
+
+or using XML metadata
+
+[source,xml]
+-----
+<class name="MyClass" identity-type="datastore">
+    <datastore-identity strategy="sequence" sequence="MY_SEQUENCE"/>
+    ...
+</class>
 -----
 
 Some of the datastore identity strategies require additional attributes, but the specification is straightforward.
@@ -460,17 +454,7 @@ NOTE: Applicable to RDBMS, ODF, Excel, OOXML, HBase, Neo4j, MongoDB.
 
 With *nondurable identity* your objects will not have a unique identity in the datastore. 
 This type of identity is typically for log files, history files etc where you aren't going to access the object by key, but instead by a different parameter. 
-In the datastore the table will typically not have a primary key. To specify that a class is to use *nondurable identity* with JDO you 
-would add the following to the MetaData for the class.
-
-[source,xml]
------
-<class name="MyClass" identity-type="nondurable">
-...
-</class>
------
-
-or using annotations, for example
+In the datastore the table will typically not have a primary key. To specify that a class is to use *nondurable identity* with JDO you would define metadata like this
 
 [source,java]
 -----
@@ -479,6 +463,15 @@ public class MyClass
 {
     ...
 }
+-----
+
+or using XML metadata
+
+[source,xml]
+-----
+<class name="MyClass" identity-type="nondurable">
+...
+</class>
 -----
 
 DataNucleus provides support for "nondurable" identity for some datastores only currently (RDBMS, Excel, ODF, MongoDB, HBase, Cassandra, Neo4j). 
