@@ -25,10 +25,11 @@ These are described below.
 [[transaction_local]]
 == Locally-Managed Transactions
 
-If using DataNucleus JPA in a J2SE environment the normal type of transaction is _RESOURCE_LOCAL_.
+If using DataNucleus JPA in a JavaSE environment the normal type of transaction is _RESOURCE_LOCAL_.
 With this type of transaction the user manages the transactions themselves, starting, committing or rolling back the transaction. 
-With these transactions with JPA http://www.datanucleus.org/javadocs/javax.persistence/2.1/javax/persistence/EntityTransaction.html[image:../images/javadoc.png[Javadoc]] 
-you would do something like
+With these transactions with JPA you obtain an _EntityTransaction_ 
+http://www.datanucleus.org/javadocs/javax.persistence/2.1/javax/persistence/EntityTransaction.html[image:../images/javadoc.png[Javadoc]] from the _EntityManager_,
+and manage it like this
 
 [source,java]
 -----
@@ -62,9 +63,13 @@ In this case you will have defined your link:#persistenceunit[persistence-unit] 
         ...
     </properties>
     ...
-</persistence-unit>]]></source>
-                <p>or</p>
-<source><![CDATA[
+</persistence-unit>
+-----
+
+or
+
+[source,xml]
+-----
 <persistence-unit name="MyUnit" transaction-type="RESOURCE_LOCAL">
     <non-jta-data-source>java:comp/env/myDS</properties>
     ...
