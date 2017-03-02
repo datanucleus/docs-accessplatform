@@ -422,7 +422,7 @@ To configure an *application identity* class to use this generation method you s
 
 image:../images/nucleus_extension.png[]
 
-NOTE: Applicable to all datastores.
+NOTE: Applicable to RDBMS.
 
 This method is database neutral and uses the _"select max(column) from table" + 1_ strategy to create unique ids. 
 The unique identifier value returned from the database is translated to a java type: java.lang.Long. 
