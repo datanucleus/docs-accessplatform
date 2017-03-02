@@ -633,7 +633,7 @@ This is to be specified when link:mapping.html#schema_constraints[defining index
 |table
 |Table name to use for any join table overriding the default name provided by DataNucleus.
 This is used either for link:mapping.html#one_many_relation_join[1-N relationships with a join table] or for link:mapping.html#secondary_tables[Secondary Tables].
-See also the property name "datanucleus.identifier.case" in the link:persistence.html#persistence_properties[Persistence Properties Guide].
+See also the property name "datanucleus.identifier.case" in the link:persistence.html#pmf_properties[PMF Properties Guide].
 |
 
 |column
@@ -1375,7 +1375,7 @@ This is used to define the details of a column in the datastore, and so can be u
 
 |name
 |Name of the column in the datastore. 
-See also the property name "datanucleus.identifier.case" in the link:persistence.html#persistence_properties[Persistence Properties Guide].
+See also the property name "datanucleus.identifier.case" in the link:persistence.html#pmf_properties[PMF Properties Guide].
 |
 
 |length
@@ -1611,13 +1611,13 @@ These are attributes within the *<extension>* tag (jdo/package/class/field/colle
 
 |cache
 |Whether this SCO collection will be cached by DataNucleus or whether every access of the collection will go through to the datastore. 
-See also "datanucleus.cache.collections" in the link:persistence.html#persistence_properties[Persistence Properties Guide]. 
+See also "datanucleus.cache.collections" in the link:persistence.html#pmf_properties[PMF Properties Guide]. 
 This MetaData attribute is used to override the value used by the _PersistenceManagerFactory_
 |*true*, false
 
 |cache-lazy-loading
 |Whether objects from this SCO collection will be lazy loaded (loaded when required) or whether they should be loaded at initialisation. 
-See also "datanucleus.cache.collections.lazy" in the link:persistence.html#persistence_properties[Persistence Properties Guide].
+See also "datanucleus.cache.collections.lazy" in the link:persistence.html#pmf_properties[PMF Properties Guide].
 This MetaData attribute is used to override the value used by the _PersistenceManagerFactory_
 |*true*, false
 
@@ -1685,13 +1685,13 @@ These are attributes within the *<extension>* tag (jdo/package/class/field/map/e
 
 |cache
 |Whether this SCO map will be cached by DataNucleus or whether every access of the map will go through to the datastore. 
-See also "datanucleus.cache.collections" in the link:persistence.html#persistence_properties[Persistence Properties Guide]. 
+See also "datanucleus.cache.collections" in the link:persistence.html#pmf_properties[PMF Properties Guide]. 
 This MetaData attribute is used to override the value used by the _PersistenceManagerFactory_
 |*true*, false
 
 |cache-lazy-loading
 |Whether objects from this SCO map will be lazy loaded (loaded when required) or whether they should be loaded at initialisation. 
-See also "datanucleus.cache.collections.lazy" in the link:persistence.html#persistence_properties[Persistence Properties Guide].
+See also "datanucleus.cache.collections.lazy" in the link:persistence.html#pmf_properties[PMF Properties Guide].
 This MetaData attribute is used to override the value used by the _PersistenceManagerFactory_
 |*true*, false
 
