@@ -244,7 +244,47 @@ In the case of a (indexed) List at both ends it doesn't make sense to use a sing
 [[many_many_map]]
 == Using Map
 
+If we reformulate our classes to use Map fields.
+
+[source,java]
+-----
+public class Product
+{
+    Map<String, Supplier> suppliers;
+
+    ...
+}
+
+public class Supplier
+{
+    Map<String, Product> products;
+
+    ...
+}
+-----
+
 If you define the Meta-Data for these classes as follows
+
+[source,java]
+-----
+public class Product
+{
+    @Join
+    Map<String, Supplier> suppliers;
+
+    ...
+}
+
+public class Supplier
+{
+    @Join
+    Map<String, Product> products;
+
+    ...
+}
+-----
+
+or using XML metadata
 
 [source,xml]
 -----
@@ -252,7 +292,7 @@ If you define the Meta-Data for these classes as follows
     <class name="Product" identity-type="datastore">
         ...
         <field name="suppliers" persistence-modifier="persistent">
-            <map key-type="java.lang.String" value-type="mydomain.Supplier"/>
+            <map/>
             <join/>
         </field>
     </class>
@@ -260,7 +300,7 @@ If you define the Meta-Data for these classes as follows
     <class name="Supplier" identity-type="datastore">
         ...
         <field name="products" persistence-modifier="persistent">
-            <map key-type="java.lang.String" value-type="mydomain.Product"/>
+            <map/>
             <join/>
         </field>
     </class>

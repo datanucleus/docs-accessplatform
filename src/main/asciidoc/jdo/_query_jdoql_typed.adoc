@@ -18,6 +18,8 @@ This annotation processor will (just before compile of your persistable classes)
 step to what QueryDSL requires, or indeed the JPA Criteria static metamodel.
 
 
+=== Using Maven
+
 With Maven you need to have the following in your POM
 
 [source,xml]
@@ -47,11 +49,19 @@ With Maven you need to have the following in your POM
 </plugins>
 -----
 
+
+=== Using Eclipse
+
 With Eclipse you need to
 
 * Go to _Java Compiler_ and make sure the compiler compliance level is 1.8 or above
 * Go to _Java Compiler -> Annotation Processing_ and enable the project specific settings and enable annotation processing
 * Go to _Java Compiler -> Annotation Processing -> Factory Path_, enable the project specific settings and then add the following jars to the list: `datanucleus-jdo-query.jar`, `javax.jdo.jar`
+
+
+=== Using Scala
+
+Please refer to this https://github.com/frgomes/poc-scala-datanucleus[proof of concept project] which demonstrates use of DataNucleus JDO (including Typed queries) with Scala.
 
 
 
