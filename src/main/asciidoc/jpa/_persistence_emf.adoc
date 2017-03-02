@@ -71,7 +71,7 @@ convenient way of specifying a set of metadata files, and classes, and jars that
 The persistence-unit is named, and the name is used for identifying it. Consequently this name can then be used when defining what classes are to be enhanced, for example.
 
 To define a _persistence-unit_ you first need to add a file *persistence.xml* to the `META-INF/` directory of your application jar. 
-This file will be used to define your _persistence-unit_s. Let's show an example
+This file will be used to define your _persistence-unit(s)_. Let's show an example
 
 [source,xml]
 -----
@@ -128,7 +128,7 @@ also since any schema generation and/or sequence handling will need to use that 
 * *jar-file* - name of a JAR file to scan for annotated classes to include in this persistence-unit.
 * *mapping-file* - name of an XML "mapping" file containing persistence information to be included in this persistence-unit.
 * *class* - name of an annotated class to include in this persistence-unit
-* *properties* - properties defining the persistence factory to be used. Please refer to link:emf_properties.html[EMF Properties] for details
+* *properties* - properties defining the persistence factory to be used. Please refer to link:persistence.html#emf_properties[EMF Properties] for details
 
 
 === Metadata loading using persistence unit
@@ -149,7 +149,7 @@ This optionally includes connection pooling dependent on datastore.
 * *Specify the JNDI name of the connectionFactory* (only for RDBMS). 
 This is achieved by specifying *javax.persistence.jtaDataSource*, and *javax.persistence.nonJtaDataSource* (for secondary operations) or
 by specifying the element(s) _jta-data-source_/_non-jta-data-source_
-                    
+
 
 
 === Restricting to specific classes
@@ -214,7 +214,7 @@ An EntityManagerFactory is very configurable, and DataNucleus provides many prop
 |Description + Values
 
 |javax.persistence.provider
-|Class name of the provider to use. DataNucleus has a provider name of *org.datanucleus.api.jpa.PersistenceProviderImpl*
+|Class name of the provider to use. DataNucleus has a provider name of *org.datanucleus.api.jpa.PersistenceProviderImpl*.
 If you only have 1 persistence provider in the CLASSPATH then this doesn't need specifying.
 
 |javax.persistence.transactionType
@@ -247,7 +247,7 @@ Please refer to link:../datastores/datastores.html[the datastores guides] for th
 
 |javax.persistence.sharedCache.mode
 |The mode of operation of the L2 cache, deciding which entities are cached. The default (UNSPECIFIED) is the same as DISABLE_SELECTIVE.
-See also Cache docs link:#cache_level2">for JPA]
+See also Cache docs link:#persistence.html#cache_level2[for JPA]
 _{NONE, ALL, ENABLE_SELECTIVE, DISABLE_SELECTIVE, *UNSPECIFIED*}_
 
 |javax.persistence.validation.mode
@@ -794,12 +794,12 @@ when the field is not in the current fetch group, and to not use lazy loading wh
 
 |datanucleus.cache.level2.type
 |Name of the type of Level 2 Cache to use. Can be used to interface with external caching products. Use "none" to turn off L2 caching.
-See also Cache docs link:cache_level2[for JPA]
+See also Cache docs link:#cache_level2[for JPA]
 {none, *soft*, weak, coherence, ehcache, ehcacheclassbased, cacheonix, oscache, swarmcache, javax.cache, spymemcached, xmemcached, {your-plugin-name}
 
 |datanucleus.cache.level2.mode
 |The mode of operation of the L2 cache, deciding which entities are cached. The default (UNSPECIFIED) is the same as DISABLE_SELECTIVE.
-See also Cache docs link:#cache_level2">for JPA]
+See also Cache docs link:#cache_level2[for JPA]
 {NONE, ALL, ENABLE_SELECTIVE, DISABLE_SELECTIVE, *UNSPECIFIED*}
 
 |datanucleus.cache.level2.storeMode
@@ -1249,9 +1249,9 @@ Weak references are held to non pinned objects.
 * link:#cache_level2_swarmcache[SwarmCache] - a simple wrapper to SwarmCache's caching product.
 * link:#cache_level2_coherence[Oracle Coherence] - a simple wrapper to Oracle's Coherence caching product. 
 Oracle's caches support distributed caching, so you could, in principle, use DataNucleus in a distributed environment with this option.
-* link:#cache_level2_memcached">spymemcached] - a simple wrapper to the "spymemcached" client for memcached caching product.
-* link:#cache_level2_memcached">xmemcached] - a simple wrapper to the "xmemcached" client for memcached caching product. 
-* link:#cache_level2_cacheonix">cacheonix] - a simple wrapper to the Cacheonix distributed caching software.
+* link:#cache_level2_memcached[spymemcached] - a simple wrapper to the "spymemcached" client for memcached caching product.
+* link:#cache_level2_memcached[xmemcached] - a simple wrapper to the "xmemcached" client for memcached caching product. 
+* link:#cache_level2_cacheonix[cacheonix] - a simple wrapper to the Cacheonix distributed caching software.
 * *none* - turn OFF Level 2 caching.
 
 The weak, soft and javax.cache caches are available in the datanucleus-core plugin.
