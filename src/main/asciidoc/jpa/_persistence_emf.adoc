@@ -71,7 +71,7 @@ convenient way of specifying a set of metadata files, and classes, and jars that
 The persistence-unit is named, and the name is used for identifying it. Consequently this name can then be used when defining what classes are to be enhanced, for example.
 
 To define a _persistence-unit_ you first need to add a file *persistence.xml* to the `META-INF/` directory of your application jar. 
-This file will be used to define your _persistence-unit_s. Let's show an example
+This file will be used to define your _persistence-unit(s)_. Let's show an example
 
 [source,xml]
 -----
@@ -113,10 +113,10 @@ This file will be used to define your _persistence-unit_s. Let's show an example
 </persistence>
 -----
 
-In this example we have defined 2 _persistence-unit_s. 
+In this example we have defined 2 _persistence-units_. 
 The first has the name "OnlineStore" and contains 5 classes (annotated). 
 The second has the name "Accounting" and contains a metadata file called `orm.xml` in a particular package (which will define the classes being part of that unit). 
-This means that once we have defined this we can reference these _persistence-unit_s in our persistence operations. 
+This means that once we have defined this we can reference these _persistence-units_ in our persistence operations. 
 You can find the XSD for `persistence.xml` http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd[here].
 
 There are several sub-elements of this `persistence.xml` file worth describing
@@ -247,7 +247,7 @@ Please refer to link:../datastores/datastores.html[the datastores guides] for th
 
 |javax.persistence.sharedCache.mode
 |The mode of operation of the L2 cache, deciding which entities are cached. The default (UNSPECIFIED) is the same as DISABLE_SELECTIVE.
-See also Cache docs link:#cache_level2">for JPA]
+See also Cache docs link:#cache_level2[for JPA]
 _{NONE, ALL, ENABLE_SELECTIVE, DISABLE_SELECTIVE, *UNSPECIFIED*}_
 
 |javax.persistence.validation.mode
@@ -804,7 +804,7 @@ See also Cache docs link:cache_level2[for JPA]
 
 |datanucleus.cache.level2.mode
 |The mode of operation of the L2 cache, deciding which entities are cached. The default (UNSPECIFIED) is the same as DISABLE_SELECTIVE.
-See also Cache docs link:#cache_level2">for JPA]
+See also Cache docs link:#cache_level2[for JPA]
 {NONE, ALL, ENABLE_SELECTIVE, DISABLE_SELECTIVE, *UNSPECIFIED*}
 
 |datanucleus.cache.level2.storeMode
@@ -1239,9 +1239,9 @@ Weak references are held to non pinned objects.
 * link:#cache_level2_swarmcache[SwarmCache] - a simple wrapper to SwarmCache's caching product.
 * link:#cache_level2_coherence[Oracle Coherence] - a simple wrapper to Oracle's Coherence caching product. 
 Oracle's caches support distributed caching, so you could, in principle, use DataNucleus in a distributed environment with this option.
-* link:#cache_level2_memcached">spymemcached] - a simple wrapper to the "spymemcached" client for memcached caching product.
-* link:#cache_level2_memcached">xmemcached] - a simple wrapper to the "xmemcached" client for memcached caching product. 
-* link:#cache_level2_cacheonix">cacheonix] - a simple wrapper to the Cacheonix distributed caching software.
+* link:#cache_level2_memcached[spymemcached] - a simple wrapper to the "spymemcached" client for memcached caching product.
+* link:#cache_level2_memcached[xmemcached] - a simple wrapper to the "xmemcached" client for memcached caching product. 
+* link:#cache_level2_cacheonix[cacheonix] - a simple wrapper to the Cacheonix distributed caching software.
 * *none* - turn OFF Level 2 caching.
 
 The weak, soft and javax.cache caches are available in the datanucleus-core plugin.
