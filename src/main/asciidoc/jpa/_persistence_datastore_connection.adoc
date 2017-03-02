@@ -123,7 +123,7 @@ whichever is required.
 
 
 === RDBMS : JDBC driver properties with connection pool
-                
+
 If using RDBMS and you have a JDBC driver that supports custom properties, you can still use DataNucleus connection pooling and you need to s
 pecify the properties in with your normal persistence properties, but add the prefix *datanucleus.connectionPool.driver.* to the property name that the driver requires. 
 For example, if an Oracle JDBC driver accepts _defaultRowPrefetch_, then you would specify something like
@@ -430,10 +430,12 @@ Once you have turned connection pooling on if you want more control over the poo
 
 
 [[datasource]]
-== RDBMS : Data Sources
+== Data Sources
 
-DataNucleus allows use of a _data source_ that represents the datastore in use. This is often just a URL defining the location of the datastore, 
-but there are in fact several ways of specifying this _data source_ depending on the environment in which you are running.
+NOTE: Applicable to RDBMS
+
+DataNucleus allows use of a _data source_ that represents the datastore in use. With JPA you specify this typically as the JNDI name of the datasource location.
+This is often just a URL defining the location of the datastore, but there are in fact several ways of specifying this _data source_ depending on the environment in which you are running.
 
 * link:#datasource_nonmanaged_client[Nonmanaged Context - Java Client]
 * link:#datasource_managed_servlet[Managed Context - Servlet]

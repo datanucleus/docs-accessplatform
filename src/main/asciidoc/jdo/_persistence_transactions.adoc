@@ -279,9 +279,11 @@ Any call to _commit_ on the transaction will throw an exception forcing the user
 
 
 [[transaction_savepoint]]
-== Transaction Savepoints (RDBMS)
+== Transaction Savepoints
 
 image:../images/nucleus_extension.png[]
+
+NOTE: Applicable to RDBMS
 
 JDBC provides the ability to specify a point in a transaction and rollback to that point if required, assuming the JDBC driver supports it.
 DataNucleus provides this as a vendor extension, as follows
