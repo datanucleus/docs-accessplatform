@@ -140,7 +140,7 @@ In JPQL, for RDBMS, if you have a FETCH JOIN to a multi-valued field of the cand
 and then will invoke an extra SQL of the form _SELECT {relatedObject columns} FROM RELATED_TBL WHERE EXISTS (restrict to the candidate objects involved).
 This is referred to as *bulk fetch* and avoids the "1+N query problem".
 
-WARN: This only applies to fields of the candidate that are FETCH JOINed. If you have a FETCH JOIN from a related object then this will not currently be fetched.
+WARNING: This only applies to fields of the candidate that are FETCH JOINed. If you have a FETCH JOIN from a related object then this will not currently be fetched.
 
 
 === Candidate that is @MappedSuperclass

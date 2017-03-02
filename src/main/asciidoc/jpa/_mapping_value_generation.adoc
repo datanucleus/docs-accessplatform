@@ -72,7 +72,7 @@ To configure a class to use this generation using *datastore identity* you need 
 [[valuegen_sequence]]
 == ValueGeneration Strategy SEQUENCE
 
-NOTE: Applicable to Oracle, PostgreSQL, SAPDB, DB2, Firebird, HSQLDB, H2, Derby, SQLServer, NuoDB
+NOTE: Applicable to RDBMS (Oracle, PostgreSQL, SAPDB, DB2, Firebird, HSQLDB, H2, Derby, SQLServer, NuoDB).
 
 A sequence is a user-defined database function that generates a sequence of unique numeric ids. 
 The unique identifier value returned from the database is translated to a java type: java.lang.Long
@@ -136,8 +136,8 @@ See also:-
 [[valuegen_identity]]
 == ValueGeneration Strategy IDENTITY
 
-NOTE: Applicable to DB2 (IDENTITY), MySQL (AUTOINCREMENT), SQLServer (IDENTITY), Sybase (IDENTITY), HSQLDB (IDENTITY), H2(IDENTITY), PostgreSQL (SERIAL), Derby (IDENTITY),
-MongoDB (String), Neo4j (long), NuoDB (IDENTITY)
+NOTE: Applicable to RDBMS (IDENTITY (DB2, SQLServer, Sybase, HSQLDB, H2, Derby, NuoDB), AUTOINCREMENT (MySQL, MariaDB) SERIAL (PostgreSQL)), MongoDB (String), Neo4j (long)
+
 
 Auto-increment/identity/serial are primary key columns that are populated when a row is inserted in the table. 
 These use the databases own keywords on table creation and so rely on having the table structure either created by DataNucleus or having the column with the necessary keyword.
@@ -189,7 +189,7 @@ Values generated using this generator are NOT available in @PrePersist, being ge
 [[valuegen_increment]]
 == ValueGeneration Strategy TABLE
 
-NOTE: Applies to all datastores
+NOTE: Applies to RDBMS, ODF, Excel, OOXML, HBase, Cassandra, MongoDB, Neo4j.
 
 This method is database neutral and uses a sequence table that holds an incrementing sequence value. The unique identifier value returned from the 
 database is translated to a java type: java.lang.Long. This method require a sequence table in the database and creates one if doesn't exist.

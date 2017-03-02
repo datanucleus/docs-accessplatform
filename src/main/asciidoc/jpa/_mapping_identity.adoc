@@ -20,6 +20,8 @@ This is known as link:#derived_identity[Derived Identity].
 [[application_identity]]
 == Application Identity
 
+NOTE: Applicable to all datastores.
+
 With *application identity* you are taking control of the specification of id's to DataNucleus. Application identity can require a primary key class 
 _(when you have multiple identity fields)_, and each persistent capable class may define a different class for its primary 
 key, and different persistent capable classes can use the same primary key class, as appropriate. With *application identity* the field(s) of the primary key 
@@ -305,6 +307,8 @@ public class ComposedIdKey implements Serializable
 
 image:../images/nucleus_extension.png[]
 
+NOTE: Applicable to RDBMS, ODF, Excel, OOXML, XML, HBase, Cassandra, Neo4j, MongoDB, JSON
+
 While JPA defines support for xref:mapping.html#application[application identity] only, DataNucleus also provides support for *datastore identity*. 
 With *datastore identity* you are leaving the assignment of id's to DataNucleus and your class will *not* have a field for this identity - it will be added to the 
 datastore representation by DataNucleus. It is, to all extents and purposes a _surrogate key_ that will have its own column in the datastore. 
@@ -380,6 +384,8 @@ MyClass myObj = em.find(MyClass.class, idKey);
 == Nondurable Identity
 
 image:../images/nucleus_extension.png[]
+
+NOTE: Applicable to RDBMS, ODF, Excel, OOXML, HBase, Neo4j, MongoDB
 
 JPA requires that all objects have an identity. DataNucleus provides a vendor extension that allows objects of a class to not have a unique identity in the datastore. 
 This type of identity is typically for log files, history files etc where you aren't going to access the object by key, but instead by a different parameter. 

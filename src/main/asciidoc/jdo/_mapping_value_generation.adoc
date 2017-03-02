@@ -56,7 +56,7 @@ A sequence is a user-defined database function that generates a sequence of uniq
 The unique identifier value returned from the database is translated to a java type: java.lang.Long. 
 DataNucleus supports sequences for the following datastores:
 
-NOTE: Applicable to Oracle, PostgreSQL, SAPDB, DB2, Firebird, HSQLDB, H2, Derby, SQLServer, NuoDB
+NOTE: Applicable to RDBMS (Oracle, PostgreSQL, SAPDB, DB2, Firebird, HSQLDB, H2, Derby, SQLServer, NuoDB)
 
 To configure a class to use either of these generation methods with *datastore identity* you simply add this to the class' Meta-Data
 
@@ -144,8 +144,7 @@ This value generator will generate values unique across different JVMs
 [[valuegen_identity]]
 == identity
 
-NOTE: Applicable to DB2 (IDENTITY), MySQL (AUTOINCREMENT), SQLServer (IDENTITY), Sybase (IDENTITY), HSQLDB (IDENTITY), H2(IDENTITY), PostgreSQL (SERIAL), Derby (IDENTITY),
-MongoDB (String), Neo4j (long), NuoDB (IDENTITY)
+NOTE: Applicable to RDBMS (IDENTITY (DB2, SQLServer, Sybase, HSQLDB, H2, Derby, NuoDB), AUTOINCREMENT (MySQL, MariaDB) SERIAL (PostgreSQL)), MongoDB (String), Neo4j (long)
 
 Auto-increment/identity/serial are primary key columns that are populated when a row is inserted in the table. 
 These use the databases own keywords on table creation and so rely on having the table structure either created by DataNucleus or having the column with the necessary keyword.
@@ -196,10 +195,8 @@ public class MyClass
 -----
 
 Please be aware that if you have an inheritance tree with the base class defined as using "identity" then
-the column definition for the PK of the base table will be defined as "AUTO_INCREMENT" or "IDENTITY" or 
-                    "SERIAL" (dependent on the RDBMS) and all subtables will NOT have this identifier added to their PK column
-                    definitions. This is because the identities are assigned in the base table (since all objects will have 
-                    an entry in the base table).
+the column definition for the PK of the base table will be defined as "AUTO_INCREMENT" or "IDENTITY" or "SERIAL" (dependent on the RDBMS) and all subtables will 
+NOT have this identifier added to their PK column definitions. This is because the identities are assigned in the base table (since all objects will have an entry in the base table).
 
 NOTE: If using optimistic transactions, this strategy will mean that the value is only set when the object is actually persisted (i.e at flush() or commit())
 
@@ -208,6 +205,8 @@ This value generator will generate values unique across different JVMs
 
 [[valuegen_increment]]
 == increment
+
+NOTE: Applies to RDBMS, ODF, Excel, OOXML, HBase, Cassandra, MongoDB, Neo4j.
 
 This method is database neutral and uses a sequence table that holds an incrementing sequence value. 
 The unique identifier value returned from the database is translated to a java type: java.lang.Long. This strategy will work with any datastore. 
@@ -319,6 +318,8 @@ This value generator will generate values unique across different JVMs
 [[valuegen_uuidstring]]
 == uuid-string
 
+NOTE: Applicable to all datastores.
+
 This generator creates identities with 16 characters in string format. 
 The identity contains the IP address of the local machine where DataNucleus is running, as well as other necessary components to provide uniqueness across time.
 
@@ -352,6 +353,8 @@ To configure an *application identity* class to use this generation method you s
 
 [[valuegen_uuidhex]]
 == uuid-hex
+
+NOTE: Applicable to all datastores.
 
 This generator creates identities with 32 characters in hexadecimal format. 
 The identity contains the IP address of the local machine where DataNucleus is running, as well as other necessary components to provide uniqueness across time.
@@ -387,8 +390,10 @@ To configure an *application identity* class to use this generation method you s
 
 image:../images/nucleus_extension.png[]
 
+NOTE: Applicable to RDBMS (SQLServer, MySQL).
+
 This method is like the "uuid-hex" option above except that it utilises datastore capabilities to generate the UUIDHEX code. 
-Consequently this only works on some RDBMS (MSSQL, MySQL). The disadvantage of this strategy is that it makes a call to the datastore for each new UUID required. 
+Consequently this only works on some RDBMS. The disadvantage of this strategy is that it makes a call to the datastore for each new UUID required. 
 The generated UUID is in the same form as the AUID strategy where identities are generated in memory and so the AUID strategy is the recommended choice relative to this option.
 
 For a class using *datastore identity* you need to add metadata something like the following
@@ -416,6 +421,8 @@ To configure an *application identity* class to use this generation method you s
 == max
 
 image:../images/nucleus_extension.png[]
+
+NOTE: Applicable to all datastores.
 
 This method is database neutral and uses the _"select max(column) from table" + 1_ strategy to create unique ids. 
 The unique identifier value returned from the database is translated to a java type: java.lang.Long. 
@@ -452,6 +459,8 @@ This is because it will select the "max+1" and before creating the record anothe
 == uuid
 
 image:../images/nucleus_extension.png[]
+
+NOTE: Applicable to all datastores.
 
 This generator uses the JRE UUID class to generate String values. The values are 128-bit (36 character) of the form "0e400c2c-b3a0-4786-a0c6-f2607bf643eb"
 
@@ -506,6 +515,8 @@ This value generator will generate values unique across different JVMs
 
 image:../images/nucleus_extension.png[]
 
+NOTE: Applicable to all datastores.
+
 This generator uses the JRE UUID class to generate UUID values. The values are 128-bit (36 character) of the form "0e400c2c-b3a0-4786-a0c6-f2607bf643eb"
 
 This generator can be used in concurrent applications. It is especially useful in situations where large numbers of transactions within a certain amount of time have to be made, and the 
@@ -539,6 +550,8 @@ This value generator will generate values unique across different JVMs
 == auid
 
 image:../images/nucleus_extension.png[]
+
+NOTE: Applicable to all datastores.
 
 This generator uses a Java implementation of DCE UUIDs to create unique identifiers without the overhead 
 of additional database transactions or even an open database connection. The identifiers are Strings of 
@@ -577,6 +590,8 @@ This value generator will generate values unique across different JVMs
 
 image:../images/nucleus_extension.png[]
 
+NOTE: Applicable to all datastores.
+
 This method will create a java.sql.Timestamp of the current time (at insertion in the datastore).
 
 For a class using *datastore identity* you need to add metadata something like the following
@@ -604,6 +619,8 @@ To configure an *application identity* class to use this generation method you s
 == timestamp-value
 
 image:../images/nucleus_extension.png[]
+
+NOTE: Applicable to all datastores.
 
 This method will create a long of the current time in millisecs (at insertion in the datastore).
 
