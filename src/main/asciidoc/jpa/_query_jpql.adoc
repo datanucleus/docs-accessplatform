@@ -132,6 +132,18 @@ This doesn't mean that DataNucleus will definitely fetch them in the same query 
 in a single query) but that it will attempt to fetch all fields that are selected (as well as the ones that are defaulted to EAGER).
 
 
+=== FETCH JOIN of multi-valued field
+
+image:../images/nucleus_extension.png[]
+
+In JPQL, for RDBMS, if you have a FETCH JOIN to a multi-valued field of the candidate, DataNucleus will perform the basic query in one SQL statement,
+and then will invoke an extra SQL of the form _SELECT {relatedObject columns} FROM RELATED_TBL WHERE EXISTS (restrict to the candidate objects involved).
+This is referred to as *bulk fetch* and avoids the "1+N query problem".
+
+WARN: This only applies to fields of the candidate that are FETCH JOINed. If you have a FETCH JOIN from a related object then this will not currently be fetched.
+
+
+=== Candidate that is @MappedSuperclass
 
 image:../images/nucleus_extension.png[]
 
@@ -140,6 +152,8 @@ you cannot query for instances of that superclass and its subclasses. We conside
 and allow the entity name to also be of a _MappedSuperclass_. 
 You are unlikely to find this supported in other JPA implementations, but then maybe that's why you chose DataNucleus?
 
+
+=== JOIN ON to another root
 
 image:../images/nucleus_extension.png[]
 
@@ -154,6 +168,8 @@ SELECT p FROM Person p LEFT OUTER JOIN Address a ON p.addressName = a.name
 Here we simply chose an ON clause to join the two roots.
 
 
+=== JOIN to an embedded element
+
 image:../images/nucleus_extension.png[]
 
 In strict JPA you cannot join to an embedded element class (of an embeddable). With DataNucleus you can do this, and hence form queries
@@ -164,6 +180,9 @@ of embeddable _Address_ objects.
 -----
 SELECT p FROM Person p LEFT OUTER JOIN p.addresses a WHERE a.name = 'Home'
 -----
+
+
+=== Control over INNER/OUTER join for implicit joins
 
 image:../images/nucleus_extension.png[]
 

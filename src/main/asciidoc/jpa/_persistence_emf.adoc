@@ -6,7 +6,7 @@
 
 Any JPA-enabled application will require at least one _EntityManagerFactory_. 
 Typically applications create one per datastore being utilised. 
-An _EntityManagerFactory_ provides access to _EntityManager_s which allow objects to be persisted, and retrieved. 
+An _EntityManagerFactory_ provides access to _EntityManager(s)_ which allow objects to be persisted, and retrieved. 
 The _EntityManagerFactory_ can be configured to provide particular behaviour.
 
 NOTE: an _EntityManagerFactory_ is designed to be thread-safe. An _EntityManager_ is not*
@@ -70,7 +70,7 @@ perhaps within a different DAO object, if using DAOs. JPA introduces the idea of
 convenient way of specifying a set of metadata files, and classes, and jars that contain all classes to be persisted in a grouping. 
 The persistence-unit is named, and the name is used for identifying it. Consequently this name can then be used when defining what classes are to be enhanced, for example.
 
-To define a _persistence-unit_ you first need to add a file *persistence.xml* to the `META-INF/` directory of your application jar. 
+To define a _persistence-unit_ you first need to add a file `persistence.xml` to the `META-INF/` directory of your application jar. 
 This file will be used to define your _persistence-unit(s)_. Let's show an example
 
 [source,xml]
@@ -113,7 +113,7 @@ This file will be used to define your _persistence-unit(s)_. Let's show an examp
 </persistence>
 -----
 
-In this example we have defined 2 _persistence-unit_s. 
+In this example we have defined 2 _persistence-unit(s)_. 
 The first has the name "OnlineStore" and contains 5 classes (annotated). 
 The second has the name "Accounting" and contains a metadata file called `orm.xml` in a particular package (which will define the classes being part of that unit). 
 This means that once we have defined this we can reference these _persistence-unit_s in our persistence operations. 
@@ -133,7 +133,7 @@ also since any schema generation and/or sequence handling will need to use that 
 
 === Metadata loading using persistence unit
 
-When you specify an EMF using a _persistence.xml_ it will load the metadata for all classes that are specified directly in the persistence unit. 
+When you specify an EMF using a `persistence.xml` it will load the metadata for all classes that are specified directly in the persistence unit. 
 If you don't have the _exclude-unlisted-classes_ set to true then it will also do a CLASSPATH scan to try to find any other *annotated* classes that are part of that persistence unit.
 To set the CLASSPATH scanner to a custom version use the persistence property *datanucleus.metadata.scanner* and set it to the classname of the scanner class.
 
@@ -169,7 +169,7 @@ If you want to just have specific classes in the _persistence-unit_ you can spec
 -----
 
 If you don't include the *exclude-unlisted-classes* then DataNucleus will search for annotated classes starting at the _root_ of the _persistence-unit_ 
-(the root directory in the CLASSPATH that contains the "META-INF/persistence.xml" file).
+(the root directory in the CLASSPATH that contains the `META-INF/persistence.xml` file).
 
 
 [[persistenceunit_dynamic]]
@@ -247,7 +247,7 @@ Please refer to link:../datastores/datastores.html[the datastores guides] for th
 
 |javax.persistence.sharedCache.mode
 |The mode of operation of the L2 cache, deciding which entities are cached. The default (UNSPECIFIED) is the same as DISABLE_SELECTIVE.
-See also Cache docs link:#persistence.html#cache_level2[for JPA]
+See also Cache docs link:persistence.html#cache_level2[for JPA]
 _{NONE, ALL, ENABLE_SELECTIVE, DISABLE_SELECTIVE, *UNSPECIFIED*}_
 
 |javax.persistence.validation.mode
@@ -309,17 +309,16 @@ DataNucleus provides the following properties for configuring the datastore used
 |Description + Values
 
 |datanucleus.ConnectionURL
-|URL specifying the datastore to use for persistence. Note that this will define the *type of datastore* as well as the datastore itself. 
-Please refer to link:../datastores/datastores.html[the datastores guides] for the URL appropriate for the type of datastore you're using.
+|Refer to _javax.persistence.jdbc.url_.
 
 |datanucleus.ConnectionUserName
-|Username to use for connecting to the DB
+|Refer to _javax.persistence.jdbc.user_.
 
 |datanucleus.ConnectionPassword
-|Password to use for connecting to the DB. See *datanucleus.ConnectionPasswordDecrypter* for a way of providing an encrypted password here
+|Refer to _javax.persistence.jdbc.password_.
 
 |datanucleus.ConnectionDriverName
-|The name of the (JDBC) driver to use for the DB (for RDBMS only).
+|Refer to _javax.persistence.jdbc.driver_.
 
 |datanucleus.ConnectionFactory
 |Instance of a connection factory for *transactional* connections. This is an alternative to *datanucleus.ConnectionURL*.
@@ -976,7 +975,7 @@ classes explicitly specified in the persistence-unit. {*true*, false}
 The default is nullable i.e. to allow null values (since v5.0.0). {*true*, false}
 
 |datanucleus.metadata.scanner
-|Name of a class to use for scanning the classpath for persistent classes when using a _persistence.xml_.
+|Name of a class to use for scanning the classpath for persistent classes when using a `persistence.xml`.
 The class must implement the interface _org.datanucleus.metadata.MetaDataScanner_
 
 |datanucleus.metadata.useDiscriminatorForSingleTable

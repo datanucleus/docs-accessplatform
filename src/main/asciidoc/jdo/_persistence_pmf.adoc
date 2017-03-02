@@ -3,15 +3,15 @@
 :_basedir: ../
 :_imagesdir: images/
 
-Any JDO-enabled application will require at least one _PersistenceManagerFactory_ (PMF). 
+Any JDO-enabled application will require at least one _PersistenceManagerFactory_ (PMF)
+http://www.datanucleus.org/javadocs/javax.jdo/3.2/javax/jdo/PersistenceManagerFactory.html[image:../images/javadoc.png[]]. 
 Typically applications create one per datastore being utilised. 
-A _PersistenceManagerFactory_ provides access to _PersistenceManagers_ which allow objects to be persisted, and retrieved.
+A _PersistenceManagerFactory_ provides access to _PersistenceManager(s)_ which allow objects to be persisted, and retrieved.
 The _PersistenceManagerFactory_ can be configured to provide particular behaviour.
 
 NOTE: A _PersistenceManagerFactory_ is designed to be thread-safe. A _PersistenceManager_ is not*
 
-There are many ways of creating a _PersistenceManagerFactory_ 
-http://www.datanucleus.org/javadocs/javax.jdo/3.2/javax/jdo/PersistenceManagerFactory.html[image:../images/javadoc.png[]]
+There are many ways of creating a _PersistenceManagerFactory_, some of which are shown below
 
 [source,java]
 -----
@@ -185,7 +185,7 @@ pumd.addProperty("datanucleus.schema.autoCreateAll", "true");
 PersistenceManagerFactory pmf = new JDOPersistenceManagerFactory(pumd, null);
 -----
 
-It should be noted that if you call _pumd.toString();_ then this returns the text that would have been found in a _persistence.xml_ file.
+It should be noted that if you call _pumd.toString();_ then this returns the text that would have been found in a `persistence.xml` file.
 
 
 
@@ -566,7 +566,7 @@ loading up into the StoreManager. Defaults to false since some databases are slo
 {true, *false*}
 
 |datanucleus.persistenceXmlFilename
-|URL name of the _persistence.xml_ file that should be used instead of using `META-INF/persistence.xml`.
+|URL name of the `persistence.xml` file that should be used instead of using `META-INF/persistence.xml`.
 
 |datanucleus.datastoreReadTimeout
 |The timeout to apply to all reads (millisecs), e.g by query or by PM.getObjectById(). *Only applies if the underlying datastore supports it*
@@ -1171,7 +1171,7 @@ The default is nullable i.e. to allow null values.
 {*true*, false}
 
 |datanucleus.metadata.scanner
-|Name of a class to use for scanning the classpath for persistent classes when using a _persistence.xml_.
+|Name of a class to use for scanning the classpath for persistent classes when using a `persistence.xml`.
 The class must implement the interface _org.datanucleus.metadata.MetaDataScanner_
 
 |datanucleus.metadata.useDiscriminatorForSingleTable
@@ -1201,7 +1201,7 @@ _Classes_ looks at the property _datanucleus.autoStartClassNames_ for a list of 
 _MetaData_ looks at the property _datanucleus.autoStartMetaDataFiles_ for a list of metadata files
 The other option (default) is _None_ (start from scratch each time). 
 Please refer to the link:persistence.html#autostart[Auto-Start Mechanism Guide] for more details.
-*Alternatively just use _persistence.xml_ to specify the classes and/or mapping files to load at startup.* Note also that "Auto-Start" is for RUNTIME use only (not during SchemaTool).
+*Alternatively just use `persistence.xml` to specify the classes and/or mapping files to load at startup.* Note also that "Auto-Start" is for RUNTIME use only (not during SchemaTool).
 {*None*, XML, Classes, MetaData, SchemaTable}
 
 |datanucleus.autoStartMechanismMode
