@@ -34,7 +34,7 @@ public class MyClass
 }
 -----
 
-So, using annotations, we have marked the field _birthday_ as persistent, whereas field _someOtherField_ is not persisted.
+So, using annotations, we have marked the field _birthday_ as persistent, whereas field _someOtherField_ is declared as _not_ persisted.
 _Please note that in this particular case, Date is by default persistent so we could omit the @Persistent annotation_ 
 (with non-default-persistent types we would definitely need the annotation). Using XML MetaData we would have done
 
@@ -47,7 +47,6 @@ _Please note that in this particular case, Date is by default persistent so we c
 -----
 
 Please note that the field Java type defines whether it is, by default, persistable.
-Look at the link:#field_types[Types Guide] and if the type has a tick in the column "Persistent?" then you don't need to mark the _persistence-modifier_ as "persistent".
 
 
 [[properties]]

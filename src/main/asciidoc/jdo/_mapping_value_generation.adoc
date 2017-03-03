@@ -426,9 +426,11 @@ NOTE: Applicable to RDBMS.
 
 This method is database neutral and uses the _"select max(column) from table" + 1_ strategy to create unique ids. 
 The unique identifier value returned from the database is translated to a java type: java.lang.Long. 
-*It is however not recommended by DataNucleus since it makes a DB call for every record to be inserted and hence is inefficient. 
+
+WARNING: This is not recommended since it makes a DB call for every record to be inserted and hence is inefficient.
 Each DB call will run a scan in all table contents causing contention and locks in the table. 
-We recommend the use of either Sequence or Identity based value generators (see below) - which you use would depend on your RDBMS.*
+We instead recommend the use of either Sequence, Identity or UUID based value generators - which you use would depend on your datastore.
+
 
 For a class using *datastore identity* you need to add metadata something like the following
 
