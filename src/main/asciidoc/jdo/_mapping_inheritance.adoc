@@ -48,7 +48,7 @@ See also :-
 [[inheritance_discriminator]]
 == Discriminator
 
-NOTE: Applicable to RDBMS, HBase, MongoDB
+NOTE: Applicable to RDBMS, HBase, MongoDB, Cassandra
 
 A _discriminator_ is an extra "column" stored alongside data to identify the class of which that information is part. 
 It is useful when storing objects which have inheritance to provide a quick way of determining the object type on retrieval. 
@@ -332,7 +332,7 @@ DataNucleus supports this, but only currently supports the following values of _
 [[inheritance_completetable]]
 == Complete table
 
-NOTE: Applicable to RDBMS, Neo4j, NeoDatis, Excel, OOXML, ODF, HBase, JSON, AmazonS3, GoogleStorage, MongoDB, LDAP
+NOTE: Applicable to RDBMS, Neo4j, NeoDatis, Excel, OOXML, ODF, HBase, Cassandra, JSON, AmazonS3, GoogleStorage, MongoDB, LDAP
 
 With "complete-table" we define the strategy on the root class of the inheritance tree and it applies to all subclasses. 
 Each class is persisted into its own table, having columns for all fields (of the class in question plus all fields of superclasses). So taking the same classes as used above

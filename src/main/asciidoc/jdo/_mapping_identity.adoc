@@ -19,6 +19,8 @@ This is known as link:#compound_identity[Compound Identity].
 [[datastore_identity]]
 == Datastore Identity
 
+NOTE: Applicable to RDBMS, ODF, Excel, OOXML, HBase, Neo4j, MongoDB, XML, Cassandra, JSON 
+
 With *datastore identity* you are leaving the assignment of id's to DataNucleus and your class will *not* have a field for this identity - it will be added to the 
 datastore representation by DataNucleus. 
 It is, to all extents and purposes, a _surrogate key_ that will have its own column in the datastore. 
@@ -56,22 +58,6 @@ JDO defines many ways of generating these identities and DataNucleus supports al
 
 Defining which one to use is a simple matter of adding a MetaData element to your classes definition, like this
 
-[source,xml]
------
-<class name="MyClass" identity-type="datastore">
-    <datastore-identity strategy="sequence" sequence="MY_SEQUENCE"/>
-    ...
-</class>
-
-
-<class name="MyClass" identity-type="datastore">
-    <datastore-identity strategy="identity"/>
-    ...
-</class>
------
-
-or using annotations, for example
-
 [source,java]
 -----
 @PersistenceCapable
@@ -80,6 +66,16 @@ public class MyClass
 {
     ...
 }
+-----
+
+or using XML metadata
+
+[source,xml]
+-----
+<class name="MyClass" identity-type="datastore">
+    <datastore-identity strategy="sequence" sequence="MY_SEQUENCE"/>
+    ...
+</class>
 -----
 
 Some of the datastore identity strategies require additional attributes, but the specification is straightforward.
@@ -152,6 +148,8 @@ Object obj = pm.getObjectById(MyClass.class, mykey);
 
 [[application_identity]]
 == Application Identity
+
+NOTE: Applicable to all datastores.
 
 With *application identity* you are taking control of the specification of id's to DataNucleus. 
 Application identity requires a primary key class _(unless you have a single primary-key field in which case the PK class is provided for you)_, 
@@ -451,6 +449,8 @@ If you are using your own PK class then the _mykey_ value is the toString() form
 
 [[nondurable_identity]]
 == Nondurable Identity
+
+NOTE: Applicable to RDBMS, ODF, Excel, OOXML, HBase, Neo4j, MongoDB.
 
 With *nondurable identity* your objects will not have a unique identity in the datastore. 
 This type of identity is typically for log files, history files etc where you aren't going to access the object by key, but instead by a different parameter. 
