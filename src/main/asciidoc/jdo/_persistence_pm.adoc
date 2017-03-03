@@ -573,6 +573,47 @@ NOTE: When performing management of relations there are some checks implemented 
 You can disable these checks using *datanucleus.manageRelationshipsChecks*, set to false.
 
 
+[[large_data_problems]]
+== Transactions with lots of data
+
+Occasionally you may need to persist large amounts of data in a single transaction. Since all objects need to be present in Java memory at the same time, you
+can get _OutOfMemory_ errors. You can alleviate this by changing how you flush/commit the persistent changes.
+You can do it like this, for example
+
+[source,java]
+-----
+PersistenceManager pm = pmf.getPersistenceManager();
+Transaction tx = pm.currentTransaction();
+try
+{
+    tx.begin();
+    for (int i=0; i<100000; i++)
+    {
+        Wardrobe wardrobe = new Wardrobe();
+        wardrobe.setModel("3 doors");
+        pm.makePersistent(wardrobe);
+        if (i % 10000 == 0)
+        {
+            // Flush every 10000 objects
+            pm.flush();
+        }
+    }
+    tx.commit();
+}
+finally
+{
+    if (tx.isActive())
+    {
+        tx.rollback();
+    }
+    pm.close();
+}
+-----
+
+You can additionally consider evicting objects from the Level 1 Cache, since they will, by default, be cached until commit.
+
+
+
 [[level1_cache]]
 == Level 1 Cache
 
@@ -596,6 +637,7 @@ particular identity at any one time for that _PersistenceManager_. When the _Per
 
 link:../extensions/extensions.html#cache_level1[image:../images/nucleus_plugin.png[]]
 The L1 cache is a DataNucleus plugin point allowing you to provide your own cache where you require it.
+
 
 == PersistenceManagerProxy
 

@@ -398,6 +398,48 @@ e.g add an element to a collection and then remove it (why?!). You can disable t
 
 
 
+
+[[large_data_problems]]
+== Transactions with lots of data
+
+Occasionally you may need to persist large amounts of data in a single transaction. Since all objects need to be present in Java memory at the same time, you
+can get _OutOfMemory_ errors. You can alleviate this by changing how you flush/commit the persistent changes.
+You can do it like this, for example
+
+[source,java]
+-----
+EntityManager em = emf.createEntityManager();
+EntityTransaction tx = em.getTransaction();
+try
+{
+    tx.begin();
+    for (int i=0; i<100000; i++)
+    {
+        Wardrobe wardrobe = new Wardrobe();
+        wardrobe.setModel("3 doors");
+        em.persist(wardrobe);
+        if (i % 10000 == 0)
+        {
+            // Flush every 10000 objects
+            em.flush();
+        }
+    }
+    tx.commit();
+}
+finally
+{
+    if (tx.isActive())
+    {
+        tx.rollback();
+    }
+    em.close();
+}
+-----
+
+You can additionally consider evicting objects from the Level 1 Cache, since they will, by default, be cached until commit.
+
+
+
         
 [[level1_cache]]
 == Level 1 Cache
