@@ -143,8 +143,10 @@ It should be noted that in this latter (embedded) case we can still persist obje
 
 DataNucleus supports embedded persistable objects with the following proviso :-
 
-* You can represent inheritence of embedded objects using a discriminator (you must define it in the metadata of the embedded type. 
+* You can represent inheritence of embedded objects using a discriminator (you must define it in the metadata of the embedded type). 
 Note that this is a DataNucleus extension since JPA doesn't define any support for embedded inherited persistable objects
+
+=== Null embedded objects
 
 image:../images/nucleus_extension.png[]
 
@@ -267,7 +269,7 @@ no identity so we have to retrieve all initially.
 It should be noted that where the collection "element" is not an entity or of a "reference" type (Interface or Object) it will *always* be embedded, and 
 this functionality here applies to embeddable entity elements only. DataNucleus doesn't support the embedding of "reference type" objects currently.
 
-Let's take an example. We are modelling a *Network*, and in our simple model our *Network* has collection of *Device*s. So we define our classes as
+Let's take an example. We are modelling a *Network*, and in our simple model our *Network* has collection of *Device(s)*. So we define our classes as
 
 [source,java]
 -----
