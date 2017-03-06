@@ -9,7 +9,7 @@ Typically applications create one per datastore being utilised.
 An _EntityManagerFactory_ provides access to _EntityManager_s which allow objects to be persisted, and retrieved. 
 The _EntityManagerFactory_ can be configured to provide particular behaviour.
 
-NOTE: an _EntityManagerFactory_ is designed to be thread-safe. An _EntityManager_ is not*
+NOTE: An _EntityManagerFactory_ is designed to be thread-safe. An _EntityManager_ is not
 
 We will hereafter refer to an EntityManagerFactory as an _EMF_ for brevity.
 
@@ -128,7 +128,7 @@ also since any schema generation and/or sequence handling will need to use that 
 * *jar-file* - name of a JAR file to scan for annotated classes to include in this persistence-unit.
 * *mapping-file* - name of an XML "mapping" file containing persistence information to be included in this persistence-unit.
 * *class* - name of an annotated class to include in this persistence-unit
-* *properties* - properties defining the persistence factory to be used. Please refer to link:emf_properties.html[EMF Properties Guide] for details
+* *properties* - properties defining the persistence factory to be used. Please refer to link:#emf_properties[EMF Properties Guide] for details
 
 
 === Metadata loading using persistence unit
@@ -247,7 +247,7 @@ Please refer to link:../datastores/datastores.html[the datastores guides] for th
 
 |javax.persistence.sharedCache.mode
 |The mode of operation of the L2 cache, deciding which entities are cached. The default (UNSPECIFIED) is the same as DISABLE_SELECTIVE.
-See also Cache docs link:#cache_level2[for JPA]
+See also link:#cache_level2[Cache docs].
 _{NONE, ALL, ENABLE_SELECTIVE, DISABLE_SELECTIVE, *UNSPECIFIED*}_
 
 |javax.persistence.validation.mode
@@ -488,15 +488,15 @@ dependent field part first and then if a FK element is defined will leave it to 
 
 |datanucleus.identityStringTranslatorType
 |You can allow identities input to _em.find(id)_ be translated into valid ids if there is a suitable translator.
-See link:extensions/extension.html#identity_string_translator[Identity String Translator Extension]
+See link:../extensions/extension.html#identity_string_translator[Identity String Translator Extension]
 
 |datanucleus.identityKeyTranslatorType
 |You can allow identities input to _em.find(cls, key)_ be translated into valid ids if there is a suitable key translator.
-See link:extensions/extensions.html#identity_key_translator[Identity Key Translator Extension]
+See link:../extensions/extensions.html#identity_key_translator[Identity Key Translator Extension]
                         
 |datanucleus.datastoreIdentityType
 |Which "datastore-identity" class plugin to use to represent datastore identities.
-See link:extensions/extension.html#datastoreidentity[Datastore Identity extension] for details.
+See link:../extensions/extensions.html#datastoreidentity[Datastore Identity extension] for details.
 {*datanucleus*, kodo, xcalia, ...}
 
 |datanucleus.executionContext.maxIdle
@@ -708,7 +708,7 @@ Please refer to the link:#transaction_isolation[transaction guide]
 |datanucleus.jtaLocator
 |Selects the locator to use when using JTA transactions so that DataNucleus can find the JTA TransactionManager.
 If this isn't specified and using JTA transactions DataNucleus will search all available locators which could have a performance impact.
-See link:extensions/extension.html#jta_locator[JTA Locator extension].
+See link:../extensions/extensions.html#jta_locator[JTA Locator extension].
 If specifying "custom_jndi" please also specify "datanucleus.jtaJndiLocation"
 {*autodetect*, jboss, jonas, jotm, oc4j, orion, resin, sap, sun, weblogic, websphere, custom_jndi, alias of a JTA transaction locator}
 
@@ -794,17 +794,17 @@ you can tell DataNucleus to access the datastore for every access of the SCO col
 when the field is not in the current fetch group, and to not use lazy loading when the field is in the current fetch group. {true, false}
 
 |datanucleus.cache.level1.type
-|Name of the type of Level 1 cache to use. Defines the backing map. See also Cache docs link:#level1_cache[for JPA]
+|Name of the type of Level 1 cache to use. Defines the backing map. See also link:#level1_cache[L1 Cache docs]
 {*soft*, weak, strong, {your-plugin-name}}
 
 |datanucleus.cache.level2.type
 |Name of the type of Level 2 Cache to use. Can be used to interface with external caching products. Use "none" to turn off L2 caching.
-See also Cache docs link:cache_level2[for JPA]
+See also link:#cache_level2[L2 Cache docs]
 {none, *soft*, weak, coherence, ehcache, ehcacheclassbased, cacheonix, oscache, swarmcache, javax.cache, spymemcached, xmemcached, {your-plugin-name}
 
 |datanucleus.cache.level2.mode
 |The mode of operation of the L2 cache, deciding which entities are cached. The default (UNSPECIFIED) is the same as DISABLE_SELECTIVE.
-See also Cache docs link:#cache_level2[for JPA]
+See also link:#cache_level2[L2 Cache docs]
 {NONE, ALL, ENABLE_SELECTIVE, DISABLE_SELECTIVE, *UNSPECIFIED*}
 
 |datanucleus.cache.level2.storeMode
@@ -1256,7 +1256,8 @@ Objects are placed in the L2 cache when you commit() the transaction of a Entity
 This means that you only have datastore-persisted objects in that cache. 
 Also, if an object is deleted during a transaction then at commit it will be removed from the L2 cache if it is present.
 
-link:../extensions/extensions.html#cache_level2[image:../images/nucleus_plugin.png]
+link:../extensions/extensions.html#cache_level2[image:../images/nucleus_plugin.png[]]
+
 The Level 2 cache is a DataNucleus plugin point allowing you to provide your own cache where you require it. Use the examples of the EHCache, Coherence caches etc as reference.
 
             
