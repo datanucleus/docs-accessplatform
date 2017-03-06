@@ -69,7 +69,12 @@ NOTE: Applicable to RDBMS
 This corresponds to JDOs "new-table" for the root class and "superclass-table" for all subclasses. 
 This has the advantage that retrieval of an object is a single DB call to a single table. 
 It also has the disadvantage that the single table can have a very large number of columns, and database readability and performance can suffer, 
-and additionally that a discriminator column is required. In our example, lets ignore the *AbstractProduct* class for a moment and 
+and additionally that a discriminator column is required. 
+
+NOTE: When using SINGLE-TABLE DataNucleus will always use a discriminator (default column name is DTYPE).
+
+
+In our example, lets ignore the *AbstractProduct* class for a moment and 
 assume that *Product* is the base class (with the "id"). We have no real interest in having separate tables for the *Book* and *CompactDisc* classes 
 and want everything stored in a single table _PRODUCT_. We change our MetaData as follows
 
@@ -136,8 +141,6 @@ image:../images/inheritance_db_superclasstable.png[]
 
 In the above example, when we insert a TravelGuide object into the datastore, a row will be inserted into the PRODUCT table only.
 
-NOTE: When using SINGLE-TABLE DataNucleus will always use a discriminator (default column name is DTYPE).
-
     
 [[inheritance_joined]]
 == Strategy : JOINED
@@ -146,7 +149,7 @@ NOTE: Applicable to RDBMS
 
 "JOINED" strategy means that each entity in the inheritance hierarchy has its own table and that the table
 of each class only contains columns for that class. Inherited fields are persisted into the tables of the superclass(es). 
-This corresponds to JDO2s "new-table" (for all classes in the inheritance hierarchy).
+This corresponds to JDOs "new-table" (for all classes in the inheritance hierarchy).
 This has the advantage of being the most normalised data definition. 
 It also has the disadvantage of being slower in performance since multiple tables will need to be accessed to 
 retrieve an object of a sub-type. Let's try an example using the simplest to understand strategy *JOINED*. 
