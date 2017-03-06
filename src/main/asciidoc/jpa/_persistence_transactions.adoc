@@ -204,7 +204,7 @@ In this case you can *flush* all outstanding changes to the datastore using
 em.flush();
 -----
 
-NOTE: When you don't have a transaction, calling flush() will throw an exception.
+NOTE: When you don't have a transaction, calling flush() will throw a _TransactionRequiredException_.
 
 
 image:../images/nucleus_extension.png[]
