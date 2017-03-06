@@ -8,7 +8,7 @@ Typically applications create one per datastore being utilised.
 A _PersistenceManagerFactory_ provides access to _PersistenceManager(s)_ which allow objects to be persisted, and retrieved.
 The _PersistenceManagerFactory_ can be configured to provide particular behaviour.
 
-NOTE: A _PersistenceManagerFactory_ is designed to be thread-safe. A _PersistenceManager_ is not*
+NOTE: A _PersistenceManagerFactory_ is designed to be thread-safe. A _PersistenceManager_ is not
 
 There are many ways of creating a _PersistenceManagerFactory_ 
 http://www.datanucleus.org/javadocs/javax.jdo/3.2/javax/jdo/PersistenceManagerFactory.html[image:../images/javadoc.png[]]
@@ -82,7 +82,7 @@ The persistence-unit is named, and the name is used for identifying it.
 Consequently this name can then be used when defining what classes are to be enhanced, for example.
 
 To define a _persistence-unit_ you first need to add a file `persistence.xml` to the `META-INF/` directory of the CLASSPATH (this may mean `WEB-INF/classes/META-INF` when using a 
-web-application in such as Tomcat). This file will be used to define your _persistence-unit_s. Lets show an example
+web-application in such as Tomcat). This file will be used to define your _persistence-unit(s)_. Lets show an example
 
 [source,xml]
 -----
@@ -315,7 +315,7 @@ Users are always advised to run a PM as single threaded, since some operations a
 
 |javax.jdo.option.Optimistic
 |Whether to use optimistic transactions 
-link:persistence.html#transactions_optimistic[optimistic transactions]. 
+link:persistence.html#locking_optimistic[optimistic transactions]. 
 {true, *false*}
 
 |javax.jdo.option.RetainValues
@@ -355,8 +355,7 @@ datastore server is running in the same timezone as the JVM under which DataNucl
 
 |javax.jdo.option.TransactionIsolationLevel
 |Select the default transaction isolation level for ALL PM factories. 
-Some databases do not support all isolation levels, refer to your database documentation. Please refer to the transaction guides for
-link:persistence.html#transaction_isolation[JDO]
+Some databases do not support all isolation levels, refer to your database documentation. Please refer to the link:persistence.html#transaction_isolation[transaction guide].
 {read-uncommitted, *read-committed*, repeatable-read, serializable}
 
 |javax.jdo.option.NontransactionalRead
@@ -466,7 +465,7 @@ Users are always advised to run a PM as single threaded, since some operations a
 
 |datanucleus.Optimistic
 |Whether to use optimistic transactions 
-link:persistence.html#transactions_optimistic[optimistic transactions]. 
+link:persistence.html#locking_optimistic[optimistic transactions]. 
 {true, *false*}
 
 |datanucleus.RetainValues
@@ -661,7 +660,7 @@ This property allows the user to override this with their own class better suite
 |datanucleus.primaryClassLoader
 |Sets a primary classloader for situations where a primary classloader is not accessible. 
 This ClassLoader is used when the class is not found in the default ClassLoader search path. 
-As example, when the database driver is loaded by a different ClassLoader not in the ClassLoader search path for JDO or JPA specifications.
+As example, when the database driver is loaded by a different ClassLoader not in the ClassLoader search path for JDO specification.
 
 |datanucleus.plugin.pluginRegistryClassName
 |Name of a class that acts as registry for plug-ins.
@@ -790,7 +789,7 @@ Will process the schema for all classes that have metadata loaded at startup (i.
 
 |datanucleus.identifierFactory
 |Name of the identifier factory to use when generating table/column names etc (RDBMS datastores only). 
-See also the link:mapping.html#datastore_identifiers[JDO RDBMS Identifier Guide].
+See also the link:mapping.html#datastore_identifiers[RDBMS Identifier Guide].
 {datanucleus1, *datanucleus2*, jpox, jpa, {user-plugin-name}}
 
 |datanucleus.identifier.namingFactory
@@ -843,8 +842,7 @@ DataNucleus provides the following properties for configuring transaction handli
 
 |datanucleus.transactionIsolation
 |Select the default transaction isolation level for ALL PM factories. 
-Some databases do not support all isolation levels, refer to your database documentation. Please refer to the transaction guides for
-link:persistence.html#transaction_isolation[JDO]
+Some databases do not support all isolation levels, refer to your database documentation. Please refer to the link:persistence.html#transaction_isolation[transaction guide].
 {read-uncommitted, *read-committed*, repeatable-read, serializable}
 
 |datanucleus.jtaLocator
@@ -1487,16 +1485,16 @@ no check will be made as to whether it exists in the datastore (since Cassandra 
 == Level 2 Cache
 
 The _EntityManagerFactory_ has an optional cache of all objects across all _EntityManager_s.
-This cache is called the Level 2 (L2) cache, and JPA doesn't define whether this should be enabled or not. With DataNucleus it defaults to enabled.
+This cache is called the Level 2 (L2) cache, and JDO doesn't define whether this should be enabled or not. With DataNucleus it defaults to enabled.
 The user can configure the L2 cache if they so wish; by use of the persistence property *datanucleus.cache.level2.type*. You set this to "type" of cache required.
 You currently have the following options.
 
 * *soft* - use the internal (soft reference based) L2 cache. *This is the default L2 cache in DataNucleus.*
-Provides support for the JPA interface of being able to put objects into the cache, and evict them when required.
+Provides support for the JDO interface of being able to put objects into the cache, and evict them when required.
 This option does not support distributed caching, solely running within the JVM of the client application. 
 Soft references are held to non pinned objects.
 * *weak* - use the internal (weak reference based) L2 cache. 
-Provides support for the JPA interface of being able to put objects into the cache, and evict them when required.
+Provides support for the JDO interface of being able to put objects into the cache, and evict them when required.
 This option does not support distributed caching, solely running within the JVM of the client application. 
 Weak references are held to non pinned objects.
 * link:#cache_level2_javax_cache[javax.cache] - a simple wrapper to the Java standard "javax.cache" Temporary Caching API.
