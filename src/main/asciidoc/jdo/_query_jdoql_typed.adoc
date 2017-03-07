@@ -4,7 +4,8 @@
 :_imagesdir: images/
 
 
-JDO 3.2 introduces a way of performing queries using a JDOQLTypedQuery API, that copes with refactoring of classes/fields.
+JDO 3.2 introduces a way of performing queries using a JDOQLTypedQuery 
+http://www.datanucleus.org/javadocs/3.2/javax/jdo/JDOQLTypedQuery.html[image:../images/javadoc.png[Javadoc]] API, that copes with refactoring of classes/fields.
 The API follows the same link:query.html#jdoql[JDOQL] syntax that we have seen earlier in terms of the components of the query etc.
 It produces queries that are much more elegant and simpler than the equivalent "Criteria" API in JPA, or the Hibernate Criteria API.
 See this http://datanucleus.wordpress.com/2010/11/jdo-typesafe-vs-jpa-criteria.html[comparison of JPA Criteria and JDO Typesafe] which
@@ -123,8 +124,9 @@ pm = pmf.getPersistenceManager();
 
 JDOQLTypedQuery<Product> tq = pm.newJDOQLTypedQuery(Product.class);
 QProduct cand = QProduct.candidate();
-List<Product> results = tq.filter(cand.value.lt(40.00).and(cand.name.startsWith("Wal"))).orderBy(cand.name.asc())
-        .executeList();
+List<Product> results = tq.filter(cand.value.lt(40.00).and(cand.name.startsWith("Wal")))
+      .orderBy(cand.name.asc())
+      .executeList();
 -----
 
 This equates to the single-string query
@@ -147,8 +149,10 @@ Let's take the query in the above example and return the name and value of the P
 -----
 JDOQLTypedQuery<Product> tq = pm.newJDOQLTypedQuery(Product.class);
 QProduct cand = QProduct.candidate();
-List<Object[]> results = tq.filter(cand.value.lt(40.00).and(cand.name.startsWith("Wal"))).orderBy(cand.name.asc())
-        .result(false, cand.name, cand.value).executeResultList();
+List<Object[]> results = tq.filter(cand.value.lt(40.00).and(cand.name.startsWith("Wal")))
+      .orderBy(cand.name.asc())
+      .result(false, cand.name, cand.value)
+      .executeResultList();
 -----
 
 This equates to the single-string query
@@ -162,11 +166,11 @@ A further example using aggregates
 [source,java]
 -----
 JDOQLTypedQuery<Product> tq = pm.newJDOQLTypedQuery(Product.class);
-Object results = 
-    tq.result(false, QProduct.candidate().max(), QProduct.candidate().min()).executeResultUnique();
+Object results = tq.result(false, QProduct.candidate().max(), QProduct.candidate().min())
+      .executeResultUnique();
 -----
 
-                    This equates to the single-string query
+This equates to the single-string query
 
 -----
 SELECT max(this.value), min(this.value) FROM mydomain.Product
@@ -185,8 +189,9 @@ JDOQLTypedQuery<Product> tq = pm.newJDOQLTypedQuery(Product.class);
 QProduct cand = QProduct.candidate();
 List<Product> results = 
     tq.filter(cand.value.lt(40.00).and(cand.name.startsWith(tq.stringParameter("prefix"))))
-        .orderBy(cand.name.asc())
-        .setParameter("prefix", "Wal").executeList();
+      .orderBy(cand.name.asc())
+      .setParameter("prefix", "Wal")
+      .executeList();
 -----
 
 This equates to the single-string query
@@ -206,7 +211,8 @@ This means we need to use a variable. Just like with a parameter, we obtain a _v
 JDOQLTypedQuery<Inventory> tq = pm.newJDOQLTypedQuery(Inventory.class);
 QProduct var = QProduct.variable("var");
 QInventory cand = QInventory.candidate();
-List<Inventory> results = tq.filter(cand.products.contains(var).and(var.name.startsWith("Wal"))).executeList();
+List<Inventory> results = tq.filter(cand.products.contains(var).and(var.name.startsWith("Wal")))
+      .executeList();
 -----
 
 This equates to the single-string query
@@ -227,7 +233,8 @@ JDOQLTypedQuery<Product> tq = pm.newJDOQLTypedQuery(Product.class);
 QProduct cand = QProduct.candidate();
 TypesafeSubquery<Product> tqsub = tq.subquery(Product.class, "p");
 QProduct candsub = QProduct.candidate("p");
-List<Product> results = tq.filter(cand.value.lt(tqsub.selectUnique(candsub.value.avg()))).executeList();
+List<Product> results = tq.filter(cand.value.lt(tqsub.selectUnique(candsub.value.avg())))
+      .executeList();
 -----
 
 Note that where we want to refer to the candidate of the subquery, we specify the alias ("p") explicitly.
@@ -248,7 +255,8 @@ If you don't want to query instances in the datastore but instead query a collec
 -----
 JDOQLTypedQuery<Product> tq = pm.newJDOQLTypedQuery(Product.class);
 QProduct cand = QProduct.candidate();
-List<Product> results = tq.filter(cand.value.lt(40.00)).setCandidates(myCandidates).executeList();
+List<Product> results = tq.filter(cand.value.lt(40.00)).setCandidates(myCandidates)
+      .executeList();
 -----
 
 This will process the query link:query.html#jdoql_inmemory[in-memory].
