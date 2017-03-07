@@ -769,8 +769,7 @@ Please note that the column ADPT_PK_IDX is added by DataNucleus when the column 
 [[one_many_map_join_pc_pc]]
 == Map<Entity, Entity> via JoinTable
 
-We have a class *Account* that contains a Map of Address objects.
-Here our key is a simple type (in this case a String) and the values are entities. Like this
+We have a class *Account* that contains a Map of Address objects. Here our key is an entity type and the values is an entity type also. Like this
 
 [source,java]
 -----
@@ -795,7 +794,7 @@ public class Account
 {
     @OneToMany
     @JoinTable
-    Map<String, Address> addresses;
+    Map<Name, Address> addresses;
 
     ...
 }
