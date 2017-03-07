@@ -989,13 +989,15 @@ q.variables("mydomain.Product prod");
 -----
 
 
+=== Controlling the join type for variables
 
 image:../images/nucleus_plugin.png[]
 
-*RDBMS : *In all situations we aim for DataNucleus JDOQL implementation to work out the right way of linking a variable into the query, 
-whether this is via a join (INNER, LEFT OUTER), or via a subquery. As you can imagine this can be complicated to work out the optimum for all situations
-so with that in mind we allow (for a limited number of situations) the option of specifying the join type. This is achieved by setting the query extension 
-*datanucleus.query.jdoql.{varName}.join* to the required type. 
+NOTE: Applicable to RDBMS
+
+In all situations we aim for DataNucleus JDOQL implementation to work out the right way of linking a variable into the query, whether this is via a join (INNER, LEFT OUTER), 
+or via a subquery. As you can imagine this can be complicated to work out the optimum for all situations so with that in mind we allow (for a limited number of situations) 
+the option of specifying the join type. This is achieved by setting the query extension *datanucleus.query.jdoql.{varName}.join* to the required type. 
 For 1-1 relations this would be either "INNERJOIN" or "LEFTOUTERJOIN", and for 1-N relations this would be either "INNERJOIN", "LEFTOUTERJOIN" or "SUBQUERY".
 
 *Please, if you find a situation where the optimum join type is not chosen then report it https://github.com/datanucleus/datanucleus-rdbms[in GitHub] so it can be registered for future work*
@@ -1009,6 +1011,8 @@ JDOQL uses the imports declaration to create a type namespace for the query.
 During query compilation, the classes used in the query, if not fully qualified, are searched in this namespace. 
 The type namespace is built with primitives types, java.lang.* package, package of the candidate class, import declarations (if any).
 
+NOTE: If you always fully-qualify candidate, variable and parameter types then there is no need to specify any _imports_ (just like in Java).
+
 To resolve a class, the JDOQL compiler will use the class fully-qualified name to load it, but if the class is not fully qualified, 
 it will search by prefixing the class name with the imported package names declared in the type namespace. 
 All classes loaded by the query must be acessible by either the candidate class classloader, the PersistenceManager classloader or the current Thread classloader. 
@@ -1020,8 +1024,6 @@ This is done until the class is loaded, or the type namespace package names are 
 
 Note that the search algorithm can be problematic in performance terms if the class is not fully qualified or declared in imports using package notation. 
 To avoid such problems, either use fully qualified class names or import the class in the imports declaration.
-
-NOTE: If you always fully-qualify candidate, variable and parameter types then there is no need to specify any _imports_ (just like in Java).
 
 
 [[jdoql_ifelse]]

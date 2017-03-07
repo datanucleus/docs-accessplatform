@@ -100,14 +100,15 @@ Also the generated class, by default, has a public field for each persistable fi
 These expressions allow us to give Java like syntax when defining your queries (see below). 
 So you access your persistable members in a query as *candidate.name* for example.
 
+
+NOTE: We currently only support generation of Q classes for persistable classes that are in their own source file, so no support for inline static persistable classes is available currently
+
 As mentioned above this is the default style of query class. However you can also create it in _property_ style, 
 where you access your persistable members as *candidate.name()* for example. 
 The benefit of this approach is that if you have 1-1, N-1 relationship fields then it only initialises the members when called, whereas in the _field_
 case above it has to initialise all in the constructor, so at static initialisation.
 You enable use of _property_ mode by adding the compiler argument *-AqueryMode=PROPERTY*. 
 All examples below use _field_ mode but just add _()_ after the field to see the equivalent in _property_ mode
-
-*Note that we currently only support generation of Q classes for persistable classes that are in their own source file, so no support for inline static persistable classes is available currently*
 
 
 == Query API - Filtering and Ordering

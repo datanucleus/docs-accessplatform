@@ -8,7 +8,9 @@ Sometimes an object-based query language (such as JDOQL) is not considered suita
 In the case where you are using an RDBMS it is sometimes desirable to query using *SQL*. 
 JDO standardises this as a valid query mechanism, and DataNucleus supports this.
 
-NOTE: Please be aware that the SQL query that you invoke has to be valid for your RDBMS, and that the SQL syntax differs across almost all RDBMS.
+NOTE: Please be aware that the SQL query that you invoke has to be valid for your RDBMS, and that the SQL syntax differs across almost all RDBMS. 
+Using SQL as the query language means you give up database-independence.
+
 
 To utilise *SQL* syntax in queries, you create a Query as follows
 
