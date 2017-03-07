@@ -16,13 +16,12 @@ List results = q.getResultList();
 This finds all "Person" objects with surname of "Jones". You specify all details in the query.
 
 
-[[jpql-select-syntax]]
+[[jpql-select-syntax]
 == SELECT Syntax
 
 In JPQL queries you define the query in a single string, defining the result, the candidate class(es), the filter, any grouping, and the ordering. 
 This string has to follow the following pattern
 
-[source,java]
 -----
 SELECT [<result>]
     FROM <from_entities_and_variables>
@@ -168,18 +167,18 @@ SELECT p FROM Person p LEFT OUTER JOIN p.addresses a WHERE a.name = 'Home'
 image:../images/nucleus_extension.png[]
 
 *RDBMS* : By default if you don't specify the JOIN to some related object in the FROM clause and instead navigate through a 1-1/N-1 relation like "a.owner" then it will join using INNER JOIN. 
-You can change this default by specifying the persistence property (to apply to all queries) or query extension *datanucleus.query.jpql.navigationJoinType* 
-and set it to either "INNERJOIN" or "LEFTOUTERJOIN". 
-You can also set the default for the _filter_ only using the persistence property(to apply to all queries) or query extension 
-*datanucleus.query.jpql.navigationJoinTypeForFilter* and set it to either "INNERJOIN" or "LEFTOUTERJOIN". 
+You can change this default by specifying the persistence property (to apply to all queries) or query hint *datanucleus.query.jpql.navigationJoinType* 
+and set it to either _INNERJOIN_ or _LEFTOUTERJOIN_. 
+You can also set the default for the _filter_ only using the persistence property(to apply to all queries) or query hint 
+*datanucleus.query.jpql.navigationJoinTypeForFilter* and set it to either _INNERJOIN_ or _LEFTOUTERJOIN_. 
 
 
 [[jpql_filter]]
 == WHERE clause (filter)
 
 The most important thing to remember when defining the _filter_ for JPQL is that *think how you would write it in SQL, and its likely the same except for FIELD names instead of COLUMN names*. 
-The _filter_ has to be a boolean expression, and can include 
-link:#jpql_entities[the candidate entity], link:#jpql_fields_properties[fields/properties], link:#jpql_literals[literals], link:#jpql_functions[functions], 
+The _filter_ has to be a boolean expression, and can include the candidate entity, 
+link:#jpql_fields_properties[fields/properties], link:#jpql_literals[literals], link:#jpql_functions[functions], 
 link:#jpql_parameters[parameters], link:#jpql_operators[operators] and link:#jpql_subqueries[subqueries]
 
 
@@ -259,11 +258,13 @@ By default a query will fetch fields according to their defined EAGER/LAZY setti
 whereas 1-N/M-N fields will not be fetched. JPQL allows you to include _FETCH JOIN_ as a hint to include 1-N/M-N fields where possible. 
 For RDBMS datastores any multi-valued field will be _bulk-fetched_ if it is defined to be EAGER or is placed in the current EntityGraph. 
 By _bulk-fetched_ we mean that there will be a single SQL issued per collection field (hence avoiding the N+1 problem). 
-Note that you can disable this by either not putting multi-valued fields in the FetchPlan, or by setting the query extension "datanucleus.rdbms.query.multivaluedFetch" to "none"
-(default is "exists" using the single SQL per field).
+
+Note: You can disable this by either not putting multi-valued fields in the FetchPlan, or by setting the query hint *datanucleus.rdbms.query.multivaluedFetch* to _none_
+(default is _exists_ using the single SQL per field).
+
 All non-RDBMS datastores do respect this FETCH JOIN setting, since a collection/map is stored in a single "column" in the object and so is readily retrievable.
 
-Note that you can also make use of link:persistence.html#entity_graphs[Entity Graphs] to have fuller control over what is retrieved from each query.
+You can also make use of link:persistence.html#entity_graphs[Entity Graphs] to have fuller control over what is retrieved from each query.
 
 
 [[jpql_fields_properties]]
@@ -377,7 +378,7 @@ The tables below also mark whether a particular method is supported for evaluati
 
 image:../images/nucleus_plugin.png[]
 
-Please note that you can easily add support for other functions for evaluation "in-memory" using this link:../extensions/extensions.html#query_method_evaluator[DataNucleus plugin point]
+Please note that you can easily add support for other functions for evaluation "in-memory" using this link:../extensions/extensions.html#query_method_evaluators[DataNucleus plugin point]
 
 image:../images/nucleus_plugin.png[]
 
@@ -728,8 +729,8 @@ Query q = em.createQuery("SELECT VALUE(p.addresses) FROM Person p WHERE KEY(p.ad
 
 Beyond this, you can also make use of the link:#jpql_functions_map[map functions] and use the size of the map for example.
 
-NOTE: in the JPA spec they allow a user to interchangeably use "p.addresses" to refer to the _value_ of the Map. 
-DataNucleus doesn't support that since that primary expression is a Map field, and the Map can equally be represented as a join table,
+NOTE: In the JPA spec they allow a user to interchangeably use "p.addresses" to refer to the _value_ of the Map. 
+DataNucleus doesn't fully support all usages of this since that primary expression is a Map field, and the Map can equally be represented as a join table,
 key stored in value, or value stored in key. Hence you should always use VALUE(...) if you mean to refer to the Map value - besides
 it is a damn sight clearer the intent by doing that.
 
@@ -1047,6 +1048,22 @@ WHERE EXISTS (
     AND P_FRIENDS_1.GLOBAL_ID = P_FRIENDS.FRIEND_ID 
     AND 101 = P_FRIENDS_1.ID)
 -----
+
+DataNucleus also allows you to view the generated SQL for query, like this
+
+[source,java]
+-----
+Query q = em.createQuery(...);
+
+org.datanucleus.api.jpa.JPAQuery dnq = (org.datanucleus.api.jpa.JPAQuery)q;
+
+Object sqlQuery = dnq.getNativeQuery();
+-----
+
+In the case of an RDBMS, the _sqlQuery_ is the SQL String. For Cassandra, it is the CQL query string, and so on.
+
+
+
 
 
 [[jpql_delete]]
