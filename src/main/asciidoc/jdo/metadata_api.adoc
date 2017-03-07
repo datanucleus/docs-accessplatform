@@ -1,4 +1,4 @@
-[[metadata_xml]]
+[[metadata_api]]
 = JDO MetaData API
 :_basedir: ../
 :_imagesdir: images/
@@ -64,7 +64,12 @@ fmd.setIndexed(true).setUnique(true);
 Note that, just like with XML metadata, we don't need to add information for all fields
 since they have their own default persistence settings based on the type of the field.
 
-All that remains is to register the metadata with the persistence process
+As you can see from the objects in this API, it follows the exact same structure as the JDO XML metadata, so you should be able to specify all by
+working your way through the respective javadocs for the API classes.
+
+
+
+All that remains is to register the defined metadata with the persistence process
 
 [source,java]
 -----
@@ -85,3 +90,85 @@ TypeMetadata compmd = pmf.getMetadata("mydomain.MyOtherClass");
 and we can now inspect the information, casting the _compmd_ to either _javax.jdo.metadata.ClassMetadata_ or _javax.jdo.metadata.InterfaceMetadata_.
 
 NOTE: you cannot currently change metadata retrieved in this way, only view it
+
+== MetaData Reference
+
+=== JDOMetadata
+
+This represents a JDO context (the equivalent of a `package.jdo` file), and contains packages, named queries, fetch plans etc.
+http://www.datanucleus.org/javadocs/javax.jdo/3.2/javax/jdo/metadata/JDOMetadata.html[image:../images/javadoc.png[Javadoc]]
+
+
+=== PackageMetadata
+
+This represents a package (the _package_ in `package.jdo`), and contains classes/interfaces, sequences etc.
+http://www.datanucleus.org/javadocs/javax.jdo/3.2/javax/jdo/metadata/PackageMetadata.html[image:../images/javadoc.png[Javadoc]]
+
+
+=== ClassMetadata
+
+This represents a persistable class (the _class_ in `package.jdo`), and contains members (fields/properties), identity, version, indices, unique constraints, FKs, 
+named queries, fetch groups for the class, and unmapped columns.
+http://www.datanucleus.org/javadocs/javax.jdo/3.2/javax/jdo/metadata/ClassMetadata.html[image:../images/javadoc.png[Javadoc]]
+
+
+=== InterfaceMetadata
+
+This represents a persistable interface (the _interface_ in `package.jdo`), and contains members (fields/properties), identity, version, indices, unique constraints, FKs, 
+named queries, fetch groups for the class, and unmapped columns.
+http://www.datanucleus.org/javadocs/javax.jdo/3.2/javax/jdo/metadata/InterfaceMetadata.html[image:../images/javadoc.png[Javadoc]]
+
+
+=== FieldMetadata
+
+This represents a persistable field (the _field_ in `package.jdo`), and contains settings for the field, array/collection/map mapping, as well as any converters, columns etc.
+http://www.datanucleus.org/javadocs/javax.jdo/3.2/javax/jdo/metadata/FieldMetadata.html[image:../images/javadoc.png[Javadoc]]
+
+
+=== PropertyMetadata
+
+This represents a persistable property (the _property_ in `package.jdo`), and contains settings for the property, array/collection/map mapping, as well as any converters, columns etc.
+http://www.datanucleus.org/javadocs/javax.jdo/3.2/javax/jdo/metadata/PropertyMetadata.html[image:../images/javadoc.png[Javadoc]]
+
+
+=== CollectionMetadata
+
+This represents a collection member (the _collection_ in `package.jdo`), and contains settings for the collection elements.
+http://www.datanucleus.org/javadocs/javax.jdo/3.2/javax/jdo/metadata/CollectionMetadata.html[image:../images/javadoc.png[Javadoc]]
+
+
+
+=== ArrayMetadata
+
+This represents an array member (the _array_ in `package.jdo`), and contains settings for the array elements.
+http://www.datanucleus.org/javadocs/javax.jdo/3.2/javax/jdo/metadata/ArrayMetadata.html[image:../images/javadoc.png[Javadoc]]
+
+
+
+=== MapMetadata
+
+This represents a map member (the _map_ in `package.jdo`), and contains settings for the map keys/values.
+http://www.datanucleus.org/javadocs/javax.jdo/3.2/javax/jdo/metadata/MapMetadata.html[image:../images/javadoc.png[Javadoc]]
+
+
+=== ElementMetadata
+
+This represents a collection/array element (the _element_ in `package.jdo`), and contains settings for the collection/array element.
+http://www.datanucleus.org/javadocs/javax.jdo/3.2/javax/jdo/metadata/ElementMetadata.html[image:../images/javadoc.png[Javadoc]]
+
+
+
+=== KeyMetadata
+
+This represents a map key (the _key_ in `package.jdo`), and contains settings for the map key.
+http://www.datanucleus.org/javadocs/javax.jdo/3.2/javax/jdo/metadata/KeyMetadata.html[image:../images/javadoc.png[Javadoc]]
+
+
+
+=== ValueMetadata
+
+This represents a map value (the _element_ in `package.jdo`), and contains settings for the map value.
+http://www.datanucleus.org/javadocs/javax.jdo/3.2/javax/jdo/metadata/ValueMetadata.html[image:../images/javadoc.png[Javadoc]]
+
+
+
