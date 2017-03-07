@@ -4,6 +4,7 @@
 :_imagesdir: images/
 
 You have a 1-N (one to many) when you have one object of a class that has a Collection of objects of another class. 
+
 *Please note that Collections allow duplicates, and so the persistence process reflects this with the choice of primary keys*. 
 There are two principal ways in which you can represent this in a datastore : *Join Table* (where a join table is used to provide the relationship mapping 
 between the objects), and *Foreign-Key* (where a foreign key is placed in the table of the object contained in the Collection.
@@ -20,13 +21,14 @@ The various possible relationships are described below.
 * link:#one_many_shared_join[Collection<Entity> using shared join table] (DataNucleus Extension)
 * link:#one_many_shared_fk[Collection<Entity> using shared foreign key] (DataNucleus Extension)
 * link:#one_many_map_join_simple_pc[Map<Simple, Entity> using join table]
+* link:#one_many_map_join_pc_pc[Map<Entity, Entity> using join table]
 * link:#one_many_map_join_simple_simple[Map<Simple, Simple> using join table]
 * link:#one_many_map_join_pc_simple[Map<Entity, Simple> using join table]
 * link:#one_many_map_fk_uni_key[Map<Simple,Entity> - Unidirectional using foreign-key (key stored in the value class)]
 * link:#one_many_map_fk_bi_key[Map<Simple,Entity> - Bidirectional using foreign-key (key stored in the value class)]
 
 
-NOTE: Please note that RDBMS supports the full range of options on this page, whereas other datastores (ODF, Excel, HBase, MongoDB, etc) persist the Collection in a 
+NOTE: RDBMS supports the full range of options on this page, whereas other datastores (ODF, Excel, HBase, MongoDB, etc) persist the Collection in a 
 column in the owner object (as well as a column in the non-owner object when bidirectional) rather than using join-tables or foreign-keys since those concepts are RDBMS-only.
 
 
@@ -763,13 +765,69 @@ Please note that the column ADPT_PK_IDX is added by DataNucleus when the column 
 (with the RDBMS being used). If the column type of your key is acceptable for use as part of a primary key then you will not have this "ADPT_PK_IDX" column.
 
 
+
+[[one_many_map_join_pc_pc]]
+== Map<Entity, Entity> via JoinTable
+
+We have a class *Account* that contains a Map of Address objects.
+Here our key is a simple type (in this case a String) and the values are entities. Like this
+
+[source,java]
+-----
+public class Account
+{
+    Map<Name, Address> addresses;
+
+    ...
+}
+
+public class Name {...}
+
+public class Address {...}
+-----
+
+If you define the annotations for these classes as follows
+
+[source,java]
+-----
+@Entity
+public class Account
+{
+    @OneToMany
+    @JoinTable
+    Map<String, Address> addresses;
+
+    ...
+}
+
+@Entity
+public class Name {...}
+
+@Entity
+public class Address {...}
+-----
+
+This will create 4 tables in the datastore, one for *Account*, one for *Name*, one for *Address* and a join table to link them.
+
+image:../images/relationship_1_N_uni_map_pc_pc_db.png[]
+
+You can configure the names of the key column(s) in the join table using the _joinColumns_ attribute of @JoinTable, or the names of the value 
+column(s) using @Column for the field/method.
+
+NOTE: The column ADPT_PK_IDX is added by DataNucleus when the column type of the key is not valid to be part of a primary key (with the RDBMS being used). 
+If the column type of your key is acceptable for use as part of a primary key then you will not have this "ADPT_PK_IDX" column.
+
+
+
+
 [[one_many_map_join_pc_simple]]
 == Map<Entity, Simple> via JoinTable
 
 Here our key is an entity type and the value is a simple type (in this case a String).
-*Please note that JPA does NOT properly allow for this in its specification. Other implementations introduced the following hack so we also provide it*.
-Note that there is no OneToMany annotation here so this is seemingly not a relation to JPA (hence our description of this as a hack). 
-Anyway use it to workaround JPA's lack of feature.
+
+NOTE: JPA does NOT properly allow for this in its specification. Other implementations introduced the following hack so we also provide it.
+Note that there is no @OneToMany annotation here so this is seemingly not a _relation_ to JPA (hence our description of this as a hack). Anyway use it to workaround JPA's lack of feature.
+
 
 If you define the Meta-Data for these classes as follows
 
