@@ -9,7 +9,7 @@ Typically applications create one per datastore being utilised.
 A _PersistenceManagerFactory_ provides access to _PersistenceManager(s)_ which allow objects to be persisted, and retrieved.
 The _PersistenceManagerFactory_ can be configured to provide particular behaviour.
 
-NOTE: A _PersistenceManagerFactory_ is designed to be thread-safe. A _PersistenceManager_ is not*
+NOTE: A _PersistenceManagerFactory_ is designed to be thread-safe. A _PersistenceManager_ is not.
 
 There are many ways of creating a _PersistenceManagerFactory_, some of which are shown below
 
@@ -82,7 +82,7 @@ The persistence-unit is named, and the name is used for identifying it.
 Consequently this name can then be used when defining what classes are to be enhanced, for example.
 
 To define a _persistence-unit_ you first need to add a file `persistence.xml` to the `META-INF/` directory of the CLASSPATH (this may mean `WEB-INF/classes/META-INF` when using a 
-web-application in such as Tomcat). This file will be used to define your _persistence-unit_s. Lets show an example
+web-application in such as Tomcat). This file will be used to define your _persistence-unit(s)_. Lets show an example
 
 [source,xml]
 -----
@@ -122,10 +122,10 @@ web-application in such as Tomcat). This file will be used to define your _persi
 </persistence>
 -----
 
-In this example we have defined 2 _persistence-unit_s. 
+In this example we have defined 2 _persistence-unit(s)_. 
 The first has the name "OnlineStore" and contains 5 classes (annotated). 
 The second has the name "Accounting" and contains a metadata file called `package.jdo` in a particular package (which will define the classes being part of that unit). 
-This means that once we have defined this we can reference these _persistence-unit_s in our persistence operations. 
+This means that once we have defined this we can reference these _persistence-unit(s)_ in our persistence operations. 
 You can find the XSD for `persistence.xml` http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd[here].
 
 There are several sub-elements of this `persistence.xml` file
@@ -238,7 +238,7 @@ You simply define all properties for the particular PMF within its specification
 PersistenceManagerFactory pmf = JDOHelper.getPersistenceManagerFactory("Optimistic");
 -----
 
-That's it. The PMF we are returned from JDOHelper will have all of the properties defined in _META-INF/jdoconfig.xml_ under the name of "Optimistic".
+That's it. The PMF we are returned from JDOHelper will have all of the properties defined in `META-INF/jdoconfig.xml` under the name of "Optimistic".
 
 
 [[pmf_properties]]
@@ -314,8 +314,7 @@ Users are always advised to run a PM as single threaded, since some operations a
 {true, *false*}
 
 |javax.jdo.option.Optimistic
-|Whether to use optimistic transactions 
-link:persistence.html#transactions_optimistic[optimistic transactions]. 
+|Whether to use link:persistence.html#locking_optimistic[optimistic transactions]. 
 {true, *false*}
 
 |javax.jdo.option.RetainValues
@@ -343,7 +342,7 @@ and the classes to use within the persistence process.
 datastore server is running in the same timezone as the JVM under which DataNucleus is running.
 
 |javax.jdo.option.Name
-|Name of the named PMF to use. Refers to a PMF defined in "META-INF/jdoconfig.xml".
+|Name of the named PMF to use. Refers to a PMF defined in `META-INF/jdoconfig.xml`.
 
 |javax.jdo.option.ReadOnly
 |Whether the datastore is read-only or not (fixed in structure and contents).
@@ -355,8 +354,7 @@ datastore server is running in the same timezone as the JVM under which DataNucl
 
 |javax.jdo.option.TransactionIsolationLevel
 |Select the default transaction isolation level for ALL PM factories. 
-Some databases do not support all isolation levels, refer to your database documentation. Please refer to the transaction guides for
-link:persistence.html#transaction_isolation[JDO]
+Some databases do not support all isolation levels, refer to your database documentation. Please refer to the link:persistence.html#transaction_isolation[transaction guide]
 {read-uncommitted, *read-committed*, repeatable-read, serializable}
 
 |javax.jdo.option.NontransactionalRead
@@ -377,7 +375,7 @@ link:persistence.html#transaction_isolation[JDO]
 
 |javax.jdo.option.Mapping
 |Name for the ORM MetaData mapping files to use with this PMF. For example if this is set to "mysql" then the implementation looks for MetaData mapping files called 
-"{classname}-mysql.orm" or "package-mysql.orm". If this is not specified then the JDO implementation assumes that all is specified in the JDO MetaData file.
+`{classname}-mysql.orm` or `package-mysql.orm`. If this is not specified then the JDO implementation assumes that all is specified in the JDO MetaData file.
 
 |javax.jdo.mapping.Catalog
 |Name of the catalog to use by default for all classes persisted using this PMF.
@@ -465,8 +463,7 @@ Users are always advised to run a PM as single threaded, since some operations a
 {true, *false*}
 
 |datanucleus.Optimistic
-|Whether to use optimistic transactions 
-link:persistence.html#transactions_optimistic[optimistic transactions]. 
+|Whether to use link:persistence.html#locking_optimistic[optimistic transactions]. 
 {true, *false*}
 
 |datanucleus.RetainValues
@@ -479,7 +476,7 @@ link:persistence.html#transactions_optimistic[optimistic transactions].
 
 |datanucleus.Mapping
 |Name for the ORM MetaData mapping files to use with this PMF. For example if this is set to "mysql" then the implementation looks for MetaData mapping files called 
-"{classname}-mysql.orm" or "package-mysql.orm". If this is not specified then the JDO implementation assumes that all is specified in the JDO MetaData file.
+`{classname}-mysql.orm` or `package-mysql.orm`. If this is not specified then the JDO implementation assumes that all is specified in the JDO MetaData file.
 
 |datanucleus.mapping.Catalog
 |Name of the catalog to use by default for all classes persisted using this PMF.
@@ -549,7 +546,7 @@ The JDO spec defines a default of 1, meaning that only the first level of relate
 |Allows control over which mechanism to use to determine the fields to be detached.
 By default DataNucleus uses the defined "fetch-groups". 
 JPA doesn't have that (although it is an option with DataNucleus), so we also allow _loaded_ which will detach just the currently loaded fields, and _all_ which will
-detach all fields of the object (*be careful with this option since it, when used with maxFetchDepth of -1 will detach a whole object graph!*)
+detach all fields of the object. Be careful with this option since it, when used with maxFetchDepth of -1 will detach a whole object graph!
 {*fetch-groups*, all, loaded}
 
 |datanucleus.ServerTimeZoneID
@@ -587,7 +584,7 @@ The default matches the JDO spec, not allowing changes to the listeners in use.
 {true, *false*}
 
 |datanucleus.jmxType
-|Which JMX server to use when hooking into JMX. Please refer to the link:persisence.html#monitoring[Monitoring Guide]
+|Which JMX server to use when hooking into JMX. Please refer to the link:persistence.html#monitoring[Monitoring Guide]
 {default, mx4j}
 
 |datanucleus.deletionPolicy
@@ -599,14 +596,15 @@ will leave it to the FK in the datastore to perform any actions, and otherwise d
 
 |datanucleus.identityStringTranslatorType
 |You can allow identities input to _pm.getObjectById(id)_ be translated into valid JDO ids if there is a suitable translator.
-See link:../extensions/extensions.html#identity_string_translator[Identity String Translator Plugin]
+See link:../extensions/extensions.html#identitystringtranslator[Identity String Translator Plugin]
 
 |datanucleus.identityKeyTranslatorType
 |You can allow identities input to _pm.getObjectById(cls, key)_ be translated into valid JDO ids if there is a suitable key translator.
-See link:../extensions/extensions.html#identity_key_translator[Identity Key Translator Plugin]
+See link:../extensions/extensions.html#identitykeytranslator[Identity Key Translator Plugin]
 
 |datanucleus.datastoreIdentityType
-|Which "datastore-identity" class plugin to use to represent datastore identities. Refer to link:extensions/extensions.html#datastoreidentity[Datastore Identity extensions] for details.
+|Which "datastore-identity" class plugin to use to represent datastore identities. 
+Refer to link:../extensions/extensions.html#store_datastoreidentity[Datastore Identity extensions] for details.
 {*datanucleus*, kodo, xcalia, {user-supplied plugin}}
 
 |datanucleus.executionContext.maxIdle
@@ -783,7 +781,7 @@ Will process the schema for all classes that have metadata loaded at startup (i.
 
 |datanucleus.identifierFactory
 |Name of the identifier factory to use when generating table/column names etc (RDBMS datastores only). 
-See also the link:mapping.html#datastore_identifiers[JDO RDBMS Identifier Guide].
+See also the link:mapping.html#datastore_identifiers[Datastore Identifier Guide].
 {datanucleus1, *datanucleus2*, jpox, jpa, {user-plugin-name}}
 
 |datanucleus.identifier.namingFactory
@@ -836,8 +834,7 @@ DataNucleus provides the following properties for configuring transaction handli
 
 |datanucleus.transaction.isolation
 |Select the default transaction isolation level for ALL PM factories. 
-Some databases do not support all isolation levels, refer to your database documentation. Please refer to the transaction guides for
-link:persistence.html#transaction_isolation[JDO]
+Some databases do not support all isolation levels, refer to your database documentation. Please refer to the link:persistence.html#transaction_isolation[transaction guide].
 {read-uncommitted, *read-committed*, repeatable-read, serializable}
 
 |datanucleus.transaction.jta.transactionManagerLocator
@@ -940,7 +937,7 @@ The default is to use lazy loading when the field is not in the current fetch gr
 
 |datanucleus.cache.level1.type
 |Name of the type of Level 1 cache to use. Defines the backing map.
-See also the link:persistence.html#cache_level1[Level 1 Cache docs]
+See also the link:persistence.html#level1_cache[Level 1 Cache docs]
 {*soft*, weak, strong, {your-plugin-name}}
 
 |datanucleus.cache.level2.type
@@ -1300,7 +1297,7 @@ This allows you to override the default behaviour where there maybe is some issu
 
 |datanucleus.rdbms.statementBatchLimit
 |Maximum number of statements that can be batched. The default is 50 and also applies to delete of objects.
-Please refer to the link:../datastores/datastores.html#rdbms_statement_batching[Statement Batching guide]
+Please refer to the link:../datastores/datastores.html#statement_batching[Statement Batching guide]
 {integer value (0 = no batching)}
 
 |datanucleus.rdbms.checkExistTablesOrViews
@@ -1511,9 +1508,9 @@ Weak references are held to non pinned objects.
 * link:#cache_level2_swarmcache[SwarmCache] - a simple wrapper to SwarmCache's caching product.
 * link:#cache_level2_coherence[Oracle Coherence] - a simple wrapper to Oracle's Coherence caching product. 
 Oracle's caches support distributed caching, so you could, in principle, use DataNucleus in a distributed environment with this option.
-* link:#cache_level2_memcached">spymemcached] - a simple wrapper to the "spymemcached" client for memcached caching product.
-* link:#cache_level2_memcached">xmemcached] - a simple wrapper to the "xmemcached" client for memcached caching product. 
-* link:#cache_level2_cacheonix">cacheonix] - a simple wrapper to the Cacheonix distributed caching software.
+* link:#cache_level2_memcached[spymemcached] - a simple wrapper to the "spymemcached" client for memcached caching product.
+* link:#cache_level2_memcached[xmemcached] - a simple wrapper to the "xmemcached" client for memcached caching product. 
+* link:#cache_level2_cacheonix[cacheonix] - a simple wrapper to the Cacheonix distributed caching software.
 * *none* - turn OFF Level 2 caching.
 
 The weak, soft and javax.cache caches are available in the datanucleus-core plugin.

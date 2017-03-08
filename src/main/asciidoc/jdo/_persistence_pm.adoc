@@ -8,7 +8,7 @@ to obtain a _PersistenceManager_ (PM) to manage the persistence of objects. Here
 to need to know about.
 
 NOTE: *Important : A _PersistenceManagerFactory_ is designed to be thread-safe. A _PersistenceManager_ is not.*
-Note that if you set the persistence property *javax.jdo.option.Multithreaded* this acts as a hint to the PMF to provide _PersistenceManager_s that are usable with multiple threads. 
+Note that if you set the persistence property *javax.jdo.option.Multithreaded* this acts as a hint to the PMF to provide _PersistenceManager(s)_ that are usable with multiple threads. 
 While DataNucleus makes efforts to make this _PersistenceManager_ usable with multiple threads, it is not guaranteed to work multi-threaded in all situations, 
 particularly around second class collection/map fields.
 
@@ -178,7 +178,7 @@ Person lincoln = pm.getObjectById(Person.class, 1);  // Retrieves the object to 
 pm.deletePersistent(lincoln);
 -----
 
-Don't forget that you can also use link:query.html#jdoql_deletepersistent[deletion by query] to delete objects. Alternatively use link:query.html#jdoql_bulkdelete[bulk deletion].
+Don't forget that you can also use link:query.html#jdoql_deletebyquery[deletion by query] to delete objects. Alternatively use link:query.html#jdoql_bulkdelete[bulk deletion].
 
 Please note that when deleting a persist object the default is to *not* delete related objects.
 
@@ -221,7 +221,8 @@ If the element is dependent then it will be deleted when removed from the collec
 * An object has a 1-N map relation with other objects and the key is removed from the map. 
 If the key or value are dependent and they are not present in the map more than once they will be deleted when they are removed. The same happens when the map is cleared.
 
-[[deletion+fk]]
+
+[[deletion_fk]]
 === Deletion using RDBMS Foreign Keys
 
 With JDO you can use "dependent-field" as shown above. As an alternative (but not as a complement), when using RDBMS,
@@ -229,7 +230,7 @@ you can use the datastore-defined foreign keys and let the datastore built-in "r
 DataNucleus provides a persistence property *datanucleus.deletionPolicy* allowing enabling of this mode of operation.
 The default setting of this property is "JDO2" which performs deletion of related objects as follows
 
-*If _dependent-field_ is true then use that to define the related objects to be deleted.
+* If _dependent-field_ is true then use that to define the related objects to be deleted.
 * Else, if the column of the foreign-key field is NULLable then NULL it and leave the related object alone
 * Else deleted the related object (and throw exceptions if this fails for whatever datastore-related reason)
 
