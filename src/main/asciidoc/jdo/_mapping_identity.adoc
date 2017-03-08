@@ -16,6 +16,12 @@ A further complication is where you use _application identity_ but one of the fi
 This is known as link:#compound_identity[Compound Identity].
 
 
+NOTE: When you have an inheritance hierarchy, you should specify the identity type in the _base instantiable_ class for the inheritance tree. 
+This is then used for all persistent classes in the tree. 
+This means that you can have superclass(es) without any identity fields/properties but using _subclass-table_ inheritance, and then the base instantiable 
+class is the first persistable class which has the identity defined.
+
+
 [[datastore_identity]]
 == Datastore Identity
 
@@ -47,7 +53,6 @@ public class MyClass
 So you are specifying the *identity-type* as _datastore_. 
 You don't need to add this because _datastore_ is the default, so in the absence of any value, it will be assumed to be 'datastore'.
 
-NOTE: When you have an inheritance hierarchy, you should specify the identity type in the *base* class for the inheritance tree. This is then used for all persistent classes in the tree
 
 
 === Datastore Identity : Generating identities
@@ -179,12 +184,8 @@ public class MyClass
 }
 -----
 
-NOTE: When you have an inheritance hierarchy, you should specify the identity type in the _base instantiable_ class for the inheritance tree. 
-This is then used for all persistent classes in the tree. 
-This means that you can have superclass(es) using application-identity without any identity fields/properties but using _subclass-table_ inheritance, and then the base instantiable 
-class is the first persistable class which has the identity field(s).
-
 See also :-
+
 * link:metadata_xml.html#field[MetaData reference for <field> element]
 * link:annotations.html#Persistent[Annotations reference for @Persistent]
 
@@ -229,14 +230,14 @@ An important thing to note is that the PK can only be made up of fields of the f
 * java.net : URI, URL
 * _persistable_
 
-Note that the types in *bold* are JDO standard types. Any others are DataNucleus extensions and, as always, link:../datastores/datastores.html[check the specific datastore docs]
+The types in *bold* are JDO standard types. Any others are DataNucleus extensions and, as always, link:../datastores/datastores.html[check the specific datastore docs]
 to see what is supported for your datastore.
 
 
 *Single PrimaryKey field*
 
 The simplest way of using *application identity* is where you have a single PK field, and in this case you use *SingleFieldIdentity* 
-http://db.apache.org/jdo/api20/apidocs/javax/jdo/identity/SingleFieldIdentity.html[image:../images/javadoc.png[]] mechanism. 
+http://www.datanucleus.org/javadocs/3.2/javax/jdo/identity/SingleFieldIdentity.html[image:../images/javadoc.png[]] mechanism. 
 This provides a PrimaryKey and you don't need to specify the _objectid-class_. Let's take an example
 
 [source,java]
@@ -269,7 +270,7 @@ public class MyClass
 }
 -----
 
-So we didnt specify the JDO "objectid-class". 
+Note that we didn't specify the JDO "objectid-class". 
 You will, of course, have to give the field a value before persisting the object, either by setting it yourself, or by using a link:mapping.html#value_generation[value-strategy] on that field.
 
 If you need to create an identity of this form for use in querying via _pm.getObjectById()_ then you can create the identities in the following way

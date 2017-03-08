@@ -6,7 +6,7 @@
 
 JDO allows objects of classes to be versioned. The version is typically used as a way of
 detecting if the object has been updated by another thread or PersistenceManager since retrieval
-using the current PersistenceManager - for use by Optimistic Transactions. 
+using the current PersistenceManager - for use by link:persistence.html#locking_optimistic[Optimistic Transactions]. 
 JDO defines several "strategies" for generating the version of an object. The strategy has the following possible values
 
 * *none* stores a number like the version-number but will not perform any optimistic checks.
