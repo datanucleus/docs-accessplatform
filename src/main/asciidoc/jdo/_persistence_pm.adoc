@@ -178,7 +178,7 @@ Person lincoln = pm.getObjectById(Person.class, 1);  // Retrieves the object to 
 pm.deletePersistent(lincoln);
 -----
 
-Don't forget that you can also use link:query.html#jdoql_deletepersistent[deletion by query] to delete objects. Alternatively use link:query.html#jdoql_bulkdelete[bulk deletion].
+Don't forget that you can also use link:query.html#jdoql_deletebyquery[deletion by query] to delete objects. Alternatively use link:query.html#jdoql_bulkdelete[bulk deletion].
 
 Please note that when deleting a persist object the default is to *not* delete related objects.
 
@@ -221,7 +221,8 @@ If the element is dependent then it will be deleted when removed from the collec
 * An object has a 1-N map relation with other objects and the key is removed from the map. 
 If the key or value are dependent and they are not present in the map more than once they will be deleted when they are removed. The same happens when the map is cleared.
 
-[[deletion+fk]]
+
+[[deletion_fk]]
 === Deletion using RDBMS Foreign Keys
 
 With JDO you can use "dependent-field" as shown above. As an alternative (but not as a complement), when using RDBMS,
