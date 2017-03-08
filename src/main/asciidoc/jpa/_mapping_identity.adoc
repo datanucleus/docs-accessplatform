@@ -16,6 +16,10 @@ via query for values of specific fields. This is useful for storing things like 
 A further complication is where you use _application identity_ but one of the fields forming the primary key is a relation field. 
 This is known as link:#derived_identity[Derived Identity].
 
+NOTE: *When you have an inheritance hierarchy, you should specify the identity type in the _base instantiable_ class for the inheritance tree. This is then used for all persistent 
+classes in the tree.* This means that you can have @MappedSuperclass without any identity fields/properties as superclass, and then the base instantiable class is the first persistable
+class which has the identity field(s).
+
 
 [[application_identity]]
 == Application Identity
@@ -77,10 +81,6 @@ public class MyClass
 
 }
 -----
-
-NOTE: *When you have an inheritance hierarchy, you should specify the identity type in the _base instantiable_ class for the inheritance tree. This is then used for all persistent 
-classes in the tree.* This means that you can have @MappedSuperclass without any identity fields/properties as superclass, and then the base instantiable class is the first persistable
-class which has the identity field(s).
 
 See also:-
 
@@ -335,8 +335,6 @@ public class MyClass
 
 _Please note that since the JPA XML metadata is poorly designed it is not possible to specify datastore identity using XML, you have to use the annotations._
 
-NOTE: *When you have an inheritance hierarchy, you should specify the identity type in the _base_ class for the inheritance tree. This is then used for all persistent classes in the tree.*
-
 
 === Datastore Identity : Generating identities
 
@@ -412,7 +410,6 @@ public class MyClass
 }
 -----
 
-DataNucleus provides support for "nondurable" identity for some datastores only currently (RDBMS, Excel, ODF, MongoDB, HBase, Cassandra, Neo4j). 
 What this means for something like RDBMS is that the table of the class will not have a primary-key.
 
 

@@ -138,13 +138,10 @@ If we call persist() on any objects of type *Computer*, they will be persisted i
 
 image:../images/embedded_pc_embedded_db.png[]
 
-It should be noted that in this latter (embedded) case we can still persist objects of type *ComputerCard* into their own table - the MetaData definition for 
-*ComputerCard* is used for the table definition in this case.
+NOTE: You can represent inheritance of embedded objects using a discriminator (you must define it in the metadata of the embedded type). 
+This is a DataNucleus extension since JPA doesn't define any support for embedded inherited persistable objects
 
-DataNucleus supports embedded persistable objects with the following proviso :-
 
-* You can represent inheritence of embedded objects using a discriminator (you must define it in the metadata of the embedded type. 
-Note that this is a DataNucleus extension since JPA doesn't define any support for embedded inherited persistable objects
 
 === Null embedded objects
 

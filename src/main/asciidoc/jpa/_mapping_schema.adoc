@@ -6,7 +6,7 @@
 We have shown link:#classes[earlier] how you define a classes basic persistence, notating which fields are persisted. 
 The next step is to define how it maps to the datastore. Fields of a class are mapped to _columns_ of a _table_ (note that with some datastores it is not called
 a 'table' or 'column', but the concept is similar and we use 'table' and 'column' here to represent the mapping). 
-If you don't specify the table and column names, then DataNucleus will generate table and column names for you, according to the JPA specs rules.
+If you don't specify the table and column names, then DataNucleus will generate table and column names for you, link:#datastore_identifiers[according to the JPA specs rules].
 
 TIP: You should specify your table and column names if you have an existing schema. Failure to do so will mean that DataNucleus uses its own names and these 
 will almost certainly not match what you have in the datastore.
@@ -749,7 +749,7 @@ See the link:metadata_xml.html#field_select_function[MetaData reference].
 * *[8]* - Oracle treats an empty string as the same as NULL. To workaround this limitation DataNucleus replaces the empty string with the character \u0001.
 * *[9]* - XMLTYPE JDBC type supported on Oracle only.
 
-link:../extensions/extensions.html#rdbms_datastore_types[image:../images/nucleus_plugin.png[Javadoc]]
+link:../extensions/extensions.html#rdbms_datastore_mapping[image:../images/nucleus_plugin.png[Javadoc]]
 If you need to extend the provided DataNucleus capabilities in terms of its datastore types support you can utilise a plugin point.
 
 DataNucleus provides support for the majority of the JDBC types with RDBMS. The support is shown below.
