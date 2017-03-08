@@ -15,6 +15,11 @@ via query for values of specific fields. This is useful for storing things like 
 A further complication is where you use _application identity_ but one of the fields forming the primary key is a relation field. 
 This is known as link:#compound_identity[Compound Identity].
 
+NOTE: When you have an inheritance hierarchy, you should specify the identity type in the _base instantiable_ class for the inheritance tree. 
+This is then used for all persistent classes in the tree. 
+This means that you can have superclass(es) without any identity defined but using _subclass-table_ inheritance, and then the base instantiable 
+class is the first persistable class which has the identity.
+
 
 [[datastore_identity]]
 == Datastore Identity
@@ -46,8 +51,6 @@ or using XML metadata
 
 So you are specifying the *identity-type* as _datastore_. 
 You don't need to add this because _datastore_ is the default, so in the absence of any value, it will be assumed to be 'datastore'.
-
-NOTE: When you have an inheritance hierarchy, you should specify the identity type in the *base* class for the inheritance tree. This is then used for all persistent classes in the tree
 
 
 === Datastore Identity : Generating identities
@@ -179,11 +182,6 @@ public class MyClass
 }
 -----
 
-NOTE: When you have an inheritance hierarchy, you should specify the identity type in the _base instantiable_ class for the inheritance tree. 
-This is then used for all persistent classes in the tree. 
-This means that you can have superclass(es) using application-identity without any identity fields/properties but using _subclass-table_ inheritance, and then the base instantiable 
-class is the first persistable class which has the identity field(s).
-
 See also :-
 
 * link:metadata_xml.html#field[MetaData reference for <field> element]
@@ -237,7 +235,7 @@ to see what is supported for your datastore.
 *Single PrimaryKey field*
 
 The simplest way of using *application identity* is where you have a single PK field, and in this case you use *SingleFieldIdentity* 
-http://db.apache.org/jdo/api20/apidocs/javax/jdo/identity/SingleFieldIdentity.html[image:../images/javadoc.png[]] mechanism. 
+http://www.datanucleus.org/javadocs/javax.jdo/3.2/javax/jdo/identity/SingleFieldIdentity.html[image:../images/javadoc.png[]] mechanism. 
 This provides a PrimaryKey and you don't need to specify the _objectid-class_. Let's take an example
 
 [source,java]
@@ -475,7 +473,6 @@ or using XML metadata
 </class>
 -----
 
-DataNucleus provides support for "nondurable" identity for some datastores only currently (RDBMS, Excel, ODF, MongoDB, HBase, Cassandra, Neo4j). 
 What this means for something like RDBMS is that the table (or view) of the class will not have a primary-key.
 
 
