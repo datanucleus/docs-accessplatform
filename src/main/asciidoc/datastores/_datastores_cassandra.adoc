@@ -40,8 +40,8 @@ Things to bear in mind with Cassandra usage :-
 * Specify persistence property *datanucleus.cassandra.socket.readTimeoutMillis* to set the timeout for reads (in ms)
 * Specify persistence property *datanucleus.cassandra.socket.connectTimeoutMillis* to set the timeout for connecting (in ms)
 * You need to specify the "schema" (_datanucleus.mapping.Schema_)
-* Queries are evaluated in-datastore when they only have (indexed) members and literals and using the operators ==, !=, &gt;, &gt;=, &lt;, &lt;=, &amp;&amp;, ||.
-* You can query the datastore using link:../jdo/query.html#jdoql[JDOQL], link:../jpa/query.html#jpql[JPQL], or link:../jpa/query.html#native[CQL]
+* Queries are evaluated in-datastore when they only have (indexed) members and literals and using the operators ==, !=, >, >=, <, <=, &amp;&amp;, {vbar}{vbar}.
+* You can query the datastore using link:../jdo/query.html#jdoql[JDOQL], link:../jpa/query.html#jpql[JPQL], or link:#cassandra_native[CQL]
 
 [[cassandra_native]]
 == Queries : Cassandra CQL Queries
@@ -61,7 +61,7 @@ query.setResultClass(Employee.class);
 List<Employee> results = (List)q.execute();
 -----
 
-You can also query results as List&lt;Object[]&gt; without specifying a specific result type as shown below.
+You can also query results as List<Object[]> without specifying a specific result type as shown below.
 
 [source,java]
 -----
@@ -84,4 +84,4 @@ Query q = em.createNativeQuery("SELECT * FROM schema1.Employee", Employee.class)
 List<Employee> results = q.getResultList();
 -----
 
-Note that the last argument to _createNativeQuery_ is optional and you would get _List<Object[]></Object>_ returned otherwise.
+Note that the last argument to _createNativeQuery_ is optional and you would get _List<Object[]>_ returned otherwise.

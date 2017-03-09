@@ -37,7 +37,7 @@ This is pooled by the MongoClient so is managed by MongoDB. Closing the PM/EM wi
 * You can set the number of connections per host with the persistence property *datanucleus.mongodb.connectionsPerHost*
 * Querying can be performed using JDOQL or JPQL. 
 Some components of a filter are handled in the datastore, and the remainder in-memory.
-Currently any expression of a field (in the same table), or a literal are handled *in-datastore*, as are the operators &amp;&amp;, ||, >, >=, <, <=, ==, and !=.
+Currently any expression of a field (in the same table), or a literal are handled *in-datastore*, as are the operators &amp;&amp;, {vbar}{vbar}, >, >=, <, <=, ==, and !=.
 Note that if something falls back to being evaluated *in-memory* then it can be much slower, and this will be noted in the log, so people are advised to design 
 their models and queries to avoid that happening if performance is a top priority.
 * If you want a query to be runnable on a slave MongoDB instance then you should set the query extension (JDO) / hint (JPA) 
