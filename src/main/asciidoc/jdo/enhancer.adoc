@@ -58,7 +58,7 @@ How to use the DataNucleus Enhancer depends on what environment you are using. B
 ** link:#maven[Using Maven via the DataNucleus Maven plugin]
 ** link:#ant[Using Ant]
 ** link:#manual[Manual invocation at the command line]
-** link:guides/eclipse.html[Using the Eclipse DataNucleus plugin]
+** link:tools.html#eclipse[Using the Eclipse DataNucleus plugin]
 * At runtime
 ** link:#runtime[Runtime Enhancement]
 ** link:#api[Programmatically via an API]
@@ -138,7 +138,7 @@ so set this option to false to avoid hitting Windows limit on command line lengt
 
 |detachListener
 |false
-|Whether to enhance classes to make use of a detach listener for attempts to access an undetached field (see xref:#detachlistener[below])
+|Whether to enhance classes to make use of a detach listener for attempts to access an undetached field (see link:#detachlistener[below])
 |===
 
 You will need to add `datanucleus-api-jdo.jar` into the CLASSPATH (of the plugin, or your project) for the enhancer to operate. 
@@ -286,7 +286,7 @@ Uses ant build file directory if the parameter is not specified.
 |*true*, false
 
 |detachListener
-|Whether to enhance classes to make use of a detach listener for attempts to access an undetached field (see xref:#detachlistener[below])
+|Whether to enhance classes to make use of a detach listener for attempts to access an undetached field (see link:#detachlistener[below])
 |*false*, true
 
 |filesuffixes
@@ -308,12 +308,12 @@ For more information on defining a fileset, see the Apache Ant Manual for FileSe
 The enhancer task extends the Apache Ant Java task, thus all parameters available to the Java task are also available to the enhancer task.
 
 
-So you could define something _like_ the following, setting up the parameters *enhancer.classpath*, 
-*jdo.file.dir*, and *log4j.config.file* to suit your situation (the *jdo.file.dir* is a 
-directory containing the JDO files defining the classes to be enhanced). 
+So you could define something _like_ the following, setting up the parameters *enhancer.classpath*, *jdo.file.dir*, and *log4j.config.file* to suit your situation
+(the *jdo.file.dir* is a directory containing the JDO files defining the classes to be enhanced). 
 The classes specified by the XML Meta-Data files, together with the XML Meta-Data files *must be* in the CLASSPATH 
-_(Please note that a CLASSPATH should contain a set of JAR's, and a set of directories. It should NOT explictly include
-class files, and should NOT include parts of the package names. If in doubt please consult a Java book)._
+
+NOTE: A CLASSPATH should contain a set of JAR's, and a set of directories. It should NOT explictly include
+class files, and should NOT include parts of the package names. If in doubt please consult a Java book.
 
 
 [source,xml]
@@ -379,7 +379,7 @@ java -cp classpath  org.datanucleus.enhancer.DataNucleusEnhancer [options] [mapp
                              ({flag} should be true or false - default=true)
         -generateConstructor {flag} : generate default constructor where needed 
                              ({flag} should be true or false - default=true)
-        -detachListener {flag} : see xref:#detachlistener[below] (set to true if required)
+        -detachListener {flag} : see link:#detachlistener[below] (set to true if required)
 
     where "mapping-files" and "class-files" are provided when not enhancing a persistence-unit, 
         and give the paths to the mapping files and class-files that define the classes being enhanced.
@@ -492,6 +492,7 @@ enhancer.enhance();
 This will look in `META-INF/persistence.xml` and enhance all classes defined by that unit.
 *Please note that you will need to load the enhanced version of the class into a different ClassLoader after performing this operation to use them*.
 See https://github.com/datanucleus/samples-jdo/tree/master/dynamic_api_usage[this guide]
+
 
 
 [[enhancement_contract]]
