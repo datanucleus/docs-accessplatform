@@ -25,7 +25,6 @@
         <asciidoctorj.pdf.version>1.5.0-alpha.11</asciidoctorj.pdf.version>
         <asciidoctorj.version>1.5.4</asciidoctorj.version>
         <asciidoctorj.diagram.version>1.5.0</asciidoctorj.diagram.version>
-        <incode-asciidoctor-extension-monotree.version>0.0.2</incode-asciidoctor-extension-monotree.version>
         <jruby.version>1.7.21</jruby.version>
 
         <build.dir>${project.basedir}/target/site</build.dir>
@@ -61,17 +60,8 @@
                             <artifactId>asciidoctorj-diagram</artifactId>
                             <version>${asciidoctorj.diagram.version}</version>
                         </dependency>
-                        <dependency>
-                            <groupId>org.incode.asciidoctor.monotree</groupId>
-                            <artifactId>incode-asciidoctor-extension-monotree</artifactId>
-                            <version>${incode-asciidoctor-extension-monotree.version}</version>
-                        </dependency>
                     </dependencies>
                     <configuration>
-                        <!-- If you set baseDir to ${project.basedir}, top-level includes are resolved relative to the project root -->
-                        <!--
-                        <baseDir>${project.basedir}</baseDir>
-                        -->
                         <!-- Attributes common to all output formats -->
                         <attributes>
                             <endpoint-url>http://www.datanucleus.org</endpoint-url>
