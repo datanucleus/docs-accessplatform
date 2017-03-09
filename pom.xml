@@ -93,22 +93,6 @@
         </pluginManagement>
     </build>
 
-    <dependencies>
-        <!-- dependency>
-            <groupId>rubygems</groupId>
-            <artifactId>asciidoctor-diagram</artifactId>
-            <version>1.2.1</version>
-            <type>gem</type>
-            <scope>provided</scope>
-            <exclusions>
-                <exclusion>
-                    <groupId>rubygems</groupId>
-                    <artifactId>asciidoctor</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency-->
-    </dependencies>
-
     <profiles>
         <profile>
             <id>html</id>
@@ -125,7 +109,7 @@
                         <executions>
                             <execution>
                                 <id>output-html</id>
-                                <phase>compile</phase>
+                                <phase>generate-resources</phase>
                                 <goals>
                                     <goal>process-asciidoc</goal>
                                 </goals>
@@ -134,9 +118,6 @@
 
                                     <sourceDirectory>src/main/asciidoc/</sourceDirectory>
                                     <outputDirectory>${project.reporting.outputDirectory}/</outputDirectory>
-
-                                    <!-- The gem-maven-plugin appends the scope (e.g., provided) to the gemPath defined in the plugin configuration -->
-                                    <gemPath>${project.build.directory}/gems-provided</gemPath>
 
                                     <sourceHighlighter>coderay</sourceHighlighter>
                                     <templateDir>src/main/template</templateDir>
