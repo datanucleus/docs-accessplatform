@@ -5,7 +5,7 @@
 
 
 DataNucleus is developed as a plugin-driven framework and one of the components that is pluggable is 
-translation of identities. When you call <i>pm.getObjectById(id)</i> you pass in an object. This object
+translation of identities. When you call _pm.getObjectById(id)_ you pass in an object. This object
 can be the toString() form of an identity. Some other JDO implementations (e.g Xcalia) allowed
 non-standard String input here including a discriminator. This plugin point allows for such
 non-standard String input forms to pm.getObjectById(id) and can provide a plugin that translates this 
