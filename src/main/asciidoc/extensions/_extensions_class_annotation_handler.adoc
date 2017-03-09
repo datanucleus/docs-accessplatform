@@ -3,15 +3,13 @@
 :_basedir: ../
 :_imagesdir: images/
 
-<head><title>Extensions : Class Annotation Handler</title></head>
-
 DataNucleus is developed as a plugin-driven framework and one of the components that is pluggable is 
 the handling of annotations at class-level. DataNucleus provides a support for JDO and JPA annotations, 
 but is structured so that you can easily add your own annotations and have them usable within your DataNucleus usage.
 
 == Interface
 
-Any class annotation handler plugin will need to implement _org.datanucleus.metadata.annotations.ClassAnnotationHandler_.
+Any class annotation handler plugin will need to implement _org.datanucleus.metadata.annotations.ClassAnnotationHandler_
 http://www.datanucleus.org/javadocs/core/latest/org/datanucleus/metadata/annotations/ClassAnnotationHandler.html[image:../images/javadoc.png[Javadoc]].
 So you need to implement the following interface
 

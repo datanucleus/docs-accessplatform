@@ -4,7 +4,7 @@
 :_imagesdir: images/
 
 DataNucleus is developed as a plugin-driven framework and one of the components that is pluggable is 
-translation of identities. When you call <i>pm.getObjectById(cls, key)</i> you pass in the "key". 
+translation of identities. When you call _pm.getObjectById(cls, key)_ you pass in the "key". 
 This object can be the toString() form of an identity, or the key of a single-string form. 
 Some store managers (e.g GAE/J) allow non-standard key input and this allows for the translation
 into a standardised key form. Alternatively you could do this in your own code, but the facility 
@@ -15,7 +15,7 @@ You can extend DataNucleus's capabilities using the plugin extension *org.datanu
 
 == Interface
 
-Any identifier factory plugin will need to implement <i>org.datanucleus.store.IdentifierKeyFactory</i>.
+Any identifier factory plugin will need to implement _org.datanucleus.store.IdentifierKeyFactory_.
 http://www.datanucleus.org/javadocs/core/latest/org/datanucleus/identity/IdentityKeyTranslator.html[image:../images/javadoc.png[Javadoc]].
 So you need to implement the following interface
 
