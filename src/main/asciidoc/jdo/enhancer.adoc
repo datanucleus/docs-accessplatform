@@ -308,9 +308,8 @@ For more information on defining a fileset, see the Apache Ant Manual for FileSe
 The enhancer task extends the Apache Ant Java task, thus all parameters available to the Java task are also available to the enhancer task.
 
 
-So you could define something _like_ the following, setting up the parameters *enhancer.classpath*, 
-*jdo.file.dir*, and *log4j.config.file* to suit your situation (the *jdo.file.dir* is a 
-directory containing the JDO files defining the classes to be enhanced). 
+So you could define something _like_ the following, setting up the parameters *enhancer.classpath*, *jdo.file.dir*, and *log4j.config.file* to suit your situation 
+(the *jdo.file.dir* is a directory containing the JDO files defining the classes to be enhanced). 
 The classes specified by the XML Meta-Data files, together with the XML Meta-Data files *must be* in the CLASSPATH 
 
 NOTE: A CLASSPATH should contain a set of JAR's, and a set of directories. It should NOT explictly include
@@ -491,7 +490,8 @@ enhancer.enhance();
 -----
 
 This will look in `META-INF/persistence.xml` and enhance all classes defined by that unit.
-*Please note that you will need to load the enhanced version of the class into a different ClassLoader after performing this operation to use them*.
+
+NOTE: You will need to load the enhanced version of the class into a different ClassLoader after performing this operation to use them.
 See https://github.com/datanucleus/samples-jdo/tree/master/dynamic_api_usage[this guide]
 
 
@@ -501,7 +501,7 @@ See https://github.com/datanucleus/samples-jdo/tree/master/dynamic_api_usage[thi
 === Persistable
 
 JDO allows implementations to bytecode-enhance persistable classes to implement some interface to provide them with change tracking etc.
-DataNucleus provides its own byte-code enhancer (in the _datanucleus-core.jar_) to enhance users entity classes to implement this _Persistable_ interface.
+DataNucleus provides its own byte-code enhancer (in the `datanucleus-core.jar`) to enhance users entity classes to implement this _Persistable_ interface.
 If we start off with the following class
 
 

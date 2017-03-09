@@ -66,6 +66,7 @@ How to use the DataNucleus Enhancer depends on what environment you are using. B
 ** xref:enhancer.html#runtime[Runtime Enhancement]
 ** xref:enhancer.html#api[Programmatically via an API]
 
+
 [[maven]]
 == Maven
 
@@ -187,6 +188,7 @@ Or alternatively, you could add the following to your POM
 -----
 
 So you then get auto-enhancement after each compile. Please refer to the link:tools.html#maven[Maven JPA guide] for more details.
+
 
 [[ant]]
 == Ant
@@ -310,7 +312,7 @@ java -cp target\classes;lib\datanucleus-core.jar;lib\datanucleus-api-jpa.jar;lib
 # [should all be on same line. Shown like this for clarity]
 -----
 
-So you pass in the persistence-unit name as the final argument(s) in the list, and include the respective JAR's in the classpath (-cp). 
+You pass in the persistence-unit name as the final argument(s) in the list, and include the respective JAR's in the classpath (-cp). 
 The enhancer responds as follows
 
 -----
@@ -335,14 +337,15 @@ the majority of errors are caught at this point. You can also use the DataNucleu
 To invoke the enhancer in this mode you specify the *checkonly* flag. This will return a list of the classes, stating whether each class 
 is enhanced for persistence under JPA or not. The classes need to be in the CLASSPATH 
 
-NOTE: A CLASSPATH should contain a set of JAR's, and a set of directories. It should NOT explictly include class files, and should NOT include parts of the package names. If in doubt please consult a Java book)
+NOTE: A CLASSPATH should contain a set of JAR's, and a set of directories. It should NOT explictly include class files, and should NOT include parts of the package names. 
+If in doubt please consult a Java book.
+
 
 [[runtime]]
 == Runtime Enhancement
 
 When operating in a JavaEE environment (JBoss, WebSphere, etc) instead set the persistence property link:persistence.html#emf_props_dn_emf[datanucleus.jpa.addClassTransformer] to _true_.
-Note that this is only for a real JavaEE server that implements the JavaEE parts of the JPA spec.
-
+This is only for a real JavaEE server that implements the JavaEE parts of the JPA spec.
 To enable runtime enhancement in other environments, the _javaagent_ option must be set in the java command line. For example,
 
 -----
@@ -367,6 +370,7 @@ since with runtime enhancement at that point the related class is likely not yet
 
 IMPORTANT: You can only runtime enhance classes that have been annotated. It will not work with classes that have XML metadata only.
 
+
 [[api]]
 == Programmatic API
 
@@ -381,8 +385,10 @@ enhancer.addPersistenceUnit("MyPersistenceUnit");
 enhancer.enhance();
 -----
 
-This will look in META-INF/persistence.xml and enhance all classes defined by that unit.
-*Please note that you will need to load the enhanced version of the class into a different ClassLoader after performing this operation to use them*.
+This will look in `META-INF/persistence.xml` and enhance all classes defined by that unit.
+
+NOTE: You will need to load the enhanced version of the class into a different ClassLoader after performing this operation to use them.
+
 
 
 [[enhancement_contract]]
@@ -391,7 +397,7 @@ This will look in META-INF/persistence.xml and enhance all classes defined by th
 === Persistable
 
 JPA allows implementations to bytecode-enhance persistable classes to implement some interface to provide them with change tracking etc.
-DataNucleus provides its own byte-code enhancer (in the _datanucleus-core.jar_) to enhance users entity classes to implement this _Persistable_ interface.
+DataNucleus provides its own byte-code enhancer (in the `datanucleus-core.jar`) to enhance users entity classes to implement this _Persistable_ interface.
 If we start off with the following class
 
 [source,java]
