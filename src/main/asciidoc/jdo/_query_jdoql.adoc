@@ -1516,7 +1516,6 @@ query.addExtension("datanucleus.jdoql.strict", "true");
 When using the method _contains_ on a collection (or _containsKey_, _containsValue_ on a map) this will 
 either add an EXISTS subquery (if there is a NOT or OR present in the query) or will add an INNER JOIN across to the element table. Let's take an example
 
-[source,java]
 -----
 SELECT FROM org.datanucleus.samples.A
 WHERE (elements.contains(b1) && b1.name == 'Jones')
@@ -1527,7 +1526,7 @@ Note that we add the _contains_ first that binds the variable "b1" to the elemen
 The order is important here. If we instead had put the condition on the variable first we would have had to do a CROSS JOIN to the variable table
 and then try to repair the situation and change it to INNER JOIN if possible. In this case the generated SQL will be like
 
-[source,java]
+[source,sql]
 -----
 SELECT `A0`.`ID`
 FROM `A` `A0`
