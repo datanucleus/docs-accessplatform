@@ -136,11 +136,17 @@ in a single query) but that it will attempt to fetch all fields that are selecte
 
 image:../images/nucleus_extension.png[]
 
-In JPQL, for RDBMS, if you have a FETCH JOIN to a multi-valued field of the candidate, DataNucleus will perform the basic query in one SQL statement,
+For RDBMS, if you have a FETCH JOIN to a multi-valued field of the candidate, DataNucleus will perform the basic query in one SQL statement,
 and then will invoke an extra SQL of the form _SELECT {relatedObject columns} FROM RELATED_TBL WHERE EXISTS (restrict to the candidate objects involved).
 This is referred to as *bulk fetch* and avoids the "1+N query problem".
 
 WARNING: This only applies to fields of the candidate that are FETCH JOINed. If you have a FETCH JOIN from a related object then this will not currently be fetched.
+
+NOTE: If you don't want multi-valued fields to be fetched in this way, either don't mark them to be fetched or set the query hint *datanucleus.rdbms.query.multivaluedFetch* to _none_ 
+(default is "exists" using the single SQL per field).
+
+
+For non-RDBMS datastores the collection/map is stored by way of a Collection of ids of the related objects in a single "column" of the object and so is retrievable in the same query.
 
 
 === Candidate that is @MappedSuperclass

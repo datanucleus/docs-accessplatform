@@ -260,12 +260,11 @@ query.setHint("datanucleus.rdbms.query.fetchDirection", "forward");
 query.setHint("datanucleus.rdbms.query.resultSetConcurrency", "read-only");
 -----
 
-                    Alternatively you can specify these as persistence properties so that they apply to all queries for that PMF/EMF. Again, the properties are
+Alternatively you can specify these as persistence properties so that they apply to all queries for that PMF/EMF. Again, the properties are
 
 * *datanucleus.rdbms.query.fetchDirection* - controls the direction that the ResultSet is navigated. By default this is forwards only. Use this property to change that.
 * *datanucleus.rdbms.query.resultSetConcurrency* - controls whether the ResultSet is read only or updateable.
 
 
-                    Bear in mind that not all RDBMS support all of the possible values for these options. That
-                    said, they do add a degree of control that is often useful.
+Bear in mind that not all RDBMS support all of the possible values for these options. That said, they do add a degree of control that is often useful.
 
