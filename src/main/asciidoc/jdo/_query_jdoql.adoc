@@ -31,8 +31,10 @@ List<Person> results =
 
 So here in our example we select all "Person" objects with surname of "Jones" and where the persons age is below 20. 
 The language is intuitive for Java developers, and is intended as their interface to accessing the persisted data model. 
-As can be seen above, the query is made up of distinct parts. 
-The class being selected (the SELECT clause in SQL), the filter (which equates to the WHERE clause in SQL), together with any sorting (the ORDER BY clause in SQL), etc.
+As can be seen above, the query is made up of distinct parts: the class being processed (equates to the FROM clause in SQL), the data being selected (the SELECT clause in SQL), 
+the filter (the WHERE clause in SQL), together with any sorting (the ORDER BY clause in SQL), etc.
+
+We will cover the _string-based_ and _declarative_ modes of JDOQL API in this chapter, and the _Typed JDOQL_ is covered in link:query.html#jdoql_typed[its own chapter].
 
 
 
