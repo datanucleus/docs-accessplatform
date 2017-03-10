@@ -259,7 +259,7 @@ whereas 1-N/M-N fields will not be fetched. JPQL allows you to include _FETCH JO
 For RDBMS datastores any multi-valued field will be _bulk-fetched_ if it is defined to be EAGER or is placed in the current EntityGraph. 
 By _bulk-fetched_ we mean that there will be a single SQL issued per collection field (hence avoiding the N+1 problem). 
 
-Note: You can disable this by either not putting multi-valued fields in the FetchPlan, or by setting the query hint *datanucleus.rdbms.query.multivaluedFetch* to _none_
+NOTE: You can disable this by either not putting multi-valued fields in the FetchPlan, or by setting the query hint *datanucleus.rdbms.query.multivaluedFetch* to _none_
 (default is _exists_ using the single SQL per field).
 
 All non-RDBMS datastores do respect this FETCH JOIN setting, since a collection/map is stored in a single "column" in the object and so is readily retrievable.
