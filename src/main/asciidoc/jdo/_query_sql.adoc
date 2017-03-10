@@ -79,7 +79,7 @@ If you want to dump each row of the SQL query results into an object of a partic
 // Using traditional JDO Query API
 Query query = pm.newQuery("javax.jdo.query.SQL", "SELECT MY_ID, MY_NAME FROM MYTABLE");
 query.setResultClass(MyResultClass.class);
-List<MyResultClass> results = (List<MyClass>) query.execute();
+List<MyResultClass> results = (List<MyResultClass>) query.execute();
 
 
 // Using JDO3.2 Query API
@@ -94,7 +94,7 @@ java.util.Date, java.sql.Date, java.sql.Time, java.sql.Timestamp, or Object[]
 * Can be a user defined class, that has either a constructor taking arguments of the same type as those returned by the query (in the same order), 
 or has a public put(Object, Object) method, or public setXXX() methods, or public fields.
 
-For example, if we are returning two columns like above, an _int_ and a _String_ then we define our result class like this
+For example, if we are returning two columns like above, an _int_ and a _String_ then we could define our result class like this
 
 [source,java]
 -----
@@ -114,7 +114,7 @@ public class MyResultClass
 -----
 
 So here we have a result class using the constructor arguments. 
-We could equally have provided a class with public fields instead, or provided _setXXX_ methods or a _put_ method. They all work in the same way.
+We could equally have provided a class with public fields instead, or provided _setXXX_ methods, or just provide a _put_ method. They all work in the same way.
 
 
 
