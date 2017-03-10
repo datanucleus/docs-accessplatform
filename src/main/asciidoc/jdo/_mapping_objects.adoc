@@ -21,7 +21,7 @@ no querying can be performed, and that there is no referential integrity.
 * *xcalia* : a slight variation on "identity" whereby there is a single column yet the contents of that column are consistent with what Xcalia XIC JDO implementation stored there.
 
 The user controls which one of these is to be used by specifying the _extension_ *mapping-strategy* on the field containing the interface. 
-The default is "per-implementation"
+The default is _per-implementation_.
 
 
 [[objects_one_one]]
@@ -68,10 +68,10 @@ image:../images/objects_db.png[]
 
 So DataNucleus adds foreign keys from the ParkingSpace table to all of the possible implementation tables for the _occupier_ field.
 
-In conclusion, when using "per-implementation" mapping for any java.lang.Object field in a class to be persisted (as non-serialised), you *must* define the possible 
+In conclusion, when using _per-implementation_ mapping for any java.lang.Object field in a class to be persisted (as non-serialised), you *must* define the possible 
 "implementation" classes that can be stored there.
 
-If we use *mapping-strategy* of "identity" then we get a different datastore schema.
+If we use *mapping-strategy* of _identity_ then we get a different datastore schema.
 
 [source,xml]
 -----
@@ -94,7 +94,7 @@ and the column "OCCUPIER" will contain strings such as _com.mydomain.samples.obj
 [[objects_one_many]]
 == 1-N Object Relation
 
-You can have a Collection/Map containing elements of java.lang.Object. You specify this in the same way as you would any Collection/Map. 
+You can have a Collection/Map containing elements of _java.lang.Object_. You specify this in the same way as you would any Collection/Map. 
 DataNucleus supports having a Collection of references with multiple implementation types as long as you use a join table relation.
 
 
@@ -119,7 +119,7 @@ public class MyClass
 -----
 <class name="MyClass">
     ...
-    <field name="myCollection" serialized="true"/>
+    <field name="myObject" serialized="true"/>
 </class>
 -----
 

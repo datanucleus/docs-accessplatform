@@ -60,13 +60,13 @@ The disadvantages are that no querying can be performed, and that there is no re
 * *xcalia* : a slight variation on "identity" whereby there is a single column yet the contents of that column are consistent with 
 what Xcalia XIC JDO implementation stored there.
 
-The user controls which one of these is to be used by specifying the _extension_ *mapping-strategy* on the field containing the interface. The default is "per-implementation"
+The user controls which one of these is to be used by specifying the _extension_ *mapping-strategy* on the field containing the interface. The default is _per-implementation_.
 
 In terms of the implementations of the interface, you can either leave the field to accept any _known about_ implementation, or you can restrict it to only accept some implementations
 (see "implementation-classes" metadata extension).
 If you are leaving it to accept any persistable implementation class, then you need to be careful that such implementations are known to DataNucleus at the point of encountering the interface
 field. By this we mean, DataNucleus has to have encountered the metadata for the implementation so that it can allow for the implementation when handling the field. 
-You can force DataNucleus to know about a persistable class by using an autostart mechanism, or using `persistence.xml`, or by placement of the `package.jdo_` file so that 
+You can force DataNucleus to know about a persistable class by using an autostart mechanism, or using `persistence.xml`, or by placement of the `package.jdo` file so that 
 when the owning class for the interface field is encountered so is the metadata for the implementations. 
 
 
@@ -132,7 +132,7 @@ image:../images/interfaces_db.png[]
 
 So DataNucleus adds foreign keys from the containers table to all of the possible implementation tables for the _shape_ field.
 
-If we use *mapping-strategy* of "identity" then we get a different datastore schema.
+If we use *mapping-strategy* of _identity_ then we get a different datastore schema.
 
 [source,xml]
 -----
@@ -158,7 +158,7 @@ You specify this in the same way as you would any Collection/Map. *You can have 
 The "unidirectional" restriction is that the interface is not persistent on its own and so cannot store the reference back to the owner object.
 Use the 1-N relationship guides for the metadata definition to use.
 
-You need to use a DataNucleus extension tag "implementation-classes" if you want to restrict the collection to only contain particular implementations of an interface.
+You need to use a DataNucleus extension tag *implementation-classes* if you want to restrict the collection to only contain particular implementations of an interface.
 For example
 
 [source,java]
