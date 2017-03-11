@@ -4,20 +4,20 @@
 :_imagesdir: images/
 
 
-DataNucleus provides capabilities for persistence of particular Java types. Some types are
-by default persistent, some are by default in the default "fetch-group". Similarly some are
-second class mutable, and hence have their operations intercepted. An _extension-point_ is
-available to define other Java types in this way. You can extend DataNucleus's capabilities to support a particular Java type using the plugin extension *org.datanucleus.java_type*.
+DataNucleus provides capabilities for persistence of particular Java types. 
+Some types are by default persistent, some are by default in the default "fetch-group". Similarly some are second class mutable, and hence have their operations intercepted. 
+An _extension-point_ is available to define other Java types in this way. 
+You can extend DataNucleus's capabilities to support a particular Java type using the plugin extension *org.datanucleus.java_type*.
 
 The attributes that you can set for each Java type are
 
-* __dfg__ - whether this type is by default in the default-fetch-group (true/false)
-* __embedded__ - whether this type is, by default, embedded (true/false)
-* _ext_java_type_wrapper_type(_wrapper type_) - class name of the SCO wrapper (if it needs a wrapper)
-* __wrapper-type-backed__ - class name of a SCO wrapper (with backing store)
-* __converter-name__ - name of a TypeConverter to use as the __default__ way of persisting this type when it isn't directly persistable as-is. 
+* *dfg* - whether this type is by default in the default-fetch-group (true/false)
+* *embedded* - whether this type is, by default, embedded (true/false)
+* *wrapper-type* - class name of the SCO wrapper (if it needs a wrapper)
+* *wrapper-type-backed* - class name of a SCO wrapper (with backing store)
+* *converter-name* - name of a TypeConverter to use as the _default_ way of persisting this type when it isn't directly persistable as-is. 
 Please refer to xref:extensions.html#type_converter[Type Converter extension point] for details of how to define your own type converter
-* __priority__ - Set this to a large number if you are overriding the default handling for a type that is supported out of the box
+* *priority* - Set this to a large number if you are overriding the default handling for a type that is supported out of the box
 
 All of these are optional, and you should define what is required for your type.
 
@@ -29,7 +29,8 @@ As we've mentioned above, if a java type is considered _second class mutable_ th
 The reason for this is that DataNucleus needs to be aware when the type has changed value internally. To give an example of such a type
 and how you would define support for intercepting these mutating operations lets use _java.util.Date_. We need to write a _wrapper_ class. 
 This has to be castable to the same type as the Java type it is representing (so inherited from it).
-So we extend "java.util.Date", and we need to implement the interface _org.datanucleus.store.types.SCO_ (http://www.datanucleus.org/javadocs/core/latest/org/datanucleus/store/types/SCO.html[Javadoc]).
+So we extend "java.util.Date", and we need to implement the interface _org.datanucleus.store.types.SCO_ 
+http://www.datanucleus.org/javadocs/core/latest/org/datanucleus/store/types/SCO.html[image:../images/javadoc.png[]].
 
 
 [source,java]
