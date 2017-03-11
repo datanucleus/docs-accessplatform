@@ -22,6 +22,7 @@ The various possible relationships are described below.
 * link:#one_many_map_join_pc_pc[Map<PC, PC> using join table]
 * link:#one_many_map_join_simple_pc[Map<Simple, PC> using join table]
 * link:#one_many_map_join_simple_simple[Map<Simple, Simple> using join table]
+* link:#one_many_map_converter_simple_simple[Map<Simple, Simple> using AttributeConverter into single column]
 * link:#one_many_map_join_pc_simple[Map<PC, Simple> using join table]
 * link:#one_many_map_fk_uni_key[Map<Simple,PC> - Unidirectional using foreign-key (key stored in the value class)]
 * link:#one_many_map_fk_bi_key[Map<Simple,PC> - Bidirectional using foreign-key (key stored in the value class)]
@@ -916,6 +917,60 @@ If you want to configure the names of the columns in the "join" table you would 
 
 Please note that the column ADPT_PK_IDX is added by DataNucleus when the column type of the key is not valid to be part of a primary key (with the RDBMS being used). 
 If the column type of your key is acceptable for use as part of a primary key then you will not have this "ADPT_PK_IDX" column.
+
+
+
+[[one_many_map_converter_simple_simple]]
+== Map<Simple, Simple> using AttributeConverter via column
+
+Just like in the above example, here we have a Map of simple types. In this case we are wanting to store this Map into a single column in the owning table. 
+We do this by using a JDO AttributeConverter.
+
+[source,java]
+-----
+public class Account
+{
+    ...
+
+    @Persistent
+    @Convert(MapStringStringToStringConverter.class)
+    @Column(name="ADDRESSES")
+    Map<String, String> addresses;
+}
+-----
+
+and then define our converter. You can clearly define your conversion process how you want it. You could, for example, convert the
+Map into comma-separated strings, or could use JSON, or XML, or some other format.
+
+[source,java]
+-----
+public class MapStringStringToStringConverter implements AttributeConverter<Map<String, String>, String>
+{
+    public String convertToDatastore(Map<String, String> attribute)
+    {
+        if (attribute == null)
+        {
+            return null;
+        }
+
+        StringBuilder str = new StringBuilder();
+        ... convert Map to String
+        return str.toString();
+    }
+
+    public Map<String, String> convertToAttribute(String columnValue)
+    {
+        if (columnValue == null)
+        {
+            return null;
+        }
+
+        Map<String, String> map = new HashMap<String, String>();
+        ... convert String to Map
+        return map;
+    }
+}
+-----
 
 
 [[one_many_map_fk_uni_key]]
