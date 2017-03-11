@@ -31,7 +31,7 @@ image:../images/nucleus_plugin.png[]
 
 If you have support for any additional types and would either like to contribute them, or have them listed here, let us know.
 Supporting a new type is easy, typically involving a link:#attributeconverter[JPA AttributeConverter] if you can easily convert the type into a String or Long. 
-See also link:../extensions/extensions.html#java_types[the Java Types plugin-point]
+See also link:../extensions/extensions.html#java_types[the Java Types plugin-point].
 You can also define more specific support for it with RDBMS datastores - link:../extensions/extensions.html#rdbms_java_mapping[the RDBMS Java Types plugin-point]
 
 Handling of second-class types uses wrappers and bytecode enhancement with DataNucleus. This contrasts to what Hibernate uses (proxies), and what Hibernate imposes on you. 
@@ -1282,4 +1282,71 @@ If you want to apply type conversion to a key/value of a map do this.
 -----
 
 So we specify the _attributeName_ to be *key*, and to use it on the value we would set it to *value*.
+
+
+
+[[container_extensions]]
+== Types extending Collection/Map
+
+Say you have your own type that extends Collection/Map. By default DataNucleus will not know how to persist this. 
+You could declare the type in your class as Collection/Map, but often you want to refer to your own type.
+If you have your type and want to just persist it into a single column then you should do as follows
+
+[source,java]
+-----
+public class MyCollectionType extends Collection
+{
+    ...
+}
+
+@PersistenceCapable
+public class MyClass
+{
+    MyCollectionType myField;
+
+    ...
+}
+-----
+
+We now define a simple converter to allow us to persist fields of this type in String form in the datastore, like this
+
+[source,java]
+-----
+public class MyCollectionTypeStringConverter implements AttributeConverter<MyCollectionType, String>
+{
+    public MyCollectionType convertToEntityAttribute(String str)
+    {
+        if (str == null)
+        {
+            return null;
+        }
+
+        ...
+        return myType;
+    }
+
+    public String convertToDatastoreColumn(MyCollectionType myType)
+    {
+        return myType != null ? myType.toString() : null;
+    }
+}
+-----
+
+and now in our entity class we mark the _myField_ as being converted using this converter
+
+[source,java]
+-----
+@Entity
+public class MyClass
+{
+    @Convert(converter=MyCollectionTypeStringConverter.class)
+    MyCollectionType myField;
+
+    ...
+}
+-----
+
+NOTE: If you want your extension of Collection/Map to be managed as a second class type then you will need to provide a _wrapper_ class for it.
+Please refer to the link:../extensions/extensions.html#java_type[java_type extension].
+
 
