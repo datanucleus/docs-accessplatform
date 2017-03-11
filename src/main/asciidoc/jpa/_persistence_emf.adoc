@@ -6,10 +6,10 @@
 
 Any JPA-enabled application will require at least one _EntityManagerFactory_. 
 Typically applications create one per datastore being utilised. 
-An _EntityManagerFactory_ provides access to _EntityManager_s which allow objects to be persisted, and retrieved. 
+An _EntityManagerFactory_ provides access to _EntityManager(s)_ which allow objects to be persisted, and retrieved. 
 The _EntityManagerFactory_ can be configured to provide particular behaviour.
 
-NOTE: An _EntityManagerFactory_ is designed to be thread-safe. An _EntityManager_ is not
+NOTE: An _EntityManagerFactory_ is designed to be thread-safe. An _EntityManager_ is not.
 
 We will hereafter refer to an EntityManagerFactory as an _EMF_ for brevity.
 
@@ -116,7 +116,7 @@ This file will be used to define your _persistence-unit(s)_. Let's show an examp
 In this example we have defined 2 _persistence-units_. 
 The first has the name "OnlineStore" and contains 5 classes (annotated). 
 The second has the name "Accounting" and contains a metadata file called `orm.xml` in a particular package (which will define the classes being part of that unit). 
-This means that once we have defined this we can reference these _persistence-units_ in our persistence operations. 
+This means that once we have defined this we can reference these _persistence-unit(s)_ in our persistence operations. 
 You can find the XSD for `persistence.xml` http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd[here].
 
 There are several sub-elements of this `persistence.xml` file worth describing
