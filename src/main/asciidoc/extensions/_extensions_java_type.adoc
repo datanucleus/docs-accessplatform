@@ -11,18 +11,17 @@ available to define other Java types in this way. You can extend DataNucleus's c
 
 The attributes that you can set for each Java type are
 
-* __dfg__ - whether this type is by default in the default-fetch-group (true/false)
-* __embedded__ - whether this type is, by default, embedded (true/false)
-* _ext_java_type_wrapper_type(_wrapper type_) - class name of the SCO wrapper (if it needs a wrapper)
-* __wrapper-type-backed__ - class name of a SCO wrapper (with backing store)
-* __converter-name__ - name of a TypeConverter to use as the __default__ way of persisting this type when it isn't directly persistable as-is. 
+* *dfg* - whether this type is by default in the default-fetch-group (true/false)
+* *embedded* - whether this type is, by default, embedded (true/false)
+* *wrapper-type* - class name of the SCO wrapper (if it needs a wrapper)
+* *wrapper-type-backed* - class name of a SCO wrapper (with backing store)
+* *converter-name* - name of a TypeConverter to use as the _default_ way of persisting this type when it isn't directly persistable as-is. 
 Please refer to xref:extensions.html#type_converter[Type Converter extension point] for details of how to define your own type converter
-* __priority__ - Set this to a large number if you are overriding the default handling for a type that is supported out of the box
+* *priority* - Set this to a large number if you are overriding the default handling for a type that is supported out of the box
 
 All of these are optional, and you should define what is required for your type.
 
 
-[[_ext_java_type_wrapper_type]]
 == wrapper-type
 
 As we've mentioned above, if a java type is considered _second class mutable_ then it needs to have any mutating operations intercepted. 
