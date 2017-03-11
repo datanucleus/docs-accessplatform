@@ -765,8 +765,8 @@ Please note that the column ADPT_PK_IDX is added by DataNucleus when the column 
 (with the RDBMS being used). If the column type of your key is acceptable for use as part of a primary key then you will not have this "ADPT_PK_IDX" column.
 
 
-[[one_many_nonpc_converter]]
-== Collection<Simple> using AttributeConverter via column
+[[one_many_map_converter_simple_simple]]
+== Map<Simple, Simple> using AttributeConverter via column
 
 Just like in the above example, here we have a Map of simple types. In this case we are wanting to store this Map into a single column in the owning table. 
 We do this by using a JPA AttributeConverter.
