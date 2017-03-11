@@ -27,6 +27,7 @@ Migrating will require the following changes.
 * The persistence property _datanucleus.jtaJndiLocation_ is renamed to *datanucleus.transaction.jta.transactionManagerJNDI*
 * The extension point "org.datanucleus.store.rdbms.connectionprovider" allowing a simple form of _failover_ is now removed
 (previously enabled by specifying _datanucleus.ConnectionFactoryName_ as a comma-separated list of JNDI names).
+* The extension point "org.datanucleus.store_objectvaluegenerator" was never used and is now removed.
 * The persistence property _datanucleus.storeManagerType_ is no longer used, and uses the ConnectionURL to determine the datastore type, otherwise falls back to RDBMS
 
 

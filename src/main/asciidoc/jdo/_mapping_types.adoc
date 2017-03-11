@@ -1285,12 +1285,12 @@ Map<URL, OtherEntity> myMap;
 NOTE: You CANNOT use an AttributeConverter for a _PersistenceCapable_ type. This is because a _PersistenceCapable_ type requires special treatment, such as attaching a StateManager etc. 
 
 
+
 [[container_extensions]]
 == Types extending Collection/Map
 
 Say you have your own type that extends Collection/Map. By default DataNucleus will not know how to persist this. You could declare the type
 in your class as Collection/Map, but often you want to refer to your own type.
-By default if a type extends Collection/Map then it will be marked as _second class_, and that DataNucleus will treat it as Collection that should be _wrapped_ (see above for Collection/Map).
 If you have your type and want to just persist it into a single column then you should do as follows
 
 [source,java]
@@ -1347,27 +1347,8 @@ public class MyClass
 }
 -----
 
-This is all well and good, it will map this type on to a single String-based column now. There remains one problem, it is still thinking that this type should be _wrapped_ (to intercept
-calls to the Collection methods). Since our type hides all of that, we want to disable this. So we update the mapping to be
-
-
-[source,java]
------
-@PersistenceCapable
-public class MyClass
-{
-    @Convert(MyCollectionTypeStringConverter.class)
-    @Extension(vendorName="datanucleus", key="is-second-class", value="false")
-    MyCollectionType myField;
-
-    ...
-}
------
-
-so now it is not attempted to be wrapped and will persist and retrieve fine.
-
 NOTE: If you want your extension of Collection/Map to be managed as a second class type then you will need to provide a _wrapper_ class for it.
-Please refer to the link:../extensions/extensions.html#java_type[java_type extension]. In which case you could omit this _is-second-class_ metadata.
+Please refer to the link:../extensions/extensions.html#java_type[java_type extension].
 
 
 
