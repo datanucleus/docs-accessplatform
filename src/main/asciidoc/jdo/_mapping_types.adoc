@@ -1311,7 +1311,7 @@ public class MyClass
 }
 -----
 
-We now define a simple converter to allow us to persist fields of this type in String form in the datastore, like this
+We now define a simple _AttributeConverter_ to allow us to persist fields of this type in String form in the datastore, like this
 
 [source,java]
 -----
@@ -1335,7 +1335,7 @@ public class MyCollectionTypeStringConverter implements AttributeConverter<MyCol
 }
 -----
 
-and now in our PersistenceCapable class we mark the _myField_ as being converted using this converter
+and now in our _PersistenceCapable_ class we mark the _myField_ as being converted using this converter
 
 [source,java]
 -----
@@ -1349,8 +1349,9 @@ public class MyClass
 }
 -----
 
-This is all well and good, it will map this type on to a single String-based column now. There remains one problem, it is still thinking that this type should be _wrapped_ (to intercept
-calls to the Collection methods). Since our type hides all of that, we want to disable this. So we update the mapping to be
+This is all well and good, it will map this type on to a single String-based column now. 
+There remains one problem, it is still thinking that this type should be _wrapped_ (to intercept calls to the Collection methods). 
+Since our type hides all of that, we want to disable this. So we update the mapping to be
 
 
 [source,java]
@@ -1369,8 +1370,8 @@ public class MyClass
 so now it is not attempted to be wrapped and will persist and retrieve fine.
 
 
-NOTE: If you want your extension of Collection/Map to be managed as a second class type then you will need to provide a _wrapper_ class for it.
-Please refer to the link:../extensions/extensions.html#java_type[java_type extension]. In which case you could omit this _is-second-class_ metadata.
+NOTE: If you want your extension of Collection/Map to be managed as a _mutable_second class type then you will need to provide a _wrapper_ class for it.
+Please refer to the link:../extensions/extensions.html#java_type[java_type extension] for how to support this. In which case you could omit this _is-second-class_ metadata.
 
 
 
