@@ -31,8 +31,8 @@ The DataNucleus enhancer provides for adding on a _default constructor_ if you h
 * Your JDO persistent classes need link:enhancer.html[bytecode enhancing] for use in the persistence process, but this can be an automatic post-compilation step.
 * To persist objects of classes you firstly need to *define which classes are persistable, and how they are persisted*. 
 Start under the link:mapping.html[JDO Mapping Guide]
-* Use of JDO requires an link:persistence.html#pmf[PersistenceManagerFactory] to access the datastore.
-* The persistence itself is controlled by an link:persistence.html#pm[PersistenceManager] and each object to be persisted will
+* Use of JDO requires a link:persistence.html#pmf[PersistenceManagerFactory] to access the datastore.
+* The persistence itself is controlled by a link:persistence.html#pm[PersistenceManager] and each object to be persisted will
 have different link:persistence.html#lifecycle[lifecycle states] that you need to have an understanding of.
 * You retrieve objects either by their identity, or using a link:query.html[query]. With JDO you can use JDOQL or SQL query languages
 * You will need `javax.jdo` as well as `datanucleus-api-jdo`, `datanucleus-core` and the `datanucleus-XXX` jar for whichever datastore you are using.
