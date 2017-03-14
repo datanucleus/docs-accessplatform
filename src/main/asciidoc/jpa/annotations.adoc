@@ -1,13 +1,13 @@
 [[annotations]]
-= JPA Annotations (v{version})
+= JPA Annotations Reference (v{version})
 :_basedir: ../
 :_imagesdir: images/
 
 JPA provides the ability to use annotations to define the persistence of entities, and DataNucleus JPA supports both JPA and JDO annotations. 
 In this section we provide a reference to the primary JPA annotations. When selecting to use annotations please bear in mind the following :-
 
-* You must have the *datanucleus-api-jpa* jar available in your CLASSPATH.
-* You must have the *javax.persistence* jar in your CLASSPATH since this provides the annotations
+* You must have the `datanucleus-api-jpa` jar available in your CLASSPATH.
+* You must have the `javax.persistence` jar in your CLASSPATH since this provides the annotations
 * Annotations should really only be used for attributes of persistence that you won't be changing at deployment. 
 Things such as table and column names shouldn't really be specified using annotations although it is permitted.
 Instead it would be better to put such information in an ORM file.
