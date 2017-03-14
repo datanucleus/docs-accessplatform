@@ -29,6 +29,8 @@ Migrating will require the following changes.
 (previously enabled by specifying _datanucleus.ConnectionFactoryName_ as a comma-separated list of JNDI names).
 * The extension point "org.datanucleus.store_objectvaluegenerator" was never used and is now removed.
 * The persistence property _datanucleus.storeManagerType_ is no longer used, and uses the ConnectionURL to determine the datastore type, otherwise falls back to RDBMS
+* A couple of errors in the default naming of join tables and its column names were fixed, meaning that anyone who relied on these previous namings
+should set the table/column names in mapping information to be safe.
 
 
 [[five_zero]]
