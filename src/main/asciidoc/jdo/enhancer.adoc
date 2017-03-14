@@ -1,5 +1,5 @@
 [[enhancer]]
-= JDO Enhancement (v{version})
+= JDO Enhancement Guide (v{version})
 :_basedir: ../
 :_imagesdir: images/
 
@@ -399,6 +399,7 @@ The input to the enhancer should be _either_ a set of MetaData/class files _or_ 
 In the first option, if any classes have annotations then they must be specified. All classes and MetaData files should be in the CLASSPATH when enhancing. 
 To give an example of how you would invoke the enhancer
 
+[source,bash]
 -----
 # Linux/Unix :
 java -cp target/classes:lib/datanucleus-core.jar:lib/javax.jdo.jar:lib/datanucleus-api-jdo.jar:lib/log4j.jar

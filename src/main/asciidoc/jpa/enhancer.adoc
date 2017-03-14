@@ -1,5 +1,5 @@
 [[enhancer]]
-= JPA Enhancement (v{version})
+= JPA Enhancement Guide (v{version})
 :_basedir: ../
 :_imagesdir: images/
 
@@ -298,6 +298,7 @@ java -cp classpath  org.datanucleus.enhancer.DataNucleusEnhancer [options]
 The input to the enhancer should be the name of the "persistence-unit" to enhance.
 To give an example of how you would invoke the enhancer
 
+[source,bash]
 -----
 # Linux/Unix :
 java -cp target/classes:lib/datanucleus-core.jar:lib/datanucleus-api-jpa.jar:lib/javax.persistence.jar:lib/log4j.jar
@@ -376,6 +377,7 @@ IMPORTANT: You can only runtime enhance classes that have been annotated. It wil
 
 You could alternatively programmatively enhance classes from within your application. 
 
+[source,java]
 -----
 import org.datanucleus.enhancer.DataNucleusEnhancer;
 
