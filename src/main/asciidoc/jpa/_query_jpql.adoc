@@ -110,12 +110,13 @@ implicit from the filter expression for example. The FROM clause is of the follo
 [source]
 -----
 FROM {candidate_entity} {candidate_alias}
-    [[[ LEFT [OUTER] | INNER ] JOIN] join_spec [join_alias] *
+    [[[ LEFT [OUTER] | INNER ] JOIN] join_spec [join_alias] [join_condition] *
 -----
 
-With JPQL you are explicitly stating that the join across _join_spec_ is performed as "LEFT OUTER" or "INNER" (rather than just leaving it to DataNucleus
-to decide which to use). Note that the _join_spec_ can be a relation field, or alternately if you have a Map of non-Entity keys/values then also
-the Map field. If you provide the _join_alias_ then you can use it thereafter in other clauses of the query. 
+With JPQL you are explicitly stating that the join across _join_spec_ is performed as "LEFT OUTER" or "INNER" (rather than just leaving it to DataNucleus to decide which to use). 
+Note that the _join_spec_ can be a relation field, or alternately if you have a Map of non-Entity keys/values then also the Map field. 
+If you provide the _join_alias_ then you can use it thereafter in other clauses of the query. 
+The _join_condition_ is an optional ON clause that is in addition to navigating along the relation that was specified.
 
 Some examples of FROM clauses.
 
