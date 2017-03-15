@@ -13,12 +13,9 @@ Whilst you can do this manually, setting the field(s) in prePersist callbacks et
 import org.datanucleus.api.jdo.annotations.CreateTimestamp;
 import org.datanucleus.api.jdo.annotations.UpdateTimestamp;
 
-@Entity
+@PersistenceCapable
 public class Hotel
 {
-    @Id
-    long id;
-
     @CreateTimestamp
     Timestamp createTimestamp;
 
