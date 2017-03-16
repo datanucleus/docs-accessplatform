@@ -18,6 +18,7 @@ Migration to 5.1 involves the following steps
 
 Migrating will require the following changes.
 
+* Bytecode enhancement contract changes slightly so re-enhance all classes prior to using this version
 * The persistence property _datanucleus.nontransactionalRead_ is renamed to *datanucleus.transaction.nontx.read*
 * The persistence property _datanucleus.nontransactionalWrite_ is renamed to *datanucleus.transaction.nontx.write*
 * The persistence property _datanucleus.nontx.atomic_ is renamed to *datanucleus.transaction.nontx.atomic*
