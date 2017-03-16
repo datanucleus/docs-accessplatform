@@ -7,8 +7,8 @@ NOTE: Applicable to RDBMS, MongoDB, HBase, Cassandra, Neo4j
 
 With standard JDO when you delete an object from persistence it is deleted from the datastore.
 DataNucleus provides a useful ability to _soft delete_ objects from persistence. 
-In simple terms, any persistable types marked for soft deletion handling will have an extra column added to their database table to represent whether the record is soft-deleted. 
-If it is soft deleted then it will not be visible at runtime thereafter.
+In simple terms, any persistable types marked for soft deletion handling will have an extra column added to their datastore table to represent whether the record is soft-deleted. 
+If it is soft deleted then it will not be visible at runtime thereafter, but will be present in the datastore.
 
 You mark a persistable type for soft deletion handling like this
 
@@ -36,7 +36,7 @@ pm.deletePersistent(myHotel);
 
 the _myHotel_ object will be updated to set the _soft-delete_ flag to _true_. 
 
-Any call to _pm.getObjectById_ or query will not return the object since it is effectively deleted, though still present in the datastore.
+Any call to _pm.getObjectById_ or query will not return the object since it is effectively deleted (though still present in the datastore).
 
 If you want to view the object, you can specify the query extension *include-soft-deletes* as _true_ and the soft-deleted records will be visible.
 
