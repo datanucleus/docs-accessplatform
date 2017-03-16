@@ -12,6 +12,10 @@ These are described below.
 NOTE: For RDBMS a 1-1 relation is stored as a foreign-key column(s). For non-RDBMS it is stored as a String "column" storing the 'id' 
 (possibly with the class-name included in the string) of the related object.
 
+NOTE: DataNucleus does not support a 1-1 relation using a join table. It is not a use-case that is very common. 
+You could look at N-1 unidirectional using join table if you really want to do this
+
+
 [[one_one_uni]]
 == Unidirectional
 
