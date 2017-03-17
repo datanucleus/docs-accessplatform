@@ -12,13 +12,9 @@ These are described below.
 NOTE: For RDBMS a 1-1 relation is stored as a foreign-key column(s). For non-RDBMS it is stored as a String "column" storing the 'id' 
 (possibly with the class-name included in the string) of the related object.
 
-NOTE: DataNucleus does not support a 1-1 relation using a join table. It is not a use-case that is very common. 
-You could look at N-1 unidirectional using join table if you really want to do this
-
-
 
 [[one_one_uni]]
-== Unidirectional
+== Unidirectional ForeignKey
 
 For this case you could have 2 classes, *User* and *Account*, as below.
 
@@ -98,7 +94,7 @@ an exception will typically be thrown (assuming the datastore supports foreign k
 
 
 [[one_one_bi]]
-== Bidirectional
+== Bidirectional ForeignKey
 
 For this case you could have 2 classes, *User* and *Account* again, but this time as below. Here the *Account* class knows about the *User* class, and also vice-versa.
 
@@ -187,4 +183,11 @@ image:../images/relationship_1_1_bi_db_singlefk.png[]
 For other types of datastore it will have a _USER_ID_ column in the _ACCOUNT_ table and a _ACCOUNT_ column in the _USER_ table.
 
 NOTE: When forming the relation please make sure that *you set the relation at BOTH sides* since DataNucleus would have no way of knowing which end is correct if you only set one end.
+
+
+[[one_one_uni_join]]
+== Unidirectional JoinTable
+
+NOTE: DataNucleus does not support a 1-1 relation using a join table. It is not a use-case that is very common and is not part of the JPA spec. 
+You could look at link:mapping.html#many_one_join[N-1 unidirectional using join table] if you really want to do this
 
