@@ -17,7 +17,7 @@ while if you use _-Djava.security.policy=..._ (single equals sign), you append t
 The following is a sample security policy file to be used with DataNucleus.
 
 -----
-grant codeBase "file:${/}jdo2-api-2.0.jar" {
+grant codeBase "file:${/}javax.jdo-3.2*.jar" {
 
     //jdo API needs datetime (timezone class needs the following)
     permission java.util.PropertyPermission "user.country", "read";
