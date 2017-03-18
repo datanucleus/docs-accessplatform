@@ -38,6 +38,17 @@
        end
     %>
 
+    <%
+       def is_jdo?
+         attributes.has_key?('jdo')
+       end
+    %>
+    <%
+       def is_jpa?
+         attributes.has_key?('jpa')
+       end
+    %>
+
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <script src="<%= (attr :_basedir) %>js/bootstrap/3.3.7/bootstrap.min.js"></script>
     <script src="<%= (attr :_basedir) %>js/bootstrap-toc/0.4.1/bootstrap-toc.min.js"></script>
@@ -83,7 +94,11 @@
         <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
                 <li class="dropdown">
+                  <% if is_jdo? then %>
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" style="background-color:#2385c6">JDO API <span class="caret"></span></a>
+                  <% else %>
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">JDO API <span class="caret"></span></a>
+                  <% end %>
                     <ul class="dropdown-menu">
                         <li><a href="<%= (attr :_basedir) %>jdo/getting_started.html">Getting Started</a></li>
                         <li><a href="<%= (attr :_basedir) %>jdo/mapping.html">Mapping</a></li>
@@ -104,7 +119,11 @@
                     </ul>
                 </li>
                 <li class="dropdown">
+                  <% if is_jpa? then %>
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" style="background-color:#2385c6">JPA API <span class="caret"></span></a>
+                  <% else %>
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">JPA API <span class="caret"></span></a>
+                  <% end %>
                     <ul class="dropdown-menu">
                         <li><a href="<%= (attr :_basedir) %>jpa/getting_started.html">Getting Started</a></li>
                         <li><a href="<%= (attr :_basedir) %>jpa/mapping.html">Mapping</a></li>
@@ -170,7 +189,15 @@
             <a href="http://forum.datanucleus.org">DataNucleus Forum</a>
         </div>
         <div class="col-sm-3">
-            <a href="https://gitter.im/datanucleus/Lobby">Gitter</a>
+            <% if is_jdo? then %>
+                <a href="https://gitter.im/datanucleus/JDO">Gitter (JDO)</a>
+            <% else %>
+            <% if is_jpa? then %>
+                <a href="https://gitter.im/datanucleus/JPA">Gitter (JPA)</a>
+            <% else %>
+                <a href="https://gitter.im/datanucleus/Lobby">Gitter</a>
+            <% end %>
+            <% end %>
         </div>
         <div class="col-sm-4">
             <a href="../../documentation/problem_reporting.html">Problem Reporting</a>
