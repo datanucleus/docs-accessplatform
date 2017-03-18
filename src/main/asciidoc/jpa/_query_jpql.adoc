@@ -134,21 +134,22 @@ This doesn't mean that DataNucleus will definitely fetch them in the same query 
 in a single query) but that it will attempt to fetch all fields that are selected (as well as the ones that are defaulted to EAGER).
 
 
-=== FETCH JOIN of multi-valued field
+[[jpql_fetchplan]]
+== Fetched Fields
 
-image:../images/nucleus_extension.png[]
+By default a query will fetch fields according to their defined EAGER/LAZY setting, so fields like primitives, wrappers, Dates, and 1-1/N-1 relations will be fetched, 
+whereas 1-N/M-N fields will not be fetched. JPQL allows you to include _FETCH JOIN_ as a hint to include relation fields where possible. 
 
-For RDBMS, if you have a FETCH JOIN to a multi-valued field of the candidate, DataNucleus will perform the basic query in one SQL statement,
-and then will invoke an extra SQL of the form _SELECT {relatedObject columns} FROM RELATED_TBL WHERE EXISTS (restrict to the candidate objects involved).
-This is referred to as *bulk fetch* and avoids the "1+N query problem".
+For RDBMS datastores any multi-valued (1-N/M-N) field will be _bulk-fetched_ if it is defined to be EAGER or has a _FETCH JOIN_, or is placed in the current EntityGraph. 
+By _bulk-fetched_ we mean that there will be a single SQL issued per collection field (hence avoiding the N+1 problem). By default this will be a single SQL per collection
+of the form `SELECT {relatedObject columns} FROM RELATED_TBL WHERE EXISTS (restrict to the candidate objects involved)`.
+Note that you can disable this by either not marking multi-valued fields to be fetched, or by setting the query extension *datanucleus.rdbms.query.multivaluedFetch* to _none_
+(default is _exists_ using the single SQL per field as mentioned above).
 
-WARNING: This only applies to fields of the candidate that are FETCH JOINed. If you have a FETCH JOIN from a related object then this will not currently be fetched.
+All non-RDBMS datastores do respect this FETCH JOIN setting, since a collection/map is stored in a single "column" in the object and so is readily retrievable.
 
-NOTE: If you don't want multi-valued fields to be fetched in this way, either don't mark them to be fetched or set the query hint *datanucleus.rdbms.query.multivaluedFetch* to _none_ 
-(default is "exists" using the single SQL per field).
+Note that you can also make use of link:persistence.html#entity_graphs[Entity Graphs] to have fuller control over what is retrieved from each query.
 
-
-For non-RDBMS datastores the collection/map is stored by way of a Collection of ids of the related objects in a single "column" of the object and so is retrievable in the same query.
 
 
 === Candidate that is @MappedSuperclass
@@ -277,20 +278,6 @@ fieldName {ASC|DESC} {NULLS FIRST|NULLS LAST}
 -----
 
 NOTE: This is only supported for a few RDBMS including H2, HSQLDB, PostgreSQL, DB2, Oracle, Derby, Firebird, SQLServer v11+.
-
-
-[[jpql_fetchplan]]
-== Fetched Fields
-
-By default a query will fetch fields according to their defined EAGER/LAZY setting, so fields like primitives, wrappers, Dates, and 1-1/N-1 relations will be fetched, 
-whereas 1-N/M-N fields will not be fetched. JPQL allows you to include _FETCH JOIN_ as a hint to include 1-N/M-N fields where possible. 
-For RDBMS datastores any multi-valued field will be _bulk-fetched_ if it is defined to be EAGER or is placed in the current EntityGraph. 
-By _bulk-fetched_ we mean that there will be a single SQL issued per collection field (hence avoiding the N+1 problem). 
-Note that you can disable this by either not putting multi-valued fields in the FetchPlan, or by setting the query extension "datanucleus.rdbms.query.multivaluedFetch" to "none"
-(default is "exists" using the single SQL per field).
-All non-RDBMS datastores do respect this FETCH JOIN setting, since a collection/map is stored in a single "column" in the object and so is readily retrievable.
-
-Note that you can also make use of link:persistence.html#entity_graphs[Entity Graphs] to have fuller control over what is retrieved from each query.
 
 
 [[jpql_fields_properties]]
