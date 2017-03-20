@@ -159,12 +159,12 @@ public class CompactDisc {...}
 We use the _inheritance_ element to define the persistence of the inherited classes.
                 
     
-In the datastore, each class in an inheritance tree is represented in its own datastore table (tables ABSTRACTPRODUCT, PRODUCT, BOOK, TRAVELGUIDE, and COMPACTDISC), 
+In the datastore, each class in an inheritance tree is represented in its own datastore table (tables `ABSTRACTPRODUCT`, `PRODUCT`, `BOOK`, `TRAVELGUIDE`, and `COMPACTDISC`), 
 with the subclasses tables' having foreign keys between the primary key and the primary key of the superclass' table. 
 
 image:../images/inheritance_db_newtable.png[]
 
-In the above example, when we insert a TravelGuide object into the datastore, a row will be inserted into ABSTRACTPRODUCT, PRODUCT, BOOK, and TRAVELGUIDE.
+In the above example, when we insert a TravelGuide object into the datastore, a row will be inserted into `ABSTRACTPRODUCT`, `PRODUCT`, `BOOK`, and `TRAVELGUIDE`.
 
 
 
@@ -199,11 +199,11 @@ or with annotations
 public class AbstractProduct {...}
 -----
 
-This subtle change of use the *inheritance* element has the effect of using the PRODUCT table for both the *Product* and *AbstractProduct* classes, containing the fields of both classes.
+This subtle change of use the *inheritance* element has the effect of using the `PRODUCT` table for both the *Product* and *AbstractProduct* classes, containing the fields of both classes.
                 
 image:../images/inheritance_db_notable.png[]
 
-In the above example, when we insert a TravelGuide object into the datastore, a row will be inserted into PRODUCT, BOOK, and TRAVELGUIDE.
+In the above example, when we insert a TravelGuide object into the datastore, a row will be inserted into `PRODUCT`, `BOOK`, and `TRAVELGUIDE`.
 
 
 NOTE: DataNucleus doesn't currently fully support the use of classes defined with _subclass-table_ strategy as having relationships where there are more than a single subclass that has a table. 
@@ -219,7 +219,7 @@ DataNucleus supports persistence of classes in the tables of superclasses where 
 This has the advantage that retrieval of an object is a single SQL call to a single table. 
 It also has the disadvantage that the single table can have a very large number of columns, and database readability and performance can suffer, and additionally 
 that a discriminator column is required. In our example, lets ignore the *AbstractProduct* class for a moment and assume that *Product* is the base class.
-We have no real interest in having separate tables for the *Book* and *CompactDisc* classes and want everything stored in a single table _PRODUCT_. 
+We have no real interest in having separate tables for the *Book* and *CompactDisc* classes and want everything stored in a single table `PRODUCT`. 
 We change our MetaData as follows
 
 [source,xml]
@@ -274,9 +274,9 @@ public class TravelGuide {...}
 public class CompactDisc {...}
 -----
 
-This change of use of the *inheritance* element has the effect of using the PRODUCT table for all classes, containing the fields of *Product*, *Book*, *CompactDisc*, and *TravelGuide*.
+This change of use of the *inheritance* element has the effect of using the `PRODUCT` table for all classes, containing the fields of *Product*, *Book*, *CompactDisc*, and *TravelGuide*.
 You will also note that we used a _discriminator_ element for the *Product* class. 
-The specification above will result in an extra column (called PRODUCT_TYPE) being added to the PRODUCT table, and containing the class name of the object stored. 
+The specification above will result in an extra column (called PRODUCT_TYPE) being added to the `PRODUCT` table, and containing the class name of the object stored. 
 So for a Book it will have "com.mydomain.samples.store.Book" in that column. This column is used in discriminating which row in the database is of which type. 
 The final thing to note is that in our classes *Book* and *CompactDisc* we have a field that is identically named. 
 With *CompactDisc* we have defined that its column will be called DISCTITLE since both of these fields will be persisted into the same table and would have had 
@@ -284,7 +284,7 @@ identical names otherwise - this gets around the problem.
 
 image:../images/inheritance_db_superclasstable.png[]
 
-In the above example, when we insert a TravelGuide object into the datastore, a row will be inserted into the PRODUCT table only.
+In the above example, when we insert a TravelGuide object into the datastore, a row will be inserted into the `PRODUCT` table only.
 
 
 JDO allows two types of discriminators. The example above used a discriminator strategy of _class-name_. 
@@ -370,8 +370,8 @@ So the key thing is the specification of inheritance strategy at the root only. 
                 
 image:../images/inheritance_db_completetable.png[]
 
-So any object of explicit type *Book* is persisted into the table "BOOK". 
-Similarly any *TravelGuide* is persisted into the table "TRAVELGUIDE".
+So any object of explicit type *Book* is persisted into the table `BOOK`. 
+Similarly any *TravelGuide* is persisted into the table `TRAVELGUIDE`.
 In addition if any class in the inheritance tree is abstract then it won't have a table since there cannot be any instances of that type.
 *DataNucleus currently has limitations when using a class using this inheritance as the element of a collection.*
 

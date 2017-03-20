@@ -1,5 +1,5 @@
 [[schema]]
-= Schema
+= Datastore Schema
 :_basedir: ../
 :_imagesdir: images/
 
@@ -7,8 +7,11 @@ We have shown link:#classes[earlier] how you define MetaData for a classes basic
 The next step is to define how it maps to the datastore. Fields of a class are mapped to _columns_ of a _table_ (note that with some datastores it is not called
 a 'table' or 'column', but the concept is similar and we use 'table' and 'column' here to represent the mapping). 
 If you don't specify the table and column names, then DataNucleus will generate table and column names for you.
-*You should specify your table and column names if you have an existing schema.* 
+
+NOTE: You should specify your table and column names if you have an existing schema.
 Failure to do so will mean that DataNucleus uses its own names and these will almost certainly not match what you have in the datastore.
+
+
 There are several aspects to cover here
 
 * link:#schema_names[Table and column names]
@@ -41,7 +44,7 @@ public class Hotel
 }
 -----
       
-In our case we want to map this class to a table called *ESTABLISHMENT*, and has columns _NAME_, _DIRECTION_, _PHONE_ and _NUMBER_OF_ROOMS_ (amongst other things). 
+In our case we want to map this class to a table called `ESTABLISHMENT`, and has columns _NAME_, _DIRECTION_, _PHONE_ and _NUMBER_OF_ROOMS_ (amongst other things). 
 So we define our Meta-Data like this
 
 [source,xml]
@@ -102,18 +105,18 @@ So lets say we have the following
 
 [source,java]
 -----
-public class MyClass // persisted to table "MYCLASS"
+public class MyClass // persisted to table `MYCLASS`
 {
     ...
 }
 
-public class MySubClass extends MyClass // persisted to table "MYSUBCLASS"
+public class MySubClass extends MyClass // persisted to table `MYSUBCLASS`
 {
     ...
 }
 -----
 
-We want to define the names of the identity column in "MYCLASS" and "MYSUBCLASS". Here's how we do it
+We want to define the names of the identity column in `MYCLASS` and `MYSUBCLASS`. Here's how we do it
     
 [source,xml]
 -----
@@ -150,8 +153,8 @@ public class MySubClass extends MyClass
 }
 -----
 
-So we will have a PK column "MY_PK_COLUMN" in the table "MYCLASS", and a PK column "MYSUB_PK_COLUMN" in the table "MYSUBCLASS" 
-(and that corresponds to the "MY_PK_COLUMN" value in "MYCLASS"). We could also do
+So we will have a PK column "MY_PK_COLUMN" in the table `MYCLASS`, and a PK column "MYSUB_PK_COLUMN" in the table `MYSUBCLASS` 
+(and that corresponds to the "MY_PK_COLUMN" value in `MYCLASS`). We could also do
     
 [source,xml]
 -----
@@ -189,13 +192,13 @@ column names can need defining for each class in the inheritance tree. So lets s
     
 [source,java]
 -----
-public class MyClass // persisted to table "MYCLASS"
+public class MyClass // persisted to table `MYCLASS`
 {
     long id; // PK field
     ...
 }
 
-public class MySubClass extends MyClass // persisted to table "MYSUBCLASS"
+public class MySubClass extends MyClass // persisted to table `MYSUBCLASS`
 {
     ...
 }
@@ -221,9 +224,9 @@ Obviously the table "MYSUBCLASS" will also need a PK column. Here's how we defin
 </class>
 -----
 
-So we will have a PK column "MY_PK_COLUMN" in the table "MYCLASS", and a PK column "MYSUB_PK_COLUMN" in the table "MYSUBCLASS" 
-(and that corresponds to the "MY_PK_COLUMN" value in "MYCLASS"). You can also use
-    
+So we will have a PK column "MY_PK_COLUMN" in the table `MYCLASS`, and a PK column "MYSUB_PK_COLUMN" in the table `MYSUBCLASS`
+(and that corresponds to the "MY_PK_COLUMN" value in `MYCLASS`). You can also use
+
 [source,xml]
 -----
 <class name="MyClass" identity-type="application" table="MYCLASS">
@@ -272,9 +275,8 @@ public class Payment
 -----
 
 In this class we can model payments from a customer of an amount. Where the customer pays by bank transfer we can save the
-reference number. Since our hotel is in the United Kingdom we want the default currency to be pounds, or to use its ISO4217
-currency code "GBP". In addition, since the bank transfer reference is optional we want that column to be nullable. So let's
-specify the MetaData for the class.
+reference number. Since our hotel is in the United Kingdom we want the default currency to be pounds, or to use its ISO4217 currency code "GBP". 
+In addition, since the bank transfer reference is optional we want that column to be nullable. So let's specify the MetaData for the class.
 
 [source,xml]
 -----
@@ -366,7 +368,7 @@ settings, but this way you allow DataNucleus to know about all information. So t
 </class>
 -----
 
-So in this example our table "ESTABLISHMENT" has the columns associated with the specified fields
+So in this example our table `ESTABLISHMENT` has the columns associated with the specified fields
 and also has columns "YEAR_ESTABLISHED" (that is INTEGER-based and will be given a value of "1980" on any inserts) 
 and "MANAGER_NAME" (VARCHAR-based and will be given a value of "N/A" on any inserts).
 
@@ -395,8 +397,8 @@ Support for Views is described below.
 
 When you want to access data according to a View, you are required to provide a (persistable) class that will accept
 the values from the View when queried, and Meta-Data for the class that defines the View and how
-it maps onto the provided class. Let's take an example. We have a View SALEABLE_PRODUCT in our database 
-as follows, defined based on data in a PRODUCT table.
+it maps onto the provided class. Let's take an example. We have a View `SALEABLE_PRODUCT` in our database 
+as follows, defined based on data in a `PRODUCT` table.
 
 -----
 CREATE VIEW SALEABLE_PRODUCT (ID, NAME, PRICE, CURRENCY) AS
@@ -502,17 +504,17 @@ Hopefully that has given enough detail on how to create and access views from wi
 [[schema_rdbms_types]]
 == RDBMS : Datastore Types
 
-As we saw in the link:mapping.html#field_types[Types Guide] DataNucleus supports the persistence 
-of a large range of Java field types. With RDBMS datastores, we have the notion of tables/columns in 
-the datastore and so each Java type is mapped across to a column or a set of columns in a table. It 
-is important to understand this mapping when mapping to an existing schema for example. In RDBMS 
-datastores a java type is stored using JDBC types. DataNucleus supports the use of the vast majority of the available JDBC types.
+As we saw in the link:mapping.html#field_types[Types Guide] DataNucleus supports the persistence of a large range of Java field types. 
+With RDBMS datastores, we have the notion of tables/columns in the datastore and so each Java type is mapped across to a column or a set of columns in a table. 
+It is important to understand this mapping when mapping to an existing schema for example. 
+In RDBMS datastores a java type is stored using JDBC types. 
+DataNucleus supports the use of the vast majority of the available JDBC types.
 
 
 When persisting a Java type in general it is persisted into a single column. 
-For example a String will be persisted into a VARCHAR column by default. Some types (e.g Color) have more 
-information to store than we can conveniently persist into a single column and so use multiple 
-columns. Other types (e.g Collection) store their information in other ways, such as foreign keys.
+For example a String will be persisted into a VARCHAR column by default. 
+Some types (e.g Color) have more information to store than we can conveniently persist into a single column and so use multiple columns. 
+Other types (e.g Collection) store their information in other ways, such as foreign keys.
     
 image:../images/rdbms_types.png[]
 

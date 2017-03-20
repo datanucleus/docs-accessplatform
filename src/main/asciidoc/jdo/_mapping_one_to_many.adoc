@@ -324,7 +324,7 @@ or using XML metadata
 
 NOTE: The crucial part is the _mapped-by_ on the "1" side of the relationship. This tells the JDO implementation to look for a field called _account_ on the *Address* class.
 
-This will create 2 tables in the database, one for *Address* (including an _ACCOUNT_ID_ to link to the _ACCOUNT_ table), and one for *Account*.
+This will create 2 tables in the database, one for *Address* (including an _ACCOUNT_ID_ to link to the `ACCOUNT` table), and one for *Account*.
 Notice the subtle difference to this set-up to that of the *Join Table* relationship earlier.
 
 image:../images/relationship_1_N_bi_collection_fk_db.png[]
@@ -427,7 +427,7 @@ In the datastore the following is created
 
 image:../images/relationship_1_N_primitive_collection_db.png[]
 
-The ACCOUNT table is as before, but this time we only have the "join table". In our MetaData we used the <element> tag to specify the column name to use for the actual address String.
+The `ACCOUNT` table is as before, but this time we only have the "join table". In our MetaData we used the <element> tag to specify the column name to use for the actual address String.
 
 NOTE: the column ADPT_PK_IDX is added by DataNucleus so that duplicates can be stored. You can control the name of this column by adding an <order> element and specifying the 
 column name for the order column (within <field>).
@@ -567,7 +567,7 @@ or using XML metadata
 </package>
 -----
 
-So we have defined the same join table for the 2 collections "ACCOUNT_ADDRESSES", and the same columns in the join table, meaning that we will 
+So we have defined the same join table for the 2 collections `ACCOUNT_ADDRESSES`, and the same columns in the join table, meaning that we will 
 be sharing the same join table to represent both relations. The important step is then to define the 3 DataNucleus _extension_ tags. 
 These define a column in the join table (the same for both relations), and the value that will be populated when a row of that collection is
 inserted into the join table. In our case, all "home" addresses will have a value of "home" inserted into this column, and all "work" addresses will have "work" inserted. 
@@ -754,7 +754,7 @@ If you wish to fully define the schema table and column names etc, follow these 
 * To specify the foreign-key between join table and key table, specify <foreign-key> below the <key> element.
 * To specify the foreign-key between join table and value table, specify <foreign-key> below the <value> element.
 
-Which changes the names of the join table to ACCOUNT_ADDRESS from ACCOUNT_ADDRESSES and the names of the columns in the join table from 
+Which changes the names of the join table to `ACCOUNT_ADDRESS` from `ACCOUNT_ADDRESSES` and the names of the columns in the join table from 
 ACCOUNT_ID_OID to ACCOUNT_ID, from NAME_ID_KID to NAME_ID, and from ADDRESS_ID_VID to ADDRESS_ID.
 
 
@@ -1030,7 +1030,7 @@ There will be 2 tables, one for *Address*, and one for *Account*. Note that we n
 
 image:../images/relationship_1_N_map_key_in_value_db.png[]
 
-If you wish to specify the names of the columns used in the schema for the foreign key in the *Address* table you should use the _value_ element within the field of the map.
+If you wish to specify the names of the columns used in the schema for the foreign key in the `ADDRESS` table you should use the _value_ element within the field of the map.
 
 In terms of operation within your classes of assigning the objects in the relationship. You have to take your *Account* object and add the *Address* to the *Account* map field 
 since the *Address* knows nothing about the *Account*. Also be aware that each *Address* object can have only one owner, since it has a single foreign key to the *Account*. 
@@ -1085,7 +1085,7 @@ So we define our metadata in a similar way
 -----
 
 This will create 2 tables in the datastore. One for *Account*, and one for *Address*. 
-The table for *Address* will contain the key field as well as an index to the *Account* record (notated by the _mapped-by_ tag).
+The `ADDRESS` table will contain the key field as well as an index to the *Account* record (notated by the _mapped-by_ tag).
 
 image:../images/relationship_1_N_map_key_in_value_db.png[]
 
@@ -1143,7 +1143,7 @@ public class Account
 
 There will be 2 tables, one for *Address*, and one for *Account*. The key thing here is that we have specified a "mapped-by" on the "value" element.
 
-If you wish to specify the names of the columns used in the schema for the foreign key in the *Address* table you should use the _key_ element within the field of the map.
+If you wish to specify the names of the columns used in the schema for the foreign key in the `ADDRESS` table you should use the _key_ element within the field of the map.
 
 image:../images/relationship_1_N_map_value_in_key_db.png[]
 

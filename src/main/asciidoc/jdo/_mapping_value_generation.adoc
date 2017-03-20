@@ -417,44 +417,6 @@ To configure an *application identity* class to use this generation method you s
 -----
 
 
-[[valuegen_max]]
-== max
-
-image:../images/nucleus_extension.png[]
-
-NOTE: Applicable to RDBMS.
-
-This method is database neutral and uses the _"select max(column) from table" + 1_ strategy to create unique ids. 
-The unique identifier value returned from the database is translated to a java type: java.lang.Long. 
-
-WARNING: This is not recommended since it makes a DB call for every record to be inserted and hence is inefficient.
-Each DB call will run a scan in all table contents causing contention and locks in the table. 
-We instead recommend the use of either Sequence, Identity or UUID based value generators - which you use would depend on your datastore.
-
-
-For a class using *datastore identity* you need to add metadata something like the following
-
-[source,xml]
------
-<class name="myclass">
-    <datastore-identity strategy="max"/>
-    ...
-</class>
------
-
-To configure an *application identity* class to use this generation method you simply add this to the class' JDO Meta-Data.
-
-[source,xml]
------
-<class name="myclass">
-    <field name="myfield" primary-key="true" value-strategy="max"/>
-    ...
-</class>
------
-
-This value generator will *NOT* guarantee to generate values unique across different JVMs.
-This is because it will select the "max+1" and before creating the record another thread may come in and insert one.
-
 
 
 [[valuegen_uuid]]
@@ -464,7 +426,7 @@ image:../images/nucleus_extension.png[]
 
 NOTE: Applicable to all datastores.
 
-This generator uses the JRE UUID class to generate String values. The values are 128-bit (36 character) of the form "0e400c2c-b3a0-4786-a0c6-f2607bf643eb"
+This generator uses the JRE UUID class to generate String values. The values are 128-bit (36 character) of the form _0e400c2c-b3a0-4786-a0c6-f2607bf643eb_.
 
 This generator can be used in concurrent applications. It is especially useful in situations where large numbers of transactions within a certain amount of time have to be made, and the 
 additional overhead of synchronizing the concurrent creation of unique identifiers through the database would break performance limits.
@@ -557,7 +519,7 @@ NOTE: Applicable to all datastores.
 
 This generator uses a Java implementation of DCE UUIDs to create unique identifiers without the overhead 
 of additional database transactions or even an open database connection. The identifiers are Strings of 
-the form "LLLLLLLL-MMMM-HHHH-CCCC-NNNNNNNNNNNN" where 'L', 'M', 'H', 'C' and 'N' are the DCE UUID fields
+the form _LLLLLLLL-MMMM-HHHH-CCCC-NNNNNNNNNNNN_ where 'L', 'M', 'H', 'C' and 'N' are the DCE UUID fields
 named time low, time mid, time high, clock sequence and node.
 
 This generator can be used in concurrent applications. It is especially useful in situations where large 
@@ -645,6 +607,45 @@ To configure an *application identity* class to use this generation method you s
     ...
 </class>
 -----
+
+
+[[valuegen_max]]
+== max
+
+image:../images/nucleus_extension.png[]
+
+NOTE: Applicable to RDBMS.
+
+This method is database neutral and uses the _"select max(column) from table" + 1_ strategy to create unique ids. 
+The unique identifier value returned from the database is translated to a java type: java.lang.Long. 
+
+WARNING: This is not recommended since it makes a DB call for every record to be inserted and hence is inefficient.
+Each DB call will run a scan in all table contents causing contention and locks in the table. 
+We instead recommend the use of either Sequence, Identity or UUID based value generators - which you use would depend on your datastore.
+
+
+For a class using *datastore identity* you need to add metadata something like the following
+
+[source,xml]
+-----
+<class name="myclass">
+    <datastore-identity strategy="max"/>
+    ...
+</class>
+-----
+
+To configure an *application identity* class to use this generation method you simply add this to the class' JDO Meta-Data.
+
+[source,xml]
+-----
+<class name="myclass">
+    <field name="myfield" primary-key="true" value-strategy="max"/>
+    ...
+</class>
+-----
+
+This value generator will *NOT* guarantee to generate values unique across different JVMs.
+This is because it will select the "max+1" and before creating the record another thread may come in and insert one.
 
 
 == Standalone ID generation

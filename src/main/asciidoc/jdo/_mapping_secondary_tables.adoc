@@ -33,7 +33,7 @@ public class Printer
 }
 -----
 
-Now we have a database schema that has 2 tables (PRINTER and PRINTER_TONER) in which to store objects of this class. 
+Now we have a database schema that has 2 tables (`PRINTER` and `PRINTER_TONER`) in which to store objects of this class. 
 So we need to tell DataNucleus to perform this mapping. So we define the MetaData for the *Printer* class like this
 
 [source,xml]
@@ -49,11 +49,11 @@ So we need to tell DataNucleus to perform this mapping. So we define the MetaDat
 </class>
 -----
 
-So here we have defined that objects of the *Printer* class will be stored in the primary table PRINTER. 
-In addition we have defined that some fields are stored in the table PRINTER_TONER. This is achieved by way of
+So here we have defined that objects of the *Printer* class will be stored in the primary table `PRINTER`. 
+In addition we have defined that some fields are stored in the table `PRINTER_TONER`. This is achieved by way of
 
-* We will store _tonerModel_ and _tonerLifetime_ in the table PRINTER_TONER. This is achieved by using <field *table="PRINTER_TONER"*>
-* The table PRINTER_TONER will use a primary key column called PRINTER_REFID. This is achieved by using <join table="PRINTER_TONER" column="PRINTER_REFID"/>
+* We will store _tonerModel_ and _tonerLifetime_ in the table `PRINTER_TONER`. This is achieved by using <field *table="PRINTER_TONER"*>
+* The table `PRINTER_TONER` will use a primary key column called PRINTER_REFID. This is achieved by using <join table="PRINTER_TONER" column="PRINTER_REFID"/>
 
 You could equally specify this using annotations
 
@@ -81,7 +81,7 @@ public class Printer
 This results in the following database tables :-
 image:../images/secondarytables_db.png[]
 
-So we now have our primary and secondary database tables. The primary key of the PRINTER_TONER table serves as a foreign key to the primary class. 
+So we now have our primary and secondary database tables. The primary key of the `PRINTER_TONER` table serves as a foreign key to the primary class. 
 Whenever we persist a *Printer* object a row will be inserted into *both* of these tables.
 
 

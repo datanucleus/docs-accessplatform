@@ -69,7 +69,7 @@ or using XML metadata
 
 This contrasts with JPA mapping where you have to _explicitly_ specify that it is a one-to-one relation!
 
-This will create 2 tables in the database, one for *User* (with name _USER_), and one for *Account* (with name _ACCOUNT_ and a column _USER_ID_), as shown below.
+This will create 2 tables in the database, `USER` (for class *User*), and `ACCOUNT` (for class *Account*, with column USER_ID), as shown below.
 
 image:../images/relationship_1_1_uni_db.png[]
 
@@ -150,12 +150,12 @@ or using XML metadata
 
 The difference is that we added _mapped-by_ to the field of *User*. This represents the bidirectionality.
 
-This will create 2 tables in the database, one for *User* (with name _USER_), and one for *Account* (with name _ACCOUNT_). 
-With RDBMS the _ACCOUNT_ table will have a column _USER_ID_ (since RDBMS will place the FK on the side without the "mapped-by"). Like this
+This will create 2 tables in the database, `USER` (for class *User*), and `ACCOUNT` (for class *Account*). 
+With RDBMS the `ACCOUNT` table will have a column _USER_ID_ (since RDBMS will place the FK on the side without the "mapped-by"). Like this
 
 image:../images/relationship_1_1_bi_db_singlefk.png[]
 
-With non-RDBMS datastores both tables will have a column containing the "id" of the related object, that is _USER_ will have an ACCOUNT column, and _ACCOUNT_ will have a USER_ID column.
+With non-RDBMS datastores both tables will have a column containing the "id" of the related object, that is `USER` will have an ACCOUNT column, and `ACCOUNT` will have a USER_ID column.
 
 NOTE: When forming the relation please make sure that *you set the relation at BOTH sides* since DataNucleus would have no way of knowing which end is correct if you only set one end.
 

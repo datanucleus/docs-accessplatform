@@ -76,7 +76,7 @@ or using XML metadata
 </package>
 -----
 
-This will create 2 tables in the database, one for *User* (with name _USER_), and one for *Account* (with name _ACCOUNT_ and a column _USER_ID_), as shown below.
+This will create 2 tables in the database, `USER` (for class *User*), and `ACCOUNT` (for class *Account*, with column _USER_ID_), as shown below.
 
 image:../images/relationship_1_1_uni_db.png[]
 
@@ -136,7 +136,7 @@ or with XML metadata
 </package>
 -----
 
-For RDBMS this will create 3 tables in the database, one for *User* (with name _USER_), one for *Account* (with name _ACCOUNT_), and a join table (with name _ACCOUNT_USER_) as shown below.
+For RDBMS this will create 3 tables in the database, `USER` (for class *User*), `ACCOUNT` (for class *Account*), and a join table `ACCOUNT_USER` as shown below.
 
 image:../images/relationship_N_1_uni_db.png[]
 
@@ -144,7 +144,7 @@ If you wish to specify the names of the database tables and columns for these cl
 (on the *column* element) and the attribute _name_ (on the *column* attribute under join
 
 
-NOTE: In the case of non-RDBMS datastores there is no join-table, simply a "column" in the _ACCOUNT_ "table", storing the "id" of the related object
+NOTE: In the case of non-RDBMS datastores there is no join-table, simply a "column" in the `ACCOUNT` table, storing the "id" of the related object
 
 
 
