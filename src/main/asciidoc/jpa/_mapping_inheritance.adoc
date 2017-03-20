@@ -76,7 +76,7 @@ NOTE: When using SINGLE-TABLE DataNucleus will always use a discriminator (defau
 
 In our example, lets ignore the *AbstractProduct* class for a moment and assume that *Product* is the base class (with the "id"). 
 We have no real interest in having separate tables for the *Book* and *CompactDisc* classes 
-and want everything stored in a single table _PRODUCT_. We change our MetaData as follows
+and want everything stored in a single table `PRODUCT`. We change our MetaData as follows
 
 [source,xml]
 -----
@@ -128,9 +128,9 @@ public class TravelGuide {...}
 public class CompactDisc {...}
 -----
  
-This change of use of the *inheritance* element has the effect of using the PRODUCT table for all classes, containing the fields 
+This change of use of the *inheritance* element has the effect of using the `PRODUCT` table for all classes, containing the fields 
 of *Product*, *Book*, *CompactDisc*, and *TravelGuide*. You will also note that we used a /discriminator-column_ element for 
-the *Product* class. The specification above will result in an extra column (called PRODUCT_TYPE) being added to the PRODUCT table, 
+the *Product* class. The specification above will result in an extra column (called PRODUCT_TYPE) being added to the `PRODUCT` table, 
 and containing the "discriminator-value" of the object stored. 
 So for a Book it will have "BOOK" in that column for example. This column is used in discriminating which row in the database is of which type. 
 The final thing to note is that in our classes *Book* and *CompactDisc* we have a field that is identically named. 
@@ -139,7 +139,7 @@ and would have had identical names otherwise - this gets around the problem.
 
 image:../images/inheritance_db_superclasstable.png[]
 
-In the above example, when we insert a TravelGuide object into the datastore, a row will be inserted into the PRODUCT table only.
+In the above example, when we insert a TravelGuide object into the datastore, a row will be inserted into the `PRODUCT` table only.
 
     
 [[inheritance_joined]]
@@ -149,7 +149,7 @@ NOTE: Applicable to RDBMS
 
 "JOINED" strategy means that each entity in the inheritance hierarchy has its own table and that the table
 of each class only contains columns for that class. Inherited fields are persisted into the tables of the superclass(es). 
-This corresponds to JDO2s "new-table" (for all classes in the inheritance hierarchy).
+This corresponds to JDOs "new-table" (for all classes in the inheritance hierarchy).
 This has the advantage of being the most normalised data definition. 
 It also has the disadvantage of being slower in performance since multiple tables will need to be accessed to 
 retrieve an object of a sub-type. Let's try an example using the simplest to understand strategy *JOINED*. 
@@ -190,12 +190,12 @@ or using annotations
 public class Product {...}
 -----
 
-So we will have 5 tables - ABSTRACTPRODUCT, PRODUCT, BOOK, COMPACTDISC, and TRAVELGUIDE. 
+So we will have 5 tables - `ABSTRACTPRODUCT`, `PRODUCT`, `BOOK`, `COMPACTDISC`, and `TRAVELGUIDE`. 
 They each contain just the fields for that class (and not any inherited fields, except the identity to join with).
 
 image:../images/inheritance_db_newtable.png[]
 
-In the above example, when we insert a TravelGuide object into the datastore, a row will be inserted into ABSTRACTPRODUCT, PRODUCT, BOOK, and TRAVELGUIDE.
+In the above example, when we insert a TravelGuide object into the datastore, a row will be inserted into `ABSTRACTPRODUCT`, `PRODUCT`, `BOOK`, and `TRAVELGUIDE`.
 
 
 [[inheritance_tableperclass]]
@@ -243,8 +243,8 @@ public class Product {...}
 This then implies a datastore schema as follows
 image:../images/inheritance_db_completetable.png[]
 
-So any object of explicit type *Book* is persisted into the table BOOK. 
-Similarly any *TravelGuide* is persisted into the table TRAVELGUIDE, etc.
+So any object of explicit type *Book* is persisted into the table `BOOK`. 
+Similarly any *TravelGuide* is persisted into the table `TRAVELGUIDE`, etc.
 In addition if any class in the inheritance tree is abstract then it won't have a table since there cannot be any instances of that type.
 *DataNucleus currently has limitations when using a class using this inheritance as the element of a collection.*
 

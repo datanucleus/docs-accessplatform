@@ -76,10 +76,10 @@ or using XML metadata
 </entity-mappings>
 -----
 
-This will create 2 tables in the database, one for *User* (with name _USER_), and one for *Account* (with name _ACCOUNT_), 
-and a foreign-key in the _ACCOUNT_ table, just like for the case of a link:mapping.html#one_one_uni[@OneToOne relation].
+This will create 2 tables in the database, `USER` (for class *User*), and `ACCOUNT` (for class *Account*), 
+and a foreign-key in the `ACCOUNT` table, just like for the case of a link:mapping.html#one_one_uni[@OneToOne relation].
 
-Note that in the case of non-RDBMS datastores there is simply a "column" in the _ACCOUNT_ "table", storing the "id" of the related object*
+Note that in the case of non-RDBMS datastores there is simply a "column" in the `ACCOUNT` "table", storing the "id" of the related object*
 
 
 [[many_one_join]]
@@ -150,11 +150,11 @@ or using XML metadata
 
 alternatively using annotations
 
-This will create 3 tables in the database, one for *User* (with name _USER_), one for *Account* (with name _ACCOUNT_), and a join table (with name _ACCOUNT_USER_), as shown below.
+This will create 3 tables in the database, `USER` (for class *User*), `ACCOUNT` (for class *Account*), and a join table `ACCOUNT_USER`, as shown below.
 
 image:../images/relationship_N_1_uni_db.png[]
 
-*Note that in the case of non-RDBMS datastores there is no join-table, simply a "column" in the _ACCOUNT_ "table", storing the "id" of the related object*
+*Note that in the case of non-RDBMS datastores there is no join-table, simply a "column" in the `ACCOUNT` "table", storing the "id" of the related object*
 
 
 == Bidirectional

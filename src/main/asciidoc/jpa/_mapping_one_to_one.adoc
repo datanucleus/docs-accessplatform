@@ -82,7 +82,7 @@ or using XML metadata
 -----
 
 
-This will create 2 tables in the database, one for *User* (with name _USER_), and one for *Account* (with name _ACCOUNT_ and a column _USER_ID_), as shown below.
+This will create 2 tables in the database, `USER` (for class *User*), and `ACCOUNT` (for class *Account*, with a column _USER_ID_), as shown below.
 
 image:../images/relationship_1_1_uni_db.png[]
 
@@ -175,12 +175,12 @@ or using XML metadata
 
 The difference is that we added _mapped-by_ to the field of *User* making it bidirectional (and putting the FK at the other side for RDBMS)
 
-This will create 2 tables in the database, one for *User* (with name _USER_), and one for *Account* (with name _ACCOUNT_). For RDBMS it includes a _USER_ID_
-column in the _ACCOUNT_ table, like this
+This will create 2 tables in the database, `USER` (for class *User*), and `ACCOUNT` (for class *Account*). For RDBMS it includes a _USER_ID_
+column in the `ACCOUNT` table, like this
 
 image:../images/relationship_1_1_bi_db_singlefk.png[]
 
-For other types of datastore it will have a _USER_ID_ column in the _ACCOUNT_ table and a _ACCOUNT_ column in the _USER_ table.
+For other types of datastore it will have a _USER_ID_ column in the `ACCOUNT` table and a _ACCOUNT_ column in the `USER` table.
 
 NOTE: When forming the relation please make sure that *you set the relation at BOTH sides* since DataNucleus would have no way of knowing which end is correct if you only set one end.
 

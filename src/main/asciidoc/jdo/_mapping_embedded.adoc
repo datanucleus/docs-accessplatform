@@ -108,7 +108,7 @@ The traditional (default) way of persisting these classes would be to have a tab
 
 image:../images/embedded_pc_traditional_db.png[]
 
-However we decide that we want to persist *Computer* objects into a table called COMPUTER and we also want to persist the PC cards into the _same table_. 
+However we decide that we want to persist *Computer* objects into a table `COMPUTER` and we also want to persist the PC cards into the _same table_. 
 We define our MetaData like this
 [source,java]
 -----
@@ -163,7 +163,7 @@ or using XML metadata
 </jdo>
 -----
 
-So here we will end up with a TABLE called "COMPUTER" with columns "COMPUTER_ID", "OS_NAME", "GRAPHICS_MANUFACTURER", "GRAPHICS_TYPE", "SOUND_MANUFACTURER", "SOUND_TYPE". 
+So here we will end up with a table `COMPUTER` with columns "COMPUTER_ID", "OS_NAME", "GRAPHICS_MANUFACTURER", "GRAPHICS_TYPE", "SOUND_MANUFACTURER", "SOUND_TYPE". 
 If we call _makePersistent()_ on any objects of type *Computer*, they will be persisted into this table.
 
 image:../images/embedded_pc_embedded_db.png[]
@@ -225,7 +225,7 @@ public class Connector
 }
 -----
 
-Well we want to store all of these objects into the same record in the COMPUTER table, so we define our XML metadata like this
+Well we want to store all of these objects into the same record in the `COMPUTER` table, so we define our XML metadata like this
 
 [source,xml]
 -----
@@ -269,7 +269,7 @@ Well we want to store all of these objects into the same record in the COMPUTER 
 -----
 
 So we simply nest the embedded definition of the *Connector* objects within the embedded definition of the *ComputerCard* definitions for *Computer*. 
-JDO supports this to as many levels as you require! The *Connector* objects will be persisted into the GRAPHICS_CONNECTOR_TYPE, and SOUND_CONNECTOR_TYPE columns in the COMPUTER table.
+JDO supports this to as many levels as you require! The *Connector* objects will be persisted into the GRAPHICS_CONNECTOR_TYPE, and SOUND_CONNECTOR_TYPE columns in the `COMPUTER` table.
 
 image:../images/embedded_pc_nested_embedded_db.png[]
 
@@ -379,8 +379,8 @@ or using XML metadata
 </jdo>
 -----
 
-So here we will end up with a table called "NETWORK" with columns "NETWORK_ID", and "NAME", and a table called "NETWORK_DEVICES" with columns 
-"NETWORK_ID", "ADPT_PK_IDX", "DEVICE_NAME", "DEVICE_IP_ADDR". When we persist a *Network* object, any devices are persisted into the NETWORK_DEVICES table.
+So here we will end up with a table `NETWORK` with columns "NETWORK_ID", and "NAME", and a table `NETWORK_DEVICES` with columns 
+"NETWORK_ID", "ADPT_PK_IDX", "DEVICE_NAME", "DEVICE_IP_ADDR". When we persist a *Network* object, any devices are persisted into the `NETWORK_DEVICES` table.
 
 image:../images/embedded_collection_embedded_db.png[]
 
@@ -528,9 +528,9 @@ or using XML metadata
 </jdo>
 -----
 
-So here we will end up with a table called "FILM_LIBRARY" with columns "FILM_LIBRARY_ID", and "OWNER", 
-and a table called "FILM_LIBRARY_FILMS" with columns "FILM_LIBRARY_ID", "FILM_ALIAS", "FILM_NAME", "FILM_DIRECTOR".
-When we persist a *FilmLibrary* object, any films are persisted into the FILM_LIBRARY_FILMS table.
+So here we will end up with a table `FILM_LIBRARY` with columns "FILM_LIBRARY_ID", and "OWNER", 
+and a table `FILM_LIBRARY_FILMS` with columns "FILM_LIBRARY_ID", "FILM_ALIAS", "FILM_NAME", "FILM_DIRECTOR".
+When we persist a *FilmLibrary* object, any films are persisted into the `FILM_LIBRARY_FILMS` table.
 
 image:../images/embedded_map_embedded_db.png[]
 

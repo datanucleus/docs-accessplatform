@@ -340,7 +340,7 @@ or alternatively using XML metadata
 NOTE: The crucial part is the _mapped-by_ attribute of the field on the "1" side of the relationship. This tells the JPA implementation to look for a field 
 called _account_ on the *Address* class.
 
-This will create 2 tables in the database, one for *Address* (including an _ACCOUNT_ID_ to link to the _ACCOUNT_ table), and one for *Account*. 
+This will create 2 tables in the database, one for *Address* (including an _ACCOUNT_ID_ to link to the `ACCOUNT` table), and one for *Account*. 
 Notice the subtle difference to this set-up to that of the *Join Table* relationship earlier.
 
 image:../images/relationship_1_N_bi_set_fk_db.png[]
@@ -436,7 +436,7 @@ In the datastore the following is created
 
 image:../images/relationship_1_N_primitive_collection_db.png[]
 
-The ACCOUNT table is as before, but this time we only have the "join table". Use @Column on the field/method to define the column details of the element in the join table.
+The `ACCOUNT` table is as before, but this time we only have the "join table". Use @Column on the field/method to define the column details of the element in the join table.
 
 
 [[one_many_nonpc_converter]]
@@ -578,7 +578,7 @@ or using XML metadata
 </entity-mappings>
 -----
 
-So we have defined the same join table for the 2 collections "ACCOUNT_ADDRESSES", and the same columns in the join table, meaning that we will be 
+So we have defined the same join table for the 2 collections `ACCOUNT_ADDRESSES`, and the same columns in the join table, meaning that we will be 
 sharing the same join table to represent both relations. The important step is then to define the 3 DataNucleus _extension_ tags. 
 These define a column in the join table (the same for both relations), and the value that will be populated when a row of that collection is
 inserted into the join table. In our case, all "home" addresses will have a value of "home" inserted into this column, and all "work" addresses will have "work" inserted. 
@@ -663,7 +663,7 @@ or using XML metadata
 </entity-mappings>
 -----
 
-So we have defined the same foreign key for the 2 collections "ACCOUNT_ID_OID", The important step is then to define the 2 DataNucleus _extension_ tags (@SharedRelation annotation). 
+We have defined the same foreign key for the 2 collections "ACCOUNT_ID_OID", The important step is then to define the 2 DataNucleus _extension_ tags (@SharedRelation annotation). 
 These define a column in the element table (the same for both relations), and the value that will be populated when a row of that collection is inserted into the element table. 
 In our case, all "home" addresses will have a value of "home" inserted into this column, and all "work" addresses will have "work" inserted. 
 This means we can now identify easily which element table entry represents which relation field.
@@ -1019,7 +1019,7 @@ public class Address
 
 
 
-With these classes we want to store a foreign-key in the value table (ADDRESS), and we want to use the "alias" field in the Address class as the key to the map. 
+With these classes we want to store a foreign-key in the value table `ADDRESS`, and we want to use the "alias" field in the Address class as the key to the map. 
 If you define the Meta-Data for these classes as follows
 
 -----
