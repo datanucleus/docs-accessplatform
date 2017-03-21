@@ -21,6 +21,10 @@ This means that you can have superclass(es) without any identity defined but usi
 class is the first persistable class which has the identity.
 
 
+NOTE: The JDO _identity_ is not the same as the type of the field(s) marked as the primary key. The _identity_ will always have an identity class name. If you specify the object-id class
+then it will be this, otherwise will use a built-in type.
+
+
 [[datastore_identity]]
 == Datastore Identity
 
