@@ -276,10 +276,10 @@ public class CompactDisc {...}
 
 This change of use of the *inheritance* element has the effect of using the `PRODUCT` table for all classes, containing the fields of *Product*, *Book*, *CompactDisc*, and *TravelGuide*.
 You will also note that we used a _discriminator_ element for the *Product* class. 
-The specification above will result in an extra column (called PRODUCT_TYPE) being added to the `PRODUCT` table, and containing the class name of the object stored. 
+The specification above will result in an extra column (called `PRODUCT_TYPE`) being added to the `PRODUCT` table, and containing the class name of the object stored. 
 So for a Book it will have "com.mydomain.samples.store.Book" in that column. This column is used in discriminating which row in the database is of which type. 
 The final thing to note is that in our classes *Book* and *CompactDisc* we have a field that is identically named. 
-With *CompactDisc* we have defined that its column will be called DISCTITLE since both of these fields will be persisted into the same table and would have had 
+With *CompactDisc* we have defined that its column will be called `DISCTITLE` since both of these fields will be persisted into the same table and would have had 
 identical names otherwise - this gets around the problem.
 
 image:../images/inheritance_db_superclasstable.png[]

@@ -133,7 +133,7 @@ We define our MetaData like this
 </embeddable>
 -----
 
-So here we will end up with a table called `COMPUTER` with columns "COMPUTER_ID", "OS_NAME", "GRAPHICS_MANUFACTURER", "GRAPHICS_TYPE", "SOUND_MANUFACTURER", "SOUND_TYPE". 
+So here we will end up with a table called `COMPUTER` with columns `COMPUTER_ID`, `OS_NAME`, `GRAPHICS_MANUFACTURER`, `GRAPHICS_TYPE`, `SOUND_MANUFACTURER`, `SOUND_TYPE`. 
 If we call persist() on any objects of type *Computer*, they will be persisted into this table.
 
 image:../images/embedded_pc_embedded_db.png[]
@@ -247,7 +247,7 @@ We want to store all of these objects into the same record in the `COMPUTER` tab
 -----
 
 So we simply nest the embedded definition of the *Connector* objects within the embedded definition of the *ComputerCard* definitions for *Computer*. 
-JPA supports this to as many levels as you require! The *Connector* objects will be persisted into the GRAPHICS_CONNECTOR_TYPE, and SOUND_CONNECTOR_TYPE columns in the `COMPUTER` table.
+JPA supports this to as many levels as you require! The *Connector* objects will be persisted into the `GRAPHICS_CONNECTOR_TYPE`, and `SOUND_CONNECTOR_TYPE` columns in the `COMPUTER` table.
 
 image:../images/embedded_pc_nested_embedded_db.png[]
 
@@ -336,8 +336,8 @@ since they are only used by the network itself. We define our MetaData like this
 </embeddable>
 -----
 
-So here we will end up with a table `NETWORK` with columns "NETWORK_ID", and "NAME", and a table `NETWORK_DEVICES` with columns 
-"NETWORK_ID", "ADPT_PK_IDX", "DEVICE_NAME", "DEVICE_IP_ADDR". When we persist a *Network* object, any devices are persisted into the NETWORK_DEVICES table.
+So here we will end up with a table `NETWORK` with columns `NETWORK_ID`, and `NAME`, and a table `NETWORK_DEVICES` with columns 
+`NETWORK_ID`, `ADPT_PK_IDX`, `DEVICE_NAME`, `DEVICE_IP_ADDR`. When we persist a *Network* object, any devices are persisted into the `NETWORK_DEVICES` table.
 
 image:../images/embedded_collection_embedded_db.png[]
 
@@ -416,8 +416,8 @@ public class Film
 }
 -----
 
-So here we will end up with a table `FILM_LIBRARY` with columns "FILM_LIBRARY_ID", and "OWNER", and a table `FILM_LIBRARY_FILMS` 
-with columns "FILM_LIBRARY_ID", "FILM_ALIAS", "FILM_NAME", "FILM_DIRECTOR". When we persist a *FilmLibrary* object, any films are persisted into the `FILM_LIBRARY_FILMS` table.
+So here we will end up with a table `FILM_LIBRARY` with columns `FILM_LIBRARY_ID`, and `OWNER`, and a table `FILM_LIBRARY_FILMS` 
+with columns `FILM_LIBRARY_ID`, `FILM_ALIAS`, `FILM_NAME`, `FILM_DIRECTOR`. When we persist a *FilmLibrary* object, any films are persisted into the `FILM_LIBRARY_FILMS` table.
 
 image:../images/embedded_map_embedded_db.png[]
 

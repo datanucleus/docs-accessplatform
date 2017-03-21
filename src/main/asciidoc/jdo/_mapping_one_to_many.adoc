@@ -126,7 +126,7 @@ If you wish to fully define the schema table and column names etc, follow these 
 * If you wish to share the join table with another relation then use the link:#one_many_shared_join[DataNucleus "shared join table" extension]
 * The join table will, by default, be given a primary key. If you want to omit this then you can turn it off using the 
 DataNucleus metadata extension "primary-key" (within <join>) set to false.
-* The column "ADPT_PK_IDX" is added by DataNucleus so that duplicates can be stored. You can control this by adding an <order> element and 
+* The column `ADPT_PK_IDX` is added by DataNucleus so that duplicates can be stored. You can control this by adding an <order> element and 
 specifying the column name for the order column (within <field>).
 * If you want the set to include nulls, you can turn on this behaviour by adding the DataNucleus extension metadata "allow-nulls" to the <field> set to true
 
@@ -271,7 +271,7 @@ If you wish to fully define the schema table and column names etc, follow these 
 * To specify the foreign-key between join table and element table, specify <foreign-key> below either the <field> element or the <element> element.
 * If you wish to share the join table with another relation then use the link:#one_many_shared_join[DataNucleus "shared join table" extension]
 * The join table will, by default, be given a primary key. If you want to omit this then you can turn it off using the DataNucleus metadata extension "primary-key" (within <join>) set to false.
-* The column "ADPT_PK_IDX" is added by DataNucleus so that duplicates can be stored. You can control this by adding an <order> element and 
+* The column `ADPT_PK_IDX` is added by DataNucleus so that duplicates can be stored. You can control this by adding an <order> element and 
 specifying the column name for the order column (within <field>).
 * When forming the relation please make sure that *you set the relation at BOTH sides* since DataNucleus would have no way of knowing which end is correct if you only set one end.
 * If you want the set to include nulls, you can turn on this behaviour by adding the extension metadata "allow-nulls" to the <field> set to true
@@ -429,7 +429,7 @@ image:../images/relationship_1_N_primitive_collection_db.png[]
 
 The `ACCOUNT` table is as before, but this time we only have the "join table". In our MetaData we used the <element> tag to specify the column name to use for the actual address String.
 
-NOTE: the column ADPT_PK_IDX is added by DataNucleus so that duplicates can be stored. You can control the name of this column by adding an <order> element and specifying the 
+NOTE: the column `ADPT_PK_IDX` is added by DataNucleus so that duplicates can be stored. You can control the name of this column by adding an <order> element and specifying the 
 column name for the order column (within <field>).
 
 
@@ -651,7 +651,7 @@ or using XML metadata
 -----
 
 
-So we have defined the same foreign key for the 2 collections "ACCOUNT_ID_OID", The important step is then to define the 2 DataNucleus _extension_ tags (@SharedRelation annotation). 
+So we have defined the same foreign key for the 2 collections `ACCOUNT_ID_OID`, The important step is then to define the 2 DataNucleus _extension_ tags (@SharedRelation annotation). 
 These define a column in the element table (the same for both relations), and the value that will be populated when a row of that collection is inserted into the element table. 
 In our case, all "home" addresses will have a value of "home" inserted into this column, and all "work" addresses will have "work" inserted. 
 This means we can now identify easily which element table entry represents which relation field.
@@ -726,7 +726,7 @@ This will create 4 tables in the datastore, one for *Account*, one for *Address*
 
 image:../images/relationship_1_N_uni_map_pc_pc_db.png[]
 
-If you want to configure the names of the columns in the "join" table you would use the <key> and <value> subelements of <field>, something like this
+If you want to configure the names of the columns in the "join" table you would use the <key> and <value> sub-elements of <field>, something like this
 
 [source,xml]
 -----
@@ -755,7 +755,7 @@ If you wish to fully define the schema table and column names etc, follow these 
 * To specify the foreign-key between join table and value table, specify <foreign-key> below the <value> element.
 
 Which changes the names of the join table to `ACCOUNT_ADDRESS` from `ACCOUNT_ADDRESSES` and the names of the columns in the join table from 
-ACCOUNT_ID_OID to ACCOUNT_ID, from NAME_ID_KID to NAME_ID, and from ADDRESS_ID_VID to ADDRESS_ID.
+`ACCOUNT_ID_OID` to `ACCOUNT_ID`, from `NAME_ID_KID` to `NAME_ID`, and from `ADDRESS_ID_VID` to `ADDRESS_ID`.
 
 
 [[one_many_map_join_simple_pc]]
@@ -811,8 +811,8 @@ image:../images/relationship_1_N_uni_map_simple_pc_db.png[]
 
 If you want to configure the names of the columns in the "join" table you would use the <key> and <value> subelements of <field> as shown above.
 
-Please note that the column ADPT_PK_IDX is added by DataNucleus when the column type of the key is not valid to be part of a primary key (with the RDBMS being used). 
-If the column type of your key is acceptable for use as part of a primary key then you will not have this "ADPT_PK_IDX" column.
+Please note that the column `ADPT_PK_IDX` is added by DataNucleus when the column type of the key is not valid to be part of a primary key (with the RDBMS being used). 
+If the column type of your key is acceptable for use as part of a primary key then you will not have this `ADPT_PK_IDX` column.
 
 
 
@@ -915,8 +915,8 @@ image:../images/relationship_1_N_uni_map_simple_simple_db.png[]
 
 If you want to configure the names of the columns in the "join" table you would use the <key> and <value> subelements of <field> as shown above.
 
-Please note that the column ADPT_PK_IDX is added by DataNucleus when the column type of the key is not valid to be part of a primary key (with the RDBMS being used). 
-If the column type of your key is acceptable for use as part of a primary key then you will not have this "ADPT_PK_IDX" column.
+Please note that the column `ADPT_PK_IDX` is added by DataNucleus when the column type of the key is not valid to be part of a primary key (with the RDBMS being used). 
+If the column type of your key is acceptable for use as part of a primary key then you will not have this `ADPT_PK_IDX` column.
 
 
 

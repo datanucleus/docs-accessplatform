@@ -44,7 +44,7 @@ public class Hotel
 }
 -----
       
-In our case we want to map this class to a table called `ESTABLISHMENT`, and has columns _NAME_, _DIRECTION_, _PHONE_ and _NUMBER_OF_ROOMS_ (amongst other things). 
+In our case we want to map this class to a table called `ESTABLISHMENT`, and has columns `NAME`, `DIRECTION`, `PHONE` and `NUMBER_OF_ROOMS` (amongst other things). 
 So we define our Meta-Data like this
 
 [source,xml]
@@ -153,8 +153,8 @@ public class MySubClass extends MyClass
 }
 -----
 
-So we will have a PK column "MY_PK_COLUMN" in the table `MYCLASS`, and a PK column "MYSUB_PK_COLUMN" in the table `MYSUBCLASS` 
-(and that corresponds to the "MY_PK_COLUMN" value in `MYCLASS`). We could also do
+So we will have a PK column `MY_PK_COLUMN` in the table `MYCLASS`, and a PK column `MYSUB_PK_COLUMN` in the table `MYSUBCLASS` 
+(and that corresponds to the `MY_PK_COLUMN` value in `MYCLASS`). We could also do
     
 [source,xml]
 -----
@@ -224,8 +224,8 @@ Obviously the table "MYSUBCLASS" will also need a PK column. Here's how we defin
 </class>
 -----
 
-So we will have a PK column "MY_PK_COLUMN" in the table `MYCLASS`, and a PK column "MYSUB_PK_COLUMN" in the table `MYSUBCLASS`
-(and that corresponds to the "MY_PK_COLUMN" value in `MYCLASS`). You can also use
+So we will have a PK column `MY_PK_COLUMN` in the table `MYCLASS`, and a PK column `MYSUB_PK_COLUMN` in the table `MYSUBCLASS`
+(and that corresponds to the `MY_PK_COLUMN` value in `MYCLASS`). You can also use
 
 [source,xml]
 -----
@@ -324,7 +324,7 @@ datastore definition with all JDO implementations) you do as follows
 </class>
 -----
 
-So we have defined TRANSFER_REF to use VARCHAR(255) column type, CURRENCY to use CHAR(3) column type, and AMOUNT to use
+So we have defined `TRANSFER_REF` to use VARCHAR(255) column type, `CURRENCY` to use CHAR(3) column type, and `AMOUNT` to use
 DECIMAL(10,2) column type. Please be aware that DataNucleus only supports persisting particular Java types to particular
 JDBC/SQL types. We have demonstrated above the _jdbc-type_ attribute, but there is also an _sql-type_ 
 attribute. This is to be used where you want to map to some specific SQL type (and will not be needed in the 
@@ -369,8 +369,9 @@ settings, but this way you allow DataNucleus to know about all information. So t
 -----
 
 So in this example our table `ESTABLISHMENT` has the columns associated with the specified fields
-and also has columns "YEAR_ESTABLISHED" (that is INTEGER-based and will be given a value of "1980" on any inserts) 
-and "MANAGER_NAME" (VARCHAR-based and will be given a value of "N/A" on any inserts).
+and also has columns `YEAR_ESTABLISHED` (that is INTEGER-based and will be given a value of "1980" on any inserts) 
+and `MANAGER_NAME` (VARCHAR-based and will be given a value of "N/A" on any inserts).
+
 
 
 [[schema_column_position]]

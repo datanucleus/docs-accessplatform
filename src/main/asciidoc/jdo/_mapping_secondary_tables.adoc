@@ -53,7 +53,7 @@ So here we have defined that objects of the *Printer* class will be stored in th
 In addition we have defined that some fields are stored in the table `PRINTER_TONER`. This is achieved by way of
 
 * We will store _tonerModel_ and _tonerLifetime_ in the table `PRINTER_TONER`. This is achieved by using <field *table="PRINTER_TONER"*>
-* The table `PRINTER_TONER` will use a primary key column called PRINTER_REFID. This is achieved by using <join table="PRINTER_TONER" column="PRINTER_REFID"/>
+* The table `PRINTER_TONER` will use a primary key column called `PRINTER_REFID`. This is achieved by using <join table="PRINTER_TONER" column="PRINTER_REFID"/>
 
 You could equally specify this using annotations
 
@@ -87,7 +87,7 @@ Whenever we persist a *Printer* object a row will be inserted into *both* of the
 
 == Specifying the primary key
 
-You saw above how we defined the column name that will be the primary key of the secondary table (the PRINTER_REFID column). 
+You saw above how we defined the column name that will be the primary key of the secondary table (the `PRINTER_REFID` column). 
 What we didn't show is how to specify the name of the primary key constraint to be generated. To do this you change the MetaData to
 
 [source,xml]

@@ -51,17 +51,17 @@ This is default for JDO persistence to non-RDBMS datastores.
 Using the example above, the rules in this _NamingFactory_ mean that, assuming that the user doesn't specify any <column> elements :-
 
 * _MyClass_ will be persisted into a table named `MYCLASS`
-* When using datastore identity *MYCLASS* will have a column called *MYCLASS_ID*
-* _MyClass.myField1_ will be persisted into a column called *MYFIELD1*
+* When using datastore identity `MYCLASS` will have a column called `MYCLASS_ID`
+* _MyClass.myField1_ will be persisted into a column called `MYFIELD1`
 * _MyElement_ will be persisted into a table named `MYELEMENT`
 * _MyClass.elements1_ will be persisted into a join table called `MYCLASS_ELEMENTS1`
-* *MYCLASS_ELEMENTS1* will have columns called *MYCLASS_ID_OID* (FK to owner table) and *MYELEMENT_ID_EID* (FK to element table)
-* *MYCLASS_ELEMENTS1* will have column names like *STRING_ELE*, *STRING_KEY*, *STRING_VAL* for non-PC elements/keys/values of collections/maps
-* *MyClass.elements2* will be persisted into a column *ELEMENTS2_MYCLASS_ID_OWN* or *ELEMENTS2_MYCLASS_ID_OID* (FK to owner) table
-* Any discriminator column will be called *DISCRIMINATOR*
-* Any index column in a List will be called *IDX*
-* Any adapter column added to a join table to form part of the primary key will be called *IDX*
-* Any version column for a table will be called *VERSION*
+* `MYCLASS_ELEMENTS1` will have columns called `MYCLASS_ID_OID` (FK to owner table) and `MYELEMENT_ID_EID` (FK to element table)
+* `MYCLASS_ELEMENTS1` will have column names like `STRING_ELE`, `STRING_KEY`, `STRING_VAL` for non-PC elements/keys/values of collections/maps
+* *MyClass.elements2* will be persisted into a column `ELEMENTS2_MYCLASS_ID_OWN` or `ELEMENTS2_MYCLASS_ID_OID` (FK to owner) table
+* Any discriminator column will be called `DISCRIMINATOR`
+* Any index column in a List will be called `IDX`
+* Any adapter column added to a join table to form part of the primary key will be called `IDX`
+* Any version column for a table will be called `VERSION`
 
 [[jpa]]
 == NamingFactory 'jpa'
@@ -70,16 +70,16 @@ The _NamingFactory_ "jpa" aims at providing a naming policy consistent with the 
 Using the same example above, the rules in this _NamingFactory_ mean that, assuming that the user doesn't specify any <column> elements :-
 
 * _MyClass_ will be persisted into a table named `MYCLASS`
-* When using datastore identity *MYCLASS* will have a column called *MYCLASS_ID*
-* _MyClass.myField1_ will be persisted into a column called *MYFIELD1*
+* When using datastore identity `MYCLASS` will have a column called `MYCLASS_ID`
+* _MyClass.myField1_ will be persisted into a column called `MYFIELD1`
 * _MyElement_ will be persisted into a table named `MYELEMENT`
 * _MyClass.elements1_ will be persisted into a join table called `MYCLASS_MYELEMENT`
-* *MYCLASS_ELEMENTS1* will have columns called *MYCLASS_MYCLASS_ID* (FK to owner table) and *ELEMENTS1_ELEMENT_ID* (FK to element table)
-* *MyClass.elements2* will be persisted into a column *ELEMENTS2_MYCLASS_ID* (FK to owner) table
-* Any discriminator column will be called *DTYPE*
-* Any index column in a List for field _MyClass.myField1_ will be called *MYFIELD1_ORDER*
-* Any adapter column added to a join table to form part of the primary key will be called *IDX*
-* Any version column for a table will be called *VERSION*
+* `MYCLASS_ELEMENTS1` will have columns called `MYCLASS_MYCLASS_ID` (FK to owner table) and `ELEMENTS1_ELEMENT_ID` (FK to element table)
+* *MyClass.elements2* will be persisted into a column `ELEMENTS2_MYCLASS_ID` (FK to owner) table
+* Any discriminator column will be called `DTYPE`
+* Any index column in a List for field _MyClass.myField1_ will be called `MYFIELD1_ORDER`
+* Any adapter column added to a join table to form part of the primary key will be called `IDX`
+* Any version column for a table will be called `VERSION`
 
 
 [[rdbms_datanucleus2]]
@@ -91,17 +91,17 @@ attempting to make the naming more concise and consistent (we retain "datanucleu
 Using the same example above, the rules in this _RDBMS IdentifierFactory_ mean that, assuming that the user doesnt specify any <column> elements :-
 
 * _MyClass_ will be persisted into a table named `MYCLASS`
-* When using datastore identity *MYCLASS* will have a column called *MYCLASS_ID*
-* _MyClass.myField1_ will be persisted into a column called *MYFIELD1*
+* When using datastore identity `MYCLASS` will have a column called `MYCLASS_ID`
+* _MyClass.myField1_ will be persisted into a column called `MYFIELD1`
 * _MyElement_ will be persisted into a table named `MYELEMENT`
 * _MyClass.elements1_ will be persisted into a join table called `MYCLASS_ELEMENTS1`
-* *MYCLASS_ELEMENTS1* will have columns called *MYCLASS_ID_OID* (FK to owner table) and *MYELEMENT_ID_EID* (FK to element table)
-* *MYCLASS_ELEMENTS1* will have column names like *STRING_ELE*, *STRING_KEY*, *STRING_VAL* for non-PC elements/keys/values of collections/maps
-* *MyClass.elements2* will be persisted into a column *ELEMENTS2_MYCLASS_ID_OWN* or *ELEMENTS2_MYCLASS_ID_OID* (FK to owner) table
-* Any discriminator column will be called *DISCRIMINATOR*
-* Any index column in a List will be called *IDX*
-* Any adapter column added to a join table to form part of the primary key will be called *IDX*
-* Any version column for a table will be called *VERSION*
+* `MYCLASS_ELEMENTS1` will have columns called `MYCLASS_ID_OID` (FK to owner table) and `MYELEMENT_ID_EID` (FK to element table)
+* `MYCLASS_ELEMENTS1` will have column names like `STRING_ELE`, `STRING_KEY`, `STRING_VAL` for non-PC elements/keys/values of collections/maps
+* *MyClass.elements2* will be persisted into a column `ELEMENTS2_MYCLASS_ID_OWN` or `ELEMENTS2_MYCLASS_ID_OID` (FK to owner) table
+* Any discriminator column will be called `DISCRIMINATOR`
+* Any index column in a List will be called `IDX`
+* Any adapter column added to a join table to form part of the primary key will be called `IDX`
+* Any version column for a table will be called `VERSION`
 
 
 [[rdbms_datanucleus1]]
@@ -112,17 +112,17 @@ This was the default in DataNucleus v1.x for JDO persistence and provided a reas
 Using the example above, the rules in this _RDBMS IdentifierFactory_ mean that, assuming that the user doesnt specify any <column> elements :-
 
 * _MyClass_ will be persisted into a table named `MYCLASS`
-* When using datastore identity *MYCLASS* will have a column called *MYCLASS_ID*
-* _MyClass.myField1_ will be persisted into a column called *MY_FIELD1*
+* When using datastore identity `MYCLASS` will have a column called `MYCLASS_ID`
+* _MyClass.myField1_ will be persisted into a column called `MY_FIELD1`
 * _MyElement_ will be persisted into a table named `MYELEMENT`
 * _MyClass.elements1_ will be persisted into a join table called `MYCLASS_ELEMENTS1`
-* *MYCLASS_ELEMENTS1* will have columns called *MYCLASS_ID_OID* (FK to owner table) and *MYELEMENT_ID_EID* (FK to element table)
-* *MYCLASS_ELEMENTS1* will have column names like *STRING_ELE*, *STRING_KEY*, *STRING_VAL* for non-PC elements/keys/values of collections/maps
-* *MyClass.elements2* will be persisted into a column *ELEMENTS2_MYCLASS_ID_OID* or *ELEMENTS2_ID_OID* (FK to owner) table
-* Any discriminator column will be called *DISCRIMINATOR*
-* Any index column in a List will be called *INTEGER_IDX*
-* Any adapter column added to a join table to form part of the primary key will be called *ADPT_PK_IDX*
-* Any version column for a table will be called *OPT_VERSION*
+* `MYCLASS_ELEMENTS1` will have columns called `MYCLASS_ID_OID` (FK to owner table) and `MYELEMENT_ID_EID` (FK to element table)
+* `MYCLASS_ELEMENTS1` will have column names like `STRING_ELE`, `STRING_KEY`, `STRING_VAL` for non-PC elements/keys/values of collections/maps
+* *MyClass.elements2* will be persisted into a column `ELEMENTS2_MYCLASS_ID_OID` or `ELEMENTS2_ID_OID` (FK to owner) table
+* Any discriminator column will be called `DISCRIMINATOR`
+* Any index column in a List will be called `INTEGER_IDX`
+* Any adapter column added to a join table to form part of the primary key will be called `ADPT_PK_IDX`
+* Any version column for a table will be called `OPT_VERSION`
 
 
 [[rdbms_jpa]]
@@ -133,16 +133,16 @@ The _RDBMS IdentifierFactory_ "jpa" aims at providing a naming policy consistent
 Using the same example above, the rules in this _RDBMS IdentifierFactory_ mean that, assuming that the user doesnt specify any <column> elements :-
 
 * _MyClass_ will be persisted into a table named `MYCLASS`
-* When using datastore identity *MYCLASS* will have a column called *MYCLASS_ID*
-* _MyClass.myField1_ will be persisted into a column called *MYFIELD1*
+* When using datastore identity `MYCLASS` will have a column called `MYCLASS_ID`
+* _MyClass.myField1_ will be persisted into a column called `MYFIELD1`
 * _MyElement_ will be persisted into a table named `MYELEMENT`
 * _MyClass.elements1_ will be persisted into a join table called `MYCLASS_MYELEMENT`
-* *MYCLASS_ELEMENTS1* will have columns called *MYCLASS_MYCLASS_ID* (FK to owner table) and *ELEMENTS1_ELEMENT_ID* (FK to element table)
-* *MyClass.elements2* will be persisted into a column *ELEMENTS2_MYCLASS_ID* (FK to owner) table
-* Any discriminator column will be called *DTYPE*
-* Any index column in a List for field _MyClass.myField1_ will be called *MYFIELD1_ORDER*
-* Any adapter column added to a join table to form part of the primary key will be called *IDX*
-* Any version column for a table will be called *VERSION*
+* `MYCLASS_ELEMENTS1` will have columns called `MYCLASS_MYCLASS_ID` (FK to owner table) and `ELEMENTS1_ELEMENT_ID` (FK to element table)
+* *MyClass.elements2* will be persisted into a column `ELEMENTS2_MYCLASS_ID` (FK to owner) table
+* Any discriminator column will be called `DTYPE`
+* Any index column in a List for field _MyClass.myField1_ will be called `MYFIELD1_ORDER`
+* Any adapter column added to a join table to form part of the primary key will be called `IDX`
+* Any version column for a table will be called `VERSION`
 
 
 [[rdbms_jpox]]

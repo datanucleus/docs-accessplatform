@@ -47,16 +47,16 @@ The _NamingFactory_ "jpa" aims at providing a naming policy consistent with the 
 Using the same example above, the rules in this _NamingFactory_ mean that, assuming that the user doesn't specify any <column> elements :-
 
 * _MyClass_ will be persisted into a table named `MYCLASS`
-* When using datastore identity *MYCLASS* will have a column called *MYCLASS_ID*
-* _MyClass.myField1_ will be persisted into a column called *MYFIELD1*
+* When using datastore identity `MYCLASS` will have a column called `MYCLASS_ID`
+* _MyClass.myField1_ will be persisted into a column called `MYFIELD1`
 * _MyElement_ will be persisted into a table named `MYELEMENT`
 * _MyClass.elements1_ will be persisted into a join table called `MYCLASS_MYELEMENT`
-* *MYCLASS_ELEMENTS1* will have columns called *MYCLASS_MYCLASS_ID* (FK to owner table) and *ELEMENTS1_ELEMENT_ID* (FK to element table)
-* *MyClass.elements2* will be persisted into a column *ELEMENTS2_MYCLASS_ID* (FK to owner) table
-* Any discriminator column will be called *DTYPE*
-* Any index column in a List for field _MyClass.myField1_ will be called *MYFIELD1_ORDER*
-* Any adapter column added to a join table to form part of the primary key will be called *IDX*
-* Any version column for a table will be called *VERSION*
+* `MYCLASS_ELEMENTS1` will have columns called `MYCLASS_MYCLASS_ID` (FK to owner table) and `ELEMENTS1_ELEMENT_ID` (FK to element table)
+* *MyClass.elements2* will be persisted into a column `ELEMENTS2_MYCLASS_ID` (FK to owner) table
+* Any discriminator column will be called `DTYPE`
+* Any index column in a List for field _MyClass.myField1_ will be called `MYFIELD1_ORDER`
+* Any adapter column added to a join table to form part of the primary key will be called `IDX`
+* Any version column for a table will be called `VERSION`
 
 
 [[rdbms_jpa]]
@@ -67,16 +67,16 @@ The _RDBMS IdentifierFactory_ "jpa" aims at providing a naming policy consistent
 Using the same example above, the rules in this _IdentifierFactory_ mean that, assuming that the user doesnt specify any <column> elements :-
 
 * _MyClass_ will be persisted into a table named `MYCLASS`
-* When using datastore identity *MYCLASS* will have a column called *MYCLASS_ID*
-* _MyClass.myField1_ will be persisted into a column called *MYFIELD1*
+* When using datastore identity `MYCLASS` will have a column called `MYCLASS_ID`
+* _MyClass.myField1_ will be persisted into a column called `MYFIELD1`
 * _MyElement_ will be persisted into a table named `MYELEMENT`
 * _MyClass.elements1_ will be persisted into a join table called `MYCLASS_MYELEMENT`
-* *MYCLASS_ELEMENTS1* will have columns called *MYCLASS_MYCLASS_ID* (FK to owner table) and *ELEMENTS1_ELEMENT_ID* (FK to element table)
-* *MyClass.elements2* will be persisted into a column *ELEMENTS2_MYCLASS_ID* (FK to owner) table
-* Any discriminator column will be called *DTYPE*
-* Any index column in a List for field _MyClass.myField1_ will be called *MYFIELD1_ORDER*
-* Any adapter column added to a join table to form part of the primary key will be called *IDX*
-* Any version column for a table will be called *VERSION*
+* `MYCLASS_ELEMENTS1` will have columns called `MYCLASS_MYCLASS_ID` (FK to owner table) and `ELEMENTS1_ELEMENT_ID` (FK to element table)
+* *MyClass.elements2* will be persisted into a column `ELEMENTS2_MYCLASS_ID` (FK to owner) table
+* Any discriminator column will be called `DTYPE`
+* Any index column in a List for field _MyClass.myField1_ will be called `MYFIELD1_ORDER`
+* Any adapter column added to a join table to form part of the primary key will be called `IDX`
+* Any version column for a table will be called `VERSION`
 
 
 == Controlling the Case

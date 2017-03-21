@@ -163,14 +163,14 @@ or using XML metadata
 </jdo>
 -----
 
-So here we will end up with a table `COMPUTER` with columns "COMPUTER_ID", "OS_NAME", "GRAPHICS_MANUFACTURER", "GRAPHICS_TYPE", "SOUND_MANUFACTURER", "SOUND_TYPE". 
+So here we will end up with a table `COMPUTER` with columns `COMPUTER_ID`, `OS_NAME`, `GRAPHICS_MANUFACTURER`, `GRAPHICS_TYPE`, `SOUND_MANUFACTURER`, `SOUND_TYPE`. 
 If we call _makePersistent()_ on any objects of type *Computer*, they will be persisted into this table.
 
 image:../images/embedded_pc_embedded_db.png[]
 
 You will notice in the MetaData our use of the attribute _null-indicator-column_. This is used when retrieving objects from the datastore and detecting if it is a NULL embedded object. 
-In the case we have here, if the column GRAPHICS_MANUFACTURER is null at retrieval, then the embedded "graphicsCard" field will be set as null. 
-Similarly for the "soundCard" field when SOUND_MANUFACTURER is null.
+In the case we have here, if the column `GRAPHICS_MANUFACTURER` is null at retrieval, then the embedded "graphicsCard" field will be set as null. 
+Similarly for the "soundCard" field when `SOUND_MANUFACTURER` is null.
 
 If the *ComputerCard* class above has a reference back to the related *Computer*, JDO defines a mechanism whereby this will be populated. 
 You would add the XML element _owner-field_ to the _<embedded>_ tag defining the field within *ComputerCard* that represents the *Computer* it relates to. 
@@ -269,7 +269,7 @@ Well we want to store all of these objects into the same record in the `COMPUTER
 -----
 
 So we simply nest the embedded definition of the *Connector* objects within the embedded definition of the *ComputerCard* definitions for *Computer*. 
-JDO supports this to as many levels as you require! The *Connector* objects will be persisted into the GRAPHICS_CONNECTOR_TYPE, and SOUND_CONNECTOR_TYPE columns in the `COMPUTER` table.
+JDO supports this to as many levels as you require! The *Connector* objects will be persisted into the `GRAPHICS_CONNECTOR_TYPE`, and `SOUND_CONNECTOR_TYPE` columns in the `COMPUTER` table.
 
 image:../images/embedded_pc_nested_embedded_db.png[]
 
@@ -379,17 +379,17 @@ or using XML metadata
 </jdo>
 -----
 
-So here we will end up with a table `NETWORK` with columns "NETWORK_ID", and "NAME", and a table `NETWORK_DEVICES` with columns 
-"NETWORK_ID", "ADPT_PK_IDX", "DEVICE_NAME", "DEVICE_IP_ADDR". When we persist a *Network* object, any devices are persisted into the `NETWORK_DEVICES` table.
+So here we will end up with a table `NETWORK` with columns `NETWORK_ID`, and `NAME`, and a table `NETWORK_DEVICES` with columns 
+`NETWORK_ID`, `ADPT_PK_IDX`, `DEVICE_NAME`, `DEVICE_IP_ADDR`. When we persist a *Network* object, any devices are persisted into the `NETWORK_DEVICES` table.
 
 image:../images/embedded_collection_embedded_db.png[]
 
 Please note that if, instead of specifying the <embedded> block we had specified *embedded-element* in the collection element we would have ended up with the same thing, 
 just that the fields and columns would be mapped using their default mappings, and that the <embedded> provides control over how they are mapped.
 
-You note that in our example above DataNucleus has added an extra column "ADPT_PK_IDX" to provide the primary key of the join table now that we're storing the elements as embedded. 
-A variation on this would have been if we wanted to maybe use the "DEVICE_IP_ADDR" as the other part of the primary key, 
-in which case the "ADPT_PK_IDX" would not be needed. You would specify XML metadata like this
+You note that in our example above DataNucleus has added an extra column `ADPT_PK_IDX` to provide the primary key of the join table now that we're storing the elements as embedded. 
+A variation on this would have been if we wanted to maybe use the `DEVICE_IP_ADDR` as the other part of the primary key, 
+in which case the `ADPT_PK_IDX` would not be needed. You would specify XML metadata like this
 
 [source,xml]
 -----
@@ -415,7 +415,7 @@ in which case the "ADPT_PK_IDX" would not be needed. You would specify XML metad
 </field>
 -----
 
-This results in the join table only having the columns "NETWORK_ID", "DEVICE_IP_ADDR", and "DEVICE_NAME", and having a primary key as the composite of "NETWORK_ID" and "DEVICE_IP_ADDR". 
+This results in the join table only having the columns `NETWORK_ID`, `DEVICE_IP_ADDR`, and `DEVICE_NAME`, and having a primary key as the composite of `NETWORK_ID` and `DEVICE_IP_ADDR`. 
 
 See also :-
 
@@ -528,8 +528,8 @@ or using XML metadata
 </jdo>
 -----
 
-So here we will end up with a table `FILM_LIBRARY` with columns "FILM_LIBRARY_ID", and "OWNER", 
-and a table `FILM_LIBRARY_FILMS` with columns "FILM_LIBRARY_ID", "FILM_ALIAS", "FILM_NAME", "FILM_DIRECTOR".
+So here we will end up with a table `FILM_LIBRARY` with columns `FILM_LIBRARY_ID`, and `OWNER`, 
+and a table `FILM_LIBRARY_FILMS` with columns `FILM_LIBRARY_ID`, `FILM_ALIAS`, `FILM_NAME`, `FILM_DIRECTOR`.
 When we persist a *FilmLibrary* object, any films are persisted into the `FILM_LIBRARY_FILMS` table.
 
 image:../images/embedded_map_embedded_db.png[]

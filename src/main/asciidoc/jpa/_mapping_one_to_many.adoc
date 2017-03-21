@@ -340,7 +340,7 @@ or alternatively using XML metadata
 NOTE: The crucial part is the _mapped-by_ attribute of the field on the "1" side of the relationship. This tells the JPA implementation to look for a field 
 called _account_ on the *Address* class.
 
-This will create 2 tables in the database, one for *Address* (including an _ACCOUNT_ID_ to link to the `ACCOUNT` table), and one for *Account*. 
+This will create 2 tables in the database, one for *Address* (including an `ACCOUNT_ID` to link to the `ACCOUNT` table), and one for *Account*. 
 Notice the subtle difference to this set-up to that of the *Join Table* relationship earlier.
 
 image:../images/relationship_1_N_bi_set_fk_db.png[]
@@ -663,7 +663,7 @@ or using XML metadata
 </entity-mappings>
 -----
 
-We have defined the same foreign key for the 2 collections "ACCOUNT_ID_OID", The important step is then to define the 2 DataNucleus _extension_ tags (@SharedRelation annotation). 
+We have defined the same foreign key for the 2 collections, named `ACCOUNT_ID_OID`, The important step is then to define the 2 DataNucleus _extension_ tags (@SharedRelation annotation). 
 These define a column in the element table (the same for both relations), and the value that will be populated when a row of that collection is inserted into the element table. 
 In our case, all "home" addresses will have a value of "home" inserted into this column, and all "work" addresses will have "work" inserted. 
 This means we can now identify easily which element table entry represents which relation field.
@@ -718,8 +718,8 @@ image:../images/relationship_1_N_uni_map_simple_pc_db.png[]
 You can configure the names of the key column(s) in the join table using the _joinColumns_ attribute of @CollectionTable, or the names of the value 
 column(s) using @Column for the field/method.
 
-NOTE: The column ADPT_PK_IDX is added by DataNucleus when the column type of the key is not valid to be part of a primary key (with the RDBMS being used). 
-If the column type of your key is acceptable for use as part of a primary key then you will not have this "ADPT_PK_IDX" column.
+NOTE: The column `ADPT_PK_IDX` is added by DataNucleus when the column type of the key is not valid to be part of a primary key (with the RDBMS being used). 
+If the column type of your key is acceptable for use as part of a primary key then you will not have this `ADPT_PK_IDX` column.
 
 
 
@@ -761,8 +761,8 @@ image:../images/relationship_1_N_uni_map_simple_simple_db.png[]
 You can configure the names of the key column(s) in the join table using the _joinColumns_ attribute of @CollectionTable, or the names of the value 
 column(s) using @Column for the field/method.
 
-Please note that the column ADPT_PK_IDX is added by DataNucleus when the column type of the key is not valid to be part of a primary key 
-(with the RDBMS being used). If the column type of your key is acceptable for use as part of a primary key then you will not have this "ADPT_PK_IDX" column.
+Please note that the column `ADPT_PK_IDX` is added by DataNucleus when the column type of the key is not valid to be part of a primary key 
+(with the RDBMS being used). If the column type of your key is acceptable for use as part of a primary key then you will not have this `ADPT_PK_IDX` column.
 
 
 [[one_many_map_converter_simple_simple]]
@@ -865,8 +865,8 @@ image:../images/relationship_1_N_uni_map_pc_pc_db.png[]
 You can configure the names of the key column(s) in the join table using the _joinColumns_ attribute of @JoinTable, or the names of the value 
 column(s) using @Column for the field/method.
 
-NOTE: The column ADPT_PK_IDX is added by DataNucleus when the column type of the key is not valid to be part of a primary key (with the RDBMS being used). 
-If the column type of your key is acceptable for use as part of a primary key then you will not have this "ADPT_PK_IDX" column.
+NOTE: The column `ADPT_PK_IDX` is added by DataNucleus when the column type of the key is not valid to be part of a primary key (with the RDBMS being used). 
+If the column type of your key is acceptable for use as part of a primary key then you will not have this `ADPT_PK_IDX` column.
 
 
 
