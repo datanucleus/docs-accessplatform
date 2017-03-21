@@ -324,7 +324,7 @@ or using XML metadata
 
 NOTE: The crucial part is the _mapped-by_ on the "1" side of the relationship. This tells the JDO implementation to look for a field called _account_ on the *Address* class.
 
-This will create 2 tables in the database, one for *Address* (including an _ACCOUNT_ID_ to link to the `ACCOUNT` table), and one for *Account*.
+This will create 2 tables in the database, one for *Address* (including an `ACCOUNT_ID` to link to the `ACCOUNT` table), and one for *Account*.
 Notice the subtle difference to this set-up to that of the *Join Table* relationship earlier.
 
 image:../images/relationship_1_N_bi_collection_fk_db.png[]
