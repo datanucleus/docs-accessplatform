@@ -6,15 +6,15 @@
 NOTE: Applicable to RDBMS
 
 The standard JDO persistence strategy is to persist an object of a class into its own table. 
-In some situations you may wish to map the class to a primary table as well as one or more secondary 
-tables. For example when you have a Java class that could have been split up into 2 separate classes 
-yet, for whatever reason, has been written as a single class, however you have a legacy datastore and 
-you need to map objects of this class into 2 tables. JDO allows persistence of fields of a class 
-into _secondary_ tables.
+In some situations you may wish to map the class to a primary table as well as one or more secondary tables. 
+For example when you have a Java class that could have been split up into 2 separate classes yet, for whatever reason, 
+has been written as a single class, however you have a legacy datastore and you need to map objects of this class into 2 tables. 
+JDO allows persistence of fields of a class into _secondary_ tables.
 
-The process for managing this situation is best demonstrated with an example. Let's suppose we have 
-a class that represents a *Printer*. The *Printer* class contains within it various 
-attributes of the toner cartridge. So we have
+NOTE: A Secondary table entry maps 1-1 to an owner table entry, and has the same primary key as the owner.
+
+The process for managing this situation is best demonstrated with an example. 
+Let's suppose we have a class that represents a *Printer*. The *Printer* class contains within it various attributes of the toner cartridge. So we have
 
 [source,java]
 -----
@@ -79,6 +79,7 @@ public class Printer
 -----
 
 This results in the following database tables :-
+
 image:../images/secondarytables_db.png[]
 
 So we now have our primary and secondary database tables. The primary key of the `PRINTER_TONER` table serves as a foreign key to the primary class. 
