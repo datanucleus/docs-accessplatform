@@ -496,6 +496,9 @@ persistable type being contained and use that type in the identity class of the 
 
 NOTE: The persistable class that is contained cannot be using _datastore identity_, and must be using _application identity_ with an objectid-class
 
+TIP: When using compound identity, it is best practice to define an _object-idclass_ for any persistable classes that are part of the primary key, and *not* rely
+on the built-in identity types.
+
 
 [[compound_identity_1_1_uni]]
 === 1-1 Relationship
