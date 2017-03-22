@@ -272,7 +272,7 @@ public class MyClass
 }
 -----
 
-So we didnt specify the JDO "objectid-class". 
+So we didn't specify the JDO "objectid-class". 
 You will, of course, have to give the field a value before persisting the object, either by setting it yourself, or by using a link:mapping.html#value_generation[value-strategy] on that field.
 
 If you need to create an identity of this form for use in querying via _pm.getObjectById()_ then you can create the identities in the following way
@@ -299,6 +299,10 @@ java.util.Date     - javax.jdo.identity.ObjectIdentity
 java.util.Currency - javax.jdo.identity.ObjectIdentity
 java.util.Locale   - javax.jdo.identity.ObjectIdentity
 -----
+
+TIP: It is however better *not* to make explicit use of these JDO classes and instead to just use the _pm.getObjectById_ taking in the class and the value and then 
+you have no dependency on these classes.
+
 
 
 === PrimaryKey : Rules for User-Defined classes
