@@ -434,6 +434,10 @@ entity being contained and use that type in the identity class of the derived en
 
 NOTE: The persistable class that is contained cannot be using _datastore identity_, and must be using _application identity_ with an objectid-class
 
+TIP: When using derived identity, it is best practice to define an _@IdClass_ for any entity that is part of the primary key, and *not* rely
+on the built-in identity types.
+
+
 
 [[derived_identity_1_1_uni]]
 === 1-1 Relationship
