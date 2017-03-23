@@ -74,7 +74,7 @@ or using annotations
 [source,java]
 -----
 @PersistenceCapable
-@DatastoreIdentity(strategy="sequence", sequence="yourseq"/>
+@DatastoreIdentity(strategy=IdGeneratorStrategy.SEQUENCE, sequence="yourseq"/>
 @Sequence(name="yourseq", datastore-sequence="YOUR_SEQUENCE_NAME", strategy=NONCONTIGUOUS/>
 public class MyClass
 -----
@@ -99,7 +99,7 @@ or using annotations
 @Sequence(name="yourseq", datastore-sequence="YOUR_SEQUENCE_NAME" strategy=NONCONTIGUOUS/>
 public class MyClass
 {
-    @Persistent(valueStrategy="sequence", sequence="yourseq"/>
+    @Persistent(valueStrategy=IdGeneratorStrategy.SEQUENCE, sequence="yourseq"/>
     private long myfield;
     ...
 }
