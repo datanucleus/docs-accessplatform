@@ -168,7 +168,7 @@ or using annotations
 [source,java]
 -----
 @PersistenceCapable
-@DatastoreIdentity(strategy=IdGenerationStrategy.IDENTITY)
+@DatastoreIdentity(strategy=IdGeneratorStrategy.IDENTITY)
 public class MyClass {...}
 -----
 
@@ -190,7 +190,7 @@ or using annotations
 @PersistenceCapable
 public class MyClass
 {
-    @Persistent(valueStrategy=IdGenerationStrategy.IDENTITY, primaryKey="true")
+    @Persistent(valueStrategy=IdGeneratorStrategy.IDENTITY, primaryKey="true")
     long myfield;
 }
 -----
@@ -228,7 +228,7 @@ or using annotations
 [source,java]
 -----
 @PersistenceCapable
-@DatastoreIdentity(strategy=IdGenerationStrategy.INCREMENT)
+@DatastoreIdentity(strategy=IdGeneratorStrategy.INCREMENT)
 public class MyClass {...}
 -----
 
@@ -250,7 +250,7 @@ or using annotations
 @PersistenceCapable
 public class MyClass 
 {
-    @Persistent(valueStrategy=IdGenerationStrategy.INCREMENT, primaryKey="true");
+    @Persistent(valueStrategy=IdGeneratorStrategy.INCREMENT, primaryKey="true");
     long myfield;
     ...
 }
