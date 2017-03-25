@@ -161,6 +161,7 @@ can lose database independence by using this route. e.g "VARCHAR(255)"
 to come up with a default datastore type for the column. Sadly JPA doesn't allow specification of the precise datastore type (except for BLOB/CLOB/TIME/TIMESTAMP cases).
 DataNucleus provides an extension to overcome this gap in the JPA spec. Here we make use of a DataNucleus extension annotation @JdbcType or "jdbc-type" extension attribute for <column>.
 Like this
+
 [source,xml]
 -----
 <entity name="Payment">
@@ -215,6 +216,7 @@ When you want to access data according to a View, you are required to provide a 
 the values from the View when queried, and Meta-Data for the class that defines the View and how it maps onto the provided class. Let's take an example. 
 We have a View `SALEABLE_PRODUCT` in our database as follows, defined based on data in a `PRODUCT` table.
 
+[source,sql]
 -----
 CREATE VIEW SALEABLE_PRODUCT (ID, NAME, PRICE, CURRENCY) AS
     SELECT ID, NAME, CURRENT_PRICE AS PRICE, CURRENCY FROM PRODUCT
