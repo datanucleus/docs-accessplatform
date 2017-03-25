@@ -173,7 +173,7 @@ In the case we have here, if the column `GRAPHICS_MANUFACTURER` is null at retri
 Similarly for the "soundCard" field when `SOUND_MANUFACTURER` is null.
 
 If the *ComputerCard* class above has a reference back to the related *Computer*, JDO defines a mechanism whereby this will be populated. 
-You would add the XML element _owner-field_ to the _<embedded>_ tag defining the field within *ComputerCard* that represents the *Computer* it relates to. 
+You would add the XML element `owner-field` to the `<embedded>` tag defining the field within *ComputerCard* that represents the *Computer* it relates to. 
 When this is specified DataNucleus will populate it automatically, so that when you retrieve the *Computer* and access the
 *ComputerCard* objects within it, they will have the link in place.
 
@@ -181,7 +181,7 @@ It should be noted that in this latter (embedded) case we can still persist obje
 for the table definition in this case.
 
 Please note that if, instead of specifying the <embedded> block we had specified *embedded* in the field element we would have ended up with the same thing, 
-just that the fields and columns would have been mapped using their default mappings, and that the <embedded> provides control over how they are mapped.
+just that the fields and columns would have been mapped using their default mappings, and that the `<embedded>` provides control over how they are mapped.
 
 NOTE: by default the embedded objects cannot have inheritance. Inheritance in embedded objects is only support for RDBMS and MongoDB, 
 and involves defining a discriminator in the metadata of the embedded type.
@@ -384,8 +384,8 @@ So here we will end up with a table `NETWORK` with columns `NETWORK_ID`, and `NA
 
 image:../images/embedded_collection_embedded_db.png[]
 
-Please note that if, instead of specifying the <embedded> block we had specified *embedded-element* in the collection element we would have ended up with the same thing, 
-just that the fields and columns would be mapped using their default mappings, and that the <embedded> provides control over how they are mapped.
+Please note that if, instead of specifying the `<embedded>` block we had specified `embedded-element` in the collection element we would have ended up with the same thing, 
+just that the fields and columns would be mapped using their default mappings, and that the `<embedded>` provides control over how they are mapped.
 
 You note that in our example above DataNucleus has added an extra column `ADPT_PK_IDX` to provide the primary key of the join table now that we're storing the elements as embedded. 
 A variation on this would have been if we wanted to maybe use the `DEVICE_IP_ADDR` as the other part of the primary key, 
@@ -534,7 +534,7 @@ When we persist a *FilmLibrary* object, any films are persisted into the `FILM_L
 
 image:../images/embedded_map_embedded_db.png[]
 
-Please note that if, instead of specifying the <embedded> block we had specified *embedded-key* of *embedded-value* in the map element we would 
+Please note that if, instead of specifying the `<embedded>` block we had specified `embedded-key` or `embedded-value` in the map element we would 
 have ended up with the same thing, just that the fields and columns would be mapped using their default mappings, and that the <embedded> provides control over
 how they are mapped.
 

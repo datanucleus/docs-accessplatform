@@ -35,7 +35,7 @@ public class Account
 So we have an *Account* and it has a number of permissions, each expressed as a byte. We want to persist the permissions in a single-column into the table of the account 
 (but we don't want them serialised). 
 
-In terms of metadata required we simply define the field as "persistent". You could add _<array>_ to be explicit but the type of the field is an array, and 
+In terms of metadata required we simply define the field as "persistent". You could add `<array>` to be explicit but the type of the field is an array, and 
 the type declaration also defines the component type so nothing more is needed. This results in a datastore schema as follows
 
 image:../images/array_serialised_db.png[]
@@ -277,5 +277,5 @@ In the datastore the following is created
 
 image:../images/relationship_1_N_primitive_collection_db.png[]
 
-Use @Column on the field/method to define the column details of the element in the join table.
+Use `@Column` on the field/method to define the column details of the element in the join table.
 
