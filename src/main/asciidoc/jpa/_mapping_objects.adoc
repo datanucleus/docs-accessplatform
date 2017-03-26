@@ -19,8 +19,8 @@ querying can be performed. The disadvantage is that if there are many implementa
 no querying can be performed, and that there is no referential integrity.
 * *xcalia* : a slight variation on "identity" whereby there is a single column yet the contents of that column are consistent with what Xcalia XIC JDO implementation stored there.
 
-The user controls which one of these is to be used by specifying the _extension_ *mapping-strategy* on the field containing the interface. 
-The default is "per-implementation"
+The user controls which one of these is to be used by specifying the extension *mapping-strategy* on the field containing the interface. 
+The default is _per-implementation_.
 
 
 
@@ -42,7 +42,7 @@ public class ParkingSpace
 So we have a space in a car park, and in that space we have an occupier of the space. We have some legacy data and so can't make the 
 type of this "occupier" an interface type, so we just use _java.lang.Object_. Now we know that we can only have particular types of objects stored there 
 (since there are only a few types of vehicle that can enter the car park).
- So we define our annotations like this
+So we define our annotations like this
 
 [source,java]
 -----

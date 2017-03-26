@@ -67,8 +67,8 @@ In terms of the implementations of the interface, you can either leave the field
 or you can restrict it to only accept some implementations (see "implementation-classes" metadata extension).
 If you are leaving it to accept any persistable implementation class, then you need to be careful that such implementations are known to 
 DataNucleus at the point of encountering the interface field. By this we mean, DataNucleus has to have encountered the metadata for the implementation
-so that it can allow for the implementation when handling the field. You can force DataNucleus to know about a persistable class by using an autostart mechanism, 
-or using `persistence.xml`.
+so that it can allow for the implementation when handling the field. 
+You can force DataNucleus to know about a persistable class by using `persistence.xml` to specify the classes.
 
 
 [[interface_one_one]]
@@ -154,7 +154,7 @@ You specify this in the same way as you would any Collection/Map.
 The "unidirectional" restriction is that the interface is not persistent on its own and so cannot store the reference back to the owner object.
 Use the 1-N relationship guides for the metadata definition to use.
 
-You need to use a DataNucleus extension tag "implementation-classes" if you want to restrict the collection to only contain particular implementations of an interface.
+You need to use a DataNucleus extension *implementation-classes* if you want to restrict the collection to only contain particular implementations of an interface.
 For example
 
 [source,java]
@@ -173,7 +173,7 @@ public class ShapeHolder
 -----
 
 So the _shapes_ field is a Collection of _mydomain.Shape_ and it will accept the implementations of type *Circle*, *Rectangle*, *Square* and *Triangle*.
-If you omit the implementation-classes tag then you have to give DataNucleus a way of finding the metadata for the implementations prior to encountering this field.
+If you omit the *implementation-classes* extension then you have to give DataNucleus a way of finding the metadata for the implementations prior to encountering this field.
 
 
 == Dynamic Schema Updates (RDBMS)
