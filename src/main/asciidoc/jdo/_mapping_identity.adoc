@@ -334,6 +334,10 @@ It follows the rules listed below and should work for all cases. Obviously if yo
 The enhancer generation of primary-key class is only enabled if you don't define your own class.
 
 
+NOTE: Your "id" class can store the target class name of the persistable object that it represents. This is useful where you want to avoid lookups of a class in an inheritance tree.
+To do this, add a field to your id-class called _targetClassName_ and make sure that it is part of the _toString()_ and _String constructor_ code.
+
+
 
 === PrimaryKey Example - Multiple Field
 
@@ -354,6 +358,7 @@ public class MyClass
 
 public class ComposedIdKey implements Serializable
 {
+    public String targetClassName; // DataNucleus extension, storing the class name of the persistable object
     public String field1;
     public String field2;
 
@@ -367,7 +372,7 @@ public class ComposedIdKey implements Serializable
     public ComposedIdKey(String value) 
     {
         StringTokenizer token = new StringTokenizer (value, "::");
-        token.nextToken();               // className
+        this.targetClassName = token.nextToken(); // className
         this.field1 = token.nextToken(); // field1
         this.field2 = token.nextToken(); // field2
     }
@@ -395,7 +400,7 @@ public class ComposedIdKey implements Serializable
     public String toString ()
     {
         // Give output expected by String constructor
-        return this.getClass().getName() + "::"  + this.field1 + "::" + this.field2;
+        return this.targetClassName + "::"  + this.field1 + "::" + this.field2;
     }
 }
 -----
