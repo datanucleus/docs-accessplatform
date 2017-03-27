@@ -104,7 +104,7 @@ and hereafter we can persist fields of type _ConstructionDetails_, as per link:#
 image:../images/nucleus_extension.png[]
 
 With JPA you cannot access _public_ fields of classes. DataNucleus allows an extension to permit this, but such classes need special enhancement. To allow this you need to
-annotate the class that will access these public fields (assuming it isn't an Entity) with the DataNucleus extension annotation @PersistenceAware, as follows
+annotate the class that will access these public fields (assuming it isn't an Entity) with the DataNucleus extension annotation `@PersistenceAware`, as follows
 
 [source,java]
 -----

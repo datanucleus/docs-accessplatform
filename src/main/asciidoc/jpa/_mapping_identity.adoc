@@ -17,7 +17,7 @@ A further complication is where you use _application identity_ but one of the fi
 This is known as link:#derived_identity[Derived Identity].
 
 NOTE: *When you have an inheritance hierarchy, you should specify the identity type in the _base instantiable_ class for the inheritance tree. This is then used for all persistent 
-classes in the tree.* This means that you can have @MappedSuperclass without any identity fields/properties as superclass, and then the base instantiable class is the first persistable
+classes in the tree.* This means that you can have `@MappedSuperclass` without any identity fields/properties as superclass, and then the base instantiable class is the first persistable
 class which has the identity field(s).
 
 
@@ -102,7 +102,7 @@ See also:-
 
 === Application Identity : Changing Identities
 
-JPA doesn't define what happens if you change the identity (an identity field) of an object once persistent. *DataNucleus doesn't currently support changes to identities.*
+JPA doesn't define what happens if you change the identity (an identity field) of an object once persistent. *DataNucleus doesn't support changes to identities.*
 
 === Application Identity : Accessing objects by Identity
 
@@ -123,7 +123,7 @@ When you choose application identity you are defining which fields of the class 
 and you are taking control of the specification of id's to DataNucleus. Application identity requires a primary key (PK) class, 
 and each persistent capable class may define a different class for its primary key, and different persistent capable classes can 
 use the same primary key class, as appropriate. 
-If you have only a single primary-key field then there are builtin PK classes so you can forget this section. Where you have more than 1 primary key field, 
+If you have only a single primary-key field then there are built-in PK classes so you can forget this section. Where you have more than 1 primary key field, 
 you would define the PK class like this
 
 [source,xml]
@@ -165,7 +165,7 @@ to see what is supported for your datastore.
 *Single PrimaryKey field*
 
 The simplest way of using *application identity* is where you have a single PK field, and in this case you use an inbuilt primary key class that DataNucleus provides, 
-so you don't need to specify the _objectid-class_. Let's take an example
+so you don't need to specify the _id-class_. Let's take an example
 
 [source,java]
 -----
@@ -205,7 +205,7 @@ link:#value_generation[value-strategy] on that field.
 
 === PrimaryKey : Rules for User-Defined classes
 
-If you wish to use *application identity* and don't want to use the "SingleFieldIdentity" builtin PK classes then you must define a Primary Key class of your own. 
+If you wish to use *application identity* and don't want to use the "SingleFieldIdentity" built-in PK classes then you must define a Primary Key class of your own. 
 You can't use classes like java.lang.String, or java.lang.Long directly. You must follow these rules when defining your primary key class.
 
 * the Primary Key class must be public
@@ -232,6 +232,10 @@ above and should work for all cases. Obviously if you want to tailor the output 
 The enhancer generation of primary-key class is only enabled if you don't define your own class.
 
 
+NOTE: Your "id" class can store the target class name of the persistable object that it represents. This is useful where you want to avoid lookups of a class in an inheritance tree.
+To do this, add a field to your id-class called _targetClassName_ and make sure that it is part of the _toString()_ and _String constructor_ code.
+
+
 === PrimaryKey Example - Multiple Field
 
 Here's an example of a composite (multiple field) primary key class
@@ -252,6 +256,7 @@ public class MyClass
 
 public class ComposedIdKey implements Serializable
 {
+    public String targetClassName; // DataNucleus extension, storing the class name of the persistable object
     public String field1;
     public String field2;
 
@@ -268,9 +273,8 @@ public class ComposedIdKey implements Serializable
     public ComposedIdKey(String value) 
     {
         StringTokenizer token = new StringTokenizer (value, "::");
-        //field1
+        this.targetClassName = token.nextToken();
         this.field1 = token.nextToken ();
-        //field2
         this.field2 = token.nextToken ();
     }
 
@@ -297,7 +301,7 @@ public class ComposedIdKey implements Serializable
     public String toString ()
     {
         // Give output expected by String constructor
-        return "" + this.field1 + "::" + this.field2;
+        return this.targetClassName + this.field1 + "::" + this.field2;
     }
 }
 -----
@@ -434,7 +438,7 @@ entity being contained and use that type in the identity class of the derived en
 
 NOTE: The persistable class that is contained cannot be using _datastore identity_, and must be using _application identity_ with an objectid-class
 
-TIP: When using derived identity, it is best practice to define an _@IdClass_ for any entity that is part of the primary key, and *not* rely
+TIP: When using derived identity, it is best practice to define an `@IdClass` for any entity that is part of the primary key, and *not* rely
 on the built-in identity types.
 
 
@@ -443,8 +447,8 @@ on the built-in identity types.
 === 1-1 Relationship
 
 Lets take the same classes as we have in the link:#one_one_relations[1-1 Relationships].
-In the 1-1 relationships guide we note that in the datastore representation of the *User* and *Account* the *ACCOUNT* table has a primary key as well as a foreign-key to *USER*. 
-In our example here we want to just have a primary key that is also a foreign-key to *USER*. 
+In the 1-1 relationships guide we note that in the datastore representation of the *User* and *Account* the `ACCOUNT` table has a primary key as well as a foreign-key to `USER`. 
+In our example here we want to just have a primary key that is also a foreign-key to `USER`. 
 To do this we need to modify the classes slightly and add primary-key fields and use "application-identity".
 
 [source,java]
@@ -617,8 +621,8 @@ To remove this restriction you could also add a "long id" to  "Account" and make
 === 1-N Collection Relationship
 
 Lets take the same classes as we have in the link:#one_many_fk_bi[1-N Relationships (FK)].
-In the 1-N relationships guide we note that in the datastore representation of the *Account* and *Address* classes the *ADDRESS* table has a primary key as 
-well as a foreign-key to *ACCOUNT*. In our example here we want to have the primary-key to *ACCOUNT* to _include_ the foreign-key. 
+In the 1-N relationships guide we note that in the datastore representation of the *Account* and *Address* classes the `ADDRESS` table has a primary key as 
+well as a foreign-key to `ACCOUNT`. In our example here we want to have the primary-key to `ACCOUNT` to _include_ the foreign-key. 
 To do this we need to modify the classes slightly, adding primary-key fields to both classes, and use "application-identity" for both.
 
 [source,java]
@@ -810,8 +814,8 @@ For that reason we have the "id" field too.
 === 1-N Map Relationship
 
 Lets take the same classes as we have in the link:#one_many_map_fk_bi_key[1-N Relationships FK].
-In this guide we note that in the datastore representation of the *Account* and *Address* classes the *ADDRESS* table has a primary key as well as a foreign-key to 
-*ACCOUNT*. In our example here we want to have the primary-key to *ACCOUNT* to _include_ the foreign-key. 
+In this guide we note that in the datastore representation of the *Account* and *Address* classes the `ADDRESS` table has a primary key as well as a foreign-key to `ACCOUNT`. 
+In our example here we want to have the primary-key to `ACCOUNT` to _include_ the foreign-key. 
 To do this we need to modify the classes slightly, adding primary-key fields to both classes, and use "application-identity" for both.
 
 [source,java]

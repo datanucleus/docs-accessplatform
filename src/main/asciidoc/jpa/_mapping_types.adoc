@@ -550,7 +550,7 @@ When instantiating the SortedSet field, it will create it with a comparator of t
 
 == Enums
 
-By default an Enum is persisted as either a String form (the name), or as an integer form (the ordinal). You control which form by specifying the *@Enumerated* annotation (or equivalent XML). 
+By default an Enum is persisted as either a String form (the name), or as an integer form (the ordinal). You control which form by specifying the `@Enumerated` annotation (or equivalent XML). 
 
 [cols="4,1,1,1,6", options="header"]
 |===
@@ -564,7 +564,7 @@ By default an Enum is persisted as either a String form (the name), or as an int
 |icon:check[]
 |icon:times[]
 |icon:check[]
-|Persisted as String (name) or int (ordinal). Specified via @Enumerated annotation or equivalent XML.
+|Persisted as String (name) or int (ordinal). Specified via `@Enumerated` annotation or equivalent XML.
 |===
 
 image:../images/nucleus_extension.png[]
@@ -594,7 +594,7 @@ public enum MyColour
 -----
 
 With the default persistence it would persist as String-based, so persisting "RED" "GREEN" "BLUE" etc. 
-With _@Enumerated_ as ORDINAL it would persist 0, 1, 2, 3 being the ordinal values.
+With `@Enumerated` as ORDINAL it would persist 0, 1, 2, 3 being the ordinal values.
 If you define the metadata as
 
 [source,java]
@@ -1249,10 +1249,10 @@ public class MyClass
 }
 -----
 
-Note that in strict JPA 2.1 you have to mark all converters with the @Converter annotation.
+Note that in strict JPA 2.1 you have to mark all converters with the `@Converter` annotation.
 In DataNucleus if you specify the converter class name in the @Convert then we know its a converter so don't really see why we need a user to annotate the converter too.
-We only require annotation as @Converter if you want the converter to always be applied to fields of a particular type. 
-i.e if you want all URL fields to be persisted using the above converter (without needing to put @Convert on each field of that type) then you would add the annotation
+We only require annotation as `@Converter` if you want the converter to always be applied to fields of a particular type. 
+i.e if you want all URL fields to be persisted using the above converter (without needing to put `@Convert` on each field of that type) then you would add the annotation
 
 [source,java]
 -----
@@ -1263,7 +1263,7 @@ public class URLStringConverter implements AttributeConverter<URL, String>
 }
 -----
 
-Note that if you have some java type with a @Converter registered to "autoApply", you can turn it off on a field-by-field basis with
+Note that if you have some java type with a `@Converter` registered to _autoApply_, you can turn it off on a field-by-field basis with
 
 [source,java]
 -----
@@ -1272,7 +1272,7 @@ Note that if you have some java type with a @Converter registered to "autoApply"
 -----
 
 A further use of AttributeConverter is where you want to apply type conversion to the key/value of a Map field, or to the element of a Collection field. 
-The Collection element case is simple, you just specify the @Convert against the field and it will be applied to the element.
+The Collection element case is simple, you just specify the `@Convert` against the field and it will be applied to the element.
 If you want to apply type conversion to a key/value of a map do this.
 
 [source,java]
