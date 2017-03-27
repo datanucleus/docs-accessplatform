@@ -341,8 +341,8 @@ So here we will end up with a table `NETWORK` with columns `NETWORK_ID`, and `NA
 
 image:../images/embedded_collection_embedded_db.png[]
 
-Note that if you want to override the name of the fields of the embedded element in the table of the owner, you should use @AttributeOverride 
-(when using annotations) or <attribute-override> (when using XML).
+Note that if you want to override the name of the fields of the embedded element in the table of the owner, you should use `@AttributeOverride` 
+(when using annotations) or `<attribute-override>` (when using XML).
 
 See also :-
 
@@ -421,7 +421,7 @@ with columns `FILM_LIBRARY_ID`, `FILM_ALIAS`, `FILM_NAME`, `FILM_DIRECTOR`. When
 
 image:../images/embedded_map_embedded_db.png[]
 
-Note that if you want to override the name of the fields of the embedded key/value in the table of the owner, you should use @AttributeOverride (when using annotations) 
-or <attribute-override> (when using XML). In the case of fields of an embedded key you should set the name as "key.{fieldName}" 
+Note that if you want to override the name of the fields of the embedded key/value in the table of the owner, you should use `@AttributeOverride` (when using annotations) 
+or `<attribute-override>` (when using XML). In the case of fields of an embedded key you should set the name as "key.{fieldName}" 
 and in the case of fields of an embedded value you should set the name as "value.{fieldName}".
 

@@ -109,7 +109,7 @@ or using XML
 </entity-mappings>
 -----
 
-NOTE: The crucial part is the _join-table_ element on the field element (@JoinTable annotation) - this signals to JPA to use a join table.
+NOTE: The crucial part is the `join-table` element on the field element (`@JoinTable` annotation) - this signals to JPA to use a join table.
 
 This will create 3 tables in the database, one for *Address*, one for *Account*, and a join table, as shown below.
 
@@ -121,9 +121,9 @@ The join table is used to link the 2 classes via foreign keys to their primary k
 If you wish to fully define the schema table and column names etc, follow these tips
 
 * To specify the name of the table where a class is stored, specify the _table_ element below the *class* element
-* To specify the names of the columns where the fields of a class are stored, specify the  _column_ attribute on the *basic* element.
+* To specify the names of the columns where the fields of a class are stored, specify the  _column_ attribute on the `basic` element.
 * To specify the name of the join table, specify the _join-table_ element below the *one-to-many* element with the collection.
-* To specify the names of the join table columns, use the _join-column_ and _inverse-join-column_ elements below the _join-table_ element.
+* To specify the names of the join table columns, use the `join-column` and `inverse-join-column` elements below the `join-table` element.
 * If the field type is Set then the join table will be given a primary key (since a Set cannot have duplicates), whereas for other Collection types 
 it will not have a primary key (since duplicates are allowed).
 
@@ -436,7 +436,7 @@ In the datastore the following is created
 
 image:../images/relationship_1_N_primitive_collection_db.png[]
 
-The `ACCOUNT` table is as before, but this time we only have the "join table". Use @Column on the field/method to define the column details of the element in the join table.
+The `ACCOUNT` table is as before, but this time we only have the "join table". Use `@Column` on the field/method to define the column details of the element in the join table.
 
 
 [[one_many_nonpc_converter]]
@@ -663,7 +663,7 @@ or using XML metadata
 </entity-mappings>
 -----
 
-We have defined the same foreign key for the 2 collections, named `ACCOUNT_ID_OID`, The important step is then to define the 2 DataNucleus _extension_ tags (@SharedRelation annotation). 
+We have defined the same foreign key for the 2 collections, named `ACCOUNT_ID_OID`, The important step is then to define the 2 DataNucleus _extension_ tags (`@SharedRelation` annotation). 
 These define a column in the element table (the same for both relations), and the value that will be populated when a row of that collection is inserted into the element table. 
 In our case, all "home" addresses will have a value of "home" inserted into this column, and all "work" addresses will have "work" inserted. 
 This means we can now identify easily which element table entry represents which relation field.
@@ -715,8 +715,8 @@ This will create 3 tables in the datastore, one for *Account*, one for *Address*
 
 image:../images/relationship_1_N_uni_map_simple_pc_db.png[]
 
-You can configure the names of the key column(s) in the join table using the _joinColumns_ attribute of @CollectionTable, or the names of the value 
-column(s) using @Column for the field/method.
+You can configure the names of the key column(s) in the join table using the _joinColumns_ attribute of `@CollectionTable`, or the names of the value 
+column(s) using `@Column` for the field/method.
 
 NOTE: The column `ADPT_PK_IDX` is added by DataNucleus when the column type of the key is not valid to be part of a primary key (with the RDBMS being used). 
 If the column type of your key is acceptable for use as part of a primary key then you will not have this `ADPT_PK_IDX` column.
@@ -758,8 +758,8 @@ This results in just 2 tables. The "join" table contains both the key AND the va
 
 image:../images/relationship_1_N_uni_map_simple_simple_db.png[]
 
-You can configure the names of the key column(s) in the join table using the _joinColumns_ attribute of @CollectionTable, or the names of the value 
-column(s) using @Column for the field/method.
+You can configure the names of the key column(s) in the join table using the _joinColumns_ attribute of `@CollectionTable`, or the names of the value 
+column(s) using `@Column` for the field/method.
 
 Please note that the column `ADPT_PK_IDX` is added by DataNucleus when the column type of the key is not valid to be part of a primary key 
 (with the RDBMS being used). If the column type of your key is acceptable for use as part of a primary key then you will not have this `ADPT_PK_IDX` column.
@@ -862,8 +862,8 @@ This will create 4 tables in the datastore, one for *Account*, one for *Name*, o
 
 image:../images/relationship_1_N_uni_map_pc_pc_db.png[]
 
-You can configure the names of the key column(s) in the join table using the _joinColumns_ attribute of @JoinTable, or the names of the value 
-column(s) using @Column for the field/method.
+You can configure the names of the key column(s) in the join table using the _joinColumns_ attribute of `@JoinTable`, or the names of the value 
+column(s) using `@Column` for the field/method.
 
 NOTE: The column `ADPT_PK_IDX` is added by DataNucleus when the column type of the key is not valid to be part of a primary key (with the RDBMS being used). 
 If the column type of your key is acceptable for use as part of a primary key then you will not have this `ADPT_PK_IDX` column.
@@ -877,7 +877,7 @@ If the column type of your key is acceptable for use as part of a primary key th
 Here our key is an entity type and the value is a simple type (in this case a String).
 
 NOTE: JPA does NOT properly allow for this in its specification. Other implementations introduced the following hack so we also provide it.
-Note that there is no OneToMany annotation here so this is seemingly not a relation to JPA (hence our description of this as a hack). Anyway use it to workaround JPA's lack of feature.
+Note that there is no `@OneToMany` annotation here so this is seemingly not a relation to JPA (hence our description of this as a hack). Anyway use it to workaround JPA's lack of feature.
 
 If you define the Meta-Data for these classes as follows
 

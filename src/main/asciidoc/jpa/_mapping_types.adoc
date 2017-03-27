@@ -416,7 +416,7 @@ DataNucleus supports a very wide range of collection, list and map types.
 |icon:times[]
 |icon:check[]
 |icon:times[]
-|See link:mapping.html#one_many[the 1-N Collections Guide]
+|See link:mapping.html#one_many_relations[the 1-N Collections Guide]
 
 |java.util.HashMap
 |icon:times[]
@@ -428,7 +428,7 @@ DataNucleus supports a very wide range of collection, list and map types.
 |icon:times[]
 |icon:check[]
 |icon:times[]
-|See link:mapping.html#one_many[the 1-N Collections Guide]
+|See link:mapping.html#one_many_relations[the 1-N Collections Guide]
 
 |java.util.Hashtable
 |icon:times[]
@@ -446,7 +446,7 @@ DataNucleus supports a very wide range of collection, list and map types.
 |icon:times[]
 |icon:check[]
 |icon:times[]
-|Persisted as a Set currently. No List-ordering is supported. See link:mapping.html#one_many[the 1-N Collections Guide]
+|Persisted as a Set currently. No List-ordering is supported. See link:mapping.html#one_many_relations[the 1-N Collections Guide]
 
 |java.util.LinkedList
 |icon:times[]
@@ -488,7 +488,7 @@ DataNucleus supports a very wide range of collection, list and map types.
 |icon:times[]
 |icon:check[]
 |icon:times[]
-|See link:mapping.html#one_many[the 1-N Collections Guide]
+|See link:mapping.html#one_many_relations[the 1-N Collections Guide]
 
 |java.util.SortedMap
 |icon:times[]
@@ -500,7 +500,7 @@ DataNucleus supports a very wide range of collection, list and map types.
 |icon:times[]
 |icon:check[]
 |icon:times[]
-|The comparator is specifiable via the metadata extension _comparator-name_ (see below). See link:mapping.html#one_many[the 1-N Collections Guide]
+|The comparator is specifiable via the metadata extension _comparator-name_ (see below). See link:mapping.html#one_many_relations[the 1-N Collections Guide]
 
 |java.util.Stack
 |icon:times[]
@@ -518,7 +518,7 @@ DataNucleus supports a very wide range of collection, list and map types.
 |icon:times[]
 |icon:check[]
 |icon:times[]
-|The comparator is specifiable via the metadata extension _comparator-name_ (see below). See link:mapping.html#one_many[the 1-N Collections Guide]
+|The comparator is specifiable via the metadata extension _comparator-name_ (see below). See link:mapping.html#one_many_relations[the 1-N Collections Guide]
 
 |java.util.Vector
 |icon:times[]
@@ -530,7 +530,7 @@ DataNucleus supports a very wide range of collection, list and map types.
 |icon:times[]
 |icon:check[]
 |icon:times[]
-|Requires *datanucleus-guava* plugin. See link:mapping.html#one_many[the 1-N Collections Guide]
+|Requires *datanucleus-guava* plugin. See link:mapping.html#one_many_relations[the 1-N Collections Guide]
 |===
 
 image:../images/nucleus_extension.png[]
@@ -1250,7 +1250,7 @@ public class MyClass
 -----
 
 Note that in strict JPA 2.1 you have to mark all converters with the `@Converter` annotation.
-In DataNucleus if you specify the converter class name in the @Convert then we know its a converter so don't really see why we need a user to annotate the converter too.
+In DataNucleus if you specify the converter class name in the `@Convert` then we know its a converter so don't really see why we need a user to annotate the converter too.
 We only require annotation as `@Converter` if you want the converter to always be applied to fields of a particular type. 
 i.e if you want all URL fields to be persisted using the above converter (without needing to put `@Convert` on each field of that type) then you would add the annotation
 

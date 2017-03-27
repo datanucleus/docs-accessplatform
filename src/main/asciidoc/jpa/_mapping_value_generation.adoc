@@ -14,7 +14,7 @@ choose the strategy that best suits your target datastore. The available strateg
 * link:#valuegen_sequence[SEQUENCE] - this uses a datastore sequence (if supported by the datastore)
 * link:#valuegen_identity[IDENTITY] - these use autoincrement/identity/serial features in the datastore (if supported by the datastore)
 * link:#valuegen_increment[TABLE] - this is datastore neutral and increments a sequence value using a table.
-* link:#valuegen_custom[Custom generators] - these are beyond the scope of the JPA spec but provided by DataNucleus<
+* link:#valuegen_custom[Custom generators] - these are beyond the scope of the JPA spec but provided by DataNucleus
 
 See also:-
 
@@ -108,7 +108,7 @@ public class MyClass
 
 If the sequence does not yet exist in the database at the time DataNucleus needs a new unique identifier, a new sequence is created in the database based on the JPA Meta-Data configuration. 
 
-Extension properties for configuring sequences can be set in the JPA Meta-Data (via @Extension or <extension>), see the available properties below. 
+Extension properties for configuring sequences can be set in the JPA Meta-Data (via `@Extension` or `<extension>`), see the available properties below. 
 Unsupported properties by a database are silently ignored by DataNucleus.
 
 [cols="1,2,1", options="header"]
@@ -180,11 +180,11 @@ an entry in the base table).
 
 *Please note that if using optimistic transactions, this strategy will mean that the value is only set when the object is actually persisted (i.e at flush() or commit())*
 
-To configure a class to use this generation using *datastore identity* you need to look at the @DatastoreId extension annotation or the XML <datastore-id> tag
+To configure a class to use this generation using *datastore identity* you need to look at the `@DatastoreId` extension annotation or the XML `<datastore-id>` tag
 
 This value generator will generate values unique across different JVMs.
 
-Values generated using this generator are NOT available in @PrePersist, being generated at persist only.
+Values generated using this generator are NOT available in `@PrePersist`, being generated at persist only.
 
 
 [[valuegen_increment]]
@@ -229,7 +229,7 @@ This will create a table in the datastore called "TABLE_VALUE_GEN" with columns 
 
 
 
-Extension properties for configuring sequences can be set in the JPA Meta-Data (via @Extension or <extension>), see the available properties below. 
+Extension properties for configuring sequences can be set in the JPA Meta-Data (via `@Extension` or `<extension>`), see the available properties below. 
 Unsupported properties by a database are silently ignored by DataNucleus.
 
 [cols="1,2,1", options="header"]
@@ -252,7 +252,7 @@ Since there is no "base table name" when the root class has "subclass-table" thi
 |No.
 |===
 
-To configure a class to use this generation using *datastore identity* you need to look at the @DatastoreId extension annotation or the XML <datastore-id> tag
+To configure a class to use this generation using *datastore identity* you need to look at the `@DatastoreId` extension annotation or the XML `<datastore-id>` tag
 
 This value generator will generate values unique across different JVMs
 

@@ -155,9 +155,9 @@ For example a Java field of type "int" will be mapped to a column type of INTEGE
 
 JPA provides 2 ways of influencing the column DDL generated.
 
-* You can specify the _columnDefinition_ of @Column/<column> but you have to provide the complete DDL for that column (without the column name), and hence
+* You can specify the _columnDefinition_ of `@Column`/`<column>` but you have to provide the complete DDL for that column (without the column name), and hence
 can lose database independence by using this route. e.g "VARCHAR(255)"
-* Use @Column/<column> attributes and specify the _length_/_precision_/_scale_ of the column, as well as whether it is unique etc. It will make use of the Java type
+* Use `@Column`/`<column>` attributes and specify the _length_/_precision_/_scale_ of the column, as well as whether it is unique etc. It will make use of the Java type
 to come up with a default datastore type for the column. Sadly JPA doesn't allow specification of the precise datastore type (except for BLOB/CLOB/TIME/TIMESTAMP cases).
 DataNucleus provides an extension to overcome this gap in the JPA spec. Here we make use of a DataNucleus extension annotation @JdbcType or "jdbc-type" extension attribute for <column>.
 Like this
@@ -271,7 +271,7 @@ public class SaleableProduct
 
 Please note the following
 
-* We would typically define our class as using "nondurable" identity (@NonDurableId). This is an important step since rows of the *View*
+* We would typically define our class as using "nondurable" identity (`@NonDurableId`). This is an important step since rows of the *View*
 typically don't operate in the same way as rows of a *Table*, not mapping onto a persisted updateable object as such
 * We've specified the "table", which in this case is the view name - otherwise DataNucleus would create a name for the view based on the class name.
 * We've defined a DataNucleus extension _view-definition_ that defines the view for this class. If the view doesn't already exist it doesn't matter since 
