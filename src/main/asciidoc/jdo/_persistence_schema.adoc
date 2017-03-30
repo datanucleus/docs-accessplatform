@@ -533,7 +533,7 @@ So for example to create the schema for classes _mydomain.A_ and _mydomain.B_ yo
 [source,java]
 -----
 JDOPersistenceManagerFactory pmf = (JDOPersistenceManagerFactory)JDOHelper.getPersistenceManagerFactory("datanucleus.properties");
-NucleusContext ctx = pmf.getNucleusContext();
+PersistenceNucleusContext ctx = pmf.getNucleusContext();
 ...
 List classNames = new ArrayList();
 classNames.add("mydomain.A");
