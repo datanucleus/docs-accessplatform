@@ -117,18 +117,18 @@ The join table is used to link the 2 classes via foreign keys to their primary k
 
 If you wish to fully define the schema table and column names etc, follow these tips
     
-* To specify the name of the table where a class is stored, specify the _table_ attribute on the *class* element
-* To specify the names of the columns where the fields of a class are stored, specify the _column_ attribute on the *field* element.
-* To specify the name of the join table, specify the _table_ attribute on the *field* element with the collection.
-* To specify the names of the join table columns, use the _column_ attribute of _join_, _element_ elements.
-* To specify the foreign-key between container table and join table, specify <foreign-key> below the <join> element.
-* To specify the foreign-key between join table and element table, specify <foreign-key> below either the <field> element or the <element> element.
+* To specify the name of the table where a class is stored, specify the _table_ attribute on the `class` element
+* To specify the names of the columns where the fields of a class are stored, specify the _column_ attribute on the `field` element.
+* To specify the name of the join table, specify the _table_ attribute on the `field` element with the collection.
+* To specify the names of the join table columns, use the _column_ attribute of `join`, `element` elements.
+* To specify the foreign-key between container table and join table, specify `<foreign-key>` below the `<join>` element.
+* To specify the foreign-key between join table and element table, specify <foreign-key> below either the `<field>` element or the `<element>` element.
 * If you wish to share the join table with another relation then use the link:#one_many_shared_join[DataNucleus "shared join table" extension]
 * The join table will, by default, be given a primary key. If you want to omit this then you can turn it off using the 
-DataNucleus metadata extension "primary-key" (within <join>) set to false.
-* The column `ADPT_PK_IDX` is added by DataNucleus so that duplicates can be stored. You can control this by adding an <order> element and 
-specifying the column name for the order column (within <field>).
-* If you want the set to include nulls, you can turn on this behaviour by adding the DataNucleus extension metadata "allow-nulls" to the <field> set to true
+DataNucleus metadata extension "primary-key" (within `<join>`) set to false.
+* The column `ADPT_PK_IDX` is added by DataNucleus so that duplicates can be stored. You can control this by adding an `<order>` element and 
+specifying the column name for the order column (within `<field>`).
+* If you want the set to include nulls, you can turn on this behaviour by adding the DataNucleus extension metadata "allow-nulls" to the `<field>` set to true
 
 
 [[one_many_fk_uni]]
@@ -182,10 +182,10 @@ add the *Address* to the *Account* collection field since the *Address* knows no
     
 If you wish to fully define the schema table and column names etc, follow these tips
 
-* To specify the name of the table where a class is stored, specify the _table_ attribute on the *class* element
-* To specify the names of the columns where the fields of a class are stored, specify the _column_ attribute on the *field* element.
-* To specify the foreign-key between container table and element table, specify <foreign-key> below either the <field> element or the <element> element.
-* To specify the names of the columns used in the schema for the foreign key in the *Address* table you should use the <element> element within the field of the collection.
+* To specify the name of the table where a class is stored, specify the _table_ attribute on the `class` element
+* To specify the names of the columns where the fields of a class are stored, specify the _column_ attribute on the `field` element.
+* To specify the foreign-key between container table and element table, specify `<foreign-key>` below either the `<field>` element or the `<element>` element.
+* To specify the names of the columns used in the schema for the foreign key in the *Address* table you should use the `<element>` element within the field of the collection.
 
 
 WARNING: Since each Address object can have at most one owner (due to the "Foreign Key") this mode of persistence will not allow duplicate values in the Collection.
@@ -263,16 +263,17 @@ The join table is used to link the 2 classes via foreign keys to their primary k
 
 If you wish to fully define the schema table and column names etc, follow these tips
 
-* To specify the name of the table where a class is stored, specify the _table_ attribute on the *class* element
-* To specify the names of the columns where the fields of a class are stored, specify the _column_ attribute on the *field* element.
-* To specify the name of the join table, specify the _table_ attribute on the *field* element with the collection.
-* To specify the names of the join table columns, use the _column_ attribute of _join_, _element_ elements.
-* To specify the foreign-key between container table and join table, specify <foreign-key> below the <join> element.
-* To specify the foreign-key between join table and element table, specify <foreign-key> below either the <field> element or the <element> element.
+* To specify the name of the table where a class is stored, specify the _table_ attribute on the `class` element
+* To specify the names of the columns where the fields of a class are stored, specify the _column_ attribute on the `field` element.
+* To specify the name of the join table, specify the _table_ attribute on the `field` element with the collection.
+* To specify the names of the join table columns, use the _column_ attribute of `join`, `element` elements.
+* To specify the foreign-key between container table and join table, specify <foreign-key> below the `<join>` element.
+* To specify the foreign-key between join table and element table, specify <foreign-key> below either the `<field>` element or the `<element>` element.
 * If you wish to share the join table with another relation then use the link:#one_many_shared_join[DataNucleus "shared join table" extension]
-* The join table will, by default, be given a primary key. If you want to omit this then you can turn it off using the DataNucleus metadata extension "primary-key" (within <join>) set to false.
-* The column `ADPT_PK_IDX` is added by DataNucleus so that duplicates can be stored. You can control this by adding an <order> element and 
-specifying the column name for the order column (within <field>).
+* The join table will, by default, be given a primary key. If you want to omit this then you can turn it off using the DataNucleus metadata extension "primary-key" (within `<join>`) 
+set to false.
+* The column `ADPT_PK_IDX` is added by DataNucleus so that duplicates can be stored. You can control this by adding an `<order>` element and 
+specifying the column name for the order column (within `<field>`).
 * When forming the relation please make sure that *you set the relation at BOTH sides* since DataNucleus would have no way of knowing which end is correct if you only set one end.
 * If you want the set to include nulls, you can turn on this behaviour by adding the extension metadata "allow-nulls" to the <field> set to true
 
@@ -332,9 +333,9 @@ image:../images/relationship_1_N_bi_collection_fk_db.png[]
     
 If you wish to fully define the schema table and column names etc, follow these tips
 
-* To specify the name of the table where a class is stored, specify the _table_ attribute on the *class* element
-* To specify the names of the columns where the fields of a class are stored, specify the _column_ attribute on the *field* element.
-* To specify the foreign-key between container table and element table, specify <foreign-key> below either the <field> element or the <element> element.
+* To specify the name of the table where a class is stored, specify the _table_ attribute on the `class` element
+* To specify the names of the columns where the fields of a class are stored, specify the _column_ attribute on the `field` element.
+* To specify the foreign-key between container table and element table, specify `<foreign-key>` below either the `<field>` element or the `<element>` element.
 * When forming the relation please make sure that *you set the relation at BOTH sides* since DataNucleus would have no way of knowing which end is correct if you only set one end.
 
     
@@ -427,10 +428,10 @@ In the datastore the following is created
 
 image:../images/relationship_1_N_primitive_collection_db.png[]
 
-The `ACCOUNT` table is as before, but this time we only have the "join table". In our MetaData we used the <element> tag to specify the column name to use for the actual address String.
+The `ACCOUNT` table is as before, but this time we only have the "join table". In our MetaData we used the `<element>` tag to specify the column name to use for the actual address String.
 
-NOTE: the column `ADPT_PK_IDX` is added by DataNucleus so that duplicates can be stored. You can control the name of this column by adding an <order> element and specifying the 
-column name for the order column (within <field>).
+NOTE: the column `ADPT_PK_IDX` is added by DataNucleus so that duplicates can be stored. You can control the name of this column by adding an `<order>` element and specifying the 
+column name for the order column (within `<field>`).
 
 
 
@@ -651,7 +652,7 @@ or using XML metadata
 -----
 
 
-So we have defined the same foreign key for the 2 collections `ACCOUNT_ID_OID`, The important step is then to define the 2 DataNucleus _extension_ tags (@SharedRelation annotation). 
+So we have defined the same foreign key for the 2 collections `ACCOUNT_ID_OID`, The important step is then to define the 2 DataNucleus `<extension>` tags (`@SharedRelation` annotation). 
 These define a column in the element table (the same for both relations), and the value that will be populated when a row of that collection is inserted into the element table. 
 In our case, all "home" addresses will have a value of "home" inserted into this column, and all "work" addresses will have "work" inserted. 
 This means we can now identify easily which element table entry represents which relation field.
@@ -726,7 +727,7 @@ This will create 4 tables in the datastore, one for *Account*, one for *Address*
 
 image:../images/relationship_1_N_uni_map_pc_pc_db.png[]
 
-If you want to configure the names of the columns in the "join" table you would use the <key> and <value> sub-elements of <field>, something like this
+If you want to configure the names of the columns in the "join" table you would use the `<key>` and `<value>` sub-elements of `<field>`, something like this
 
 [source,xml]
 -----
@@ -746,13 +747,13 @@ If you want to configure the names of the columns in the "join" table you would 
 
 If you wish to fully define the schema table and column names etc, follow these tips
 
-* To specify the name of the table where a class is stored, specify the _table_ attribute on the *class* element
-* To specify the names of the columns where the fields of a class are stored, specify the _column_ attribute on the *field* element.
+* To specify the name of the table where a class is stored, specify the _table_ attribute on the `class` element
+* To specify the names of the columns where the fields of a class are stored, specify the _column_ attribute on the `field` element.
 * To specify the name of the join table, specify the _table_ attribute on the *field* element.
-* To specify the names of the columns of the join table, specify the _column_ attribute on the *join*, *key*, and *value* elements.
-* To specify the foreign-key between container table and join table, specify <foreign-key> below the <join> element.
-* To specify the foreign-key between join table and key table, specify <foreign-key> below the <key> element.
-* To specify the foreign-key between join table and value table, specify <foreign-key> below the <value> element.
+* To specify the names of the columns of the join table, specify the _column_ attribute on the `join`, `key`, and `value` elements.
+* To specify the foreign-key between container table and join table, specify `<foreign-key>` below the `<join>` element.
+* To specify the foreign-key between join table and key table, specify `<foreign-key>` below the `<key>` element.
+* To specify the foreign-key between join table and value table, specify `<foreign-key>` below the `<value>` element.
 
 Which changes the names of the join table to `ACCOUNT_ADDRESS` from `ACCOUNT_ADDRESSES` and the names of the columns in the join table from 
 `ACCOUNT_ID_OID` to `ACCOUNT_ID`, from `NAME_ID_KID` to `NAME_ID`, and from `ADDRESS_ID_VID` to `ADDRESS_ID`.
@@ -809,7 +810,7 @@ This will create 3 tables in the datastore, one for *Account*, one for *Address*
 
 image:../images/relationship_1_N_uni_map_simple_pc_db.png[]
 
-If you want to configure the names of the columns in the "join" table you would use the <key> and <value> subelements of <field> as shown above.
+If you want to configure the names of the columns in the "join" table you would use the `<key>` and `<value>` subelements of `<field>` as shown above.
 
 Please note that the column `ADPT_PK_IDX` is added by DataNucleus when the column type of the key is not valid to be part of a primary key (with the RDBMS being used). 
 If the column type of your key is acceptable for use as part of a primary key then you will not have this `ADPT_PK_IDX` column.
@@ -913,7 +914,7 @@ This results in just 2 tables. The "join" table contains both the key AND the va
 
 image:../images/relationship_1_N_uni_map_simple_simple_db.png[]
 
-If you want to configure the names of the columns in the "join" table you would use the <key> and <value> subelements of <field> as shown above.
+If you want to configure the names of the columns in the "join" table you would use the `<key>` and `<value>` subelements of `<field>` as shown above.
 
 Please note that the column `ADPT_PK_IDX` is added by DataNucleus when the column type of the key is not valid to be part of a primary key (with the RDBMS being used). 
 If the column type of your key is acceptable for use as part of a primary key then you will not have this `ADPT_PK_IDX` column.
@@ -1141,9 +1142,9 @@ public class Account
 </package>
 -----
 
-There will be 2 tables, one for *Address*, and one for *Account*. The key thing here is that we have specified a "mapped-by" on the "value" element.
+There will be 2 tables, one for *Address*, and one for *Account*. The key thing here is that we have specified a "mapped-by" on the `<value>` element.
 
-If you wish to specify the names of the columns used in the schema for the foreign key in the `ADDRESS` table you should use the _key_ element within the field of the map.
+If you wish to specify the names of the columns used in the schema for the foreign key in the `ADDRESS` table you should use the `<key>` element within the field of the map.
 
 image:../images/relationship_1_N_map_value_in_key_db.png[]
 
