@@ -120,7 +120,7 @@ or using XML metadata
 </entity-mappings>
 -----
 
-Note how we have specified the information only once regarding join table name, and join column names as well as the <join-table>. 
+Note how we have specified the information only once regarding join table name, and join column names as well as the `<join-table>`/`@JoinTable`. 
 This is the JPA standard way of specification, and results in a single join table. The "mapped-by" ties the two fields together.
 
 image:../images/relationship_M_N_singlejoin_db.png[]
@@ -193,7 +193,7 @@ or using XML metadata
 </entity-mappings>
 -----
 
-There will be 3 tables, one for *Product*, one for *Supplier*, and the join table. The difference from the Set example is that we now have <order-by> at both sides of the relation. 
+There will be 3 tables, one for *Product*, one for *Supplier*, and the join table. The difference from the Set example is that we now have `<order-by>`/`@OrderBy` at both sides of the relation. 
 This has no effect in the datastore schema but when the Lists are retrieved they are ordered using the specified _order-by_.
 
 image:../images/relationship_M_N_singlejoin_db.png[]
