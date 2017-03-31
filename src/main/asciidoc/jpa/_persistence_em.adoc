@@ -7,8 +7,8 @@ Now that we have our link:#emf[EntityManagerFactory], providing the connection f
 to obtain an _EntityManager_ (EM) to manage the persistence of objects. Here we describe the majority of operations that you will are likely
 to need to know about.
 
-NOTE: An _EntityManagerFactory_ is designed to be thread-safe. An _EntityManager_ is not.* 
-If you set the persistence property *datanucleus.Multithreaded* this acts as a hint to the EMF to provide _EntityManager_s that are usable with multiple threads. 
+NOTE: An _EntityManagerFactory_ is designed to be thread-safe. An _EntityManager_ is not.
+If you set the persistence property *datanucleus.Multithreaded* this acts as a hint to the EMF to provide _EntityManager(s)_ that are usable with multiple threads. 
 While DataNucleus makes efforts to make this _EntityManager_ usable with multiple threads, it is not guaranteed to work multi-threaded in all situations, 
 particularly around second class collection/map fields.
 
