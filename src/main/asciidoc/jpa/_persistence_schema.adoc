@@ -481,7 +481,7 @@ So for example to create the schema for classes _mydomain.A_ and _mydomain.B_ yo
 [source,java]
 -----
 EntityManagerFactory emf = Persistence.createEntityManagerFactory("MyUnit");
-PersistenceNucleusContext nucCtx = emf.unwrap(NucleusContext.class);
+PersistenceNucleusContext nucCtx = (PersistenceNucleusContext)emf.unwrap(NucleusContext.class);
 ...
 List classNames = new ArrayList();
 classNames.add("mydomain.A");
