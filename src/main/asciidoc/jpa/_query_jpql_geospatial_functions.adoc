@@ -90,7 +90,7 @@ An entry in the "Result" column indicates, whether the funcion may be used in th
 |icon:check[]
 |===
 
-[1] These functions can't be used in the return part because it's not possible to determine the return type from the parameters.</p>
+[1] These functions can't be used in the return part because it's not possible to determine the return type from the parameters.
 
 == Functions for Constructing a Geometry Value given its Well-known Binary Representation (OGC SF 3.2.7)
 
@@ -872,7 +872,7 @@ public class SampleLineString
 
 === Example 1 - Spatial Function in the Filter of a Query
 
-This example shows how to use spatial functions in the filter of a query. The query returns a list of _SampleLineString_s whose line string has a length less than the given limit.
+This example shows how to use spatial functions in the filter of a query. The query returns a list of _SampleLineString(s)_ whose line string has a length less than the given limit.
 
 [source,java]
 -----
@@ -896,7 +896,7 @@ Geometry point = q.getSingleResult();
 
 === Example 3 - Nested Functions
 
-You may want to use nested functions in your query. This example shows how to do that. The query returns a list of _SampleLineString_s, whose end point spatially equals a given point.
+You may want to use nested functions in your query. This example shows how to do that. The query returns a list of _SampleLineString(s)_, whose end point spatially equals a given point.
 
 [source,java]
 -----

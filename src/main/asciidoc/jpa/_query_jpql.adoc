@@ -517,7 +517,7 @@ There are a series of functions for use with temporal values
 |icon:check[]
 
 |MONTH(dateField)
-|Returns the month of the specified date (1-12) in timezone it was stored. Previous to 5.0.0.M2 this was (0-11).
+|Returns the month of the specified date (1-12) in timezone it was stored.
 |icon:times[]
 |icon:check[]
 
@@ -742,10 +742,8 @@ Query q = em.createQuery("SELECT VALUE(p.addresses) FROM Person p WHERE KEY(p.ad
 
 Beyond this, you can also make use of the link:#jpql_functions_map[map functions] and use the size of the map for example.
 
-NOTE: in the JPA spec they allow a user to interchangeably use "p.addresses" to refer to the _value_ of the Map. 
-DataNucleus doesn't support that since that primary expression is a Map field, and the Map can equally be represented as a join table,
-key stored in value, or value stored in key. Hence you should always use VALUE(...) if you mean to refer to the Map value - besides
-it is a damn sight clearer the intent by doing that.
+NOTE: in the JPA spec they allow a user to interchangeably use "p.addresses" to refer to the _value_ of the Map. Whilst DataNucleus supports
+this, we advise using explicit _VALUE({field})_ since it is clearer the intent and makes for more readable queries.
 
 
 
@@ -937,8 +935,8 @@ For many (usually non-RDBMS) datastores it is simply impossible to support the f
 necessary to evaluate the query in-memory. This means that we evaluate as much as we can in the datastore and then instantiate those objects and evaluate further in-memory.
 Here we document the current capabilities of _in-memory evaluation_ in DataNucleus.
 
-* Subqueries using ALL, ANY, SOME, EXISTS are not currently supported
-* MEMBER OF syntax is not currently supported.
+* Subqueries using ALL, ANY, SOME, EXISTS are not currently supported for use in-memory.
+* MEMBER OF syntax is not currently supported for use in-memory.
 
 To enable evaluation in memory you specify the query hint *datanucleus.query.evaluateInMemory* to _true_ as follows
 
@@ -975,10 +973,11 @@ or using annotations
 public class Product {...}
 -----
 
-*Note that DataNucleus also supports specifying this using annotations in non-Entity classes. This is beyond the JPA spec, but is very useful in real applications*
+NOTE: DataNucleus also supports specifying this using `@NamedQuery` annotation in non-Entity classes. This is beyond the JPA spec, but is very useful in real applications.
 
-So we have a JPQL query called "SoldOut" defined for the class _Product_ that returns all Products (and subclasses) that have a _status_ of "Sold Out". 
-Out of interest, what we would then do in our application to execute this query would be
+
+Above we have a JPQL query called "SoldOut" defined for the class _Product_ that returns all Products (and subclasses) that have a _status_ of "Sold Out". 
+To execute this query we would do as follows
 
 [source,java]
 -----
@@ -998,6 +997,7 @@ Query q = em.createQuery("SELECT p FROM Product p WHERE ...");
 ...
 emf.addNamedQuery("MyQuery", q);
 -----
+
 
 image:../images/nucleus_extension.png[]
 
@@ -1031,7 +1031,19 @@ query.setHint("datanucleus.jpql.strict", "true");
 == JPQL : SQL Generation for RDBMS
 
 With a JPQL query running on an RDBMS the query is compiled into SQL. Here we give a few examples of what SQL is generated. 
-You can of course try this for yourself observing the content of the DataNucleus log.
+You can of course try this for yourself observing the content of the DataNucleus log, or by using the following vendor extension
+
+[source,java]
+-----
+Query q = em.createQuery(...);
+List results = q.getResultList();
+
+String sql = (String)((org.datanucleus.api.jpa.JPAQuery)q).getNativeQuery();
+-----
+
+For non-RDBMS datastores this can return other object types.
+
+
 
 In JPQL you specify a candidate class and its alias (identifier). In addition you can specify joins with their respective alias. 
 The DataNucleus implementation of JPQL will preserve these aliases in the generated SQL.
