@@ -505,7 +505,7 @@ There are a series of functions for use with temporal values
 |icon:check[]
 
 |MONTH(dateField)
-|Returns the month of the specified date (1-12) in timezone it was stored. Previous to 5.0.0.M2 this was (0-11).
+|Returns the month of the specified date (1-12) in timezone it was stored.
 |icon:times[]
 |icon:check[]
 
@@ -730,10 +730,8 @@ Query q = em.createQuery("SELECT VALUE(p.addresses) FROM Person p WHERE KEY(p.ad
 
 Beyond this, you can also make use of the link:#jpql_functions_map[map functions] and use the size of the map for example.
 
-NOTE: In the JPA spec they allow a user to interchangeably use "p.addresses" to refer to the _value_ of the Map. 
-DataNucleus doesn't fully support all usages of this since that primary expression is a Map field, and the Map can equally be represented as a join table,
-key stored in value, or value stored in key. Hence you should always use VALUE(...) if you mean to refer to the Map value - besides
-it is a damn sight clearer the intent by doing that.
+NOTE: In the JPA spec they allow a user to interchangeably use "p.addresses" to refer to the _value_ of the Map. DataNucleus supports this usage
+but we strongly recommend to explicitly use _VALUE({field})_ since it makes queries much more readable.
 
 
 
