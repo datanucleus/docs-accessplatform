@@ -85,18 +85,6 @@ plugin in your `pom.xml` file. Some properties that you may need to change are b
 |
 |Name of the persistence-unit to enhance. *Mandatory*
 
-|metadataDirectory
-|${project.build.outputDirectory}
-|Directory to use for enhancement files (classes/mappings). For example, you could set this to ${project.build.testOutputDirectory} when enhancing Maven test classes
-
-|metadataIncludes
-|**/*.jdo, **/*.class
-|Fileset to include for enhancement (if not using persistence-unit)
-
-|metadataExcludes
-|
-|Fileset to exclude for enhancement (if not using persistence-unit)
-
 |log4jConfiguration
 |
 |Config file location for Log4J (if using it)
@@ -127,7 +115,7 @@ plugin in your `pom.xml` file. Some properties that you may need to change are b
 
 |generatePK
 |true
-|Generate a PK class (of name {MyClass}_PK) for cases where there are multiple PK fields yet no PK class is defined.
+|Generate a PK class (of name {MyClass}_PK) for cases where there are multiple PK fields yet no _IdClass_ is defined.
 
 |generateConstructor
 |true
@@ -139,7 +127,7 @@ plugin in your `pom.xml` file. Some properties that you may need to change are b
 
 |ignoreMetaDataForMissingClasses
 |false
-|Whether to ignore when we have metadata specified for classes that aren't found
+|Whether to ignore when we have metadata specified for classes that aren't found (e.g in `orm.xml`)
 |===
 
 You will need to add _(org.datanucleus) datanucleus-api-jpa_ into the CLASSPATH (of the plugin, or your project) for the enhancer to operate. 
@@ -215,7 +203,7 @@ In the DataNucleus Enhancer Ant task, the following parameters are available
 |Set this to *JPA*
 
 |persistenceUnit
-|Defines the "persistence-unit" to enhance.
+|Defines the "persistence-unit" to enhance. Mandatory for JPA usage
 |
 
 |checkonly
@@ -244,7 +232,7 @@ In the DataNucleus Enhancer Ant task, the following parameters are available
 |
 
 |ignoreMetaDataForMissingClasses
-|Optional. Whether to ignore when we have metadata specified for classes that aren't found
+|Optional. Whether to ignore when we have metadata specified for classes that aren't found (e.g in `orm.xml`)
 |
 |===
 
@@ -264,6 +252,7 @@ So you could define something _like_ the following, setting up the parameter *en
     </datanucleusenhancer>
 </target>
 -----
+
 
 [[manual]]
 == Manually
@@ -292,6 +281,7 @@ java -cp classpath  org.datanucleus.enhancer.DataNucleusEnhancer [options]
         `datanucleus-api-jpa.jar`
         `javax.persistence.jar`
         `log4j.jar` (optional)
+        `META-INF/persistence.xml`
         your classes
         your meta-data files
 -----
