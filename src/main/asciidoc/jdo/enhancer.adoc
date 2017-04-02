@@ -196,7 +196,7 @@ If you wanted to enhance test classes as well, then use two executions
         <plugin>
             <groupId>org.datanucleus</groupId>
             <artifactId>datanucleus-maven-plugin</artifactId>
-            <version>5.0.0-release</version>
+            <version>5.0.2</version>
             <configuration>
                 <log4jConfiguration>${basedir}/log4j.properties</log4jConfiguration>
                 <verbose>true</verbose>
@@ -462,16 +462,14 @@ To speed this up you can specify an argument to that command specifying the name
 java -javaagent:datanucleus-core.jar=-api=JDO,mydomain.mypackage1,mydomain.mypackage2 Main
 -----
 
-
 so in this case only classes being loaded that are in _mydomain.mypackage1_ and _mydomain.mypackage2_ will be attempted to be enhanced.
 
 Please take care over the following when using runtime enhancement
 
-* When you have a class with a field of another persistable type, make sure that you mark that field as "persistent" (@Persistent)
-since with runtime enhancement at that point the related class is likely not yet enhanced so will likely not be marked as persistent otherwise.
-*Be explicit*
+* When you have a class with a field of another persistable type, make sure that you mark that field as "persistent" (e.g `@Persistent`)
+since with runtime enhancement at that point the related class is likely not yet enhanced may not be marked as persistent otherwise. *Be explicit*
 * If the agent jar is not found make sure it is specified with an absolute path.
-                    
+
 
 
 [[api]]

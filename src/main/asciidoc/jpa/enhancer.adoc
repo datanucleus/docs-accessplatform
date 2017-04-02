@@ -356,7 +356,7 @@ so in this case only classes being loaded that are in _mydomain.mypackage1_ and 
 
 Please take care over the following when using runtime enhancement
 
-* When you have a class with a field of another entity type make sure that you mark the field with the relation annotation (@OneToOne, @OneToMany, @ManyToOne, @ManyToMany etc)
+* When you have a class with a field of another entity type make sure that you mark the field with the relation annotation (`@OneToOne`, `@OneToMany`, `@ManyToOne`, `@ManyToMany` etc)
 since with runtime enhancement at that point the related class is likely not yet enhanced so will likely not be marked as persistent otherwise. *Be explicit*
 * If the agent jar is not found make sure it is specified with an absolute path.
 
