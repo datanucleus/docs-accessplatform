@@ -108,6 +108,8 @@ annotate the class that will access these public fields (assuming it isn't an En
 
 [source,java]
 -----
+import org.datanucleus.api.jpa.annotations.PersistenceAware;
+
 @PersistenceAware
 public class MyClassThatAccessesPublicFields
 {
@@ -129,11 +131,21 @@ You can, if you wish, make a class _read-only_. This is a DataNucleus extension 
 
 [source,java]
 -----
+import org.datanucleus.api.jpa.annotations.ReadOnly;
+
 @Entity
-@Extension(key="read-only", value="true")
+@ReadOnly
 public class MyClass
 {
     ...
 }
 -----
+
+In practical terms this means that at runtime, if you try to persist an object of this type then an exception will be thrown. You can read objects of this type from the datastore
+just as you would for any persistable class
+
+See also :-
+
+* link:annotations.html#ReadOnly_Class[Annotations reference for @ReadOnly]
+
 
