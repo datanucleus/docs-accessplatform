@@ -142,18 +142,7 @@ and it will pass in _defaultRowPrefetch_ as "50" into the driver used by the con
 
 DataNucleus provides a builtin version of DBCP2 to provide pooling. This is automatically selected if using RDBMS, unless you specify otherwise. 
 An alternative is to use an external http://jakarta.apache.org/commons/dbcp/[DBCP2]. 
-This is accessed by specifying the persistence property *datanucleus.connectionPoolingType*. To utilise DBCP2-based connection pooling we do this
-
-[source,java]
------
-// Specify our persistence properties used for creating our PMF
-Properties props = new Properties();
-properties.setProperty("javax.persistence.jdbc.driver","com.mysql.jdbc.Driver");
-properties.setProperty("javax.persistence.jdbc.url","jdbc:mysql://localhost/myDB");
-properties.setProperty("javax.persistence.jdbc.user","login");
-properties.setProperty("javax.persistence.jdbc.password","password");
-properties.setProperty("datanucleus.connectionPoolingType", "dbcp2");
------
+This is accessed by specifying the persistence property *datanucleus.connectionPoolingType* to _DBCP2_.
 
 So the _PMF_ will use connection pooling using DBCP version 2. To do this you will need `commons-dbcp2`, `commons-pool2` JARs to be in the CLASSPATH.
 
@@ -178,18 +167,7 @@ datanucleus.connectionPool.timeBetweenEvictionRunsMillis=2400000
 
 DataNucleus allows you to utilise a connection pool using http://jakarta.apache.org/commons/dbcp/[DBCP] (v1) to efficiently manage the connections to the datastore. 
 It is recommended to use DBCP v2 instead of DBCP v1 for all JRE's 1.7+.
-This is accessed by specifying the persistence property *datanucleus.connectionPoolingType* etc like this
-
-[source,java]
------
-// Specify our persistence properties used for creating our PMF
-Properties props = new Properties();
-properties.setProperty("javax.persistence.jdbc.driver","com.mysql.jdbc.Driver");
-properties.setProperty("javax.persistence.jdbc.url","jdbc:mysql://localhost/myDB");
-properties.setProperty("javax.persistence.jdbc.user","login");
-properties.setProperty("javax.persistence.jdbc.password","password");
-properties.setProperty("datanucleus.connectionPoolingType", "DBCP");
------
+This is accessed by specifying the persistence property *datanucleus.connectionPoolingType* to _DBCP_.
 
 So the _PMF_ will use connection pooling using DBCP. To do this you will need `commons-dbcp`, `commons-pool` and `commons-collections` JARs to be in the CLASSPATH.
 
@@ -217,24 +195,11 @@ datanucleus.connectionPool.minEvictableIdleTimeMillis=18000000
 
 DataNucleus allows you to utilise a connection pool using C3P0 to efficiently manage the connections to the datastore.
 http://www.sf.net/projects/c3p0[C3P0] is a third-party library providing connection pooling. 
-This is accessed by specifying the persistence property *datanucleus.connectionPoolingType*.
-To utilise C3P0-based connection pooling we do this
-
-[source,java]
------
-// Specify our persistence properties used for creating our PMF
-Properties props = new Properties();
-properties.setProperty("javax.persistence.jdbc.driver","com.mysql.jdbc.Driver");
-properties.setProperty("javax.persistence.jdbc.url","jdbc:mysql://localhost/myDB");
-properties.setProperty("javax.persistence.jdbc.user","login");
-properties.setProperty("javax.persistence.jdbc.password","password");
-properties.setProperty("datanucleus.connectionPoolingType", "C3P0");
------
+This is accessed by specifying the persistence property *datanucleus.connectionPoolingType* to _C3P0_.
 
 So the _PMF_ will use connection pooling using C3P0. To do this you will need the `c3p0` JAR to be in the CLASSPATH. 
+
 If you want to configure C3P0 further you can include a `c3p0.properties` in your CLASSPATH - see the C3P0 documentation for details.
-
-
 You can also specify persistence properties to control the actual pooling. The currently supported properties for C3P0 are shown below
 
 -----
@@ -253,18 +218,7 @@ datanucleus.connectionPool.maxStatements=20
 
 DataNucleus allows you to utilise a connection pool using Proxool to efficiently manage the connections to the datastore.
 http://proxool.sourceforge.net/[Proxool] is a third-party library providing connection pooling. 
-This is accessed by specifying the persistence property *datanucleus.connectionPoolingType*. To utilise Proxool-based connection pooling we do this
-
-[source,java]
------
-// Specify our persistence properties used for creating our PMF
-Properties props = new Properties();
-properties.setProperty("javax.persistence.jdbc.driver","com.mysql.jdbc.Driver");
-properties.setProperty("javax.persistence.jdbc.url","jdbc:mysql://localhost/myDB");
-properties.setProperty("javax.persistence.jdbc.user","login");
-properties.setProperty("javax.persistence.jdbc.password","password");
-properties.setProperty("datanucleus.connectionPoolingType", "Proxool");
------
+This is accessed by specifying the persistence property *datanucleus.connectionPoolingType* to _Proxool_.
 
 So the _PMF_ will use connection pooling using Proxool. To do this you will need the `proxool` and `commons-logging` JARs to be in the CLASSPATH.
 
@@ -281,20 +235,8 @@ datanucleus.connectionPool.testSQL=SELECT 1
 
 DataNucleus allows you to utilise a connection pool using BoneCP to efficiently manage the connections to the datastore.
 http://www.jolbox.com[BoneCP] is a third-party library providing connection pooling. 
-This is accessed by specifying the persistence property *datanucleus.connectionPoolingType*. 
-To utilise BoneCP-based connection pooling we do this
+This is accessed by specifying the persistence property *datanucleus.connectionPoolingType* to _BoneCP_.
 
-[source,java]
------
-// Specify our persistence properties used for creating our PMF
-Properties props = new Properties();
-properties.setProperty("javax.persistence.jdbc.driver","com.mysql.jdbc.Driver");
-properties.setProperty("javax.persistence.jdbc.url","jdbc:mysql://localhost/myDB");
-properties.setProperty("javax.persistence.jdbc.user","login");
-properties.setProperty("javax.persistence.jdbc.password","password");
-properties.setProperty("datanucleus.connectionPoolingType", "BoneCP");
------
-                
 So the _PMF_ will use connection pooling using BoneCP. To do this you will need the `bonecp` JAR (and `slf4j`, `google-collections`) to be in the CLASSPATH.
 
 You can also specify persistence properties to control the actual pooling. The currently supported properties for BoneCP are shown below
@@ -314,23 +256,11 @@ datanucleus.connectionPool.maxStatements=20
 
 DataNucleus allows you to utilise a connection pool using HikariCP to efficiently manage the connections to the datastore.
 https://github.com/brettwooldridge/HikariCP[HikariCP] is a third-party library providing connection pooling. 
-This is accessed by specifying the persistence property *datanucleus.connectionPoolingType*.
-To utilise this connection pooling we do this
-
-[source,java]
------
-// Specify our persistence properties used for creating our PMF
-Properties props = new Properties();
-properties.setProperty("datanucleus.ConnectionDriverName","com.mysql.jdbc.Driver");
-properties.setProperty("datanucleus.ConnectionURL","jdbc:mysql://localhost/myDB");
-properties.setProperty("datanucleus.ConnectionUserName","login");
-properties.setProperty("datanucleus.ConnectionPassword","password");
-properties.setProperty("datanucleus.connectionPoolingType", "HikariCP");
------
+This is accessed by specifying the persistence property *datanucleus.connectionPoolingType* to _HikariCP_.
 
 So the _PMF_ will use connection pooling using HikariCP. To do this you will need the `hikaricp` JAR (and `slf4j`, `javassist` as required) to be in the CLASSPATH.
-You can also specify persistence properties to control the actual pooling.
-The currently supported properties for HikariCP are shown below
+
+You can also specify persistence properties to control the actual pooling. The currently supported properties for HikariCP are shown below
 
 -----
 # Pooling of Connections
@@ -345,19 +275,7 @@ datanucleus.connectionPool.maxLifetime=240
 === RDBMS : Tomcat
 
 DataNucleus allows you to utilise a connection pool using Tomcat JDBC Pool to efficiently manage the connections to the datastore. 
-This is accessed by specifying the persistence property *datanucleus.connectionPoolingType*.
-To utilise Tomcat-based connection pooling we do this
-
-[source,java]
------
-// Specify our persistence properties used for creating our PMF
-Properties props = new Properties();
-properties.setProperty("javax.persistence.jdbc.driver","com.mysql.jdbc.Driver");
-properties.setProperty("javax.persistence.jdbc.url","jdbc:mysql://localhost/myDB");
-properties.setProperty("javax.persistence.jdbc.user","login");
-properties.setProperty("javax.persistence.jdbc.password","password");
-properties.setProperty("datanucleus.connectionPoolingType", "tomcat");
------
+This is accessed by specifying the persistence property *datanucleus.connectionPoolingType* to _tomcat_.
 
 So the _PMF_ will use a DataSource with connection pooling using Tomcat. To do this you will need the `tomcat-jdbc` JAR to be in the CLASSPATH.
 

@@ -1803,6 +1803,6 @@ If you require more control over the Coherence cache whilst using it with DataNu
 
 [source,java]
 -----
-DataStoreCache cache = pmf.getDataStoreCache();
-NamedCache tangosolCache = ((TangosolLevel2Cache)cache).getTangosolCache();
+JDODataStoreCache cache = (JDODataStoreCache)pmf.getDataStoreCache();
+NamedCache tangosolCache = ((TangosolLevel2Cache)cache.getLevel2Cache()).getTangosolCache();
 -----

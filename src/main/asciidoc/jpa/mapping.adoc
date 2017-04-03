@@ -5,11 +5,11 @@
 :jpa:
 
 To implement a persistence layer with JPA you firstly need to map the classes and fields/properties that are involved in the persistence process to how they are represented in the datastore.
-This can be as simple as marking the classes as an `@Entity` and defaulting the datastore definition, or you can configure down to the fine detail of precisely what schema it maps on to.
+This can be as simple as marking the classes as `@Entity` and defaulting the datastore definition, or you can configure down to the fine detail of precisely what schema it maps on to.
 The following sections deal with the many options available for using metadata to map your entities.
 
 
-When mapping a class for JPA you can make use of _metadata_. This _metadata_ can be Java annotations, or can be XML metadata, or a mixture of both. 
+When mapping a class for JPA you make use of _metadata_, and this _metadata_ can be Java annotations, or can be XML metadata, or a mixture of both. 
 This is very much down to your own personal preference but we try to present both ways here.
 
 TIP: We advise trying to keep schema information out of annotations, so that you avoid tying compiled code to a specific datastore. That way you
