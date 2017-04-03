@@ -6,8 +6,8 @@
 
 
 To implement a persistence layer with JDO you firstly need to map the classes and fields/properties that are involved in the persistence process.
-This can be as simple as marking the classes as an @PersistenceCapable, or you can configure down to the fine detail of precisely what schema it maps on to.
-The following sections deal with the many options available. This guide takes you through the many metadata options.
+This can be as simple as marking the classes as an `@PersistenceCapable`, or you can configure down to the fine detail of precisely what schema it maps on to.
+The following sections deal with the many options available for using metadata to map your persistable classes.
 
 
 When mapping a class for JDO you can make use of _metadata_. This _metadata_ can be Java annotations, or can be XML metadata, or a mixture of both,
@@ -45,12 +45,12 @@ extra compile cycle (and also you may need to deploy to some other datastore at 
 
 include::_mapping_classes.adoc[leveloffset=+1]
 include::_mapping_inheritance.adoc[leveloffset=+1]
+include::_mapping_identity.adoc[leveloffset=+1]
+include::_mapping_versioning.adoc[leveloffset=+1]
 include::_mapping_auditing.adoc[leveloffset=+1]
 
 include::_mapping_members.adoc[leveloffset=+1]
 include::_mapping_types.adoc[leveloffset=+1]
-include::_mapping_identity.adoc[leveloffset=+1]
-include::_mapping_versioning.adoc[leveloffset=+1]
 include::_mapping_value_generation.adoc[leveloffset=+1]
 
 include::_mapping_one_to_one.adoc[leveloffset=+1]

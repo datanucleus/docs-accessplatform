@@ -5,8 +5,8 @@
 :jpa:
 
 To implement a persistence layer with JPA you firstly need to map the classes and fields/properties that are involved in the persistence process to how they are represented in the datastore.
-This can be as simple as marking the classes as an @Entity and defaulting the datastore definition, or you can configure down to the fine detail of precisely what schema it maps on to.
-The following sections deal with the many options available. This guide takes you through the many metadata mapping options.
+This can be as simple as marking the classes as an `@Entity` and defaulting the datastore definition, or you can configure down to the fine detail of precisely what schema it maps on to.
+The following sections deal with the many options available for using metadata to map your entities.
 
 
 When mapping a class for JPA you can make use of _metadata_. This _metadata_ can be Java annotations, or can be XML metadata, or a mixture of both. 
@@ -22,12 +22,12 @@ Consult the link:../jdo/mapping.html[DataNucleus JDO mappings docs] for details.
 
 include::_mapping_classes.adoc[leveloffset=+1]
 include::_mapping_inheritance.adoc[leveloffset=+1]
+include::_mapping_identity.adoc[leveloffset=+1]
+include::_mapping_versioning.adoc[leveloffset=+1]
 include::_mapping_auditing.adoc[leveloffset=+1]
 
 include::_mapping_members.adoc[leveloffset=+1]
 include::_mapping_types.adoc[leveloffset=+1]
-include::_mapping_identity.adoc[leveloffset=+1]
-include::_mapping_versioning.adoc[leveloffset=+1]
 include::_mapping_value_generation.adoc[leveloffset=+1]
 
 include::_mapping_one_to_one.adoc[leveloffset=+1]
