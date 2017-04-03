@@ -67,7 +67,7 @@ public class MyClass
 }
 -----
 
-To configure a class to use this generation using *datastore identity* you need to look at the @DatastoreId extension annotation or the XML <datastore-id> tag
+To configure a class to use this generation using *datastore identity* you need to look at the `@DatastoreId` extension annotation or the XML `<datastore-id>` tag
 
 
 [[valuegen_sequence]]
@@ -122,11 +122,11 @@ Unsupported properties by a database are silently ignored by DataNucleus.
 |No
 |===
 
-To configure a class to use this generation using *datastore identity* you need to look at the @DatastoreId extension annotation or the XML <datastore-id> tag.
+To configure a class to use this generation using *datastore identity* you need to look at the `@DatastoreId` extension annotation or the XML `<datastore-id>` tag.
 
 This value generator will generate values unique across different JVMs
 
-Values generated using this generator are available in @PrePersist.
+Values generated using this generator are available in `@PrePersist`.
 
 See also:-
 
@@ -256,7 +256,7 @@ To configure a class to use this generation using *datastore identity* you need 
 
 This value generator will generate values unique across different JVMs
 
-Values generated using this generator are available in @PrePersist.
+Values generated using this generator are available in `@PrePersist`.
 
 See also:-
 
@@ -301,4 +301,4 @@ This will generate java UUID Strings in the "myId" field. You can also set the "
 link:../jdo/mapping.html#valuegen_auid["auid"], link:../jdo/mapping.html#valuegen_uuidstring["uuid-string"], link:../jdo/mapping.html#valuegen_uuid_hex["uuid-hex"], 
 link:../jdo/mapping.html#valuegen_uuid_object["uuid-object"] and link:../jdo/mapping.html#valuegen_timestamp_value["timestamp_value"].
 
-Values generated using these generators are available in @PrePersist.
+Values generated using these generators are available in `@PrePersist`.

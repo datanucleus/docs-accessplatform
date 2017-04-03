@@ -41,7 +41,7 @@ public class MyClass
 
 image:../images/nucleus_extension.png[]
 
-The JPA @Index annotation is only applicable at a class level. DataNucleus provides its own @Index annotation that you
+The JPA `@Index` annotation is only applicable at a class level. DataNucleus provides its own `@Index` annotation that you
 can specify on a field/method to signify that the column(s) for this field/method will be indexed. Like this
 
 [source,java]
@@ -117,7 +117,7 @@ So we reuse the class above, and this time we want to impose a constraint that t
 </entity>
 -----
 
-In the same way we can also impose unique constraints on <join-table> and <secondary-table>
+In the same way we can also impose unique constraints on `<join-table>` and `<secondary-table>`
 
 See also :-
 
@@ -160,6 +160,6 @@ Note that when you don't specify any foreign key the JPA provider is free to add
 NOTE: Applicable to RDBMS
 
 In RDBMS datastores, it is accepted as good practice to have a primary key on all tables. You specify in other parts of the MetaData 
-which fields are part of the primary key (if using application identity). Unfortunately JPA doesnt allow specification of the name of the primary key constraint, nor of whether
+which fields are part of the primary key (if using application identity). Unfortunately JPA doesn't allow specification of the name of the primary key constraint, nor of whether
 join tables are given a primary key constraint at all.
 

@@ -268,7 +268,7 @@ or alternatively using XML
 </entity-mappings>
 -----
 
-NOTE: The crucial part is the _join-table_ element on the field element (or @JoinTable annotation) - this signals to JPA to use a join table.
+NOTE: The crucial part is the `join-table` element on the field element (or `@JoinTable` annotation) - this signals to JPA to use a join table.
 
 This will create 3 tables in the database, one for *Address*, one for *Account*, and a join table, as shown below.
 
@@ -278,10 +278,10 @@ The join table is used to link the 2 classes via foreign keys to their primary k
 
 If you wish to fully define the schema table and column names etc, follow these tips
 
-* To specify the name of the table where a class is stored, specify the _table_ element below the *class* element
-* To specify the names of the columns where the fields of a class are stored, specify the _column_ attribute on the *basic* element.
-* To specify the name of the join table, specify the _join-table_ element below the *one-to-many* element with the collection.
-* To specify the names of the join table columns, use the _join-column_ and _inverse-join-column_ elements below the _join-table_ element.
+* To specify the name of the table where a class is stored, specify the _table_ element below the `<class>` element
+* To specify the names of the columns where the fields of a class are stored, specify the _column_ attribute on the `<basic>` element.
+* To specify the name of the join table, specify the _join-table_ element below the `<one-to-many>` element with the collection.
+* To specify the names of the join table columns, use the `<join-column>` and `<inverse-join-column>` elements below the `<join-table>` element.
 * If the field type is a Set then the join table will be given a primary key (since a Set cannot have duplicates), whereas for other Collection types no primary key is assigned.
 * When forming the relation please make sure that *you set the relation at BOTH sides* since DataNucleus would have no way of knowing which end is correct if you only set one end.
 
