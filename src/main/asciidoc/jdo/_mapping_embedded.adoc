@@ -183,8 +183,9 @@ for the table definition in this case.
 Please note that if, instead of specifying the <embedded> block we had specified *embedded* in the field element we would have ended up with the same thing, 
 just that the fields and columns would have been mapped using their default mappings, and that the `<embedded>` provides control over how they are mapped.
 
-NOTE: by default the embedded objects cannot have inheritance. Inheritance in embedded objects is only support for RDBMS and MongoDB, 
-and involves defining a discriminator in the metadata of the embedded type.
+
+NOTE: by default the embedded objects cannot have inheritance. Inheritance in embedded objects is only supported for RDBMS and MongoDB, 
+and only with all inherited fields stored in the same table with a discriminator defined in the metadata of the embedded type.
 
 See also :-
 
@@ -286,7 +287,8 @@ foreign key is used to relate them. With JPA and DataNucleus you have a variatio
 the "N" side into the join table itself so that they don't have their own identity, and aren't stored in the table for that class.
 *This is supported in DataNucleus with the following provisos*
 
-* You can have inheritance in embedded keys/values and a discriminator is added (you must define the discriminator in the metadata of the embedded type).
+* You can have inheritance in embedded keys/values but with all inherited fields stored in the same table with a discriminator 
+(you must define the discriminator in the metadata of the embedded type).
 * When retrieving embedded elements, all fields are retrieved in one call. That is, fetch plans are not utilised. This is because the embedded element has 
 no identity so we have to retrieve all initially.
 
@@ -435,7 +437,8 @@ In a typical 1-N map relationship between classes, the classes in the relationsh
 With JDO and DataNucleus you have a variation on the join table relation where you can persist either the key class or the value class, or both key class 
 and value class into the join table. *This is supported in DataNucleus with the following provisos*
 
-* You can have inheritance in embedded keys/values and a discriminator is added (you must define the discriminator in the metadata of the embedded type).
+* You can have inheritance in embedded keys/values but with all inherited fields stored in the same table and a discriminator 
+(you must define the discriminator in the metadata of the embedded type).
 * When retrieving embedded keys/values, all fields are retrieved in one call. That is, fetch plans are not utilised. 
 This is because the embedded key/value has no identity so we have to retrieve all initially.
 
