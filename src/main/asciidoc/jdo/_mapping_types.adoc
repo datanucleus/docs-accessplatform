@@ -1189,7 +1189,7 @@ Similarly you use TypeVariables to form relations, like this
 -----
 public abstract class Ownable<T extends Serializable> implements Serializable
 {
-    @ManyToOne(optional = false)
+    @Persistent
     private T owner;
 }
 
@@ -1273,7 +1273,7 @@ Note that you can register converters as the default handler for a java type whe
 These properties should be of the form *javax.jdo.option.typeconverter.{javatype}* and the value is the class name of the AttributeConverter.
 
 A further use of AttributeConverter is where you want to apply type conversion to the key/value of a Map field, or to the element of a Collection field. 
-The Collection element case is simple, you just specify the @Convert against the field and it will be applied to the element.
+The Collection element case is simple, you just specify the `@Convert` against the field and it will be applied to the element.
 If you want to apply type conversion to a key/value of a map do this.
 
 [source,java]

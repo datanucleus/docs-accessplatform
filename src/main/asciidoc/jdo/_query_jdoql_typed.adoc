@@ -13,7 +13,7 @@ compares a prototype of this JDOQLTypedQuery API against JPA Criteria.
 == Preparation
 
 To set up your environment to use this JDOQLTypedQuery API you need to enable annotation processing, place some DataNucleus jars in your build path, 
-and specify a _@PersistenceCapable_ annotation on your classes to be used in queries (you can still provide the remaining information in XML metadata if you wish to).
+and specify a `@PersistenceCapable` annotation on your classes to be used in queries (you can still provide the remaining information in XML metadata if you wish to).
 This annotation processor will (just before compile of your persistable classes), create a query metamodel "Q" class for each persistable class. This is similar
 step to what QueryDSL requires, or indeed the JPA Criteria static metamodel.
 

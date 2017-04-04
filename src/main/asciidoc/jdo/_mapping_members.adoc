@@ -17,7 +17,7 @@ when extracting it from the datastore.
 NOTE: Requirement : you have a field in the class. This can be public, protected, private or package access, but cannot be static or final.
 
 Almost all Java field types are default persistent (if DataNucleus knows how to persist a type then it defaults to persistent) 
-so there is no real need to specify @Persistent to make the field persistent.
+so there is no real need to specify `@Persistent` to make the field persistent.
 
 An example of how to define the persistence of a field is shown below
 
@@ -35,7 +35,7 @@ public class MyClass
 -----
 
 So, using annotations, we have marked the field _birthday_ as persistent, whereas field _someOtherField_ is declared as _not_ persisted.
-_Please note that in this particular case, Date is by default persistent so we could omit the @Persistent annotation_ 
+_Please note that in this particular case, Date is by default persistent so we could omit the `@Persistent` annotation_ 
 (with non-default-persistent types we would definitely need the annotation). Using XML MetaData we would have done
 
 [source,xml]
