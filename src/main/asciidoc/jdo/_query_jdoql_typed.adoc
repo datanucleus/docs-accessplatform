@@ -49,6 +49,9 @@ With Maven you need to have the following in your POM
 </plugins>
 -----
 
+This creates the "metamodel" Q classes under _target/generated-sources/annotations/_. 
+You can change this location using the configuration property *generatedSourcesDirectory* of the _maven-compiler-plugin_.
+
 
 === Using Eclipse
 
@@ -57,6 +60,10 @@ With Eclipse you need to
 * Go to _Java Compiler_ and make sure the compiler compliance level is 1.8 or above
 * Go to _Java Compiler -> Annotation Processing_ and enable the project specific settings and enable annotation processing
 * Go to _Java Compiler -> Annotation Processing -> Factory Path_, enable the project specific settings and then add the following jars to the list: `datanucleus-jdo-query.jar`, `javax.jdo.jar`
+
+
+This creates the "metamodel" Q classes under _target/generated-sources/annotations/_. 
+You can change this location on the _Java Compiler -> Annotation Processing_ page.
 
 
 === Using Scala
