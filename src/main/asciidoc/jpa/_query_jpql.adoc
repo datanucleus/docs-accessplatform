@@ -14,12 +14,14 @@ List results = q.getResultList();
 -----
 
 This finds all "Person" objects with surname of "Jones". You specify all details in the query.
+The _Person_ specified in the query is the entity name of our entity. This defaults to the name of the class itself, but you can specify it explicitly in the mapping
+if wanting to use something different.
 
 
 [[jpql-select-syntax]]
 == SELECT Syntax
 
-In JPQL queries you define the query in a single string, defining the result, the candidate class(es), the filter, any grouping, and the ordering. 
+In JPQL queries you define the query in a single string, defining the result, the candidate entity(s), the filter, any grouping, and the ordering. 
 This string has to follow the following pattern
 
 [source,java]
@@ -66,6 +68,7 @@ join ::= join_spec join_association_path_expression [AS] identification_variable
 fetch_join ::= join_spec FETCH join_association_path_expression
 join_association_path_expression ::= join_collection_valued_path_expression | join_single_valued_path_expression |
     TREAT(join_collection_valued_path_expression AS subtype) | TREAT(join_single_valued_path_expression AS subtype)
+
 join_collection_valued_path_expression::= identification_variable.{single_valued_embeddable_object_field.}*collection_valued_field
 join_single_valued_path_expression::= identification_variable.{single_valued_embeddable_object_field.}*single_valued_object_field
 join_spec ::= [ LEFT [OUTER] | INNER ] JOIN
@@ -132,6 +135,8 @@ SELECT VALUE(om) FROM Company c INNER JOIN c.officeMap om ON KEY(om) = 'London'
 If you specify "LEFT OUTER FETCH" or "INNER FETCH" (i.e you specify *FETCH*)this means that you want those fields/properties fetching by this query. 
 This doesn't mean that DataNucleus will definitely fetch them in the same query (because sometimes it is impossible to fetch things like multi-valued fields 
 in a single query) but that it will attempt to fetch all fields that are selected (as well as the ones that are defaulted to EAGER).
+
+NOTE: DataNucleus JPA also allows _RIGHT_ OUTER JOIN, though this is not part of the JPA spec.
 
 
 [[jpql_fetchplan]]
@@ -316,7 +321,7 @@ The operators are listed below in order of decreasing precedence.
 ** +, - unary
 ** *, / multiplication and division
 ** +, - addition and subtraction
-* <![CDATA[Comparison operators : =, >, >=, <, <=, <> (not equal), [NOT] BETWEEN, [NOT] LIKE, [NOT] IN, IS [NOT] NULL, IS [NOT] EMPTY, [NOT] MEMBER [OF], [NOT] EXISTS]]>
+* Comparison operators : =, >, >=, <, <=, <> (not equal), [NOT] BETWEEN, [NOT] LIKE, [NOT] IN, IS [NOT] NULL, IS [NOT] EMPTY, [NOT] MEMBER [OF], [NOT] EXISTS
 * Logical operators:
 ** NOT
 ** AND
@@ -328,7 +333,7 @@ The operators are listed below in order of decreasing precedence.
 
 JPQL supports literals of the following types : Number, boolean, character, String, _NULL_ and temporal.
 When String literals are specified using single-string format they should be surrounded by single-quotes _'_. 
-Please note that temporal literals are specified using _JDBC escape syntax_ in String form, namely
+Please note that temporal literals are specified using _JDBC escape syntax_ (see the JDBC spec for full details) in String form, namely
 
 [source]
 -----
@@ -436,6 +441,7 @@ There are a series of aggregate functions for aggregating the values of a field 
 |icon:check[]
 |===
 
+
 [[jpql_functions_string]]
 === String Functions
 
@@ -483,6 +489,7 @@ There are a series of functions to be applied to String fields.
 |icon:check[]
 |icon:check[]
 |===
+
 
 [[jpql_functions_temporal]]
 === Temporal Functions
@@ -547,6 +554,7 @@ There are a series of functions for use with temporal values
 |icon:check[]
 |===
 
+
 [[jpql_functions_collection]]
 === Collection Functions
 
@@ -569,6 +577,7 @@ There are a series of functions for use with collection values
 |icon:check[]
 |icon:check[]
 |===
+
 
 [[jpql_functions_map]]
 === Map Functions
@@ -597,6 +606,7 @@ There are a series of functions for use with maps
 |icon:check[]
 |icon:check[]
 |===
+
 
 [[jpql_functions_arithmetic]]
 === Arithmetic Functions
@@ -690,6 +700,7 @@ There are a series of functions for arithmetic use
 |icon:times[]
 |icon:times[]
 |===
+
 
 [[jpql_functions_other]]
 === Other Functions
@@ -886,7 +897,11 @@ public class PersonName
 -----
 * Default constructor, and a method _void put(Object aliasName, Object value)_
 
+
 Note that if the setter property name doesn't match the query result component name, you should use _AS {alias}_ in the query so they are the same.
+
+
+=== Tuples
 
 A special case, where you don't have a result class but want to easily extract multiple columns in the form of a *Tuple* JPA provides a special class 
 _javax.persistence.Tuple_ to supply as the result class in the above call. From that you can get hold of the column aliases, and their values.

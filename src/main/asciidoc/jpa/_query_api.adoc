@@ -12,7 +12,7 @@ Let's create a JPQL query to highlight its usage
 
 [source,java]
 -----
-Query q = em.createQuery("SELECT p FROM Product p WHERE p.param2 < :threshold ORDER BY p.param1 ascending");
+Query q = em.createQuery("SELECT p FROM Product p WHERE p.param2 < :threshold ORDER BY p.param1 ASC");
 q.setParameter("threshold", my_threshold);
 List results = q.getResultList();
 -----
@@ -46,7 +46,7 @@ A query will by default return all of the results that it finds. You can restric
 
 [source,java]
 -----
-Query q = em.createQuery("SELECT p FROM Product p WHERE p.param2 < :threshold ORDER BY p.param1 ascending");
+Query q = em.createQuery("SELECT p FROM Product p WHERE p.param2 < :threshold ORDER BY p.param1 ASC");
 q.setFirstResult(1);
 q.setMaxResults(3);
 -----
@@ -61,7 +61,7 @@ JPA's query API allows implementations to support extensions ("hints") and provi
 
 [source,java]
 -----
-q.setHint("extension_name", value);
+q.setHint("{extension_name}", value);
 -----
 
 JPA supports some standard hints, namely *javax.persistence.fetchgraph*, *javax.persistence.loadgraph*, *javax.persistence.query.timeout*, *javax.persistence.lock.timeout*.
@@ -77,7 +77,7 @@ To set a named parameter, for example, you could do
 
 [source,java]
 -----
-Query q = em.createQuery("SELECT p FROM Product p WHERE p.param2 < :threshold ORDER BY p.param1 ascending");
+Query q = em.createQuery("SELECT p FROM Product p WHERE p.param2 < :threshold ORDER BY p.param1 ASC");
 q.setParameter("threshold", value);
 -----
 
@@ -85,7 +85,7 @@ To set a numbered parameter you could do
 
 [source,java]
 -----
-Query q = em.createQuery("SELECT p FROM Product p WHERE p.param2 < ?1 ORDER BY p.param1 ascending");
+Query q = em.createQuery("SELECT p FROM Product p WHERE p.param2 < ?1 ORDER BY p.param1 ASC");
 q.setParameter(1, value);
 -----
 
@@ -101,7 +101,7 @@ This should not be called when the query is an "UPDATE"/"DELETE".
 
 [source,java]
 -----
-Query q = em.createQuery("SELECT p FROM Product p WHERE p.param2 < :threshold ORDER BY p.param1 ascending");
+Query q = em.createQuery("SELECT p FROM Product p WHERE p.param2 < :threshold ORDER BY p.param1 ASC");
 q.setParameter("threshold", value);
 List results = q.getResultList();
 -----
@@ -111,7 +111,7 @@ List results = q.getResultList();
 == getSingleResult()
 
 To execute a JPA query where you are expecting a single value to be returned you would call _getSingleResult_. This will return the single Object. 
-If the query returns more than one result then you will get an Exception.
+If the query returns more than one result then you will get a _NonUniqueResultException_.
 This should not be called when the query is an "UPDATE"/"DELETE".
 
 [source,java]
@@ -169,9 +169,7 @@ You can also specify this for all queries for all EntityManagers using a persist
 image:../images/nucleus_extension.png[]
 
 When a transaction is committed by default all remaining results for a query are loaded so that the query is usable thereafter. 
-With a large result set you clearly don't want this to happen. So in this case you should set the query hint *datanucleus.query.loadResultsAtCommit* to _false_.
-
-To do this on a per query basis for JPA you would do
+With a large result set you clearly don't want this to happen. So in this case you should set the query hint *datanucleus.query.loadResultsAtCommit* to _false_, like this
 
 [source,java]
 -----
@@ -190,7 +188,7 @@ You can set the query hint *datanucleus.query.resultCacheType* and it has the fo
 
 * _weak_ : use a weak reference map for caching (default)
 * _soft_ : use a soft reference map for caching
-* _hard_ : use a Map for caching (objects not garbage collected)
+* _strong_ : use a Map for caching (objects not garbage collected)
 * _none_ : no caching (hence uses least memory)
 
 To do this on a per query basis, you would do
@@ -203,6 +201,7 @@ query.setHint("datanucleus.query.resultCacheType", "weak");
 
 [[query_resultSizeMethod]]
 == Large Result Sets : Size
+
 image:../images/nucleus_extension.png[]
 
 If you have a large result set you clearly don't want to instantiate all objects since this would hit the memory footprint of your application. 
@@ -234,6 +233,7 @@ For RDBMS datastores, _java.sql.ResultSet_ defines three possible result set typ
 DataNucleus allows specification of this type as a query extension *datanucleus.rdbms.query.resultSetType*.
 
 To do this on a per query basis you would do
+
 [source,java]
 -----
 query.setHint("datanucleus.rdbms.query.resultSetType", "scroll-insensitive");
