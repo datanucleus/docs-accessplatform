@@ -270,7 +270,7 @@ See also:-
 
 image:../images/nucleus_extension.png[]
 
-JPA only provides a very restricted set of value generators. DataNucleus provides various others internally. To access these you need to use a custom annotation as follows
+JPA only provides a very restricted set of value generators. DataNucleus provides various others internally. To access these you need to use a custom strategy as follows
 
 [source,xml]
 -----
@@ -287,6 +287,8 @@ or using annotations
 
 [source,java]
 -----
+import org.datanucleus.api.jpa.annotations.ValueGenerator;
+
 @Entity
 public class MyClass
 {
