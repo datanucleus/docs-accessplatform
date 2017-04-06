@@ -125,6 +125,9 @@ There are several sub-elements of this `persistence.xml` file worth describing
 * *jta-data-source* - JNDI name for JTA connections (make sure you set _transaction-type_ as *JTA* on the persistence-unit for this) *This is only for RDBMS.*
 * *non-jta-data-source* - JNDI name for non-JTA connections. Note that if using a JTA datasource as the primary connection, you ought to provide a _non-jta-data-source_ 
 also since any schema generation and/or sequence handling will need to use that *This is only for RDBMS.*
+* *shared-cache-mode* - Defines the way the L2 cache will operate. ALL means all entities cached. NONE means no entities will be cached. ENABLE_SELECTIVE means only cache
+the entities that are specified. DISABLE_SELECTIVE means cache all unless specified. UNSPECIFIED leaves it to DataNucleus.
+* *validation-mode* - Defines the validation mode for Bean Validation. AUTO, CALLBACK or NONE.
 * *jar-file* - name of a JAR file to scan for annotated classes to include in this persistence-unit.
 * *mapping-file* - name of an XML "mapping" file containing persistence information to be included in this persistence-unit.
 * *class* - name of an annotated class to include in this persistence-unit
