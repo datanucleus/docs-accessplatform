@@ -168,6 +168,50 @@ Note that the first argument could be a base class and the real object could be 
 
 
 
+== Finding an object by its class and unique key field value(s)
+
+image:../images/nucleus_extension.png[]
+
+Whilst the primary way of looking up an object is via its _identity_, in some cases a class has a _unique key_ (maybe comprised of multiple field values). 
+This is sometimes referred to as a _natural id_. This is not part of the JDO API, however DataNucleus makes it available.
+Let's take an example
+
+[source,java]
+-----
+@PersistenceCapable
+@Unique(name="MY_NAME_IDX", members={"firstName", "lastName"})
+public class Person
+{
+    @PrimaryKey
+    long id;
+
+    LocalDate dob;
+
+    String firstName;
+
+    String lastName;
+
+    int age;
+
+    ...
+}
+-----
+
+Here we have a _Person_ class with an identity defined as a long, but also with a _unique key_ defined as the composite of the _firstName_ and _lastName_ (in most 
+societies it is possible to duplicate names amongst people, but we just take this as an example).
+
+Now to access a _Person_ object based on the _firstName_ and _lastName_ we do the following
+
+[source,java]
+-----
+JDOPersistenceManager jdopm = (JDOPersistenceManager)pm;
+Person p = jdopm.getObjectByUnique(Person.class, {"firstName", "lastName"}, {"George", "Jones"});
+-----
+
+and we retrieve the _Person_ "George Jones".
+
+
+
 == Deleting an Object
 
 When you need to delete an object that you had previous persisted, deleting it is simple.

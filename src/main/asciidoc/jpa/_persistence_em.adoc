@@ -129,6 +129,52 @@ NOTE: the second argument is either the value of the single primary-key field (w
 or is the value of the _object-id-class_ (when it has multiple `@Id` fields).
 
 
+
+
+== Finding an object by its class and unique key field value(s)
+
+image:../images/nucleus_extension.png[]
+
+Whilst the primary way of looking up an object is via its _identity_, in some cases a class has a _unique key_ (maybe comprised of multiple field values). 
+This is sometimes referred to as a _natural id_. This is not part of the JPA API, however DataNucleus makes it available.
+Let's take an example
+
+[source,java]
+-----
+@Entity
+@Table(uniqueConstraints={@UniqueConstraint(columnNames={"firstName","lastName"})})
+public class Person
+{
+    @Id
+    long id;
+
+    LocalDate dob;
+
+    String firstName;
+
+    String lastName;
+
+    int age;
+
+    ...
+}
+-----
+
+Here we have a _Person_ class with an identity defined as a long, but also with a _unique key_ defined as the composite of the _firstName_ and _lastName_ (in most 
+societies it is possible to duplicate names amongst people, but we just take this as an example).
+
+Now to access a _Person_ object based on the _firstName_ and _lastName_ we do the following
+
+[source,java]
+-----
+JPAEntityManager jpaem = (JPAEntityManager)em;
+Person p = jpaem.findByUnique(Person.class, {"firstName", "lastName"}, {"George", "Jones"});
+-----
+
+and we retrieve the _Person_ "George Jones".
+
+
+
 == Deleting an Object
 
 When you need to delete an object that you had previous persisted, deleting it is simple.
