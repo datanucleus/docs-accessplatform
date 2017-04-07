@@ -142,6 +142,7 @@ NOTE: Applicable to RDBMS (IDENTITY (DB2, SQLServer, Sybase, HSQLDB, H2, Derby, 
 
 Auto-increment/identity/serial are primary key columns that are populated when a row is inserted in the table. 
 These use the databases own keywords on table creation and so rely on having the table structure either created by DataNucleus or having the column with the necessary keyword.
+Any field using this strategy will NOT be present in any INSERT statement, and will be set in the datastore as a result.
 
 TIP: This generation strategy should only be used if there is a single "root" table for the inheritance tree. If you have more than 1 root table (e.g using subclass-table inheritance)
 then you should choose a different generation strategy
