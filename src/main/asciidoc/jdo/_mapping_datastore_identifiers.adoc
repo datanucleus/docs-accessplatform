@@ -7,6 +7,10 @@ A datastore identifier is a simple name of a database object, such as a column, 
 sequence of letters, digits, and underscores ( _ ) that represents it's name. DataNucleus allows users to specify the names of tables, 
 columns, indexes etc but if the user doesn't specify these DataNucleus will generate names.
 
+NOTE: Some identifiers are actually reserved keywords with RDBMS, meaning that to use them you have to quote them. DataNucleus JDO quotes these
+automatically for you so you don't have to think about it, whereas other ORMs force you to quote these yourself!
+
+
 Generation of identifier names for RDBMS is controlled by an IdentifierFactory, and DataNucleus provides a default implementation. 
 You can link:../extensions/extensions.html#rdbms_identifierfactory[provide your own RDBMS IdentifierFactory plugin] to give your own preferred naming if so desired.
 You set the _RDBMS IdentifierFactory_ by setting the persistence property _datanucleus.identifierFactory_. 
