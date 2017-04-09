@@ -336,15 +336,16 @@ If in doubt please consult a Java book.
 [[runtime]]
 == Runtime Enhancement
 
-When operating in a JavaEE environment (JBoss, WebSphere, etc) instead set the persistence property link:persistence.html#emf_props_dn_emf[datanucleus.jpa.addClassTransformer] to _true_.
+When operating in a JavaEE environment (JBoss, WebSphere, etc) set the persistence property link:persistence.html#emf_props_dn_emf[datanucleus.jpa.addClassTransformer] to _true_.
 This is only for a real JavaEE server that implements the JavaEE parts of the JPA spec.
-To enable runtime enhancement in other environments, the _javaagent_ option must be set in the java command line. For example,
+To enable runtime enhancement in other environments, the _javaagent_ option must be set in the java command line when running your application. For example,
 
 -----
 java -javaagent:datanucleus-core.jar=-api=JPA Main
 -----
 
-The statement above will mean that all classes, when being loaded, will be processed by the ClassFileTransformer (except class in packages "java.*", "javax.*", "org.datanucleus.*").
+The statement above will mean that all classes, when being loaded, will be processed by the ClassFileTransformer 
+(with the exception of classes in packages "java.*", "javax.*", "org.datanucleus.*").
 This means that it can be slow since the MetaData search algorithm will be utilised for each.
 To speed this up you can specify an argument to that command specifying the names of package(s) that should be processed (and all others will be ignored). Like this
 

@@ -448,13 +448,14 @@ NOTE: A CLASSPATH should contain a set of JAR's, and a set of directories. It sh
 [[runtime]]
 == Runtime Enhancement
 
-To enable runtime enhancement, the _javaagent_ option must be set in the java command line. For example,
+To enable runtime enhancement, the _javaagent_ option must be set in the java command line when running your application. For example,
 
 -----
 java -javaagent:datanucleus-core.jar=-api=JDO Main
 -----
 
-The statement above will mean that all classes, when being loaded, will be processed by the ClassFileTransformer (except class in packages "java.*", "javax.*", "org.datanucleus.*").
+The statement above will mean that all classes, when being loaded, will be processed by the ClassFileTransformer 
+(with the exception of classes in packages "java.*", "javax.*", "org.datanucleus.*").
 This means that it can be slow since the MetaData search algorithm will be utilised for each.
 To speed this up you can specify an argument to that command specifying the names of package(s) that should be processed (and all others will be ignored). Like this
 
