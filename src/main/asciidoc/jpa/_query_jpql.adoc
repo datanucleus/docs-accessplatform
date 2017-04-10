@@ -1078,7 +1078,7 @@ The syntax for deleting records is very similar to selecting them
 
 [source]
 -----
-DELETE FROM [<candidate-class>] [WHERE <filter>]
+DELETE FROM [<candidate-class> [[AS] {alias}]]] [WHERE <filter>]
 -----
 
 The "keywords" in the query are shown in UPPER CASE are case-insensitive.
@@ -1104,7 +1104,7 @@ The syntax for updating records is very similar to selecting them
 
 [source]
 -----
-UPDATE [<candidate-class>] SET item1=value1, item2=value2 [WHERE <filter>]
+UPDATE [<candidate-class> [[AS] {alias}]] SET item1=value1, item2=value2 [WHERE <filter>]
 -----
 
 The "keywords" in the query are shown in UPPER CASE are case-insensitive.
