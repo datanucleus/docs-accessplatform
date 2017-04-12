@@ -135,6 +135,9 @@ There are several sub-elements of this `persistence.xml` file
 You can alternatively specify JDO standard *javax.jdo.option.ConnectionFactoryName* to the same end.
 * *non-jta-data-source* - JNDI name for non-JTA connections.
 You can alternatively specify JDO standard *javax.jdo.option.ConnectionFactory2Name* to the same end.
+* *shared-cache-mode* - Defines the way the L2 cache will operate. ALL means all entities cached. NONE means no entities will be cached. 
+ENABLE_SELECTIVE means only cache the entities that are specified. DISABLE_SELECTIVE means cache all unless specified. UNSPECIFIED leaves it to DataNucleus.
+* *validation-mode* - Defines the validation mode for Bean Validation. AUTO, CALLBACK or NONE.
 * *jar-file* - name of a JAR file to scan for annotated classes to include in this persistence-unit.
 * *mapping-file* - name of an XML "mapping" file containing persistence information to be included in this persistence-unit. 
 This is the JDO XML Metadata file (_package.jdo_) (*not* the ORM XML Metadata file)
