@@ -144,8 +144,7 @@ If you want to make a member read-only you can do it like this.
 <entity name="mydomain.MyClass">
     <attributes>
         <basic name="myField">
-            <extension key="insertable" value="false"/>
-            <extension key="updateable" value="false"/>
+            <column insertable="false" updatable="false"/>
         </basic>
     </attributes>
 </entity>
