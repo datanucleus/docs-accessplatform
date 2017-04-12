@@ -17,7 +17,6 @@ The performance of this process will break down as soon as you read a large numb
 compare all object states for modification at transaction commit time.
 * Other ORMs utilise bytecode enhancement : OpenJPA requires a similar bytecode enhancement process also, and EclipseLink and Hibernate both allow it as an 
 option since they also now see the benefits of this approach over use of proxies and reflection. 
-Read http://blog.bolkey.com/2009/05/hibernate-datanucleus-r1/[this comparison] of bytecode enhancement, and proxies to see the relative benefits.
 
 In the DataNucleus bytecode enhancement contract there are 3 categories of classes. 
 These are _PersistenceCapable_, _PersistenceAware_ and normal classes. The Meta-Data (XML or annotations) defines which classes fit into these categories. 
