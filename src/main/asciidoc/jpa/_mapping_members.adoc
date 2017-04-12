@@ -112,12 +112,33 @@ image:../images/nucleus_extension.png[]
 With some datastores (notably spreadsheets) it is desirable to be able to specify the relative position of a column. 
 The default (for DataNucleus) is just to put them in ascending alphabetical order.
 JPA doesn't allow configuration of this, but DataNucleus provides the following vendor extension.
-It is currently only possible using (DataNucleus) annotations
+
+Using XML metadata this would be
+
+[source,xml]
+-----
+<entity name="mydomain.Person">
+    <attributes>
+        <id name="personNum">
+            <column position="0"/>
+        </id>
+        <basic name="firstName">
+            <column position="1"/>
+        </basic>
+        <basic name="lastName">
+            <column position="2"/>
+        </basic>
+    </attributes>
+</entity>
+-----
+
+or using (DataNucleus) annotations
 
 [source,java]
 -----
+import org.datanucleus.api.jpa.annotations.ColumnPosition;
+
 @Entity
-@Table(name="People")
 public class Person
 {
     @Id
