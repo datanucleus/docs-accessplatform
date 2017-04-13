@@ -1214,7 +1214,6 @@ so now our subquery has a candidate related to the outer query candidate.
 
 A subquery is effectively a Collection, so you have access to the normal methods of a Collection to use on the subquery. Here are as couple of examples
 
-[source,java]
 -----
 SELECT FROM mydomain.Manager WHERE (SELECT FROM mydomain.Employee e WHERE e.manager == this).isEmpty()
 -----
@@ -1223,7 +1222,6 @@ which returns all _Manager_ objects which have no _Employee(s)_.
 
 This can equally be expressed using _contains()_
 
-[source,java]
 -----
 SELECT FROM mydomain.Manager WHERE !(SELECT FROM mydomain.Employee e).contains(this)
 -----
