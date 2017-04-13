@@ -76,7 +76,7 @@ The FROM clause firstly defines the _candidate_ entity for the query. You can sp
 
 -----
 # Using candidate name fully qualified
-SELECT p FROM org.datanucleus.company.Person p
+SELECT p FROM mydomain.Person p
 
 
 # Using entity name
@@ -89,7 +89,7 @@ Firstly, in XML metadata
 
 [source,xml]
 -----
-<entity class="org.datanucleus.company.Person" name="ThePerson">
+<entity class="mydomain.Person" name="ThePerson">
     ...
 </entity>
 -----
@@ -744,8 +744,8 @@ JPQL also allows the use of subqueries. Here's an example
 
 [source]
 -----
-SELECT Object(e) FROM org.datanucleus.Employee e 
-WHERE e.salary > (SELECT avg(f.salary) FROM org.datanucleus.Employee f)
+SELECT e FROM Employee e 
+WHERE e.salary > (SELECT avg(f.salary) FROM Employee f)
 -----
 
 So we want to find all Employees that have a salary greater than the average salary.
@@ -1025,7 +1025,7 @@ The DataNucleus implementation of JPQL will preserve these aliases in the genera
 [source]
 -----
 # JPQL:
-SELECT Object(P) FROM mydomain.Person P INNER JOIN P.bestFriend AS B
+SELECT p FROM Person p INNER JOIN p.bestFriend AS B
 
 # SQL:
 SELECT P.ID
@@ -1037,7 +1037,7 @@ With the JPQL _MEMBER OF_ syntax this is typically converted into an EXISTS quer
 [source]
 -----
 # JPQL:
-SELECT DISTINCT Object(p) FROM mydomain.Person p WHERE :param MEMBER OF p.friends
+SELECT DISTINCT p FROM Person p WHERE :param MEMBER OF p.friends
 
 # SQL:
 SELECT DISTINCT P.ID FROM PERSON P
