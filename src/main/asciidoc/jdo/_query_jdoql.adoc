@@ -1129,8 +1129,7 @@ or a field access expression followed by an optional alias definition.
 Here's an example, using single-string JDOQL
 
 -----
-SELECT FROM org.datanucleus.Employee WHERE salary > 
-    (SELECT avg(e.salary) FROM org.datanucleus.Employee e)
+SELECT FROM mydomain.Employee WHERE salary > (SELECT avg(e.salary) FROM mydomain.Employee e)
 -----
 
 So we want to find all Employees that have a salary greater than the average salary.
@@ -1159,10 +1158,9 @@ and the in the main query have an implicit variable that we define as being repr
 JDOQL subqueries allows use of the outer query fields within the subquery if so desired.
 Taking the above example and extending it, here is how we do it in single-string JDOQL
 
-[source,java]
 -----
-SELECT FROM org.datanucleus.Employee WHERE salary > 
-    (SELECT avg(e.salary) FROM org.datanucleus.Employee e WHERE e.lastName == this.lastName)
+SELECT FROM mydomain.Employee WHERE salary > 
+    (SELECT avg(e.salary) FROM mydomain.Employee e WHERE e.lastName == this.lastName)
 -----
 
 So with single-string JDOQL we make use of the alias identifier "this" to link back to the outer query.
@@ -1190,7 +1188,7 @@ There are occasions where we want the candidate of the subquery to be part of th
 This is an expression relative to the candidate of the outer query. An example
 
 -----
-SELECT FROM org.datanucleus.Employee WHERE this.weeklyhours > 
+SELECT FROM mydomain.Employee WHERE this.weeklyhours > 
     (SELECT AVG(e.weeklyhours) FROM this.department.employees e)
 -----
 
@@ -1217,7 +1215,6 @@ so now our subquery has a candidate related to the outer query candidate.
 
 A subquery is effectively a Collection, so you have access to the normal methods of a Collection to use on the subquery. Here are as couple of examples
 
-[source,java]
 -----
 SELECT FROM mydomain.Manager WHERE (SELECT FROM mydomain.Employee e WHERE e.manager == this).isEmpty()
 -----
@@ -1226,7 +1223,6 @@ which returns all _Manager_ objects which have no _Employee(s)_.
 
 This can equally be expressed using _contains()_
 
-[source,java]
 -----
 SELECT FROM mydomain.Manager WHERE !(SELECT FROM mydomain.Employee e).contains(this)
 -----
@@ -1543,18 +1539,18 @@ query.addExtension("datanucleus.jdoql.strict", "true");
 When using the method _contains_ on a collection (or _containsKey_, _containsValue_ on a map) this will 
 either add an EXISTS subquery (if there is a NOT or OR present in the query) or will add an INNER JOIN across to the element table. Let's take an example
 
-[source,java]
+[source,sql]
 -----
-SELECT FROM org.datanucleus.samples.A
+SELECT FROM mydomain.A
 WHERE (elements.contains(b1) && b1.name == 'Jones')
-VARIABLES org.datanucleus.samples.B b1
+VARIABLES mydomain.B b1
 -----
 
 Note that we add the _contains_ first that binds the variable "b1" to the element table, and then add the condition on the variable. 
 The order is important here. If we instead had put the condition on the variable first we would have had to do a CROSS JOIN to the variable table
 and then try to repair the situation and change it to INNER JOIN if possible. In this case the generated SQL will be like
 
-[source,java]
+[source,sql]
 -----
 SELECT `A0`.`ID`
 FROM `A` `A0`
