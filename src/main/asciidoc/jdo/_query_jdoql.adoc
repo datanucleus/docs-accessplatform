@@ -1438,6 +1438,11 @@ This is also useful where you have a Collection of (persisted) objects and want 
 Simply turn on in-memory evaluation, and supply the candidate collection to the query, and no communication with the datastore will be needed.
 
 
+WARNING: In-memory JDOQL evaluation does not support variables currently, or correlated subqueries. You should omit such things from your query
+and try to evaluate them manually in your own code.
+
+
+
 [[jdoql_candidates]]
 === Specify candidates to query over
 

@@ -961,6 +961,12 @@ query.setHint("datanucleus.query.evaluateInMemory","true");
 -----
 
 
+
+WARNING: In-memory JPQL evaluation does not support JOINs currently, or correlated subqueries. You should omit such things from your query
+and try to evaluate them manually in your own code.
+
+
+
 [[jpql_named]]
 == Named Query
 
