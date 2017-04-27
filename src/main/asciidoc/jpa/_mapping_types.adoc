@@ -1248,6 +1248,10 @@ public class MyClass
 }
 -----
 
+
+NOTE: The AttributeConverter objects here are *stateless*. That is, they do not support CDI injection by DataNucleus.
+
+
 Note that in strict JPA 2.1 you have to mark all converters with the `@Converter` annotation.
 In DataNucleus if you specify the converter class name in the `@Convert` then we know its a converter so don't really see why we need a user to annotate the converter too.
 We only require annotation as `@Converter` if you want the converter to always be applied to fields of a particular type. 
