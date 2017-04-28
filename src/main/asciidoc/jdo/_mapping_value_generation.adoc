@@ -196,7 +196,7 @@ public class MyClass
 -----
 
 Please be aware that if you have an inheritance tree with the base class defined as using "identity" then
-the column definition for the PK of the base table will be defined as "AUTO_INCREMENT" or "IDENTITY" or "SERIAL" (dependent on the RDBMS) and all subtables will 
+the column type for the PK of the base table will be defined as `AUTO_INCREMENT` / `IDENTITY` / `SERIAL` (dependent on the RDBMS) and all subtables will 
 NOT have this identifier added to their PK column definitions. This is because the identities are assigned in the base table (since all objects will have an entry in the base table).
 
 NOTE: If using optimistic transactions, this strategy will mean that the value is only set when the object is actually persisted (i.e at flush() or commit())
@@ -211,7 +211,7 @@ NOTE: Applies to RDBMS, ODF, Excel, OOXML, HBase, Cassandra, MongoDB, Neo4j.
 
 This method is database neutral and uses a sequence table that holds an incrementing sequence value. 
 The unique identifier value returned from the database is translated to a java type: java.lang.Long. This strategy will work with any datastore. 
-This method require a sequence table in the database and creates one if doesn't exist.
+This method requires a _sequence_ table in the database and creates one if doesn't exist.
 
 To configure a *datastore identity* class to use this generation method you simply add this to the classes Meta-Data.
 
@@ -285,7 +285,7 @@ Since there is no "base table name" when the root class has "subclass-table" thi
 
 |sequence-table-name
 |Table name for storing the sequence.
-|No. Defaults to _SEQUENCE_TABLE_
+|No. Defaults to `SEQUENCE_TABLE`
 
 |sequence-catalog-name
 |Name of the catalog where the table is.
@@ -297,11 +297,11 @@ Since there is no "base table name" when the root class has "subclass-table" thi
 
 |sequence-name-column-name
 |Name for the column that represent sequence names.
-|No. Defaults to _SEQUENCE_NAME_
+|No. Defaults to `SEQUENCE_NAME`
 
 |sequence-nextval-column-name
 |Name for the column that represent incremeting sequence values.
-|No. Defaults to _NEXT_VAL_
+|No. Defaults to `NEXT_VAL`
 
 |table-name
 |Name of the table whose column we are generating the value for (used when we have no previous sequence value and want a start point.
