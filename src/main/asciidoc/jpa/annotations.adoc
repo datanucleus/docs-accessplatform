@@ -104,10 +104,6 @@ Using these provide portability for your application.
 |Class
 |Defines the value to be used in the discriminator for objects of this class
 
-|xref:annotations.html#PrimaryKeyJoinColumns_Class[@PrimaryKeyJoinColumns]
-|Class
-|Defines the names of the PK columns when this class has a superclass
-
 |xref:annotations.html#PrimaryKeyJoinColumn_Class[@PrimaryKeyJoinColumn]
 |Class
 |Defines the name of the PK column when this class has a superclass
@@ -738,41 +734,6 @@ public class MyClass
 See the documentation for link:mapping.html#inheritance_discriminator[Inheritance]
 
 
-[[PrimaryKeyJoinColumns_Class]]
-=== @PrimaryKeyJoinColumns
-
-This annotation is used to define the names of the primary key columns when this class has a superclass. Specified on the *class*.
-
-[cols="1,1,3,1", options="header"]
-|===
-|Attribute
-|Type
-|Description
-|Default
-
-|value
-|PrimaryKeyJoinColumn[]
-|Array of column definitions for the primary key
-|
-
-|foreignKey
-|ForeignKey
-|Foreign key details if wanting to override provider default
-|
-|===
-
-[source,java]
------
-@Entity
-@Inheritance(strategy=InheritanceType.TABLE_PER_CLASS)
-@PrimaryKeyJoinColumns({@PrimaryKeyJoinColumn(name="PK_FIELD_1", referredColumnName="BASE_1_ID"),
-                        @PrimaryKeyJoinColumn(name="PK_FIELD_2", referredColumnName="BASE_2_ID")})
-public class MyClass
-{
-    ...
-}
------
-
 
 [[PrimaryKeyJoinColumn_Class]]
 === @PrimaryKeyJoinColumn
@@ -818,6 +779,9 @@ public class MyClass
     ...
 }
 -----
+
+NOTE: There is a `@PrimaryKeyJoinColumns` annotation but you can achieve the same more cleanly with multiple `@PrimaryKeyJoinColumn` annotations.
+
 
 
 [[AttributeOverride]]
@@ -1180,10 +1144,6 @@ Using these provide portability for your application.
 |xref:annotations.html#JoinColumn[@JoinColumn]
 |Field/Method
 |Defines a column for joining to either a join table or foreign key relation
-
-|xref:annotations.html#JoinColumns[@JoinColumns]
-|Field/Method
-|Defines the columns for joining to either a join table or foreign key relation (1-1, 1-N, N-1)
 
 |xref:annotations.html#Index[@Index]
 |-
@@ -2385,40 +2345,7 @@ public class Person
 -----
 
 
-[[JoinColumns]]
-=== @JoinColumns
-
-This annotation is used to define the FK columns for joining to another table. This is part of a 1-1, 1-N, or N-1 relation. Specified on the *field/method*.
-
-[cols="1,1,3,1", options="header"]
-|===
-|Attribute
-|Type
-|Description
-|Default
-
-|value
-|JoinColumn[]
-|Details of the columns
-|
-
-|foreignKey
-|ForeignKey
-|Foreign key details if wanting to override provider default
-|
-|===
-
-[source,java]
------
-@Entity
-public class Person
-{
-    @OneToOne
-    @JoinColumns({@JoinColumn(name="PET1_ID"), @JoinColumn(name="PET2_ID")})
-    Animal pet; // composite PK
-    ...
-}
------
+NOTE: There is a `@JoinColumns` annotation but you can achieve the same more cleanly with multiple `@JoinColumn` annotations.
 
 
 [[UniqueConstraint]]

@@ -92,10 +92,6 @@ Using these provide portability for your application.
 |Class
 |ORM : Defines an index for the class as a whole (typically a composite index)
 
-|xref:annotations.html#Uniques[@Uniques]
-|Class
-|ORM : Defines a series of unique constraints for this class
-
 |xref:annotations.html#Unique_Class[@Unique]
 |Class
 |ORM : Defines a unique constraint for the class as a whole (typically a composite)
@@ -556,47 +552,6 @@ public class MyClass
 
 See the documentation for link:persistence.html#fetchgroups[FetchGroups]
 
-
-[[FetchGroups]]
-=== @FetchGroups
-
-Annotation used to define a set of fetch groups for a class. Specified on the *class*.
-Note that you can put multiple @FetchGroup instead of using this.
-
-[cols="1,1,3,1", options="header"]
-|===
-|Attribute
-|Type
-|Description
-|Default
-
-|value
-|xref:annotations.html#FetchGroup[FetchGroup]
-|Array of fetch groups - see @FetchGroup annotation
-|
-|===
-
-
-[source,java]
------
-@PersistenceCapable
-@FetchGroups({@FetchGroup(name="one_two", members={@Persistent(name="field1"), @Persistent(name="field2")}),
-              @FetchGroup(name="three", members={@Persistent(name="field3")})})
-public class MyClass
-{
-    @Persistent
-    String field1;
-
-    @Persistent
-    String field2;
-
-    @Persistent
-    String field3;
-    ...
-}
------
-
-See the documentation for link:persistence.html#fetchgroups[FetchGroups]
 
 
 [[FetchGroup]]
