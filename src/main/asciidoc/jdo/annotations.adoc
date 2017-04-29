@@ -60,17 +60,9 @@ Using these provide portability for your application.
 |Class
 |Specifies any versioning process for objects of this class
 
-|xref:annotations.html#FetchPlans[@FetchPlans]
-|Class
-|Defines a series of fetch plans
-
 |xref:annotations.html#FetchPlan[@FetchPlan]
 |Class
 |Defines a fetch plan
-
-|xref:annotations.html#FetchGroups[@FetchGroups]
-|Class
-|Defines a series of fetch groups for this class
 
 |xref:annotations.html#FetchGroup[@FetchGroup]
 |Class
@@ -79,10 +71,6 @@ Using these provide portability for your application.
 |xref:annotations.html#Sequence[@Sequence]
 |Class
 |Defines a sequence for use by this class
-
-|xref:annotations.html#Queries[@Queries]
-|Class
-|Defines a series of named queries for this class
 
 |xref:annotations.html#Query[@Query]
 |Class
@@ -100,10 +88,6 @@ Using these provide portability for your application.
 |Class
 |ORM : Defines the primary key constraint for this class
 
-|xref:annotations.html#Indices[@Indices]
-|Class
-|ORM : Defines a series of indices for this class
-
 |xref:annotations.html#Index_Class[@Index]
 |Class
 |ORM : Defines an index for the class as a whole (typically a composite index)
@@ -116,25 +100,21 @@ Using these provide portability for your application.
 |Class
 |ORM : Defines a unique constraint for the class as a whole (typically a composite)
 
-|xref:annotations.html#ForeignKeys[@ForeignKeys]
-|Class
-|ORM : Defines a series of foreign-keys (typically for non-mapped columns/tables)
-
 |xref:annotations.html#ForeignKey_Class[@ForeignKey]
 |Class
 |ORM : Defines a foreign-key for the class as a whole (typically for non-mapped columns/tables)
-
-|xref:annotations.html#Joins[@Joins]
-|Class
-|ORM : Defines a series of joins to secondary tables from this table
 
 |xref:annotations.html#Join_Class[@Join]
 |Class
 |ORM : Defines a join to a secondary table from this table
 
-|xref:annotations.html#Columns[@Columns]
+|xref:annotations.html#Column[@Column]
 |Class
-|ORM : Defines a series of columns that dont have associated fields ("unmapped columns")
+|ORM : Defines a column that doesnt have associated fields ("unmapped columns")
+
+|xref:annotations.html#Extension[@Extension]
+|Class/Field/Method
+|Defines a JDO extension
 |===
 
 
@@ -524,39 +504,6 @@ public class MyClass
 -----
 
 
-[[FetchPlans]]
-=== @FetchPlans
-
-Annotation used to define a set of fetch plans. Specified on the *class*. Used by named queries.
-Note that you can put multiple @FetchPlan instead of using this.
-
-[cols="1,1,3,1", options="header"]
-|===
-|Attribute
-|Type
-|Description
-|Default
-
-|value
-|xref:annotations.html#FetchPlan[FetchPlan]
-|Array of fetch plans - see @FetchPlan annotation
-|
-|===
-
-
-[source,java]
------
-@PersistenceCapable
-@FetchPlans({@FetchPlan(name="plan_3", maxFetchDepth=3, fetchGroups={"group1", "group4"}),
-             @FetchPlan(name="plan_4", maxFetchDepth=2, fetchGroups={"group1", "group2"})})
-public class MyClass
-{
-    ...
-}
------
-
-See the documentation for link:persistence.html#fetchgroups[FetchGroups]
-
 
 [[FetchPlan]]
 === @FetchPlan
@@ -591,6 +538,10 @@ Specified on the *class*. Used by named queries
 |Names of the fetch groups included in this FetchPlan.
 |
 |===
+
+See the documentation for link:persistence.html#fetchgroups[FetchGroups]
+
+NOTE: There is a `@FetchPlans` annotation but in JDO 3.2 you can simply use multiple `@FetchPlan` to achieve the same cleaner
 
 
 [source,java]
@@ -695,6 +646,9 @@ public class MyClass
 
 See the documentation for link:persistence.html#fetchgroups[FetchGroups]
 
+NOTE: There is a `@FetchGroups` annotation but in JDO 3.2 you can simply use multiple `@FetchGroup` to achieve the same cleaner
+
+
 
 [[Sequence]]
 === @Sequence
@@ -747,45 +701,6 @@ Specified on the *class*.
 
 See the documentation for link:mapping.html#sequence[Sequences]
 
-
-
-[[Queries]]
-=== @Queries
-
-Annotation used to define a set of named queries for a class. Specified on the *class*.
-Note that you can put multiple @Query instead of using this.
-
-[cols="1,1,3,1", options="header"]
-|===
-|Attribute
-|Type
-|Description
-|Default
-
-|value
-|xref:annotations.html#Query[Query]
-|Array of queries - see @Query annotation
-|
-|===
-
-
-[source,java]
------
-@PersistenceCapable
-@Queries({@Query(name="PeopleCalledSmith", language="JDOQL", 
-                 value="SELECT FROM org.datanucleus.samples.Person WHERE surname == \"Smith\""),
-          @Query(name="PeopleCalledJones", language="JDOQL", 
-                 value="SELECT FROM org.datanucleus.samples.Person WHERE surname == \"Jones\"")})
-public class Person
-{
-    @Persistent
-    String surname;
-
-    ...
-}
------
-
-See the documentation for link:query.html#jdoql_named[Named Queries]
 
 
 [[Query]]
@@ -859,38 +774,7 @@ public class Person
 
 See the documentation for link:query.html#jdoql_named[Named Queries]
 
-
-[[Indices]]
-=== @Indices
-
-Annotation used to define a set of indices for a class. Specified on the *class*.
-Note that you can put multiple @Index instead of using this.
-
-[cols="1,1,3,1", options="header"]
-|===
-|Attribute
-|Type
-|Description
-|Default
-
-|value
-|xref:annotations.html#Index_Class[Index]
-|Array of indices - see @Index annotation
-|
-|===
-
-
-[source,java]
------
-@PersistenceCapable
-@Indices({@Index(name="MYINDEX_1", members={"field1","field2"}), @Index(name="MYINDEX_2", members={"field3"})})
-public class Person
-{
-    ...
-}
------
-
-See the documentation for link:mapping.html#schema_constraints[Schema Constraints]
+NOTE: There is a `@Queries` annotation but in JDO 3.2 you can simply use multiple `@Query` to achieve the same cleaner
 
 
 [[Index_Class]]
@@ -950,38 +834,8 @@ public class MyClass
 
 See the documentation for link:mapping.html#schema_constraints[Schema Constraints]
 
+NOTE: There is a `@Indices` annotation but in JDO 3.2 you can simply use multiple `@Index` to achieve the same cleaner
 
-[[Uniques]]
-=== @Uniques
-
-Annotation used to define a set of unique constraints for a class. Specified on the *class*.
-Note that you can put multiple @Unique instead of using this.
-
-[cols="1,1,3,1", options="header"]
-|===
-|Attribute
-|Type
-|Description
-|Default
-
-|value
-|xref:annotations.html#Unique_Class[Unique]
-|Array of constraints - see @Unique annotation
-|
-|===
-
-
-[source,java]
------
-@PersistenceCapable
-@Uniques({@Unique(name="MYCONST_1", members={"field1","field2"}), @Unique(name="MYCONST_2", members={"field3"})})
-public class Person
-{
-    ...
-}
------
-
-See the documentation for link:mapping.html#schema_constraints[Schema Constraints]
 
 
 [[Unique_Class]]
@@ -1040,29 +894,11 @@ public class MyClass
     ...
 }
 -----
-See the documentation for link:mapping.html#schema_constraints[Schema Constraints]
-
-
-[[ForeignKeys]]
-=== @ForeignKeys
-
-Annotation used to define a set of foreign-key constraints for a class. Specified on the *class*.
-Note that you can put multiple @Extension instead of using this.
-
-[cols="1,1,3,1", options="header"]
-|===
-|Attribute
-|Type
-|Description
-|Default
-
-|value
-|xref:annotations.html#ForeignKey_Class[ForeignKey]
-|Array of FK constraints - see @ForeignKey annotation
-|
-|===
 
 See the documentation for link:mapping.html#schema_constraints[Schema Constraints]
+
+NOTE: There is a `@Uniques` annotation but in JDO 3.2 you can simply use multiple `@Unique` to achieve the same cleaner
+
 
 
 [[ForeignKey_Class]]
@@ -1121,43 +957,8 @@ Specified on the *class*.
 
 See the documentation for link:mapping.html#schema_constraints[Schema Constraints]
 
+NOTE: There is a `@ForeignKeys` annotation but in JDO 3.2 you can simply use multiple `@ForeignKey` to achieve the same cleaner
 
-[[Joins]]
-=== @Joins
-
-Annotation used to define a set of joins (to secondary tables) for a class.
-Specified on the *class*.
-Note that you can put multiple @Join instead of using this.
-
-[cols="1,1,3,1", options="header"]
-|===
-|Attribute
-|Type
-|Description
-|Default
-
-|value
-|xref:annotations.html#Join_Class[Join]
-|Array of joins - see @Join annotation
-|
-|===
-
-
-[source,java]
------
-@PersistenceCapable
-@Joins({@Join(table="MY_OTHER_TABLE", column="MY_PK_COL"),
-        @Join(table="MY_SECOND_TABLE", column="MY_PK_COL")})
-public class MyClass
-{
-    @Persistent(table="MY_OTHER_TABLE")
-    String myField;
-
-    @Persistent(table="MY_SECOND_TABLE")
-    String myField2;
-    ...
-}
------
 
 
 
@@ -1212,38 +1013,7 @@ public class MyClass
 }
 -----
 
-
-
-[[Columns_Class]]
-=== @Columns
-
-Annotation used to define the columns which have no associated field in the class.
-User should specify a minimum of @Column "name", "jdbcType", and "insertValue".
-Specified on the *class*. Note that you can put multiple @Column instead of using this.
-
-[cols="1,1,3,1", options="header"]
-|===
-|Attribute
-|Type
-|Description
-|Default
-
-|value
-|xref:annotations.html#Column[Column]
-|Array of columns - see @Column annotation
-|
-|===
-
-
-[source,java]
------
-@PersistenceCapable
-@Columns(@Column(name="MY_OTHER_COL", jdbcType="VARCHAR", insertValue="N/A")
-public class MyClass
-{
-    ...
-}
------
+NOTE: There is a `@Joins` annotation but in JDO 3.2 you can simply use multiple `@Join` to achieve the same cleaner
 
 
 
@@ -1309,10 +1079,6 @@ Using these provide portability for your application.
 |Field/Method
 |ORM : Defines that this field is embedded and how it is embedded
 
-|xref:annotations.html#Columns[@Columns]
-|Field/Method
-|ORM : Defines a series of columns where a field is persisted
-
 |xref:annotations.html#Column[@Column]
 |Field/Method
 |ORM : Defines a column where a field is persisted
@@ -1332,10 +1098,6 @@ Using these provide portability for your application.
 |xref:annotations.html#Convert[@Convert]
 |Field/Method
 |Specify an AttributeConverter for this field/method
-
-|xref:annotations.html#Extensions[@Extensions]
-|Class/Field/Method
-|Defines a series of JDO extensions
 
 |xref:annotations.html#Extension[@Extension]
 |Class/Field/Method
@@ -2226,38 +1988,6 @@ public class MyOtherClass
 -----
 
 
-[[Columns]]
-=== @Columns
-
-Annotation used to define the columns into which a field is persisted.
-If the field is persisted into a single column then @Column should be used. Specified on the *field/method*.
-
-[cols="1,1,3,1", options="header"]
-|===
-|Attribute
-|Type
-|Description
-|Default
-
-|value
-|xref:annotations.html#Column[Column]
-|Array of columns - see @Columns annotation
-|
-|===
-
-
-[source,java]
------
-@PersistenceCapable
-public class MyClass
-{
-    @Persistent
-    @Columns({@Column(name="RED"), @Column(name="GREEN"), @Column(name="BLUE"), @Column(name="ALPHA")})
-    Color myField;
-    ...
-}
------
-
 
 [[Column]]
 === @Column
@@ -2349,6 +2079,10 @@ public class MyClass
     ...
 }
 -----
+
+NOTE: There is a `@Columns` annotation but in JDO 3.2 you can simply use multiple `@Columns` to achieve the same cleaner
+
+
 
 
 [[Index]]
@@ -2531,38 +2265,6 @@ public class MyClass
 -----
 
 
-[[Extensions]]
-=== @Extensions
-
-Annotation used to define a set of extensions specific to the JDO implementation being used.
-Specified on the *class* or *field*. Note that you can put multiple @Extension instead of using this.
-
-[cols="1,1,3,1", options="header"]
-|===
-|Attribute
-|Type
-|Description
-|Default
-
-|value
-|xref:annotations.html#Extension[Extension]
-|Array of extensions - see @Extension annotation
-|
-|===
-
-
-[source,java]
------
-@PersistenceCapable
-@Extensions({@Extension(vendorName="datanucleus", key="firstExtension", value="myValue"),
-             @Extension(vendorName="datanucleus", key="secondExtension", value="myValue")})
-public class Person
-{
-    ...
-}
------
-
-
 [[Extension]]
 === @Extension
 
@@ -2602,6 +2304,9 @@ public class Person
 }
 -----
 
+
+
+NOTE: There is a `@Extensions` annotation but in JDO 3.2 you can simply use multiple `@Extension` to achieve the same cleaner
 
 
 

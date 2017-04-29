@@ -60,10 +60,6 @@ Using these provide portability for your application.
 |Class
 |Specifies class(es) that are listeners for events from instances of this class
 
-|xref:annotations.html#NamedQueries[@NamedQueries]
-|Class
-|Defines a series of named JPQL queries for use in the current persistence unit
-
 |xref:annotations.html#NamedQuery[@NamedQuery]
 |Class
 |Defines a named JPQL query for use in the current persistence unit
@@ -72,33 +68,17 @@ Using these provide portability for your application.
 |Class
 |Defines a named SQL query for use in the current persistence unit
 
-|xref:annotations.html#NamedNativeQueries[@NamedNativeQueries]
-|Class
-|Defines a series of named SQL queries for use in the current persistence unit
-
 |xref:annotations.html#NamedStoredProcedureQuery[@NamedStoredProcedureQuery]
 |Class
 |Defines a named stored procedure query for use in the current persistence unit
-
-|xref:annotations.html#NamedStoredProcedureQueries[@NamedStoredProcedureQueries]
-|Class
-|Defines a series of named stored procedure queries for use in the current persistence unit
 
 |xref:annotations.html#SqlResultSetMapping[@SqlResultSetMapping]
 |Class
 |Defines a result mapping for an SQL query for use in the current persistence unit
 
-|xref:annotations.html#SqlResultSetMappings[@SqlResultSetMappings]
-|Class
-|Defines a series of mappings for SQL queries for use in the current persistence unit
-
 |xref:annotations.html#NamedEntityGraph[@NamedEntityGraph]
 |Class
 |Defines a named entity graph with root of the class it is specifed on
-
-|xref:annotations.html#NamedEntityGraphs[@NamedEntityGraphs]
-|Class
-|Defines named entity graphs with root of the class it is specifed on
 
 |xref:annotations.html#Converter[@Converter]
 |Class
@@ -136,17 +116,9 @@ Using these provide portability for your application.
 |Class
 |Defines a field in a superclass that will have its column overridden
 
-|xref:annotations.html#AttributeOverrides[@AttributeOverrides]
-|Class
-|Defines the field(s) of superclasses that will have their columns overridden
-
 |xref:annotations.html#AssociationOverride[@AssociationOverride]
 |Class
 |Defines a N-1/1-1 field in a superclass that will have its column overridden
-
-|xref:annotations.html#AssociationOverrides[@AssociationOverrides]
-|Class
-|Defines the N-1/1-1 field(s) of superclasses that will have their columns overridden
 
 |xref:annotations.html#SequenceGenerator[@SequenceGenerator]
 |Class/Field/Method
@@ -298,40 +270,6 @@ public class MyClass
 See the documentation for link:persistence.html#lifecycle_callbacks[Lifecycle Callbacks]
 
 
-[[NamedQueries]]
-=== @NamedQueries
-
-This annotation is used to define a series of named (JPQL) queries that can be used in this persistence unit. Specified on the *class*.
-
-[cols="1,1,3,1", options="header"]
-|===
-|Attribute
-|Type
-|Description
-|Default
-
-|value
-|NamedQuery[]
-|The named queries
-|
-|===
-
-[source,java]
------
-@Entity
-@NamedQueries({
-     @NamedQuery(name="AllPeople", 
-                 query="SELECT p FROM Person p"),
-     @NamedQuery(name="PeopleCalledJones", 
-                 query="SELECT p FROM Person p WHERE p.surname = 'Jones'")})
-public class Person
-{
-    ...
-}
------
-
-*Note that with DataNucleus you can also specify @NamedQueries on non-persistable classes* See the documentation for link:query.html#jpql_named[Named Queries]
-
 
 [[NamedQuery]]
 === @NamedQuery
@@ -368,38 +306,8 @@ public class Person
 *Note that with DataNucleus you can also specify @NamedQuery on non-persistable classes*
 See the documentation for link:query.html#jpql_named[Named Queries]
 
+NOTE: There is a `@NamedQueries` annotation but you can achieve the same cleaner using multiple `@NamedQuery` annotations.
 
-[[NamedNativeQueries]]
-=== @NamedNativeQueries
-
-This annotation is used to define a series of named native (SQL) queries that can be used in this persistence unit. Specified on the *class*.
-
-[cols="1,1,3,1", options="header"]
-|===
-|Attribute
-|Type
-|Description
-|Default
-
-|value
-|NamedNativeQuery[]
-|The named native queries
-|
-|===
-
-[source,java]
------
-@Entity
-@NamedNativeQueries({
-     @NamedNativeQuery(name="AllPeople", query="SELECT * FROM PERSON WHERE SURNAME = 'Smith'"),
-     @NamedNativeQuery(name="PeopleCalledJones", query="SELECT * FROM PERSON WHERE SURNAME = 'Jones')})
-public class Person
-{
-    ...
-}
------
-*Note that with DataNucleus you can also specify @NamedNativeQueries on non-persistable classes*
-See the documentation for link:query.html#native_named[Named Native Queries]
 
 
 [[NamedNativeQuery]]
@@ -442,40 +350,8 @@ public class Person
 *Note that with DataNucleus you can also specify @NamedNativeQuery on non-persistable classes*
 See the documentation for link:query.html#native_named[Named Native Queries]
 
+NOTE: There is a `@NamedNativeQueries` annotation but you can achieve the same cleaner using multiple `@NamedNativeQuery` annotations.
 
-[[NamedStoredProcedureQueries]]
-=== @NamedStoredProcedureQueries
-
-This annotation is used to define a series of named native stored procedure queries that can be used in this persistence unit. Specified on the *class*.
-
-[cols="1,1,3,1", options="header"]
-|===
-|Attribute
-|Type
-|Description
-|Default
-
-|value
-|NamedStoredProcedureQuery[]
-|The named stored procedure queries
-|
-|===
-
-[source,java]
------
-@Entity
-@NamedStoredProcedureQueries({
-     @NamedStoredProcedureQuery(name="MyProc", procedureName="MY_PROC_SP1",
-       parameters={@StoredProcedureParameter(name="PARAM1", mode=ParameterMode.IN, type=String.class)}),
-     @NamedStoredProcedureQuery(name="MyProc2", procedureName="MY_PROC_SP2",
-       parameters={@StoredProcedureParameter(name="PARAM1", mode=ParameterMode.IN, type=Long.class)})})
-public class Person
-{
-    ...
-}
------
-*Note that with DataNucleus you can also specify @NamedStoredProcedureQueries on non-persistable classes*
-See the documentation for link:query.html#stored_procedures_named[Named Stored procedures]
 
 
 [[NamedStoredProcedureQuery]]
@@ -531,42 +407,13 @@ public class Person
     ...
 }
 -----
+
 *Note that with DataNucleus you can also specify @NamedStoredProcedureQuery on non-persistable classes*
 See the documentation for link:query.html#stored_procedures_named[Named StoredProcedures]
 
 
-[[SqlResultSetMappings]]
-=== @SqlResultSetMappings
+NOTE: There is a `@NamedStoredProcedureQueries` annotation but you can achieve the same cleaner using multiple `@NamedStoredProcedureQuery` annotations.
 
-This annotation is used to define a series of result mappings for SQL queries that can be used in this persistence unit. Specified on the *class*.
-
-[cols="1,1,3,1", options="header"]
-|===
-|Attribute
-|Type
-|Description
-|Default
-
-|value
-|SqlResultSetMapping[]
-|The SQL result mappings
-|
-|===
-
-[source,java]
------
-@Entity
-@SqlResultSetMappings({
-    @SqlResultSetMapping(name="PEOPLE_PLUS_AGE",
-        entities={@EntityResult(entityClass=Person.class)}, columns={@ColumnResult(name="AGE")}),
-    @SqlResultSetMapping(name="FIRST_LAST_NAMES",
-        columns={@ColumnResult(name="FIRSTNAME"), @ColumnResult(name="LASTNAME")})
-    })
-public class Person
-{
-    ...
-}
------
 
 
 [[SqlResultSetMapping]]
@@ -609,38 +456,7 @@ public class Person
 -----
 
 
-[[NamedEntityGraphs]]
-=== @NamedEntityGraphs
-
-This annotation is used to define a series of named EntityGraphs that can be used in this persistence unit. Specified on the *class*.
-
-[cols="1,1,3,1", options="header"]
-|===
-|Attribute
-|Type
-|Description
-|Default
-
-|value
-|NamedEntityGraph[]
-|The named EntityGraphs
-|
-|===
-
-[source,java]
------
-@Entity
-@NamedEntityGraph({
-    @NamedEntityGraph(name="PERSON_FULL",
-        attributeNodes={@NamedAttributeNode(name="friends"), @NamedAttributeNode(name="parents")}),
-    @NamedEntityGraph(name="PERSON_BASIC",
-        attributeNodes={@NamedAttributeNode(name="parents")})
-    })
-public class Person
-{
-    ...
-}
------
+NOTE: There is a `@SqlResultSetMappings` annotation but you can achieve the same cleaner using multiple `@SqlResultSetMapping` annotations.
 
 
 [[NamedEntityGraph]]
@@ -676,6 +492,8 @@ public class Person
     ...
 }
 -----
+
+NOTE: There is a `@NamedEntityGraphs` annotation but you can achieve the same cleaner using multiple `@NamedEntityGraph` annotations.
 
 
 [[Converter]]
@@ -1035,35 +853,8 @@ public class MyClass extends MySuperClass
 }
 -----
 
+NOTE: There is also an `@AttributeOverrides` annotation but you can achieve the same cleaner using multiple `@AttributeOverride` annotations.
 
-[[AttributeOverrides]]
-=== @AttributeOverrides
-
-This annotation is used to define fields of a superclass that have their columns overridden. Specified on the *class*.
-
-[cols="1,1,3,1", options="header"]
-|===
-|Attribute
-|Type
-|Description
-|Default
-
-|value
-|AttributeOverride[]
-|The overrides
-|
-|===
-
-[source,java]
------
-@Entity
-@AttributeOverrides({@AttributeOverride(name="attr1", column=@Column(name="NEW_NAME_1")),
-                     @AttributeOverride(name="attr2", column=@Column(name="NEW_NAME_2"))})
-public class MyClass extends MySuperClass
-{
-    ...
-}
------
 
 
 [[AssociationOverride]]
@@ -1099,35 +890,9 @@ public class Employee extends Person
 }
 -----
 
+NOTE: There is also an `@AssociationOverrides` annotation but you can achieve the same cleaner using multiple `@AssociationOverride` annotations.
 
-[[AssociationOverrides]]
-=== @AssociationOverrides
 
-This annotation is used to define 1-1/N-1 fields of a superclass that have their columns overridden. Specified on the *class*.
-
-[cols="1,1,3,1", options="header"]
-|===
-|Attribute
-|Type
-|Description
-|Default
-
-|value
-|AssociationOverride[]
-|The overrides
-|
-|===
-
-[source,java]
------
-@Entity
-@AssociationOverrides({@AssociationOverride(name="friend", joinColumn=@JoinColumn(name="FRIEND_ID")),
-                       @AssociationOverride(name="teacher", joinColumn=@JoinColumn(name="TEACHER_ID"))})
-public class Employee extends Person
-{
-    ...
-}
------
 
 
 [[SequenceGenerator]]
