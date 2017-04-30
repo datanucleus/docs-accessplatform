@@ -2645,10 +2645,6 @@ Using these will reduce the portability of your application.
 |Field/Method
 |Specifies a non-JPA-standard value generator to use on this field/property (DataNucleus extension).
 
-|xref:annotations.html#Extensions[@Extensions]
-|Class/Field/Method
-|Defines a series of DataNucleus extensions (DataNucleus extension).
-
 |xref:annotations.html#Extension[@Extension]
 |Class/Field/Method
 |Defines a DataNucleus extension (DataNucleus extension).
@@ -2890,35 +2886,6 @@ public class MyClass
 -----
 
 
-[[Extensions]]
-=== @Extensions
-
-_DataNucleus Extension Annotation_ used to define a set of extensions specific to DataNucleus. Specified on the *class* or *field*.
-
-[cols="1,1,3,1", options="header"]
-|===
-|Attribute
-|Type
-|Description
-|Default
-
-|value
-|Extension[]
-|Array of extensions - see @Extension annotation
-|
-|===
-                
-[source,java]
------
-@Entity
-@Extensions({@Extension(key="firstExtension", value="myValue"),
-             @Extension(key="secondExtension", value="myValue")})
-public class Person
-{
-    ...
-}
------
-
 
 [[Extension]]
 === @Extension
@@ -2957,3 +2924,5 @@ public class Person
     ...
 }
 -----
+
+NOTE: There is an `@Extensions` annotation but you can achieve the same cleaner using multiple `@Extension` annotations.
