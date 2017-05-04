@@ -112,9 +112,11 @@ You can also invoke methods, so a slight variation on this clause would be
 -----
 // String-based:
 Predicate nameUpperEquals = cb.equal(cb.upper(candidateRoot.get("name")), "FIRST");
+crit.where(nameUpperEquals);
 
 // MetaModel-based:
 Predicate nameUpperEquals = cb.equal(cb.upper(candidateRoot.get(Person_.name)), "FIRST");
+crit.where(nameUpperEquals);
 -----
 
 which equates to
@@ -122,6 +124,37 @@ which equates to
 -----
 WHERE (UPPER(p.name) = 'FIRST')
 -----
+
+You can combine predicates into AND/OR structures like this
+
+[source,java]
+-----
+// String-based:
+Predicate nameEquals = cb.equal(candidateRoot.get("name"), "First");
+Predicate ageEquals = cb.equal(candidateRoot.get("age"), 18);
+crit.where(cb.and(nameEquals, ageEquals));
+
+// MetaModel-based:
+Predicate nameEquals = cb.equal(candidateRoot.get(Person_.name), "First");
+Predicate ageEquals = cb.equal(candidateRoot.get(Person_.age), 18);
+crit.where(b.and(nameEquals, ageEquals));
+-----
+
+
+[source,java]
+-----
+// String-based:
+Predicate nameEquals = cb.equal(candidateRoot.get("name"), "First");
+Predicate ageEquals = cb.equal(candidateRoot.get("age"), 18);
+crit.where(cb.or(nameEquals, ageEquals));
+
+// MetaModel-based:
+Predicate nameEquals = cb.equal(candidateRoot.get(Person_.name), "First");
+Predicate ageEquals = cb.equal(candidateRoot.get(Person_.age), 18);
+crit.where(b.or(nameEquals, ageEquals));
+-----
+
+
 
 
 == Criteria API : Ordering
