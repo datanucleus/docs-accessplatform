@@ -508,9 +508,9 @@ class Product
 |icon:check[]
 
 |getDayOfWeek()
-|Returns the day of the week for the date (java.util.Date types) in the timezone it was stored
+|Returns the day of the week for the date (java.util.Date types) (1-7) in the timezone it was stored
 |icon:check[]
-|icon:check[]
+|icon:error[]
 |===
 
 
@@ -532,6 +532,12 @@ class Product
 |icon:check[]
 
 |LocalDate
+|getDayOfWeek()
+|Returns the day of the week for the date (1-7) in the timezone it was stored
+|icon:check[]
+|icon:error[]
+
+|LocalDate
 |getMonthValue()
 |Returns the month for the date (1-12) in the timezone it was stored
 |icon:check[]
@@ -548,6 +554,12 @@ class Product
 |Returns the day (of the month) for the date in the timezone it was stored
 |icon:check[]
 |icon:check[]
+
+|LocalDateTime
+|getDayOfWeek()
+|Returns the day of the week for the date (1-7) in the timezone it was stored
+|icon:check[]
+|icon:error[]
 
 |LocalDateTime
 |getMonthValue()
