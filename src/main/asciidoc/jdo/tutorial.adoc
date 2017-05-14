@@ -317,7 +317,7 @@ try
     tx.begin();
 
     Query q = pm.newQuery("SELECT FROM " + Product.class.getName() + " WHERE price < 150.00 ORDER BY price ASC");
-    List<Product> products = (List<Product>)q.execute();
+    List<Product> products = q.executeList();
     Iterator<Product> iter = products.iterator();
     while (iter.hasNext())
     {
