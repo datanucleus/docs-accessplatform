@@ -242,7 +242,9 @@ SELECT ID, NAME, CURRENT_PRICE AS PRICE, CURRENCY FROM PRODUCT
 WHERE PRODUCT.STATUS_ID = 1")
 public class SaleableProduct
 {
+    @Id
     String id;
+
     String name;
     double price;
     String currency;
@@ -271,8 +273,6 @@ public class SaleableProduct
 
 Please note the following
 
-* We would typically define our class as using "nondurable" identity (`@NonDurableId`). This is an important step since rows of the *View*
-typically don't operate in the same way as rows of a *Table*, not mapping onto a persisted updateable object as such
 * We've specified the "table", which in this case is the view name - otherwise DataNucleus would create a name for the view based on the class name.
 * We've defined a DataNucleus extension _view-definition_ that defines the view for this class. If the view doesn't already exist it doesn't matter since 
 DataNucleus (when used with _autoCreateSchema_) will execute this construction definition.
