@@ -164,12 +164,12 @@ The basic Criteria query above is fine, but in many cases we want to define orde
 [source,java]
 -----
 // String-based:
-Order orderFirstName = cb.desc(candidateRoot.get("name"));
-crit.orderBy(orderFirstName);
+Order orderName = cb.desc(candidateRoot.get("name"));
+crit.orderBy(orderName);
 
 // MetaModel-based:
-Order orderFirstName = cb.desc(candidateRoot.get(Person_.name));
-crit.orderBy(orderFirstName);
+Order orderName = cb.desc(candidateRoot.get(Person_.name));
+crit.orderBy(orderName);
 -----
 
 which equates to
@@ -177,6 +177,19 @@ which equates to
 -----
 ORDER BY p.name DESC
 -----
+
+
+DataNucleus provides an extension to the JPA Criteria API in its _javax.persistence-2.2.jar_ where you have additional
+methods to specify where NULL values are placed in the ordering. Like this
+
+[source,java]
+-----
+Order orderName = cb.desc(candidateRoot.get("name"));
+orderName.nullsFirst();
+-----
+
+which will put NULL values of that field before other values. Similarly there is a method `nullsLast`.
+
 
 
 == Criteria API : Parameters
@@ -237,6 +250,40 @@ Subquery<Double> avgSalary = subCrit.select(cb.avg(e2SalaryField));
 Path eSalaryField = candidate.get("salary");
 Predicate lessThanAvgSalary = cb.lessThan(eSalaryField, avgSalary);
 crit.where(lessThanAvgSalary);
+-----
+
+
+
+== Criteria API : IN operator
+
+You can make use of the IN operator with Criteria, like this
+
+[source,java]
+-----
+List<String> nameOptions = new ArrayList<String>();
+nameOptions.add("Fred");
+nameOptions.add("George");
+
+Path nameField = candidateRoot.get("name");
+Predicate nameIn = nameField.in(nameOptions);
+-----
+
+so this generates the equivalent of this JPQL
+
+-----
+firstName IN ('Fred', 'George')
+-----
+
+
+An alternative way of doing this is via the CriteriaBuilder
+
+[source,java]
+-----
+In nameIn = cb.in(candidateRoot.get("name"));
+nameIn.value("Fred");
+nameIn.value("George");
+
+crit.where(nameIn);
 -----
 
 
