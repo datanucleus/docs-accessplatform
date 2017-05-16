@@ -217,6 +217,8 @@ In JPQL this would be written as
 SELECT e FROM Employee e WHERE (e.salary < SELECT AVG(e2.salary) FROM Employee e2")
 -----
 
+With Criteria we do it like this. Firstly we create the outer query, then create the subquery, and then place the subquery in the outer query.
+
 [source,java]
 -----
 CriteriaQuery<Employee> crit = cb.createQuery(Employee.class);
