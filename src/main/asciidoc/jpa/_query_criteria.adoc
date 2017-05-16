@@ -206,6 +206,38 @@ WHERE (p.name = :myParam)
 Don't forget to set the value of the parameters before executing the query!
 
 
+== Criteria API : Subqueries
+
+You can also make use of subqueries with Criteria. 
+
+In this example we are going to search for all _Employee(s)_ where the salary is below the average of all _Employees_.
+In JPQL this would be written as
+
+-----
+SELECT e FROM Employee e WHERE (e.salary < SELECT AVG(e2.salary) FROM Employee e2")
+-----
+
+[source,java]
+-----
+CriteriaQuery<Employee> crit = cb.createQuery(Employee.class);
+Root<Employee> candidate = crit.from(Employee.class);
+candidate.alias("e");
+crit.select(candidate);
+
+// Create subquery for the average salary of all Employees
+Subquery<Double> subCrit = crit.subquery(Double.class);
+Root<Employee> subCandidate = subCrit.from(Employee.class);
+subCandidate.alias("e2");
+Path e2SalaryField = subCandidate.get("salary");
+Subquery<Double> avgSalary = subCrit.select(cb.avg(e2SalaryField));
+
+// Add WHERE clause to outer query, linking to subquery
+Path eSalaryField = candidate.get("salary");
+Predicate lessThanAvgSalary = cb.lessThan(eSalaryField, avgSalary);
+crit.where(lessThanAvgSalary);
+-----
+
+
 == Criteria API : Result as Tuple
 
 You sometimes need to define a result for a query.
