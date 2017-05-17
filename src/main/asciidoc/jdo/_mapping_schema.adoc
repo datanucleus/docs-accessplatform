@@ -470,8 +470,8 @@ WHERE PRODUCT.STATUS_ID = 1"/>
 
 Please note the following
 
-* We've defined our class as using "nondurable" identity. This is an important step since rows of the *View*
-typically don't operate in the same way as rows of a *Table*, not mapping onto a persisted updateable object as such
+* We've defined our class as using "nondurable" identity. This was mandatory in all versions up to 5.0.7 but
+after that is optional and you can use application/datastore identity also.
 * We've specified the "table", which in this case is the view name - otherwise DataNucleus would create a name for the view based on the class name.
 * We've defined a DataNucleus extension _view-definition_ that defines the view for this class. If the view
 doesn't already exist it doesn't matter since DataNucleus (when used with _autoCreateSchema_) will execute this construction definition.
