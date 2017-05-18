@@ -16,7 +16,8 @@ Instructions are provided for the following JavaEE servers
 * link:#jonas[Jonas 4.8]
 
 NOTE: The main thing to mention here is that you can use DataNucleus in a JavaEE environment just like you use any other library, following the
-documentation for JavaSE. Consequently you do not _need_ the JCA Adaptor for this usage. You solely use the JCA Adaptor if you want to fully integrate with JavaEE.
+documentation for JavaSE. Consequently you do not _need_ the JCA Adaptor for this usage. You solely use the JCA Adaptor if you want to fully integrate with JavaEE;
+by this we mean make use of transaction demarcation (and so avoid having to put tx.begin/commit).
 
 The remainder of these notes refer to JCA usage.
 The provided DataNucleus JCA rar provides default resource adapter descriptors, one general, and the other for the WebLogic JavaEE server. 
