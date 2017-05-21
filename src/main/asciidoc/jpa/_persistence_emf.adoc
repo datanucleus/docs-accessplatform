@@ -277,17 +277,25 @@ _{create, drop, drop-and-create, *none*}_
 Will process the schema for all classes that have metadata loaded at startup (i.e the classes specified in a persistence-unit).
 _{create, drop, drop-and-create, *none*}_
 
+|javax.persistence.schema-generation.create-source
+|Specifies the order for create operations. If a script is provided then defaults to "script", otherwise defaults to "metadata".
+_{script, metadata, script-then-metadata, metadata-then-script}_
+
 |javax.persistence.schema-generation.scripts.create-target
 |Name of the script file to write to if doing a "create" with the target as "scripts"
 _{*datanucleus-schema-create.ddl*, {filename}}_
 
-|javax.persistence.schema-generation.scripts.drop-target
-|Name of the script file to write to if doing a "drop" with the target as "scripts"
-_{*datanucleus-schema-drop.ddl*, {filename}}_
-
 |javax.persistence.schema-generation.create-script-source
 |Name of a script file to run to create tables. Can be absolute filename, or URL string
 _{filename}_
+
+|javax.persistence.schema-generation.drop-source
+|Specifies the order for drop operations. If a script is provided then defaults to "script", otherwise defaults to "metadata".
+_{script, metadata, script-then-metadata, metadata-then-script}_
+
+|javax.persistence.schema-generation.scripts.drop-target
+|Name of the script file to write to if doing a "drop" with the target as "scripts"
+_{*datanucleus-schema-drop.ddl*, {filename}}_
 
 |javax.persistence.schema-generation.drop-script-source
 |Name of a script file to run to drop tables. Can be absolute filename, or URL string
