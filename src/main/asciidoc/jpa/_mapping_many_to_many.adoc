@@ -41,6 +41,12 @@ WARNING: If you want to delete an object from one end of a M-N relationship you 
 If you don't you will get an error message that the object to be deleted has links to other objects and so cannot be deleted.
 
 
+TIP: If you want to have a M-N relation between classes and think of adding extra information to the join table, please think about where in your Java model that "extra information"
+is stored, and consider how JPA can know where to persist it. You would model this situation by creating an intermediate persistable class containing the extra information
+and make the relations to this intermediate class.
+
+
+
 
 The various possible relationships are described below.
 
