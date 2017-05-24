@@ -15,6 +15,14 @@ As a result sometimes users will have to make some changes to move between versi
 Migration to 5.0 involves the following steps
 
 
+=== Migration from 5.0.8 to 5.0.9
+
+Migrating will require the following changes.
+
+* An error was found in the default naming of a table for a class, so that it should use the entity name, meaning that anyone who relied on these previous namings
+(when overriding the entity name) should set the table/column names in mapping information to be safe.
+
+
 === Migration from 5.0.5 to 5.0.6
 
 Migrating will require the following changes.
