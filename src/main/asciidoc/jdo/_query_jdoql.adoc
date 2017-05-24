@@ -1213,7 +1213,7 @@ so now our subquery has a candidate related to the outer query candidate.
 
 === Using methods on the subquery
 
-A subquery is effectively a Collection, so you have access to the normal methods of a Collection to use on the subquery. Here are as couple of examples
+A subquery is effectively a Collection, so you have access to the normal methods of a Collection to use on the subquery. Here are a couple of examples
 
 -----
 SELECT FROM mydomain.Manager WHERE (SELECT FROM mydomain.Employee e WHERE e.manager == this).isEmpty()
