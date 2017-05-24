@@ -50,7 +50,7 @@ The _NamingFactory_ "jpa" aims at providing a naming policy consistent with the 
 
 Using the same example above, the rules in this _NamingFactory_ mean that, assuming that the user doesn't specify any <column> elements :-
 
-* _MyClass_ will be persisted into a table named `MYCLASS`
+* _MyClass_ will be persisted into a table named `MYCLASS` (unless entityName had been specified, in which case use that)
 * When using datastore identity `MYCLASS` will have a column called `MYCLASS_ID`
 * _MyClass.myField1_ will be persisted into a column called `MYFIELD1`
 * _MyElement_ will be persisted into a table named `MYELEMENT`
@@ -70,7 +70,7 @@ The _RDBMS IdentifierFactory_ "jpa" aims at providing a naming policy consistent
 
 Using the same example above, the rules in this _IdentifierFactory_ mean that, assuming that the user doesnt specify any <column> elements :-
 
-* _MyClass_ will be persisted into a table named `MYCLASS`
+* _MyClass_ will be persisted into a table named `MYCLASS` (unless entityName had been specified, in which case use that)
 * When using datastore identity `MYCLASS` will have a column called `MYCLASS_ID`
 * _MyClass.myField1_ will be persisted into a column called `MYFIELD1`
 * _MyElement_ will be persisted into a table named `MYELEMENT`
