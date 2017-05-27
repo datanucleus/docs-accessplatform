@@ -2323,7 +2323,7 @@ This DataNucleus-extension annotation is used specify multi-tenancy details for 
 |Name of the multi-tenancy column for this class.
 |TENANT_ID
 
-|columnName
+|columnLength
 |int
 |Length of the multi-tenancy column.
 |
@@ -2483,4 +2483,79 @@ public class MyClass
     ...
 }
 -----
+
+
+
+
+[[meta_annotations]]
+== Meta-Annotations
+
+JDO annotations are all usable as part of _meta-annotations_. A _meta-annotation_ is, in simple terms, a user-defined annotation that provides one or multiple
+other annotations (including annotation attributes). Let's provide a couple of examples
+
+Firstly, say we have 
+
+[source,java]
+-----
+@PersistenceCapable(detachable="true")
+@MultiTenant(column="TENANT")
+-----
+
+and need to put this on many classes. We can introduce our own annotation
+
+[source,java]
+-----
+@Target(TYPE)
+@Retention(RUNTIME)
+@PersistenceCapable(detachable="true")
+@MultiTenant(column="TENANT")
+@interface @MultiTenantPersistable
+{
+}
+-----
+
+so now we can simply annotate a JDO persistable class with
+
+[source,java]
+-----
+@MultiTenantPersistable
+public class MyClass
+{
+    ...
+}
+-----
+
+
+A second example is where we are specifying several attributes on an annotation, such as
+
+[source,java]
+-----
+@PersistenceCapable(detachable="true", requiresExtent="true", cacheable="false", identityType=IdentityType.DATASTORE)
+-----
+
+so we introduce our own convenience annotation
+
+[source,java]
+-----
+@Target(TYPE)
+@Retention(RUNTIME)
+@PersistenceCapable(detachable="true", requiresExtent="true", cacheable="false", identityType=IdentityType.DATASTORE)
+@interface @MyPersistable
+{
+}
+-----
+
+so now we can simply annotate a JDO persistable class with
+
+[source,java]
+-----
+@MyPersistable
+public class MyClass
+{
+    ...
+}
+-----
+
+
+NOTE: You can also make use of _meta-annotations_ on fields/properties.
 
