@@ -208,8 +208,7 @@ A convenient vendor extension is to find which objects are waiting to be flushed
 
 [source,java]
 -----
-List<ObjectProvider> objs = 
-    ((JPAEntityManager)pm).getExecutionContext().getObjectsToBeFlushed();
+List<ObjectProvider> objs = em.unwrap(ExecutionContext.class).getObjectsToBeFlushed();
 -----
 
 
@@ -231,7 +230,7 @@ As an alternative you can also specify it on a per-transaction basis as follows 
 
 [source,java]
 -----
-org.datanucleus.api.jpa.JPAEntityTransaction tx = (org.datanucleus.api.jpa.JPAEntityTransaction)pm.currentTransaction();
+org.datanucleus.api.jpa.JPAEntityTransaction tx = (org.datanucleus.api.jpa.JPAEntityTransaction)em.getTransaction();
 tx.setOption("transaction.isolation", 2);
 -----
 
@@ -283,7 +282,7 @@ DataNucleus provides this as a vendor extension, as follows
 import org.datanucleus.api.jpa.JPAEntityTransaction;
 
 EntityManager em = emf.createEntityManager();
-JPAEntityTransaction tx = (JPAEntityTransaction)pm.getTransaction();
+JPAEntityTransaction tx = (JPAEntityTransaction)em.getTransaction();
 try
 {
     tx.begin();
