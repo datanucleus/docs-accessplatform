@@ -14,9 +14,9 @@ These are described below.
 * link:#transaction_container[Container-managed transactions] : managed by a JavaEE environment
 * link:#transaction_spring[Spring-managed transactions] : managed by SpringFramework
 * link:#transaction_nontransactional[No transactions] : "auto-commit" mode
-* link:#transaction_flushing[Flushing a Transaction]
 * link:#transaction_isolation[Controlling transaction isolation level]
 * link:#transaction_readonly[Read-Only transactions]
+* link:#transaction_flushing[Flushing a Transaction]
 * link:#transaction_savepoint[RDBMS : Savepoints]
 
 
@@ -190,28 +190,6 @@ If this is true then any persist/delete/update will be committed to the datastor
 If this is false then any persist/delete/update will be queued up until the next transaction (or _em.close()_) and committed with that.
 
 
-[[transaction_flushing]]
-== Flushing
-
-During a transaction, depending on the configuration, operations don't necessarily go to the datastore immediately, often waiting until _commit_. 
-In some situations you need persists/updates/deletes to be in the datastore so that subsequent operations can be performed that rely on those being handled first. 
-In this case you can *flush* all outstanding changes to the datastore using
-
-[source,java]
------
-em.flush();
------
-
-image:../images/nucleus_extension.png[]
-
-A convenient vendor extension is to find which objects are waiting to be flushed at any time, like this
-
-[source,java]
------
-List<ObjectProvider> objs = em.unwrap(ExecutionContext.class).getObjectsToBeFlushed();
------
-
-
 [[transaction_isolation]]
 == Transaction Isolation
 
@@ -265,6 +243,40 @@ em.close();
 -----
 
 Any call to _commit_ on the transaction will throw an exception forcing the user to roll it back.
+
+
+[[transaction_flushing]]
+== Flushing
+
+During a transaction, depending on the configuration, operations don't necessarily go to the datastore immediately, often waiting until _commit_. 
+In some situations you need persists/updates/deletes to be in the datastore so that subsequent operations can be performed that rely on those being handled first. 
+In this case you can *flush* all outstanding changes to the datastore using
+
+[source,java]
+-----
+em.flush();
+-----
+
+You can control the _flush mode_ for an EntityManager using
+
+[source,java]
+-----
+em.setFlushMode(FlushModeType.COMMIT);
+-----
+which will only flush changes at commit. This means that when a query is performed it will not see any local changes.
+
+The default is FlushModeType.AUTO which will flush just before any query, so that the results of all queries are consistent with local changes.
+
+
+
+image:../images/nucleus_extension.png[]
+
+A convenient vendor extension is to find which objects are waiting to be flushed at any time, like this
+
+[source,java]
+-----
+List<ObjectProvider> objs = em.unwrap(ExecutionContext.class).getObjectsToBeFlushed();
+-----
 
 
 [[transaction_savepoint]]
