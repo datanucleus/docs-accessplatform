@@ -332,7 +332,7 @@ so it is possible to block access to datastore entities for the duration of the 
 You would select pessimistic locking by adding the persistence property *datanucleus.Optimistic* as _false_.
 
 By default DataNucleus does not currently lock the objects fetched in pessimistic locking, 
-but you can configure this behaviour for RDBMS datastores by setting the persistence property _datanucleus.rdbms.useUpdateLock_ to <u>true</u>. 
+but you can configure this behaviour for RDBMS datastores by setting the persistence property *datanucleus.rdbms.useUpdateLock* to _true_. 
 This will result in all "SELECT ... FROM ..." statements being changed to be "SELECT ... FROM ... FOR UPDATE". 
 This will be applied only where the underlying RDBMS supports the "FOR UPDATE" syntax.
 
