@@ -14,7 +14,6 @@ then just before committing make a check for changes. This is known as link:#loc
 
 [[locking_pessimistic]]
 == Pessimistic (Datastore) Locking
-image:../images/nucleus_extension.png[]
 
 *Pessimistic* locking isn't the default behaviour with JPA but can be configured.
 It is suitable for short lived operations where no user interaction is taking place and so it is possible to block access to datastore entities for the duration of the transaction.
@@ -120,19 +119,17 @@ It should be noted that DataNucleus provides two persistence properties that all
 [[locking_optimistic]]
 == Optimistic Locking
 
-It is suitable for longer lived operations maybe where user interaction is taking place and where it would be undesirable to block access to 
+Optimistic locking is suitable for longer lived operations maybe where user interaction is taking place and where it would be undesirable to block access to 
 datastore entities for the duration of the transaction. The assumption is that data altered in this transaction will not be updated by 
 other transactions during the duration of this transaction, so the changes are not propagated to the datastore until commit()/flush(). 
 The data is checked just before commit to ensure the integrity in this respect. 
-The most convenient way of checking data for updates is to maintain a column on each table that handles optimistic locking data. 
-The user will decide this when generating their MetaData.
+The most convenient way of checking data for updates is to maintain a column on each table that handles optimistic locking data to store a version. 
 
-Rather than placing version/timestamp columns on all user datastore tables, JPA allows the user to notate particular classes as requiring *optimistic* treatment. 
+
+Rather than placing version columns on all user datastore tables, JPA allows the user to notate particular classes as requiring *optimistic* treatment. 
 This is performed by specifying in MetaData or annotations the details of the field/column to use for storing the version - see link:mapping.html#versioning[versioning]. 
-With JPA you must have a field in your class ready to store the version.
-
-In JPA you can read the version by inspecting the field marked as storing the version value.
-
+With JPA you must have a field in your class ready to store the version. With DataNucleus we also allows a version to be stored in a surrogate column
+hence not requiring a field in the actual class.
 
 
 
