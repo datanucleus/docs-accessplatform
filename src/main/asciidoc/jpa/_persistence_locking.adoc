@@ -17,10 +17,12 @@ then just before committing make a check for changes. This is known as link:#loc
 
 *Pessimistic* locking isn't the default behaviour with JPA but can be configured.
 It is suitable for short lived operations where no user interaction is taking place and so it is possible to block access to datastore entities for the duration of the transaction.
+Such locking is best employed on specific objects, rather as a global process applying to all retrieved objects.
+
 To enable pessimistic locking globally you would add the persistence property *datanucleus.Optimistic* as _false_. 
 Additionally, for RDBMS, to lock ALL retrieved objects you would also set the persistence property *datanucleus.rdbms.useUpdateLock* to _true_. 
 
-Any object that has a pessimistic lock will result in (for RDBMS) all "SELECT ... FROM ..." statements being changed to be "SELECT ... FROM ... FOR UPDATE"; 
+Any object that has a pessimistic lock will result in (for RDBMS) all "SELECT ... FROM ..." retrieval statements being changed to be "SELECT ... FROM ... FOR UPDATE"; 
 this will be applied only where the underlying RDBMS supports the "FOR UPDATE" syntax.
 
 With pessimistic locking DataNucleus will grab a datastore connection at the first operation, and maintain it for the duration of the transaction. 
@@ -108,12 +110,15 @@ Insert the object (1) into the datastore
 
 So here whenever an operation is performed, DataNucleus pushes it straight to the datastore.
 Consequently any queries will always reflect the current state of all objects in use.
-However this mode of operation has no version checking of objects and so if they were updated by external processes in the meantime then they will overwrite those changes.
+This mode of operation has no version checking of objects and so, if they were updated by external processes in the meantime then, they will overwrite those changes. This is
+where the locking statements for particular objects is crucial, preventing them being updated externally.
+
 
 It should be noted that DataNucleus provides two persistence properties that allow an amount of control over when flushing happens with pessimistic locking
 
 * _datanucleus.flush.mode_ when set to MANUAL will try to delay all datastore operations until commit/flush.
 * _datanucleus.datastoreTransactionFlushLimit_ represents the number of dirty objects before a flush is performed. This defaults to 1.
+
 
 
 [[locking_optimistic]]
@@ -202,6 +207,7 @@ If you invoke flush() just before running the query the query results will inclu
 all changes are made in a block and version checking of objects is performed before application of changes, hence this mode copes better with external processes updating the objects.
 
 Please note that for some datastores (e.g RDBMS) the version check followed by update/delete is performed in a single statement.
+
 See also :-
 
 * link:metadata_xml.html#version[JPA MetaData reference for <version> element]
