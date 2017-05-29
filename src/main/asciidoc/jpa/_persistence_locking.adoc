@@ -18,12 +18,11 @@ image:../images/nucleus_extension.png[]
 
 *Pessimistic* locking isn't the default behaviour with JPA but can be configured.
 It is suitable for short lived operations where no user interaction is taking place and so it is possible to block access to datastore entities for the duration of the transaction.
-To enable pessimistic locking globally you would add the persistence property *datanucleus.Optimistic* as _false_.
+To enable pessimistic locking globally you would add the persistence property *datanucleus.Optimistic* as _false_. 
+Additionally, for RDBMS, to lock ALL retrieved objects you would also set the persistence property *datanucleus.rdbms.useUpdateLock* to _true_. 
 
-By default DataNucleus does not currently lock the objects fetched in pessimistic locking, 
-but you can configure this behaviour for RDBMS datastores by setting the persistence property _datanucleus.rdbms.useUpdateLock_ to <u>true</u>. 
-This will result in all "SELECT ... FROM ..." statements being changed to be "SELECT ... FROM ... FOR UPDATE". 
-This will be applied only where the underlying RDBMS supports the "FOR UPDATE" syntax.
+Any object that has a pessimistic lock will result in (for RDBMS) all "SELECT ... FROM ..." statements being changed to be "SELECT ... FROM ... FOR UPDATE"; 
+this will be applied only where the underlying RDBMS supports the "FOR UPDATE" syntax.
 
 With pessimistic locking DataNucleus will grab a datastore connection at the first operation, and maintain it for the duration of the transaction. 
 A single connection is used for the transaction (with the exception of any link:mapping.html#value_generation[Value Generation] operations which need datastore 
@@ -45,6 +44,16 @@ em.lock(person, LockModeType.PESSIMISTIC_READ);
 -----
 
 which will lock the object from that point in the transaction.
+
+If you wanted to lock all objects affected by a query, you can set the lock mode of the query, like this
+
+[source,java]
+-----
+Query q = em.createQuery("SELECT p FROM Person p WHERE p.lastName = 'Smith'");
+q.setLockMode(LockModeType.PESSIMISTIC_READ);
+List<Person> results = q.getResultList();
+-----
+which will add a pessimistic lock on all _Person_ objects with surname _Smith_.
 
 
 
