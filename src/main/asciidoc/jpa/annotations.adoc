@@ -3264,3 +3264,79 @@ public class Person
     ...
 }
 -----
+
+
+[[meta_annotations]]
+== Meta-Annotations
+
+JPA annotations are all usable as part of _meta-annotations_. A _meta-annotation_ is, in simple terms, a user-defined annotation that provides one or multiple
+other annotations (including annotation attributes). Let's provide a couple of examples
+
+Firstly, say we have 
+
+[source,java]
+-----
+@Entity
+@Cacheable
+@MultiTenant(column="TENANT")
+-----
+
+and need to put this on many classes. We can introduce our own annotation
+
+[source,java]
+-----
+@Target(TYPE)
+@Retention(RUNTIME)
+@Entity
+@Cacheable
+@MultiTenant(column="TENANT")
+@interface @MultiTenantCacheableEntity
+{
+}
+-----
+
+so now we can simply annotate a JPA entity with
+
+[source,java]
+-----
+@MultiTenantCacheableEntity
+public class MyClass
+{
+    ...
+}
+-----
+
+
+A second example is where we are specifying several attributes on an annotation, such as
+
+[source,java]
+-----
+@DiscriminatorColumn(name="DISCRIM", discriminatorType=DiscriminatorType.INTEGER)
+-----
+
+so we introduce our own convenience annotation
+
+[source,java]
+-----
+@Target(TYPE)
+@Retention(RUNTIME)
+@DiscriminatorColumn(name="DISCRIM", discriminatorType=DiscriminatorType.INTEGER)
+@interface @MyDiscriminator
+{
+}
+-----
+
+so now we can simply annotate a JPA entity that needs this discriminator with
+
+[source,java]
+-----
+@Entity
+@MyDiscriminator
+public class MyClass
+{
+    ...
+}
+-----
+
+
+NOTE: You can also make use of _meta-annotations_ on fields/properties.
