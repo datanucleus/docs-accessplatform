@@ -2955,7 +2955,7 @@ and need to put this on many classes. We can introduce our own annotation
 @Entity
 @Cacheable
 @MultiTenant(column="TENANT")
-@interface @MultiTenantCacheableEntity
+public @interface MultiTenantCacheableEntity
 {
 }
 -----
@@ -2986,7 +2986,7 @@ so we introduce our own convenience annotation
 @Target(TYPE)
 @Retention(RUNTIME)
 @DiscriminatorColumn(name="DISCRIM", discriminatorType=DiscriminatorType.INTEGER)
-@interface @MyDiscriminator
+public @interface MyDiscriminator
 {
 }
 -----
