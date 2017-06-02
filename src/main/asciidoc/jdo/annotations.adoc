@@ -2850,7 +2850,7 @@ and need to put this on many classes. We can introduce our own annotation
 @Retention(RUNTIME)
 @PersistenceCapable(detachable="true")
 @MultiTenant(column="TENANT")
-@interface @MultiTenantPersistable
+public @interface MultiTenantPersistable
 {
 }
 -----
@@ -2881,7 +2881,7 @@ so we introduce our own convenience annotation
 @Target(TYPE)
 @Retention(RUNTIME)
 @PersistenceCapable(detachable="true", requiresExtent="true", cacheable="false", identityType=IdentityType.DATASTORE)
-@interface @MyPersistable
+public @interface MyPersistable
 {
 }
 -----
