@@ -869,14 +869,16 @@ or close of the PM. Disable this if you want operations to be processed with the
 This setting applies as the default for all PMs obtained. You can also specify this on a per-transaction or per-query basis (which is often better to avoid deadlocks etc)
 {true, *false*}
 
-|datanucleus.datastoreTransactionFlushLimit
-|For use when using datastore transactions and is the limit on number of dirty objects before a flush to the datastore will be performed.
+|datanucleus.flush.auto.objectLimit
+|For use when using (DataNucleus) "AUTO" flush mode (see `datanucleus.flush.mode`) and is the limit on number of dirty objects before a flush to the datastore will be performed.
 {*1*, positive integer}
 
 |datanucleus.flush.mode
 |Sets when persistence operations are flushed to the datastore.
-_MANUAL_ means that operations will be sent only on flush()/commit(). _AUTO_ means that operations will be sent immediately.
-{MANUAL, AUTO}
+_MANUAL_ means that operations will be sent only on flush()/commit(). 
+_QUERY_ means that operations will be sent on flush()/commit() and just before query execution.
+_AUTO_ means that operations will be sent immediately (auto-flush)
+{MANUAL, QUERY, AUTO}
 
 |datanucleus.flush.optimised
 |Whether to use an "optimised" flush process, changing the order of persists for referential integrity (as used by RDBMS typically), 
