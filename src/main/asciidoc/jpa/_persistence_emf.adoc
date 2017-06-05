@@ -742,9 +742,9 @@ This setting applies as the default for all EMs obtained. You can also specify t
 
 |datanucleus.flush.mode
 |Sets when persistence operations are flushed to the datastore. This overrides the JPA flush mode.
-_MANUAL_ means that operations will be sent only on flush()/commit(). 
-_QUERY_ means that operations will be sent on flush()/commit() and just before query execution.
-_AUTO_ means that operations will be sent immediately (auto-flush)
+_MANUAL_ means that operations will be sent only on flush()/commit() (*same as JPA FlushModeType.COMMIT*). 
+_QUERY_ means that operations will be sent on flush()/commit() and just before query execution (*same as JPA FlushModeType.AUTO*).
+_AUTO_ means that operations will be sent immediately (auto-flush).
 {MANUAL, QUERY, AUTO}
 
 |datanucleus.flush.optimised
