@@ -149,30 +149,6 @@ If this is true then any persist/delete/update will be committed to the datastor
 If this is false then any persist/delete/update will be queued up until the next transaction (or _pm.close()_) and committed with that.
 
 
-
-[[transaction_flushing]]
-== Flushing
-
-During a transaction, depending on the configuration, operations don't necessarily go to the datastore immediately, often waiting until _commit_. 
-In some situations you need persists/updates/deletes to be in the datastore so that subsequent operations can be performed that rely on those being handled first. 
-In this case you can *flush* all outstanding changes to the datastore using
-
-[source,java]
------
-pm.flush();
------
-
-
-image:../images/nucleus_extension.png[]
-
-A convenient vendor extension is to find which objects are waiting to be flushed at any time, like this
-
-[source,java]
------
-List<ObjectProvider> objs = ((JDOPersistenceManager)pm).getExecutionContext().getObjectsToBeFlushed();
------
-
-
 [[transaction_isolation]]
 == Transaction Isolation
 
@@ -273,6 +249,37 @@ pm.close();
 -----
 
 Any call to _commit_ on the transaction will throw an exception forcing the user to roll it back.
+
+
+
+
+[[transaction_flushing]]
+== Flushing
+
+During a transaction, depending on the configuration, operations don't necessarily go to the datastore immediately, often waiting until _commit_. 
+In some situations you need persists/updates/deletes to be in the datastore so that subsequent operations can be performed that rely on those being handled first. 
+In this case you can *flush* all outstanding changes to the datastore using
+
+[source,java]
+-----
+pm.flush();
+-----
+
+You can control the *flush mode* using the persistence property *datanucleus.flush.mode*. This has the following values
+
+* *Auto* : auto-flush changes to the datastore when they are made. This is the default for pessimistic transactions.
+* *Manual* : only flush on explicit calls to _pm.flush()_ or _tx.commit()_. This is the default for optimistic transactions.
+* *Query* : only flush on explicit calls to _pm.flush()_ or _tx.commit()_, or just before a Query is executed.
+
+
+image:../images/nucleus_extension.png[]
+
+A convenient vendor extension is to find which objects are waiting to be flushed at any time, like this
+
+[source,java]
+-----
+List<ObjectProvider> objs = ((JDOPersistenceManager)pm).getExecutionContext().getObjectsToBeFlushed();
+-----
 
 
 
