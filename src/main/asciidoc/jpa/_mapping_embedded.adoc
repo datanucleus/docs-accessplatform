@@ -36,11 +36,21 @@ JPA's definition of embedding encompasses several types of fields. These are des
 * link:#embedded_collection[Embedded Collection elements] - where you want to embed the elements of a collection into a join table (instead of persisting them into their own table)
 * link:#embedded_map[Embedded Map keys/values] - where you want to embed the keys/values of a map into a join table (instead of persisting them into their own table)
 
+
+[[embedded_entity_structure]]
+== Embedded entity structure
+
 With respect to what types of fields you can have in an embedded class, DataNucleus supports all basic types, as well as 1-1/N-1 relations
 (where the _foreign-key_ is at the embedded object side), and some 1-N/M-N relations.
 
 NOTE: whilst nested embedded members are supported, you *cannot use recursive embedded objects* since that would require potentially infinite columns in the owner table, 
 or infinite embedded join tables.
+
+
+NOTE: You can represent inheritance of an embedded entity but only using _SINGLE_TABLE_ strategy using a discriminator (you must define it in the metadata of the embedded type). 
+Note that this is a DataNucleus extension since JPA doesn't define any support for embedded inherited persistable objects
+
+
 
 
 [[embedded_entity]]
@@ -138,11 +148,6 @@ So here we will end up with a table called `COMPUTER` with columns `COMPUTER_ID`
 If we call persist() on any objects of type *Computer*, they will be persisted into this table.
 
 image:../images/embedded_pc_embedded_db.png[]
-
-
-
-NOTE: You can represent inheritance of embedded objects but only using _SINGLE_TABLE_ strategy using a discriminator (you must define it in the metadata of the embedded type). 
-Note that this is a DataNucleus extension since JPA doesn't define any support for embedded inherited persistable objects
 
 
 

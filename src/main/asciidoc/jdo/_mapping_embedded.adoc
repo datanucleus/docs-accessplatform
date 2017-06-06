@@ -45,11 +45,21 @@ JDO's definition of embedding encompasses several types of fields. These are des
 * link:#embedded_collection[Embedded Collection elements] - where you want to embed the elements of a collection into a join table (instead of persisting them into their own table)
 * link:#embedded_map[Embedded Map keys/values] - where you want to embed the keys/values of a map into a join table (instead of persisting them into their own table)
 
+
+
+[[embedded_pc_structure]]
+== Embedded class structure
+
 With respect to what types of fields you can have in an embedded class, DataNucleus supports all basic types, as well as 1-1/N-1 relations 
 (where the _foreign-key_ is at the embedded object side) and some 1-N/M-N relations.
 
 NOTE: whilst nested embedded members are supported, you cannot use recursive embedded objects since that would require potentially infinite columns 
 in the owner table, or infinite embedded join tables.
+
+NOTE: by default the embedded class cannot have inheritance. However inheritance in embedded objects is supported for RDBMS and MongoDB, 
+but only with all inherited fields stored in the same table with a discriminator defined in the metadata of the embedded type.
+
+
 
 
 [[embedded_pc]]
@@ -182,10 +192,6 @@ for the table definition in this case.
 
 Please note that if, instead of specifying the <embedded> block we had specified *embedded* in the field element we would have ended up with the same thing, 
 just that the fields and columns would have been mapped using their default mappings, and that the `<embedded>` provides control over how they are mapped.
-
-
-NOTE: by default the embedded objects cannot have inheritance. Inheritance in embedded objects is only supported for RDBMS and MongoDB, 
-and only with all inherited fields stored in the same table with a discriminator defined in the metadata of the embedded type.
 
 See also :-
 
