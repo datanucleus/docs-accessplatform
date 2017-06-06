@@ -218,6 +218,15 @@ org.datanucleus.api.jpa.JPAEntityTransaction tx = (org.datanucleus.api.jpa.JPAEn
 tx.setOption("transaction.isolation", 2);
 -----
 
+Alternatively if you prefer String-based input
+
+[source,java]
+-----
+org.datanucleus.api.jpa.JPAEntityTransaction tx = (org.datanucleus.api.jpa.JPAEntityTransaction)em.getTransaction();
+tx.setOption("transaction.isolation", "read-committed");
+-----
+
+
 
 [[transaction_readonly]]
 == Read-Only Transactions
