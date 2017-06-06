@@ -189,6 +189,11 @@ When using non-transactional operations, you need to pay attention to the persis
 If this is true then any persist/delete/update will be committed to the datastore immediately. 
 If this is false then any persist/delete/update will be queued up until the next transaction (or _em.close()_) and committed with that.
 
+NOTE: Some other JPA providers do not provide this flexibility of non-transactional handling, and indeed, if you try to do updates when outside a transaction these
+changes are not committed even at _em.close_ with those JPA providers. Fortunately you're using DataNucleus and it doesn't have that problem.
+
+
+
 
 [[transaction_isolation]]
 == Transaction Isolation
