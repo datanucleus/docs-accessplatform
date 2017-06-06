@@ -102,6 +102,7 @@ However we decide that we want to persist *Computer* objects into a table called
 We define our MetaData like this
 
 [source,xml]
+-----
 <entity name="mydomain.Computer">
     <attributes>
         <basic name="operatingSystem">
@@ -138,8 +139,6 @@ If we call persist() on any objects of type *Computer*, they will be persisted i
 
 image:../images/embedded_pc_embedded_db.png[]
 
-It should be noted that in this latter (embedded) case we can still persist objects of type *ComputerCard* into their own table - the MetaData definition for 
-*ComputerCard* is used for the table definition in this case.
 
 
 NOTE: You can represent inheritance of embedded objects but only using _SINGLE_TABLE_ strategy using a discriminator (you must define it in the metadata of the embedded type). 
