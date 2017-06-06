@@ -69,7 +69,7 @@ So lets take the example shown before and do it for an EntityListener.
 [source,java]
 -----
 @Entity
-@EntityListeners(org.datanucleus.MyEntityListener.class)
+@EntityListeners(mydomain.MyEntityListener.class)
 public class Account
 {
     @Id
@@ -84,6 +84,8 @@ public class Account
 
 [source,java]
 -----
+package mydomain;
+
 public class MyEntityListener
 {
     @PostPersist

@@ -84,11 +84,11 @@ This file will be used to define your _persistence-unit(s)_. Let's show an examp
     <!-- Online Store -->
     <persistence-unit name="OnlineStore">
         <provider>org.datanucleus.api.jpa.PersistenceProviderImpl</provider>
-        <class>org.datanucleus.samples.metadata.store.Product</class>
-        <class>org.datanucleus.samples.metadata.store.Book</class>
-        <class>org.datanucleus.samples.metadata.store.CompactDisc</class>
-        <class>org.datanucleus.samples.metadata.store.Customer</class>
-        <class>org.datanucleus.samples.metadata.store.Supplier</class>
+        <class>mydomain.samples.metadata.store.Product</class>
+        <class>mydomain.samples.metadata.store.Book</class>
+        <class>mydomain.samples.metadata.store.CompactDisc</class>
+        <class>mydomain.samples.metadata.store.Customer</class>
+        <class>mydomain.samples.metadata.store.Supplier</class>
         <exclude-unlisted-classes/>
         <properties>
             <property name="javax.persistence.jdbc.url" value="jdbc:h2:datanucleus"/>
@@ -163,9 +163,9 @@ If you want to just have specific classes in the _persistence-unit_ you can spec
 -----
 <persistence-unit name="Store">
     <provider>org.datanucleus.api.jpa.PersistenceProviderImpl</provider>
-    <class>org.datanucleus.samples.metadata.store.Product</class>
-    <class>org.datanucleus.samples.metadata.store.Book</class>
-    <class>org.datanucleus.samples.metadata.store.CompactDisc</class>
+    <class>mydomain.samples.metadata.store.Product</class>
+    <class>mydomain.samples.metadata.store.Book</class>
+    <class>mydomain.samples.metadata.store.CompactDisc</class>
     <exclude-unlisted-classes/>
     ...
 </persistence-unit>
@@ -189,7 +189,7 @@ import org.datanucleus.metadata.PersistenceUnitMetaData;
 import org.datanucleus.api.jpa.JPAEntityManagerFactory;
  
 PersistenceUnitMetaData pumd = new PersistenceUnitMetaData("dynamic-unit", "RESOURCE_LOCAL", null);
-pumd.addClassName("org.datanucleus.test.A");
+pumd.addClassName("mydomain.test.A");
 pumd.setExcludeUnlistedClasses();
 pumd.addProperty("javax.persistence.jdbc.url", "jdbc:h2:mem:nucleus");
 pumd.addProperty("javax.persistence.jdbc.driver", "org.h2.Driver");

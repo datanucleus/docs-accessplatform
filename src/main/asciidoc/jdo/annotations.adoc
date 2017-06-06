@@ -717,7 +717,7 @@ Specified on the *class*.
 -----
 @PersistenceCapable
 @Query(name="PeopleCalledSmith", language="JDOQL", 
-       value="SELECT FROM org.datanucleus.samples.Person WHERE surname == \"Smith\"")
+       value="SELECT FROM mydomain.samples.Person WHERE surname == \"Smith\"")
 public class Person
 {
     @Persistent
@@ -1482,7 +1482,7 @@ Specified on the Collection/array *field/method*.
 @PersistenceCapable
 public class MyClass
 {
-    @Element(types=org.datanucleus.samples.MyElementClass.class, dependent="true")
+    @Element(types=mydomain.samples.MyElementClass.class, dependent="true")
     Collection myField;
     ...
 }
@@ -1530,7 +1530,7 @@ Maps across to the <order> XML element. Specified on the *field/method*.
 @PersistenceCapable
 public class MyClass
 {
-    @Element(types=org.datanucleus.samples.MyElementClass.class, dependent="true")
+    @Element(types=mydomain.samples.MyElementClass.class, dependent="true")
     @Order(column="ORDER_IDX")
     Collection myField;
     ...
@@ -1786,7 +1786,7 @@ Maps across to the <map> and <value> XML elements. Specified on the *field/metho
 public class MyClass
 {
     @Key(types=java.lang.String.class)
-    @Value(types=org.datanucleus.samples.MyValueClass.class, dependent="true")
+    @Value(types=mydomain.samples.MyValueClass.class, dependent="true")
     Map myField;
     ...
 }
@@ -1874,7 +1874,7 @@ Specified on the *field/method*.
 public class MyClass
 {
     @Persistent
-    @Element(types=org.datanucleus.samples.MyElement.class)
+    @Element(types=mydomain.samples.MyElement.class)
     @Join(table="MYCLASS_ELEMENTS", column="MYCLASS_ELEMENTS_PK")
     Collection myField;
     ...

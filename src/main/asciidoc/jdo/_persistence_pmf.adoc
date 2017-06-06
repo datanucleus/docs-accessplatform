@@ -94,11 +94,11 @@ web-application in such as Tomcat). This file will be used to define your _persi
 
     <!-- Online Store -->
     <persistence-unit name="OnlineStore">
-        <class>org.datanucleus.samples.metadata.store.Product</class>
-        <class>org.datanucleus.samples.metadata.store.Book</class>
-        <class>org.datanucleus.samples.metadata.store.CompactDisc</class>
-        <class>org.datanucleus.samples.metadata.store.Customer</class>
-        <class>org.datanucleus.samples.metadata.store.Supplier</class>
+        <class>mydomain.samples.metadata.store.Product</class>
+        <class>mydomain.samples.metadata.store.Book</class>
+        <class>mydomain.samples.metadata.store.CompactDisc</class>
+        <class>mydomain.samples.metadata.store.Customer</class>
+        <class>mydomain.samples.metadata.store.Supplier</class>
         <exclude-unlisted-classes/>
         <properties>
             <property name="datanucleus.ConnectionDriverName" value="org.h2.Driver"/>
@@ -110,7 +110,7 @@ web-application in such as Tomcat). This file will be used to define your _persi
 
     <!-- Accounting -->
     <persistence-unit name="Accounting">
-        <mapping-file>/com/datanucleus/samples/metadata/accounts/package.jdo</mapping-file>
+        <mapping-file>/mydomain/samples/metadata/accounts/package.jdo</mapping-file>
         <properties>
             <property name="datanucleus.ConnectionDriverName" value="org.h2.Driver"/>
             <property name="datanucleus.ConnectionURL" value="jdbc:h2:mem:datanucleus"/>
@@ -177,7 +177,7 @@ import org.datanucleus.metadata.PersistenceUnitMetaData;
 import org.datanucleus.api.jdo.JDOPersistenceManagerFactory;
  
 PersistenceUnitMetaData pumd = new PersistenceUnitMetaData("dynamic-unit", "RESOURCE_LOCAL", null);
-pumd.addClassName("org.datanucleus.test.A");
+pumd.addClassName("mydomain.test.A");
 pumd.setExcludeUnlistedClasses();
 pumd.addProperty("javax.jdo.ConnectionURL", "jdbc:hsqldb:mem:nucleus");
 pumd.addProperty("javax.jdo.ConnectionDriverName", "org.hsqldb.jdbcDriver");

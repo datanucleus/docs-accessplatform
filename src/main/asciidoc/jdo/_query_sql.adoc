@@ -252,7 +252,7 @@ class MyClass
 
 [source,xml]
 -----
-<package name="org.datanucleus.samples.sql">
+<package name="mydomain.samples.sql">
     <class name="MyClass" identity-type="datastore" table="MYTABLE">
         <datastore-identity strategy="identity">
             <column name="MY_ID"/>
@@ -285,7 +285,7 @@ So let's take a _Product_ class, and we want to define a query for all products 
 
 [source,xml]
 -----
-<package name="org.datanucleus.samples.store">
+<package name="mydomain.samples.store">
     <class name="Product" identity-type="datastore" table="PRODUCT">
         <datastore-identity strategy="identity">
             <column name="PRODUCT_ID"/>

@@ -70,7 +70,7 @@ Here's an example using JDO XML MetaData:
 [source,xml]
 -----
 <jdo>
-    <package name="org.datanucleus.samples.models.company">
+    <package name="mydomain.model.company">
         <class name="Group" table="ou=Groups,dc=example,dc=com" schema="top,groupOfNames" detachable="true">
             <field name="name" column="cn" primary-key="true" />
             <field name="users" column="member" />
@@ -128,7 +128,7 @@ public class Group
     String name;
 
     @Column(name = "member")
-    protected Set<Person> users = new HashSet<Person>();
+    protected Set<Person> users = new HashSet<>();
 }
 
 @PersistenceCapable(table="ou=Users,dc=example,dc=com", schema="top,person,organizationalPerson,inetOrgPerson")

@@ -826,7 +826,7 @@ In the examples we use a class from the test suite. Here's the source code for r
 
 [source,java]
 -----
-package org.datanucleus.samples.pggeometry;
+package mydomain.samples.pggeometry;
 import org.postgis.LineString;
                 
 public class SampleLineString 
@@ -852,7 +852,7 @@ public class SampleLineString
 [source,xml]
 -----
 <jdo>
-    <package name="org.datanucleus.samples.pggeometry">	
+    <package name="mydomain.samples.pggeometry">	
         <extension vendor-name="datanucleus" key="spatial-dimension" value="2"/>
         <extension vendor-name="datanucleus" key="spatial-srid" value="4326"/>
 

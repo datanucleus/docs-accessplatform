@@ -210,7 +210,7 @@ Specified on the *class*.
 [source,java]
 -----
 @Entity
-@IdClass(org.datanucleus.samples.MyIdentity.class)
+@IdClass(mydomain.samples.MyIdentity.class)
 public class MyClass
 {
     ...
@@ -257,7 +257,7 @@ This annotation is used to define a class or classes that are listeners for even
 [source,java]
 -----
 @Entity
-@EntityListeners(org.datanucleus.MyListener.class)
+@EntityListeners(mydomain.MyListener.class)
 public class MyClass
 {
     ...
