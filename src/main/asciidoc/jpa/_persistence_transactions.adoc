@@ -195,13 +195,14 @@ If this is false then any persist/delete/update will be queued up until the next
 
 image:../images/nucleus_extension.png[]
 
-DataNucleus also allows specification of the transaction isolation level. 
-This is specified via the persistence property _datanucleus.transaction.isolation_. It accepts the standard JDBC values of
+DataNucleus also allows specification of the transaction isolation level, applied at the connection level, and providing a level of isolation
+of this process from other processed using the same database. 
+The isolation is specified via the persistence property *datanucleus.transaction.isolation*. It accepts the standard JDBC values of
 
-* *read-uncommitted (1)* : dirty reads, non-repeatable reads and phantom reads can occur
-* *read-committed (2)* : dirty reads are prevented; non-repeatable reads and phantom reads can occur
-* *repeatable-read (4)* : dirty reads and non-repeatable reads are prevented; phantom reads can occur
-* *serializable (8)* : dirty reads, non-repeatable reads and phantom reads are prevented
+* *1* (read-uncommitted) : dirty reads, non-repeatable reads and phantom reads can occur
+* *2* (read-committed) : dirty reads are prevented; non-repeatable reads and phantom reads can occur
+* *4* (repeatable-read) : dirty reads and non-repeatable reads are prevented; phantom reads can occur
+* *8* (serializable) : dirty reads, non-repeatable reads and phantom reads are prevented
 
 The default is _read-committed_. If the datastore doesn't support a particular isolation level then it will silently be changed to one that is supported. 
 As an alternative you can also specify it on a per-transaction basis as follows (using the values in parentheses above).
