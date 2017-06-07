@@ -43,18 +43,18 @@ JPA's definition of embedding encompasses several types of fields. These are des
 With respect to what types of fields you can have in an embedded class, DataNucleus supports all basic types, as well as 1-1/N-1 relations
 (where the _foreign-key_ is at the embedded object side), and some 1-N/M-N relations.
 
-NOTE: whilst nested embedded members are supported, you *cannot use recursive embedded objects* since that would require potentially infinite columns in the owner table, 
+NOTE: Whilst nested embedded members are supported, you *cannot use recursive embedded objects* since that would require potentially infinite columns in the owner table, 
 or infinite embedded join tables.
 
 
-NOTE: You can represent inheritance of an embedded entity but only using _SINGLE_TABLE_ strategy using a discriminator (you must define it in the metadata of the embedded type). 
-Note that this is a DataNucleus extension since JPA doesn't define any support for embedded inherited persistable objects
+NOTE: You can have inheritance in an embedded entity but only using _SINGLE_TABLE_ strategy using a discriminator (you must define it in the metadata of the embedded type). 
+Note that this is a DataNucleus extension since JPA doesn't define any support for embedded inherited entities.
 
 
 
 
 [[embedded_entity]]
-== Embedding entities (1-1)
+== Embedding Entities (1-1)
 
 NOTE: Applicable to RDBMS, Excel, OOXML, ODF, HBase, MongoDB, Neo4j, Cassandra, JSON
 

@@ -82,6 +82,8 @@ public class MyClass
 }
 -----
 
+The definition of the `@IdClass` is described further below.
+
 
 See also:-
 
@@ -90,19 +92,15 @@ See also:-
 
 === Application Identity : Generating identities
 
-By choosing *application identity* you are controlling the process of identity generation 
-for this class. This does not mean that you have a lot of work to do for this. JPA1 defines many 
-ways of generating these identities and DataNucleus supports all of these and provides some 
-more of its own besides.
-
-See also:-
-
-* link:#value_generation[Identity Generation Guide] - strategies for generating ids
+By choosing *application identity* you are controlling the process of identity generation for this class. 
+This does not mean that you have a lot of work to do for this. 
+JPA defines link:#value_generation[many ways of generating these identities] and DataNucleus supports all of these and provides some more of its own besides.
 
 
 === Application Identity : Changing Identities
 
 JPA doesn't define what happens if you change the identity (an identity field) of an object once persistent. *DataNucleus doesn't support changes to identities.*
+
 
 === Application Identity : Accessing objects by Identity
 
@@ -123,8 +121,8 @@ When you choose application identity you are defining which fields of the class 
 and you are taking control of the specification of id's to DataNucleus. Application identity requires a primary key (PK) class, 
 and each persistent capable class may define a different class for its primary key, and different persistent capable classes can 
 use the same primary key class, as appropriate. 
-If you have only a single primary-key field then there are built-in PK classes so you can forget this section. Where you have more than 1 primary key field, 
-you would define the PK class like this
+If you have only a single primary-key field then there are built-in PK classes so you can forget this section. 
+Where you have more than 1 primary key field, you would define the PK class like this
 
 [source,xml]
 -----
@@ -208,26 +206,27 @@ link:#value_generation[value-strategy] on that field.
 If you wish to use *application identity* and don't want to use the "SingleFieldIdentity" built-in PK classes then you must define a Primary Key class of your own. 
 You can't use classes like java.lang.String, or java.lang.Long directly. You must follow these rules when defining your primary key class.
 
-* the Primary Key class must be public
-* the Primary Key class must implement Serializable
-* the Primary Key class must have a public no-arg constructor, which might be the default constructor
+* The Primary Key class must be public
+* The Primary Key class must implement Serializable
+* The Primary Key class must have a public no-arg constructor, which might be the default constructor
 * The PrimaryKey class can have a constructor taking the primary key fields, or can use Java bean setters/getters
-* the field types of all non-static fields in the Primary Key class must be serializable, and are recommended to be primitive, String, Date, or Number types
-* all serializable non-static fields in the Primary Key class can be public, but package/protected/private should also be fine
-* the names of the non-static fields in the Primary Key class must include the names of the primary key fields in the Entity, and the types of the common fields must be identical
-* the equals() and hashCode() methods of the Primary Key class must use the value(s) of all the fields corresponding to the primary key fields in the JPA entity
-* if the Primary Key class is an inner class, it must be static
-* the Primary Key class must override the toString() method defined in Object, and return a String that can be used as the parameter of a constructor
-* the Primary Key class must provide a String constructor that returns an instance that compares equal to an instance that returned that String by the toString() method.
-* the Primary Key class must be only used within a single inheritance tree.
+* The field types of all non-static fields in the Primary Key class must be serializable, and are recommended to be primitive, String, Date, or Number types
+* All serializable non-static fields in the Primary Key class can be public, but package/protected/private should also be fine
+* The names of the non-static fields in the Primary Key class must include the names of the primary key fields in the Entity, and the types of the common fields must be identical
+* The equals() and hashCode() methods of the Primary Key class must use the value(s) of all the fields corresponding to the primary key fields in the JPA entity
+* If the Primary Key class is an inner class, it must be static
+* The Primary Key class must override the toString() method defined in Object, and return a String that can be used as the parameter of a constructor
+* The Primary Key class must provide a String constructor that returns an instance that compares equal to an instance that returned that String by the toString() method.
+* The Primary Key class must be only used within a single inheritance tree.
 
 Please note that if one of the fields that comprises the primary key is in itself an entity then you have xref:mapping.html#derived[Derived Identity]
 and should consult the documentation for that feature which contains its own example.
 
+
 image:../images/nucleus_extension.png[]
 
 NOTE: Since there are many possible combinations of primary-key fields it is impossible for DataNucleus to provide a series of builtin composite primary key classes. 
-However the link:enhancer.html[DataNucleus enhancer] provides a mechanism for auto-generating a primary-key class for a persistable class. It follows the rules listed 
+However the link:enhancer.html[DataNucleus Enhancer] provides a mechanism for auto-generating a primary-key class for a persistable class. It follows the rules listed 
 above and should work for all cases. Obviously if you want to tailor the output of things like the PK toString() method then you ought to define your own. 
 The enhancer generation of primary-key class is only enabled if you don't define your own class.
 

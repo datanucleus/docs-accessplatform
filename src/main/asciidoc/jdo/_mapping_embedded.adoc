@@ -53,11 +53,11 @@ JDO's definition of embedding encompasses several types of fields. These are des
 With respect to what types of fields you can have in an embedded class, DataNucleus supports all basic types, as well as 1-1/N-1 relations 
 (where the _foreign-key_ is at the embedded object side) and some 1-N/M-N relations.
 
-NOTE: whilst nested embedded members are supported, you cannot use recursive embedded objects since that would require potentially infinite columns 
+NOTE: Whilst nested embedded members are supported, you cannot use recursive embedded objects since that would require potentially infinite columns 
 in the owner table, or infinite embedded join tables.
 
-NOTE: by default the embedded class cannot have inheritance. However inheritance in embedded objects is supported for RDBMS and MongoDB, 
-but only with all inherited fields stored in the same table with a discriminator defined in the metadata of the embedded type.
+NOTE: You can have inheritance in an embedded type, but this is only supported for RDBMS and MongoDB. You must specify a discriminator in the embedded type and
+stored all inherited fields in the single table.
 
 
 
@@ -201,7 +201,7 @@ See also :-
 
 
 [[embedded_pc_nested]]
-== Embedding Nested persistable objects
+== Embedding nested persistable objects
 
 NOTE: Applicable to RDBMS, Excel, OOXML, ODF, HBase, MongoDB, Neo4j, Cassandra, JSON
 
