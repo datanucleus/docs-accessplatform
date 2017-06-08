@@ -1243,7 +1243,7 @@ SELECT FROM mydomain.Manager WHERE !(SELECT FROM mydomain.Employee e).contains(t
 -----
 
 
-Similarly you can make use of _size()_.
+NOTE: There is no _size()_ method but you can achieve the same by selecting `COUNT(e)` in the subquery (where `e` is the subquery alias).
 
 
 
