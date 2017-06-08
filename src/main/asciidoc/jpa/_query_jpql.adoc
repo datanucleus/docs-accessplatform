@@ -139,6 +139,56 @@ in a single query) but that it will attempt to fetch all fields that are selecte
 NOTE: DataNucleus JPA also allows _RIGHT_ OUTER JOIN, though this is not part of the JPA spec.
 
 
+=== FROM : Candidate that is @MappedSuperclass
+
+image:../images/nucleus_extension.png[]
+
+In strict JPA the entity name cannot be a _MappedSuperclass_ entity name. That is, if you have an abstract superclass that is persistable, 
+you cannot query for instances of that superclass and its subclasses. We consider this a significant shortcoming of the querying capability,
+and allow the entity name to also be of a _MappedSuperclass_. 
+You are unlikely to find this supported in other JPA implementations, but then maybe that's why you chose DataNucleus?
+
+
+=== FROM : JOIN ON to another root
+
+image:../images/nucleus_extension.png[]
+
+In strict JPA you cannot join to another "root" element. That is, you define JOIN syntax to the following element *along a relation*
+from the previous element. DataNucleus supports joining to a (new) "root" element potentially without any relation. See this example
+
+[source]
+-----
+SELECT p FROM Person p LEFT OUTER JOIN Address a ON p.addressName = a.name
+-----
+
+Here we simply chose an ON clause to join the two roots.
+
+
+=== FROM : JOIN to an embedded element
+
+image:../images/nucleus_extension.png[]
+
+In strict JPA you cannot join to an embedded element class (of an embeddable). With DataNucleus you can do this, and hence form queries
+using fields of the embeddable (not available in most other JPA providers). See this example, where class _Person_ has a Collection 
+of embeddable _Address_ objects.
+
+[source]
+-----
+SELECT p FROM Person p LEFT OUTER JOIN p.addresses a WHERE a.name = 'Home'
+-----
+
+
+=== FROM : Control over INNER/OUTER join for implicit joins
+
+image:../images/nucleus_extension.png[]
+
+*RDBMS* : By default if you don't specify the JOIN to some related object in the FROM clause and instead navigate through a 1-1/N-1 relation like "a.owner" then it will join using INNER JOIN. 
+You can change this default by specifying the persistence property (to apply to all queries) or query extension *datanucleus.query.jpql.navigationJoinType* 
+and set it to either "INNERJOIN" or "LEFTOUTERJOIN". 
+You can also set the default for the _filter_ only using the persistence property(to apply to all queries) or query extension 
+*datanucleus.query.jpql.navigationJoinTypeForFilter* and set it to either "INNERJOIN" or "LEFTOUTERJOIN". 
+
+
 [[jpql_fetchplan]]
 == Fetched Fields
 
@@ -156,55 +206,6 @@ All non-RDBMS datastores do respect this FETCH JOIN setting, since a collection/
 Note that you can also make use of link:persistence.html#entity_graphs[Entity Graphs] to have fuller control over what is retrieved from each query.
 
 
-
-=== Candidate that is @MappedSuperclass
-
-image:../images/nucleus_extension.png[]
-
-In strict JPA the entity name cannot be a _MappedSuperclass_ entity name. That is, if you have an abstract superclass that is persistable, 
-you cannot query for instances of that superclass and its subclasses. We consider this a significant shortcoming of the querying capability,
-and allow the entity name to also be of a _MappedSuperclass_. 
-You are unlikely to find this supported in other JPA implementations, but then maybe that's why you chose DataNucleus?
-
-
-=== JOIN ON to another root
-
-image:../images/nucleus_extension.png[]
-
-In strict JPA you cannot join to another "root" element. That is, you define JOIN syntax to the following element *along a relation*
-from the previous element. DataNucleus supports joining to a (new) "root" element potentially without any relation. See this example
-
-[source]
------
-SELECT p FROM Person p LEFT OUTER JOIN Address a ON p.addressName = a.name
------
-
-Here we simply chose an ON clause to join the two roots.
-
-
-=== JOIN to an embedded element
-
-image:../images/nucleus_extension.png[]
-
-In strict JPA you cannot join to an embedded element class (of an embeddable). With DataNucleus you can do this, and hence form queries
-using fields of the embeddable (not available in most other JPA providers). See this example, where class _Person_ has a Collection 
-of embeddable _Address_ objects.
-
-[source]
------
-SELECT p FROM Person p LEFT OUTER JOIN p.addresses a WHERE a.name = 'Home'
------
-
-
-=== Control over INNER/OUTER join for implicit joins
-
-image:../images/nucleus_extension.png[]
-
-*RDBMS* : By default if you don't specify the JOIN to some related object in the FROM clause and instead navigate through a 1-1/N-1 relation like "a.owner" then it will join using INNER JOIN. 
-You can change this default by specifying the persistence property (to apply to all queries) or query extension *datanucleus.query.jpql.navigationJoinType* 
-and set it to either "INNERJOIN" or "LEFTOUTERJOIN". 
-You can also set the default for the _filter_ only using the persistence property(to apply to all queries) or query extension 
-*datanucleus.query.jpql.navigationJoinTypeForFilter* and set it to either "INNERJOIN" or "LEFTOUTERJOIN". 
 
 
 [[jpql_filter]]
