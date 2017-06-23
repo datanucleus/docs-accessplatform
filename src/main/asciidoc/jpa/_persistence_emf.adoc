@@ -405,6 +405,13 @@ of schema names in DDL. *RDBMS only*
 |Instance of a class that implements _org.datanucleus.store.schema.MultiTenancyProvider_ which will return the tenant name to use for each call.
 *RDBMS, MongoDB, HBase, Neo4j, Cassandra only*
 
+|datanucleus.CurrentUser
+|String defining the current user for the persistence process. Used by link:persistence.html#auditing[auditing]. _RDBMS datastores only_
+
+|datanucleus.CurrentUserProvider
+|Instance of a class that implements _org.datanucleus.store.schema.CurrentUserProvider_
+which will return the current user to use for each call. Used by link:persistence.html#auditing[auditing]. _RDBMS datastores only_
+
 |datanucleus.DetachAllOnCommit
 |Allows the user to select that when a transaction is committed all objects enlisted in that transaction will be automatically detached.
 {true, *false*}

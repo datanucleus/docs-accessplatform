@@ -491,13 +491,20 @@ DataNucleus will prefix all table names with this catalog name if the RDBMS supp
 This can be overridden in the MetaData where required, and is optional.
 DataNucleus will prefix all table names with this schema name if the RDBMS supports specification of schema names in DDL. _RDBMS datastores only_
 
-|datanucleus.tenantId
+|datanucleus.TenantId
 |String id to use as a discriminator on all persistable class tables to restrict data for the tenant using this application instance 
 (aka link:persistence.html#multitenancy[multi-tenancy via discriminator]). _RDBMS, MongoDB, HBase, Neo4j, Cassandra datastores only_
 
-|datanucleus.tenantProvider
+|datanucleus.TenantProvider
 |Instance of a class that implements _org.datanucleus.store.schema.MultiTenancyProvider_
 which will return the tenant name to use for each call. _RDBMS, MongoDB, HBase, Neo4j, Cassandra datastores only_
+
+|datanucleus.CurrentUser
+|String defining the current user for the persistence process. Used by link:persistence.html#auditing[auditing]. _RDBMS datastores only_
+
+|datanucleus.CurrentUserProvider
+|Instance of a class that implements _org.datanucleus.store.schema.CurrentUserProvider_
+which will return the current user to use for each call. Used by link:persistence.html#auditing[auditing]. _RDBMS datastores only_
 
 |datanucleus.DetachAllOnCommit
 |Allows the user to select that when a transaction is committed all objects enlisted in that transaction will be automatically detached.

@@ -2653,9 +2653,17 @@ Using these will reduce the portability of your application.
 |Field/Method
 |Specifies that this field/property should store a creation timestamp when inserting (DataNucleus extension).
 
+|xref:annotations.html#CreateUser[@CreateUser]
+|Field/Method
+|Specifies that this field/property should store the current user when inserting (DataNucleus extension).
+
 |xref:annotations.html#UpdateTimestamp[@UpdateTimestamp]
 |Field/Method
 |Specifies that this field/property should store an update timestamp when updating (DataNucleus extension).
+
+|xref:annotations.html#UpdateUser[@UpdateUser]
+|Field/Method
+|Specifies that this field/property should store the current user when updating (DataNucleus extension).
 |===
 
 
@@ -2774,6 +2782,23 @@ public class MyClass
 -----
 
 
+[[CreateUser]]
+=== @CreateUser
+
+This DataNucleus-extension annotation is used to define this field as being persisted with the current user at insert of this object. Specified on the *field/property*.
+
+[source,java]
+-----
+@Entity
+public class MyClass
+{
+    @CreateUser
+    String createUser;
+    ...
+}
+-----
+
+
 [[UpdateTimestamp]]
 === @UpdateTimestamp
 
@@ -2789,6 +2814,24 @@ public class MyClass
     ...
 }
 -----
+
+
+[[UpdateUser]]
+=== @UpdateUser
+
+This DataNucleus-extension annotation is used to define this field as being persisted with the current user at update of this object. Specified on the *field/property*.
+
+[source,java]
+-----
+@Entity
+public class MyClass
+{
+    @UpdateUser
+    String updateUser;
+    ...
+}
+-----
+
 
 
 [[Index_Field]]
