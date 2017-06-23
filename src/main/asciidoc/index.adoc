@@ -78,14 +78,14 @@ When choosing the persistence API to use in your application you should bear the
 * *Target datastore* : JDO is designed for all datastores, whereas JPA is just designed around RDBMS and explicitly uses RDBMS/SQL terminology. 
 If using RDBMS then you have the choice. If using, for example, a NoSQL store then JDO makes much more sense, though we have made efforts to make DataNucleus JPA adaptable to non-RDBMS features
 * *Datastore interoperability* : are you likely to change your datastore type at some point in the future ? If so you likely ought to use JDO due to its design
-* *Persistence API* : both persistence APIs are very similar. JDO provides more options and control though for basic persistence and retrieval there are differences only in the methods
+* *Persistence API* : both persistence APIs are very similar. JDO provides more options and control though for basic persistence and retrieval, and there are differences only in the methods
 * *ORM* : JDO has a more complete ORM definition, as shown on http://db.apache.org/jdo/jdo_v_jpa_orm.html[Apache JDO ORM Guide]
 * *Query API* : do you need a flexible query language that is object-oriented and extensible ? JDOQL provides this and the implementation in DataNucleus allows extensions. 
 JPQL is more closely aligned with RDBMS concepts and SQL. If you just want SQL then you can use either JDO or JPA since both provide this
-* *Fetch Control* : do you need full control of what is fetched, and when ? JDO provides Fetch Groups, whereas JPA now provides Entity Graphs (A subset of Fetch Groups). 
+* *Fetch Control* : do you need full control of what is fetched, and when ? JDO provides Fetch Groups, whereas JPA now provides Entity Graphs (a subset of Fetch Groups). 
 Use JDO if full fetch groups is an important factor for your design, otherwise either
 * *Developer Experience* : do your developers know a particular API already ? As mentioned the persistence API's themselves are very similar, though the metadata definition is different. 
-Remember that you can use JPA metadata with the JDO persistence API, and vice-versa.
+Remember that you can use JPA metadata with the JDO persistence API, and vice-versa. You are more likely to find developers with JPA experience.
 
 Read more over at http://db.apache.org/jdo/jdo_v_jpa.html[Apache JDO].
 
