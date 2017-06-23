@@ -156,17 +156,17 @@ public class Book extends Product
 }
 -----
 
-Note that we mark each class that can be persisted with _@Entity_ and their primary key field(s) with @Id. 
+Note that we mark each class that can be persisted with `@Entity` and their primary key field(s) with `@Id`. 
 In addition we defined a _valueStrategy_ for Product field _id_ so that it will have its values generated automatically.
-In this tutorial we are using _application identity- which means that all objects of these classes will have their identity defined by the primary key field(s).
+In this tutorial we are using _application identity_ which means that all objects of these classes will have their identity defined by the primary key field(s).
 You can read more in link:mapping.html#application_identity[the application identity guide] when designing your systems persistence.
                     
 
 [[step2]]
 == Step 2 : Define the 'persistence-unit'
 
-Writing your own classes to be persisted is the start point, but you now need to define which objects of these classes are actually persisted. You do this via a file
-`META-INF/persistence.xml` at the root of the CLASSPATH. Like this
+Writing your own classes to be persisted is the start point, but you now need to define which objects of these classes are actually persisted. 
+You do this via a file `META-INF/persistence.xml` at the root of the CLASSPATH. Like this
 
 [source,xml]
 -----
@@ -194,10 +194,10 @@ Writing your own classes to be persisted is the start point, but you now need to
 == Step 3 : Enhance your classes
 
 DataNucleus relies on the classes that you want to persist be enhanced to implement the interface _Persistable_. 
-You could write your classes manually to do this but this would be laborious. Alternatively you can use a post-processing step to compilation that "enhances" your 
-compiled classes, adding on the necessary extra methods to make them _Persistable_. 
+You could write your classes manually to do this but this would be laborious. 
+Alternatively you can use a post-processing step to compilation that "enhances" your compiled classes, adding on the necessary extra methods to make them _Persistable_. 
 There are several ways to do this, most notably at post-compile, or at runtime. We use the post-compile step in this tutorial. 
-*DataNucleus JPA* provides its own byte-code enhancer for instrumenting/enhancing your classes (in _datanucleus-core_) and this is included in the 
+*DataNucleus JPA* provides its own byte-code enhancer for instrumenting/enhancing your classes (in `datanucleus-core.jar`) and this is included in the 
 DataNucleus AccessPlatform zip file prerequisite.
 
 To understand on how to invoke the enhancer you need to visualise where the various source and metadata files are stored
@@ -218,7 +218,7 @@ lib/datanucleus-core.jar
 lib/datanucleus-api-jpa.jar
 -----
 
-The first thing to do is compile your domain/model classes. You can do this in any way you wish, but the downloadable JAR provides an Ant task, and a Maven project to do this for you.
+The first thing to do is compile your domain/model classes. You can do this in any way you wish, but the download provides an Ant task, and a Maven project to do this for you.
 
 -----
 # Using Ant :
@@ -247,8 +247,8 @@ java -cp target\classes;lib\datanucleus-core.jar;lib\datanucleus-api-jpa.jar;lib
 -----
 
 This command enhances all classes defined in the persistence-unit "Tutorial".
-If you accidentally omitted this step, at the point of running your application and trying to persist an object, you would get a _ClassNotPersistableException_
-thrown. The use of the enhancer is documented in more detail in the link:enhancer.html[Enhancer Guide]. 
+If you accidentally omitted this step, at the point of running your application and trying to persist an object, you would get a _ClassNotPersistableException_ thrown. 
+The use of the enhancer is documented in more detail in the link:enhancer.html[Enhancer Guide]. 
 The output of this step are a set of class files that represent persistable classes.
 
 
@@ -306,7 +306,7 @@ try
 {
     tx.begin();
 
-    Query q = pm.createQuery("SELECT p FROM Product p WHERE p.price &lt; 150.00");
+    Query q = pm.createQuery("SELECT p FROM Product p WHERE p.price < 150.00");
     List results = q.getResultList();
     Iterator iter = results.iterator();
     while (iter.hasNext())
@@ -366,8 +366,8 @@ To run your JPA-enabled application will require a few things to be available in
 * The `persistence.xml` file (stored under META-INF/)
 * Any ORM MetaData files for your persistable classes
 * Any Datastore driver classes (e.g JDBC driver for RDBMS, Datastax driver for Cassandra, etc) needed for accessing your datastore
-* The `javax.persistence` JAR (defining the JPA interface)
-* The `datanucleus-core`, `datanucleus-api-jpa` and `datanucleus-{datastore}` (for the datastore you are using, e.g _datanucleus-rdbms_ when using RDBMS)
+* The `javax.persistence.jar` (defining the JPA interface)
+* The `datanucleus-core.jar`, `datanucleus-api-jpa.jar` and `datanucleus-{datastore}.jar` (for the datastore you are using, e.g _datanucleus-rdbms.jar_ when using RDBMS)
 
 After that it is simply a question of starting your application and all should be taken care of. 
 
