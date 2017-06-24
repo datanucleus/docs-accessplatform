@@ -20,6 +20,8 @@ Migration to 5.1 involves the following steps
 Migrating will require the following changes.
 
 * The persistence property _datanucleus.datastoreTransactionFlushLimit_ is renamed to *datanucleus.flush.auto.objectLimit*.
+* SwarmCache L2 cache is now removed.
+* The persistence property _datanucleus.cache.level2.timeout_ is renamed to *datanucleus.cache.level2.expireMillis*.
 
 
 

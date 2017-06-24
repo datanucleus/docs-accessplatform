@@ -1402,11 +1402,11 @@ To enable this you should set the persistence properties
 datanucleus.cache.level2.type=spymemcached         [or "xmemcached"]
 datanucleus.cache.level2.cacheName={prefix for keys, to avoid clashes with other memcached objects}
 datanucleus.cache.level2.memcached.servers=...
-datanucleus.cache.level2.memcached.expireSeconds=...
+datanucleus.cache.level2.expireMillis=...
 -----
 
 *datanucleus.cache.level2.memcached.servers* is a space separated list of memcached hosts/ports, e.g. host:port host2:port.
-*datanucleus.cache.level2.memcached.expireSeconds* if not set or set to 0 then no expire
+*datanucleus.cache.level2.expireMillis* if not set or set to 0 then no expire
 
 
 [[cache_level2_cacheonix]]
@@ -1473,6 +1473,7 @@ To enable this you should set the persistence properties
 datanucleus.cache.level2.type=redis
 datanucleus.cache.level2.cacheName={cache name}
 datanucleus.cache.level2.clearAtClose={true | false, whether to clear at close}
+datanucleus.cache.level2.expireMillis=...
 datanucleus.cache.level2.redis.database={database, or use the default '1'}
 datanucleus.cache.level2.redis.timeout={optional cache timeout, or use the default of 5000}
 datanucleus.cache.level2.redis.sentinels={comma-separated list of sentinels, optional (use server/port instead)}
