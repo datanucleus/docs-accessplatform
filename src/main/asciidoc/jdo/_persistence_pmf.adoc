@@ -991,9 +991,9 @@ By default it will clear objects out but if the user has configured an external 
 |When objects are added to the L2 cache at commit they are typically batched. This property sets the max size of the batch.
 {*100*, integer value}
 
-|datanucleus.cache.level2.timeout
-|Some caches (Cacheonix, javax.cache) allow specification of an expiration time for objects in the cache. 
-This property is the timeout in milliseconds (will be unset meaning use cache default).
+|datanucleus.cache.level2.expiryMillis
+|Some caches (Cacheonix, Redis) allow specification of an expiration time for objects in the cache. 
+This property is the expiry timeout in milliseconds (will be unset meaning use cache default).
 {*-1*, integer value}
 
 |datanucleus.cache.level2.readThrough
@@ -1666,7 +1666,6 @@ To enable this you should put a "javax.cache" implementation in your CLASSPATH, 
 -----
 datanucleus.cache.level2.type=javax.cache
 datanucleus.cache.level2.cacheName={cache name}
-datanucleus.cache.level2.timeout={expiration time in millis - optional}
 -----
 
 As an example, you could simply add the following to a Maven POM, together with those persistence properties above to use HazelCast "javax.cache" implementation
@@ -1733,7 +1732,7 @@ datanucleus.cache.level2.cacheName={cache name}
 Note that you can optionally also specify
 
 -----
-datanucleus.cache.level2.timeout={timeout-in-millis (default=60)}
+datanucleus.cache.level2.expiryMillis={expiry-in-millis (default=60)}
 datanucleus.cache.level2.configurationFile={Cacheonix configuration file (in classpath)}
 -----
 
@@ -1785,7 +1784,6 @@ datanucleus.cache.level2.cacheName={cache name}
 datanucleus.cache.level2.clearAtClose={true | false, whether to clear at close}
 datanucleus.cache.level2.redis.database={database, or use the default '1'}
 datanucleus.cache.level2.redis.timeout={optional timeout, or use the default of 5000}
-datanucleus.cache.level2.redis.expirySeconds={expiry in secs, or use the default of 86400}
 datanucleus.cache.level2.redis.sentinels={comma-separated list of sentinels, optional (use server/port instead)}
 datanucleus.cache.level2.redis.server={server, or use the default of "localhost"}
 datanucleus.cache.level2.redis.port={port, or use the default of 6379}
