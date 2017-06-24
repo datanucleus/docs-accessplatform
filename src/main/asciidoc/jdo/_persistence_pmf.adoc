@@ -955,7 +955,7 @@ See also the link:persistence.html#level1_cache[Level 1 Cache docs]
 |datanucleus.cache.level2.type
 |Name of the type of Level 2 Cache to use. Can be used to interface with external caching products. Use "none" to turn off L2 caching.
 See also the link:persistence.html#cache_level2[Level 2 Cache docs]
-{none, *soft*, weak, coherence, ehcache, ehcacheclassbased, cacheonix, oscache, javax.cache, spymemcached, xmemcached, {your-plugin-name}}
+{none, *soft*, weak, javax.cache, coherence, ehcache, ehcacheclassbased, cacheonix, oscache, redis, spymemcached, xmemcached, {your-plugin-name}}
 
 |datanucleus.cache.level2.mode
 |The mode of operation of the L2 cache, deciding which entities are cached. The default (UNSPECIFIED) is the same as DISABLE_SELECTIVE.
@@ -1516,7 +1516,8 @@ Weak references are held to non pinned objects.
 * link:#cache_level2_javax_cache[javax.cache] - a simple wrapper to the Java standard "javax.cache" Temporary Caching API.
 * link:#cache_level2_ehcache[EHCache] - a simple wrapper to EHCache's caching product.
 * link:#cache_level2_ehcache[EHCacheClassBased] - similar to the EHCache option but class-based.
-* link:#cache_level2_oscache[OSCache] - a simple wrapper to OSCache's caching product.
+* link:#cache_level2_redis[Redis] - an L2 cache using Redis.
+* link:#cache_level2_he[OSCache] - a simple wrapper to OSCache's caching product.
 * link:#cache_level2_coherence[Oracle Coherence] - a simple wrapper to Oracle's Coherence caching product. 
 Oracle's caches support distributed caching, so you could, in principle, use DataNucleus in a distributed environment with this option.
 * link:#cache_level2_memcached[spymemcached] - a simple wrapper to the "spymemcached" client for memcached caching product.
@@ -1769,6 +1770,25 @@ and define a _cacheonix-config.xml_ like
    </local>
 
 </cacheonix>
+-----
+
+
+[[cache_level2_redis]]
+=== L2 Cache using Redis
+
+DataNucleus provides a simple L2 cache using Redis.
+To enable this you should set the persistence properties
+
+-----
+datanucleus.cache.level2.type=redis
+datanucleus.cache.level2.cacheName={cache name}
+datanucleus.cache.level2.clearAtClose={true | false, whether to clear at close}
+datanucleus.cache.level2.redis.database={database, or use the default '1'}
+datanucleus.cache.level2.redis.timeout={optional timeout, or use the default of 5000}
+datanucleus.cache.level2.redis.expirySeconds={expiry in secs, or use the default of 86400}
+datanucleus.cache.level2.redis.sentinels={comma-separated list of sentinels, optional (use server/port instead)}
+datanucleus.cache.level2.redis.server={server, or use the default of "localhost"}
+datanucleus.cache.level2.redis.port={port, or use the default of 6379}
 -----
 
 
