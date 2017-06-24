@@ -1030,14 +1030,23 @@ This property is the expiry timeout in milliseconds (will be unset meaning use c
 
 |datanucleus.cache.queryResults.type
 |Type of cache to use for caching query results.
-{none, *soft*, weak, strong, javax.cache, spymemcached, xmemcached, cacheonix, {your-plugin-name}}
+{none, *soft*, weak, strong, javax.cache, redis, spymemcached, xmemcached, cacheonix, {your-plugin-name}}
 
 |datanucleus.cache.queryResults.cacheName
 |Name of cache for caching the query results.
 {*datanucleus-query*, {your-name}}
 
+|datanucleus.cache.queryResults.clearAtClose
+|Whether the close of the Query Results cache (when the PMF closes) should also clear out any objects from the underlying cache mechanism. 
+By default it will clear query results out.
+{*true*, false}
+
 |datanucleus.cache.queryResults.maxSize
 |Max size for the query results cache (supported by weak, soft, strong)
+{*-1*, integer value}
+
+|datanucleus.cache.queryResults.expiryMillis
+|Expiry in milliseconds for objects in the query results cache (cacheonix, redis)
 {*-1*, integer value}
 |===
 
