@@ -955,7 +955,7 @@ See also the link:persistence.html#level1_cache[Level 1 Cache docs]
 |datanucleus.cache.level2.type
 |Name of the type of Level 2 Cache to use. Can be used to interface with external caching products. Use "none" to turn off L2 caching.
 See also the link:persistence.html#cache_level2[Level 2 Cache docs]
-{none, *soft*, weak, coherence, ehcache, ehcacheclassbased, cacheonix, oscache, swarmcache, javax.cache, spymemcached, xmemcached, {your-plugin-name}}
+{none, *soft*, weak, coherence, ehcache, ehcacheclassbased, cacheonix, oscache, javax.cache, spymemcached, xmemcached, {your-plugin-name}}
 
 |datanucleus.cache.level2.mode
 |The mode of operation of the L2 cache, deciding which entities are cached. The default (UNSPECIFIED) is the same as DISABLE_SELECTIVE.
@@ -1517,7 +1517,6 @@ Weak references are held to non pinned objects.
 * link:#cache_level2_ehcache[EHCache] - a simple wrapper to EHCache's caching product.
 * link:#cache_level2_ehcache[EHCacheClassBased] - similar to the EHCache option but class-based.
 * link:#cache_level2_oscache[OSCache] - a simple wrapper to OSCache's caching product.
-* link:#cache_level2_swarmcache[SwarmCache] - a simple wrapper to SwarmCache's caching product.
 * link:#cache_level2_coherence[Oracle Coherence] - a simple wrapper to Oracle's Coherence caching product. 
 Oracle's caches support distributed caching, so you could, in principle, use DataNucleus in a distributed environment with this option.
 * link:#cache_level2_memcached[spymemcached] - a simple wrapper to the "spymemcached" client for memcached caching product.
@@ -1526,7 +1525,7 @@ Oracle's caches support distributed caching, so you could, in principle, use Dat
 * *none* - turn OFF Level 2 caching.
 
 The weak, soft and javax.cache caches are available in the datanucleus-core plugin.
-The EHCache, OSCache, SwarmCache, Coherence, Cacheonix, and Memcache caches are available in the http://github.com/datanucleus/datanucleus-cache[datanucleus-cache] plugin.
+The EHCache, OSCache, Coherence, Cacheonix, and Memcache caches are available in the http://github.com/datanucleus/datanucleus-cache[datanucleus-cache] plugin.
 
 In addition you can control the _mode_ of operation of the L2 cache. You do this using the persistence property *datanucleus.cache.level2.mode* (or *javax.persistence.sharedCache.mode*).
 The default is _UNSPECIFIED_ which means that DataNucleus will cache all objects of entities unless the entity is explicitly marked as not cacheable. 
@@ -1781,18 +1780,6 @@ To enable this you should set the persistence properties
 
 -----
 datanucleus.cache.level2.type=oscache
-datanucleus.cache.level2.cacheName={cache name}
------
-
-
-[[cache_level2_swarmcache]]
-=== L2 Cache using SwarmCache
-
-DataNucleus provides a simple wrapper to http://swarmcache.sourceforge.net/[SwarmCache's caches]. 
-To enable this you should set the persistence properties
-
------
-datanucleus.cache.level2.type=swarmcache
 datanucleus.cache.level2.cacheName={cache name}
 -----
 
