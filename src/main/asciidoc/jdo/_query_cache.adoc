@@ -45,10 +45,15 @@ As a finer degree of control, where cached results are used, you can omit the va
 == Query Results Cache
 
 This cache is by default set to _soft_, meaning that the datastore query results are cached using soft references. 
-This is set using the persistence property *datanucleus.cache.queryResult.type*. 
+This is set using the persistence property *datanucleus.cache.queryResults.type*. 
 You can also set it to _strong_ meaning that strong references are used, or _weak_ meaning that weak references are used, or finally to _none_ 
 meaning that there is no caching of query results information. 
-You can also specify *datanucleus.cache.queryResult.cacheName* to define the name of the cache used for the query results cache.
+
+You can specify persistence property *datanucleus.cache.queryResults.cacheName* to define the name of the cache used for the query results cache.
+
+You can specify persistence property *datanucleus.cache.queryResults.expireMillis* to specify the expiry of caching of results, for caches that support it.
+
+You can specify persistence property *datanucleus.cache.queryResults.maxSize* to define the maximum number of queries that have their results cached, for caches that support it.
 
 You can turn caching on/off (default = off) on a query-by-query basis by specifying the query extension *datanucleus.query.results.cached* as true/false.
 
