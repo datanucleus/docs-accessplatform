@@ -10,6 +10,10 @@ The _PersistenceManagerFactory_ can be configured to provide particular behaviou
 
 NOTE: A _PersistenceManagerFactory_ is designed to be thread-safe. A _PersistenceManager_ is not
 
+TIP: A _PersistenceManagerFactory_ is expensive to create so you should create one per datastore for your application and retain it for as long as it is needed.
+Always close your _PersistenceManagerFactory_ after you have finished with it.
+
+
 There are many ways of creating a _PersistenceManagerFactory_ 
 http://www.datanucleus.org/javadocs/javax.jdo/3.2/javax/jdo/PersistenceManagerFactory.html[image:../images/javadoc.png[]]
 
