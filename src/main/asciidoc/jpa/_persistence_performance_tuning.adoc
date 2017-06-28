@@ -285,10 +285,11 @@ https://jisajournal.springeropen.com/articles/10.1186/s13174-016-0052-x[This pap
 Key points to make are
 
 * The study persists a flat class, with no relations. Hardly representative of a real world usage.
-* The study doesn't even touch on feature set available in each mapper, so the fact that DataNucleus has a very wide range of mapping capabilities for MongoDB.
+* The study doesn't even touch on feature set available in each mapper, so the fact that DataNucleus has a very wide range of mapping capabilities for MongoDB is ignored.
 * All mappers come out as slower than native MongoDB (surprise!). The whole point of using a mapper is that you don't want to spend the time learning a new API, 
 so are prepared for some overhead.
-* All timings quoted in their report are in the "microseconds" range!! as are differences between the methods so very few real world applications would be impacted.
+* All timings quoted in their report are in the "microseconds" range!! as are differences between the methods so very few real world applications would be impacted by the differences shown.
+If anybody is choosing a persistence mechanism for pure speed, they should *always* go with the native API; right tool for the job.
 * DataNucleus was configured to turn OFF query compilation caching, and L2 caching !!! whereas not all other mappers provide a way to not cache such things, hence they 
 have tied one arm behind its back, and then commented that time taken to compile queries is impacting on performance!
 * Enhancement was done at RUNTIME!! so would impact on performance results. Not sure how many times we need to say this in reference to benchmarking but clearly the message
