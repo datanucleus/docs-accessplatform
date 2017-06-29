@@ -69,6 +69,11 @@ it can take some time. This is easily remedied by specifying the catalog/schema 
 (using the persistence properties *datanucleus.Catalog*, *datanucleus.Schema*, or using the settings in `persistence.xml`), or for the package/class using attributes in the MetaData. 
 This subsequently reduces the amount of information that the RDBMS needs to search through and so can give significant speed ups when you have many catalogs/schemas being managed by the RDBMS.
 
+TIP: If you want to ensure that the schema existence checks are done for all persistence-unit classes at startup you should set the persistence property
+*datanucleus.persistenceUnitLoadClasses* to _true_. This processes all classes up front, meaning that all operations from there on will run faster without interruptions
+while it checks the database for existence of a table of a class.
+
+
 
 == EntityManager usage
 
