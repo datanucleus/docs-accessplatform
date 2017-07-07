@@ -103,7 +103,6 @@ For some of the supported datastores DataNucleus allows you to utilise a connect
 manage the connections to the datastore. We currently provide support for the following
 
 * RDBMS : link:#connection_pooling_rdbms_dbcp2[Apache DBCP v2], we allow use of externally-defined DBCP2, but also provide a builtin DBCP v2.1.1
-* RDBMS : link:#connection_pooling_rdbms_dbcp[Apache DBCP v1]
 * RDBMS : link:#connection_pooling_rdbms_c3p0[C3P0]
 * RDBMS : link:#connection_pooling_rdbms_proxool[Proxool]
 * RDBMS : link:#connection_pooling_rdbms_bonecp[BoneCP]
@@ -158,34 +157,6 @@ datanucleus.connectionPool.maxWait=60
 datanucleus.connectionPool.testSQL=SELECT 1
 
 datanucleus.connectionPool.timeBetweenEvictionRunsMillis=2400000
------
-
-
-[[connection_pooling_rdbms_dbcp]]
-=== RDBMS : Apache DBCP
-
-DataNucleus allows you to utilise a connection pool using http://jakarta.apache.org/commons/dbcp/[DBCP] (v1) to efficiently manage the connections to the datastore. 
-It is recommended to use DBCP v2 instead of DBCP v1 for all JRE's 1.7+.
-This is accessed by specifying the persistence property *datanucleus.connectionPoolingType* to _DBCP_ in your `persistence.xml`.
-
-So the _EMF_ will use connection pooling using DBCP. To do this you will need `commons-dbcp`, `commons-pool` and `commons-collections` JARs to be in the CLASSPATH.
-
-You can also specify persistence properties to control the actual pooling. The currently supported properties for DBCP are shown below
-
------
-# Pooling of Connections
-datanucleus.connectionPool.maxIdle=10
-datanucleus.connectionPool.minIdle=3
-datanucleus.connectionPool.maxActive=5
-datanucleus.connectionPool.maxWait=60
-
-# Pooling of PreparedStatements
-datanucleus.connectionPool.maxStatements=0
-
-datanucleus.connectionPool.testSQL=SELECT 1
-
-datanucleus.connectionPool.timeBetweenEvictionRunsMillis=2400000
-datanucleus.connectionPool.minEvictableIdleTimeMillis=18000000
 -----
 
 
