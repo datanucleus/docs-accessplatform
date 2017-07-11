@@ -597,6 +597,9 @@ If a subsequent request is made for a PMF with a name that already exists then a
 The default matches the JDO spec, not allowing changes to the listeners in use.
 {true, *false*}
 
+|datanucleus.cdi.bean.manager
+|Specifies a CDI `BeanManager` object that will be used to allow injection of dependencies into `AttributeConverter` objects.
+
 |datanucleus.jmxType
 |Which JMX server to use when hooking into JMX. Please refer to the link:persistence.html#monitoring[Monitoring Guide]
 {default, mx4j}

@@ -1248,11 +1248,14 @@ public class MyClass
 }
 -----
 
+NOTE: You CANNOT use an `AttributeConverter` for a _Entity_ type. This is because a _Entity_ type requires special treatment, such as attaching a StateManager etc. 
 
-NOTE: The `AttributeConverter` objects shown here are *stateless*. That is, they do not require CDI injection by DataNucleus.
+
+NOTE: The `AttributeConverter` objects shown here are *stateless*.
 
 
-NOTE: JPA 2.2 allows `AttributeConverter` objects to be CDI injectable. DataNucleus supports this, but clearly will only be usable in a CDI environment.
+NOTE: DataNucleus (and JPA 2.2) allows for stateful `AttributeConverter` objects, with the state being CDI injectable, but you must be in a CDI environment for this to work.
+To provide CDI support for JPA, you should specify the persistence property *javax.persistence.bean.manager* to be a CDI `BeanManager` object.
 
 
 

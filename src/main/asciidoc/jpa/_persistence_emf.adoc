@@ -269,6 +269,9 @@ _{NONE, ALL, ENABLE_SELECTIVE, DISABLE_SELECTIVE, *UNSPECIFIED*}_
 |javax.persistence.validation.factory
 |The validation factory to use in validation
 
+|javax.persistence.bean.manager
+|CDI BeanManager, to enable CDI injection into `AttributeConverter` and event listener objects.
+
 |javax.persistence.schema-generation.database.action
 |Whether to perform any schema generation to the database at startup. Will process the schema for all classes that have metadata loaded at startup (i.e the classes specified in a persistence-unit).
 _{create, drop, drop-and-create, *none*}_
