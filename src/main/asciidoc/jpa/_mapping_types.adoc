@@ -21,8 +21,12 @@ The tables in these sections show
 ** *PK* : whether the field can be used as part of the primary-key
 
 
+NOTE: The JPA spec places restrictions on what you can and can't do with a `@MappedSuperclass` type. DataNucleus largely treats it like any entity, so can be used
+for querying, or relations.
 
-NOTE: With DataNucleus, all types that we have a way of persisting (i.e listed below) are default persistent (meaning that you don't need to annotate them in any way to persist them). 
+NOTE: The JPA spec has a _required list of types_ that a provider should support is very basic. DataNucleus provides all of those and many many more, see below.
+
+NOTE: With DataNucleus, *all* types that we have a way of persisting (i.e listed below) are default persistent (meaning that you don't need to annotate them in any way to persist them). 
 The only field types where this is not always true is for java.lang.Object, some Serializable types, array of persistables, and java.io.File so always safer to mark those as persistent.
 
 
