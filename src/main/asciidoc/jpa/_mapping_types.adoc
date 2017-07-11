@@ -1185,7 +1185,7 @@ If you find one that doesn't work fully then report it and perhaps it can be sup
 [[attributeconverter]]
 == JPA Attribute Converters
 
-JPA2.1 introduces an API for conversion of an attribute of an Entity to its datastore value.
+JPA provides an API for conversion of an attribute of an Entity to its datastore value.
 You can define a "converter" that will convert to the datastore value and back from it, implementing this interface.
 
 [source,java]
@@ -1249,10 +1249,14 @@ public class MyClass
 -----
 
 
-NOTE: The AttributeConverter objects here are *stateless*. That is, they do not support CDI injection by DataNucleus.
+NOTE: The `AttributeConverter` objects shown here are *stateless*. That is, they do not require CDI injection by DataNucleus.
 
 
-Note that in strict JPA 2.1 you have to mark all converters with the `@Converter` annotation.
+NOTE: JPA 2.2 allows `AttributeConverter` objects to be CDI injectable. DataNucleus supports this, but clearly will only be usable in a CDI environment.
+
+
+
+Note that in strict JPA you have to mark all converters with the `@Converter` annotation.
 In DataNucleus if you specify the converter class name in the `@Convert` then we know its a converter so don't really see why we need a user to annotate the converter too.
 We only require annotation as `@Converter` if you want the converter to always be applied to fields of a particular type. 
 i.e if you want all URL fields to be persisted using the above converter (without needing to put `@Convert` on each field of that type) then you would add the annotation
