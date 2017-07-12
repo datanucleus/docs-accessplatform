@@ -100,9 +100,10 @@ So we define our "Account" entity as normal but mark it with an _EntityListener_
 As before we can define any of the 7 callbacks as we require. 
 The only difference is that the callback method has to take an argument of type "Object" that it will be called for, and have void return.
 
-NOTE: The Entity Listeners shown here are *stateless*. That is, they have no CDI injection by DataNucleus.
+NOTE: The Entity Listeners objects shown here are *stateless*.
 
 
-NOTE: JPA allows Entity Listeners to be CDI injectable. DataNucleus supports this, but clearly will only be usable in a CDI environment.
+NOTE: DataNucleus allows for stateful event listener objects, with the state being CDI injectable, but you must be in a CDI environment for this to work.
+To provide CDI support for JPA, you should specify the persistence property *javax.persistence.bean.manager* to be a CDI `BeanManager` object.
 
 
