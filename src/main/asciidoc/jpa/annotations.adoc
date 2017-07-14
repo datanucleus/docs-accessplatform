@@ -1922,7 +1922,8 @@ This annotation is used to define the generation of a value for a (PK) field. Sp
 
 |strategy
 |GenerationType
-|Strategy to use when generating the values for this field. Has possible values of GenerationType TABLE, SEQUENCE, IDENTITY, AUTO.
+|Strategy to use when generating the values for this field. Has possible values of GenerationType TABLE, SEQUENCE, IDENTITY, AUTO, UUID.
+Note that UUID is only available if using the DN provided javax.persistence.jar (v2.2+)
 |GenerationType.AUTO
 
 |generator

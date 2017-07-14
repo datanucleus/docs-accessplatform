@@ -14,6 +14,7 @@ choose the strategy that best suits your target datastore. The available strateg
 * link:#valuegen_sequence[SEQUENCE] - this uses a datastore sequence (if supported by the datastore)
 * link:#valuegen_identity[IDENTITY] - these use autoincrement/identity/serial features in the datastore (if supported by the datastore)
 * link:#valuegen_increment[TABLE] - this is datastore neutral and increments a sequence value using a table.
+* link:#valuegen_uuid[UUID] - datastore neutral, created in the JRE. Provided by DataNucleus
 * link:#valuegen_custom[Custom generators] - these are beyond the scope of the JPA spec but provided by DataNucleus
 
 See also:-
@@ -264,6 +265,44 @@ See also:-
 * link:metadata_xml.html#table-generator[JPA MetaData reference for <table-generator>]
 * link:annotations.html#TableGenerator[JPA Annotation reference for @TableGenerator]
 
+
+
+
+[[valuegen_uuid]]
+== uuid
+
+image:../images/nucleus_extension.png[]
+
+NOTE: Applicable to all datastores.
+
+This generator uses the JRE UUID class to generate String values. The values are 128-bit (36 character) of the form _0e400c2c-b3a0-4786-a0c6-f2607bf643eb_.
+
+This generator can be used in concurrent applications. It is especially useful in situations where large numbers of transactions within a certain amount of time have to be made, and the 
+additional overhead of synchronizing the concurrent creation of unique identifiers through the database would break performance limits.
+
+[source,xml]
+-----
+<entity class="MyClass">
+    <attributes>
+        <id name="myId">
+            <generated-value strategy="UUID"/>
+        </id>
+    </attributes>
+</entity>
+-----
+
+or using annotations
+
+[source,java]
+-----
+public class MyClass
+{
+    @GeneratedValue(strategy=GenerationType.UUID)
+    String myId;
+}
+-----
+
+This value generator will generate values unique across different JVMs
 
 
 [[valuegen_custom]]
