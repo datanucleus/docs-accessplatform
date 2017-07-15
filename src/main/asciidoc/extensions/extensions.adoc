@@ -6,6 +6,9 @@
 
 == Plugin Mechanism
 DataNucleus products are built using a plugin mechanism, allowing plugins to operate together.
+This plugin mechanism involves the use of a file `plugin.xml` situated at the root of the CLASSPATH, containing a definition of the
+extension points and extensions that the plugin utilises/provides. 
+The plugin mechanism originated in the Eclipse IDE, but has no dependencies on Eclipse.
 This plugin mechanism is useful also from a user viewpoint in that you, the user, could provide plugins that use these plugin points and extend the capabilities of DataNucleus.
 Plugins are loaded by a plugin manager when DataNucleus is initialised at runtime, and this plugin manager uses a registry mechanism, inspecting jars in the CLASSPATH.
 
