@@ -22,8 +22,7 @@ For example with RDBMS, it is converted into SQL. This can be cached
 
 This cache is by default set to _soft_, meaning that the generic query compilation is cached using soft references. 
 This is set using the persistence property *datanucleus.cache.queryCompilation.type*. 
-You can also set it to _strong_ meaning that strong references are used, or _weak_ meaning that weak references are used, or finally to _none_ 
-meaning that there is no caching of generic query compilation information
+You can also set it to _strong_ meaning that strong references are used, or _weak_ meaning that weak references are used.
 
 You can turn caching on/off (default = on) on a query-by-query basis by specifying the query extension *datanucleus.query.compilation.cached* as true/false.
 
@@ -33,8 +32,7 @@ You can turn caching on/off (default = on) on a query-by-query basis by specifyi
 
 This cache is by default set to _soft_, meaning that the datastore query compilation is cached using soft references. 
 This is set using the persistence property *datanucleus.cache.queryCompilationDatastore.type*. 
-You can also set it to _strong_ meaning that strong references are used, or _weak_ meaning that weak references are used, or finally to _none_ 
-meaning that there is no caching of datastore-specific query compilation information
+You can also set it to _strong_ meaning that strong references are used, or _weak_ meaning that weak references are used.
 
 You can turn caching on/off (default = on) on a query-by-query basis by specifying the query extension *datanucleus.query.compilation.cached* as true/false.
 As a finer degree of control, where cached results are used, you can omit the validation of object existence in the datastore by setting the query extension
@@ -46,8 +44,7 @@ As a finer degree of control, where cached results are used, you can omit the va
 
 This cache is by default set to _soft_, meaning that the datastore query results are cached using soft references. 
 This is set using the persistence property *datanucleus.cache.queryResults.type*. 
-You can also set it to _strong_ meaning that strong references are used, or _weak_ meaning that weak references are used, or finally to _none_ 
-meaning that there is no caching of query results information. 
+You can also set it to _strong_ meaning that strong references are used, or _weak_ meaning that weak references are used. 
 
 You can specify persistence property *datanucleus.cache.queryResults.cacheName* to define the name of the cache used for the query results cache.
 
