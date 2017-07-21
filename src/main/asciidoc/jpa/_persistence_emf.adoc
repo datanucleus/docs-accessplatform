@@ -496,6 +496,10 @@ warning will be logged and the original EMF returned.
 |Which JMX server to use when hooking into JMX. Please refer to the link:#monitoring[Monitoring Guide]
 {default, mx4j}
 
+|datanucleus.type.wrapper.basis
+|Whether to use the "instantiated" type of a field, or the "declared" type of a field to determine which wrapper to use when the field is SCO mutable.
+{*instantiated*, declared}
+
 |datanucleus.deletionPolicy
 |Allows the user to decide the policy when deleting objects. The default is "JDO2" which firstly checks if the field is dependent and if so deletes dependents, and then for others will null any
 foreign keys out. The problem with this option is that it takes no account of whether the user has also defined foreign-key metadata, so we provide a "DataNucleus" mode that does the 

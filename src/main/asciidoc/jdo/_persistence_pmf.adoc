@@ -639,6 +639,10 @@ Refer to link:../extensions/extensions.html#store_datastoreidentity[Datastore Id
 |datanucleus.objectProvider.className
 |Class name for the ObjectProvider to use when managing object state. The default for RDBMS is ReferentialStateManagerImpl, and is StateManagerImpl for all other datastores.
 
+|datanucleus.type.wrapper.basis
+|Whether to use the "instantiated" type of a field, or the "declared" type of a field to determine which wrapper to use when the field is SCO mutable.
+{*instantiated*, declared}
+
 |datanucleus.useImplementationCreator
 |Whether to allow use of the implementation-creator (feature of JDO to dynamically create implementations of persistent interfaces). 
 {*true*, false}
