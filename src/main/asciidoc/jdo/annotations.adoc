@@ -152,21 +152,6 @@ It equates to the <class> XML element (though with only some of its attributes).
 |Object-id class
 |
 
-|table
-|String
-|ORM : Name of the table where this class is persisted
-|
-
-|catalog
-|String
-|ORM : Name of the catalog where this table is persisted
-|
-
-|schema
-|String
-|ORM : Name of the schema where this table is persisted
-|
-
 |cacheable
 |String
 |Whether the class can be L2 cached.
@@ -180,6 +165,21 @@ It equates to the <class> XML element (though with only some of its attributes).
 |extensions
 |xref:annotations.html#Extension[Extension]
 |Vendor extensions
+|
+
+|table
+|String
+|ORM : Name of the table where this class is persisted
+|
+
+|catalog
+|String
+|ORM : Name of the catalog where this table is persisted
+|
+
+|schema
+|String
+|ORM : Name of the schema where this table is persisted
 |
 |===
 
@@ -377,6 +377,11 @@ Specified on the *class*.
 |Name of the sequence to use (when using SEQUENCE strategy) - refer to @Sequence
 |
 
+|extensions
+|xref:annotations.html#Extension[Extension]
+|Vendor extensions
+|
+
 |column
 |String
 |ORM : Name of the column for the datastore identity
@@ -385,11 +390,6 @@ Specified on the *class*.
 |columns
 |xref:annotations.html#Column[Column]
 |ORM : Column definition for the column(s) for the datastore identity
-|
-
-|extensions
-|xref:annotations.html#Extension[Extension]
-|Vendor extensions
 |
 |===
 
@@ -430,6 +430,11 @@ Specified on the *class*.
 |Whether the version column(s) is indexed
 |
 
+|extensions
+|xref:annotations.html#Extension[Extension]
+|Vendor extensions
+|
+
 |column
 |String
 |ORM : Name of the column for the version
@@ -438,11 +443,6 @@ Specified on the *class*.
 |columns
 |xref:annotations.html#Column[Column]
 |ORM : Column definition for the column(s) for the version
-|
-
-|extensions
-|xref:annotations.html#Extension[Extension]
-|Vendor extensions
 |
 |===
 
@@ -1022,6 +1022,14 @@ Using these provide portability for your application.
 |Field/Method
 |Defines the details of values of a map stored in this field
 
+|xref:annotations.html#Convert[@Convert]
+|Field/Method
+|Specify an AttributeConverter for this field/method
+
+|xref:annotations.html#Extension[@Extension]
+|Class/Field/Method
+|Defines a JDO extension
+
 |xref:annotations.html#Order[@Order]
 |Field/Method
 |ORM : Defines the details of ordering of an array/collection stored in this field
@@ -1049,14 +1057,6 @@ Using these provide portability for your application.
 |xref:annotations.html#ForeignKey[@ForeignKey]
 |Field/Method
 |ORM : Defines a foreign key for the field
-
-|xref:annotations.html#Convert[@Convert]
-|Field/Method
-|Specify an AttributeConverter for this field/method
-
-|xref:annotations.html#Extension[@Extension]
-|Class/Field/Method
-|Defines a JDO extension
 |===
 
 
@@ -1179,32 +1179,15 @@ Specified on the *field/method*.
 |Field in other class when the relation is bidirectional to signify the owner of the relation
 |
 
-|table
-|String
-|ORM : Name of the table where this field is persisted.
-If this field is a collection/map/array then the table refers to a join table, otherwise this refers to a secondary table.
-|
-
 |name
 |String
 |Name of the field when defining an embedded field.
-|
-
-|columns
-|xref:annotations.html#Column[Column]
-|ORM : Column definition(s) for the columns into which this field is persisted. 
-This is only typically used when specifying columns of a field of an embedded class.
 |
 
 |cacheable
 |String
 |Whether the field/property can be L2 cached.
 |*true*, false
-
-|extensions
-|xref:annotations.html#Extension[Extension]
-|Vendor extensions
-|
 
 |recursionDepth
 |int
@@ -1226,6 +1209,23 @@ Not used for getObjectById, queries, extents etc. Better to use @FetchGroup and 
 |boolean
 |Whether we should disable any default conversion for this field
 |false
+
+|extensions
+|xref:annotations.html#Extension[Extension]
+|Vendor extensions
+|
+
+|table
+|String
+|ORM : Name of the table where this field is persisted.
+If this field is a collection/map/array then the table refers to a join table, otherwise this refers to a secondary table.
+|
+
+|columns
+|xref:annotations.html#Column[Column]
+|ORM : Column definition(s) for the columns into which this field is persisted. 
+This is only typically used when specifying columns of a field of an embedded class.
+|
 |===
 
 
@@ -1405,6 +1405,21 @@ Specified on the Collection/array *field/method*.
 |Definition of any embedding of the (persistable) element. Only 1 "Embedded" should be provided
 |
 
+|converter
+|Class
+|Converter class that implements javax.jdo.AttributeConverter
+|
+
+|useDefaultConversion
+|boolean
+|Whether we should disable any default conversion for this element
+|false
+
+|extensions
+|xref:annotations.html#Extension[Extension]
+|Vendor extensions
+|
+
 |table
 |String
 |ORM : Name of the table for this element
@@ -1459,21 +1474,6 @@ Specified on the Collection/array *field/method*.
 |xref:annotations.html#Column[Column]
 |ORM : Column definition for the column(s) of this element
 |
-
-|converter
-|Class
-|Converter class that implements javax.jdo.AttributeConverter
-|
-
-|useDefaultConversion
-|boolean
-|Whether we should disable any default conversion for this element
-|false
-
-|extensions
-|xref:annotations.html#Extension[Extension]
-|Vendor extensions
-|
 |===
 
 
@@ -1503,6 +1503,11 @@ Maps across to the <order> XML element. Specified on the *field/method*.
 |Description
 |Default
 
+|extensions
+|xref:annotations.html#Extension[Extension]
+|Vendor extensions
+|
+
 |mappedBy
 |String
 |ORM : Field in the element class that represents the ordering of the collection/array
@@ -1516,11 +1521,6 @@ Maps across to the <order> XML element. Specified on the *field/method*.
 |columns
 |xref:annotations.html#Column[Column]
 |ORM : Column definition for the column(s) of this order
-|
-
-|extensions
-|xref:annotations.html#Extension[Extension]
-|Vendor extensions
 |
 |===
 
@@ -1581,6 +1581,21 @@ Maps across to the <map> and <key> XML elements. Specified on the *field/method*
 |Definition of any embedding of the (persistable) key. Only 1 "Embedded" should be provided
 |
 
+|converter
+|Class
+|Converter class that implements javax.jdo.AttributeConverter
+|
+
+|useDefaultConversion
+|boolean
+|Whether we should disable any default conversion for this key
+|false
+
+|extensions
+|xref:annotations.html#Extension[Extension]
+|Vendor extensions
+|
+
 |table
 |String
 |ORM : Name of the table for this key
@@ -1634,21 +1649,6 @@ Maps across to the <map> and <key> XML elements. Specified on the *field/method*
 |columns
 |xref:annotations.html#Column[Column]
 |ORM : Column definition for the column(s) of this key
-|
-
-|converter
-|Class
-|Converter class that implements javax.jdo.AttributeConverter
-|
-
-|useDefaultConversion
-|boolean
-|Whether we should disable any default conversion for this key
-|false
-
-|extensions
-|xref:annotations.html#Extension[Extension]
-|Vendor extensions
 |
 |===
 
@@ -1708,6 +1708,21 @@ Maps across to the <map> and <value> XML elements. Specified on the *field/metho
 |Definition of any embedding of the (persistable) value. Only 1 "Embedded" should be provided
 |
 
+|converter
+|Class
+|Converter class that implements javax.jdo.AttributeConverter
+|
+
+|useDefaultConversion
+|boolean
+|Whether we should disable any default conversion for this value
+|false
+
+|extensions
+|xref:annotations.html#Extension[Extension]
+|Vendor extensions
+|
+
 |table
 |String
 |ORM : Name of the table for this value
@@ -1762,21 +1777,6 @@ Maps across to the <map> and <value> XML elements. Specified on the *field/metho
 |xref:annotations.html#Column[Column]
 |ORM : Column definition for the column(s) of this value
 |
-
-|converter
-|Class
-|Converter class that implements javax.jdo.AttributeConverter
-|
-
-|useDefaultConversion
-|boolean
-|Whether we should disable any default conversion for this value
-|false
-
-|extensions
-|xref:annotations.html#Extension[Extension]
-|Vendor extensions
-|
 |===
 
 
@@ -1805,6 +1805,11 @@ Specified on the *field/method*.
 |Type
 |Description
 |Default
+
+|extensions
+|xref:annotations.html#Extension[Extension]
+|Vendor extensions
+|
 
 |table
 |String
@@ -1859,11 +1864,6 @@ Specified on the *field/method*.
 |columns
 |xref:annotations.html#Column[Column]
 |ORM : Name of the columns to join our PK to in the join table (when multiple columns used)
-|
-
-|extensions
-|xref:annotations.html#Extension[Extension]
-|Vendor extensions
 |
 |===
 
@@ -1958,6 +1958,11 @@ Specified on the *field/method* (and within other annotations).
 |Description
 |Default
 
+|extensions
+|xref:annotations.html#Extension[Extension]
+|Vendor extensions
+|
+
 |name
 |String
 |ORM : Name of the column
@@ -2012,12 +2017,7 @@ This is for use when you have a composite PK so acts as a way of aligning the re
 
 |position
 |int
-|Position of this column in the owning table (0 = first)
-|
-
-|extensions
-|xref:annotations.html#Extension[Extension]
-|Vendor extensions
+|ORM : Position of this column in the owning table (0 = first)
 |
 |===
 
