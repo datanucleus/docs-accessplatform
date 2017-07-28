@@ -13,7 +13,7 @@ This page defines the format of the XML Metadata and can be used for either the 
 
 
 
-Here is an example header for *package.jdo* files with http://xmlns.jcp.org/xml/ns/jdo/jdo_3_0.xsd[JDO XSD] specification
+Here is an example header for `package.jdo` files with http://xmlns.jcp.org/xml/ns/jdo/jdo_3_0.xsd[JDO XSD] specification
 
 [source,xml]
 -----
@@ -39,7 +39,7 @@ Here is an example header for *package.orm* files with http://xmlns.jcp.org/xml/
 
 
 JDO expects the XML metadata to be specified in a file or files in particular locations in the CLASSPATH. 
-For example, if you have a class _com.mycompany.sample.MyExample_, JDO will look for any of the following resources until it finds one (in the order stated) :-
+For example, if you have a class `com.mycompany.sample.MyExample`, JDO will look for any of the following resources until it finds one (in the order stated) :-
 
 -----
 META-INF/package.jdo
@@ -71,7 +71,7 @@ DataNucleus will always search for the metadata file containing the class defini
 As well as JDO XML metadata, you can (also) use ORM XML metadata to override particular datastore-specific things like table and column names. 
 JDO expects any ORM XML metadata to be specified in a file or files in particular locations in the CLASSPATH. 
 These filenames depend on the *javax.jdo.option.mapping* persistence property.
-For example, if you have a class _com.mycompany.sample.MyExample_, and the persistence property is set to "mysql" then JDO will look for any 
+For example, if you have a class `com.mycompany.sample.MyExample`, and the persistence property is set to "mysql" then JDO will look for any 
 of the following resources until it finds one (in the order stated) :-
 
 -----

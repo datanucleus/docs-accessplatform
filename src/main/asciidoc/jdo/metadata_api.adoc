@@ -9,7 +9,7 @@ The JDO API provides a dynamic API for defining metadata for classes, as an alte
 
 == Defining Metadata for classes
 
-The basic idea behind the Metadata API is that the developer obtains a metadata object from the PersistenceManagerFactory, 
+The basic idea behind the Metadata API is that the developer obtains a metadata object from the `PersistenceManagerFactory`, 
 and adds the definition to that as required, before registering it for use in the persistence process.
 
 [source,java]
@@ -19,7 +19,7 @@ PersistenceManagerFactory pmf = JDOHelper.getPersistenceManagerFactory(propsFile
 JDOMetadata md = pmf.newMetadata();
 -----
 
-So we have a _JDOMetadata_ object and want to define the persistence for our class _mydomain.MyClass_, so we do as follows
+So we have a _JDOMetadata_ object and want to define the persistence for our class `mydomain.MyClass`, so we do as follows
 
 [source,java]
 -----
@@ -88,7 +88,7 @@ With the JDO Metadata API you can do that
 TypeMetadata compmd = pmf.getMetadata("mydomain.MyOtherClass");
 -----
 
-and we can now inspect the information, casting the _compmd_ to either _javax.jdo.metadata.ClassMetadata_ or _javax.jdo.metadata.InterfaceMetadata_.
+and we can now inspect the information, casting the _compmd_ to either `javax.jdo.metadata.ClassMetadata` or `javax.jdo.metadata.InterfaceMetadata`.
 
 NOTE: you cannot currently change metadata retrieved in this way, only view it
 
