@@ -12,6 +12,8 @@ or whether only the "N" side knows about the other class (unidirectional). These
 NOTE: For RDBMS a N-1 relation is stored as a foreign-key column(s). For non-RDBMS it is stored as a String "column" storing the 'id' (possibly with the class-name 
 included in the string) of the related object.
 
+NOTE: You cannot have an N-1 relation to a long or int field! JDO is for use with object-oriented systems, not flat data.
+
 
 [[many_one_fk]]
 == Unidirectional with ForeignKey
