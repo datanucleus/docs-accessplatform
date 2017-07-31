@@ -433,8 +433,11 @@ This type of relation is available in the following forms
 * xref:mapping.html#derived_identity_1_N_coll_bi[1-N collection bidirectional using ForeignKey]
 * xref:mapping.html#derived_identity_1_N_map_bi[1-N map bidirectional using ForeignKey (key stored in value)]
 
-WARNING: In pure JPA, if the entity that is part of the id of the derived entity has a single long field then you can put a _long_
-field in the identity class of the derived entity. In DataNucleus you cannot do this currently, and should define the `@IdClass` of the 
+IMPORTANT: A more efficient relationship is to handle this as a standard 1-1/1-N relation, with individual id field in the related class, and then
+define a unique constraint on the related class. This then foregoes the "derived identity" relationship idea and you can stick to standard relationships.
+
+WARNING: In standard JPA, if the entity that is part of the id of the derived entity has a single long field then you can put a _long_
+field in the identity class of the derived entity. In DataNucleus you *cannot* do this currently, and should define the `@IdClass` of the 
 entity being contained and use that type in the identity class of the derived entity.
 
 NOTE: The persistable class that is contained cannot be using _datastore identity_, and must be using _application identity_ with an objectid-class
@@ -445,7 +448,7 @@ on the built-in identity types.
 
 
 [[derived_identity_1_1_uni]]
-=== 1-1 Relationship
+=== Derived 1-1 Relationship
 
 Lets take the same classes as we have in the link:#one_one_relations[1-1 Relationships].
 In the 1-1 relationships guide we note that in the datastore representation of the *User* and *Account* the `ACCOUNT` table has a primary key as well as a foreign-key to `USER`. 
@@ -619,7 +622,7 @@ be the same type as the Primary Key class of the parent
 To remove this restriction you could also add a "long id" to  "Account" and make the "Account.PK" a composite primary-key
 
 [[derived_identity_1_N_coll_bi]]
-=== 1-N Collection Relationship
+=== Derived 1-N Collection Relationship
 
 Lets take the same classes as we have in the link:#one_many_fk_bi[1-N Relationships (FK)].
 In the 1-N relationships guide we note that in the datastore representation of the *Account* and *Address* classes the `ADDRESS` table has a primary key as 
@@ -812,7 +815,7 @@ For that reason we have the "id" field too.
 
 
 [[derived_identity_1_N_map_bi]]
-=== 1-N Map Relationship
+=== Derived 1-N Map Relationship
 
 Lets take the same classes as we have in the link:#one_many_map_fk_bi_key[1-N Relationships FK].
 In this guide we note that in the datastore representation of the *Account* and *Address* classes the `ADDRESS` table has a primary key as well as a foreign-key to `ACCOUNT`. 
