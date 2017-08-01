@@ -1152,6 +1152,10 @@ Using these provide portability for your application.
 |xref:annotations.html#ForeignKey[@ForeignKey]
 |-
 |Defines the details of a foreign key when overriding the provider default.
+
+|xref:annotations.html#MapsId[@MapsId]
+|Field/Method
+|Defines that this field maps one part of the id of the overall class. *NOT SUPPORTED*.
 |===
 
 
@@ -2446,6 +2450,16 @@ _FOREIGN KEY ( colExpr1 {, colExpr2}... ) REFERENCES tblIdentifier {( otherColEx
 |===
 
 See the documentation for link:mapping.html#constraints[Schema Constraints]
+
+
+
+[[MapsId]]
+=== @MapsId
+
+This annotation would be used to mark the current field as mapping on to one of the "id" fields of the current class (embedded-id). 
+*This is not currently supported* and there are better, more efficient ways of handling it.
+
+
 
 
 [[dn_class_extensions]]
