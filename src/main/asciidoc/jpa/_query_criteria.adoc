@@ -79,8 +79,14 @@ The basic Criteria query above is fine, but you may want to define some explicit
 -----
 Metamodel model = emf.getMetamodel();
 ManagedType personType = model.type(Person.class);
+
+// String-based:
 Attribute addressAttr = personType.getAttribute("address");
 Join addressJoin = candidateRoot.join((SingularAttribute)addressAttr);
+addressJoin.alias("a");
+
+// MetaModel-based:
+Join<Person, Address> addressJoin = candidateRoot.join(Person_.address);
 addressJoin.alias("a");
 -----
 
