@@ -15,6 +15,15 @@ Migration to 5.1 involves the following steps
 
 
 
+=== Migration from 5.1.0-RELEASE to 5.1.1
+
+Migrating will require the following changes.
+
+* The "org.datanucleus.store.rdbms.datastore_mapping" extension point values no longer supports the _priority_ attribute. This is to facilitate providing "built-in"
+values directly in the RDBMS plugin rather than always loading from the plugin mechanism. Either contribute pull requests to the *datanucleus-rdbms* plugin if wanting
+to support types better, or make use of the `DatastoreAdapter.registerDatastoreMapping` method to manually register your datastore mappings.
+
+
 === Migration from 5.1.0-M4 to 5.1.0-RELEASE
 
 Migrating will require the following changes.
