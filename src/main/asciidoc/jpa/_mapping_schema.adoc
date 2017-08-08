@@ -159,7 +159,9 @@ JPA provides 2 ways of influencing the column DDL generated.
 can lose database independence by using this route. e.g "VARCHAR(255)"
 * Use `@Column`/`<column>` attributes and specify the _length_/_precision_/_scale_ of the column, as well as whether it is unique etc. It will make use of the Java type
 to come up with a default datastore type for the column. Sadly JPA doesn't allow specification of the precise datastore type (except for BLOB/CLOB/TIME/TIMESTAMP cases).
-DataNucleus provides an extension to overcome this gap in the JPA spec. Here we make use of a DataNucleus extension annotation `@JdbcType` or _jdbc-type_ extension attribute for `<column>`.
+DataNucleus provides an extension to overcome this gap in the JPA spec. 
+Here we make use of a DataNucleus extension annotation `@JdbcType` or _jdbc-type_ extension attribute for `<column>`.
+Note that we could alternatively have made use of the DataNucleus extension annotation `@SqlType` or _sql-type_ extension attribute for `<column>` to specify a low-level SQL type.
 Like this
 
 [source,xml]
