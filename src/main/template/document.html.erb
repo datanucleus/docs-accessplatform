@@ -41,6 +41,12 @@
     %>
 
     <%
+       def is_titlepage?
+         attributes.has_key?('titlepage')
+       end
+    %>
+
+    <%
        def is_jdo?
          attributes.has_key?('jdo')
        end
@@ -169,12 +175,17 @@
             </div>
         </div>
     <% else %>
-        <!-- Front Page, no TOC and no heading -->
+        <!-- No TOC -->
         <div class="row-fluid">
             <div class="col-sm-12">
-                <div class="page-title">
-                    <h1><%= document.name %></h1>
-                </div>
+                <% if is_titlepage? then %>
+                    <!-- Front Page, so no heading -->
+                <% else %>
+                    <div class="page-title">
+                        <h1><%= document.name %></h1>
+                    </div>
+                <% end %>
+
                 <div id="doc-content">
                     <%= document.content %>
                 </div>
