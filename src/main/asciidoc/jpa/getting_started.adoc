@@ -46,7 +46,7 @@ have different link:persistence.html#lifecycle[lifecycle states] that you need t
 DataNucleus has a modular architecture and you will need to make use of multiple JARs in your application, as follows
 
 * `javax.persistence.jar` : This is the JPA API. This is basically a collection of interfaces, annotations and helper classes.
-* `datanucleus-api-jdo.jar` : This is DataNucleus' implementation of the JPA API. It implements the interfaces defined in _javax.persistence.jar_.
+* `datanucleus-api-jpa.jar` : This is DataNucleus' implementation of the JPA API. It implements the interfaces defined in _javax.persistence.jar_.
 * `datanucleus-core.jar` : This provides the basic DataNucleus persistence mechanism, and is required by all DataNucleus plugins.
 * `datanucleus-{datastore}.jar` ({datastore} is 'rdbms', 'mongodb', 'cassandra', etc) : This provides persistence to the specific type of datastore that the JAR is for.
 * `datanucleus-jpa-query.jar` : This provides an _annotation processor_ and is used by the JPA Criteria mechanism to generate the JPA static metamodel classes used at runtime.
