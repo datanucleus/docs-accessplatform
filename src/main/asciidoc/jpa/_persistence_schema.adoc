@@ -43,8 +43,26 @@ when using _javax.persistence.schema-generation.scripts.action_
 (prior to any schema generation from the persistable objects)
 * *javax.persistence.schema-generation.scripts.drop.source* - set this to an SQL script of your own that will drop some tables
 (prior to any schema generation from the persistable objects)
-* *javax.persistence.sql-load-script-source* - set this to an SQL script of your own that
-will insert any data that you require to be available when your EMF is initialised
+* *javax.persistence.sql-load-script-source* - set this to an SQL script of your own that will insert any data that you require to be available when your EMF is initialised
+
+
+Some examples.
+
+To create a database using the JPA entities, and load data
+
+-----
+javax.persistence.schema-generation.database.action=create
+javax.persistence.sql-load-script-source=/usr/local/MyStartUp.sql
+-----
+
+
+To create DDL for the JPA entities
+
+-----
+javax.persistence.schema-generation.scripts.action=create
+javax.persistence.schema-generation.scripts.create.target=/usr/local/CreateTables.ddl
+-----
+
 
 
 [[schema-autogeneration]]
