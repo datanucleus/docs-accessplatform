@@ -37,6 +37,11 @@ You can also define more specific support for it with RDBMS datastores - link:..
 
 Handling of second-class types uses wrappers and bytecode enhancement with DataNucleus. This contrasts to what Hibernate uses (proxies), and what Hibernate imposes on you. 
 
+NOTE: When your field type is a type that is mutable it will be replaced by a "wrapper" when the owning object is managed. 
+By default this wrapper type will be based on the _instantiated_ type.
+You can change this to use the _declared_ type by setting the persistence property *datanucleus.type.wrapper.basis* to _declared_.
+
+
 
 == Primitive and java.lang Types
 
