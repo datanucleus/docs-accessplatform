@@ -5,7 +5,9 @@
 
 image:../images/nucleus_extension.png[]
 
-The http://beanvalidation.org/[Bean Validation API (JSR0303/JSR0349)] can be hooked up with JDO (DataNucleus extension) so that you have validation of an objects values 
+NOTE: Support for BeanValidation includes all versions of that API (1.0, 1.1, 2.0).
+
+The http://beanvalidation.org/[Bean Validation API (JSR0303/JSR0349/JSR0380)] can be hooked up with JDO (DataNucleus extension) so that you have validation of an objects values 
 prior to persistence, update and deletion. To do this
 
 * Put the *javax.validation* `validation-api` jar in your CLASSPATH, along with the Bean Validation implementation jar of your choice (e.g Apache BVal)
