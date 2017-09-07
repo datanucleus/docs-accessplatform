@@ -342,7 +342,7 @@ since they are only used by the network itself. We define our MetaData like this
 -----
 
 So here we will end up with a table `NETWORK` with columns `NETWORK_ID`, and `NAME`, and a table `NETWORK_DEVICES` with columns 
-`NETWORK_ID`, `ADPT_PK_IDX`, `DEVICE_NAME`, `DEVICE_IP_ADDR`. When we persist a *Network* object, any devices are persisted into the `NETWORK_DEVICES` table.
+`NETWORK_ID`, (optional `ADPT_PK_IDX`), `DEVICE_NAME`, `DEVICE_IP_ADDR`. When we persist a *Network* object, any devices are persisted into the `NETWORK_DEVICES` table.
 
 image:../images/embedded_collection_embedded_db.png[]
 
