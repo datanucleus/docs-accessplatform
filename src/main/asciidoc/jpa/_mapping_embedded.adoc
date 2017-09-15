@@ -6,11 +6,10 @@
 
 The JPA persistence strategy typically involves persisting the fields of any class into its own table, and representing any relationships from the fields 
 of that class across to other tables. 
-There are occasions when this is undesirable, maybe due to an existing datastore schema, or because a more convenient datastore model is required. 
-JPA allows the persistence of fields as _embedded_ typically into the same table as the "owning" class.
-
-One important decision when defining objects of a type to be embedded into another type is whether objects of that type will ever be persisted in their 
-own right into their own table, and have an identity. JPA allows you to mark a class as `@Embeddable` (instead of `@Entity`) in this case.
+There are occasions when this is undesirable, maybe due to an existing datastore schema, because a more convenient datastore model is required, or maybe
+you simply don't want an instance of some type to have its own _identity_ and so that type will only co-exist with an owner object.
+JPA allows the persistence of fields as _embedded_ typically into the same table as the "owning" class. 
+To define a class to be _embedded_ into other objects you make use of the `@Embeddable` annotation (instead of `@Entity`) in this case.
 
 [source,java]
 -----
@@ -110,6 +109,32 @@ image:../images/embedded_pc_traditional_db.png[]
 
 However we decide that we want to persist *Computer* objects into a table called `COMPUTER` and we also want to persist the PC cards into the _same table_. 
 We define our MetaData like this
+
+[source,java]
+-----
+public class Computer
+{
+    @Embedded
+    @AttributeOverride(name="manufacturer", column=@Column(name="GRAPHICS_MANUFACTURER"))
+    @AttributeOverride(name="type", column=@Column(name="GRAPHICS_TYPE"))
+    private ComputerCard graphicsCard;
+
+    @Embedded
+    @AttributeOverride(name="manufacturer", column=@Column(name="SOUND_MANUFACTURER"))
+    @AttributeOverride(name="type", column=@Column(name="SOUND_TYPE"))
+    private ComputerCard soundCard;
+
+    ...
+}
+
+@Embeddable
+public class ComputerCard
+{
+    ...
+}
+-----
+
+Or using XML metadata
 
 [source,xml]
 -----

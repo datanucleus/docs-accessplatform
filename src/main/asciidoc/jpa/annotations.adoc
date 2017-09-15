@@ -820,6 +820,44 @@ public class MyClass extends MySuperClass
 NOTE: There is also an `@AttributeOverrides` annotation but you can achieve the same cleaner using multiple `@AttributeOverride` annotations.
 
 
+[[AttributeOverride_Field]]
+=== @AttributeOverride
+
+This annotation is used to define a field of an embedded class that has its column overridden. Specified on the *field/property*.
+
+[cols="1,1,3,1", options="header"]
+|===
+|Attribute
+|Type
+|Description
+|Default
+
+|name
+|String
+|Name of the field
+|
+
+|column
+|Column
+|Column information
+|
+|===
+
+[source,java]
+-----
+@Entity
+public class MyClass extends MySuperClass
+{
+    @Embedded
+    @AttributeOverride(name="attr", column=@Column(name="NEW_NAME"))
+    MyEmbeddedType embedded;
+    ...
+}
+-----
+
+NOTE: There is also an `@AttributeOverrides` annotation but you can achieve the same cleaner using multiple `@AttributeOverride` annotations.
+
+
 
 [[AssociationOverride]]
 === @AssociationOverride
@@ -1012,6 +1050,10 @@ Using these provide portability for your application.
 |xref:annotations.html#Embedded[@Embedded]
 |Field/Method
 |Defines this field as being embedded
+
+|xref:annotations.html#AttributeOverride_Field[@AttributeOverride]
+|Class
+|Defines a field in an embedded class that will have its column overridden
 
 |xref:annotations.html#Id[@Id]
 |Field/Method
