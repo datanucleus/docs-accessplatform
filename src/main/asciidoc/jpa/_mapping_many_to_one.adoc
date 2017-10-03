@@ -88,6 +88,8 @@ Note that in the case of non-RDBMS datastores there is simply a "column" in the 
 [[many_one_join]]
 == Unidirectional with JoinTable
 
+NOTE: Supported for RDBMS. Other datastores simply ignore the join table and store the relation in a column in the table of the object with the field.
+
 For this case we have the same 2 classes, *User* and *Account*, as before.
 
 [source,java]

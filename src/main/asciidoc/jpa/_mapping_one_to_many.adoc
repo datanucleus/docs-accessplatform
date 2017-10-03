@@ -44,6 +44,8 @@ By that we mean that it should *not* use some basis before persistence and then 
 [[one_many_join_uni]]
 == Collection<Entity> Unidirectional JoinTable
 
+NOTE: Supported for RDBMS. Other datastores simply ignore the join table and store the relation in a column in the table of the object with the field.
+
 We have 2 sample classes *Account* and *Address*. These are related in such a way as *Account* contains a _Collection_ of objects of type *Address*, yet each *Address* 
 knows nothing about the *Account* objects that it relates to. Like this
 
@@ -195,6 +197,8 @@ If you want to allow duplicate Collection entries, then use the "Join Table" var
 
 [[one_many_join_bi]]
 == Collection<Entity> Bidirectional JoinTable
+
+NOTE: Supported for RDBMS. Other datastores simply ignore the join table and store the relation in a column in the table of the object with the field.
 
 We have our 2 sample classes *Account* and *Address*. These are related in such a way as *Account* contains a _Collection_ of objects of type *Address*, 
 and now each *Address* has a reference to the *Account* object that it relates to. Like this
@@ -399,6 +403,8 @@ or using XML
 [[one_many_nonpc_join]]
 == Collection<Simple> via JoinTable
 
+NOTE: Supported for RDBMS. Other datastores simply ignore the join table and store the collection in a column in the table of the object with the field.
+
 All of the examples above show a 1-N relationship between 2 entities.
 If you want the element to be primitive or Object types then follow this section. For example, when you have a Collection of Strings. 
 This will be persisted in the same way as the "Join Table" examples above. A join table is created to hold the collection elements. 
@@ -494,6 +500,8 @@ public class CollectionStringToStringConverter implements AttributeConverter<Col
 
 [[one_many_shared_join]]
 == Collection<Entity> via Shared JoinTable
+
+NOTE: Supported for RDBMS.
 
 image:../images/nucleus_extension.png[]
 
@@ -592,6 +600,8 @@ image:../images/relationship_1_N_uni_join_shared_db.png[]
 [[one_many_shared_fk]]
 == Collection<Entity> via Shared FK
 
+NOTE: Supported for RDBMS.
+
 image:../images/nucleus_extension.png[]
 
 The relationships using foreign keys shown above rely on the foreign key relating to the relation in question.
@@ -678,6 +688,8 @@ image:../images/relationship_1_N_uni_fk_shared_db.png[]
 [[one_many_map_join_simple_pc]]
 == Map<Simple, Entity> via JoinTable
 
+NOTE: Supported for RDBMS. Other datastores simply ignore the join table and store the relation in a column in the table of the object with the field.
+
 We have a class *Account* that contains a Map of Address objects.
 Here our key is a simple type (in this case a String) and the values are entities. Like this
 
@@ -725,6 +737,8 @@ If the column type of your key is acceptable for use as part of a primary key th
 
 [[one_many_map_join_simple_simple]]
 == Map<Simple, Simple> via JoinTable
+
+NOTE: Supported for RDBMS. Other datastores simply ignore the join table and store the map in a column in the table of the object with the field.
 
 Here our keys and values are of simple types (in this case a String). Like this
 
@@ -821,6 +835,8 @@ public class MapStringStringToStringConverter implements AttributeConverter<Map<
 [[one_many_map_join_pc_pc]]
 == Map<Entity, Entity> via JoinTable
 
+NOTE: Supported for RDBMS. Other datastores simply ignore the join table and store the relation in a column in the table of the object with the field.
+
 We have a class *Account* that contains a Map of Address objects. Here our key is an entity type and the values is an entity type also. Like this
 
 [source,java]
@@ -873,6 +889,8 @@ If the column type of your key is acceptable for use as part of a primary key th
 
 [[one_many_map_join_pc_simple]]
 == Map<Entity, Simple> via JoinTable
+
+NOTE: Supported for RDBMS. Other datastores simply ignore the join table and store the relation in a column in the table of the object with the field.
 
 Here our key is an entity type and the value is a simple type (in this case a String).
 

@@ -66,6 +66,8 @@ By that we mean that it should *not* use some basis before persistence and then 
 [[many_many_set]]
 == Using Set
 
+NOTE: Supported for RDBMS. Other datastores simply ignore the join table and store the relation in a column in the table of the object with the field.
+
 If you define the Meta-Data for these classes as follows
 
 [source,java]
@@ -135,6 +137,8 @@ image:../images/relationship_M_N_singlejoin_db.png[]
 
 [[many_many_list_ordered]]
 == Using Ordered Lists
+
+NOTE: Supported for RDBMS. Other datastores simply ignore the join table and store the relation in a column in the table of the object with the field.
 
 In this case our fields are of type List instead of Set used above. If you define the annotations for these classes as follows
 

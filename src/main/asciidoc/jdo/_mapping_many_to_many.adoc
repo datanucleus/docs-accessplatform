@@ -67,6 +67,8 @@ for this reason we do not recommend usage of _JDOHelper.getObjectId(obj)_ in the
 [[many_many_set]]
 == Using Set
 
+NOTE: Supported for RDBMS. Other datastores simply ignore the join table and store the relation in a column in the table of the object with the field.
+
 
 If you define the Meta-Data for these classes as follows
 
@@ -127,6 +129,8 @@ image:../images/relationship_M_N_singlejoin_db.png[]
 
 [[many_many_list_ordered]]
 == Using Ordered Lists
+
+NOTE: Supported for RDBMS. Other datastores simply ignore the join table and store the relation in a column in the table of the object with the field.
 
 In this case our fields are of type List instead of Set used above. If you define the annotations for these classes as follows
 
@@ -193,6 +197,8 @@ image:../images/relationship_M_N_singlejoin_db.png[]
 [[many_many_list_indexed]]
 == Using indexed Lists
 
+NOTE: Supported for RDBMS. Other datastores simply ignore the join table and store the relation in a column in the table of the object with the field.
+
 *Firstly a true M-N relation with Lists is impossible since there are two lists, and it is undefined as to which one applies to which side etc. What is shown below is two independent
 1-N unidirectional join table relations.*
 
@@ -250,6 +256,8 @@ In the case of a (indexed) List at both ends it doesn't make sense to use a sing
 
 [[many_many_map]]
 == Using Map
+
+NOTE: Supported for RDBMS. Other datastores simply ignore the join table and store the relation in a column in the table of the object with the field.
 
 If we reformulate our classes to use Map fields.
 
