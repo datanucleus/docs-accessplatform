@@ -299,7 +299,10 @@ no identity so we have to retrieve all initially.
 It should be noted that where the collection "element" is not an entity or of a "reference" type (Interface or Object) it will *always* be embedded, and 
 this functionality here applies to embeddable entity elements only. DataNucleus doesn't support the embedding of "reference type" objects currently.
 
-Let's take an example. We are modelling a *Network*, and in our simple model our *Network* has collection of *Device(s)*. So we define our classes as
+Let's take an example. We are modelling a *Network*, and in our simple model our *Network* has collection of *Device(s)*. 
+We decide that instead of *Device* having its own table, we want to persist them into the join table of its relationship with the *Network* since they are only used by the network itself. 
+
+So we define our classes, using annotations, as follows
 
 [source,java]
 -----
@@ -310,6 +313,7 @@ public class Network
 
     @Embedded
     @ElementCollection
+    @CollectionTable(name="NETWORK_DEVICES", joinColumns=@JoinColumn(name="NETWORK_ID"))
     private Collection<Device> devices = new HashSet<>();
 
     public Network(String name)
@@ -323,8 +327,10 @@ public class Network
 @Embeddable
 public class Device
 {
+    @Column(name="DEVICE_NAME")
     private String name;
 
+    @Column(name="DEVICE_IP_ADDR")
     private String ipAddress;
 
     public Device(String name, String addr)
@@ -337,16 +343,13 @@ public class Device
 }
 -----
 
-We decide that instead of *Device* having its own table, we want to persist them into the join table of its relationship with the *Network* 
-since they are only used by the network itself. We define our MetaData like this
+Alternatively using XML MetaData
 
 [source,xml]
 -----
 <entity name="mydomain.Network">
     <attributes>
-        <basic name="name">
-            <column="NAME" length="40"/>
-        </basic>
+        ...
         <element-collection name="devices">
             <collection-table name="NETWORK_DEVICES">
                 <join-column name="NETWORK_ID"/>
@@ -371,7 +374,7 @@ So here we will end up with a table `NETWORK` with columns `NETWORK_ID`, and `NA
 
 image:../images/embedded_collection_embedded_db.png[]
 
-Note that if you want to override the name of the fields of the embedded element in the table of the owner, you should use `@AttributeOverride` 
+Note that if you want to override the name of the fields of the embedded element in the collection table, you could use `@AttributeOverride` 
 (when using annotations) or `<attribute-override>` (when using XML).
 
 See also :-
