@@ -3,7 +3,7 @@
 :_basedir: ../
 :_imagesdir: images/
 
-The JPA 2.1 specification adds support for calling stored procedures through its API.
+The JPA specification supports calling stored procedures through its API.
 It allows some flexibility in the type of stored procedure being used, supporting IN/OUT/INOUT parameters as well as result sets being returned. 
 Obviously if a datastore does not support stored procedures then this functionality will not apply.
 
@@ -15,7 +15,7 @@ StoredProcedureQuery spq = em.createStoredProcedureQuery("PERSON_SP_1");
 -----
 
 You should familiarise yourself with the StoredProcedureQuery 
-http://www.datanucleus.org:15080/javadocs/javax.persistence/2.1/javax/persistence/StoredProcedureQuery.html[image:../images/javadoc.png[Javadoc]] API.
+http://www.datanucleus.org:15080/javadocs/javax.persistence/2.2/javax/persistence/StoredProcedureQuery.html[image:../images/javadoc.png[Javadoc]] API.
 
 If we have any parameters in this stored procedure we need to register them, for example
 

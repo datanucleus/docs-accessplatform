@@ -18,11 +18,9 @@ These are :-
 NOTE: Applicable to RDBMS, NeoDatis, MongoDB
 
 Many datastores provide the ability to have indexes defined to give performance benefits.
-With RDBMS the indexes are specified on the table and the indexes to the rows are stored 
-separately. In the same way an ODBMS typically allows indexes to be specified on the fields 
-of the class, and these are managed by the datastore. JPA 2.1 allows you to define the indexes
-on a table-by-table basis by metadata as in the following example (note that you cannot specify
-indexes on a field basis like in JDO)
+With RDBMS the indexes are specified on the table and the indexes to the rows are stored separately. 
+In the same way an ODBMS typically allows indexes to be specified on the fields of the class, and these are managed by the datastore. 
+JPA allows you to define the indexes on a table-by-table basis by metadata as in the following example (note that you cannot specify indexes on a field basis like in JDO)
 
 [source,java]
 -----
@@ -135,7 +133,7 @@ NOTE: Applicable to RDBMS
 When objects have relationships with one object containing, for example, a Collection of another object, it is common to store a foreign key 
 in the datastore representation to link the two associated tables. Moreover, it is common to define behaviour about what happens to the dependent 
 object when the owning object is deleted. Should the deletion of the owner cause the deletion of the dependent object maybe ? 
-JPA 2.1 adds support for defining the foreign key for relation fields as per the following example
+JPA supports defining the foreign key for relation fields as per the following example
 
 [source,java]
 -----
