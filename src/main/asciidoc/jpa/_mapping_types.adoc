@@ -398,6 +398,8 @@ DataNucleus supports a very wide range of temporal types, with flexibility in ho
 == Collection/Map types
 
 DataNucleus supports a very wide range of collection, list and map types.
+It also supports the declared type to be not just interfaces (`Collection`, `Set`, `List`, `Map`) but also common implementations (unlike many
+other JPA providers which only support the interface types).
 
 [cols="4,1,1,1,6", options="header"]
 |===
@@ -406,6 +408,48 @@ DataNucleus supports a very wide range of collection, list and map types.
 |Proxy?
 |PK?
 |Comments
+
+|java.util.Collection
+|icon:times[]
+|icon:check[]
+|icon:times[]
+|See link:mapping.html#one_many_relations[the 1-N Collections Guide]
+
+|java.util.List
+|icon:times[]
+|icon:check[]
+|icon:times[]
+|See link:mapping.html#one_many_list[the 1-N Lists Guide]
+
+|java.util.Map
+|icon:times[]
+|icon:check[]
+|icon:times[]
+|See link:mapping.html#one_many_map[the 1-N Maps Guide]
+
+|java.util.Queue
+|icon:times[]
+|icon:check[]
+|icon:times[]
+|The comparator is specifiable via the metadata extension _comparator-name_ (see below). See link:mapping.html#one_many_list[the 1-N Lists Guide]
+
+|java.util.Set
+|icon:times[]
+|icon:check[]
+|icon:times[]
+|See link:mapping.html#one_many_relations[the 1-N Collections Guide]
+
+|java.util.SortedMap
+|icon:times[]
+|icon:check[]
+|icon:times[]
+|The comparator is specifiable via the metadata extension _comparator-name_ (see below). See link:mapping.html#one_many_map[the 1-N Maps Guide]
+
+|java.util.SortedSet
+|icon:times[]
+|icon:check[]
+|icon:times[]
+|The comparator is specifiable via the metadata extension _comparator-name_ (see below). See link:mapping.html#one_many_relations[the 1-N Collections Guide]
 
 |java.util.ArrayList
 |icon:times[]
@@ -418,12 +462,6 @@ DataNucleus supports a very wide range of collection, list and map types.
 |icon:check[]
 |icon:times[]
 |Persisted as collection by default, but will be stored as String when the datastore doesn't provide for collection storage
-
-|java.util.Collection
-|icon:times[]
-|icon:check[]
-|icon:times[]
-|See link:mapping.html#one_many_relations[the 1-N Collections Guide]
 
 |java.util.HashMap
 |icon:times[]
@@ -461,18 +499,6 @@ DataNucleus supports a very wide range of collection, list and map types.
 |icon:times[]
 |See link:mapping.html#one_many_list[the 1-N Lists Guide]
 
-|java.util.List
-|icon:times[]
-|icon:check[]
-|icon:times[]
-|See link:mapping.html#one_many_list[the 1-N Lists Guide]
-
-|java.util.Map
-|icon:times[]
-|icon:check[]
-|icon:times[]
-|See link:mapping.html#one_many_map[the 1-N Maps Guide]
-
 |java.util.Properties
 |icon:times[]
 |icon:check[]
@@ -484,30 +510,6 @@ DataNucleus supports a very wide range of collection, list and map types.
 |icon:check[]
 |icon:times[]
 |The comparator is specifiable via the metadata extension _comparator-name_ (see below). See link:mapping.html#one_many_list[the 1-N Lists Guide]
-
-|java.util.Queue
-|icon:times[]
-|icon:check[]
-|icon:times[]
-|The comparator is specifiable via the metadata extension _comparator-name_ (see below). See link:mapping.html#one_many_list[the 1-N Lists Guide]
-
-|java.util.Set
-|icon:times[]
-|icon:check[]
-|icon:times[]
-|See link:mapping.html#one_many_relations[the 1-N Collections Guide]
-
-|java.util.SortedMap
-|icon:times[]
-|icon:check[]
-|icon:times[]
-|The comparator is specifiable via the metadata extension _comparator-name_ (see below). See link:mapping.html#one_many_map[the 1-N Maps Guide]
-
-|java.util.SortedSet
-|icon:times[]
-|icon:check[]
-|icon:times[]
-|The comparator is specifiable via the metadata extension _comparator-name_ (see below). See link:mapping.html#one_many_relations[the 1-N Collections Guide]
 
 |java.util.Stack
 |icon:times[]
