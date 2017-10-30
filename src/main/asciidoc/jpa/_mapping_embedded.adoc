@@ -374,8 +374,13 @@ So here we will end up with a table `NETWORK` with columns `NETWORK_ID`, and `NA
 
 image:../images/embedded_collection_embedded_db.png[]
 
-Note that if you want to override the name of the fields of the embedded element in the collection table, you could use `@AttributeOverride` 
+
+NOTE: If you want to override the name of the fields of the embedded element in the collection table, you could use `@AttributeOverride` 
 (when using annotations) or `<attribute-override>` (when using XML).
+
+NOTE: By default a primary key constraint will be added to the table containing the embedded elements, formed from the id of the owner plus all columns representing fields of the element. 
+You can turn this off using `@Extension(key="primary-key" value="false")`
+
 
 See also :-
 
