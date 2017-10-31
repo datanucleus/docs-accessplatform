@@ -4,7 +4,9 @@
 :_imagesdir: images/
 
 You have a 1-N (one to many) or N-1 (many to one) when you have one object of a class that has a Collection of objects of another class.
-*Please note that Collections allow duplicates whilst Sets don't allow duplicates, and so the persistence process reflects this with the choice of primary keys.*. 
+
+NOTE: Collections allow duplicates whilst Sets don't allow duplicates, and so the persistence process reflects this with the choice of primary keys.
+
 There are two principal ways in which you can represent this in a datastore : *Join Table* (where a join table is used to provide the relationship mapping 
 between the objects), and *Foreign-Key* (where a foreign key is placed in the table of the object contained in the Collection.
 
