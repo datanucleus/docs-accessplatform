@@ -233,9 +233,9 @@ TIP: If you invoke an operation that will retrieve the one-to-one field (of the 
 can add the metadata extension _fetch-fk-only_ (set to "true") to the field/property.
 
 
-[[one_one_uni_join]]
-== Unidirectional JoinTable
+[[one_one_bi_join]]
+== bidirectional JoinTable
 
-NOTE: DataNucleus does not support a 1-1 relation using a join table. It is not a use-case that is very common and is not part of the JDO spec. 
-You could look at link:mapping.html#many_one_join[N-1 unidirectional using join table] if you really want to do this
+NOTE: DataNucleus does not support a BIDIRECTIONAL 1-1 relation using a join table. It is not a use-case that is very common and is not part of the JDO spec. 
+You could look at a unidirectional relation with join table, or model it using a foreign key.
 
