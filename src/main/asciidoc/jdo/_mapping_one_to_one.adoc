@@ -87,6 +87,74 @@ you can add the metadata extension _fetch-fk-only_ (set to "true") to the field/
 
 
 
+[[one_one_uni_join]]
+== Unidirectional with JoinTable
+
+NOTE: Supported for RDBMS. Other datastores simply ignore the join table and store the relation in a column in the table of the object with the field.
+
+For this case we have the same 2 classes, *User* and *Account*, as before.
+
+[source,java]
+-----
+public class Account
+{
+    User user;
+
+    ...
+}
+
+public class User
+{
+    ...
+}
+-----
+
+so the *Account* class knows about the *User* class, but not vice-versa and the relation is stored using a join table. 
+A particular user could be related to several accounts. If you define the annotations as follows
+
+[source,java]
+-----
+public class Account
+{
+    ...
+
+    @Persistent(table="ACCOUNT_USER")
+    @Join
+    User user;
+}
+-----
+
+or with XML metadata
+
+[source,xml]
+-----
+<package name="mydomain">
+    <class name="User" identity-type="datastore">
+        ...
+    </class>
+
+    <class name="Account" identity-type="datastore">
+        ...
+        <field name="user" persistence-modifier="persistent" table="ACCOUNT_USER">
+            <join/>
+        </field>
+    </class>
+</package>
+-----
+
+For RDBMS this will create 3 tables in the database, `USER` (for class *User*), `ACCOUNT` (for class *Account*), and a join table `ACCOUNT_USER` as shown below.
+
+image:../images/relationship_N_1_uni_db.png[]
+
+If you wish to specify the names of the database tables and columns for these classes, you can use the attribute _table_ (on the `<class>` element), 
+the attribute _table_ on the `<field>`, the attribute _name_ (on the `<column>` element) and the attribute _name_ (on the *column* attribute under `<join>`)
+
+
+NOTE: In the case of non-RDBMS datastores there is no join-table, simply a "column" in the `ACCOUNT` table, storing the "id" of the related object
+
+
+
+
 [[one_one_bi]]
 == Bidirectional ForeignKey
 
