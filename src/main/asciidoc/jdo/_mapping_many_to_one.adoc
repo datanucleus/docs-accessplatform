@@ -113,7 +113,8 @@ public class Account
 {
     ...
 
-    @Join(table="ACCOUNT_USER")
+    @Persistent(table="ACCOUNT_USER")
+    @Join
     User user;
 }
 -----
@@ -129,7 +130,7 @@ or with XML metadata
 
     <class name="Account" identity-type="datastore">
         ...
-        <field name="user" persistence-modifier="persistent">
+        <field name="user" table="ACCOUNT_USER">
             <join/>
         </field>
     </class>
