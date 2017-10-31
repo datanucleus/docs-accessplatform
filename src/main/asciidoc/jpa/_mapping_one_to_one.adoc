@@ -95,6 +95,85 @@ NOTE: If you call _EntityManager.remove()_ on the end of a 1-1 unidirectional re
 an exception will typically be thrown (assuming the datastore supports foreign keys). To delete this record you should remove the other objects association first.
 
 
+[[one_one_uni_join]]
+== Unidirectional with JoinTable
+
+NOTE: Supported for RDBMS. Other datastores simply ignore the join table and store the relation in a column in the table of the object with the field.
+
+For this case we have the same 2 classes, *User* and *Account*, as before.
+
+[source,java]
+-----
+public class Account
+{
+    User user;
+
+    ...
+}
+
+public class User
+{
+    ...
+}
+-----
+
+so the *Account* class knows about the *User* class, but not vice-versa, and are using a join table. 
+A particular user could be related to several accounts. If you define the annotations for these classes as follows
+
+[source,java]
+-----
+@Entity
+public class Account
+{
+    @OneToOne
+    @JoinTable(name="ACCOUNT_USER")
+    User user;
+
+    ....
+}
+-----
+
+or using XML metadata
+
+[source,xml]
+-----
+<entity-mappings>
+    <entity class="User">
+        <table name="USER"/>
+        <attributes>
+            <id name="id">
+                <column name="USER_ID"/>
+            </id>
+            ...
+        </attributes>
+    </entity>
+
+    <entity class="Account">
+        <table name="ACCOUNT"/>
+        <attributes>
+            <id name="id">
+                <column name="ACCOUNT_ID"/>
+            </id>
+            ...
+            <one-to-one name="user">
+                <join-table name="ACCOUNT_USER"/>
+            </one-to-one>
+        </attributes>
+    </entity>
+</entity-mappings>
+-----
+
+alternatively using annotations
+
+This will create 3 tables in the database, `USER` (for class *User*), `ACCOUNT` (for class *Account*), and a join table `ACCOUNT_USER`, as shown below.
+
+image:../images/relationship_N_1_uni_db.png[]
+
+NOTE: in the case of non-RDBMS datastores there is no join-table, simply a "column" in the `ACCOUNT` "table", storing the "id" of the related object
+
+
+
+
 [[one_one_bi]]
 == Bidirectional ForeignKey
 
@@ -187,9 +266,9 @@ For other types of datastore it will have a _USER_ID_ column in the `ACCOUNT` ta
 NOTE: When forming the relation please make sure that *you set the relation at BOTH sides* since DataNucleus would have no way of knowing which end is correct if you only set one end.
 
 
-[[one_one_uni_join]]
-== Unidirectional JoinTable
+[[one_one_bi_join]]
+== Bidirectional JoinTable
 
-NOTE: DataNucleus does not support a 1-1 relation using a join table. It is not a use-case that is very common and is not part of the JPA spec. 
-You could look at link:mapping.html#many_one_join[N-1 unidirectional using join table] if you really want to do this
+NOTE: DataNucleus does not support a 1-1 BIDIRECTIONAL relation using a join table. It is not a use-case that is very common and is not part of the JPA spec. 
+You could look at doing that as a unidirectional relation.
 
