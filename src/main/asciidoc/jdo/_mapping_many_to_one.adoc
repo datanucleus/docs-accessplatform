@@ -117,7 +117,8 @@ public class Account
 {
     ...
 
-    @Join(table="ACCOUNT_USER")
+    @Persistent(table="ACCOUNT_USER")
+    @Join
     User user;
 }
 -----
@@ -133,7 +134,7 @@ or with XML metadata
 
     <class name="Account" identity-type="datastore">
         ...
-        <field name="user" persistence-modifier="persistent">
+        <field name="user" persistence-modifier="persistent" table="ACCOUNT_USER">
             <join/>
         </field>
     </class>
@@ -144,8 +145,8 @@ For RDBMS this will create 3 tables in the database, `USER` (for class *User*), 
 
 image:../images/relationship_N_1_uni_db.png[]
 
-If you wish to specify the names of the database tables and columns for these classes, you can use the attribute _table_ (on the `<class>` element), the attribute _name_ 
-(on the `<column>` element) and the attribute _name_ (on the *column* attribute under `<join>`)
+If you wish to specify the names of the database tables and columns for these classes, you can use the attribute _table_ (on the `<class>` element), 
+the attribute _table_ on the `<field>`, the attribute _name_ (on the `<column>` element) and the attribute _name_ (on the *column* attribute under `<join>`)
 
 
 NOTE: In the case of non-RDBMS datastores there is no join-table, simply a "column" in the `ACCOUNT` table, storing the "id" of the related object
