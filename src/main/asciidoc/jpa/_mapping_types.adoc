@@ -559,7 +559,8 @@ When instantiating the SortedSet field, it will create it with a comparator of t
 
 == Enums
 
-By default an Enum is persisted as either a String form (the name), or as an integer form (the ordinal). You control which form by specifying the `@Enumerated` annotation (or equivalent XML). 
+By default an Enum is persisted as either a String form (the name), or as an integer form (the ordinal). 
+You control which form by specifying the `@Enumerated` annotation (or equivalent XML). 
 
 [cols="4,1,1,1,6", options="header"]
 |===
@@ -575,6 +576,9 @@ By default an Enum is persisted as either a String form (the name), or as an int
 |icon:check[]
 |Persisted as String (name) or int (ordinal). Specified via `@Enumerated` annotation or equivalent XML.
 |===
+
+
+=== Enum custom values
 
 image:../images/nucleus_extension.png[]
 
@@ -613,6 +617,9 @@ MyColour colour;
 -----
 
 this will now persist 1, 3, 5, 8, being the "value" of each of the enum options. You can use this method to persist "int", "short", or "String" types.
+
+
+=== Enum CHECK constraints
 
 image:../images/nucleus_extension.png[]
 
@@ -859,9 +866,11 @@ But the recommendation is to not use them, unless you have a mapping scenario th
 for PostGIS, any attempt to read or persist one of those data types in another mapping scenario will result in failure!
 
 
+=== Geospatial metadata extensions
+
 image:../images/nucleus_extension.png[]
 
-datanucleus-geospatial has defined some metadata extensions that can be used to give additional information about the geometry types in use. 
+`datanucleus-geospatial` has defined some metadata extensions that can be used to give additional information about the geometry types in use. 
 The position of these tags in the meta-data determines their scope. If you use them inside a &lt;field&gt;-tag the values are only used for that field specifically, if 
 you use them inside the &lt;package&gt;-tag the values are in effect for all (geometry) fields of all classes inside that package, etc. 
 
