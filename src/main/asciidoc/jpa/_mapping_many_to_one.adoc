@@ -16,8 +16,8 @@ included in the string) of the related object.
 NOTE: You cannot have an N-1 relation to a long or int field! JPA is for use with object-oriented systems, not flat data.
 
 
-[[many_one_fk]]
-== Unidirectional with ForeignKey
+[[many_one_uni_fk]]
+== Unidirectional ForeignKey
 
 For this case you could have 2 classes, *User* and *Account*, as below.
 
@@ -85,8 +85,8 @@ and a foreign-key in the `ACCOUNT` table, just like for the case of a link:mappi
 NOTE: in the case of non-RDBMS datastores there is simply a "column" in the `ACCOUNT` "table", storing the "id" of the related object*
 
 
-[[many_one_join]]
-== Unidirectional with JoinTable
+[[many_one_uni_join]]
+== Unidirectional JoinTable
 
 NOTE: Supported for RDBMS. Other datastores simply ignore the join table and store the relation in a column in the table of the object with the field.
 
@@ -162,13 +162,22 @@ image:../images/relationship_N_1_uni_db.png[]
 NOTE: in the case of non-RDBMS datastores there is no join-table, simply a "column" in the `ACCOUNT` "table", storing the "id" of the related object
 
 
-== Bidirectional
+[[many_one_bi_fk]]
+== Bidirectional ForeignKey
 
 This relationship is described in the guide for link:mapping.html#one_many_relations[1-N relationships]. 
-In particular there are 2 ways to define the relationship for RDBMS : the link:mapping.html#one_many_join_bi[first] uses a Join Table to hold the relationship, 
-whilst the link:mapping.html#one_many_fk_bi[second] uses a Foreign Key in the "N" object to hold the relationship. 
-For non-RDBMS datastores each side will have a "column" (or equivalent) in the "table" of the N side storing the "id" of the related (owning) object.
-Please refer to the 1-N relationships bidirectional relations since they show this exact relationship.
+This link:mapping.html#one_many_fk_bi[relation] uses a Foreign Key in the "N" object to hold the relationship. 
+
+NOTE : For non-RDBMS datastores each side will have a "column" (or equivalent) in the "table" of the N side storing the "id" of the related (owning) object.
+
+
+[[many_one_bi_join]]
+== Bidirectional JoinTable
+
+This relationship is described in the guide for link:mapping.html#one_many_relations[1-N relationships]. 
+This link:mapping.html#one_many_join_bi[relation] uses a Join Table to link to the "N" object, with this table holding the relationship. 
+
+NOTE : For non-RDBMS datastores there is no join table, and each side will have a "column" (or equivalent) in the "table", storing the "id" of the related object(s).
 
 
 
