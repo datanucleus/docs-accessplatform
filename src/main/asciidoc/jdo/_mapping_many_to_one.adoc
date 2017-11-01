@@ -149,7 +149,7 @@ If you wish to specify the names of the database tables and columns for these cl
 the attribute _table_ on the `<field>`, the attribute _name_ (on the `<column>` element) and the attribute _name_ (on the *column* attribute under `<join>`)
 
 
-NOTE: In the case of non-RDBMS datastores there is no join-table, simply a "column" in the `ACCOUNT` table, storing the "id" of the related object
+NOTE: For non-RDBMS datastores there is no join-table, simply a "column" in the `ACCOUNT` table, storing the "id" of the related object
 
 
 
@@ -159,7 +159,7 @@ NOTE: In the case of non-RDBMS datastores there is no join-table, simply a "colu
 This relationship is described in the guide for link:mapping.html#one_many_relations[1-N relationships]. 
 This link:mapping.html#one_many_fk_bi[relation] uses a Foreign Key in the "N" object to hold the relationship. 
 
-NOTE : For non-RDBMS datastores each side will have a "column" (or equivalent) in the "table" of the N side storing the "id" of the related (owning) object.
+NOTE: For non-RDBMS datastores each side will have a "column" (or equivalent) in the "table" of the N side storing the "id" of the related (owning) object.
 
 
 [[many_one_bi_join]]
@@ -168,6 +168,6 @@ NOTE : For non-RDBMS datastores each side will have a "column" (or equivalent) i
 This relationship is described in the guide for link:mapping.html#one_many_relations[1-N relationships]. 
 This link:mapping.html#one_many_join_bi[relation] uses a Join Table to link to the "N" object, with this table holding the relationship. 
 
-NOTE : For non-RDBMS datastores there is no join table, and each side will have a "column" (or equivalent) in the "table", storing the "id" of the related object(s).
+NOTE: For non-RDBMS datastores there is no join table, and each side will have a "column" (or equivalent) in the "table", storing the "id" of the related object(s).
 
 
