@@ -151,8 +151,8 @@ There are some other combinations of MetaData tags that result in serialising of
 
 * *Map<non-_persistable_, non-_persistable_>, and no <join> is specified.*
 Since the keys/values don't have a table of their own, the only option is to serialise the whole map and it appears as a single BLOB field in the table of the main class.
-* *Map<non-_persistable_, _persistable_>, with "embedded-value" set to *true*
-and no <join> is specified.* Since the keys/values are embedded and there is no join table, then the whole map is serialised as above.
+* *Map<non-_persistable_, _persistable_>, with "embedded-value" set to true and no <join> is specified.* 
+Since the keys/values are embedded and there is no join table, then the whole map is serialised as above.
 
 See also :-
 
