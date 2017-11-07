@@ -623,14 +623,20 @@ this will now persist 1, 3, 5, 8, being the "value" of each of the enum options.
 
 image:../images/nucleus_extension.png[]
 
-A DataNucleus extension is available for RDBMS datastores where you are storing the _name_ of the enum, and to put a CHECK constraint on the column.
+NOTE: Supported for RDBMS datastores.
+
+If where you are storing the _name_ of the enum, you can put a CHECK constraint on the column contents in the datastore.
 You specify it like this
 
 [source,java]
 -----
-@Extension(key="enum-check-constraint", value="true")
+@Extension(vendorName="datanucleus", key="enum-check-constraint", value="true")
 MyColour colour;
 -----
+
+This is portable across all RDBMS datastores, unlike native datastore "enum" types, which only work for a minority of RDBMS.
+
+
 
 == Geospatial Types
 
