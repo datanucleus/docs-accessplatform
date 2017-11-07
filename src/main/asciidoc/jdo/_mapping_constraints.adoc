@@ -70,6 +70,8 @@ So we are thinking more from a database perspective. Here we define our indexes 
 
 This creates an index for the specified column (where the datastore supports columns i.e RDBMS).
 
+=== Enhanced index creation
+
 image:../images/nucleus_extension.png[]
 
 Should you have need to tailor the index creation, for example to generate a particular type of index (where the datastore supports it), 
@@ -83,6 +85,13 @@ you can specify extended settings that is appended to the end of any _CREATE IND
     </index>
     ...
 </class>
+-----
+
+or alternatively using annotations
+
+[source,java]
+-----
+@Index(name-"MY_BOOKING_INDEX" extensions={@Extension(vendorName="datanucleus", key="extended-setting", value=" USING HASH")})
 -----
 
 See also :-
