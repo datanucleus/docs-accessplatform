@@ -65,7 +65,7 @@ There are some other combinations of MetaData tags that result in serialising of
 
 * *Collection of non-_persistable_ elements, and no <join> is specified.*
 Since the elements don't have a table of their own, the only option is to serialise the whole collection and it appears as a single BLOB field in the table of the main class.
-* *Collection of _persistable_ elements, with "embedded-element" set to *true* and no <join> is specified.*
+* *Collection of _persistable_ elements, with "embedded-element" set to true and no <join> is specified.*
 Since the elements are embedded and there is no join table, then the whole collection is serialised as above.
 
 See also :-
