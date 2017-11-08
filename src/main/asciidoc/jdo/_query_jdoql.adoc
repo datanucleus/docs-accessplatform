@@ -178,7 +178,7 @@ taxPercent < mydomain.Product.TAX_BAND_A
 So this will find all products that include a tax percentage less than some "BAND A" level.
 Where you are using "public static final" fields you can either fully-qualify the class name or you can include it in the "imports" section of the query (see later).
 
-NOTE: with JDOQL you do not do _explicit_ joins. You instead use the fields/properties and navigate to the object you want to make use of in your query
+NOTE: With JDOQL you do not do _explicit_ joins. You instead use the fields/properties and navigate to the object you want to make use of in your query
 
 With 1-1/N-1 relations this is simply a reference to the field/property, and place some restriction on it, like this
 
@@ -1040,7 +1040,7 @@ This is done until the class is loaded, or the type namespace package names are 
 Note that the search algorithm can be problematic in performance terms if the class is not fully qualified or declared in imports using package notation. 
 To avoid such problems, either use fully qualified class names or import the class in the imports declaration.
 
-NOTE: If you always fully-qualify candidate, variable and parameter types then there is no need to specify any _imports_ (just like in Java).
+NOTE: If you always fully-qualify the candidate, variable and parameter types then there is no need to specify any _imports_ (just like in Java).
 
 
 [[jdoql_ifelse]]
@@ -1243,7 +1243,7 @@ SELECT FROM mydomain.Manager WHERE !(SELECT FROM mydomain.Employee e).contains(t
 -----
 
 
-NOTE: There is no _size()_ method but you can achieve the same by selecting `COUNT(e)` in the subquery (where `e` is the subquery alias).
+NOTE: There is no _size()_ method on subqueries but you can achieve the same by selecting `COUNT(e)` in the subquery (where `e` is the subquery alias).
 
 
 
@@ -1298,12 +1298,14 @@ This is achieved when you specified either UNIQUE, or just an aggregate (e.g "ma
 
 
 With the string-based API the _result_ is part of the query. With the Declarative API you would specify the result like this
+
 [source,java]
 -----
 q.result(result);
 
 // alternatively q.setResult(result)
 -----
+
 
 
 [[jdoql_resultclass]]
@@ -1402,6 +1404,7 @@ Note that this is only supported for a few RDBMS (H2, HSQLDB, PostgreSQL, DB2, O
 
 
 With the string-based API the _ordering_ would be part of the query (_ORDER BY {ordering}_). With the Declarative API you would specify the ordering like this
+
 [source,java]
 -----
 q.orderBy(ordering);
@@ -1422,6 +1425,7 @@ which will return just the results numbers 10-19 inclusive.
 Obviously bear in mind that if specifying the range then you should really specify an link:#jdoql_ordering[ordering] otherwise the range positions will be not defined.
 
 With the string-based API the _ordering_ would be part of the query (_RANGE {start,end}_). With the Declarative API you would specify the range like this
+
 [source,java]
 -----
 q.range(10, 20);
