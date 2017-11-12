@@ -626,7 +626,7 @@ image:../images/nucleus_extension.png[]
 
 NOTE: Supported for RDBMS datastores.
 
-If where you are storing the _name_ of the enum, you can put a CHECK constraint on the column contents in the datastore.
+If you want to constraint the column where the Enum is stored to only have the values for that enum you can put a CHECK constraint on the column contents in the datastore.
 You specify it like this
 
 [source,java]
@@ -635,7 +635,14 @@ You specify it like this
 MyColour colour;
 -----
 
-This is portable across all RDBMS datastores, unlike native datastore "enum" types, which only work for a minority of RDBMS.
+This results in a column defined like
+
+[source,sql]
+-----
+MY_COL VARCHAR(10) CHECK (MY_COL IN ('RED', 'GREEN', 'BLUE')),
+-----
+
+NOTE: This is the recommended way of constraining enum values in the datastore since it uses ANSI SQL, and it is a better more portable solution than using such as PostgreSQL enum type.
 
 
 
