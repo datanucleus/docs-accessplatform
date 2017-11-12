@@ -557,6 +557,8 @@ SortedSet<MyElementType> elements;
 
 When instantiating the SortedSet field, it will create it with a comparator of the specified class (which must have a default constructor).
 
+- - -
+
 
 == Enums
 
@@ -644,6 +646,7 @@ MY_COL VARCHAR(10) CHECK (MY_COL IN ('RED', 'GREEN', 'BLUE')),
 
 NOTE: This is the recommended way of constraining enum values in the datastore since it uses ANSI SQL, and it is a better more portable solution than using such as PostgreSQL enum type.
 
+- - -
 
 
 == Geospatial Types
@@ -932,6 +935,9 @@ you use them inside the &lt;package&gt;-tag the values are in effect for all (ge
 * *[2]* - Every JTS geometry object can have a user data object attached to it. The default behaviour is to serialize that object and store it in a separate column in the database. 
 If for some reason this isn't desired, the *mapping* extension can be used with value &quot;no-mapping&quot; and datanucleus-geospatial will ignore the user data objects.
 * *[3]* - If you want to use measure types in PostGIS you have to define that using the *postgis-hasMeasure* extension.
+
+
+- - -
 
 
 == Other Types

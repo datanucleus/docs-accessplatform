@@ -560,6 +560,9 @@ SortedSet<MyElementType> elements;
 When instantiating the SortedSet field it will create it with a comparator of the specified class (which must have a default constructor).
 
 
+- - -
+
+
 == Enums
 
 DataNucleus supports persisting Enums, and they can be stored as either the _ordinal_ (numeric column) or _name_ (String column).
@@ -643,6 +646,8 @@ MY_COL VARCHAR(10) CHECK (MY_COL IN ('RED', 'GREEN', 'BLUE')),
 
 NOTE: This is the recommended way of constraining enum values in the datastore since it uses ANSI SQL, and it is a better more portable solution than using such as PostgreSQL enum type.
 
+
+- - -
 
 
 == Geospatial Types
@@ -947,6 +952,8 @@ you use them inside the <package>-tag the values are in effect for all (geometry
 If for some reason this isn't desired, the _mapping_ extension can be used with value 
 &quot;no-mapping&quot; and DataNucleus-Geospatial will ignore the user data objects.
 * *[3]* - If you want to use measure types in PostGIS you have to define that using the _postgis-hasMeasure_ extension.
+
+- - -
 
 
 == Other Types
