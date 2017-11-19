@@ -1191,9 +1191,9 @@ Here we list a few of the combinations definitely supported as arrays, but other
 
 == Generic Type Variables
 
-JDO does not explicitly require support for generic type variables. DataNucleus does support some situations with generic type variables.
+JDO does not explicitly require support for generic type variables. DataNucleus provides support for many situations with generic type variables.
 
-The first example that is largely supported is where you have an abstract base class with a generic Type Variable and then you specify the type in the (concrete) subclass(es).
+The first example that is supported is where you have an abstract base class with a generic Type Variable and then you specify the type in the (concrete) subclass(es).
 
 [source,java]
 -----
@@ -1212,7 +1212,7 @@ public class Sub2 extends Base<Integer>
 }
 -----
 
-Similarly you use TypeVariables to form relations, like this
+Similarly you could use TypeVariables to form relations, like this
 
 [source,java]
 -----
@@ -1228,8 +1228,24 @@ public class Document extends Ownable<Person>
 }
 -----
 
-Clearly there are many combinations of where TypeVariables can be used and DataNucleus supports a subset of these currently. 
-Let us know if your generics usage isn't supported.
+
+Similarly, if you use a type argument in a generic declaration for a field, like this
+
+[source,java]
+-----
+public class Owner
+{
+    private List<? extends Element> elements;
+}
+
+public class Element
+{
+    ...
+}
+-----
+
+
+Clearly there are many combinations of where generics and TypeVariables can be used, so let us know if your generics usage isn't supported.
 
 
 
