@@ -664,8 +664,8 @@ You can additionally consider evicting objects from the Level 1 Cache, since the
 == Level 1 Cache
 
 Each _PersistenceManager_ maintains a cache of the objects that it has encountered (or have been "enlisted") during its lifetime. 
-This is termed the *Level 1 Cache*. It is enabled by default and you should only ever disable it if you really know what you are doing.
-There are inbuilt types for the Level 1 (L1) Cache available for selection. DataNucleus supports the following types of L1 Cache :-
+This is termed the *Level 1 (L1) Cache*. It is enabled by default and you should only ever disable it if you really know what you are doing.
+There are inbuilt types for the L1 Cache available for selection. DataNucleus supports the following types of L1 Cache :-
 
 * _weak_ - uses a weak reference backing map. If JVM garbage collection clears the reference, then the object is removed from the cache.
 * _soft_ - uses a soft reference backing map. If the map entry value object is not being actively used, then garbage collection _may_ garbage collect the reference, 

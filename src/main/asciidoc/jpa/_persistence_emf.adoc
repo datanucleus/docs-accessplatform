@@ -1271,7 +1271,7 @@ emf.close();
 == Level 2 Cache
 
 The _EntityManagerFactory_ has an optional cache of all objects across all _EntityManager_s.
-This cache is called the Level 2 (L2) cache, and JPA doesn't define whether this should be enabled or not. With DataNucleus it defaults to enabled.
+This cache is called the *Level 2 (L2) cache*, and JPA doesn't define whether this should be enabled or not. With DataNucleus it defaults to enabled.
 The user can configure the L2 cache if they so wish; by use of the persistence property *datanucleus.cache.level2.type*. You set this to "type" of cache required.
 You currently have the following options.
 
@@ -1293,7 +1293,7 @@ Oracle's caches support distributed caching, so you could, in principle, use Dat
 * link:#cache_level2_memcached[spymemcached] - a simple wrapper to the "spymemcached" client for memcached caching product.
 * link:#cache_level2_memcached[xmemcached] - a simple wrapper to the "xmemcached" client for memcached caching product. 
 * link:#cache_level2_cacheonix[cacheonix] - a simple wrapper to the Cacheonix distributed caching software.
-* *none* - turn OFF Level 2 caching.
+* *none* - turn OFF L2 caching.
 
 The weak, soft and javax.cache caches are available in the datanucleus-core plugin.
 The EHCache, OSCache, Coherence, Cacheonix, and Memcache caches are available in the http://github.com/datanucleus/datanucleus-cache[datanucleus-cache] plugin.
@@ -1308,13 +1308,13 @@ This means that you only have datastore-persisted objects in that cache.
 Also, if an object is deleted during a transaction then at commit it will be removed from the L2 cache if it is present.
 
 link:../extensions/extensions.html#cache_level2[image:../images/nucleus_plugin.png]
-The Level 2 cache is a DataNucleus plugin point allowing you to provide your own cache where you require it. Use the examples of the EHCache, Coherence caches etc as reference.
+The L2 cache is a DataNucleus plugin point allowing you to provide your own cache where you require it. Use the examples of the EHCache, Coherence caches etc as reference.
 
             
 === Controlling the Level 2 Cache
 
 The majority of times when using a JPA-enabled system you will not have to take control over any aspect of the caching other than specification of 
-whether to use a *Level 2* Cache or not. With JPA and DataNucleus you have the ability to control which objects remain in the cache. 
+whether to use a *L2 Cache* or not. With JPA and DataNucleus you have the ability to control which objects remain in the cache. 
 This is available via a method on the _EntityManagerFactory_.
 
 [source,java]
