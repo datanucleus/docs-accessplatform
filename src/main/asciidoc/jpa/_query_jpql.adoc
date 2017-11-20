@@ -346,6 +346,15 @@ Please note that temporal literals are specified using _JDBC escape syntax_ (see
 -----
 
 
+=== RDBMS : Parameters .v. Literals
+
+When considering whether to embody a literal into a JPQL query, you should consider using a parameter instead. 
+The advantage of using a parameter is that the generated SQL will have a '?' rather than the value. As a result, if you are using a connection pool
+that supports PreparedStatement caching, this will potentially reuse an existing statement rather than generating a new one each time.
+If you only ever invoke a query with a single possible value of the parameter then there is no advantage.
+If you invoke the query with multiple possible values of the parameter then this advantage can be significant.
+
+
 [[jpql_parameters]]
 == Parameters
 
@@ -368,14 +377,6 @@ So in the first case we have parameters that are prefixed by *:* (colon) to iden
 In the second case we have parameters that are prefixed by *?* (question mark) and are numbered starting at 1. 
 We then use the numbered position when calling _Query.setParameter()_.
 
-
-=== RDBMS : Parameters .v. Literals
-
-When considering whether to embody a literal into a JPQL query, you should consider using a parameter instead. 
-The advantage of using a parameter is that the generated SQL will have a '?' rather than the value. As a result, if you are using a connection pool
-that supports PreparedStatement caching, this will potentially reuse an existing statement rather than generating a new one each time.
-If you only ever invoke a query with a single possible value of the parameter then there is no advantage.
-If you invoke the query with multiple possible values of the parameter then this advantage can be significant.
 
 
 

@@ -173,7 +173,7 @@ Object results =
     tq.result(false, QProduct.candidate().max(), QProduct.candidate().min()).executeResultUnique();
 -----
 
-                    This equates to the single-string query
+This equates to the single-string query
 
 -----
 SELECT max(this.value), min(this.value) FROM mydomain.Product
@@ -201,6 +201,15 @@ This equates to the single-string query
 -----
 SELECT FROM mydomain.Product WHERE this.value < 40.0 && this.name.startsWith(:prefix) ORDER BY this.name ASCENDING
 -----
+
+=== RDBMS : Parameters .v. Literals
+
+When considering whether to embody a literal into a JDOQL Typed query, you should consider using a parameter instead. 
+The advantage of using a parameter is that the generated SQL will have a '?' rather than the value. As a result, if you are using a connection pool
+that supports PreparedStatement caching, this will potentially reuse an existing statement rather than generating a new one each time.
+If you only ever invoke a query with a single possible value of the parameter then there is no advantage.
+If you invoke the query with multiple possible values of the parameter then this advantage can be significant.
+
 
 
 == Query API - Variables
