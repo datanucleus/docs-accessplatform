@@ -952,6 +952,14 @@ List results = (List)query.execute(150.00);
 
 Note that if declaring multiple parameters then they should be comma-separated.
 
+With the Declarative API you would define explicit parameters like this (and use comma-separated if defining multiple)
+
+[source,java]
+-----
+q.parameters("double limit");
+-----
+
+
 === Implicit Parameters
 
 If you don't declare the parameters when defining the query but instead prefix identifiers in the query with *:* (colon) then these are *implicit* parameters. 
@@ -959,8 +967,7 @@ For example
 
 [source,java]
 -----
-Query query = pm.newQuery(
-    "SELECT FROM mydomain.Product WHERE price < :limit");
+Query query = pm.newQuery("SELECT FROM mydomain.Product WHERE price < :limit");
 List results = (List)query.execute(150.00);
 -----
 
@@ -974,11 +981,44 @@ Normal JDO execution would throw an exception here since they are inconsistent w
 q.addExtension("datanucleus.query.checkUnusedParameters", "false");
 -----
 
-with the Declarative API you would define explicit parameters like this
+=== Setting parameters at execution time
+
+Defining a query to accept parameters is only the first part. You then need to specify the parameter values at execution time. This can be done
+in many ways, but here are some examples
+
 [source,java]
 -----
-q.parameters("double limit");
+// === JDOQL with named parameters ===
+...
+q.setFilter("this.name == :name && this.serialNo == :serial");
+
+Map params = new HashMap();
+params.put("name", "Walkman");
+params.put("serial", "123021");
+
+
+// Set parameter values via method call
+q.setNamedParameters(params);
+
+
+// Alternatively set the parameter values on execute()
+q.executeWithMap(params);
+
+
+
+// === JDOQL with numbered parameters ===
+...
+q.setFilter("this.name == ?1 && this.serialNo == ?2");
+
+// Set parameter values via method call, using the number order of the query parameters
+q.setParameters("Walkman", "123021");
+
+
+// Alternatively set the parameter values on execute(), using the number order of the query parameters
+q.execute("Walkman", "123021");
+
 -----
+
 
 
 [[jdoql_variables]]
