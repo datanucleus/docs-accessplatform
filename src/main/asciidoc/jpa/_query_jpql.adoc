@@ -738,8 +738,16 @@ You have a further function available
 |icon:times[]
 |===
 
+For example, this executes the SQL function 'date_part' (where its is available) with 2 arguments, a Date, and a format. 
+Clearly there are better ways of handling dates than this so it serves simply as an example of invocation
+
+[source,sql]
+-----
+SELECT FUNCTION('date_part', myDate, 'YYYY-MM-DD') FROM ...
+-----
 
 In addition, DataNucleus JPA provides support for a number of link:query.html#jpql_geospatial_functions[Geospatial functions].
+
 
 
 [[jpql_collections]]
