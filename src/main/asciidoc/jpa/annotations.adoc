@@ -2571,8 +2571,9 @@ This DataNucleus-extension annotation is used to define that the class uses data
 
 |generationType
 |GenerationType
-|Strategy to use when generating the values for this field. Has possible values of GenerationType TABLE, SEQUENCE, IDENTITY, AUTO.
-|*AUTO*, TABLE, SEQUENCE
+|Strategy to use when generating the values for this field. Has possible values of GenerationType TABLE, SEQUENCE, IDENTITY, AUTO, UUID.
+Note that UUID is only available if using the DN provided javax.persistence.jar (v2.2+)
+|GenerationType.AUTO
 
 |generator
 |String
