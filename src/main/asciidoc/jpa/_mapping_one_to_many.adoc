@@ -40,6 +40,12 @@ Note also that the hashCode() should be consistent throughout the lifetime of a 
 By that we mean that it should *not* use some basis before persistence and then use some other basis (such as the object identity) after persistence in the equals/hashCode methods.
 
 
+== Ordering of elements
+
+You can only retain the order in a 1-N Collection if you instantiate the Collection as an implementation that supports retaining the order.
+If the order of elements is important to you, use a List, or instantiate using something like a TreeSet where the order is handled.
+
+
 
 [[one_many_join_uni]]
 == Collection<Entity> Unidirectional JoinTable
