@@ -123,14 +123,14 @@ You don't have to support everything at once. The following gives guidelines on 
 
 * Is there a supported datastore that is similar in terms of its access ? If so, copy the existing datastore plugin (renaming packages etc). 
 For example to support another OODB, you could take the "datanucleus-neodatis" plugin as a start point. Develop the XXXStoreManager class. 
-*You are recommended to extend _org.datanucleus.store.AbstractStoreManager_. Make sure you specify the _getSupportedOptions()_ method specifying what is supported*
+*You are recommended to extend* _org.datanucleus.store.AbstractStoreManager_. Make sure you specify the _getSupportedOptions()_ method specifying what is supported.
 * Develop the ConnectionFactoryImpl. This provides connectivity to the datastore. If the datastore has a simple connection that you open then commit then this 
 file will be very simple. Again, copy an existing one if there is something suitable. 
-*You are recommended to extend _org.datanucleus.store.connection.AbstractConnectionFactory_ *
+*You are recommended to extend* _org.datanucleus.store.connection.AbstractConnectionFactory_ 
 * Develop the PersistenceHandler. This provides the capability to do insert/update/delete/fetch/locate and so provides support for persistence to this datastore.
-*You are recommended to extend _org.datanucleus.store.AbstractPersistenceHandler_ *
+*You are recommended to extend* _org.datanucleus.store.AbstractPersistenceHandler_ 
 * Does your datastore support the concept of a "schema" ? i.e you need to create some "table" in the datastore to store objects in? If so then you should implement the SchemaHandler.
-*You are recommended to extend _org.datanucleus.store.schema.AbstractStoreSchemaHandler_ *
+*You are recommended to extend* _org.datanucleus.store.schema.AbstractStoreSchemaHandler_
 * Develop the JDOQL/JPQL support. Make use of the _org.datanucleus.query_ classes. You need to decide how much of the query can be embodied in the native query language 
 of the datastore. If you can't support some feature in the datastore native language then use the in-memory query evaluation
 * Add on support for other features like inheritance strategy, discriminators, version checks, type converters as they are required.
