@@ -237,7 +237,7 @@ Let's see an example of a `jdoconfig.xml`
 -----
 
 So in this example we have 2 named PMFs. The first is known by the name "Datastore" and utilises datastore transactions. 
-The second is known by the name "Optimistic" and utilises optimistic transactions. 
+The second is known by the name "Optimistic" and utilises optimistic locking. 
 You simply define all properties for the particular PMF within its specification block. And finally we instantiate our PMF like this
 
 [source,java]
@@ -321,7 +321,7 @@ Users are always advised to run a PM as single threaded, since some operations a
 {true, *false*}
 
 |javax.jdo.option.Optimistic
-|Whether to use link:persistence.html#locking_optimistic[optimistic transactions]. 
+|Whether to use link:persistence.html#locking_optimistic[optimistic locking]. 
 {true, *false*}
 
 |javax.jdo.option.RetainValues
@@ -470,7 +470,7 @@ Users are always advised to run a PM as single threaded, since some operations a
 {true, *false*}
 
 |datanucleus.Optimistic
-|Whether to use link:persistence.html#locking_optimistic[optimistic transactions]. 
+|Whether to use link:persistence.html#locking_optimistic[optimistic locking]. 
 {true, *false*}
 
 |datanucleus.RetainValues
@@ -1266,7 +1266,7 @@ DataNucleus provides the following properties for configuring query handling use
 
 |datanucleus.query.flushBeforeExecution
 |This property can enforce a flush to the datastore of any outstanding changes just before executing all queries. 
-If using optimistic transactions any updates are typically held back until flush/commit and so the query would otherwise not take them into account.
+If using optimistic locking any updates are typically held back until flush/commit and so the query would otherwise not take them into account.
 {true, *false*}
 
 |datanucleus.query.closeable

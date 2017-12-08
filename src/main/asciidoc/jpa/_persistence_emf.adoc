@@ -380,7 +380,7 @@ Users are always advised to run an EM as single threaded, since some operations 
 {true, *false*}
 
 |datanucleus.Optimistic
-|Whether to use optimistic transactions (link:#locking_optimistic[Optimistic locking]).
+|Whether to use optimistic locking (link:#locking_optimistic[Optimistic locking]).
 {*true*, false}
 
 |datanucleus.RetainValues
@@ -1043,7 +1043,7 @@ DataNucleus provides the following properties for configuring query handling use
 |Description + Values
 
 |datanucleus.query.flushBeforeExecution
-|This property can enforce a flush to the datastore of any outstanding changes just before executing all queries. If using optimistic transactions any updates are typically
+|This property can enforce a flush to the datastore of any outstanding changes just before executing all queries. If using optimistic locking any updates are typically
 held back until flush/commit and so the query would otherwise not take them into account. {true, *false*}
 
 |datanucleus.query.jpql.allowRange
