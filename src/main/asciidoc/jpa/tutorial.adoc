@@ -378,9 +378,9 @@ In our case we firstly need to update the `persistence.xml` with the persistence
 -----
 <properties>
     <property name="javax.persistence.jdbc.url" value="jdbc:h2:mem:nucleus1"/>
-    <property name="javax.persistence.jdbc.driver" value="org.h2.Driver"/>
     <property name="javax.persistence.jdbc.user" value="sa"/>
     <property name="javax.persistence.jdbc.password" value=""/>
+    <property name="javax.persistence.jdbc.driver" value="org.h2.Driver"/>
     <property name="datanucleus.schema.autoCreateAll" value="true"/>
 </properties>
 -----
@@ -526,9 +526,9 @@ For H2 these properties become
 -----
 <properties>
     <property name="javax.persistence.jdbc.url" value="jdbc:h2:mem:nucleus1"/>
-    <property name="javax.persistence.jdbc.driver" value="org.h2.Driver"/>
     <property name="javax.persistence.jdbc.user" value="sa"/>
     <property name="javax.persistence.jdbc.password" value=""/>
+    <property name="javax.persistence.jdbc.driver" value="org.h2.Driver"/>
 
     <property name="javax.persistence.schema-generation.database.action" value="create/>
 </properties>
