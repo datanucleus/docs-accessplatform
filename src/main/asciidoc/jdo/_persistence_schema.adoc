@@ -367,10 +367,6 @@ properties file, or when providing the _persistence-unit_)
 |Description
 |Mandatory
 
-|datanucleus.ConnectionDriverName
-|Name of JDBC driver class
-|icon:check[]
-
 |datanucleus.ConnectionURL
 |URL for the database
 |icon:check[]
@@ -381,6 +377,10 @@ properties file, or when providing the _persistence-unit_)
 
 |datanucleus.ConnectionPassword
 |Password for the database
+|icon:check[]
+
+|datanucleus.ConnectionDriverName
+|Name of JDBC driver class
 |icon:check[]
 
 |datanucleus.Mapping
@@ -394,7 +394,7 @@ properties file, or when providing the _persistence-unit_)
 
 
 So you could define something _like_ the following, setting up the parameters *schematool.classpath*, 
-*datanucleus.ConnectionDriverName*, *datanucleus.ConnectionURL*, *datanucleus.ConnectionUserName*, and *datanucleus.ConnectionPassword* to suit your situation.
+*datanucleus.ConnectionURL*, *datanucleus.ConnectionUserName*, *datanucleus.ConnectionPassword*, *datanucleus.ConnectionDriverName* to suit your situation.
 
 You define the JDO files to create the tables using *fileset*.
 
@@ -409,7 +409,6 @@ You define the JDO files to create the tables using *fileset*.
     <fileset dir="${classes.dir}">
         <include name="**/*.jdo"/>
     </fileset>
-    <sysproperty key="datanucleus.ConnectionDriverName" value="${datanucleus.ConnectionDriverName}"/>
     <sysproperty key="datanucleus.ConnectionURL" value="${datanucleus.ConnectionURL}"/>
     <sysproperty key="datanucleus.ConnectionUserName" value="${datanucleus.ConnectionUserName}"/>
     <sysproperty key="datanucleus.ConnectionPassword" value="${datanucleus.ConnectionPassword}"/>
@@ -427,7 +426,6 @@ If you wish to call *DataNucleus SchemaTool* manually, it can be called as follo
 java [-cp classpath] [system_props] org.datanucleus.store.schema.SchemaTool [modes] [options]
     where system_props (when specified) should include
         -Ddatanucleus.ConnectionURL=db_url
-        -Ddatanucleus.ConnectionDriverName=db_driver_name
         -Ddatanucleus.ConnectionUserName=db_username
         -Ddatanucleus.ConnectionPassword=db_password
         -Dlog4j.configuration=file:{log4j.properties} (optional)

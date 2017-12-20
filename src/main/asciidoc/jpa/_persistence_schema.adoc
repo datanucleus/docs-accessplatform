@@ -362,10 +362,6 @@ properties file, or when providing the _persistence-unit_)
 |Description
 |Optional
 
-|datanucleus.ConnectionDriverName
-|Name of JDBC driver class
-|icon:check[]
-
 |datanucleus.ConnectionURL
 |URL for the database
 |icon:check[]
@@ -378,6 +374,10 @@ properties file, or when providing the _persistence-unit_)
 |Password for the database
 |icon:check[]
 
+|datanucleus.ConnectionDriverName
+|Name of JDBC driver class
+|icon:check[]
+
 |datanucleus.Mapping
 |ORM Mapping name
 |icon:times[]
@@ -388,7 +388,7 @@ properties file, or when providing the _persistence-unit_)
 |===
 
 So you could define something _like_ the following, setting up the parameters *schematool.classpath*, 
-*datanucleus.ConnectionDriverName*, *datanucleus.ConnectionURL*, *datanucleus.ConnectionUserName*, and *datanucleus.ConnectionPassword* 
+*datanucleus.ConnectionURL*, *datanucleus.ConnectionUserName*, *datanucleus.ConnectionPassword*, *datanucleus.ConnectionDriverName* 
 to suit your situation.
 
 
@@ -401,7 +401,6 @@ If you wish to call *DataNucleus SchemaTool* manually, it can be called as follo
 java [-cp classpath] [system_props] org.datanucleus.store.schema.SchemaTool [modes] [options]
     where system_props (when specified) should include
         -Ddatanucleus.ConnectionURL=db_url
-        -Ddatanucleus.ConnectionDriverName=db_driver_name
         -Ddatanucleus.ConnectionUserName=db_username
         -Ddatanucleus.ConnectionPassword=db_password
         -Dlog4j.configuration=file:{log4j.properties} (optional)
