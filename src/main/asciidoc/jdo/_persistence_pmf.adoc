@@ -22,9 +22,9 @@ There are many ways of creating a _PersistenceManagerFactory_, some of which are
 Properties properties = new Properties();
 properties.setProperty("javax.jdo.PersistenceManagerFactoryClass", "org.datanucleus.api.jdo.JDOPersistenceManagerFactory");
 properties.setProperty("javax.jdo.option.ConnectionURL","jdbc:mysql://localhost/myDB");
-properties.setProperty("javax.jdo.option.ConnectionDriverName","com.mysql.jdbc.Driver");
 properties.setProperty("javax.jdo.option.ConnectionUserName","login");
 properties.setProperty("javax.jdo.option.ConnectionPassword","password");
+properties.setProperty("javax.jdo.option.ConnectionDriverName","com.mysql.jdbc.Driver");
 PersistenceManagerFactory pmf = JDOHelper.getPersistenceManagerFactory(properties);
 -----
 
@@ -33,9 +33,9 @@ A slight variation on this, is to have a file to specify these properties in a f
 -----
 javax.jdo.PersistenceManagerFactoryClass=org.datanucleus.api.jdo.JDOPersistenceManagerFactory
 javax.jdo.option.ConnectionURL=jdbc:mysql://localhost/myDB
-javax.jdo.option.ConnectionDriverName=com.mysql.jdbc.Driver
 javax.jdo.option.ConnectionUserName=login
 javax.jdo.option.ConnectionPassword=password
+javax.jdo.option.ConnectionDriverName=com.mysql.jdbc.Driver
 -----
 
 and then to create the _PersistenceManagerFactory_ using this file
@@ -105,10 +105,10 @@ web-application in such as Tomcat). This file will be used to define your _persi
         <class>mydomain.samples.metadata.store.Supplier</class>
         <exclude-unlisted-classes/>
         <properties>
-            <property name="datanucleus.ConnectionDriverName" value="org.h2.Driver"/>
             <property name="datanucleus.ConnectionURL" value="jdbc:h2:mem:datanucleus"/>
             <property name="datanucleus.ConnectionUserName" value="sa"/>
             <property name="datanucleus.ConnectionPassword" value=""/>
+            <property name="datanucleus.ConnectionDriverName" value="org.h2.Driver"/>
         </properties>
     </persistence-unit>
 
@@ -116,10 +116,10 @@ web-application in such as Tomcat). This file will be used to define your _persi
     <persistence-unit name="Accounting">
         <mapping-file>/mydomain/samples/metadata/accounts/package.jdo</mapping-file>
         <properties>
-            <property name="datanucleus.ConnectionDriverName" value="org.h2.Driver"/>
             <property name="datanucleus.ConnectionURL" value="jdbc:h2:mem:datanucleus"/>
             <property name="datanucleus.ConnectionUserName" value="sa"/>
             <property name="datanucleus.ConnectionPassword" value=""/>
+            <property name="datanucleus.ConnectionDriverName" value="org.h2.Driver"/>
         </properties>
     </persistence-unit>
 
@@ -184,9 +184,9 @@ PersistenceUnitMetaData pumd = new PersistenceUnitMetaData("dynamic-unit", "RESO
 pumd.addClassName("mydomain.test.A");
 pumd.setExcludeUnlistedClasses();
 pumd.addProperty("javax.jdo.ConnectionURL", "jdbc:hsqldb:mem:nucleus");
-pumd.addProperty("javax.jdo.ConnectionDriverName", "org.hsqldb.jdbcDriver");
 pumd.addProperty("javax.jdo.ConnectionUserName", "sa");
 pumd.addProperty("javax.jdo.ConnectionPassword", "");
+pumd.addProperty("javax.jdo.ConnectionDriverName", "org.hsqldb.jdbcDriver");
 pumd.addProperty("datanucleus.schema.autoCreateAll", "true");
 
 PersistenceManagerFactory pmf = new JDOPersistenceManagerFactory(pumd, null);
@@ -215,9 +215,9 @@ Let's see an example of a `jdoconfig.xml`
     <persistence-manager-factory name="Datastore">
         <property name="javax.jdo.PersistenceManagerFactoryClass" value="org.datanucleus.api.jdo.JDOPersistenceManagerFactory"/>
         <property name="javax.jdo.option.ConnectionURL" value="jdbc:mysql://localhost/datanucleus?useServerPrepStmts=false"/>
-        <property name="javax.jdo.option.ConnectionDriverName" value="com.mysql.jdbc.Driver"/>
         <property name="javax.jdo.option.ConnectionUserName" value="datanucleus"/>
         <property name="javax.jdo.option.ConnectionPassword" value=""/>
+        <property name="javax.jdo.option.ConnectionDriverName" value="com.mysql.jdbc.Driver"/>
         <property name="javax.jdo.option.Optimistic" value="false"/>
         <property name="datanucleus.schema.autoCreateAll" value="true"/>
     </persistence-manager-factory>
@@ -226,9 +226,9 @@ Let's see an example of a `jdoconfig.xml`
     <persistence-manager-factory name="Optimistic">
         <property name="javax.jdo.PersistenceManagerFactoryClass" value="org.datanucleus.api.jdo.JDOPersistenceManagerFactory"/>
         <property name="javax.jdo.option.ConnectionURL" value="jdbc:mysql://localhost/datanucleus?useServerPrepStmts=false"/>
-        <property name="javax.jdo.option.ConnectionDriverName" value="com.mysql.jdbc.Driver"/>
         <property name="javax.jdo.option.ConnectionUserName" value="datanucleus"/>
         <property name="javax.jdo.option.ConnectionPassword" value=""/>
+        <property name="javax.jdo.option.ConnectionDriverName" value="com.mysql.jdbc.Driver"/>
         <property name="javax.jdo.option.Optimistic" value="true"/>
         <property name="datanucleus.schema.autoCreateAll" value="true"/>
     </persistence-manager-factory>
@@ -259,8 +259,8 @@ An PersistenceManagerFactory is very configurable, and DataNucleus provides many
 With JDO you have 3 ways of specifying the datastore via persistence properties
 
 * *Specify the connection URL/driverName/userName/password* and it will internally create a DataSource for this URL (with optional connection pooling). 
-This is achieved by specifying *javax.jdo.option.ConnectionDriverName*, *javax.jdo.option.ConnectionURL*,
-*javax.jdo.option.ConnectionUserName*, and *javax.jdo.option.ConnectionPassword*
+This is achieved by specifying *javax.jdo.option.ConnectionURL*, *javax.jdo.option.ConnectionUserName*, *javax.jdo.option.ConnectionPassword*
+and optionally *javax.jdo.option.ConnectionDriverName*.
 * *Specify the JNDI name of the connectionFactory*. This is achieved by specifying *javax.jdo.option.ConnectionFactoryName*, and *javax.jdo.option.ConnectionFactory2Name* (for secondary operations)
 * *Specify the DataSource of the connectionFactory*. This is achieved by specifying
 *javax.jdo.option.ConnectionFactory*, and *javax.jdo.option.ConnectionFactory2* (for secondary operations)
@@ -295,9 +295,6 @@ The JNDI routes are typically only for use with RDBMS datastores.
 |The JNDI name for a connection factory for *nontransactional* connections. 
 *Only for RDBMS*, and it must be a JNDI name that points to a javax.sql.DataSource object. See link:persistence.html#datastore_connection[here]
 
-|javax.jdo.option.ConnectionDriverName
-|The name of the driver to use for the DB (typically the JDBC driver class name for RDBMS datastores).
-
 |javax.jdo.option.ConnectionURL
 |URL specifying the datastore to use for persistence.
 Note that this will define the *type of datastore* as well as the datastore itself. Please refer to link:../datastores/datastores.html[the datastores guides]
@@ -308,6 +305,10 @@ for the URL appropriate for the type of datastore you're using.
 
 |javax.jdo.option.ConnectionPassword
 |Password to use for connecting to the DB. See *datanucleus.ConnectionPasswordDecrypter*for a way of providing an encrypted password here
+
+|javax.jdo.option.ConnectionDriverName
+|The name of the driver to use for the DB.
+*Only for RDBMS, and not needed for JDBC4+ drivers*.
 
 |javax.jdo.option.IgnoreCache
 |Whether to ignore the cache for queries. If the user sets this to _true_ then the query will evaluate in the datastore, but the instances returned will be formed
@@ -421,7 +422,8 @@ for the URL appropriate for the type of datastore you're using.
 See property *datanucleus.ConnectionPasswordDecrypter* for a way of providing an encrypted password here
 
 |datanucleus.ConnectionDriverName
-|The name of the (JDBC) driver to use for the DB (for RDBMS only).
+|The name of the (JDBC) driver to use for the DB.
+*Only for RDBMS, and not needed for JDBC 4+ drivers.*
 
 |datanucleus.ConnectionFactory
 |Instance of a connection factory for *transactional* connections. This is an alternative to *datanucleus.ConnectionURL*.

@@ -93,9 +93,9 @@ This file will be used to define your _persistence-unit(s)_. Let's show an examp
         <exclude-unlisted-classes/>
         <properties>
             <property name="javax.persistence.jdbc.url" value="jdbc:h2:datanucleus"/>
-            <property name="javax.persistence.jdbc.driver" value="org.h2.Driver"/>
             <property name="javax.persistence.jdbc.user" value="sa"/>
             <property name="javax.persistence.jdbc.password" value=""/>
+            <property name="javax.persistence.jdbc.driver" value="org.h2.Driver"/>
         </properties>
     </persistence-unit>
 
@@ -105,9 +105,9 @@ This file will be used to define your _persistence-unit(s)_. Let's show an examp
         <mapping-file>com/datanucleus/samples/metadata/accounts/orm.xml</mapping-file>
         <properties>
             <property name="javax.persistence.jdbc.url" value="jdbc:h2:datanucleus"/>
-            <property name="javax.persistence.jdbc.driver" value="org.h2.Driver"/>
             <property name="javax.persistence.jdbc.user" value="sa"/>
             <property name="javax.persistence.jdbc.password" value=""/>
+            <property name="javax.persistence.jdbc.driver" value="org.h2.Driver"/>
         </properties>
     </persistence-unit>
 
@@ -146,8 +146,8 @@ To set the CLASSPATH scanner to a custom version use the persistence property *d
 
 With a persistence-unit you have 2 ways of specifying the datastore to use
 
-* *Specify the connection URL/driverName/userName/password* and it will internally create a DataSource for this URL (or equivalent for non-RDBMS). 
-This is achieved by specifying *javax.persistence.jdbc.url*, *javax.persistence.jdbc.driver*, *javax.persistence.jdbc.user*, and *javax.persistence.jdbc.password* properties. 
+* *Specify the connection URL/userName/password/driverName* and it will internally create a DataSource for this URL (or equivalent for non-RDBMS). 
+This is achieved by specifying *javax.persistence.jdbc.url*, *javax.persistence.jdbc.user*, *javax.persistence.jdbc.password*, *javax.persistence.jdbc.driver* properties. 
 This optionally includes connection pooling dependent on datastore.
                     
 * *Specify the JNDI name of the connectionFactory* (only for RDBMS). 
@@ -193,9 +193,9 @@ PersistenceUnitMetaData pumd = new PersistenceUnitMetaData("dynamic-unit", "RESO
 pumd.addClassName("mydomain.test.A");
 pumd.setExcludeUnlistedClasses();
 pumd.addProperty("javax.persistence.jdbc.url", "jdbc:h2:mem:nucleus");
-pumd.addProperty("javax.persistence.jdbc.driver", "org.h2.Driver");
 pumd.addProperty("javax.persistence.jdbc.user", "sa");
 pumd.addProperty("javax.persistence.jdbc.password", "");
+pumd.addProperty("javax.persistence.jdbc.driver", "org.h2.Driver");
 pumd.addProperty("datanucleus.schema.autoCreateAll", "true");
 
 EntityManagerFactory emf = new JPAEntityManagerFactory(pumd, null);
@@ -237,14 +237,14 @@ schema generation and/or sequence handling will need to use that.
 |URL specifying the datastore to use for persistence. Note that this will define the *type of datastore* as well as the datastore itself. 
 Please refer to link:../datastores/datastores.html[the datastores guides] for the URL appropriate for the type of datastore you're using.
 
-|javax.persistence.jdbc.driver
-|The name of the (JDBC) driver to use for the DB (for RDBMS only).
-
 |javax.persistence.jdbc.user
 |Username to use for connecting to the DB
 
 |javax.persistence.jdbc.password
 |Password to use for connecting to the DB
+
+|javax.persistence.jdbc.driver
+|The name of the (JDBC) driver to use for the DB (for RDBMS only, and not needed for JDBC 4+ drivers).
 
 |javax.persistence.query.timeout
 |Timeout for queries (global)
