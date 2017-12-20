@@ -363,7 +363,7 @@ In JPQL queries it is convenient to pass in parameters so we don't have to defin
 [source,java]
 -----
 # Named Parameters :
-Query q = em.createQuery("SELECT p FROM Person p WHERE p.lastName = :surname AND o.firstName = :forename");
+Query q = em.createQuery("SELECT p FROM Person p WHERE p.lastName = :surname AND p.firstName = :forename");
 q.setParameter("surname", theSurname);
 q.setParameter("forename", theForename);
 
