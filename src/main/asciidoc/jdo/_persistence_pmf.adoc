@@ -258,7 +258,7 @@ An PersistenceManagerFactory is very configurable, and DataNucleus provides many
 
 With JDO you have 3 ways of specifying the datastore via persistence properties
 
-* *Specify the connection URL/driverName/userName/password* and it will internally create a DataSource for this URL (with optional connection pooling). 
+* *Specify the connection URL/userName/password/driverName* and it will internally create a DataSource for this URL (with optional connection pooling). 
 This is achieved by specifying *javax.jdo.option.ConnectionURL*, *javax.jdo.option.ConnectionUserName*, *javax.jdo.option.ConnectionPassword*
 and optionally *javax.jdo.option.ConnectionDriverName*.
 * *Specify the JNDI name of the connectionFactory*. This is achieved by specifying *javax.jdo.option.ConnectionFactoryName*, and *javax.jdo.option.ConnectionFactory2Name* (for secondary operations)
@@ -308,7 +308,8 @@ for the URL appropriate for the type of datastore you're using.
 
 |javax.jdo.option.ConnectionDriverName
 |The name of the driver to use for the DB.
-*Only for RDBMS, and not needed for JDBC4+ drivers*.
+*For RDBMS, and not needed for JDBC4+ drivers*.
+*For LDAP, specifying the initial context factory*.
 
 |javax.jdo.option.IgnoreCache
 |Whether to ignore the cache for queries. If the user sets this to _true_ then the query will evaluate in the datastore, but the instances returned will be formed
