@@ -95,7 +95,6 @@ This file will be used to define your _persistence-unit(s)_. Let's show an examp
             <property name="javax.persistence.jdbc.url" value="jdbc:h2:datanucleus"/>
             <property name="javax.persistence.jdbc.user" value="sa"/>
             <property name="javax.persistence.jdbc.password" value=""/>
-            <property name="javax.persistence.jdbc.driver" value="org.h2.Driver"/>
         </properties>
     </persistence-unit>
 
@@ -107,7 +106,6 @@ This file will be used to define your _persistence-unit(s)_. Let's show an examp
             <property name="javax.persistence.jdbc.url" value="jdbc:h2:datanucleus"/>
             <property name="javax.persistence.jdbc.user" value="sa"/>
             <property name="javax.persistence.jdbc.password" value=""/>
-            <property name="javax.persistence.jdbc.driver" value="org.h2.Driver"/>
         </properties>
     </persistence-unit>
 
@@ -146,7 +144,7 @@ To set the CLASSPATH scanner to a custom version use the persistence property *d
 
 With a persistence-unit you have 2 ways of specifying the datastore to use
 
-* *Specify the connection URL/userName/password/driverName* and it will internally create a DataSource for this URL (or equivalent for non-RDBMS). 
+* *Specify the connection URL/userName/password(/driver)* and it will internally create a DataSource for this URL (or equivalent for non-RDBMS). 
 This is achieved by specifying *javax.persistence.jdbc.url*, *javax.persistence.jdbc.user*, *javax.persistence.jdbc.password*, *javax.persistence.jdbc.driver* properties. 
 This optionally includes connection pooling dependent on datastore.
                     
@@ -195,7 +193,6 @@ pumd.setExcludeUnlistedClasses();
 pumd.addProperty("javax.persistence.jdbc.url", "jdbc:h2:mem:nucleus");
 pumd.addProperty("javax.persistence.jdbc.user", "sa");
 pumd.addProperty("javax.persistence.jdbc.password", "");
-pumd.addProperty("javax.persistence.jdbc.driver", "org.h2.Driver");
 pumd.addProperty("datanucleus.schema.autoCreateAll", "true");
 
 EntityManagerFactory emf = new JPAEntityManagerFactory(pumd, null);
