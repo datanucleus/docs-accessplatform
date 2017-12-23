@@ -78,7 +78,6 @@ Similarly if you are using an adapter that has some problem on your case you cou
 To specify DB2 as your datastore, you will need something like the following specifying (where "mydb1" is the name of the database)
 
 -----
-datanucleus.ConnectionDriverName=com.ibm.db2.jcc.DB2Driver
 datanucleus.ConnectionURL=jdbc:db2://localhost:50002/mydb1
 datanucleus.ConnectionUserName='username'     (e.g db2inst1)
 datanucleus.ConnectionPassword='password'
@@ -111,7 +110,6 @@ This is because these types are not supported by the MySQL JDBC driver and it re
 To specify MySQL as your datastore, you will need something like the following specifying (replacing 'db-name' with name of your database etc)
 
 -----
-datanucleus.ConnectionDriverName=com.mysql.jdbc.Driver
 datanucleus.ConnectionURL=jdbc:mysql://'host':'port'/'db-name'
 datanucleus.ConnectionUserName='user-name'
 datanucleus.ConnectionPassword='password'
@@ -129,7 +127,6 @@ To specify SQLServer as your datastore, you will need something like the followi
     
 Microsoft SQLServer 2005 JDBC Driver (Recommended)
 -----
-datanucleus.ConnectionDriverName=com.microsoft.sqlserver.jdbc.SQLServerDriver
 datanucleus.ConnectionURL=jdbc:sqlserver://'host':'port';DatabaseName='db-name';SelectMethod=cursor
 datanucleus.ConnectionUserName='user-name'
 datanucleus.ConnectionPassword='password'
@@ -137,7 +134,6 @@ datanucleus.ConnectionPassword='password'
 
 Microsoft SQLServer 2000 JDBC Driver
 -----
-datanucleus.ConnectionDriverName=com.microsoft.jdbc.sqlserver.SQLServerDriver
 datanucleus.ConnectionURL=jdbc:microsoft:sqlserver://'host':'port';DatabaseName='db-name';SelectMethod=cursor
 datanucleus.ConnectionUserName='user-name'
 datanucleus.ConnectionPassword='password'
@@ -151,7 +147,6 @@ To specify http://www.oracle.com/database/[Oracle] as your datastore, you will n
 you can also use 'oci' instead of 'thin' depending on your driver.
 
 -----
-datanucleus.ConnectionDriverName=oracle.jdbc.driver.OracleDriver
 datanucleus.ConnectionURL=jdbc:oracle:thin:@'host':'port':'db-name'
 datanucleus.ConnectionUserName='user-name'
 datanucleus.ConnectionPassword='password'
@@ -164,7 +159,6 @@ datanucleus.ConnectionPassword='password'
 To specify http://www.sybase.com[Sybase] as your datastore, you will need something like the following specifying (replacing 'db-name' with name of your database etc)
 
 -----
-datanucleus.ConnectionDriverName=com.sybase.jdbc2.jdbc.SybDriver
 datanucleus.ConnectionURL=jdbc:sybase:Tds:'host':'port'/'db-name'
 datanucleus.ConnectionUserName='user-name'
 datanucleus.ConnectionPassword='password'
@@ -178,7 +172,6 @@ To specify http://www.sap.com/pc/tech/database/software/sybase-sql-anywhere/inde
 you will need something like the following specifying (replacing 'db-name' with name of your database etc)
 
 -----
-datanucleus.ConnectionDriverName=sybase.jdbc4.sqlanywhere.IDriver
 datanucleus.ConnectionURL=jdbc:sqlanywhere:uid=DBA;pwd=sql;eng=demo
 datanucleus.ConnectionUserName='user-name'
 datanucleus.ConnectionPassword='password'
@@ -196,7 +189,6 @@ http://hsqldb.org[HSQLDB] is supported as an RDBMS datastore by DataNucleus with
 To specify HSQL (1.x) as your datastore, you will need something like the following specifying (replacing 'db-name' with name of your database etc)
 
 -----
-datanucleus.ConnectionDriverName=org.hsqldb.jdbcDriver
 datanucleus.ConnectionURL=jdbc:hsqldb:hsql://'host':'port'/'db-name'
 datanucleus.ConnectionUserName='user-name'
 datanucleus.ConnectionPassword='password'
@@ -213,7 +205,6 @@ http://www.h2database.com[H2] is supported as an RDBMS datastore by DataNucleus.
 To specify H2 as your datastore, you will need something like the following specifying (replacing 'db-name' with name of your database etc)
 
 -----
-datanucleus.ConnectionDriverName=org.h2.Driver
 datanucleus.ConnectionURL=jdbc:h2:'db-name'
 datanucleus.ConnectionUserName=sa
 datanucleus.ConnectionPassword=
@@ -228,7 +219,6 @@ Informix is supported as an RDBMS datastore by DataNucleus.
 To specify Informix as your datastore, you will need something like the following specifying (replacing 'db-name' with name of your database etc)
 
 -----
-datanucleus.ConnectionDriverName=com.informix.jdbc.IfxDriver
 datanucleus.ConnectionURL=jdbc:informix-sqli://[{ip|host}:port][/dbname]:INFORMIXSERVER=servername[;name=value[;name=value]...]
 datanucleus.ConnectionUserName=informix
 datanucleus.ConnectionPassword=password
@@ -236,7 +226,6 @@ datanucleus.ConnectionPassword=password
 
 For example
 -----
-datanucleus.ConnectionDriverName=com.informix.jdbc.IfxDriver
 datanucleus.ConnectionURL=jdbc:informix-sqli://192.168.254.129:9088:informixserver=demo_on;database=buf_log_db
 datanucleus.ConnectionUserName=informix
 datanucleus.ConnectionPassword=password
@@ -277,7 +266,6 @@ end function;
 To specify http://www.postgresql.org[PostgreSQL] as your datastore, you will need something like the following specifying (replacing 'db-name' with name of your database etc)
 
 -----
-datanucleus.ConnectionDriverName=org.postgresql.Driver
 datanucleus.ConnectionURL=jdbc:postgresql://'host':'port'/'db-name'
 datanucleus.ConnectionUserName='user-name'
 datanucleus.ConnectionPassword='password'
@@ -292,7 +280,6 @@ To specify http://www.postgis.org[PostGIS] as your datastore, you will need to d
 For the PostGIS JDBC geometries you will need something like the following specifying (replacing 'db-name' with name of your database etc)
 
 -----
-datanucleus.ConnectionDriverName=org.postgresql.Driver
 datanucleus.ConnectionURL=jdbc:postgresql://'host':'port'/'db-name'
 datanucleus.ConnectionUserName='user-name'
 datanucleus.ConnectionPassword='password'
@@ -300,7 +287,6 @@ datanucleus.ConnectionPassword='password'
 
 For Oracle's JGeometry you will need something like the following specifying (replacing 'db-name' with name of your database etc)
 -----
-datanucleus.ConnectionDriverName=org.postgresql.Driver
 datanucleus.ConnectionURL=jdbc:postgres_jgeom://'host':'port'/'db-name'
 datanucleus.ConnectionUserName='user-name'
 datanucleus.ConnectionPassword='password'
@@ -308,7 +294,6 @@ datanucleus.ConnectionPassword='password'
 
 For the JTS (Java Topology Suite) geometries you will need something like the following specifying (replacing 'db-name' with name of your database etc)
 -----
-datanucleus.ConnectionDriverName=org.postgresql.Driver
 datanucleus.ConnectionURL=jdbc:postgres_jts://'host':'port'/'db-name'
 datanucleus.ConnectionUserName='user-name'
 datanucleus.ConnectionPassword='password'
@@ -321,7 +306,6 @@ datanucleus.ConnectionPassword='password'
 To specify http://db.apache.org/derby/[Apache Derby] as your datastore, you will need something like the following specifying (replacing 'db-name' with filename of your database etc)
 
 -----
-datanucleus.ConnectionDriverName=org.apache.derby.jdbc.EmbeddedDriver
 datanucleus.ConnectionURL=jdbc:derby:'db-name';create=true
 datanucleus.ConnectionUserName='user-name'
 datanucleus.ConnectionPassword='password'
@@ -330,7 +314,6 @@ datanucleus.ConnectionPassword='password'
 Above settings are used together with the Apache Derby in embedded mode. The below settings are used in network mode, where the default port number is 1527.
 
 -----
-datanucleus.ConnectionDriverName=org.apache.derby.jdbc.ClientDriver
 datanucleus.ConnectionURL=jdbc:derby://'hostname':'portnumber'/'db-name';create=true
 datanucleus.ConnectionUserName='user-name'
 datanucleus.ConnectionPassword='password'
@@ -374,7 +357,6 @@ Don't ask us why such limitations are in a RDBMS, but then it was you that chose
 To specify Firebird as your datastore, you will need something like the following specifying (replacing 'db-name' with filename of your database etc) </p>
 
 -----
-datanucleus.ConnectionDriverName=org.firebirdsql.jdbc.FBDriver
 datanucleus.ConnectionURL=jdbc:firebirdsql://localhost/'db-name'
 datanucleus.ConnectionUserName='user-name'
 datanucleus.ConnectionPassword='password'
@@ -387,7 +369,6 @@ datanucleus.ConnectionPassword='password'
 To specify NuoDB as your datastore, you will need something like the following specifying (replacing 'db-name' with filename of your database etc) </p>
 
 -----
-datanucleus.ConnectionDriverName=com.nuodb.jdbc.Driver
 datanucleus.ConnectionURL=jdbc:com.nuodb://localhost/'db-name'
 datanucleus.ConnectionUserName='user-name'
 datanucleus.ConnectionPassword='password'
@@ -401,7 +382,6 @@ datanucleus.Schema={my-schema-name}
 To specify SAPDB/MaxDB as your datastore, you will need something like the following specifying (replacing 'db-name' with filename of your database etc)
 
 -----
-datanucleus.ConnectionDriverName=com.sap.dbtech.jdbc.DriverSapDB
 datanucleus.ConnectionURL=jdbc:sapdb://localhost/'db-name'
 datanucleus.ConnectionUserName='user-name'
 datanucleus.ConnectionPassword='password'
@@ -418,7 +398,6 @@ http://www.sqlite.org/[SQLite] is supported as an RDBMS datastore by DataNucleus
 To specify SQLite as your datastore, you will need something like the following specifying (replacing 'db-name' with filename of your database etc) </p>
 
 -----
-datanucleus.ConnectionDriverName=org.sqlite.JDBC
 datanucleus.ConnectionURL=jdbc:sqlite:'db-name'
 datanucleus.ConnectionUserName=
 datanucleus.ConnectionPassword=
@@ -432,7 +411,6 @@ To specify http://virtuoso.openlinksw.com/dataspace/dav/wiki/Main/[Virtuoso] as 
 (replacing 'db-name' with filename of your database etc) 
 
 -----
-datanucleus.ConnectionDriverName=virtuoso.jdbc.Driver
 datanucleus.ConnectionURL=jdbc:virtuoso://127.0.0.1/{dbname}
 datanucleus.ConnectionUserName=
 datanucleus.ConnectionPassword=
@@ -446,7 +424,6 @@ To specify http://docs.oracle.com/cd/E13218_01/wlp/docs92/db/pointbase.html#wp10
 something like the following specifying (replacing 'db-name' with filename of your database etc)
 
 -----
-datanucleus.ConnectionDriverName=com.pointbase.jdbc.jdbcUniversalDriver
 datanucleus.ConnectionURL=jdbc:pointbase://127.0.0.1/{dbname}
 datanucleus.ConnectionUserName=
 datanucleus.ConnectionPassword=
