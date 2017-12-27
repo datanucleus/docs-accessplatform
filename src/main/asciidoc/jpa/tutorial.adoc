@@ -366,8 +366,8 @@ To run your JPA-enabled application will require a few things to be available in
 * The `persistence.xml` file (stored under META-INF/)
 * Any ORM MetaData files for your persistable classes
 * Any Datastore driver classes (e.g JDBC driver for RDBMS, Datastax driver for Cassandra, etc) needed for accessing your datastore
-* The `javax.persistence` JAR (defining the JPA interface)
-* The `datanucleus-core`, `datanucleus-api-jpa` and `datanucleus-{datastore}` (for the datastore you are using, e.g _datanucleus-rdbms_ when using RDBMS)
+* The `javax.persistence.jar` (defining the JPA interface)
+* The `datanucleus-core.jar`, `datanucleus-api-jpa.jar` and `datanucleus-{datastore}.jar` (for the datastore you are using, e.g `datanucleus-rdbms.jar` when using RDBMS)
 
 After that it is simply a question of starting your application and all should be taken care of. 
 

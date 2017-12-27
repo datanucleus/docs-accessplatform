@@ -203,7 +203,7 @@ Alternatively you can use a post-processing step to compilation that "enhances" 
 necessary extra methods to make them _Persistable_. There are several ways to do this, most notably at post-compile, or at runtime. 
 We use the post-compile step in this tutorial.
 *DataNucleus JDO* provides its own byte-code enhancer for instrumenting/enhancing your classes
-(in _datanucleus-core_) and this is included in the DataNucleus AccessPlatform zip file prerequisite.
+(in `datanucleus-core.jar`) and this is included in the DataNucleus AccessPlatform zip file prerequisite.
 
 To understand on how to invoke the enhancer you need to visualise where the various source and jdo files are stored
 
@@ -377,8 +377,8 @@ To run your JDO-enabled application will require a few things to be available in
 * Any `persistence.xml` file for the PersistenceManagerFactory creation
 * Any JDO XML MetaData files for your persistable classes (not used in this example)
 * Any datastore driver classes (e.g JDBC driver for RDBMS, Datastax driver for Cassandra, etc) needed for accessing your datastore
-* The `javax.jdo` JAR (defining the JDO interface)
-* The `datanucleus-core`, `datanucleus-api-jdo` and `datanucleus-{datastore}` (for the datastore you are using, e.g _datanucleus-rdbms_ when using RDBMS)
+* The `javax.jdo.jar` (defining the JDO interface)
+* The `datanucleus-core.jar`, `datanucleus-api-jdo.jar` and `datanucleus-{datastore}.jar` (for the datastore you are using, e.g `datanucleus-rdbms.jar` when using RDBMS)
 
 After that it is simply a question of starting your application and all should be taken care of. 
 
