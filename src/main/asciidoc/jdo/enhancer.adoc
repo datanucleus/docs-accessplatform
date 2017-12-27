@@ -142,7 +142,7 @@ so set this option to false to avoid hitting Windows limit on command line lengt
 |Whether to enhance classes to make use of a detach listener for attempts to access an undetached field (see link:#detachlistener[below])
 |===
 
-You will need to add `datanucleus-api-jdo.jar` into the CLASSPATH (of the plugin, or your project) for the enhancer to operate. 
+You will need to add `datanucleus-core.jar` and `datanucleus-api-jdo.jar` into the CLASSPATH (of the plugin, or your project) for the enhancer to operate. 
 Also if using JPA metadata then you also will need `datanucleus-api-jpa.jar` and `javax.persistence.jar` in the CLASSPATH.
 You then run the Maven DataNucleus plugin, as follows
 

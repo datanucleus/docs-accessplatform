@@ -141,7 +141,7 @@ plugin in your `pom.xml` file. Some properties that you may need to change are b
 |Whether to ignore when we have metadata specified for classes that aren't found
 |===
 
-You will need to add _(org.datanucleus) datanucleus-api-jpa_ into the CLASSPATH (of the plugin, or your project) for the enhancer to operate. 
+You will need to add `datanucleus-core.jar` and `datanucleus-api-jpa.jar` into the CLASSPATH (of the plugin, or your project) for the enhancer to operate. 
 Similarly _javax.persistence_ (but then you almost certainly will have that in your project CLASSPATH anyway).
 
 You then run the Maven DataNucleus plugin, as follows
