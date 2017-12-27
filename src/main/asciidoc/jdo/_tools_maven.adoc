@@ -125,9 +125,9 @@ If you want to use the DataNucleus Maven plugin for enhancement or SchemaTool ad
 </project>
 -----
 
-Note that this plugin step will automatically try to bring in the latest applicable version of `datanucleus-core` for use by the enhancer. 
-It does this since you don't need to have `datanucleus-core` in your POM for compilation/enhancement. 
-If you want to use an earlier version then you need to add exclusions to the `maven-datanucleus-plugin`
+This will use your Maven dependencies defined for your project, so will need to have `datanucleus-core.jar`, 
+and either of `datanucleus-api-jdo.jar` or `datanucleus-api-jpa.jar` depending on what type of metadata is being used. 
+SchemaTool will also need the `datanucleus-{datastore}.jar` for whichever datastore is being used (where you will create the schema).
 
 The _executions_ part of that will make enhancement be performed immediately after compile, so automatic. 
 See also link:enhancer.html[the Enhancer docs]
