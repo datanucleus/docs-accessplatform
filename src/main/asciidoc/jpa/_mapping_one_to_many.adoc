@@ -729,6 +729,31 @@ public class Account
 public class Address {...}
 -----
 
+or using XML
+
+[source,xml]
+-----
+<entity-mappings>
+    <entity class="Account">
+        <table name="ACCOUNT"/>
+        <attributes>
+            ...
+            <one-to-many name="addresses">
+                <join-table name="ACCOUNT_ADDRESSES"/>
+                <column name="STRING_KEY"/>
+            </one-to-many>
+        </attributes>
+    </entity>
+
+    <entity class="Address">
+        <table name="ADDRESS"/>
+        <attributes>
+            ...
+        </attributes>
+    </entity>
+</entity-mappings>
+-----
+
 This will create 3 tables in the datastore, one for *Account*, one for *Address* and a join table also containing the key.
 
 image:../images/relationship_1_N_uni_map_simple_pc_db.png[]
@@ -772,6 +797,26 @@ public class Account
 
     ...
 }
+-----
+
+or using XML
+
+[source,xml]
+-----
+<entity-mappings>
+    <entity class="Account">
+        <table name="ACCOUNT"/>
+        <attributes>
+            ...
+            <element-collection name="addresses">
+                <collection-table name="ACCOUNT_ADDRESSES">
+                    <join-column name="STRING_VAL"/>
+                </collection-table>
+                <column name="STRING_KEY"/>
+            </element-collection>
+        </attributes>
+    </entity>
+</entity-mappings>
 -----
 
 This results in just 2 tables. The "join" table contains both the key AND the value.
