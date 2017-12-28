@@ -758,8 +758,8 @@ This will create 3 tables in the datastore, one for *Account*, one for *Address*
 
 image:../images/relationship_1_N_uni_map_simple_pc_db.png[]
 
-You can configure the names of the key column(s) in the join table using the _joinColumns_ attribute of `@CollectionTable`, or the names of the value 
-column(s) using `@Column` for the field/method.
+You can configure the names of the key column(s) in the join table using the _joinColumns_ attribute of `@JoinTable`, 
+or the names of the value column(s) using `@Column` for the field/method.
 
 NOTE: The column `ADPT_PK_IDX` is added by DataNucleus _when_ the column type of the key is not valid to be part of a primary key (with the RDBMS being used). 
 If the column type of your key is acceptable for use as part of a primary key then you will not have this `ADPT_PK_IDX` column.
