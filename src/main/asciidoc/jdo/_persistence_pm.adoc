@@ -321,8 +321,8 @@ TIP: Don't forget that you can also use link:query.html#jdoql_bulkupdate[bulk up
 [[pm_detach]]
 == Detaching a persisted Object
 
-As long as your persistable class is _detachable_ (see the link:mapping.html[mapping guide]) then you can _detach_ objects of that type. This means
-that your object is no longer managed by a particular _PersistenceManager_ and hence usable in other tiers of your application.
+As long as your persistable class is _detachable_ (see the link:mapping.html[mapping guide]) then you can _detach_ objects of that type. 
+Being _detached_ means that your object is no longer managed by a particular _PersistenceManager_ and hence usable in other tiers of your application.
 In this case you want to _detach_ the object (and its related sub-objects) so that they can be passed across to the part of the application that requires it.
 To do this you do
 
@@ -334,9 +334,6 @@ Person detachedLincoln = pm.detachCopy(lincoln); // Returns a copy of the persis
 The detached object is like the original object except that it has no StateManager connected, and it stores its JDO identity and version. 
 It retains a list of all fields that are modified while it is detached. 
 This means that when you want to "attach" it to the data-access layer it knows what to update.
-
-As an alternative, to make the detachment process transparent, you can set the persistence property *datanucleus.DetachAllOnCommit* to true and when you commit your transaction all objects
-enlisted in the transaction will be detached. If you just want to apply this setting for a _PersistenceManager_ then there is a _setDetachAllOnCommit_ method on the _PersistenceManager_.
 
 
 Some things to be aware of with the _detachment_ process.
@@ -351,6 +348,20 @@ Some things to be aware of with the _detachment_ process.
 Detaching a relation field will detach the related object as well.
 * If you don't detach a field of an object, you *cannot* access the value for that field while the object is detached.
 * If you don't detach a field of an object, you *can* update the value for that field while detached, and thereafter you can access the value for that field.
+
+
+=== Detaching objects used by a transaction
+
+As an alternative, to make the detachment process transparent, you can set the persistence property *datanucleus.DetachAllOnCommit* to true and when you commit your transaction all objects
+enlisted in the transaction will be detached. If you just want to apply this setting for a _PersistenceManager_ then there is a _setDetachAllOnCommit_ method on the _PersistenceManager_. 
+NOTE: This only has any effect when performing operations *in a transaction*.
+
+
+=== Detaching objects managed by a PersistenceManager at close
+
+A further alternative is to set the persistence property *datanucleus.detachOnClose* to true so that when you close your _PersistenceManager_ then all objects currently managed
+will be detached (when they are detachable).
+
 
 === Detached Fields
 
