@@ -350,6 +350,31 @@ Detaching a relation field will detach the related object as well.
 * If you don't detach a field of an object, you *can* update the value for that field while detached, and thereafter you can access the value for that field.
 
 
+
+=== Detaching objects used by a transaction
+
+To make the detachment process transparent you can set the persistence property *datanucleus.DetachAllOnCommit* to true and when you commit your transaction all objects
+enlisted in the transaction will be detached. 
+If you just want to apply this setting for a _PersistenceManager_ then there is a _setDetachAllOnCommit_ method on the _PersistenceManager_. 
+
+NOTE: This only has any effect when performing operations *in a transaction*.
+
+
+
+=== Detach objects on close of the PersistenceManager
+
+image:../images/nucleus_extension.png[]
+
+A further variation is known as "detachOnClose" and means that if enabled (setting persistence property *datanucleus.DetachOnClose* to _true_), 
+when you close your _PersistenceManager_ you are opting to have all instances currently cached in the Level 1 Cache of that _PersistenceManager_ to be detached automatically.
+
+WARNING: This will not work in a JavaEE environment when using JCA.
+
+NOTE: It is recommended that you use "DetachAllOnCommit" instead of this wherever possible since that is standard JDO and would work in all JavaEE environments also.
+
+
+
+
 === Detached Fields
 
 image:../images/nucleus_extension.png[]
@@ -378,29 +403,6 @@ This process occurs transparently to the application. However, if deserializatio
 
 Serialization and deserialization of Detachable classes and un-enhanced versions of the same class is only possible if the field _serialVersionUID_ is added. 
 It's recommended during development of the class, to define the _serialVersionUID_ and make the class implement the _java.io.Serializable_ interface.
-
-
-=== Detaching objects used by a transaction
-
-As an alternative, to make the detachment process transparent, you can set the persistence property *datanucleus.DetachAllOnCommit* to true and when you commit your transaction all objects
-enlisted in the transaction will be detached. If you just want to apply this setting for a _PersistenceManager_ then there is a _setDetachAllOnCommit_ method on the _PersistenceManager_. 
-
-NOTE: This only has any effect when performing operations *in a transaction*.
-
-
-
-=== Detach On Close
-
-image:../images/nucleus_extension.png[]
-
-A further variation is known as "detachOnClose" and means that if enabled (setting persistence property *datanucleus.DetachOnClose* to _true_), 
-when you close your _PersistenceManager_ you are opting to have all instances currently cached in the Level 1 Cache of that _PersistenceManager_ to be detached automatically.
-
-WARNING: This will not work in a JavaEE environment when using JCA.
-
-NOTE: It is recommended that you use "DetachAllOnCommit" instead of this wherever possible since that is standard JDO and would work in all JavaEE environments also.
-
-
 
 
 [[pm_attach]]
