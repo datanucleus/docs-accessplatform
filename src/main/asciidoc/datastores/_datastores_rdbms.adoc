@@ -194,7 +194,7 @@ datanucleus.ConnectionUserName='user-name'
 datanucleus.ConnectionPassword='password'
 -----
 
-Note that in HSQLDB v2.x the driver changes to _org.hsqldb.jdbc.JDBCDriver_</p>
+Note that in HSQLDB v2.x the driver changes to _org.hsqldb.jdbc.JDBCDriver_
 
 
 [[h2]]
@@ -352,9 +352,9 @@ http://www.firebirdsql.org[Firebird] is supported as an RDBMS datastore by DataN
 This makes "on the fly" table creation in the middle of a DML transaction not work. 
 You must make sure that "autoStartMechanism" is NOT set to "SchemaTable" since this will use DML. 
 You must also make sure that nobody else is connected to the database at the same time.
-Don't ask us why such limitations are in a RDBMS, but then it was you that chose to use it ;-)
+Don't ask us why such limitations are in a RDBMS, but then it was you that chose to use this ;-)
 
-To specify Firebird as your datastore, you will need something like the following specifying (replacing 'db-name' with filename of your database etc) </p>
+To specify Firebird as your datastore, you will need something like the following specifying (replacing 'db-name' with filename of your database etc) 
 
 -----
 datanucleus.ConnectionURL=jdbc:firebirdsql://localhost/'db-name'
@@ -366,7 +366,7 @@ datanucleus.ConnectionPassword='password'
 [[nuodb]]
 == NuoDB
 
-To specify NuoDB as your datastore, you will need something like the following specifying (replacing 'db-name' with filename of your database etc) </p>
+To specify NuoDB as your datastore, you will need something like the following specifying (replacing 'db-name' with filename of your database etc) 
 
 -----
 datanucleus.ConnectionURL=jdbc:com.nuodb://localhost/'db-name'
@@ -395,7 +395,7 @@ http://www.sqlite.org/[SQLite] is supported as an RDBMS datastore by DataNucleus
 
 * When using sequences, you must set the persistence property *datanucleus.valuegeneration.transactionAttribute* to *EXISTING*
 
-To specify SQLite as your datastore, you will need something like the following specifying (replacing 'db-name' with filename of your database etc) </p>
+To specify SQLite as your datastore, you will need something like the following specifying (replacing 'db-name' with filename of your database etc)
 
 -----
 datanucleus.ConnectionURL=jdbc:sqlite:'db-name'
