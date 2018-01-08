@@ -275,7 +275,7 @@ See also:-
 
 
 [[valuegen_uuid]]
-== uuid
+== ValueGeneration Strategy "UUID"
 
 image:../images/nucleus_extension.png[]
 
@@ -308,7 +308,9 @@ public class MyClass
 }
 -----
 
-This value generator will generate values unique across different JVMs
+This value generator will generate values unique across different JVMs.
+
+NOTE: To use this strategy via annotations you need to have the DataNucleus `javax.persistence.jar` present in the CLASSPATH.
 
 
 [[valuegen_custom]]
