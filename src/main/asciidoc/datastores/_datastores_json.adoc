@@ -13,14 +13,14 @@ Simply specify your "connectionURL" as follows
 datanucleus.ConnectionURL=json:{url}
 -----
 
-replacing "{url}" with some URL of your choice (e.g "http://www.mydomain.com/somepath/").
+replacing "{url}" with some URL of your choice (e.g `http://www.mydomain.com/somepath/`).
 You then create your PMF/EMF as normal and use JDO/JPA as normal.
 
 Things to bear in mind with JSON usage :-
 
 * Querying can be performed using JDOQL or JPQL. Any filtering/ordering will be performed *in-memory*
 * Relations : DataNucleus stores the id of the related object(s) in the element of the field. 
-If a relation is bidirectional then it will be stored at both ends of the relation; this facilitates easy access to the related object with no need to do a query to find it.</li>
+If a relation is bidirectional then it will be stored at both ends of the relation; this facilitates easy access to the related object with no need to do a query to find it.
 
 
 == Mapping : HTTP Mapping
