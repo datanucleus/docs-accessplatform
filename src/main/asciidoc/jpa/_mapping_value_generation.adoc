@@ -38,10 +38,11 @@ Otherwise the field is numeric in which case it chooses link:#valuegen_identity[
 otherwise link:#valuegen_sequence[sequence] if supported, otherwise link:#valuegen_increment[table] if supported
 otherwise throws an exception.
 
-On RDBMS you can get the behaviour used up until DN v3.0 by specifying the persistence property 
-*datanucleus.rdbms.useLegacyNativeValueStrategy* as _true_.
-For a class using *application identity* you need to set the _value-strategy_ attribute 
-on the primary key field. You can configure the Meta-Data for the class something like this 
+
+On RDBMS you can get the behaviour used up until DN v3.0 by specifying the persistence property *datanucleus.rdbms.useLegacyNativeValueStrategy* as _true_.
+
+For a class using *application identity* you need to set the _value-strategy_ attribute on the primary key field. 
+You can configure the Meta-Data for the class something like this 
 
 [source,xml]
 -----
@@ -69,6 +70,11 @@ public class MyClass
 -----
 
 To configure a class to use this generation using *datastore identity* you need to look at the `@DatastoreId` extension annotation or the XML `<datastore-id>` tag
+
+
+WARNING: Which generation strategy is used internally will be JPA provider dependent. 
+If you want to be portable and independent of a JPA providers internals you should likely avoid use of `AUTO`.
+
 
 
 [[valuegen_sequence]]

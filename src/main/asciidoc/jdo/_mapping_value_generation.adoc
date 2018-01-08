@@ -46,7 +46,13 @@ With this strategy DataNucleus will choose the most appropriate strategy for the
 If you define the field as String-based then it will choose link:#valuegen_uuidhex[uuid-hex]. 
 Otherwise the field is numeric in which case it chooses link:#valuegen_identity[identity] if supported, otherwise
 link:#valuegen_sequence[sequence] if supported, otherwise link:#valuegen_increment[increment] if supported otherwise throws an exception. 
+
 On RDBMS you can get the behaviour used up until DN v3.0 by specifying the persistence property *datanucleus.rdbms.useLegacyNativeValueStrategy* as _true_
+
+
+WARNING: Which generation strategy is used internally will be JDO provider dependent. 
+If you want to be portable and independent of a JDO providers internals you should likely avoid use of `AUTO`.
+
 
 
 [[valuegen_sequence]]
