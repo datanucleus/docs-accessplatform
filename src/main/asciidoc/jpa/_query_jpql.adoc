@@ -408,6 +408,12 @@ END
 JPQL provides an SQL-like query language. Just as with SQL, JPQL also supports a range of functions to enhance the querying possibilities. 
 The tables below also mark whether a particular method is supported for evaluation link:#jpql_inmemory[in-memory].
 
+
+NOTE: These methods are not available for use with all of the supported datastores to be executed in-datastore. 
+RDBMS, in general, supports the vast majority, whilst MongoDB, Neo4j, Cassandra support a select few methods in-datastore.
+
+
+
 image:../images/nucleus_plugin.png[]
 
 Please note that you can easily add support for other functions for evaluation "in-memory" using this link:../extensions/extensions.html#query_method_evaluator[DataNucleus plugin point]
