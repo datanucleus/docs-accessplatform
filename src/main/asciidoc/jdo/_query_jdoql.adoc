@@ -450,8 +450,7 @@ Query query = pm.newQuery(mydomain.Inventory.class, "products.containsKey('produ
 List<Inventory> results = query.execute();
 
 Single-String JDOQL :
-Query query = pm.newQuery("SELECT FROM mydomain.Inventory " +
-    "WHERE products.containsKey('product 1')");
+Query query = pm.newQuery("SELECT FROM mydomain.Inventory WHERE products.containsKey('product 1')");
 List results = (List)query.execute();
 -----
 
