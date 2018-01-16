@@ -123,7 +123,7 @@ You can then go back to your data layer and retrieve the object as follows
 Person lincoln = (Person)pm.getObjectById(lincolnID);
 -----
 
-                
+
 image:../images/nucleus_extension.png[]
 
 A DataNucleus extension is to pass in a String form of the identity to the above method. It accepts identity strings of the form
@@ -163,7 +163,13 @@ Person lincoln = pm.getObjectById(Person.class, 1);
 -----
 
 where 1 is the value of the primary key field (numeric).
-Note that the first argument could be a base class and the real object could be an instance of a subclass of that.
+
+
+NOTE: The first argument could be a base class and the real object could be an instance of a subclass of that.
+
+NOTE: If the second argument is not of the type expected for the `@PrimaryKey` field then it will throw an exception. 
+You can enable DataNucleus built-in type conversion by setting the persistence property *datanucleus.findObject.typeConversion* to _true_.
+
 
 
 

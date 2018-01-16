@@ -128,6 +128,8 @@ NOTE: the first argument could be a base class and the real object could be an i
 NOTE: the second argument is either the value of the single primary-key field (when it has only one `@Id` field), 
 or is the value of the _object-id-class_ (when it has multiple `@Id` fields).
 
+NOTE: if the second argument is not of the type expected for the `@Id` field then it will throw an exception. 
+You can enable DataNucleus built-in type conversion by setting the persistence property *datanucleus.findObject.typeConversion* to _true_.
 
 
 
