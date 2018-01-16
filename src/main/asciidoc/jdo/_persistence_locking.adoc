@@ -20,8 +20,9 @@ then just before committing make a check for changes. This is known as link:#loc
 Pessimistic locking is suitable for short lived operations where no user interaction is taking place and so it is possible to block access to datastore entities 
 for the duration of the transaction. By default DataNucleus does not currently lock the objects fetched with pessimistic locking, but you can configure this 
 behaviour for RDBMS datastores by setting the persistence property *datanucleus.SerializeRead* to _true_. 
-This will result in all "SELECT ... FROM ..." statements being changed to be "SELECT ... FROM ... FOR UPDATE". 
-This will be applied only where the underlying RDBMS supports the "FOR UPDATE" syntax. This can be done on a transaction-by-transaction basis by doing
+This will result in all `SELECT ... FROM ...` statements being changed to be `SELECT ... FROM ... FOR UPDATE`. 
+This will be applied only where the underlying RDBMS supports the "FOR UPDATE" syntax. 
+This can be done on a transaction-by-transaction basis by doing
 
 [source,java]
 -----
@@ -97,8 +98,8 @@ However this mode of operation has no version checking of objects and so if they
 
 It should be noted that DataNucleus provides two persistence properties that allow an amount of control over when flushing happens with pessimistic locking
 
-* _datanucleus.flush.mode_ when set to MANUAL will try to delay all datastore operations until commit/flush.
-* _datanucleus.datastoreTransactionFlushLimit_ represents the number of dirty objects before a flush is performed. This defaults to 1.
+* Persistence property *datanucleus.flush.mode* when set to _MANUAL_ will try to delay all datastore operations until commit/flush.
+* Persistence property *datanucleus.datastoreTransactionFlushLimit* represents the number of dirty objects before a flush is performed. This defaults to 1.
 
 
 

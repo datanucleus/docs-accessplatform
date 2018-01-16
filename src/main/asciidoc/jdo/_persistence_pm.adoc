@@ -24,7 +24,7 @@ public class Person
 {
     @PrimaryKey
     long id;
-    
+
     String firstName;
     String lastName;
 }
@@ -292,7 +292,7 @@ The other setting of this property is "DataNucleus" which performs deletion of r
 * Else, if the column of the foreign-key field is NULLable then NULL it and leave the related object alone
 * Else deleted the related object (and throw exceptions if this fails for whatever datastore-related reason)
 
-As you can see, with the second option you have the ability to utilise datastore "referential integrity" checking using your MetaData-specified <foreign-key> elements.
+As you can see, with the second option you have the ability to utilise datastore "referential integrity" checking using your MetaData-specified `<foreign-key>` elements.
 
 
 
@@ -327,7 +327,7 @@ TIP: Don't forget that you can also use link:query.html#jdoql_bulkupdate[bulk up
 [[pm_detach]]
 == Detaching a persisted Object
 
-As long as your persistable class is _detachable_ (see the link:mapping.html[mapping guide]) then you can _detach_ objects of that type. 
+As long as your persistable class is _detachable_ (see the link:mapping.html#detachable[mapping guide]) then you can _detach_ objects of that type. 
 Being _detached_ means that your object is no longer managed by a particular _PersistenceManager_ and hence usable in other tiers of your application.
 In this case you want to _detach_ the object (and its related sub-objects) so that they can be passed across to the part of the application that requires it.
 To do this you do
@@ -601,9 +601,12 @@ should definitely be persisted. This is for the following situation.
 * Delete object A from persistence
 * Commit the transaction.
 
-If you have property *datanucleus.persistenceByReachabilityAtCommit* set to true (default) then this will recheck the persisted objects should remain persistent. 
+If you have persistence property *datanucleus.persistenceByReachabilityAtCommit* set to true (default) then this will recheck the persisted objects should remain persistent. 
 In this case it will find B and realise that it was only persisted due to A (which has since been deleted), hence B will not remain persistent after the transaction.
 If you had property *datanucleus.persistenceByReachabilityAtCommit* set to false then B will remain persistent after the transaction. 
+
+NOTE: If you set this persistence property to _false_ then this will give a speed benefit, since at commit it no longer has to re-check all reachability for subsequent deletions.
+Consequently, if you are sure you have not subsequently deleted an object you just persisted, you are advised to set this property to _false_.
 
 
 

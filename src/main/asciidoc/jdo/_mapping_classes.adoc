@@ -113,6 +113,32 @@ See also :-
 
 
 
+[[detachable]]
+== Detachable Classes
+
+One of the main things you need to decide for you persistable classes is whether you will be detaching them from the persistence process for use in a different layer
+of your application. If you do want to do this then you need to mark them as _detachable_, like this
+
+[source,java]
+-----
+@PersistenceCapable(detachable="true")
+public class Hotel
+{
+    ...
+}
+-----
+
+or using XML metadata
+
+[source,xml]
+-----
+<class name="Hotel" detachable="true">
+    ...
+</class>
+-----
+
+
+
 [[softdelete]]
 == SoftDelete
 

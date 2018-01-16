@@ -81,7 +81,7 @@ finally
 So here we used the JTA API to begin/commit the controlling (_javax.transaction.UserTransaction_).
 
 
-An alternative is where you don't have a UserTransaction started and just use the JDO API, which will start the UserTransaction for you.
+An alternative is where you don't have a _UserTransaction_ started and just use the JDO API, which will start the _UserTransaction_ for you.
 
 [source,java]
 -----
@@ -102,7 +102,9 @@ finally
 }
 -----
 
-IMPORTANT: You need to set both transactional and nontransactional datasources, and *the nontransactional cannot be JTA. The nontransactional is used for schema and sequence operations.
+IMPORTANT: You need to set both transactional and nontransactional datasources, and the nontransactional cannot be JTA. The nontransactional is used for schema and sequence operations.
+
+
 
 === JTA TransactionManager
 
@@ -265,7 +267,7 @@ In this case you can *flush* all outstanding changes to the datastore using
 pm.flush();
 -----
 
-You can control the *flush mode* using the persistence property *datanucleus.flush.mode*. This has the following values
+You can control the flush mode using the persistence property *datanucleus.flush.mode*. This has the following values
 
 * *Auto* : auto-flush changes to the datastore when they are made. This is the default for pessimistic transactions.
 * *Manual* : only flush on explicit calls to _pm.flush()_ or _tx.commit()_. This is the default for optimistic transactions.
