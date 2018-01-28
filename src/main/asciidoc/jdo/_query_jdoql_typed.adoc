@@ -170,7 +170,7 @@ A further example using aggregates
 -----
 JDOQLTypedQuery<Product> tq = pm.newJDOQLTypedQuery(Product.class);
 Object results = 
-    tq.result(false, QProduct.candidate().max(), QProduct.candidate().min()).executeResultUnique();
+    tq.result(false, QProduct.candidate().value.max(), QProduct.candidate().value.min()).executeResultUnique();
 -----
 
 This equates to the single-string query
