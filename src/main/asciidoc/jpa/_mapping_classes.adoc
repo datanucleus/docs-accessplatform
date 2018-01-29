@@ -16,6 +16,11 @@ Consequently an inheritance tree cannot just have a mapped superclass on its own
 NOTE: In strict JPA all persistable classes need to have a _default constructor_. With DataNucleus JPA this is not necessary, since all classes are enhanced before persistence and
 the enhancer adds on a default constructor if one is not defined.
 
+NOTE: If defining a method _toString_ in a JPA entity class, be aware that use of a persistable field will cause the load of that field if the object is managed, and the field is not yet loaded.
+
+NOTE: If a JPA entity class is an element of a Java collection in another entity, you are advised to define _hashCode_ and _equals_ methods, for reliable handling by Java collections.
+
+
 
 [[entity]]
 == Entity Class
