@@ -1314,6 +1314,13 @@ public class MyClass
 }
 -----
 
+or using XML metadata
+
+[source,xml]
+-----
+<field name="url" converter="mydomain.package.URLStringConverter"/>
+-----
+
 Note that you can register converters as the default handler for a java type when constructing the PMF via persistence properties. 
 These properties should be of the form *javax.jdo.option.typeconverter.{javatype}* and the value is the class name of the AttributeConverter.
 
@@ -1397,6 +1404,13 @@ public class MyClass
 
     ...
 }
+-----
+
+or using XML metadata
+
+[source,xml]
+-----
+<field name="myField" converter="mydomain.package.MyCollectionTypeStringConverter"/>
 -----
 
 NOTE: If you want your extension of Collection/Map to be managed as a _mutable_ second class type then you will need to provide a _wrapper_ class for it.
