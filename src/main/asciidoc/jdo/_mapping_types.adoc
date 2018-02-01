@@ -1321,9 +1321,6 @@ or using XML metadata
 <field name="url" converter="mydomain.package.URLStringConverter"/>
 -----
 
-Note that you can register converters as the default handler for a java type when constructing the PMF via persistence properties. 
-These properties should be of the form *javax.jdo.option.typeconverter.{javatype}* and the value is the class name of the AttributeConverter.
-
 A further use of AttributeConverter is where you want to apply type conversion to the key/value of a Map field, or to the element of a Collection field. 
 The Collection element case is simple, you just specify the `@Convert` against the field and it will be applied to the element.
 If you want to apply type conversion to a key/value of a map do this.
@@ -1334,13 +1331,25 @@ If you want to apply type conversion to a key/value of a map do this.
 Map<URL, OtherEntity> myMap;
 -----
 
+or using XML metadata
+
+[source,xml]
+-----
+<field name="myMap">
+    <key converter="mydomain.package.URLStringConverter"/>
+</field>
+-----
+
+
+NOTE: You can register a _default_ `AttributeConverter` for a java type when constructing the PMF via persistence properties. 
+These properties should be of the form *javax.jdo.option.typeconverter.{javatype}* and the value is the class name of the `AttributeConverter`.
+
+
 NOTE: You CANNOT use an `AttributeConverter` for a _PersistenceCapable_ type. This is because a _PersistenceCapable_ type requires special treatment, such as attaching a StateManager etc. 
 
 
-NOTE: The `AttributeConverter` objects shown here are *stateless*.
-
-
-NOTE: DataNucleus allows for stateful `AttributeConverter` objects, with the state being CDI injectable, but you must be in a CDI environment for this to work.
+NOTE: The `AttributeConverter` objects shown here are *stateless*. 
+DataNucleus allows for stateful `AttributeConverter` objects, with the state being CDI injectable, but you must be in a CDI environment for this to work.
 To provide CDI support for JDO, you should specify the persistence property *datanucleus.cdi.bean.manager* to be a CDI `BeanManager` object.
 
 
