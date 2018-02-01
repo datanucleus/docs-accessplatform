@@ -1176,7 +1176,7 @@ Here we list a few of the combinations definitely supported as arrays, but other
 JPA does not explicitly require support for generic type variables. DataNucleus provides support for many situations with generic type variables.
 
 
-The first example that is supported is where you have an abstract base class with a generic TypeVariable and then you specify the type in the (concrete) subclass(es).
+The first example that is supported is where you have an abstract base class with a generic `TypeVariable` and then you specify the type in the (concrete) subclass(es).
 
 [source,java]
 -----
@@ -1199,7 +1199,7 @@ public class Sub2 extends Base<Integer>
 }
 -----
 
-Similarly you use TypeVariables to form relations, like this
+Similarly you use `TypeVariables` to form relations, like this
 
 [source,java]
 -----
@@ -1233,7 +1233,7 @@ public class Element
 }
 -----
 
-Clearly there are many combinations of where generics and TypeVariables can be used, so let us know if your generics usage isn't supported.
+Clearly there are many combinations of where generics and `TypeVariables` can be used, so let us know if your generics usage isn't supported.
 
 
 
@@ -1304,15 +1304,14 @@ public class MyClass
 }
 -----
 
-NOTE: You CANNOT use an `AttributeConverter` for a _Entity_ type. This is because a _Entity_ type requires special treatment, such as attaching a StateManager etc. 
+or using XML metadata
 
-
-NOTE: The `AttributeConverter` objects shown here are *stateless*.
-
-
-NOTE: DataNucleus (and JPA 2.2) allows for stateful `AttributeConverter` objects, with the state being CDI injectable, but you must be in a CDI environment for this to work.
-To provide CDI support for JPA, you should specify the persistence property *javax.persistence.bean.manager* to be a CDI `BeanManager` object.
-
+[source,xml]
+-----
+<basic name="url">
+    <convert converter="mydomain.package.URLStringConverter"/>
+</basic>
+-----
 
 
 Note that in strict JPA you have to mark all converters with the `@Converter` annotation.
@@ -1337,17 +1336,48 @@ Note that if you have some java type with a `@Converter` registered to _autoAppl
     URL url;
 -----
 
+or using XML metadata
+
+[source,xml]
+-----
+<basic name="url">
+    <convert disable-conversion="true"/>
+</basic>
+-----
+
 A further use of AttributeConverter is where you want to apply type conversion to the key/value of a Map field, or to the element of a Collection field. 
 The Collection element case is simple, you just specify the `@Convert` against the field and it will be applied to the element.
 If you want to apply type conversion to a key/value of a map do this.
 
 [source,java]
 -----
+    @OneToMany
     @Convert(attributeName="key", converter=URLStringConverter.class)
     Map<URL, OtherEntity> myMap;
 -----
 
 So we specify the _attributeName_ to be *key*, and to use it on the value we would set it to *value*.
+
+
+If using XML metadata
+
+[source,xml]
+-----
+<one-to-many name="myMap">
+    <map-key-convert converter="mydomain.package.URLStringConverter"/>
+</one-to-many>
+-----
+
+
+
+
+NOTE: You CANNOT use an `AttributeConverter` for a _Entity_ type. This is because a _Entity_ type requires special treatment, such as attaching a StateManager etc. 
+
+
+NOTE: The `AttributeConverter` objects shown here are *stateless*. 
+DataNucleus (JPA 2.2) allows for stateful `AttributeConverter` objects, with the state being CDI injectable, but you must be in a CDI environment for this to work.
+To provide CDI support for JPA, you should specify the persistence property *javax.persistence.bean.manager* to be a CDI `BeanManager` object.
+
 
 
 

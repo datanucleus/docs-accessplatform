@@ -8,6 +8,9 @@ We have the following types of classes in DataNucleus JDO.
 * link:#persistence_capable[PersistenceCapable] - persistable class with full control over its persistence.
 * link:#persistence_aware[PersistenceAware] - a class that is not itself persisted, but that needs to access internals of persistable classes. 
 
+JDO imposes very little on classes used within the persistence process so, to a very large degree, you should design your classes as you would normally do
+and not design them to fit JDO.
+
 NOTE: In strict JDO all persistable classes need to have a _default constructor_. With DataNucleus JDO this is not necessary, since all classes are enhanced before persistence and
 the enhancer adds on a default constructor if one is not defined.
 
