@@ -39,4 +39,4 @@ If it doesn't validate then at persist/update an exception will be thrown.
 You can add bean validation annotations to classes marked as `@Entity`, `@MappedSuperclass` or `@Embeddable`.
 
 A further use of the Bean Validation annotations `@Size(max=...)` and `@NotNull` is that if you specify these then you have no need to specify the equivalent JPA attributes 
-since they equate to the same thing.
+since they equate to the same thing. This is enabled via the persistence property *datanucleus.metadata.javaxValidationShortcuts*.

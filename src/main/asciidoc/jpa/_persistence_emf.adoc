@@ -1022,6 +1022,10 @@ The class must implement the interface _org.datanucleus.metadata.MetaDataScanner
 |With JPA the spec implies that all use of "single-table" inheritance will use a discriminator. DataNucleus up to and including 5.0.2
 relied on the user defining the discriminator, whereas it now will add one if not supplied. Set this to _false_ to get behaviour as it was <= 5.0.2
 {*true*, false}
+
+|datanucleus.metadata.javaxValidationShortcuts
+|Whether to process javax.validation `@NotNull` and `@Size` annotations as their JPA `@Column` equivalent.
+{*false*, true}
 |===
 
 
