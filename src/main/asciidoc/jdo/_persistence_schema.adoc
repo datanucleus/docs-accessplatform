@@ -550,3 +550,19 @@ catch(Exception e)
 -----
 
 
+[[schema-adaption]]
+== Schema Adaption
+
+As time goes by during the development of your DataNucleus JDO powered application you may need to add fields, update field mappings, or delete fields.
+In an ideal world the JDO provider would take care of this itself. However this is actually not part of the JPA standard and so you are reliant on 
+what features the JDO provider possesses. 
+
+DataNucleus can cope with added fields, if you have the relevant persistence properties enabled. In this case look at *datanucleus.schema.autoCreateTables*, 
+*datanucleus.schema.autoCreateColumns*, *datanucleus.schema.autoCreateConstraints*, and *datanucleus.rdbms.dynamicSchemaUpdates* (with this latter property
+of use where you have interface field(s) and a new implementation of that interface is encountered at runtime.
+
+If you *update* or *delete* a field with an RDBMS datastore then you will need to update your schema manually. With non-RDBMS datastores deletion of fields
+is supported in some situations.
+
+You should also consider making use of tools like https://flywaydb.org/[Flyway] and http://www.liquibase.org/[Liquibase] since these are designed for exactly this role.
+
