@@ -122,6 +122,12 @@ and you are taking control of the specification of id's to DataNucleus. Applicat
 and each persistent capable class may define a different class for its primary key, and different persistent capable classes can 
 use the same primary key class, as appropriate. 
 If you have only a single primary-key field then there are built-in PK classes so you can forget this section. 
+
+
+NOTE: If you are thinking of using multiple primary key fields in a class we would urge you to consider using a single (maybe surrogate) primary key field instead for
+reasons of simplicity and performance. This also means that you can avoid the need to define your own primary key class.
+
+
 Where you have more than 1 primary key field, you would define the PK class like this
 
 [source,xml]
@@ -236,6 +242,11 @@ To do this, add a field to your id-class called _targetClassName_ and make sure 
 
 
 === PrimaryKey Example - Multiple Field
+
+
+NOTE: Again, if you are thinking of using multiple primary key fields in a class we would urge you to consider using a single (maybe surrogate) primary key field instead for
+reasons of simplicity and performance. This also means that you can avoid the need to define your own primary key class.
+
 
 Here's an example of a composite (multiple field) primary key class
 

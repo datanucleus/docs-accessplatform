@@ -199,7 +199,12 @@ When you choose application identity you are defining which fields of the class 
 Application identity requires a primary key (PK) class, and each persistent capable class may define a different class for its 
 primary key, and different persistent capable classes can use the same primary key class, as appropriate. 
 If you have only a single primary-key field then there are built-in PK classes so you can forget this section. 
-Where you have more than 1 primary key field, you would define the PK class like this
+
+NOTE: If you are thinking of using multiple primary key fields in a class we would urge you to consider using a single (maybe surrogate) primary key field instead for
+reasons of simplicity and performance. This also means that you can avoid the need to define your own primary key class.
+
+
+Where you have more than 1 primary key field, you would map the persistable class like this
 
 [source,xml]
 -----
@@ -219,8 +224,8 @@ public class MyClass
 }
 -----
 
-You now need to define the PK class to use. This is simplified for you because *if you have only one 
-PK field then you dont need to define a PK class* and you only define it when you have a composite PK.
+You now need to define the PK class to use (`MyIdClass`). This is simplified for you because *if you have only one 
+PK field then you don't need to define a PK class* and you only define it when you have a composite PK.
 
 An important thing to note is that the PK can only be made up of fields of the following Java types
 
@@ -230,10 +235,10 @@ An important thing to note is that the PK can only be made up of fields of the f
 * java.sql : *Date*, *Time*, *Timestamp*
 * java.util : *Date*, *Currency*, *Locale*, TimeZone, UUID
 * java.net : URI, URL
-* _persistable_
+* _Persistable_
 
-Note that the types in *bold* are JDO standard types. Any others are DataNucleus extensions and, as always, link:../datastores/datastores.html[check the specific datastore docs]
-to see what is supported for your datastore.
+Note that the types in *bold* are JDO standard types. 
+Any others are DataNucleus extensions and, as always, link:../datastores/datastores.html[check the specific datastore docs] to see what is supported for your datastore.
 
 
 *Single PrimaryKey field*
@@ -340,6 +345,9 @@ To do this, add a field to your id-class called _targetClassName_ and make sure 
 
 
 === PrimaryKey Example - Multiple Field
+
+NOTE: Again, if you are thinking of using multiple primary key fields in a class we would urge you to consider using a single (maybe surrogate) primary key field instead for
+reasons of simplicity and performance. This also means that you can avoid the need to define your own primary key class.
 
 Here's an example of a composite (multiple field) primary key class
 
