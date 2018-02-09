@@ -404,7 +404,7 @@ public class Person
 }
 -----
 
-*Note that with DataNucleus you can also specify @NamedStoredProcedureQuery on non-persistable classes*
+*Note that with DataNucleus you can also specify `@NamedStoredProcedureQuery` on non-persistable classes*
 See the documentation for link:query.html#stored_procedures_named[Named StoredProcedures]
 
 
@@ -1490,8 +1490,7 @@ See the documentation for link:mapping.html#members[Fields/Properties]
 [[JoinTable]]
 === @JoinTable
 
-This annotation is used to define that a collection/map is stored using a join table.
-Specified on the *field/method*.
+This annotation is used to define that a collection/map is stored using a join table. Specified on the *field/method*.
 
 [cols="1,1,3,1", options="header"]
 |===
@@ -1671,7 +1670,7 @@ public class Person
 [[Enumerated]]
 === @Enumerated
 
-This annotation is used to define that a field is stored enumerated (not that it wasnt obvious from the type!). Specified on the *field/method*.
+This annotation is used to define that a field is stored enumerated (not that it wasn't obvious from the type!). Specified on the *field/method*.
 
 [cols="1,1,3,1", options="header"]
 |===
@@ -1792,7 +1791,7 @@ If the field that owns the relation is stored in an embedded object on the other
 
 |link:persistence.html#orphanremoval[orphanRemoval]
 |boolean
-|Whether to remove orphans when either removing this side of the relation or when nulling the relationremoving an element
+|Whether to remove orphans when either removing this side of the relation or when nulling the relation and removing an element
 |true, *false*
 |===
 
@@ -2399,7 +2398,7 @@ NOTE: There is a `@JoinColumns` annotation but you can achieve the same more cle
 [[UniqueConstraint]]
 === @UniqueConstraint
 
-This annotation is used to define a unique constraint to apply to a table. It is specified as part of @Table, @JoinTable or @SecondaryTable.
+This annotation is used to define a unique constraint to apply to a table. It is specified as part of `@Table`, `@JoinTable` or `@SecondaryTable`.
 
 [cols="1,1,3,1", options="header"]
 |===
@@ -2434,7 +2433,7 @@ See the documentation for link:mapping.html#constraints[Schema Constraints]
 [[Index]]
 === @Index
 
-This annotation is used to define the details for an Index. It is specified as part of @Table, @JoinTable, @CollectionTable or @SecondaryTable.
+This annotation is used to define the details for an Index. It is specified as part of `@Table`, `@JoinTable`, `@CollectionTable` or `@SecondaryTable`.
 
 [cols="1,1,3,1", options="header"]
 |===
@@ -2466,7 +2465,7 @@ See the documentation for link:mapping.html#constraints[Schema Constraints]
 [[ForeignKey]]
 === @ForeignKey
 
-This annotation is used to define the details for a ForeignKey. It is specified as part of @JoinColumn, @JoinTable, @CollectionTable or @SecondaryTable.
+This annotation is used to define the details for a ForeignKey. It is specified as part of `@JoinColumn`, `@JoinTable`, `@CollectionTable` or `@SecondaryTable`.
 
 [cols="1,1,3,1", options="header"]
 |===
@@ -2600,7 +2599,7 @@ public class MyClass
 [[NonDurableId]]
 === @NonDurableId
 
-This DataNucleus-extension annotation is used to define that the class uses nondurable identity. Specified on the *class*.
+This DataNucleus-extension annotation is used to define that the class uses non-durable identity. Specified on the *class*.
 
 [source,java]
 -----
@@ -2811,7 +2810,7 @@ public class MyClass
 [[ReadOnly]]
 === @ReadOnly
 
-This DataNucleus-extension annotation is used to define a field as being read-only (equivalent as insertable="false", updateable="false").
+This DataNucleus-extension annotation is used to define a field as being read-only (equivalent to `insertable="false", updateable="false"`).
 Specified on the *field/property*.
 
 [source,java]
