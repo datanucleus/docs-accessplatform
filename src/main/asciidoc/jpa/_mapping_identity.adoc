@@ -27,7 +27,7 @@ class which has the identity field(s).
 NOTE: Applicable to all datastores.
 
 With *application identity* you are taking control of the specification of id's to DataNucleus. Application identity can require a primary key class 
-_(when you have multiple identity fields)_, and each persistent capable class may define a different class for its primary 
+_(when you have multiple identity fields)_, and each persistable class may define a different class for its primary 
 key, and different persistent capable classes can use the same primary key class, as appropriate. With *application identity* the field(s) of the primary key 
 will be present as field(s) of the class itself. To specify that a class is to use *application identity*, you add the following to the MetaData for the class.
 
@@ -326,7 +326,7 @@ NOTE: Applicable to RDBMS, ODF, Excel, OOXML, XML, HBase, Cassandra, Neo4j, Mong
 
 While JPA defines support for xref:mapping.html#application[application identity] only, DataNucleus also provides support for *datastore identity*. 
 With *datastore identity* you are leaving the assignment of id's to DataNucleus and your class will *not* have a field for this identity - it will be added to the 
-datastore representation by DataNucleus. It is, to all extents and purposes a _surrogate key_ that will have its own column in the datastore. 
+datastore representation by DataNucleus. It is, to all extents and purposes, a _surrogate key_ that will have its own column in the datastore. 
 To specify that a class is to use *datastore identity* with JPA, you define the metadata as follows
 
 [source,xml]
