@@ -794,6 +794,8 @@ this, we advise using explicit _VALUE({field})_ since it is clearer the intent a
 [[jpql_subqueries]]
 == Subqueries
 
+NOTE: In strict JPQL you can only have subqueries in WHERE or HAVING clauses. DataNucleus additionally allows them in the SELECT, GROUP and ORDER clauses.
+
 With JPQL the user has a very flexible query syntax which allows for querying of the vast majority of data components in a single query. 
 In some situations it is desirable for the query to utilise the results of a separate query in its calculations. 
 JPQL also allows the use of subqueries. Here's an example
@@ -839,8 +841,6 @@ WHERE EXISTS (SELECT emp2 FROM Employee emp2 WHERE emp2 = emp.spouse)
 -----
 
 So this returns the employees that have a partner also employed.
-
-NOTE: in strict JPQL you can only have subqueries in WHERE or HAVING clauses. DataNucleus additionally allows them in the SELECT clause.
 
 
 [[jpql_candidates]]
