@@ -678,7 +678,7 @@ But the recommendation is to not use them, unless you have a mapping scenario th
 NOTE: PostGIS supports two additional types called box2d and box3d, that are not defined in OGC SF. There are only mappings available for these types 
 for PostGIS, any attempt to read or persist one of those data types in another mapping scenario will result in failure!
 
-NOTE: We do not currently support the PostGIS "geography" type, only the (most used) "geometry" type.
+NOTE: We do not currently support persisting to the PostGIS "geography" type, only the (most used) "geometry" type.
 
 
 
@@ -877,7 +877,7 @@ Dirty check limited to immutable mode (must reassign field to owner if you chang
 
 
 
-=== Geospatial PostGIS types
+=== PostGIS types
 
 https://postgis.net/docs/[PostGIS] provides a series of geometric types for use in Java applications
 
