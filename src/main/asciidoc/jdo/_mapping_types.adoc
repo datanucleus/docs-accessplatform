@@ -653,10 +653,39 @@ NOTE: This is the recommended way of constraining enum values in the datastore s
 == Geospatial Types
 
 DataNucleus has extensive support for Geospatial types. 
-The datanucleus-geospatial plugin allows using geospatial and traditional types simultaneously in persistent objects making DataNucleus a single 
-interface to read and manipulate any business data.
+The `datanucleus-geospatial` plugin allows using geospatial and traditional types simultaneously in persistent objects making DataNucleus a single 
+interface to read and manipulate any business data. This plugin supports types from all of the most used geospatial libraries, see below.
 The implementation of many of these spatial types follows the http://www.opengeospatial.org/standards/sfa[OGC Simple Feature  specification], 
 but adds further types where the datastores support them.
+
+
+Some extra notes for implementation of JTS, JGeometry and PostGIS types support :-
+
+NOTE: MySQL doesn't support 3-dimensional geometries. Trying to persist them anyway results in undefined behaviour, 
+there may be an exception thrown or the z-ordinate might just get stripped.
+
+NOTE: Oracle supports additional data types like circles and curves that are not defined in the OGC SF specification. 
+Any attempt to read or persist one of those data types, if you're not using Oracle, will result in failure!
+
+NOTE: PostGIS added support for curves in version 1.2.0, but at the moment the JDBC driver doesn't support them yet. 
+Any attempt to read curves geometries will result in failure, for every mapping scenario!
+
+NOTE: Both PostGIS and Oracle have a system to add user data to specific points of a geometry. In PostGIS these types are called measure types 
+and the z-coordinate of every 2d-point can be used to store arbitrary (numeric) data of double precision associated with that point. 
+In Oracle this user data is called LRS. `datanucleus-geospatial` tries to handle these types as gracefully as possible. 
+But the recommendation is to not use them, unless you have a mapping scenario that is known to support them.
+
+NOTE: PostGIS supports two additional types called box2d and box3d, that are not defined in OGC SF. There are only mappings available for these types 
+for PostGIS, any attempt to read or persist one of those data types in another mapping scenario will result in failure!
+
+NOTE: We do not currently support the PostGIS "geography" type, only the (most used) "geometry" type.
+
+
+
+
+=== java.awt types
+
+The JRE contains very limited support for some geometric types, largely under the _java.awt_ package.
 
 [cols="4,1,1,1,6", options="header"]
 |===
@@ -742,6 +771,23 @@ Persisted as (double, double, double, double, double, double) or (float, float, 
 |icon:times[]
 |Requires *datanucleus-geospatial* plugin. 
 Persisted as (double, double, double, double, double, double) or (float, float, float, float, float, float) on RDBMS, or as String elsewhere.
+|===
+
+
+
+
+=== Oracle JGeometry type
+
+Oracle provides its own geometry type for use in Oracle databases.
+
+
+[cols="4,1,1,1,6", options="header"]
+|===
+|Java Type
+|DFG?
+|Proxy?
+|PK?
+|Comments
 
 |oracle.spatial.geometry.JGeometry
 |icon:check[]
@@ -749,6 +795,21 @@ Persisted as (double, double, double, double, double, double) or (float, float, 
 |icon:times[]
 |Requires *datanucleus-geospatial* plugin.
 Dirty check limited to immutable mode (must reassign field to owner if you change it). Only on Oracle(SDO_GEOMETRY), MySQL(geometry)
+|===
+
+
+
+=== JTS Topology Suite types
+
+The https://github.com/locationtech/jts[JTS Topology Suite] is a Java library for creating and manipulating vector geometry.
+
+[cols="4,1,1,1,6", options="header"]
+|===
+|Java Type
+|DFG?
+|Proxy?
+|PK?
+|Comments
 
 |com.vividsolutions.jts.geom.Geometry
 |icon:check[]
@@ -812,6 +873,22 @@ Dirty check limited to immutable mode (must reassign field to owner if you chang
 |icon:times[]
 |Requires *datanucleus-geospatial* plugin.
 Dirty check limited to immutable mode (must reassign field to owner if you change it). Only on Oracle(SDO_GEOMETRY), MySQL(geometry), PostGIS(geometry).
+|===
+
+
+
+=== Geospatial PostGIS types
+
+https://postgis.net/docs/[PostGIS] provides a series of geometric types for use in Java applications
+
+
+[cols="4,1,1,1,6", options="header"]
+|===
+|Java Type
+|DFG?
+|Proxy?
+|PK?
+|Comments
 
 |org.postgis.Geometry
 |icon:check[]
@@ -891,20 +968,7 @@ Dirty check limited to immutable mode (must reassign field to owner if you chang
 Dirty check limited to immutable mode (must reassign field to owner if you change it). Only on PostGIS(geometry).
 |===
 
-Some extra notes for implementation of JTS, JGeometry and PostGIS types support :-
 
-* MySQL doesn't support 3-dimensional geometries. Trying to persist them anyway results in undefined behaviour, 
-there may be an exception thrown or the z-ordinate might just get stripped.
-* Oracle supports additional data types like circles and curves that are not defined in the OGC SF specification. 
-Any attempt to read or persist one of those data types, if you're not using Oracle, will result in failure!
-* PostGIS added support for curves in version 1.2.0, but at the moment the JDBC driver doesn't support them yet. 
-Any attempt to read curves geometries will result in failure, for every mapping scenario!
-* Both PostGIS and Oracle have a system to add user data to specific points of a geometry. In PostGIS these types are called measure types 
-and the z-coordinate of every 2d-point can be used to store arbitrary (numeric) data of double precision associated with that point. 
-In Oracle this user data is called LRS. datanucleus-geospatial tries to handle these types as gracefully as possible. 
-But the recommendation is to not use them, unless you have a mapping scenario that is known to support them.
-* PostGIS supports two additional types called box2d and box3d, that are not defined in OGC SF. There are only mappings available for these types 
-for PostGIS, any attempt to read or persist one of those data types in another mapping scenario will result in failure!
 
 
 === Geospatial metadata extensions
