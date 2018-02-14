@@ -680,7 +680,7 @@ NOTE: We do not currently support persisting to the PostGIS "geography" type, on
 
 
 
-=== java.awt types
+=== java.awt Java types
 
 The JRE contains very limited support for some geometric types, largely under the _java.awt_ package.
 
@@ -761,30 +761,7 @@ The JRE contains very limited support for some geometric types, largely under th
 
 
 
-
-=== Oracle JGeometry type
-
-Oracle provides its own geometry type for use in Oracle databases.
-
-
-[cols="4,1,1,1,6", options="header"]
-|===
-|Java Type
-|DFG?
-|Proxy?
-|PK?
-|Comments
-
-|oracle.spatial.geometry.JGeometry
-|icon:check[]
-|icon:times[]
-|icon:times[]
-|Requires *datanucleus-geospatial* plugin. Dirty check limited to immutable mode (must reassign field to owner if you change it). Only on Oracle(SDO_GEOMETRY), MySQL(geometry)
-|===
-
-
-
-=== JTS Topology Suite types
+=== JTS Topology Suite Java types
 
 The https://github.com/locationtech/jts[JTS Topology Suite] is a Java library for creating and manipulating vector geometry.
 
@@ -806,7 +783,7 @@ The https://github.com/locationtech/jts[JTS Topology Suite] is a Java library fo
 |icon:check[]
 |icon:times[]
 |icon:times[]
-|Requires *datanucleus-geospatial* plugin.Dirty check limited to immutable mode (must reassign field to owner if you change it). Only on Oracle(SDO_GEOMETRY), MySQL(geometry), PostGIS(geometry).
+|Requires *datanucleus-geospatial* plugin. Dirty check limited to immutable mode (must reassign field to owner if you change it). Only on Oracle(SDO_GEOMETRY), MySQL(geometry), PostGIS(geometry).
 
 |com.vividsolutions.jts.geom.LinearRing
 |icon:check[]
@@ -852,7 +829,7 @@ The https://github.com/locationtech/jts[JTS Topology Suite] is a Java library fo
 |===
 
 
-=== PostGIS types
+=== PostGIS Java types
 
 https://postgis.net/docs/[PostGIS] provides a series of geometric types for use in Java applications
 
@@ -940,6 +917,30 @@ Dirty check limited to immutable mode (must reassign field to owner if you chang
 |Requires *datanucleus-geospatial* plugin.
 Dirty check limited to immutable mode (must reassign field to owner if you change it). Only on PostGIS(geometry).
 |===
+
+
+
+=== Oracle JGeometry Java type
+
+Oracle provides its own geometry type for use in Oracle databases.
+
+
+[cols="4,1,1,1,6", options="header"]
+|===
+|Java Type
+|DFG?
+|Proxy?
+|PK?
+|Comments
+
+|oracle.spatial.geometry.JGeometry
+|icon:check[]
+|icon:times[]
+|icon:times[]
+|Requires *datanucleus-geospatial* plugin. Dirty check limited to immutable mode (must reassign field to owner if you change it). Only on Oracle(SDO_GEOMETRY), MySQL(geometry)
+|===
+
+
 
 
 === Geospatial metadata extensions

@@ -776,29 +776,6 @@ Persisted as (double, double, double, double, double, double) or (float, float, 
 
 
 
-=== Oracle JGeometry type
-
-Oracle provides its own geometry type for use in Oracle databases.
-
-
-[cols="4,1,1,1,6", options="header"]
-|===
-|Java Type
-|DFG?
-|Proxy?
-|PK?
-|Comments
-
-|oracle.spatial.geometry.JGeometry
-|icon:check[]
-|icon:times[]
-|icon:times[]
-|Requires *datanucleus-geospatial* plugin.
-Dirty check limited to immutable mode (must reassign field to owner if you change it). Only on Oracle(SDO_GEOMETRY), MySQL(geometry)
-|===
-
-
-
 === JTS Topology Suite types
 
 The https://github.com/locationtech/jts[JTS Topology Suite] is a Java library for creating and manipulating vector geometry.
@@ -967,6 +944,29 @@ Dirty check limited to immutable mode (must reassign field to owner if you chang
 |Requires *datanucleus-geospatial* plugin.
 Dirty check limited to immutable mode (must reassign field to owner if you change it). Only on PostGIS(geometry).
 |===
+
+
+=== Oracle JGeometry type
+
+Oracle provides its own geometry type for use in Oracle databases.
+
+
+[cols="4,1,1,1,6", options="header"]
+|===
+|Java Type
+|DFG?
+|Proxy?
+|PK?
+|Comments
+
+|oracle.spatial.geometry.JGeometry
+|icon:check[]
+|icon:times[]
+|icon:times[]
+|Requires *datanucleus-geospatial* plugin.
+Dirty check limited to immutable mode (must reassign field to owner if you change it). Only on Oracle(SDO_GEOMETRY), MySQL(geometry)
+|===
+
 
 
 
