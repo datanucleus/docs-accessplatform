@@ -187,10 +187,8 @@ Declare a Persistence Manager Factory Bean inside the beans.xml:
             <prop key="javax.jdo.option.ConnectionUserName">foo</prop>
             <prop key="javax.jdo.option.ConnectionPassword">bar</prop>
 
-            <prop key="datanucleus.autoCreateSchema">true</prop>
-            <prop key="datanucleus.validateTables">true</prop>
-            <prop key="datanucleus.validateColumns">true</prop>
-            <prop key="datanucleus.validateConstraints">true</prop>
+            <prop key="datanucleus.schema.autoCreateAll">true</prop>
+            <prop key="datanucleus.schema.validateAll">true</prop>
             <prop key="datanucleus.rdbms.CheckExistTablesOrViews">true</prop>
 
             <prop key="datanucleus.plugin.pluginRegistryClassName">org.datanucleus.plugin.OSGiPluginRegistry</prop>
