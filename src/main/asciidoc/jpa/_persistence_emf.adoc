@@ -378,7 +378,7 @@ Users are always advised to run an EM as single threaded, since some operations 
 {true, *false*}
 
 |datanucleus.Optimistic
-|Whether to use optimistic locking (link:#locking_optimistic[Optimistic locking]).
+|Whether to use link:#locking_optimistic[optimistic locking].
 {*true*, false}
 
 |datanucleus.RetainValues
@@ -994,7 +994,7 @@ DataNucleus provides the following properties for configuring metadata handling 
 {true, *false*}
 
 |datanucleus.metadata.xml.namespaceAware
-|Whether to allow for XML namespaces in metadata files. The vast majority of sane people should not need this at all, but it's enabled by default to allow for those that do (since v3.2.3)
+|Whether to allow for XML namespaces in metadata files. The vast majority of sane people should not need this at all, but it's enabled by default to allow for those that do. 
 {*true*, false}
 
 |datanucleus.metadata.allowXML
@@ -1149,7 +1149,7 @@ to select the affected owner objects. 'none' means don't fetch container element
 {*exists*, none}
 
 |datanucleus.rdbms.oracle.nlsSortOrder
-|Sort order for Oracle String fields in queries (BINARY disables native language sorting). *Applicable for RDBMS only* {*LATIN*, See Oracle documentation}
+|Sort order for Oracle String fields in queries (BINARY disables native language sorting). *Applicable to Oracle only* {*LATIN*, See Oracle documentation}
 
 |datanucleus.rdbms.mysql.engineType
 |Specify the default engine for any tables created in MySQL. *Applicable to MySQL only*. {*InnoDB*, valid engine for MySQL}
@@ -1161,7 +1161,7 @@ to select the affected owner objects. 'none' means don't fetch container element
 |Specify the default charset for any tables created in MySQL. *Applicable to MySQL only*
 
 |datanucleus.rdbms.informix.useSerialForIdentity
-|Whether we are using SERIAL for identity columns (instead of SERIAL8). *Applicable for RDBMS only.* {true, *false*}
+|Whether we are using SERIAL for identity columns (instead of SERIAL8). *Applicable to Informix only.* {true, *false*}
 
 |datanucleus.rdbms.dynamicSchemaUpdates
 |Whether to allow dynamic updates to the schema. This means that upon each insert/update the types of objects will be tested and any previously unknown implementations of
@@ -1309,7 +1309,7 @@ Objects are placed in the L2 cache when you commit() the transaction of a Entity
 This means that you only have datastore-persisted objects in that cache. 
 Also, if an object is deleted during a transaction then at commit it will be removed from the L2 cache if it is present.
 
-link:../extensions/extensions.html#cache_level2[image:../images/nucleus_plugin.png]
+link:../extensions/extensions.html#cache_level2[image:../images/nucleus_extension.png[]]
 The L2 cache is a DataNucleus plugin point allowing you to provide your own cache where you require it. Use the examples of the EHCache, Coherence caches etc as reference.
 
             
