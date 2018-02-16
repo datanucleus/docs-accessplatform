@@ -886,7 +886,7 @@ This setting applies as the default for all PMs obtained. You can also specify t
 {true, *false*}
 
 |datanucleus.flush.auto.objectLimit
-|For use when using (DataNucleus) "AUTO" flush mode (see `datanucleus.flush.mode`) and is the limit on number of dirty objects before a flush to the datastore will be performed.
+|For use when using (DataNucleus) "AUTO" flush mode (see *datanucleus.flush.mode*) and is the limit on number of dirty objects before a flush to the datastore will be performed.
 {*1*, positive integer}
 
 |datanucleus.flush.mode
@@ -1114,11 +1114,11 @@ Some databases do not support all isolation levels, refer to your database docum
 {read-uncommitted, *read-committed*, repeatable-read, serializable}
 
 |datanucleus.valuegeneration.sequence.allocationSize
-|If using JDO3.0 still and not specifying the size of your sequence, this acts as the default allocation size.
+|Sets the default allocation size for any "sequence" value strategy. You can configure each member strategy individually but they fall back to this value if not set.
 {10, (integer value)}
 
 |datanucleus.valuegeneration.increment.allocationSize
-|Sets the default allocation size for any "increment" value strategy. You can configure each member strategy individually but they fall back to this value if not set
+|Sets the default allocation size for any "increment" value strategy. You can configure each member strategy individually but they fall back to this value if not set.
 {10, (integer value)}
 |===
 
