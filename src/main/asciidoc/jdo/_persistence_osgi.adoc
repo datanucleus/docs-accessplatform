@@ -60,45 +60,45 @@ We are going to start by creating a clean OSGi target platform. Start by creatin
 
 The first ingredient we are adding to our platform is the OSGi implementation. In this guide we will use Eclipse Equinox as our OSGi implementation. 
 However one could also use Apache Felix, Knoplerfish, Concierge or any other compatible OSGi implementation for this purpose. 
-Download the "org.eclipse.osgi_3.7.1.R37x_v20110808-1106.jar" ("Framework Only" download) from the Eclipse Equinox website and put in the target platform.
+Download the `org.eclipse.osgi_3.7.1.R37x_v20110808-1106.jar` ("Framework Only" download) from the Eclipse Equinox website and put in the target platform.
 
 
 === Step 2 - Adding DI
 
 We are now going to add the Spring, Spring ORM, Spring JDBC, Spring Transaction and Spring DM bundles to our target platform. 
-Download the Spring Community distribution from their website "spring-framework-3.0.6.RELEASE.zip". Extract the following files to our target platform directory:
+Download the Spring Community distribution from their website (`spring-framework-3.0.6.RELEASE.zip`). Extract the following files to our target platform directory:
 
-* org.springframework.aop-3.0.6.RELEASE.jar
-* org.springframework.asm-3.0.6.RELEASE.jar
-* org.springframework.aspects-3.0.6.RELEASE.jar
-* org.springframework.beans-3.0.6.RELEASE.jar
-* org.springframework.context.support-3.0.6.RELEASE.jar
-* org.springframework.context-3.0.6.RELEASE.jar
-* org.springframework.core-3.0.6.RELEASE.jar
-* org.springframework.expression-3.0.6.RELEASE.jar
-* org.springframework.jdbc-3.0.6.RELEASE.jar
-* org.springframework.orm-3.0.6.RELEASE.jar
-* org.springframework.spring-library-3.0.6.RELEASE.libd
-* org.springframework.transaction-3.0.6.RELEASE.jar
+* `org.springframework.aop-3.0.6.RELEASE.jar`
+* `org.springframework.asm-3.0.6.RELEASE.jar`
+* `org.springframework.aspects-3.0.6.RELEASE.jar`
+* `org.springframework.beans-3.0.6.RELEASE.jar`
+* `org.springframework.context.support-3.0.6.RELEASE.jar`
+* `org.springframework.context-3.0.6.RELEASE.jar`
+* `org.springframework.core-3.0.6.RELEASE.jar`
+* `org.springframework.expression-3.0.6.RELEASE.jar`
+* `org.springframework.jdbc-3.0.6.RELEASE.jar`
+* `org.springframework.orm-3.0.6.RELEASE.jar`
+* `org.springframework.spring-library-3.0.6.RELEASE.libd`
+* `org.springframework.transaction-3.0.6.RELEASE.jar`
 
 
 === Step 3 - Adding OSGi Blueprint
 
-Download the Eclipse Gemini release from their website ("gemini-blueprint-1.0.0.RELEASE.zip") and extract the following files to our target platform:
+Download the Eclipse Gemini release from their website (`gemini-blueprint-1.0.0.RELEASE.zip`) and extract the following files to our target platform:
 
-* gemini-blueprint-core-1.0.0.RELEASE.jar
-* gemini-blueprint-extender-1.0.0.RELEASE.jar
-* gemini-blueprint-io-1.0.0.RELEASE.jar
+* `gemini-blueprint-core-1.0.0.RELEASE.jar`
+* `gemini-blueprint-extender-1.0.0.RELEASE.jar`
+* `gemini-blueprint-io-1.0.0.RELEASE.jar`
 
 
 === Step 4 - Adding ORM
 
 We are now going to add JDO and DataNucleus to our target platform.
 
-* datanucleus-core-XXX.jar
-* datanucleus-api-jdo-XXX.jar
-* datanucleus-rdbms-XXX.jar
-* javax.jdo-3.2.0-m5.jar
+* `datanucleus-core-XXX.jar`
+* `datanucleus-api-jdo-XXX.jar`
+* `datanucleus-rdbms-XXX.jar`
+* `javax.jdo-3.2.0-m5.jar`
 
 
 === Step 5 - Adding miscellaneous bundles
@@ -106,9 +106,9 @@ We are now going to add JDO and DataNucleus to our target platform.
 The following bundles are dependencies of our core bundles and can be downloaded from the http://www.springsource.com/repository/app/[Spring Enterprise Bundle Repository]
 
 
-* com.springsource.org.aopalliance-1.0.0.jar (Dependency of Spring AOP, the core AOP bundle. )
-* com.springsource.org.apache.commons.logging-1.1.1.jar (Dependency of various Spring bundles, logging abstraction library.)
-* com.springsource.org.postgresql.jdbc4-8.3.604.jar (PostgreSQL JDBC driver, somewhat dated.)
+* `com.springsource.org.aopalliance-1.0.0.jar` (Dependency of Spring AOP, the core AOP bundle. )
+* `com.springsource.org.apache.commons.logging-1.1.1.jar` (Dependency of various Spring bundles, logging abstraction library.)
+* `com.springsource.org.postgresql.jdbc4-8.3.604.jar` (PostgreSQL JDBC driver, somewhat dated.)
 
 We now have a basic target platform. This is how the directory housing the target platform looks on my PC:
 
@@ -378,7 +378,7 @@ _This guide was written by Stuart Robertson_.
 
 Using DataNucleus inside an Eclipse plugin (that is, Eclipse's Equinox OSGi runtime) should be simple, because DataNucleus is implemented as a collection of 
 OSGi bundles. My early efforts to use DataNucleus from within my Eclipse plugins all ran into problems. First classloader problems of various kinds began to show 
-themselves. See http://www.datanucleus.org/servlet/forum/viewthread?thread=4846[this post] on the DataNucleus Forum for details. 
+themselves. This was revealed in a post on the old DataNucleus forum (now closed). 
 My initial faulty configuration was as follows:
 
 -----
@@ -427,7 +427,7 @@ PMF properties file (which I called _datanucleus.properties_). Also, _all_ of th
 exported using the Export-Package bundle-header.
 
 Note, that the plugin.xml file in the "jars" project is an empty plugin.xml file containing only &lt;plugin&gt;&lt;/plugin&gt;, used only to trick Eclipse into using the 
-Plugin Editor to open the MANIFEST.MF file so the bundle info can be edited in style.
+Plugin Editor to open the `MANIFEST.MF` file so the bundle info can be edited in style.
 
 The _rcp.ui plugin_ depends on the _rcp.jars_ so that it can "see" all of the necessary classes. Inside the Bundle Activator class in my UI plugin I 
 initialized DataNucleus as normal, creating a PersistenceManagerFactory from the embedded datanucleus.properties file.
@@ -438,8 +438,8 @@ It all looks really promising, but doesn't work due to all kinds of classloading
 === DataNucleus jars as plugins
 
 The first part of the solution was to use the DataNucleus as a set of Eclipse plugins. Initially I wasn't sure where to get MANIFEST.MF and plugin.xml files to do 
-this, but I later discovered that each of the datanucleus jar files are <u>already</u> packaged as Eclipse plugins. Open any of the datanucleus jar files up and 
-you'll see an OSGi manifest and Eclipse plugin.xml. All that was needed was to copy datanucleus-XXX.jar into $ECLIPSE_HOME/plugins directory and restart Eclipse.
+this, but I later discovered that each of the datanucleus jar files are already packaged as Eclipse plugins. Open any of the datanucleus jar files up and 
+you'll see an OSGi manifest and Eclipse plugin.xml. All that was needed was to copy `datanucleus-XXX.jar` into `$ECLIPSE_HOME/plugins` directory and restart Eclipse.
 
 Once this was done, I removed the datanucleus jar files from my lib/ directory and instead modified my jars plugin, removing the datanucleus jars and all 
 datanucleus packages from Bundle-Classpath and Export-Package. Next, I modified my _rcp.ui plugin_ to depend not only on _rcp.jars_, but also on 
@@ -458,7 +458,7 @@ This moved things along, resulting in the following message:
 javax.jdo.JDOException: Class org.datanucleus.store.rdbms.RDBMSManager was not found in the CLASSPATH. Please check your specification and your CLASSPATH.
 -----
 
-Turns out that the class that could not be found was not org.datanucleus.store.rdbms.RDBMSManager, but rather my H2 database driver class. I figured the solution 
+Turns out that the class that could not be found was not `org.datanucleus.store.rdbms.RDBMSManager`, but rather my H2 database driver class. I figured the solution 
 might lie in using Eclipse's buddy-loading mechanism to allow the *org.datanucleus.store.rdbms* plugin to see my JDBC driver, which is was packaged into my 
 'jars' plugin. Thus, I added the following to _rcp.ui_'s MANIFEST.MF:
 
@@ -473,7 +473,7 @@ read http://www.eclipsezone.com/articles/eclipse-vms/[A Tale of Two VMs], as you
 
 === PrimaryClassLoader saves the day
 
-Returning to http://www.datanucleus.org/servlet/forum/viewthread?thread=3910[Erik Bengtson's example] (about half-way down the post) gave me inspiration:
+Returning to Erik Bengtson's DataNucleus forum example gave me inspiration:
 
 [source,java]
 -----
