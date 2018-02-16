@@ -128,9 +128,9 @@ The join table is used to link the 2 classes via foreign keys to their primary k
 
 If you wish to fully define the schema table and column names etc, follow these tips
 
-* To specify the name of the table where a class is stored, specify the _table_ element below the *class* element
+* To specify the name of the table where a class is stored, specify the `table` element below the `class` element
 * To specify the names of the columns where the fields of a class are stored, specify the  _column_ attribute on the `basic` element.
-* To specify the name of the join table, specify the _join-table_ element below the *one-to-many* element with the collection.
+* To specify the name of the join table, specify the `join-table` element below the `one-to-many` element with the collection.
 * To specify the names of the join table columns, use the `join-column` and `inverse-join-column` elements below the `join-table` element.
 * If the field type is Set then the join table will be given a primary key (since a Set cannot have duplicates), whereas for other Collection types 
 it will not have a primary key (since duplicates are allowed).

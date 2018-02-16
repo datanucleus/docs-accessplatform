@@ -451,7 +451,7 @@ This is because the embedded key/value has no identity so we have to retrieve al
 It should be noted that where the map "key"/"value" is not _persistable_ or of a "reference" type (Interface or Object) it will *always* be embedded, 
 and this functionality here applies to _persistable_ keys/values only. DataNucleus doesn't support embedding reference type elements currently.
 
-Let's take an example. We are modelling a *FilmLibrary*, and in our simple model our *FilmLibrary* has map of *Film*s, keyed by a String alias. So we define our classes as
+Let's take an example. We are modelling a *FilmLibrary*, and in our simple model our *FilmLibrary* has map of *Films*, keyed by a String alias. So we define our classes as
 
 [source,java]
 -----
