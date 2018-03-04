@@ -520,11 +520,6 @@ which will return the current user to use for each call. Used by link:mapping.ht
 |Whether, when attaching a detached object, we create an attached copy or simply migrate the detached object to attached state
 {*true*, false}
 
-|datanucleus.allowAttachOfTransient
-|When you call PM.makePersistent with a transient object (with PK fields set), if you enable this feature then it will first check for existence of an object in the datastore 
-with the same identity and, if present, will merge into that object (rather than just trying to persist a new object).
-{true, *false*}
-
 |datanucleus.attachSameDatastore
 |When attaching an object DataNucleus by default assumes that you're attaching to the same datastore as you detached from. 
 DataNucleus does though allow you to attach to a different datastore (for things like replication). 
