@@ -43,6 +43,9 @@ image:../images/array_serialised_db.png[]
 DataNucleus supports persistence of the following array types in this way :
 _boolean[], byte[], char[], double[], float[], int[], long[], short[], Boolean[], Byte[], Character[], Double[], Float[], Integer[], Long[], Short[], BigDecimal[], BigInteger[]_
 
+NOTE: When using PostgreSQL you can persist an array of _int, short, long, Integer, Short, Long into a column of type _int array_, or an array of _String_ into a column of type _text array_.
+
+ 
 See also :-
 
 * link:metadata_xml.html#array[MetaData reference for <array> element]

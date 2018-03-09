@@ -115,8 +115,8 @@ so we have changed the field "someField" specified in the persistent superclass 
 [[member_position]]
 == Field/Property positioning
 
-With some datastores (notably spreadsheets) it is desirable to be able to specify the relative position of a column. 
-The default (for DataNucleus) is just to put them in ascending alphabetical order.
+With some datastores (notably spreadsheets) it is desirable to be able to specify the relative position of a column in the schema. 
+The DataNucleus default is to put them in ascending *alphabetical* order.
 JDO allows definition of this using the _position_ attribute on a *column*.
 Here's an example, using XML metadata    
 
@@ -139,7 +139,7 @@ Here's an example, using XML metadata
 </jdo>
 -----
 
-and with Annotations
+and with annotations
 
 [source,java]
 -----
@@ -180,7 +180,7 @@ If you want to make a member read-only you can do it like this.
 </jdo>
 -----
 
-and with Annotations
+and with annotations
 
 [source,java]
 -----
