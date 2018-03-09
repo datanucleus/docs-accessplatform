@@ -79,17 +79,17 @@ _Rectangle_ classes implement _Shape_ then we just define them in the MetaData a
 
 [source,java]
 -----
-@Entity
+@PersistenceCapable
 public class Square implement Shape
 {
     ...
 }
-@Entity
+@PersistenceCapable
 public class Circle implement Shape
 {
     ...
 }
-@Entity
+@PersistenceCapable
 public class Rectangle implement Shape
 {
     ...
@@ -103,7 +103,7 @@ for a particular interface field. To do this you define the Meta-Data like this
 
 [source,java]
 -----
-@Entity
+@PersistenceCapable
 public class ShapeHolder
 {
     @Extension(key="implementation-classes", value="mydomain.Circle,mydomain.Rectangle,mydomain.Square")
@@ -193,12 +193,9 @@ If you omit the _implementation-classes_ tag then you have to give DataNucleus a
 
 == Dynamic Schema Updates
 
-The default mapping strategy for interface fields and collections of interfaces is
-to have separate FK column(s) for each possible implementation of the interface.
-Obviously if you have an application where new implementations are added over time
-the schema will need new FK column(s) adding to match. This is possible if you enable
-the persistence property *datanucleus.rdbms.dynamicSchemaUpdates*, setting it
-to _true_. With this set, any insert/update operation of an interface related field
-will do a check if the implementation being stored is known about in the schema and,
+The default mapping strategy for interface fields and collections of interfaces is to have separate FK column(s) for each possible implementation of the interface.
+Obviously if you have an application where new implementations are added over time the schema will need new FK column(s) adding to match. 
+This is possible if you enable the persistence property *datanucleus.rdbms.dynamicSchemaUpdates*, setting it to _true_. 
+With this set, any insert/update operation of an interface related field will do a check if the implementation being stored is known about in the schema and,
 if not, will update the schema accordingly.
 
