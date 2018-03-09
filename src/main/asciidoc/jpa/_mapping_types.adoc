@@ -641,7 +641,7 @@ This results in a column defined like
 
 [source,sql]
 -----
-MY_COL VARCHAR(10) CHECK (MY_COL IN ('RED', 'GREEN', 'BLUE')),
+MY_COL VARCHAR(10) CHECK (MY_COL IN ('RED', 'GREEN', 'BLUE', 'YELLOW')),
 -----
 
 NOTE: This is the recommended way of constraining enum values in the datastore since it uses ANSI SQL, and it is a better more portable solution than using such as PostgreSQL enum type.
