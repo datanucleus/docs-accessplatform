@@ -15,6 +15,14 @@ Migration to 5.1 involves the following steps
 
 
 
+=== Migration from 5.1.7 to 5.1.8
+
+Migrating will require the following changes.
+
+* The default for which JDO XML file locations will be supported has changed. It is now just the locations in the JDO 3.2 spec. To support XML locations from
+the JDO 1.0.0 spec (which were later removed from JDO) you need to specify persistence property *datanucleus.metadata.xml.allowJDO1_0" as _true_.
+
+
 === Migration from 5.1.0-RELEASE to 5.1.1
 
 Migrating will require the following changes.
