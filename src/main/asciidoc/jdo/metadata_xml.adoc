@@ -99,6 +99,28 @@ You can turn off such validations by setting the persistence property *datanucle
 Note that this only turns off the XML strictness validation, and _not_ the checks on inconsistency of specification of relations etc.
 
 
+image:../images/nucleus_extension.png[]
+
+By default DataNucleus will look for XML metadata in the above locations, as per the JDO spec. If you set the persistence property *datanucleus.metadata.xml.allowJDO1_0*
+then the above list of locations will be extended to also include some locations that were in the original JDO 1.0.0 spec
+
+
+-----
+META-INF/package.jdo
+WEB-INF/package.jdo
+package.jdo
+com.jdo
+com/package.jdo
+com/mycompany.jdo
+com/mycompany/package.jdo
+com/mycompany/sample.jdo
+com/mycompany/sample/package.jdo
+com/mycompany/sample/MyExample.jdo
+-----
+
+
+
+
 
 What follows provides a reference guide to XML MetaData elements for what goes in an XML metadata file. 
 Refer to the relevant XSD for precise details.
