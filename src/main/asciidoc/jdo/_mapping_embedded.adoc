@@ -323,7 +323,7 @@ public class Device
 -----
 
 We decide that instead of *Device* having its own table, we want to persist them into the join table of its relationship with the *Network* since they are only used by the network itself.
-We define our XML MetaData like this
+We define our annotations like this
 
 [source,java]
 -----
@@ -334,6 +334,7 @@ public class Network
             @Persistent(name="name", column="DEVICE_NAME"),
             @Persistent(name="ipAddress", column="DEVICE_IP_ADDR")})
     })
+    @Join(column="NETWORK_ID")
     private Collection<Device> devices = new HashSet<>();
 
     ...
