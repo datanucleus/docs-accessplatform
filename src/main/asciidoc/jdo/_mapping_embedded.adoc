@@ -474,7 +474,7 @@ public class Film
 -----
 
 We decide that instead of *Film* having its own table, we want to persist them into the join table of its map relationship with the *FilmLibrary* since they are 
-only used by the library itself. We define our XML MetaData like this
+only used by the library itself. We define our annotations like this
 
 [source,java]
 -----
@@ -486,6 +486,7 @@ public class FilmLibrary
             @Persistent(name="name", column="FILM_NAME"),
             @Persistent(name="director", column="FILM_DIRECTOR")})
     })
+    @Join(column="FILM_LIBRARY_ID")
     private Map<String, Film> films = new HashMap<>();
 
     ...
