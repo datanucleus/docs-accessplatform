@@ -1538,12 +1538,12 @@ Weak references are held to non pinned objects.
 * link:#cache_level2_ehcache[EHCache] - a simple wrapper to EHCache's caching product.
 * link:#cache_level2_ehcache[EHCacheClassBased] - similar to the EHCache option but class-based.
 * link:#cache_level2_redis[Redis] - an L2 cache using Redis.
-* link:#cache_level2_he[OSCache] - a simple wrapper to OSCache's caching product.
 * link:#cache_level2_coherence[Oracle Coherence] - a simple wrapper to Oracle's Coherence caching product. 
 Oracle's caches support distributed caching, so you could, in principle, use DataNucleus in a distributed environment with this option.
-* link:#cache_level2_memcached[spymemcached] - a simple wrapper to the "spymemcached" client for memcached caching product.
-* link:#cache_level2_memcached[xmemcached] - a simple wrapper to the "xmemcached" client for memcached caching product. 
+* link:#cache_level2_memcached[spymemcached] - a simple wrapper to the "spymemcached" client for http://www.memcached.org[memcached] caching product.
+* link:#cache_level2_memcached[xmemcached] - a simple wrapper to the "xmemcached" client for http://www.memcached.org[memcached] caching product. 
 * link:#cache_level2_cacheonix[cacheonix] - a simple wrapper to the Cacheonix distributed caching software.
+* link:#cache_level2_oscache[OSCache] - a simple wrapper to OSCache's caching product.
 * *none* - turn OFF L2 caching.
 
 The weak, soft and javax.cache caches are available in the datanucleus-core plugin.
@@ -1734,7 +1734,7 @@ datanucleus.cache.level2.expireMillis=...
 datanucleus.cache.level2.memcached.servers=...
 -----
 
-*datanucleus.cache.level2.memcached.servers* is a space separated list of memcached hosts/ports, e.g. host:port host2:port.
+*datanucleus.cache.level2.memcached.servers* is a space separated list of http://www.memcached.org[memcached] hosts/ports, e.g. host:port host2:port.
 *datanucleus.cache.level2.expireMillis* if not set or set to 0 then no expire
 
 
