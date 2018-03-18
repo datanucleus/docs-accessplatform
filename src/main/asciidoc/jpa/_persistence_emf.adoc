@@ -1538,3 +1538,12 @@ If you require more control over the Coherence cache whilst using it with DataNu
 JPADataStoreCache cache = (JPADataStoreCache)emf.getCache();
 NamedCache tangosolCache = ((TangosolLevel2Cache)cache.getLevel2Cache()).getTangosolCache();
 -----
+
+
+=== Level 2 Cache implementation
+
+Objects in a Level 2 cache are keyed by their JPA "identity". Consequently only persistable objects with an identity will be L2 cached.
+In terms of what is cached, the persistable object is represented by a https://github.com/datanucleus/datanucleus-core/blob/master/src/main/java/org/datanucleus/cache/CachedPC.java[CachedPC]
+object. This stores the class of the persistable object, the "id", "version" (if present), and the field values (together with which fields are present in the L2 cache).
+If a field is/contains a relation, the field value will be the "id" of the related object (rather than the object itself). 
+If a field is/contains an embedded persistable object, the field value will be a nested `CachedPC` object representing that object.
