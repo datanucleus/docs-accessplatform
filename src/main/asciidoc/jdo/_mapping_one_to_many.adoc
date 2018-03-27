@@ -1119,6 +1119,8 @@ The `ADDRESS` table will contain the key field as well as an index to the *Accou
 
 image:../images/relationship_1_N_map_key_in_value_db.png[]
 
+TIP: Since each Address object can have at most one key (due to the "Foreign Key") this mode of persistence will not allow duplicate values in the Map. If you want to allow duplicate Map values, then use the "Join Table" variant above.
+
 
 [[one_many_map_fk_uni_value]]
 == Map<PC,Simple> Unidirectional FK (value stored in key)
