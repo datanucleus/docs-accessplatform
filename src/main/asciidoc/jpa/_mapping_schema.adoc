@@ -17,6 +17,7 @@ There are several aspects to cover here
 * link:#schema_nulls_defaults[Column nullability and default value]
 * link:#schema_column_types[Column Types]
 * link:#schema_column_position[Position of a column in a table]
+* link:#schema_foreign_key[RDBMS : Foreign keys]
 * link:#schema_rdbms_views[RDBMS : Mapping a class to an RDBMS View]
 * link:#schema_rdbms_types[RDBMS : Supported types for a field]
 
@@ -202,6 +203,57 @@ With some datastores it is desirable to be able to specify the relative position
 The default (for DataNucleus) is just to put them in ascending alphabetical order.
 DataNucleus allows an extension to JPA providing definition of this using the _position_ of a *column*.
 See link:#member_position[fields/properties positioning docs] for details.
+
+
+[[schema_foreign_key]]
+== RDBMS: Foreign Keys
+
+With RDBMS you can define the names of some of the foreign keys that are used along relationships.
+When you have a join table you can define the foreign key back to the owner and foreign key across to the element like this
+
+
+[source,java]
+-----
+public class Account
+{
+    ...
+
+    @OneToMany
+    @JoinTable(foreignKey=@ForeignKey(name="ACCOUNT_FK"), inverseForeignKey=@ForeignKey(name="ADDRESS_FK"))
+    Collection<Address> addresses;
+}
+
+public class Address
+{
+    ...
+}
+-----
+
+or alternatively using XML
+
+[source,xml]
+-----
+<entity-mappings>
+    <entity class="Account">
+        <attributes>
+            ...
+            <one-to-many name="addresses">
+                <join-table>
+                    <foreign-key name="ACCOUNT_FK"/>
+                    <inverse-foreign-key name="ADDRESS_FK"/>
+                </join-table>
+            </one-to-many>
+        </attributes>
+    </entity>
+
+    <entity class="Address">
+        <attributes>
+            ...
+        </attributes>
+    </entity>
+</entity-mappings>
+-----
+
 
 
 [[schema_rdbms_views]]
