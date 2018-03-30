@@ -21,6 +21,10 @@ There are several aspects to cover here
 * link:#schema_column_types[Column Types]
 * link:#schema_unmapped_columns[Columns with no field in the class]
 * link:#schema_column_position[Position of a column in a table]
+* link:#index[Index Constraints] - these are used to mark fields that are referenced often as indexes so that when they are used the performance is optimised.
+* link:#unique[Unique Constraints] - these are placed on fields that should have a unique value. That is only one object will have a particular value.
+* link:#fk[Foreign-Key Constraints] - these are used to interrelate objects, and allow the datastore to keep the integrity of the data in the datastore.
+* link:#pk[Primary-Key Constraints] - allow the PK to be set, and also to have a name.
 * link:#schema_rdbms_views[RDBMS : Mapping a class to an RDBMS View]
 * link:#schema_rdbms_types[RDBMS : Supported types for a field]
 
@@ -381,6 +385,317 @@ With some datastores it is desirable to be able to specify the relative position
 The default (for DataNucleus) is just to put them in ascending alphabetical order.
 JDO allows definition of this using the _position_ attribute on a *column*.
 See link:mapping.html#member_position[fields/properties column positioning docs] for details.
+
+
+[[index]]
+== Index Constraints
+
+NOTE: Applicable to RDBMS, NeoDatis, MongoDB.
+
+Many datastores provide the ability to have indexes defined to give performance benefits.
+With RDBMS the indexes are specified on the table and the indexes to the rows are stored separately.
+In the same way an ODBMS typically allows indexes to be specified on the fields of the class, and these 
+are managed by the datastore. JDO provides a mechanism for defining indexes, and hence if a developer 
+knows that a particular field is going to be highly used for querying, they can select that field to be 
+indexed in their (JDO) persistence solution. 
+Let's take an example class, and show how to specify this
+
+[source,java]
+-----
+public class Booking
+{
+    private int bookingType;
+    ...
+}
+-----
+
+We decide that our _bookingType_ is going to be highly used and we want to index this in the persistence tool. To do this we define the Meta-Data for our class as
+
+[source,xml]
+-----
+<class name="Booking">
+    <field name="bookingType">
+        <index name="BOOKING_TYPE_INDEX"/>
+    </field>
+</class>
+-----
+ 
+This will mean that DataNucleus will create an index in the datastore for the field and the index will have the name `BOOKING_TYPE_INDEX` (for datastores that support using named indexes). 
+If we had wanted the index to provide uniqueness, we could have made this 
+
+[source,xml]
+-----
+<index name="BOOKING_TYPE_INDEX" unique="true"/>
+-----
+
+This has demonstrated indexing the fields of a class. The above example will index together all columns for that field. 
+In certain circumstances you want to be able to index from the column point of view. 
+So we are thinking more from a database perspective. Here we define our indexes at the `<class>` level, like this
+
+[source,xml]
+-----
+<class name="Booking">
+    <index name="MY_BOOKING_INDEX">
+        <column name="BOOKING"/>
+    </index>
+    ...
+</class>
+-----
+
+This creates an index for the specified column (where the datastore supports columns i.e RDBMS).
+
+=== Enhanced index creation
+
+image:../images/nucleus_extension.png[]
+
+Should you have need to tailor the index creation, for example to generate a particular type of index (where the datastore supports it), 
+you can specify extended settings that is appended to the end of any _CREATE INDEX_ statement.
+
+[source,xml]
+-----
+<class name="Booking">
+    <index name="MY_BOOKING_INDEX">
+        <extension vendor-name="datanucleus" key="extended-setting" value=" USING HASH"/>
+    </index>
+    ...
+</class>
+-----
+
+or alternatively using annotations
+
+[source,java]
+-----
+@Index(name-"MY_BOOKING_INDEX" extensions={@Extension(vendorName="datanucleus", key="extended-setting", value=" USING HASH")})
+-----
+
+See also :-
+
+* link:metadata_xml.html#index[MetaData reference for <index> element]
+* link:annotations.html#Index[Annotations reference for @Index]
+* link:annotations.html#Index_Class[Annotations reference for @Index (class level)]
+
+
+
+[[unique]]
+== Unique Constraints
+
+NOTE: Applicable to RDBMS, NeoDatis, MongoDB.
+
+Some datastores provide the ability to have unique constraints defined on tables to give 
+extra control over data integrity. JDO provides a mechanism for defining such unique constraints. 
+Lets take the previous class, and show how to specify this
+
+[source,xml]
+-----
+<class name="Booking">
+    <field name="bookingType">
+        <unique name="BOOKING_TYPE_CONSTRAINT"/>
+    </field>
+</class>
+-----
+
+So in an identical way to the specification of an index. This example specification will result in the 
+column(s) for "bookingType" being enforced as unique in the datastore. In the same way you can specify 
+unique constraints directly to columns - see the example above for indexes.
+
+
+Again, as for index, you can also specify unique constraints at "class" level in the MetaData file. 
+This is useful to specify where the composite of 2 or more columns or fields are unique. So with this example
+
+[source,xml]
+-----
+<class name="Booking">
+    <unique name="UNIQUE_PERF">
+        <field name="performanceDate"/>
+        <field name="startTime"/>
+    </unique>
+
+    <field name="performanceDate"/>
+    <field name="startTime"/>
+</class>
+-----
+
+The table for Booking has a unique constraint on the columns for the fields _performanceDate_ and _startTime_
+
+See also :-
+
+* link:metadata_xml.html#unique[MetaData reference for <unique> element]
+* link:annotations.html#Unique[Annotations reference for @Unique]
+* link:annotations.html#Unique_Class[Annotations reference for @Unique (class level)]
+
+
+
+[[fk]]
+== Foreign Key Constraints
+
+NOTE: Applicable to RDBMS
+ 
+When objects have relationships with one object containing, for example, a Collection of another object, 
+it is common to store a foreign key in the datastore representation to link the two associated tables. 
+Moreover, it is common to define behaviour about what happens to the dependent object when the owning object is deleted. 
+Should the deletion of the owner cause the deletion of the dependent object maybe ? Lets take an example
+
+[source,java]
+-----
+public class Hotel
+{
+    private Set rooms;
+    ...
+}
+
+public class Room
+{
+    private int numberOfBeds;
+    ...
+}
+-----
+
+We now want to control the relationship so that it is linked by a named foreign key, and that we cascade delete the *Room* object when we delete the *Hotel*. 
+We define the Meta-Data like this
+
+[source,xml]
+-----
+<class name="Hotel">
+    <field name="rooms">
+        <collection element-type="com.mydomain.samples.hotel.Room"/>
+        <foreign-key name="HOTEL_ROOMS_FK" delete-action="cascade"/>
+    </field>
+</class>
+-----
+
+So we now have given the datastore control over the cascade deletion strategy for objects stored in these tables. 
+Please be aware that JDO provides link:persistence.html#dependent_fields[Dependent Fields] as a way of allowing cascade deletion. 
+The difference here is that _Dependent Fields_ is controlled by DataNucleus, whereas foreign key delete actions are controlled by the datastore (assuming the datastore supports it even)
+
+
+
+In the case of a 1-N relation using a join table the equivalent example would be
+
+[source,java]
+-----
+public class Account
+{
+    ...
+
+    @Persistent
+    @Join(foreignKey="ACCOUNT_FK")
+    @Element(foreignKey="ADDRESS_FK");
+    Collection<Address> addresses;
+}
+
+public class Address
+{
+    ...
+}
+-----
+
+or using XML metadata
+    
+[source,xml]
+-----
+<package name="com.mydomain">
+    <class name="Account">
+        ...
+        <field name="addresses">
+            <collection element-type="com.mydomain.Address"/>
+            <join>
+                <foreign-key name="ACCOUNT_FK"/>
+            </join>
+            <element>
+                <foreign-key name="ADDRESS_FK"/>
+            </element>
+        </field>
+    </class>
+
+    <class name="Address">
+        ...
+    </class>
+</package>
+-----
+
+
+
+
+image:../images/nucleus_extension.png[]
+
+DataNucleus provides an extension that can give significant benefit to users. This is provided via the 
+PersistenceManagerFactory _datanucleus.rdbms.constraintCreateMode_. This property has 2 values. 
+The default is _DataNucleus_ which will automatically decide which foreign keys are required to satisfy 
+the relationships that have been specified, whilst utilising the information provided in the MetaData 
+for foreign keys. The other option is _JDO2_ which will simply create foreign keys that have been 
+specified in the MetaData file(s).
+
+Note that the _foreign-key_ for a 1-N FK relation can be specified as above, or under the _element_ element. 
+Note that the _foreign-key_ for a 1-N Join Table relation is specified under _field_ for the FK from owner to join table, 
+and is specified under _element_ for the FK from join table to element table.
+
+
+In the special case of application-identity and inheritance there is a foreign-key from subclass to superclass. You can define this as follows
+
+[source,xml]
+-----
+<class name="MySubClass">
+    <inheritance>
+        <join>
+            <foreign-key name="ID_FK"/>
+        </join>
+    </inheritance>
+</class>
+-----
+
+See also :-
+
+* link:metadata_xml.html#foreignkey[MetaData reference for <foreignkey> element]
+* link:annotations.html#ForeignKey[Annotations reference for @ForeignKey]
+* link:persistence.html#cascading[Deletion of related objects using FK constraints]
+
+
+
+[[pk]]
+== Primary Key Constraints
+
+NOTE: Applicable to RDBMS
+
+In RDBMS datastores, it is accepted as good practice to have a primary key on all tables. 
+You specify in other parts of the MetaData which fields are part of the primary key (if using 
+applicatioin identity), or you define the name of the column DataNucleus should use for the primary
+key (if using datastore identity). What these other parts of the MetaData don't allow is specifying 
+the constraint name for the primary key. You can specify this if you wish, like this
+
+[source,xml]
+-----
+<class name="Booking">
+    <primary-key name="BOOKING_PK"/>
+    ...
+</class>
+-----
+
+When the schema is generated for this table, the primary key will be given the specified name, and will
+use the column(s) specified by the identity type in use.
+
+
+In the case where you have a 1-N/M-N relation using a join table you can specify the name of the primary 
+key constraint used as follows
+
+[source,xml]
+-----
+<class name="Hotel">
+    <field name="rooms">
+        <collection element-type="com.mydomain.samples.hotel.Room"/>
+        <join>
+            <primary-key name="HOTEL_ROOM_PK"/>
+        </join>
+    </field>
+</class>
+-----
+
+This creates a PK constraint with name `HOTEL_ROOM_PK`.
+
+See also :-
+
+* link:metadata_xml.html#primary-key[MetaData reference for <primary-key> element]
+* link:annotations.html#PrimaryKey[Annotations reference for @PrimaryKey]
+* link:annotations.html#PrimaryKey_Class[Annotations reference for @PrimaryKey (class level)]
 
 
 
@@ -1109,6 +1424,5 @@ DataNucleus provides support for the majority of the JDBC types with RDBMS. The 
 
 
 include::_mapping_secondary_tables.adoc[leveloffset=+1]
-include::_mapping_constraints.adoc[leveloffset=+1]
 include::_mapping_datastore_identifiers.adoc[leveloffset=+1]
 
