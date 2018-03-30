@@ -21,8 +21,7 @@ There are several aspects to cover here
 * link:#unique[Unique Constraints] - placed on fields that should have a unique value. That is, only one object will have a particular value.
 * link:#fk[Foreign-Key Constraints] - used to interrelate objects, and allow the datastore to keep the integrity of the data in the datastore.
 * link:#pk[Primary-Key Constraints] - allow the PK to be set, and also to have a name.
-* link:#schema_rdbms_views[RDBMS : Mapping a class to an RDBMS View]
-* link:#schema_rdbms_types[RDBMS : Supported types for a field]
+* link:#schema_rdbms_views[RDBMS Views] - mapping a class to an RDBMS View instead of a Table
 
 
 [[schema_names]]
@@ -199,308 +198,10 @@ See also :-
 * link:metadata_xml.html#column[MetaData reference for <column> element]
 
 
-[[schema_column_position]]
-== Column Position
-
-With some datastores it is desirable to be able to specify the relative position of a column in the table schema. 
-The default (for DataNucleus) is just to put them in ascending alphabetical order.
-DataNucleus allows an extension to JPA providing definition of this using the _position_ of a *column*.
-See link:#member_position[fields/properties positioning docs] for details.
-
-
-
-[[index]]
-== Index Constraints
-
-NOTE: Applicable to RDBMS, NeoDatis, MongoDB
-
-Many datastores provide the ability to have indexes defined to give performance benefits.
-With RDBMS the indexes are specified on the table and the indexes to the rows are stored separately. 
-In the same way an ODBMS typically allows indexes to be specified on the fields of the class, and these are managed by the datastore. 
-JPA allows you to define the indexes on a table-by-table basis by metadata as in the following example (note that you cannot specify indexes on a field basis like in JDO)
-
-[source,java]
------
-import javax.persistence.Index;
-
-@Entity
-@Table(indexes={@Index(name="SOME_VAL_IDX", columnList="SOME_VALUE")})
-public class MyClass
-{
-    @Column(name="SOME_VALUE")
-    long someValue;
-
-    ...
-}
------
-
-image:../images/nucleus_extension.png[]
-
-The JPA `@Index` annotation is only applicable at a class level. DataNucleus provides its own `@Index` annotation that you
-can specify on a field/method to signify that the column(s) for this field/method will be indexed. Like this
-
-[source,java]
------
-@Entity
-public class MyClass
-{
-    @org.datanucleus.api.jpa.annotations.Index(name="VAL_IDX")
-    long someValue;
-
-    ...
-}
------
-
-
-[[unique]]
-== Unique Constraints
-
-NOTE: Applicable to RDBMS, NeoDatis, MongoDB
-
-Some datastores provide the ability to have unique constraints defined on tables to give extra control over data integrity. 
-JPA provides a mechanism for defining such unique constraints. Let's take an example class, and show how to specify this
-
-[source,java]
------
-public class Person
-{
-    String forename;
-    String surname;
-    String nickname;
-    ...
-}
------
-
-and here we want to impose uniqueness on the "nickname" field, so there is only one Person known as "DataNucleus Guru" for example !
-
-[source,xml]
------
-<entity class="Person">
-    <table name="PEOPLE"/>
-    <attributes>
-        ...
-        <basic name="nickname">
-            <column name="SURNAME" unique="true"/>
-        </basic>
-        ...
-    </attributes>
-</entity>
------
-
-The second use of unique constraints is where we want to impose uniqueness across composite columns.
-So we reuse the class above, and this time we want to impose a constraint that there is only one Person with a particular "forename+surname".
-
-[source,xml]
------
-<entity class="Person">
-    <table name="PEOPLE">
-        <unique-constraint>
-            <column-name>FORENAME</column-name>
-            <column-name>SURNAME</column-name>
-        </unique-constraint>
-    </table>
-    <attributes>
-        ...
-        <basic name="forename">
-            <column name="FORENAME"/>
-        </basic>
-        <basic name="surname">
-            <column name="SURNAME"/>
-        </basic>
-        ...
-    </attributes>
-</entity>
------
-
-In the same way we can also impose unique constraints on `<join-table>` and `<secondary-table>`
-
-See also :-
-
-* link:metadata_xml.html#column[MetaData reference for <column> element]
-* link:metadata_xml.html#unique-constraint[MetaData reference for <unique-constraint> element]
-* link:annotations.html#Column[Annotations reference for @Column]
-* link:annotations.html#UniqueConstraint[Annotations reference for @UniqueConstraint]
-
-
-[[fk]]
-== Foreign Key Constraints
-
-NOTE: Applicable to RDBMS
-
-When objects have relationships with one object containing, for example, a Collection of another object, it is common to store a foreign key 
-in the datastore representation to link the two associated tables. Moreover, it is common to define behaviour about what happens to the dependent 
-object when the owning object is deleted. Should the deletion of the owner cause the deletion of the dependent object maybe ? 
-JPA supports defining the foreign key for relation fields as per the following example
-
-[source,java]
------
-public class MyClass
-{
-    ...
-
-    @OneToOne
-    @JoinColumn(name="OTHER_ID", foreignKey=@ForeignKey(name="OTHER_FK", 
-        foreignKeyDefinition="FOREIGN KEY (OTHER_ID) REFERENCES MY_OTHER_TBL (MY_OTHER_ID) ]"))
-    MyOtherClass other;
-
-}
------
-
-Note that when you don't specify any foreign key the JPA provider is free to add the foreign keys that it considers are necessary.                
-
-
-In the case of a 1-N/M-N relation using a join table the equivalent example would be
-
-[source,java]
------
-public class Account
-{
-    ...
-
-    @OneToMany
-    @JoinTable(foreignKey=@ForeignKey(name="ACCOUNT_FK"), inverseForeignKey=@ForeignKey(name="ADDRESS_FK"))
-    Collection<Address> addresses;
-}
-
-public class Address
-{
-    ...
-}
------
-
-or alternatively using XML
-
-[source,xml]
------
-<entity-mappings>
-    <entity class="Account">
-        <attributes>
-            ...
-            <one-to-many name="addresses">
-                <join-table>
-                    <foreign-key name="ACCOUNT_FK"/>
-                    <inverse-foreign-key name="ADDRESS_FK"/>
-                </join-table>
-            </one-to-many>
-        </attributes>
-    </entity>
-
-    <entity class="Address">
-        <attributes>
-            ...
-        </attributes>
-    </entity>
-</entity-mappings>
------
-
-
-
-[[pk]]
-== Primary Key Constraints
-
-NOTE: Applicable to RDBMS
-
-In RDBMS datastores, it is accepted as good practice to have a primary key on all tables. You specify in other parts of the MetaData 
-which fields are part of the primary key (if using application identity). Unfortunately JPA doesn't allow specification of the name of the primary key constraint, nor of whether
-join tables are given a primary key constraint at all.
-
-
-
-
-[[schema_rdbms_views]]
-== RDBMS : Views
-
-image:../images/nucleus_extension.png[]
-
-The standard situation with an RDBMS datastore is to map classes to *Tables*. 
-The majority of RDBMS also provide support for *Views*, providing the equivalent of a read-only SELECT across various tables. 
-DataNucleus also provides support for querying such Views. This provides more flexibility to the user where they have data and need to display it in their application. 
-Support for Views is described below.
-
-When you want to access data according to a View, you are required to provide a class that will accept
-the values from the View when queried, and Meta-Data for the class that defines the View and how it maps onto the provided class. Let's take an example. 
-We have a View `SALEABLE_PRODUCT` in our database as follows, defined based on data in a `PRODUCT` table.
-
-[source,sql]
------
-CREATE VIEW SALEABLE_PRODUCT (ID, NAME, PRICE, CURRENCY) AS
-    SELECT ID, NAME, CURRENT_PRICE AS PRICE, CURRENCY FROM PRODUCT
-    WHERE PRODUCT.STATUS_ID = 1
------
-
-So we define a class to receive the values from this *View*, and define how it is mapped to the view.
-
-[source,java]
------
-package mydomain.views;
-
-@Entity
-@Table("SALEABLE_PRODUCT")
-@Extension(vendorName="datanucleus", key="view-definition", value="CREATE VIEW SALEABLE_PRODUCT
-(
-    {this.id},
-    {this.name},
-    {this.price},
-    {this.currency}
-) AS
-SELECT ID, NAME, CURRENT_PRICE AS PRICE, CURRENCY FROM PRODUCT
-WHERE PRODUCT.STATUS_ID = 1")
-public class SaleableProduct
-{
-    @Id
-    String id;
-
-    String name;
-    double price;
-    String currency;
-
-    public String getId()
-    {
-        return id;
-    }
-
-    public String getName()
-    {
-        return name;
-    }
-
-    public double getPrice()
-    {
-        return price;
-    }
-
-    public String getCurrency()
-    {
-        return currency;
-    }
-}
------
-
-Please note the following
-
-* We've specified the "table", which in this case is the view name - otherwise DataNucleus would create a name for the view based on the class name.
-* We've defined a DataNucleus extension _view-definition_ that defines the view for this class. If the view doesn't already exist it doesn't matter since 
-DataNucleus (when used with _autoCreateSchema_) will execute this construction definition.
-* The _view-definition_ can contain macros utilising the names of the fields in the class, and hence borrowing their column names (if we had defined column names for the fields of the class).
-* You can also utilise other classes in the macros, and include them via a DataNucleus MetaData extension _view-imports_ (not shown here)
-* If your *View* already exists you are still required to provide a _view-definition_ even though DataNucleus will not be utilising it, 
-since it also uses this attribute as the flag for whether it is a *View* or a *Table* - just make sure that you specify the "table" also in the MetaData.
-* If you have a relation to the class represented by a *View*, you cannot expect it to create an FK in the *View*. The *View* will map on to exactly
-the members defined in the class it represents. i.e cannot have a 1-N FK uni relation to the class with the *View*.
-
-We can now utilise this class within normal DataNucleus JPA querying operation.
-
-[source,java]
------
-Query<MyViewClass> q = em.createQuery("SELECT p FROM SaleableProduct p", SaleableProduct.class);
-List<MyViewClass> results = q.getResultList();
------
-
-Hopefully that has given enough detail on how to create and access views from with a DataNucleus-enabled application.
-
-
 [[schema_rdbms_types]]
-== RDBMS : Datastore Types
+=== RDBMS Column Types
+
+NOTE: Applicable to RDBMS.
 
 As we saw in the link:#field_types[Types Guide] DataNucleus supports the persistence of a large range of Java field types. With RDBMS datastores, we have the notion 
 of tables/columns in the datastore and so each Java type is mapped across to a column or a set of columns in a table. It is important to understand this mapping 
@@ -1095,6 +796,309 @@ DataNucleus provides support for the majority of the JDBC types with RDBMS. The 
 |icon:check[]
 |
 |===
+
+
+[[schema_column_position]]
+== Column Position
+
+With some datastores it is desirable to be able to specify the relative position of a column in the table schema. 
+The default (for DataNucleus) is just to put them in ascending alphabetical order.
+DataNucleus allows an extension to JPA providing definition of this using the _position_ of a *column*.
+See link:#member_position[fields/properties positioning docs] for details.
+
+
+
+[[index]]
+== Index Constraints
+
+NOTE: Applicable to RDBMS, NeoDatis, MongoDB
+
+Many datastores provide the ability to have indexes defined to give performance benefits.
+With RDBMS the indexes are specified on the table and the indexes to the rows are stored separately. 
+In the same way an ODBMS typically allows indexes to be specified on the fields of the class, and these are managed by the datastore. 
+JPA allows you to define the indexes on a table-by-table basis by metadata as in the following example (note that you cannot specify indexes on a field basis like in JDO)
+
+[source,java]
+-----
+import javax.persistence.Index;
+
+@Entity
+@Table(indexes={@Index(name="SOME_VAL_IDX", columnList="SOME_VALUE")})
+public class MyClass
+{
+    @Column(name="SOME_VALUE")
+    long someValue;
+
+    ...
+}
+-----
+
+image:../images/nucleus_extension.png[]
+
+The JPA `@Index` annotation is only applicable at a class level. DataNucleus provides its own `@Index` annotation that you
+can specify on a field/method to signify that the column(s) for this field/method will be indexed. Like this
+
+[source,java]
+-----
+@Entity
+public class MyClass
+{
+    @org.datanucleus.api.jpa.annotations.Index(name="VAL_IDX")
+    long someValue;
+
+    ...
+}
+-----
+
+
+[[unique]]
+== Unique Constraints
+
+NOTE: Applicable to RDBMS, NeoDatis, MongoDB
+
+Some datastores provide the ability to have unique constraints defined on tables to give extra control over data integrity. 
+JPA provides a mechanism for defining such unique constraints. Let's take an example class, and show how to specify this
+
+[source,java]
+-----
+public class Person
+{
+    String forename;
+    String surname;
+    String nickname;
+    ...
+}
+-----
+
+and here we want to impose uniqueness on the "nickname" field, so there is only one Person known as "DataNucleus Guru" for example !
+
+[source,xml]
+-----
+<entity class="Person">
+    <table name="PEOPLE"/>
+    <attributes>
+        ...
+        <basic name="nickname">
+            <column name="SURNAME" unique="true"/>
+        </basic>
+        ...
+    </attributes>
+</entity>
+-----
+
+The second use of unique constraints is where we want to impose uniqueness across composite columns.
+So we reuse the class above, and this time we want to impose a constraint that there is only one Person with a particular "forename+surname".
+
+[source,xml]
+-----
+<entity class="Person">
+    <table name="PEOPLE">
+        <unique-constraint>
+            <column-name>FORENAME</column-name>
+            <column-name>SURNAME</column-name>
+        </unique-constraint>
+    </table>
+    <attributes>
+        ...
+        <basic name="forename">
+            <column name="FORENAME"/>
+        </basic>
+        <basic name="surname">
+            <column name="SURNAME"/>
+        </basic>
+        ...
+    </attributes>
+</entity>
+-----
+
+In the same way we can also impose unique constraints on `<join-table>` and `<secondary-table>`
+
+See also :-
+
+* link:metadata_xml.html#column[MetaData reference for <column> element]
+* link:metadata_xml.html#unique-constraint[MetaData reference for <unique-constraint> element]
+* link:annotations.html#Column[Annotations reference for @Column]
+* link:annotations.html#UniqueConstraint[Annotations reference for @UniqueConstraint]
+
+
+[[fk]]
+== Foreign Key Constraints
+
+NOTE: Applicable to RDBMS
+
+When objects have relationships with one object containing, for example, a Collection of another object, it is common to store a foreign key 
+in the datastore representation to link the two associated tables. Moreover, it is common to define behaviour about what happens to the dependent 
+object when the owning object is deleted. Should the deletion of the owner cause the deletion of the dependent object maybe ? 
+JPA supports defining the foreign key for relation fields as per the following example
+
+[source,java]
+-----
+public class MyClass
+{
+    ...
+
+    @OneToOne
+    @JoinColumn(name="OTHER_ID", foreignKey=@ForeignKey(name="OTHER_FK", 
+        foreignKeyDefinition="FOREIGN KEY (OTHER_ID) REFERENCES MY_OTHER_TBL (MY_OTHER_ID) ]"))
+    MyOtherClass other;
+
+}
+-----
+
+Note that when you don't specify any foreign key the JPA provider is free to add the foreign keys that it considers are necessary.                
+
+
+In the case of a 1-N/M-N relation using a join table the equivalent example would be
+
+[source,java]
+-----
+public class Account
+{
+    ...
+
+    @OneToMany
+    @JoinTable(foreignKey=@ForeignKey(name="ACCOUNT_FK"), inverseForeignKey=@ForeignKey(name="ADDRESS_FK"))
+    Collection<Address> addresses;
+}
+
+public class Address
+{
+    ...
+}
+-----
+
+or alternatively using XML
+
+[source,xml]
+-----
+<entity-mappings>
+    <entity class="Account">
+        <attributes>
+            ...
+            <one-to-many name="addresses">
+                <join-table>
+                    <foreign-key name="ACCOUNT_FK"/>
+                    <inverse-foreign-key name="ADDRESS_FK"/>
+                </join-table>
+            </one-to-many>
+        </attributes>
+    </entity>
+
+    <entity class="Address">
+        <attributes>
+            ...
+        </attributes>
+    </entity>
+</entity-mappings>
+-----
+
+
+
+[[pk]]
+== Primary Key Constraints
+
+NOTE: Applicable to RDBMS
+
+In RDBMS datastores, it is accepted as good practice to have a primary key on all tables. You specify in other parts of the MetaData 
+which fields are part of the primary key (if using application identity). Unfortunately JPA doesn't allow specification of the name of the primary key constraint, nor of whether
+join tables are given a primary key constraint at all.
+
+
+
+
+[[schema_rdbms_views]]
+== RDBMS : Views
+
+NOTE: Applicable to RDBMS.
+
+image:../images/nucleus_extension.png[]
+
+The standard situation with an RDBMS datastore is to map classes to *Tables*. 
+The majority of RDBMS also provide support for *Views*, providing the equivalent of a read-only SELECT across various tables. 
+DataNucleus also provides support for querying such Views. This provides more flexibility to the user where they have data and need to display it in their application. 
+Support for Views is described below.
+
+When you want to access data according to a View, you are required to provide a class that will accept
+the values from the View when queried, and Meta-Data for the class that defines the View and how it maps onto the provided class. Let's take an example. 
+We have a View `SALEABLE_PRODUCT` in our database as follows, defined based on data in a `PRODUCT` table.
+
+[source,sql]
+-----
+CREATE VIEW SALEABLE_PRODUCT (ID, NAME, PRICE, CURRENCY) AS
+    SELECT ID, NAME, CURRENT_PRICE AS PRICE, CURRENCY FROM PRODUCT
+    WHERE PRODUCT.STATUS_ID = 1
+-----
+
+So we define a class to receive the values from this *View*, and define how it is mapped to the view.
+
+[source,java]
+-----
+package mydomain.views;
+
+@Entity
+@Table("SALEABLE_PRODUCT")
+@Extension(vendorName="datanucleus", key="view-definition", value="CREATE VIEW SALEABLE_PRODUCT
+(
+    {this.id},
+    {this.name},
+    {this.price},
+    {this.currency}
+) AS
+SELECT ID, NAME, CURRENT_PRICE AS PRICE, CURRENCY FROM PRODUCT
+WHERE PRODUCT.STATUS_ID = 1")
+public class SaleableProduct
+{
+    @Id
+    String id;
+
+    String name;
+    double price;
+    String currency;
+
+    public String getId()
+    {
+        return id;
+    }
+
+    public String getName()
+    {
+        return name;
+    }
+
+    public double getPrice()
+    {
+        return price;
+    }
+
+    public String getCurrency()
+    {
+        return currency;
+    }
+}
+-----
+
+Please note the following
+
+* We've specified the "table", which in this case is the view name - otherwise DataNucleus would create a name for the view based on the class name.
+* We've defined a DataNucleus extension _view-definition_ that defines the view for this class. If the view doesn't already exist it doesn't matter since 
+DataNucleus (when used with _autoCreateSchema_) will execute this construction definition.
+* The _view-definition_ can contain macros utilising the names of the fields in the class, and hence borrowing their column names (if we had defined column names for the fields of the class).
+* You can also utilise other classes in the macros, and include them via a DataNucleus MetaData extension _view-imports_ (not shown here)
+* If your *View* already exists you are still required to provide a _view-definition_ even though DataNucleus will not be utilising it, 
+since it also uses this attribute as the flag for whether it is a *View* or a *Table* - just make sure that you specify the "table" also in the MetaData.
+* If you have a relation to the class represented by a *View*, you cannot expect it to create an FK in the *View*. The *View* will map on to exactly
+the members defined in the class it represents. i.e cannot have a 1-N FK uni relation to the class with the *View*.
+
+We can now utilise this class within normal DataNucleus JPA querying operation.
+
+[source,java]
+-----
+Query<MyViewClass> q = em.createQuery("SELECT p FROM SaleableProduct p", SaleableProduct.class);
+List<MyViewClass> results = q.getResultList();
+-----
+
+Hopefully that has given enough detail on how to create and access views from with a DataNucleus-enabled application.
+
 
 
 include::_mapping_secondary_tables.adoc[leveloffset=+1]
