@@ -107,6 +107,17 @@ If you have a field/property that you don't want to persist, just mark it as _tr
     String unimportantField;
 -----
 
+or with XML
+
+[source,xml]
+-----
+<entity name="mydomain.MyClass">
+    <attributes>
+        <transient name="unimportantField"/>
+    </attributes>
+</entity>
+-----
+
 
 [[member_readonly]]
 == Making a field/property read-only
