@@ -13,13 +13,13 @@ will almost certainly not match what you have in the datastore.
 
 There are several aspects to cover here
 
-* link:#schema_names[Table and column names]
-* link:#schema_nulls_defaults[Column nullability and default value]
-* link:#schema_column_types[Column Types]
-* link:#schema_column_position[Position of a column in a table]
-* link:#index[Index Constraints] - these are used to mark fields that are referenced often as indexes so that when they are used the performance is optimised.
-* link:#unique[Unique Constraints] - these are placed on fields that should have a unique value. That is, only one object will have a particular value.
-* link:#fk[Foreign-Key Constraints] - these are used to interrelate objects, and allow the datastore to keep the integrity of the data in the datastore.
+* link:#schema_names[Table and column names] - mapping classes/fields to table/columns
+* link:#schema_nulls_defaults[Column nullability and default value] - what values can be stored in a column 
+* link:#schema_column_types[Column Types] - supported column types
+* link:#schema_column_position[Position of a column in a table] - allowing ordering of columns in the schema
+* link:#index[Index Constraints] - used to mark fields that are referenced often as indexes so that when they are used the performance is optimised.
+* link:#unique[Unique Constraints] - placed on fields that should have a unique value. That is, only one object will have a particular value.
+* link:#fk[Foreign-Key Constraints] - used to interrelate objects, and allow the datastore to keep the integrity of the data in the datastore.
 * link:#pk[Primary-Key Constraints] - allow the PK to be set, and also to have a name.
 * link:#schema_rdbms_views[RDBMS : Mapping a class to an RDBMS View]
 * link:#schema_rdbms_types[RDBMS : Supported types for a field]
