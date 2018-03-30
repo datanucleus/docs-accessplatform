@@ -1064,7 +1064,7 @@ q.variables("mydomain.Product prod");
 
 image:../images/nucleus_plugin.png[]
 
-*RDBMS : *In all situations we aim for DataNucleus JDOQL implementation to work out the right way of linking a variable into the query, 
+*RDBMS : In all situations we aim for DataNucleus JDOQL implementation to work out the right way of linking a variable into the query, 
 whether this is via a join (INNER, LEFT OUTER), or via a subquery. As you can imagine this can be complicated to work out the optimum for all situations
 so with that in mind we allow (for a limited number of situations) the option of specifying the join type. This is achieved by setting the query extension 
 *datanucleus.query.jdoql.{varName}.join* to the required type. 
