@@ -49,7 +49,13 @@ public class ShapeHolder
 }
 -----
 
-JDO doesn't define how an interface is persisted in the datastore. Obviously there can be many implementations and so no obvious solution. DataNucleus allows the following
+JDO doesn't define how an interface is persisted in the datastore. Obviously there can be many implementations and so no obvious solution. 
+DataNucleus supports the following. With non-RDBMS datastores there is a single column holding the interface field value. 
+With RDBMS you have the option of storing this interface field value in several different ways, as below.
+
+NOTE: Applicable to RDBMS.
+
+DataNucleus allows the following strategies for mapping this field
 
 * *per-implementation* : a FK is created for each implementation so that the datastore can provide referential integrity. 
 The other advantage is that since there are FKs then querying can be performed. The disadvantage is that if there are many
