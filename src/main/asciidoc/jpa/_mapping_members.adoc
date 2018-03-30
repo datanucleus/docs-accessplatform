@@ -108,56 +108,6 @@ If you have a field/property that you don't want to persist, just mark it as _tr
 -----
 
 
-[[member_position]]
-== Field/Property Positioning
-
-image:../images/nucleus_extension.png[]
-
-With some datastores (notably spreadsheets) it is desirable to be able to specify the relative position of a column. 
-The default (for DataNucleus) is just to put them in ascending alphabetical order.
-JPA doesn't allow configuration of this, but DataNucleus provides the following vendor extension.
-
-Using XML metadata this would be
-
-[source,xml]
------
-<entity name="mydomain.Person">
-    <attributes>
-        <id name="personNum">
-            <column position="0"/>
-        </id>
-        <basic name="firstName">
-            <column position="1"/>
-        </basic>
-        <basic name="lastName">
-            <column position="2"/>
-        </basic>
-    </attributes>
-</entity>
------
-
-or using (DataNucleus) annotations
-
-[source,java]
------
-import org.datanucleus.api.jpa.annotations.ColumnPosition;
-
-@Entity
-public class Person
-{
-    @Id
-    @ColumnPosition(0)
-    long personNum;
-
-    @ColumnPosition(1)
-    String firstName;
-
-    @ColumnPosition(2)
-    String lastName;
-}
------
-
-
 [[member_readonly]]
 == Making a field/property read-only
 

@@ -980,14 +980,50 @@ and also has columns `YEAR_ESTABLISHED` (that is INTEGER-based and will be given
 and `MANAGER_NAME` (VARCHAR-based and will be given a value of "N/A" on any inserts).
 
 
-
 [[schema_column_position]]
-== Position of column in a table
+== Field/Column Position in a Table
 
-With some datastores it is desirable to be able to specify the relative position of a column in the table schema. 
+With some datastores (notably spreadsheets) it is desirable to be able to specify the relative position of a column in the schema. 
 The default (for DataNucleus) is just to put them in ascending alphabetical order.
 JDO allows definition of this using the _position_ attribute on a *column*.
-See link:mapping.html#member_position[fields/properties column positioning docs] for details.
+Here's an example, using XML metadata    
+
+[source,xml]
+-----
+<jdo>
+    <package name="mydomain">
+        <class name="Person" detachable="true" table="People">
+            <field name="personNum">
+                <column position="0"/>
+            </field>
+            <field name="firstName">
+                <column position="1"/>
+            </field>
+            <field name="lastName">
+                <column position="2"/>
+            </field>
+        </class>
+    </package>
+</jdo>
+-----
+
+and with annotations
+
+[source,java]
+-----
+@PersistenceCapable(table="People")
+public class Person
+{
+    @Column(position=0)
+    long personNum;
+
+    @Column(position=1)
+    String firstName;
+
+    @Column(position=2)
+    String lastName;
+}
+-----
 
 
 [[index]]

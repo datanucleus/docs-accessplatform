@@ -799,12 +799,53 @@ DataNucleus provides support for the majority of the JDBC types with RDBMS. The 
 
 
 [[schema_column_position]]
-== Column Position
+== Field/Column Positioning in a Table
+
+image:../images/nucleus_extension.png[]
 
 With some datastores it is desirable to be able to specify the relative position of a column in the table schema. 
 The default (for DataNucleus) is just to put them in ascending alphabetical order.
-DataNucleus allows an extension to JPA providing definition of this using the _position_ of a *column*.
-See link:#member_position[fields/properties positioning docs] for details.
+JPA doesn't allow configuration of this, but DataNucleus provides the following vendor extension.
+
+Using XML metadata this would be
+
+[source,xml]
+-----
+<entity name="mydomain.Person">
+    <attributes>
+        <id name="personNum">
+            <column position="0"/>
+        </id>
+        <basic name="firstName">
+            <column position="1"/>
+        </basic>
+        <basic name="lastName">
+            <column position="2"/>
+        </basic>
+    </attributes>
+</entity>
+-----
+
+or using (DataNucleus) annotations
+
+[source,java]
+-----
+import org.datanucleus.api.jpa.annotations.ColumnPosition;
+
+@Entity
+public class Person
+{
+    @Id
+    @ColumnPosition(0)
+    long personNum;
+
+    @ColumnPosition(1)
+    String firstName;
+
+    @ColumnPosition(2)
+    String lastName;
+}
+-----
 
 
 
