@@ -152,6 +152,52 @@ public class MyClass
 Note that when you don't specify any foreign key the JPA provider is free to add the foreign keys that it considers are necessary.                
 
 
+In the case of a 1-N/M-N relation using a join table the equivalent example would be
+
+[source,java]
+-----
+public class Account
+{
+    ...
+
+    @OneToMany
+    @JoinTable(foreignKey=@ForeignKey(name="ACCOUNT_FK"), inverseForeignKey=@ForeignKey(name="ADDRESS_FK"))
+    Collection<Address> addresses;
+}
+
+public class Address
+{
+    ...
+}
+-----
+
+or alternatively using XML
+
+[source,xml]
+-----
+<entity-mappings>
+    <entity class="Account">
+        <attributes>
+            ...
+            <one-to-many name="addresses">
+                <join-table>
+                    <foreign-key name="ACCOUNT_FK"/>
+                    <inverse-foreign-key name="ADDRESS_FK"/>
+                </join-table>
+            </one-to-many>
+        </attributes>
+    </entity>
+
+    <entity class="Address">
+        <attributes>
+            ...
+        </attributes>
+    </entity>
+</entity-mappings>
+-----
+
+
+
 [[pk]]
 == Primary Keys
 

@@ -193,6 +193,55 @@ So we now have given the datastore control over the cascade deletion strategy fo
 Please be aware that JDO provides link:persistence.html#dependent_fields[Dependent Fields] as a way of allowing cascade deletion. 
 The difference here is that _Dependent Fields_ is controlled by DataNucleus, whereas foreign key delete actions are controlled by the datastore (assuming the datastore supports it even)
 
+
+
+In the case of a 1-N relation using a join table the equivalent example would be
+
+[source,java]
+-----
+public class Account
+{
+    ...
+
+    @Persistent
+    @Join(foreignKey="ACCOUNT_FK")
+    @Element(foreignKey="ADDRESS_FK");
+    Collection<Address> addresses;
+}
+
+public class Address
+{
+    ...
+}
+-----
+
+or using XML metadata
+    
+[source,xml]
+-----
+<package name="com.mydomain">
+    <class name="Account">
+        ...
+        <field name="addresses">
+            <collection element-type="com.mydomain.Address"/>
+            <join>
+                <foreign-key name="ACCOUNT_FK"/>
+            </join>
+            <element>
+                <foreign-key name="ADDRESS_FK"/>
+            </element>
+        </field>
+    </class>
+
+    <class name="Address">
+        ...
+    </class>
+</package>
+-----
+
+
+
+
 image:../images/nucleus_extension.png[]
 
 DataNucleus provides an extension that can give significant benefit to users. This is provided via the 
