@@ -59,6 +59,15 @@ q.setFirstResult(0).setMaxResults(20);
 So with this query we get results 0 to 19 inclusive.
 
 
+[[sql_syntax_checks]]
+== SQL Syntax Checks
+
+When a native query is a SELECT, and is returning instances of an Entity, then it is required to return the columns for the PK, version and discriminator (if applicable).
+DataNucleus provides some checks that can be performed to ensure that these are selected. 
+You can turn this checking off by setting the persistence property *datanucleus.sql.syntaxChecks* to _false_. 
+Similarly you can turn them off on a query-by-query basis by setting the query hint *datanucleus.sql.syntaxChecks* to _false_.
+
+
 == Query Execution
 
 There are two ways to execute a native query. When you know it will return 0 or 1 results you call

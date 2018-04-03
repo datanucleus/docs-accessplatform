@@ -115,6 +115,15 @@ So here we have a result class using the constructor arguments.
 We could equally have provided a class with public fields instead, or provided _setXXX_ methods, or just provide a _put_ method. They all work in the same way.
 
 
+[[sql_syntax_checks]]
+== SQL Syntax Checks
+
+When an SQL query is a SELECT, and is returning instances of an persistable class, then it is required to return the columns for the PK, version and discriminator (if applicable).
+DataNucleus provides some checks that can be performed to ensure that these are selected. 
+You can turn this checking off by setting the persistence property *datanucleus.sql.syntaxChecks* to _false_. 
+Similarly you can turn them off on a query-by-query basis by setting the query hint *datanucleus.sql.syntaxChecks* to _false_.
+
+
 
 [[sql_updates]]
 == Inserting/Updating/Deleting
