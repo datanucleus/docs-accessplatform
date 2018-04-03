@@ -1302,6 +1302,10 @@ This extension to allow "RANGE x,y" after the ORDER BY clause of JPQL string que
 |Whether to check for unused input parameters and throw an exception if found.
 The JDO spec requires this check and is a good guide to having misnamed a parameter name in the query for example.
 {*true*, false}
+
+|datanucleus.sql.syntaxChecks
+|Whether to perform some basic syntax checking on SQL/"native" queries that they include PK, version and discriminator columns where necessary.
+{*true*, false}
 |===
 
 
