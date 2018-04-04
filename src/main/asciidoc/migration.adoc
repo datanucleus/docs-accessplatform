@@ -15,6 +15,15 @@ Migration to 5.1 involves the following steps
 
 
 
+=== Migration from 5.1.8 to 5.1.9
+
+Migrating will require the following changes.
+
+* When refreshing schema table information (from the database), we previously just refreshed the schema information for all known tables in one call. 
+We now default to just refreshing the schema table information for the requested table. 
+Use persistence property *datanucleus.rdbms.refreshAllTablesOnRefreshColumns* set to _true_ to get previous behaviour.
+
+
 === Migration from 5.1.7 to 5.1.8
 
 Migrating will require the following changes.

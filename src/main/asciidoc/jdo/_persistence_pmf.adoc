@@ -1446,6 +1446,11 @@ interfaces will be added to the existing schema.
 take an inordinate amount of time. Setting this to true means that your datastore schema has to be correct and no checks will be performed.
 {true, *false*}
 
+|datanucleus.rdbms.refreshAllTablesOnRefreshColumns
+|Whether to refresh all known tables whenever we need to get schema info for a table from the JDBC driver. Set this to _true_ if you want to refresh all known table's
+information in the same call. If your application is changing the schema often then this should likely be _false_.
+{true, *false*}
+
 |datanucleus.rdbms.sqlTableNamingStrategy
 |Name of the plugin to use for defining the names of the aliases of tables in SQL statements.
 {*alpha-scheme*, t-scheme}
