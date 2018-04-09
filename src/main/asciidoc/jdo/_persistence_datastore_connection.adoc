@@ -86,12 +86,12 @@ For the datastores supported by DataNucleus, the "native" object is of the follo
 * Cassandra : `com.datastax.driver.core.Session`
 * HBase : NOT SUPPORTED
 * JSON : NOT SUPPORTED
-* _NeoDatis : `org.neodatis.odb.ODB`_
-* _GAE Datastore : `com.google.appengine.api.datastore.DatastoreService`_
+* _NeoDatis : org.neodatis.odb.ODB_
+* _GAE Datastore : com.google.appengine.api.datastore.DatastoreService_
 
 You now have a connection allowing direct access to the datastore. 
 
-WARN: You *must* return the connection back to the _PersistenceManager_ before performing any _PersistenceManager_ operation. You do this by calling _conn.close()_
+WARNING: You *must* return the connection back to the _PersistenceManager_ before performing any _PersistenceManager_ operation. You do this by calling _conn.close()_
 If you don't return the connection and try to perform an _PersistenceManager_ operation which requires the connection then a JDOUserException is thrown.
 
 
