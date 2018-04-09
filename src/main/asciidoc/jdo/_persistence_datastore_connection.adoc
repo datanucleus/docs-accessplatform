@@ -75,24 +75,25 @@ The "JDOConnection" http://www.datanucleus.org/javadocs/javax.jdo/3.2/javax/jdo/
 in the case of DataNucleus is a wrapper to the native connection for the type of datastore being used. 
 For the datastores supported by DataNucleus, the "native" object is of the following types
 
-* RDBMS : java.sql.Connection
-* Excel : org.apache.poi.hssf.usermodel.HSSFWorkbook
-* OOXML : org.apache.poi.hssf.usermodel.XSSFWorkbook
-* ODF : org.odftoolkit.odfdom.doc.OdfDocument
-* LDAP : javax.naming.ldap.LdapContext
-* MongoDB : com.mongodb.DB
+* RDBMS : `java.sql.Connection`
+* Excel : `org.apache.poi.hssf.usermodel.HSSFWorkbook`
+* OOXML : `org.apache.poi.hssf.usermodel.XSSFWorkbook`
+* ODF : `org.odftoolkit.odfdom.doc.OdfDocument`
+* LDAP : `javax.naming.ldap.LdapContext`
+* MongoDB : `com.mongodb.DB`
+* XML : `org.w3c.dom.Document`
+* Neo4j : `org.neo4j.graphdb.GraphDatabaseService`
+* Cassandra : `com.datastax.driver.core.Session`
 * HBase : NOT SUPPORTED
 * JSON : NOT SUPPORTED
-* XML : org.w3c.dom.Document
-* Neo4j : org.neo4j.graphdb.GraphDatabaseService
-* Cassandra : com.datastax.driver.core.Session
-* NeoDatis : org.neodatis.odb.ODB
-* GAE Datastore : com.google.appengine.api.datastore.DatastoreService
+* _NeoDatis : `org.neodatis.odb.ODB`_
+* _GAE Datastore : `com.google.appengine.api.datastore.DatastoreService`_
 
-You now have a connection allowing direct access to the datastore. Things to bear in mind with this connection
-                
-* You *must* return the connection back to the PersistenceManager before performing any PersistenceManager operation. You do this by calling _conn.close()_
-* If you don't return the connection and try to perform an PersistenceManager operation which requires the connection then a JDOUserException is thrown.
+You now have a connection allowing direct access to the datastore. 
+
+WARN: You *must* return the connection back to the _PersistenceManager_ before performing any _PersistenceManager_ operation. You do this by calling _conn.close()_
+If you don't return the connection and try to perform an _PersistenceManager_ operation which requires the connection then a JDOUserException is thrown.
+
 
 
 [[connection_pooling]]

@@ -72,25 +72,22 @@ finally
 
 For the datastores supported by DataNucleus, the "native" object is of the following types
 
-* RDBMS : java.sql.Connection
-* Excel : org.apache.poi.hssf.usermodel.HSSFWorkbook
-* OOXML : org.apache.poi.hssf.usermodel.XSSFWorkbook
-* ODF : org.odftoolkit.odfdom.doc.OdfDocument
-* LDAP : javax.naming.ldap.LdapContext
-* MongoDB : com.mongodb.DB
+* RDBMS : `java.sql.Connection`
+* Excel : `org.apache.poi.hssf.usermodel.HSSFWorkbook`
+* OOXML : `org.apache.poi.hssf.usermodel.XSSFWorkbook`
+* ODF : `org.odftoolkit.odfdom.doc.OdfDocument`
+* LDAP : `javax.naming.ldap.LdapContext`
+* MongoDB : `com.mongodb.DB`
+* XML : `org.w3c.dom.Document`
+* Neo4j : `org.neo4j.graphdb.GraphDatabaseService`
+* Cassandra : `com.datastax.driver.core.Session`
 * HBase : NOT SUPPORTED
 * JSON : NOT SUPPORTED
-* XML : org.w3c.dom.Document
-* Neo4j : org.neo4j.graphdb.GraphDatabaseService
-* Cassandra : com.datastax.driver.core.Session
-* NeoDatis : org.neodatis.odb.ODB
-* GAE Datastore : com.google.appengine.api.datastore.DatastoreService
+* _NeoDatis : `org.neodatis.odb.ODB`_
+* _GAE Datastore : `com.google.appengine.api.datastore.DatastoreService`_
 
-                
-Things to bear in mind with this connection
-                
-* You *must* return the connection back to the EntityManager before performing any EntityManager operation. You do this by calling _conn.close()_
-* If you don't return the connection and try to perform an EntityManager operation which requires the connection then an Exception is thrown.
+WARN: You *must* return the connection back to the _EntityManager_ before performing any EntityManager operation. You do this by calling _conn.close()_.
+If you don't return the connection and try to perform an _EntityManager_ operation which requires the connection then an exception is thrown.
 
 
 [[connection_pooling]]
