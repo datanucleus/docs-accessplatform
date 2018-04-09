@@ -55,8 +55,7 @@ You obtain a connection as follows
 [source,java]
 -----
 // Obtain the connection from the JDO implementation
-ExecutionContext ec = em.unwrap(ExecutionContext.class);
-NucleusConnection conn = ec.getStoreManager().getNucleusConnection(ec);
+NucleusConnection ec = em.unwrap(NucleusConnection.class);
 try
 {
     Object native = conn.getNativeConnection();
