@@ -40,16 +40,6 @@ Note that this uses our own developed JPA API including all JPA 2.2 proposed imp
 |Version
 |Requirement
 
-|http://central.maven.org/maven2/javax/xml/bind/jaxb-api/2.1/[jaxb-api]
-|JAXB API
-|2.1
-|Required is you are using an XML datastore
-
-|http://central.maven.org/maven2/javax/xml/jaxb-impl/[jaxb-impl]
-|JAXB Reference Implementation
-|2.x
-|Required if you are using an XML datastore
-
 |JDBC Driver
 |JDBC Driver for your chosen RDBMS
 |
@@ -89,6 +79,16 @@ Note that this uses our own developed JPA API including all JPA 2.2 proposed imp
 |Neo4j driver
 |2.3+
 |Required if you want to persist to Neo4j datastores. Tested against v3.0/v3.1 also.
+
+|http://central.maven.org/maven2/javax/xml/bind/jaxb-api/2.1/[jaxb-api]
+|JAXB API
+|2.1
+|Required if you are using an XML datastore
+
+|http://central.maven.org/maven2/javax/xml/jaxb-impl/[jaxb-impl]
+|JAXB Reference Implementation
+|2.x
+|Required if you are using an XML datastore
 |===
 
 
@@ -120,11 +120,6 @@ Note that this uses our own developed JPA API including all JPA 2.2 proposed imp
 |JodaTime
 |2.0+
 |Required if you want to persist JodaTime java types
-
-|javax.time
-|JSR Time Library
-|1.0+
-|Required if you want to persist javax.time types
 
 |https://github.com/google/guava/[Google Guava]
 |Google Guava
