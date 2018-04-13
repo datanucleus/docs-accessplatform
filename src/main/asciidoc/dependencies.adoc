@@ -55,11 +55,6 @@ Note that this uses our own developed JPA API including all JPA 2.2 proposed imp
 |0.8.7
 |Required if you want to use an ODF document for persistence.
 
-|http://xerces.apache.org/[Xerces]
-|Xerces XML parser
-|2.8+
-|Required if you want to use an ODF document for persistence. Required by ODFDOM
-
 |http://hbase.apache.org/[Apache HBase]
 |hbase-client
 |1.1+
@@ -106,15 +101,10 @@ Note that this uses our own developed JPA API including all JPA 2.2 proposed imp
 |1.2+
 |Required if you wish to log using Log4J. DataNucleus supports Log4J or JRE logging
 
-|http://www.mx4j.org[mx4j]
-|MX4J management library
-|3.0+
-|Required if you want to use JMX with DataNucleus via MX4J
- 
-|http://www.mx4j.org[mx4j-tools]
-|MX4J tools
-|1.2+
-|Required if you want to use JMX with DataNucleus via MX4J
+|https://en.wikipedia.org/wiki/JTS_Topology_Suite[VividSolutions JTS]
+|JTS
+|1.12
+|Required if you want to persist JTS geospatial types
 
 |http://www.sf.net/projects/joda-time/[JodaTime]
 |JodaTime
@@ -168,8 +158,18 @@ Note that this uses our own developed JPA API including all JPA 2.2 proposed imp
 
 |http://www.oracle.com/technology/software/products/spatial/index.html[sdoapi]
 |Oracle Spatial library
+|11.2+
+|Required if you want to persist Oracle geospatial types
+
+|http://www.mx4j.org[mx4j]
+|MX4J management library
+|3.0+
+|Required if you want to use JMX with DataNucleus via MX4J
+ 
+|http://www.mx4j.org[mx4j-tools]
+|MX4J tools
 |1.2+
-|Required if you want to persist Oracle spatial types
+|Required if you want to use JMX with DataNucleus via MX4J
 
 |jta
 |JTA transaction API
