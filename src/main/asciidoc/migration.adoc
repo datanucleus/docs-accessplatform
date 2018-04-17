@@ -29,7 +29,7 @@ Use persistence property *datanucleus.rdbms.refreshAllTablesOnRefreshColumns* se
 Migrating will require the following changes.
 
 * The default for which JDO XML file locations will be supported has changed. It is now just the locations in the JDO 3.2 spec. To support XML locations from
-the JDO 1.0.0 spec (which were later removed from JDO) you need to specify persistence property *datanucleus.metadata.xml.allowJDO1_0" as _true_.
+the JDO 1.0.0 spec (which were later removed from JDO) you need to specify persistence property *datanucleus.metadata.xml.allowJDO1_0* as _true_.
 
 
 === Migration from 5.1.0-RELEASE to 5.1.1
@@ -70,7 +70,10 @@ Migrating will require the following changes.
 
 === Migration from 5.1.0-M1 to 5.1.0-M2
 
-Migrating will require no changes.
+Migrating will require the following changes.
+
+* If you are using a user-defined PK class that has a field *targetClassName* then be aware that this is now interpreted as holding the fully-qualified class name of 
+the object that the PK represents. If you want to store something else in this field then rename it to something else.
 
 
 
