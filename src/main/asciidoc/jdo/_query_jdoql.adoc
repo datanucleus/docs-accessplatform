@@ -924,7 +924,7 @@ For example, with a numeric literal
 
 [source,java]
 -----
-Query q = pm.newQuery("SELECT FROM mydomain.Person WHERE age = 25");
+Query q = pm.newQuery("SELECT FROM mydomain.Person WHERE age == 25");
 -----
 
 When String literals are specified using string format JDOQL they should be surrounded by single-quotes _'_. For example
