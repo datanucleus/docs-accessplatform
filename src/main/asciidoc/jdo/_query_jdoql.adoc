@@ -919,8 +919,20 @@ In addition, DataNucleus JDO provides support for a number of specialised link:q
 [[jdoql_literals]]
 == Literals
 
-JDOQL supports literals of the following types : Number, boolean, character, String, and _null_.
-When String literals are specified using single-string format they should be surrounded by single-quotes _'_.
+JDOQL supports literals of the following types : Number, boolean, character, String, and _null_. 
+For example, with a numeric literal
+
+[source,java]
+-----
+Query q = pm.newQuery("SELECT FROM mydomain.Person WHERE age = 25");
+-----
+
+When String literals are specified using string format JDOQL they should be surrounded by single-quotes _'_. For example
+
+[source,java]
+-----
+Query q = pm.newQuery("SELECT FROM mydomain.Person WHERE firstName == 'John'");
+-----
 
 
 === RDBMS : Parameters .v. Literals
@@ -941,6 +953,7 @@ With a query you can pass values into the query as parameters.
 This is useful where you don't want to embed particular values in the query itself, so making it reusable with different values.
 JDOQL allows two types of parameters.
 
+
 === Explicit Parameters
 
 If you _declare_ the parameters when defining the query (using the PARAMETERS keyword in the single-string form, or via the declareParameters method) then these are *explicit* parameters. 
@@ -948,8 +961,7 @@ This sets the type of the parameter, and when you pass the value in at _execute_
 
 [source,java]
 -----
-Query query = pm.newQuery(
-    "SELECT FROM mydomain.Product WHERE price < limit PARAMETERS double limit");
+Query query = pm.newQuery("SELECT FROM mydomain.Product WHERE price < limit PARAMETERS double limit");
 List results = (List)query.execute(150.00);
 -----
 

@@ -335,8 +335,21 @@ The operators are listed below in order of decreasing precedence.
 == Literals
 
 JPQL supports literals of the following types : Number, boolean, character, String, _NULL_ and temporal.
-When String literals are specified using single-string format they should be surrounded by single-quotes _'_. 
-Please note that temporal literals are specified using _JDBC escape syntax_ (see the JDBC spec for full details) in String form, namely
+For example, with a numeric literal
+
+[source,java]
+-----
+Query q = em.createQuery("SELECT p FROM Person p WHERE p.age = 25");
+-----
+
+When String literals are specified using single format JPQL they should be surrounded by single-quotes _'_. For example
+
+[source,java]
+-----
+Query q = em.createQuery("SELECT p FROM Person p WHERE p.firstName = 'John'");
+-----
+
+When temporal literals are specified using string format JPQL they use _JDBC escape syntax_ (see the JDBC spec for full details), namely
 
 [source]
 -----
@@ -345,7 +358,7 @@ Please note that temporal literals are specified using _JDBC escape syntax_ (see
 {ts 'yyyy-mm-dd hh:mm:ss.f...'}  - a Timestamp
 -----
 
-Here is an example of a JPQL query using a temporal literal
+For example
 
 [source,java]
 -----
