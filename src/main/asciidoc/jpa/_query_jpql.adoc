@@ -345,6 +345,13 @@ Please note that temporal literals are specified using _JDBC escape syntax_ (see
 {ts 'yyyy-mm-dd hh:mm:ss.f...'}  - a Timestamp
 -----
 
+Here is an example of a JPQL query using a temporal literal
+
+[source,java]
+-----
+Query q = em.createQuery("SELECT p FROM Person p WHERE p.birthDate < {ts '1970-01-01 00:00:00.000000001'}");
+-----
+
 
 === RDBMS : Parameters .v. Literals
 
