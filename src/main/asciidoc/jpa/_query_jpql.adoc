@@ -33,7 +33,7 @@ SELECT [<result>]
     [ORDER BY <ordering>]
 -----
 
-The "keywords" in the query are shown in UPPER CASE are case-insensitive.
+The "keywords" in the query are shown in UPPER CASE, and are case-insensitive.
 
 image:../images/nucleus_extension.png[]
 
@@ -132,7 +132,7 @@ SELECT p FROM Person p JOIN p.address a JOIN a.owner o WHERE o.name = 'Fred'
 SELECT VALUE(om) FROM Company c INNER JOIN c.officeMap om ON KEY(om) = 'London'
 -----
 
-If you specify "LEFT OUTER FETCH" or "INNER FETCH" (i.e you specify *FETCH*)this means that you want those fields/properties fetching by this query. 
+If you specify "LEFT OUTER FETCH" or "INNER FETCH" (i.e you specify *FETCH*) this means that you want those fields/properties fetching by this query. 
 This doesn't mean that DataNucleus will definitely fetch them in the same query (because sometimes it is impossible to fetch things like multi-valued fields 
 in a single query) but that it will attempt to fetch all fields that are selected (as well as the ones that are defaulted to EAGER).
 
@@ -417,7 +417,8 @@ The BNF structure of the JPQL CASE expression is
 [source]
 -----
 CASE WHEN conditional_expression THEN scalar_expression 
-    {WHEN conditional_expression THEN scalar_expression}* ELSE scalar_expression 
+    {WHEN conditional_expression THEN scalar_expression}* 
+    ELSE scalar_expression 
 END
 -----
 
@@ -1165,7 +1166,7 @@ The syntax for deleting records is very similar to selecting them
 DELETE FROM [<candidate-class> [[AS] {alias}]]  [WHERE <filter>]
 -----
 
-The "keywords" in the query are shown in UPPER CASE are case-insensitive.
+The "keywords" in the query are shown in UPPER CASE, and are case-insensitive.
 
 [source,java]
 -----
@@ -1191,7 +1192,7 @@ The syntax for updating records is very similar to selecting them
 UPDATE [<candidate-class> [[AS] {alias}]] SET item1=value1, item2=value2  [WHERE <filter>]
 -----
 
-The "keywords" in the query are shown in UPPER CASE are case-insensitive.
+The "keywords" in the query are shown in UPPER CASE, and are case-insensitive.
 
 [source,java]
 -----

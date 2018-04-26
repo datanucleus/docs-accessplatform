@@ -877,7 +877,7 @@ This example shows how to use spatial functions in the filter of a query. The qu
 
 [source,java]
 -----
-Query q = em.createQuery("SELECT s FROM SampleLineString s WHERE geom IS NOT NULL AND Spatial.length(geom) < :limit");
+Query q = em.createQuery("SELECT s FROM SampleLineString s WHERE s.geom IS NOT NULL AND Spatial.length(s.geom) < :limit");
 q.setParameter("limit", new Double(100.0));
 List list = q.getResultList();
 -----
@@ -889,7 +889,7 @@ This time we use a spatial function in the result part of a query. The query ret
 
 [source,java]
 -----
-q = em.createQuery("SELECT Spatial.pointN(geom, 2) FROM SampleLineString s WHERE id == :id");
+q = em.createQuery("SELECT Spatial.pointN(s.geom, 2) FROM SampleLineString s WHERE s.id == :id");
 q.setParameter("id", new Long(1001));
 Geometry point = q.getSingleResult();
 -----
@@ -902,7 +902,7 @@ You may want to use nested functions in your query. This example shows how to do
 [source,java]
 -----
 Point point = new Point("SRID=4326;POINT(110 45)");
-Query q = em.createQuery("SELECT s FROM SampleLineString s WHERE geom IS NOT NULL AND Spatial.equals(Spatial.endPoint(geom), :point)");
+Query q = em.createQuery("SELECT s FROM SampleLineString s WHERE s.geom IS NOT NULL AND Spatial.equals(Spatial.endPoint(s.geom), :point)");
 q.setParameter("point", point);
 List list = q.getResultList();
 -----
