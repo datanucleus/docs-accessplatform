@@ -241,7 +241,7 @@ Please refer to link:../datastores/datastores.html[the datastores guides] for th
 |Password to use for connecting to the DB
 
 |javax.persistence.jdbc.driver
-|The name of the (JDBC) driver to use for the DB (for RDBMS only, and not needed for JDBC 4+ drivers).
+|The name of the (JDBC) driver to use for the DB (for RDBMS only, and not needed for JDBC 4+ drivers). Note that some 3rd party connection pools do require the driver class name still.
 For LDAP this would be the initial context factory.
 
 |javax.persistence.query.timeout
