@@ -335,11 +335,15 @@ DataNucleus provides the following properties for configuring the datastore used
 
 |datanucleus.ConnectionFactory
 |Instance of a connection factory for *transactional* connections. This is an alternative to *datanucleus.ConnectionURL*.
-*Only for RDBMS*, and it must be an instance of javax.sql.DataSource. See link:#datasource[Data Sources]
+*Only for RDBMS*, and it must be an instance of javax.sql.DataSource. 
+*Note that you will also need to define a separate ConnectionFactory2 for schema/sequence operations where those are required*.
+See link:#datasource[Data Sources]
 
 |datanucleus.ConnectionFactory2
 |Instance of a connection factory for *nontransactional* connections. This is an alternative to *datanucleus.ConnectionURL*.
-*Only for RDBMS*, and it must be an instance of javax.sql.DataSource. See link:#datasource[Data Sources].
+*Only for RDBMS*, and it must be an instance of javax.sql.DataSource. 
+*Note that you if using ConnectionFactory then you need to define this as a separate factory for schema/sequence operations*.
+See link:#datasource[Data Sources].
 
 |datanucleus.ConnectionFactoryName
 |The JNDI name for a connection factory for *transactional* connections. 
