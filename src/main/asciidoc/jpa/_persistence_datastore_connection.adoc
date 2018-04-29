@@ -13,6 +13,8 @@ DataNucleus utilises datastore connections as follows
 The exact point at which the connection is obtained is defined more fully below. 
 When used for non-transactional operations the connection is obtained just for the specific operation (unless configured to retain it).
 
+WARNING: If you are performing any schema generation at runtime then you must define a secondary connection factory (via use of _javax.persistence.jdbc.url_, or via _non-jta-datasource_).
+
 NOTE: If you have multiple threads using the same _EntityManager_ then you can get "ConnectionInUse" problems where another operation on another thread comes in and 
 tries to perform something while that first operation is still in use. This happens because the JPA spec requires an implementation to use a single datastore connection 
 at any one time. When this situation crops up the user ought to use multiple _EntityManagers_.

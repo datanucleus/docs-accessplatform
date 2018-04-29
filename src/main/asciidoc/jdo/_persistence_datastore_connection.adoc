@@ -12,6 +12,11 @@ DataNucleus utilises datastore connections as follows
 the exact point at which the connection is obtained is defined more fully below.
 When used for non-transactional operations the connection is obtained just for the specific operation (unless configured to retain it).
 
+Datastore connections are obtained from up to 2 connection factories. The primary connection factory is used for persistence operations, and optionally for value generation operations.
+The secondary connection factory is used for schema generation, and optionally for value generation operations. 
+
+WARNING: If you are performing any schema generation at runtime then you must define a secondary connection factory.
+
 
 NOTE: If you have multiple threads using the same PersistenceManager then you can get "ConnectionInUse" problems where another operation on another thread comes in 
 and tries to perform something while that first operation is still in use. 
