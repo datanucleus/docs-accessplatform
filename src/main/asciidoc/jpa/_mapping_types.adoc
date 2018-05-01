@@ -1532,7 +1532,7 @@ Similarly on retrieval, we also allow the equivalent.
 String myStringField;
 -----
 
-So the stored datastore value will be converted to UPPERCASE before being set in the Java object retrieved.
+The `?` is replaced by the column name. So the stored datastore value will be converted to UPPERCASE before being set in the Java object retrieved.
 
 You could use these _column adapters_ to do things like encrypt/decrypt the value of a field when storing to/retrieving from the database, for example.
 
