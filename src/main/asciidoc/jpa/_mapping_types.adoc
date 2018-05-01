@@ -1506,3 +1506,33 @@ NOTE: If you want your extension of Collection/Map to be managed as a second cla
 Please refer to the link:../extensions/extensions.html#java_type[java_type extension].
 
 
+
+[[columnadapter]]
+== Column Adapters
+
+NOTE: Supported for RDBMS.
+
+By default, when inserting/updating into a column into an RDBMS datastore, the SQL will have a `?` and the value replaced into it.
+We allow the use of adapter "functions" so that the inserted value can be modified during the insert/update. Like this
+
+[source,java]
+-----
+@Extension(key="insert-function", value="TRIM(?)")
+@Extension(key="update-function", value="TRIM(?)")
+String myStringField;
+-----
+
+So when this field of this class is persisted the SQL generated will include `TRIM(?)` rather than `?`, and any leading/trailing whitespace will be removed.
+
+Similarly on retrieval, we also allow the equivalent.
+
+[source,java]
+-----
+@Extension(key="select-function", value="UPPER(?)")
+String myStringField;
+-----
+
+So the stored datastore value will be converted to UPPERCASE before being set in the Java object retrieved.
+
+You could use these _column adapters_ to do things like encrypt/decrypt the value of a field when storing to/retrieving from the database, for example.
+
