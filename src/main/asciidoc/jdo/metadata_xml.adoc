@@ -767,16 +767,19 @@ This is defined when, for example, a join table is shared by multiple relations 
 |select-function
 |Permits to use a function when fetching contents from the database. A ? (question mark) is mandatory to have and will be replaced by the column name when generating the SQL statement.
 For example to specify a value of _UPPER(?)_ will convert the field value to upper case on a datastore that supports that UPPER function.
+See link:mapping.html#columnadapter[Mapping : Column Adapters].
 |
 
 |insert-function
 |Permits to use a function when inserting into the database. A ? (question mark) is optional and will be replaced by the column name when generating the SQL statement.
 For example to specify a value of _TRIM(?)_ will trim the field value on a datastore that supports that TRIM function.
+See link:mapping.html#columnadapter[Mapping : Column Adapters].
 |
 
 |update-function
 |Permits to use a function when updating into the database. A ? (question mark) is optional and will be replaced by the column name when generating the SQL statement.
 For example to specify a value of _FUNC(?)_ will perform "FUNC" on the field value on a datastore that supports that FUNC function.
+See link:mapping.html#columnadapter[Mapping : Column Adapters].
 |
 
 |sequence-table-basis
@@ -1031,16 +1034,19 @@ the objects placed in the join table need discriminating for which relation they
 |select-function
 |Permits to use a function when fetching contents from the database. A ? (question mark) is mandatory to have and will be replaced by the column name when generating the SQL statement.
 For example to specify a value of _UPPER(?)_ will convert to upper case the field value on a datastore that supports that UPPER function.
+See link:mapping.html#columnadapter[Mapping : Column Adapters].
 |
 
 |insert-function
 |Permits to use a function when inserting into the database. A ? (question mark) is optional and will be replaced by the column name when generating the SQL statement.
 For example to specify a value of _TRIM(?)_ will trim the field value on a datastore that supports that TRIM function.
+See link:mapping.html#columnadapter[Mapping : Column Adapters].
 |
 
 |update-function
 |Permits to use a function when updating into the database. A ? (question mark) is optional and will be replaced by the column name when generating the SQL statement.
 For example to specify a value of _FUNC(?)_ will perform FUNC() on the field value on a datastore that supports that FUNC function.
+See link:mapping.html#columnadapter[Mapping : Column Adapters].
 |
 
 |sequence-table-basis
