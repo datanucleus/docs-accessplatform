@@ -244,12 +244,12 @@ This is used to denote a package, and all of the *<class>* elements that follow 
 
 |catalog
 |Name of the catalog in which to persist the classes in this package. 
-See also the property name "javax.jdo.mapping.Catalog" in the link:persistence.html#pmf[PMF Guide].
+See also the property *javax.jdo.mapping.Catalog* in the link:persistence.html#pmf[PMF Guide].
 |
 
 |schema
 |Name of the schema in which to persist the classes in this package. 
-See also the property name "javax.jdo.mapping.Schema" in the link:persistence.html#pmf[PMF Guide].
+See also the property *javax.jdo.mapping.Schema* in the link:persistence.html#pmf[PMF Guide].
 |
 |===
 
@@ -273,7 +273,6 @@ This is used to define the persistence definition for this class.
 |identity-type
 |The identity type, specifying whether they are uniquely provided by the JDO implementation (datastore identity), 
 accessible fields in the object (application identity), or not at all (nondurable identity).
-*DataNucleus only supports nondurable identity for SQL views*.
 |*datastore*, application, nondurable
 
 |objectid-class
@@ -297,15 +296,15 @@ accessible fields in the object (application identity), or not at all (nondurabl
 |*persistence-capable*, persistence-aware, non-persistent
 
 |catalog
-|Name of the catalog in which to persist the class. See also the property name "javax.jdo.mapping.Catalog" in the link:persistence.html#pmf[PMF Guide].
+|Name of the catalog in which to persist the class. See also the property *javax.jdo.mapping.Catalog* in the link:persistence.html#pmf[PMF Guide].
 |
 
 |schema
-|Name of the schema in which to persist the class. See also the property name "javax.jdo.mapping.Schema" in the link:persistence.html#pmf[PMF Guide].
+|Name of the schema in which to persist the class. See also the property *javax.jdo.mapping.Schema* in the link:persistence.html#pmf[PMF Guide].
 |
 
 |table
-|Name of the table/view in which to persist the class. See also the property name "datanucleus.identifier.case" in the 
+|Name of the table/view in which to persist the class. See also the property *datanucleus.identifier.case* in the 
 link:persistence.html#pmf_properties[Persistence Properties Guide].
 |
 
@@ -558,7 +557,7 @@ This element contains the query single-string form as its content.
 |Values
 
 |name
-|Name of the query. This name is mandatory and is used in calls to _pm.newNamedQuery()_. Has to be unique for this class.
+|Name of the query. This name is mandatory and is used in calls to `pm.newNamedQuery()`. Has to be unique for this class.
 |
 
 |language
@@ -656,7 +655,7 @@ This is to be specified when link:mapping.html#schema_constraints[defining index
 |table
 |Table name to use for any join table overriding the default name provided by DataNucleus.
 This is used either for link:mapping.html#one_many_relation_join[1-N relationships with a join table] or for link:mapping.html#secondary_tables[Secondary Tables].
-See also the property name "datanucleus.identifier.case" in the link:persistence.html#pmf_properties[PMF Properties Guide].
+See also the property *datanucleus.identifier.case* in the link:persistence.html#pmf_properties[PMF Properties Guide].
 |
 
 |column
@@ -744,7 +743,7 @@ Value should be comma-separated list of fully-qualified class names
 
 |strategy-when-notnull
 |This is to be used in conjunction with the "value-strategy" attribute. 
-Default JDO2 behaviour when you have a "value-strategy" defined for a field is to always create a strategy value for that field regardless 
+Default JDO behaviour when you have a "value-strategy" defined for a field is to always create a strategy value for that field regardless 
 of whether you have set the value of the field yourself. This extension allows you to only apply the 
 strategy if the field is null at persistence. This extension has no effect on primitive field
 types (which can't be null) and the value-strategy will always be applied to such fields.
@@ -912,7 +911,7 @@ See the definitions under "datastore-identity".
 
 |recursion-depth
 |The depth that will be recursed when this property is self-referencing. 
-Should be used alongside FetchPlan.setMaxFetchDepth() to control the objects fetched.
+Should be used alongside `FetchPlan.setMaxFetchDepth()` to control the objects fetched.
 |-1, *1*, 2, ... (integer)
 
 |field-type
@@ -929,7 +928,7 @@ This is to be specified when link:mapping.html#schema_constraints[defining index
 |table
 |Table name to use for any join table overriding the default name provided by DataNucleus.
 This is used either for link:mapping.html#one_many_relation[1-N relationships with a join table] or for link:mapping.html#secondary_tables[Secondary Tables].
-See also the property name "datanucleus.identifier.case" in the link:persistence.html#pmf_properties.html[PMF Properties Guide].
+See also the property *datanucleus.identifier.case* in the link:persistence.html#pmf_properties.html[PMF Properties Guide].
 |
 
 |column
@@ -1404,7 +1403,7 @@ This is used to define the details of a column in the datastore, and so can be u
 
 |name
 |Name of the column in the datastore. 
-See also the property name "datanucleus.identifier.case" in the link:persistence.html#pmf_properties[PMF Properties Guide].
+See also the property *datanucleus.identifier.case* in the link:persistence.html#pmf_properties[PMF Properties Guide].
 |
 
 |length
@@ -1473,7 +1472,7 @@ These are attributes within the *<extension>* tag (*/column/extension).
 |datastore-mapping-class
 |Specifies the datastore mapping class to be used for mapping this field. 
 This is only used where the user wants to override the default DataNucleus datastore mapping class and provide their own mapping class for this field based on the database data type. 
-This datastore mapping class must be available for the DataNucleus PersistenceManagerFactory classpath.
+This datastore mapping class must be available in the DataNucleus PersistenceManagerFactory CLASSPATH.
 |Fully-qualified class name
 
 |enum-check-constraint
@@ -1608,7 +1607,7 @@ This is used to define the persistence of a Collection.
 
 |element-type
 |The type of element stored in this Collection or array (fully qualified class).
-This is not required when the field is an array. It is also not required when the Collection is defined using generics.
+This is not required when the field is an array. It is also not required when the Collection is defined using Java generics.
 |
 
 |embedded-element
@@ -1640,13 +1639,13 @@ These are attributes within the *<extension>* tag (jdo/package/class/field/colle
 
 |cache
 |Whether this SCO collection will be cached by DataNucleus or whether every access of the collection will go through to the datastore. 
-See also "datanucleus.cache.collections" in the link:persistence.html#pmf_properties[PMF Properties Guide]. 
+See also the property *datanucleus.cache.collections* in the link:persistence.html#pmf_properties[PMF Properties Guide]. 
 This MetaData attribute is used to override the value used by the _PersistenceManagerFactory_
 |*true*, false
 
 |cache-lazy-loading
 |Whether objects from this SCO collection will be lazy loaded (loaded when required) or whether they should be loaded at initialisation. 
-See also "datanucleus.cache.collections.lazy" in the link:persistence.html#pmf_properties[PMF Properties Guide].
+See also the property *datanucleus.cache.collections.lazy* in the link:persistence.html#pmf_properties[PMF Properties Guide].
 This MetaData attribute is used to override the value used by the _PersistenceManagerFactory_
 |*true*, false
 
@@ -1669,7 +1668,7 @@ These are attributes within the *<map>* tag (jdo/package/class/field/map). This 
 |Values
 
 |key-type
-|The type of key stored in this Map (fully qualified class). This is not required when the Map is defined using JDK 1.5 generics.
+|The type of key stored in this Map (fully qualified class). This is not required when the Map is defined using Java generics.
 |
 
 |embedded-key
@@ -1677,7 +1676,7 @@ These are attributes within the *<map>* tag (jdo/package/class/field/map). This 
 |true, false
 
 |value-type
-|The type of value stored in this Map (fully qualified class). This is not required when the Map is defined using JDK 1.5 generics.
+|The type of value stored in this Map (fully qualified class). This is not required when the Map is defined using Java generics.
 |
 
 |embedded-value
