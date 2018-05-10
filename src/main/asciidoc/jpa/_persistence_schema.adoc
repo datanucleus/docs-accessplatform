@@ -131,6 +131,22 @@ datanucleus.mapping.Schema={the_schema_name}
 This will mean that all RDBMS DDL and SQL statements will prefix table names with the 
 necessary catalog and schema names (specify which ones your datastore supports).
 
+NOTE: Some RDBMS do not support specification of both catalog and schema. For example MySQL/MariaDB use catalog and not schema. You need to check what is appropriate for your datastore.
+
+
+The datastore will define what _case_ of identifiers (table/column names) are accepted. By default, DataNucleus will capitalise names (assuming that the datastore supports it). 
+You can however influence the case used for identifiers. This is specifiable with the persistence property *datanucleus.identifier.case*, having the following values
+
+* *UpperCase*: identifiers are in upper case
+* *lowercase*: identifiers are in lower case
+* *MixedCase*: No case changes are made to the name of the identifier provided by the user (class name or metadata).
+
+NOTE: Some datastores only support UPPERCASE or lowercase identifiers and so setting this parameter may have no effect if your database doesn't support that option.
+
+NOTE: This case control only applies to DataNucleus-generated identifiers. If you provide your own identifiers for things like schema/catalog etc 
+then you need to specify those using the case you wish to use in the datastore (including quoting as necessary)
+
+
 
 == Schema Generation : Column Ordering
 
