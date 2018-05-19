@@ -195,7 +195,7 @@ You can also set the default for the _filter_ only using the persistence propert
 By default a query will fetch fields according to their defined EAGER/LAZY setting, so fields like primitives, wrappers, Dates, and 1-1/N-1 relations will be fetched, 
 whereas 1-N/M-N fields will not be fetched. JPQL allows you to include _FETCH JOIN_ as a hint to include relation fields where possible. 
 
-For RDBMS datastores any multi-valued (1-N/M-N) field will be _bulk-fetched_ if it is defined to be EAGER or has a _FETCH JOIN_, or is placed in the current EntityGraph. 
+For RDBMS datastores any multi-valued (1-N/M-N) field (Collection, array) will be _bulk-fetched_ if it is defined to be EAGER or has a _FETCH JOIN_, or is placed in the current EntityGraph. 
 By _bulk-fetched_ we mean that there will be a single SQL issued per collection field (hence avoiding the N+1 problem). By default this will be a single SQL per collection
 of the form `SELECT {relatedObject columns} FROM RELATED_TBL WHERE EXISTS (restrict to the candidate objects involved)`.
 Note that you can disable this by either not marking multi-valued fields to be fetched, or by setting the query extension *datanucleus.rdbms.query.multivaluedFetch* to _none_

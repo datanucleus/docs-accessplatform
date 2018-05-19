@@ -331,7 +331,7 @@ This can be efficient for queries with few results, and very inefficient for que
 In addition to the number of objects fetched, you can also control which fields are fetched for each object of the candidate type. This is controlled via the _FetchPlan_.
 
 For RDBMS any single-valued member will be fetched in the original SQL query, but with multiple-valued members this is not supported. 
-However what will happen is that any collection field will be retrieved in a single SQL query for all candidate objects (by default using an EXISTS subquery); this avoids the "N+1" problem, 
+However what will happen is that any collection/array field will be retrieved in a single SQL query for all candidate objects (by default using an EXISTS subquery); this avoids the "N+1" problem, 
 resulting in 1 original SQL query plus 1 SQL query per collection member. Note that you can disable this by either not putting multi-valued fields in the FetchPlan, 
 or by setting the query extension *datanucleus.rdbms.query.multivaluedFetch* to _none_ (default is "exists" using the single SQL per field).
 
