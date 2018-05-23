@@ -261,3 +261,20 @@ Query query = em.createNamedQuery("PriceBelowValue");
 List results = query.setParameter(1, new Double(20.0)).getResultList();
 -----
 
+
+[[cassandra_native]]
+== Cassandra Native (CQL) Queries
+
+NOTE: If you choose to use Cassandra CQL Queries then these are not portable to any other datastore. Use JPQL for portability
+
+Cassandra provides the CQL query language. To take a simple example using it with the JPA API and a Cassandra datastore
+
+[source,java]
+-----
+// Find all employees
+Query q = em.createNativeQuery("SELECT * FROM schema1.Employee", Employee.class);
+List<Employee> results = (List)q.getResultList();
+-----
+
+Note that the last argument to _createNativeQuery_ is optional and you would get _List<Object[]>_ returned otherwise.
+

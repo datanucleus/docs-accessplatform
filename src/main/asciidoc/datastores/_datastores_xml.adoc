@@ -23,8 +23,7 @@ If you wish to help out in this effort either by contributing or by sponsoring p
 Things to bear in mind with XML usage :-
 
 * Indentation of XML : the persistence property *datanucleus.xml.indentSize* defaults to 4 but you can set it to the desired indent size
-* Querying using JDOQL/JPQL will operate in-memory currently.
-* Application identity is supported but can only have 1 PK field and must be a String. This is a limitation of JAXB
+* Application identity is supported but can only have 1 PK field and must be a String. This is a limitation of the JAXB reference implementation
 * Persistent properties are not supported, only persistent fields
 * Out of the box it will use the JAXB reference implementation. You could, in principle, provide support for other JAXB implementations by implementing
 _org.datanucleus.store.xml.JAXBHandler_ and then specify the persistence property *datanucleus.xml.jaxbHandlerClass* to the JAXBHandler

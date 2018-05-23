@@ -53,6 +53,12 @@ SELECT [<result>]
 where _fromInclusive_ is the first row to be returned (origin = 0), and _toExclusive_ is the row after the last one to be returned).
 
 
+NOTE: When using RDBMS all parts of a query are evaluated *in-datastore*.
+When using LDAP, Excel, ODF, XML, JSON, GoogleStorage, AmazonS3 any query filter/ordering etc is evaluated *in-memory*.
+When using Neo4j, HBase, MongoDB and Cassandra any query filter/ordering etc are evaluated *in-datastore* where possible, with the remainder evaluated *in-memory*.
+
+
+
 [[jpql_from]]
 == FROM Clause
 

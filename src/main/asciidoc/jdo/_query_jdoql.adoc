@@ -37,6 +37,11 @@ the filter (the WHERE clause in SQL), together with any sorting (the ORDER BY cl
 We will cover the _string-based_ and _declarative_ modes of JDOQL API in this chapter, and the _Typed JDOQL_ is covered in link:query.html#jdoql_typed[its own chapter].
 
 
+NOTE: When using RDBMS all parts of a query are evaluated *in-datastore*.
+When using LDAP, Excel, ODF, XML, JSON, GoogleStorage, AmazonS3 any query filter/ordering etc is evaluated *in-memory*.
+When using Neo4j, HBase, MongoDB and Cassandra any query filter/ordering etc are evaluated *in-datastore* where possible, with the remainder evaluated *in-memory*.
+
+
 
 
 [[jdoql_string]]
@@ -140,7 +145,6 @@ With the Declarative API you would define the filter using the _Query.filter_ me
 -----
 q.filter("this.inventory.name == 'MyInventory'");
 -----
-
 
 
 [[jdoql_fields_properties]]
