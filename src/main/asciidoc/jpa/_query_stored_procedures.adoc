@@ -3,9 +3,11 @@
 :_basedir: ../
 :_imagesdir: images/
 
+NOTE: applicable to RDBMS.
+
 The JPA specification supports calling stored procedures through its API.
 It allows some flexibility in the type of stored procedure being used, supporting IN/OUT/INOUT parameters as well as result sets being returned. 
-Obviously if a datastore does not support stored procedures then this functionality will not apply.
+Obviously if a particular RDBMS does not support stored procedures then this functionality will not apply.
 
 You start off by creating a stored procedure query, like this, referencing the stored procedure name in the datastore.
 
