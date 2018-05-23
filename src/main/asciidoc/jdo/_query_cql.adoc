@@ -1,0 +1,34 @@
+[[cql]]
+= Cassandra CQL
+:_basedir: ../
+:_imagesdir: images/
+
+As we have described earlier, JDO allows access to many query languages to give the user full flexibility over what they utilise.
+Sometimes an object-based query language (such as JDOQL) is not considered suitable, maybe due to the lack of familiarity of the application developer with such a query language. 
+In the case where you are using Cassandra it is sometimes desirable to query using *CQL*. 
+JDO provides a mechanism to use this as a valid query mechanism, and DataNucleus supports this.
+
+To utilise *CQL* syntax in queries with Cassandra datastores, you create a Query as follows
+
+[source,java]
+-----
+Query q = pm.newQuery("CQL", "SELECT * FROM schema1.Employee");
+// Fetch 10 Employee rows at a time
+query.getFetchPlan().setFetchSize(10);
+query.setResultClass(Employee.class);
+List<Employee> results = (List)q.execute();
+-----
+
+You can also query results as List<Object[]> without specifying a specific result type as shown below.
+
+[source,java]
+-----
+// Find all employees
+PersistenceManager persistenceManager = pmf.getPersistenceManager();
+Query q = pm.newQuery("CQL", "SELECT * FROM schema1.Employee");
+// Fetch all Employee rows as Object[] at a time.
+query.getFetchPlan().setFetchSize(-1);
+List<Object[]> results = (List)q.execute();
+-----
+
+So we are utilising the JDO API to generate a query and passing in the Cassandra "CQL".
