@@ -90,7 +90,7 @@ or by setting the extension metadata on a class with key _mysql-collation_
 * You can set the character set for any created tables via persistence property *datanucleus.rdbms.mysql.characterSet*
 or by setting the extension metadata on a class with key _mysql-character-set_
 * JDOQL.isEmpty()/contains() will not work in MySQL 4.0 (or earlier) since the query uses EXISTS and that is only available from MySQL 4.1
-* MySQL on Windows MUST specify _datanucleus.identifier.case_ as "LowerCase" since the MySQL server stores all identifiers in lowercase 
+* MySQL on Windows MUST specify *datanucleus.identifier.case* as "LowerCase" since the MySQL server stores all identifiers in lowercase 
 BUT the mysql-connector-java JDBC driver has a bug (in versions up to and including 3.1.10) where it claims that the MySQL server stores things in mixed case when it doesnt
 * MySQL 3.* will not work reliably with inheritance cases since DataNucleus requires UNION and this doesn't exist in MySQL 3.*
 * MySQL before version 4.1 will not work correctly on JDOQL Collection.size(), Map.size() operations since this requires subqueries, which are not supported before MySQL 4.1.
@@ -229,8 +229,9 @@ To rebuild the database refer to Informix documention, but as example,
 run $INFORMIXDIR\bin\dbaccess and execute the command "CREATE DATABASE mydb WITH BUFFERED LOG".
 -----
  
-*INDEXOF*: Informix 11.x does not have a function to search a string in another string. DataNucleus defines a user defined function, DATANUCLEUS_STRPOS, which is automatically created 
-on startup. The SQL for the UDF function is:
+*INDEXOF*: Informix 11.x does not have a function to search a string in another string. 
+DataNucleus defines a user defined function `DATANUCLEUS_STRPOS` which is automatically created on startup. 
+The SQL for the UDF function is:
 
 -----
 create function DATANUCLEUS_STRPOS(str char(40),search char(40),from smallint) returning smallint
@@ -311,10 +312,8 @@ datanucleus.ConnectionUserName='user-name'
 datanucleus.ConnectionPassword='password'
 -----
 
-org.apache.derby.jdbc.ClientDriver
-
-*ASCII*: Derby 10.1 does not have a function to convert a char into ascii code. DataNucleus needs such function to converts chars to int values when performing queries converting chars to ints. 
-DataNucleus defines a user defined function, DataNucleus_ASCII, which is automatically created on startup. The SQL for the UDF function is:
+*ASCII*: Derby 10.1 does not have a function to convert a char into ASCII code. DataNucleus needs such function to converts chars to int values when performing queries converting chars to ints. 
+DataNucleus defines a defined function `NUCLEUS_ASCII`, which is automatically created on startup. The SQL for the UDF function is:
 
 -----
 DROP FUNCTION NUCLEUS_ASCII;
@@ -324,7 +323,7 @@ CALLED ON NULL INPUT
 LANGUAGE JAVA PARAMETER STYLE JAVA;
 -----
 
-*String.matches(pattern)*: When pattern argument is a column, DataNucleus defines a function that allows Derby 10.1 to perform the matches function. The SQL for the UDF function is:
+*String.matches(pattern)*: When pattern argument is a column, DataNucleus defines a function `NUCLEUS_MATCHES` that allows Derby 10.1 to perform the matches function. The SQL for the UDF function is:
 
 -----
 DROP FUNCTION NUCLEUS_MATCHES;
