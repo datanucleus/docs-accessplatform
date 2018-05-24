@@ -197,6 +197,62 @@ See also :-
 * link:annotations.html#Embedded[Annotations reference for @Embedded]
 
 
+
+=== MongoDB embedding control
+
+For MongoDB you have one further control over how the persistable object is embedded. 
+Since the datastore effectively is a JSON document, the default is to nest the embedded object, so our example could be represented as
+
+[source,json]
+-----
+{ "OS_NAME" : "Windows" ,
+  "COMPUTER_ID" : 1 ,
+  "graphicsCard" : { "GRAPHICS_MANUFACTURER" : "NVidea" ,
+          "GRAPHICS_TYPE" : "AGP"},
+  "soundCard" : { "SOUND_MANUFACTURER" : "Intel" ,
+          "SOUND_TYPE" : "Other"}
+}
+-----
+
+If you set the field(s) to use *flat* embedding using the *nested* extension, like this
+
+[source,java]
+-----
+public class Computer
+{
+    @Embedded
+    @AttributeOverride(name="manufacturer", column=@Column(name="GRAPHICS_MANUFACTURER"))
+    @AttributeOverride(name="type", column=@Column(name="GRAPHICS_TYPE"))
+    @Extension(vendorName="datanucleus", key="nested", value="false")
+    private ComputerCard graphicsCard;
+
+    @Embedded
+    @AttributeOverride(name="manufacturer", column=@Column(name="SOUND_MANUFACTURER"))
+    @AttributeOverride(name="type", column=@Column(name="SOUND_TYPE"))
+    @Extension(vendorName="datanucleus", key="nested", value="false")
+    private ComputerCard soundCard;
+
+    ...
+}
+-----
+
+then the resultant representation will be
+
+
+[source,json]
+-----
+{ "OS_NAME" : "Windows",
+  "COMPUTER_ID" : 1,
+  "GRAPHICS_MANUFACTURER" : "NVidea",
+  "GRAPHICS_TYPE" : "AGP",
+  "SOUND_MANUFACTURER" : "Intel",
+  "SOUND_TYPE" : "Other"
+}
+-----
+
+
+
+
 [[embedded_entity_nested]]
 == Embedding Nested Entities
 
@@ -391,6 +447,30 @@ See also :-
 * link:annotations.html#Embeddable[Annotations reference for @Embeddable]
 * link:annotations.html#Embedded[Annotations reference for @Embedded]
 * link:annotations.html#ElementCollection[Annotations reference for @ElementCollection]
+
+
+
+=== MongoDB embedded representation
+
+Since the datastore with MongoDB is effectively a JSON document, our example would be represented as
+
+[source,json]
+-----
+{ "NAME" : "A Name" ,
+  "NETWORK_ID" : 1 ,
+  "devices" :
+      [
+        { "DEVICE_NAME" : "Laptop" ,
+          "DEVICE_IP_ADDR" : "192.168.1.2"} ,
+        { "DEVICE_NAME" : "Desktop" ,
+          "DEVICE_IP_ADDR" : "192.168.1.3"} ,
+        { "DEVICE_NAME" : "Smart TV" ,
+          "DEVICE_IP_ADDR" : "192.168.1.4"}
+      ]
+}
+-----
+
+
 
 
 [[embedded_map]]

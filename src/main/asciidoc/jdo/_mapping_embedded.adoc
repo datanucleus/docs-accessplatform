@@ -120,6 +120,7 @@ image:../images/embedded_pc_traditional_db.png[]
 
 However we decide that we want to persist *Computer* objects into a table `COMPUTER` and we also want to persist the PC cards into the _same table_. 
 We define our MetaData like this
+
 [source,java]
 -----
 public class Computer
@@ -197,6 +198,60 @@ See also :-
 
 * link:metadata_xml.html#embedded[MetaData reference for <embedded> element]
 * link:annotations.html#Embedded[Annotations reference for @Embedded]
+
+
+=== MongoDB embedding control
+
+For MongoDB you have one further control over how the persistable object is embedded. 
+Since the datastore effectively is a JSON document, the default is to nest the embedded object, so our example could be represented as
+
+[source,json]
+-----
+{ "OS_NAME" : "Windows" ,
+  "COMPUTER_ID" : 1 ,
+  "graphicsCard" : { "GRAPHICS_MANUFACTURER" : "NVidea" ,
+          "GRAPHICS_TYPE" : "AGP"},
+  "soundCard" : { "SOUND_MANUFACTURER" : "Intel" ,
+          "SOUND_TYPE" : "Other"}
+}
+-----
+
+If you set the field(s) to use *flat* embedding using the *nested* extension, like this
+
+[source,java]
+-----
+public class Computer
+{
+    @Embedded(nullIndicatorColumn="GRAPHICS_MANUFACTURER", members={
+        @Persistent(name="manufacturer", column="GRAPHICS_MANUFACTURER"),
+        @Persistent(name="type", column="GRAPHICS_TYPE")})
+    @Extension(vendorName="datanucleus", key="nested", value="false")
+    private ComputerCard graphicsCard;
+
+    @Embedded(nullIndicatorColumn="SOUND_MANUFACTURER", members={
+        @Persistent(name="manufacturer", column="SOUND_MANUFACTURER"),
+        @Persistent(name="type", column="SOUND_TYPE")})
+    @Extension(vendorName="datanucleus", key="nested", value="false")
+    private ComputerCard soundCard;
+
+    ...
+}
+-----
+
+then the resultant representation will be
+
+
+[source,json]
+-----
+{ "OS_NAME" : "Windows",
+  "COMPUTER_ID" : 1,
+  "GRAPHICS_MANUFACTURER" : "NVidea",
+  "GRAPHICS_TYPE" : "AGP",
+  "SOUND_MANUFACTURER" : "Intel",
+  "SOUND_TYPE" : "Other"
+}
+-----
+
 
 
 
@@ -433,6 +488,29 @@ See also :-
 * link:metadata_xml.html#join[MetaData reference for <join> element]
 * link:annotations.html#Embedded[Annotations reference for @Embedded]
 * link:annotations.html#Element[Annotations reference for @Element]
+
+
+
+=== MongoDB embedded representation
+
+Since the datastore with MongoDB is effectively a JSON document, our example would be represented as
+
+[source,json]
+-----
+{ "NAME" : "A Name" ,
+  "NETWORK_ID" : 1 ,
+  "devices" :
+      [
+        { "DEVICE_NAME" : "Laptop" ,
+          "DEVICE_IP_ADDR" : "192.168.1.2"} ,
+        { "DEVICE_NAME" : "Desktop" ,
+          "DEVICE_IP_ADDR" : "192.168.1.3"} ,
+        { "DEVICE_NAME" : "Smart TV" ,
+          "DEVICE_IP_ADDR" : "192.168.1.4"}
+      ]
+}
+-----
+
 
 
 [[embedded_map]]
