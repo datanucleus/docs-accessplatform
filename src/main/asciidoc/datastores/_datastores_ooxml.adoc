@@ -5,7 +5,7 @@
 
 image:../images/datastore/excel.png[]
 
-DataNucleus supports persisting/retrieving objects to/from OOXML documents (using the https://github.com/datanucleus/datanucleus-excel[datanucleus-excel] plugin) 
+DataNucleus supports persistence to OOXML _spreadsheets_ using the https://github.com/datanucleus/datanucleus-excel[datanucleus-excel] plugin,
 which makes use of the Apache POI project. Simply specify your "connectionURL" as follows
 
 -----
@@ -13,10 +13,7 @@ datanucleus.ConnectionURL=excel:file:myfile.xlsx
 -----
 
 replacing `myfile.xlsx` with your filename, which can be absolute or relative. This connects to a file on your local machine. 
-You then create your PMF/EMF as normal and use JDO/JPA as normal.
-
-The jars required to use DataNucleus OOXML persistence are `datanucleus-core`, `datanucleus-api-jdo`/`datanucleus-api-jpa`, `datanucleus-excel` and `apache-poi`.
-
+You need to have the _org.apache.poi_ `poi.jar` as well as the _org.apache.poi_ `poi-ooxml.jar` in the CLASSPATH.
 There are tutorials available for use of DataNucleus with Excel link:../jdo/tutorial.html[for JDO] and link:../jpa/tutorial.html[for JPA]
 
 Things to bear in mind with OOXML usage :-

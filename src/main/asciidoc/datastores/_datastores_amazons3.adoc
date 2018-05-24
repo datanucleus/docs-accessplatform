@@ -6,8 +6,7 @@
 
 image:../images/datastore/aws.png[]
 
-DataNucleus supports persisting/retrieving objects to/from Amazon Simple Storage Service
-(using the https://github.com/datanucleus/datanucleus-json[datanucleus-json] plugin). 
+DataNucleus supports persistence to Amazon Simple Storage Service using the https://github.com/datanucleus/datanucleus-json[datanucleus-json] plugin. 
 Simply specify your connection details as follows
 
 -----
@@ -17,10 +16,5 @@ datanucleus.ConnectionPassword={Secret Access Key}
 datanucleus.cloud.storage.bucket={bucket}
 -----
 
-You then create your PMF/EMF as normal and use JDO/JPA as normal.
-
-
-Below are some references using this support
-
-* http://www.den-4.com/?p=113[Simple Integration of Datanucleus 2.0.0 + AmazonS3]
+An example of this usage is seen at http://www.den-4.com/?p=113[Simple Integration of Datanucleus 2.0.0 + AmazonS3]
 

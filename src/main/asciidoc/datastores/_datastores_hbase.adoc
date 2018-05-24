@@ -5,8 +5,8 @@
 
 image:../images/datastore/hbase.png[]
 
-DataNucleus supports persisting/retrieving objects to/from HBase datastores (using the https://github.com/datanucleus/datanucleus-hbase[datanucleus-hbase] plugin, 
-which makes use of the HBase/Hadoop jars).  Simply specify your "connectionURL" as follows
+DataNucleus supports persistence to HBase datastores using the https://github.com/datanucleus/datanucleus-hbase[datanucleus-hbase] plugin, 
+which makes use of the HBase's client.  Simply specify your "connectionURL" as follows
 
 -----
 datanucleus.ConnectionURL=hbase[:{server}:{port}]
@@ -16,16 +16,13 @@ datanucleus.ConnectionPassword=
 
 If you just specify the URL as _hbase_ then you have a local HBase datastore, otherwise it tries to connect to the datastore at _{server}:{port}_. 
 Alternatively just put "hbase"  as the URL and set the zookeeper details in `hbase-site.xml` as normal.
-You then create your PMF/EMF as normal and use JDO/JPA as normal.
-
-The jars required to use DataNucleus HBase persistence are `datanucleus-core`, `datanucleus-api-jdo`/`datanucleus-api-jpa`, `datanucleus-hbase` and `hbase-client`.
-
+You need to have _org.apache.hbase_ `hbase-client.jar` in the CLASSPATH.
 There are tutorials available for use of DataNucleus with HBase link:../jdo/tutorial.html[for JDO] and link:../jpa/tutorial.html[for JPA]
 
 Things to bear in mind with HBase usage :-
 
-* Creation of a PMF/EMF will create an internal _HBaseConnectionPool_
-* Creation of a PM/EM will create/use a _HConnection_.
+* Creation of a PMF/EMF will create an internal connection pool of `org.apache.hadoop.hbase.client.Connection` objects.
+* Creation of a PM/EM will create/use a `org.apache.hadoop.hbase.client.Connection`.
 * Querying can be performed using JDOQL or JPQL. Some components of a filter are handled in the datastore, and the remainder in-memory.
 Currently any expression of a field (in the same table), or a literal are handled in-datastore,
 as are the operators &amp;&amp;, ||, >, >=, <, <=, ==, and !=.

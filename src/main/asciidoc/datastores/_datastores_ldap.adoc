@@ -5,13 +5,10 @@
 
 image:../images/datastore/ldap.png[]
 
-DataNucleus supports persisting/retrieving objects to/from LDAP datastores https://github.com/datanucleus/datanucleus-ldap[datanucleus-ldap] plugin). 
-If you wish to help out development of this plugin either by contributing or by sponsoring particular functionality please contact us.
+DataNucleus supports persistence to LDAP using the https://github.com/datanucleus/datanucleus-ldap[datanucleus-ldap] plugin. 
+Simply specify your connection details as follows
 
-
-== Datastore Connection
-
-The following persistence properties will connect to an LDAP running on your local machine
+_The following persistence properties will connect to an LDAP running on your local machine_
 
 -----
 datanucleus.ConnectionDriverName=com.sun.jndi.ldap.LdapCtxFactory
@@ -19,9 +16,6 @@ datanucleus.ConnectionURL=ldap://localhost:10389
 datanucleus.ConnectionUserName=uid=admin,ou=system
 datanucleus.ConnectionPassword=secret
 -----
-
-You create your link:../jdo/mapping.html#pmf[PersistenceManagerFactory] or link:../jpa/mapping.html#emf[EntityManagerFactory] with these properties. 
-Thereafter you have the full power of the JDO or JPA APIs at your disposal, for your LDAP datastore.
 
 
 == Mapping : LDAP Datastore Mapping

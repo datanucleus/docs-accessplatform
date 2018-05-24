@@ -6,7 +6,7 @@
 
 image:../images/datastore/json.png[]
 
-DataNucleus supports persisting/retrieving objects to/from JSON documents (using the https://github.com/datanucleus/datanucleus-json[datanucleus-json] plugin). 
+DataNucleus supports persistence to JSON documents using the https://github.com/datanucleus/datanucleus-json[datanucleus-json] plugin. 
 Simply specify your "connectionURL" as follows
 
 -----
@@ -14,7 +14,7 @@ datanucleus.ConnectionURL=json:{url}
 -----
 
 replacing "{url}" with some URL of your choice (e.g `http://www.mydomain.com/somepath/`).
-You then create your PMF/EMF as normal and use JDO/JPA as normal.
+
 
 Things to bear in mind with JSON usage :-
 

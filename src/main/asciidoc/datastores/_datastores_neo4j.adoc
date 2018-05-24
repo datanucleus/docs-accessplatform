@@ -6,8 +6,7 @@
 
 http://www.neo4j.org[image:../images/datastore/neo4j.png[]]
 
-DataNucleus supports persisting/retrieving objects to/from *embedded* Neo4j graph datastores (using the 
-https://github.com/datanucleus/datanucleus-neo4j[datanucleus-neo4j] plugin, which utilises the Neo4j Java driver). 
+DataNucleus supports persistence to *embedded* Neo4j graph datastores using the https://github.com/datanucleus/datanucleus-neo4j[datanucleus-neo4j] plugin, which utilises the Neo4j Java driver. 
 Simply specify your "connectionURL" as follows
 
 -----
@@ -20,32 +19,25 @@ For example
 datanucleus.ConnectionURL=neo4j:myNeo4jDB
 -----
 
-You then create your PMF/EMF as normal and use JDO/JPA as normal.
-
-The jars required to use DataNucleus Neo4j persistence are `datanucleus-core`, `datanucleus-api-jdo`/`datanucleus-api-jpa`, `datanucleus-neo4j` and `neo4j`.
+You need to have the _org.neo4j_ `neo4j.jar` in the CLASSPATH.
+There are tutorials available for use of DataNucleus with Neo4j link:../jdo/tutorial.html[for JDO] and link:../jpa/tutorial.html[for JPA]
 
 *Note that this is for embedded Neo4j. This is because at the time of writing there is no binary protocol for connecting Java clients to the 
 server with Neo4j. When that is available we would hope to support it.*
 
-There are tutorials available for use of DataNucleus with Neo4j 
-link:../jdo/tutorial.html[for JDO] and link:../jpa/tutorial.html[for JPA]
 
 Things to bear in mind with Neo4j usage :-
 
-* Creation of a PMF/EMF will create a _GraphDatabaseService_ and this is shared by all PM/EM instances.
+* Creation of a PMF/EMF will create a `org.neo4j.graphdb.GraphDatabaseService` and this is shared by all PM/EM instances.
 Since this is for an embedded graph datastore then this is the only logical way to provide this. 
 Should this plugin be updated to connect to a Neo4J server then this will change.
 * Querying can be performed using JDOQL or JPQL. Some components of a filter are handled in the datastore, and the remainder in-memory. 
 Currently any expression of a field (in the same 'table'), or a literal are handled in-datastore, as are the operators &amp;&amp;, ||, >, >=, <, <=, ==, and !=. Also
 the majority of ordering and result clauses are evaluatable in the datastore, as well as query result range restrictions.
-* When an object is persisted it becomes a Node in Neo4j. You define the names of the
-properties of that node by specifying the "column" name using JDO/JPA metadata
-* Any 1-1, 1-N, M-N, N-1 relation is persisted as a Relationship object in Neo4j and any positioning of 
-elements in a List or array is preserved via a property on the Relationship.
-* If you wanted to specify some neo4j.properties file for use of your embedded database then
-specify the persistence property *datanucleus.ConnectionPropertiesFile* set to the filename.
-* This plugin is in prototype stage so would welcome feedback and, better still, some contributions to fully exploit the power of Neo4j. 
-Register your interest on https://groups.io/g/datanucleus/[Groups.IO] or https://gitter.im/datanucleus/Lobby[Gitter]
+* When an object is persisted it becomes a Node in Neo4j. You define the names of the properties of that node by specifying the "column" name using JDO/JPA metadata
+* Any 1-1, 1-N, M-N, N-1 relation is persisted as a Relationship object in Neo4j and any positioning of  elements in a List or array is preserved via a property on the Relationship.
+* If you wanted to specify some neo4j.properties file for use of your embedded database then specify the persistence property *datanucleus.ConnectionPropertiesFile* set to the filename.
+
 
 
 == Persistence Implementation

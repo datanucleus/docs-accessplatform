@@ -6,18 +6,15 @@
 
 image:../images/datastore/excel.png[]
 
-DataNucleus supports persisting/retrieving objects to/from Excel documents (using the https://github.com/datanucleus/datanucleus-excel[datanucleus-excel] plugin, 
-which makes use of the Apache POI project). Simply specify your "connectionURL" as follows
+DataNucleus supports persistence to Excel _spreadsheets_ using the https://github.com/datanucleus/datanucleus-excel[datanucleus-excel] plugin, 
+which makes use of the Apache POI project. Simply specify your "connectionURL" as follows
 
 -----
 datanucleus.ConnectionURL=excel:file:myfile.xls
 -----
 
 replacing `myfile.xls` with your filename, which can be absolute or relative. This connects to a file on your local machine. 
-You then create your PMF/EMF as normal and use JDO/JPA as normal.
-
-The jars required to use DataNucleus Excel persistence are `datanucleus-core`, `datanucleus-api-jdo`/`datanucleus-api-jpa`, `datanucleus-excel` and `apache-poi`.
-
+You need to have the _org.apache.poi_ `poi.jar` in the CLASSPATH.
 There are tutorials available for use of DataNucleus with Excel link:../jdo/tutorial_excel.html[for JDO] and link:../jpa/tutorial_excel.html[for JPA]
 
 Things to bear in mind with Excel usage :-

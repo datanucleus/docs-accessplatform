@@ -6,9 +6,8 @@
 
 image:../images/datastore/cassandra.png[]
 
-DataNucleus supports a limited for of persisting/retrieving objects to/from Cassandra datastores 
-(using the https://github.com/datanucleus/datanucleus-cassandra[datanucleus-cassandra] plugin, which utilises the DataStax Java driver). 
-Simply specify your "connectionURL" as follows
+DataNucleus supports persistence of objects to Cassandra datastores using the https://github.com/datanucleus/datanucleus-cassandra[datanucleus-cassandra] plugin, 
+which utilises the DataStax Java driver. Simply specify your "connectionURL" as follows
 
 -----
 datanucleus.ConnectionURL=cassandra:[{host1}[:{port}] [,{host2} [,{host3}]]]
@@ -23,17 +22,16 @@ For example, to connect to a local server
 datanucleus.ConnectionURL=cassandra:
 -----
 
-The jars required to use DataNucleus Cassandra persistence are `datanucleus-core`, `datanucleus-api-jdo`/`datanucleus-api-jpa`, `datanucleus-cassandra` and `cassandra-driver-core`.
-
+You need to have the _com.datastax.cassandra_ `cassandra-driver-core.jar` in the CLASSPATH.
 There are tutorials available for use of DataNucleus with Cassandra link:../jdo/tutorial.html[for JDO] and link:../jpa/tutorial.html[for JPA]
 
 Things to bear in mind with Cassandra usage :-
 
-* Creation of a PMF/EMF will create a _Cluster_. This will be closed then the PMF/EMF is closed.
-* Any PM/EM will use a single _Session_, by default, shared amongst all PM/EMs.
-* If you specify the persistence property *datanucleus.cassandra.sessionPerManager* to _true_ then each PM/EM will have its own _Session_ object.
+* Creation of a PMF/EMF will create a `com.datastax.driver.core.Cluster`. This will be closed then the PMF/EMF is closed.
+* Any PM/EM will use a single `com.datastax.driver.core.Session`, by default, shared amongst all PM/EMs.
+* If you specify the persistence property *datanucleus.cassandra.sessionPerManager* to _true_ then each PM/EM will have its own `com.datastax.driver.core.Session` object.
 * Cassandra doesn't use transactions, so any JDO/JPA transaction operation is a no-op (i.e will be ignored).
-* This uses Cassandra 3.x (and CQL v3.x), not Thrift (like the previous unofficial attempts at a datanucleus-cassandra plugin used)
+* This uses Cassandra 3.x (and CQL v3.x), not the older Thrift.
 * Specify persistence property *datanucleus.cassandra.metrics* to enable/disable metrics
 * Specify persistence property *datanucleus.cassandra.compression* to enable/disable compression
 * Specify persistence property *datanucleus.cassandra.ssl* to enable/disable SSL

@@ -22,25 +22,17 @@ image:../images/datastore/firebird.png[]
 image:../images/datastore/nuodb.png[]
 
 
-DataNucleus supports persisting objects to RDBMS datastores (using the https://github.com/datanucleus/datanucleus-rdbms[datanucleus-rdbms] plugin). 
-It supports the vast majority of RDBMS products available today. 
-DataNucleus communicates with the RDBMS datastore using JDBC. 
+DataNucleus supports persistence to RDBMS datastores using the https://github.com/datanucleus/datanucleus-rdbms[datanucleus-rdbms] plugin. 
+It supports the vast majority of RDBMS products available today, and uses JDBC.
 RDBMS systems accept varying standards of SQL and so DataNucleus will support particular RDBMS/JDBC combinations only, though clearly we try to support as many as possible.
-
-The jars required to use DataNucleus RDBMS persistence are `datanucleus-core`, `datanucleus-api-jdo`/`datanucleus-api-jpa`, `datanucleus-rdbms` and `JDBC driver`.
-
+You need to have the JDBC driver for your RDBMS in the CLASSPATH.
 There are tutorials available for use of DataNucleus with RDBMS link:../jdo/tutorial.html[for JDO] and link:../jpa/tutorial.html[for JPA]
+
 
 By default when you create a PersistenceManagerFactory or EntityManagerFactory to connect to a particular datastore DataNucleus will automatically 
 detect the _datastore adapter_ to use and will use its own internal adapter for that type of datastore. 
 If you find that either DataNucleus has incorrectly detected the adapter to use, you can override the default behaviour using the persistence property
 *datanucleus.rdbms.datastoreAdapterClassName*.
-
-Using an RDBMS datastore DataNucleus allows you to query the objects in the datastore using the following
-
-* link:../jdo/query.html#jdoql[JDOQL] - language based around the objects that are persisted and using Java-type syntax
-* link:../jdo/query.html#sql[SQL] - language found on almost all RDBMS.
-* link:../jpa/query.html#jpql[JPQL] - language defined in the JPA specification which closely mirrors SQL.
 
 The following RDBMS have support built in to DataNucleus. 
 Click on the one of interest to see details of any provisos for its support, as well as the JDBC connection information

@@ -4,21 +4,17 @@
 :_imagesdir: images/
 
 
-
 image:../images/datastore/odf.png[]
 
-DataNucleus supports persisting/retrieving objects to/from ODF documents (using the https://github.com/datanucleus/datanucleus-odf[datanucleus-odf] plugin, 
-which makes use of the ODFDOM project). Simply specify your "connectionURL" as follows
+DataNucleus supports persistence to ODF _spreadsheets_ using the https://github.com/datanucleus/datanucleus-odf[datanucleus-odf] plugin, 
+which makes use of the ODFDOM project. Simply specify your "connectionURL" as follows
 
 -----
 datanucleus.ConnectionURL=odf:file:myfile.ods
 -----
 
 replacing `myfile.ods` with your filename, which can be absolute or relative. This connects to a file on your local machine. 
-You then create your PMF/EMF as normal and use JDO/JPA as normal.
-
-The jars required to use DataNucleus ODF persistence are `datanucleus-core`, `datanucleus-api-jdo`/`datanucleus-api-jpa`, `datanucleus-odf` and `odftoolkit`.
-
+You need to have the _org.odftoolkit_ `odfdom-java.jar` in the CLASSPATH.
 There are tutorials available for use of DataNucleus with ODF link:../jdo/tutorial.html[for JDO] and link:../jpa/tutorial.html[for JPA]
 
 Things to bear in mind with ODF usage :-

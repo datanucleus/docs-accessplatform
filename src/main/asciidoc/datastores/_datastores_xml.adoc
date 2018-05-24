@@ -6,8 +6,7 @@
 
 image:../images/datastore/xml.png[]
 
-DataNucleus supports persisting/retrieving objects to/from XML documents 
-(using the https://github.com/datanucleus/datanucleus-xml[datanucleus-xml] plugin).
+DataNucleus supports persistence to XML documents using the https://github.com/datanucleus/datanucleus-xml[datanucleus-xml] plugin, which makes use of JAXB.
 Simply specify your "connectionURL" as follows
 
 -----
@@ -15,10 +14,7 @@ datanucleus.ConnectionURL=xml:file:myfile.xml
 -----
 
 replacing `myfile.xml` with your filename, which can be absolute or relative.
-
-It makes use of JAXB, and the jars required to use DataNucleus XML persistence are `datanucleus-core`,
-`datanucleus-api-jdo`/`datanucleus-api-jpa`, `datanucleus-xml` and `JAXB API`, `JAXB Reference Implementation`.
-If you wish to help out in this effort either by contributing or by sponsoring particular functionality please contact us.
+You need to have the _javax.xml.bind_ `jaxb-api.jar` (JAXB API) as well as _com.sun.xml.bind_ `jaxb-impl.jar` (JAXB reference implementation) in the CLASSPATH.
 
 Things to bear in mind with XML usage :-
 
