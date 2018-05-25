@@ -261,6 +261,8 @@ and optionally *javax.jdo.option.ConnectionDriverName*.
 
 The JNDI routes are typically only for use with RDBMS datastores.
 
+NOTE: The "ConnectionURL" value for the different supported datastores is defined in the link:../datastores/datastores.html[Datastore Guide]
+
 
 [[pmf_props_jdo]]
 === Standard JDO Properties
@@ -291,7 +293,7 @@ The JNDI routes are typically only for use with RDBMS datastores.
 
 |javax.jdo.option.ConnectionURL
 |URL specifying the datastore to use for persistence.
-Note that this will define the *type of datastore* as well as the datastore itself. Please refer to link:../datastores/datastores.html[the datastores guides]
+Note that this will define the *type of datastore* as well as the datastore itself. Please refer to link:../datastores/datastores.html[the Datastore Guide]
 for the URL appropriate for the type of datastore you're using.
 
 |javax.jdo.option.ConnectionUserName
@@ -406,7 +408,7 @@ DataNucleus provides the following properties for configuring the datastore used
 
 |datanucleus.ConnectionURL
 |URL specifying the datastore to use for persistence.
-Note that this will define the *type of datastore* as well as the datastore itself. Please refer to link:../datastores/datastores.html[the datastores guide]
+Note that this will define the *type of datastore* as well as the datastore itself. Please refer to link:../datastores/datastores.html[the Datastore Guide]
 for the URL appropriate for the type of datastore you're using.
 
 |datanucleus.ConnectionUserName

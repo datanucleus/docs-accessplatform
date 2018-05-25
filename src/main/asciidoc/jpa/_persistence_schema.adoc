@@ -546,3 +546,181 @@ If you *update* or *delete* a field with an RDBMS datastore then you will need t
 is supported in some situations.
 
 You should also consider making use of tools like https://flywaydb.org/[Flyway] and http://www.liquibase.org/[Liquibase] since these are designed for exactly this role.
+
+
+
+[[schema_api]]
+== RDBMS : Datastore Schema SPI
+
+image:../images/nucleus_extension.png[]
+
+The JPA API doesn't provide a way of accessing the schema of the datastore itself (if it has one). 
+In the case of RDBMS it is useful to be able to find out what columns there are in a table, or what data types are supported for example. 
+DataNucleus Access Platform provides an API for this.
+
+The first thing to do is get your hands on the DataNucleus _StoreManager_ and from that the _StoreSchemaHandler_. 
+You do this as follows
+
+[source,java]
+-----
+import org.datanucleus.store.StoreManager;
+import org.datanucleus.store.schema.StoreSchemaHandler;
+
+...
+StoreManager storeMgr = emf.unwrap(StoreManager.class);
+StoreSchemaHandler schemaHandler = storeMgr.getSchemaHandler();
+-----
+
+So now we have the _StoreSchemaHandler_ what can we do with it? Well start with the javadoc for the implementation that is used for RDBMS
+http://www.datanucleus.org/javadocs/store.rdbms/latest/org/datanucleus/store/rdbms/schema/RDBMSSchemaHandler.html[image:../images/javadoc.png[Javadoc]]
+
+
+=== RDBMS : Datastore Types Information
+    
+So we now want to find out what JDBC/SQL types are supported for our RDBMS. This is simple.
+
+[source,java]
+-----
+import org.datanucleus.store.rdbms.schema.RDBMSTypesInfo;
+
+Connection conn = (Connection)pm.getDataStoreConnection().getNativeConnection();
+RDBMSTypesInfo typesInfo = schemaHandler.getSchemaData(conn, "types");
+-----
+
+As you can see from the javadocs for _RDBMSTypesInfo_
+http://www.datanucleus.org/javadocs/store.rdbms/latest/org/datanucleus/store/rdbms/schema/RDBMSTypesInfo.html[image:../images/javadoc.png[Javadoc]]
+we can access the JDBC types information via the "children". They are keyed by the JDBC type number of the JDBC type (see java.sql.Types). So we can just iterate it
+
+[source,java]
+-----
+Iterator jdbcTypesIter = typesInfo.getChildren().values().iterator();
+while (jdbcTypesIter.hasNext())
+{
+    JDBCTypeInfo jdbcType = (JDBCTypeInfo)jdbcTypesIter.next();
+
+    // Each JDBCTypeInfo contains SQLTypeInfo as its children, keyed by SQL name
+    Iterator sqlTypesIter = jdbcType.getChildren().values().iterator();
+    while (sqlTypesIter.hasNext())
+    {
+        SQLTypeInfo sqlType = (SQLTypeInfo)sqlTypesIter.next();
+        ... inspect the SQL type info
+    }
+}
+-----
+
+
+=== RDBMS : Column information for a table
+
+Here we have a table in the datastore and want to find the columns present. So we do this
+
+[source,java]
+-----
+import org.datanucleus.store.rdbms.schema.RDBMSTableInfo;
+
+Connection conn = (Connection)pm.getDataStoreConnection().getNativeConnection();
+RDBMSTableInfo tableInfo = schemaHandler.getSchemaData(conn, "columns", 
+    new Object[] {catalogName, schemaName, tableName});
+-----
+    
+As you can see from the javadocs for _RDBMSTableInfo_
+http://www.datanucleus.org/javadocs/store.rdbms/latest/org/datanucleus/store/rdbms/schema/RDBMSTableInfo.html[image:../images/javadoc.png[Javadoc]]
+we can access the columns information via the "children".
+
+[source,java]
+-----
+Iterator columnsIter = tableInfo.getChildren().iterator();
+while (columnsIter.hasNext())
+{
+    RDBMSColumnInfo colInfo = (RDBMSColumnInfo)columnsIter.next();
+
+    ...
+}
+-----
+
+=== RDBMS : Index information for a table
+
+Here we have a table in the datastore and want to find the indices present. So we do this
+
+[source,java]
+-----
+import org.datanucleus.store.rdbms.schema.RDBMSTableInfo;
+
+Connection conn = (Connection)pm.getDataStoreConnection().getNativeConnection();
+RDBMSTableIndexInfo tableInfo = schemaHandler.getSchemaData(conn, "indices", 
+    new Object[] {catalogName, schemaName, tableName});
+-----
+
+As you can see from the javadocs for _RDBMSTableIndexInfo_
+http://www.datanucleus.org/javadocs/store.rdbms/latest/org/datanucleus/store/rdbms/schema/RDBMSTableIndexInfo.htm[image:../images/javadoc.png[Javadoc]]
+we can access the index information via the "children".
+
+[source,java]
+-----
+Iterator indexIter = tableInfo.getChildren().iterator();
+while (indexIter.hasNext())
+{
+    IndexInfo idxInfo = (IndexInfo)indexIter.next();
+
+    ...
+}
+-----
+
+
+=== RDBMS : ForeignKey information for a table
+
+Here we have a table in the datastore and want to find the FKs present. So we do this
+
+[source,java]
+-----
+import org.datanucleus.store.rdbms.schema.RDBMSTableInfo;
+
+Connection conn = (Connection)pm.getDataStoreConnection().getNativeConnection();
+RDBMSTableFKInfo tableInfo = schemaHandler.getSchemaData(conn, "foreign-keys", 
+    new Object[] {catalogName, schemaName, tableName});
+-----
+
+As you can see from the javadocs for _RDBMSTableFKInfo_
+http://www.datanucleus.org/javadocs/store.rdbms/latest/org/datanucleus/store/rdbms/schema/RDBMSTableFKInfo.html[image:../images/javadoc.png[Javadoc]]
+we can access the foreign-key information via the "children".
+
+[source,java]
+-----
+Iterator fkIter = tableInfo.getChildren().iterator();
+while (fkIter.hasNext())
+{
+    ForeignKeyInfo fkInfo = (ForeignKeyInfo)fkIter.next();
+
+    ...
+}
+-----
+
+
+=== RDBMS : PrimaryKey information for a table
+    
+Here we have a table in the datastore and want to find the PK present. So we do this
+
+[source,java]
+-----
+import org.datanucleus.store.rdbms.schema.RDBMSTableInfo;
+
+Connection conn = (Connection)pm.getDataStoreConnection().getNativeConnection();
+RDBMSTablePKInfo tableInfo = schemaHandler.getSchemaData(conn, "primary-keys", 
+    new Object[] {catalogName, schemaName, tableName});
+-----
+
+As you can see from the javadocs for _RDBMSTablePKInfo_
+http://www.datanucleus.org/javadocs/store.rdbms/latest/org/datanucleus/store/rdbms/schema/RDBMSTablePKInfo.html[image:../images/javadoc.png[Javadoc]]
+we can access the foreign-key information via the "children".
+
+[source,java]
+-----
+Iterator pkIter = tableInfo.getChildren().iterator();
+while (pkIter.hasNext())
+{
+    PrimaryKeyInfo pkInfo = (PrimaryKeyInfo)pkIter.next();
+
+    ...
+}
+-----
+
+

@@ -153,6 +153,9 @@ This is achieved by specifying *javax.persistence.jtaDataSource*, and *javax.per
 by specifying the element(s) _jta-data-source_/_non-jta-data-source_
 
 
+NOTE: The connection "url" value for the different supported datastores is defined in the link:../datastores/datastores.html[Datastore Guide]
+
+
 
 === Restricting to specific classes
 
@@ -232,7 +235,7 @@ schema generation and/or sequence handling will need to use that.
 
 |javax.persistence.jdbc.url
 |URL specifying the datastore to use for persistence. Note that this will define the *type of datastore* as well as the datastore itself. 
-Please refer to link:../datastores/datastores.html[the datastores guides] for the URL appropriate for the type of datastore you're using.
+Please refer to link:../datastores/datastores.html[the Datastore Guide] for the URL appropriate for the type of datastore you're using.
 
 |javax.persistence.jdbc.user
 |Username to use for connecting to the DB
