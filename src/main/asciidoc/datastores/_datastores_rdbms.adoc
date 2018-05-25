@@ -27,38 +27,14 @@ It supports the vast majority of RDBMS products available today, and uses JDBC.
 RDBMS systems accept varying standards of SQL and so DataNucleus will support particular RDBMS/JDBC combinations only, though clearly we try to support as many as possible.
 You need to have the JDBC driver for your RDBMS in the CLASSPATH.
 
-
-By default when you create a PersistenceManagerFactory or EntityManagerFactory to connect to a particular datastore DataNucleus will automatically 
-detect the _datastore adapter_ to use and will use its own internal adapter for that type of datastore. 
+By default when you create a PersistenceManagerFactory or EntityManagerFactory to connect to a particular RDBMS DataNucleus will automatically 
+detect the _DatastoreAdapter_ to use and will use its own internal adapter for that type of datastore. 
 If you find that either DataNucleus has incorrectly detected the adapter to use, you can override the default behaviour using the persistence property
 *datanucleus.rdbms.datastoreAdapterClassName*.
 
-The following RDBMS have support built in to DataNucleus. 
-Click on the one of interest to see details of any provisos for its support, as well as the JDBC connection information
-
-* link:#mysql[MySQL/MariaDB]
-* link:#postgresql[PostgreSQL Database]
-* link:#postgis[PostgreSQL+PostGIS Database]
-* link:#hsqldb[HSQL DB]
-* link:#h2[H2 Database]
-* link:#sqlite[SQLite]
-* link:#derby[Apache Derby]
-* link:#sqlserver[Microsoft SQLServer]
-* link:#sybase[Sybase]
-* link:#sqlanywhere[SQL Anywhere]
-* link:#oracle[Oracle]
-* link:#db2[IBM DB2]
-* link:#informix[IBM Informix]
-* link:#firebird[Firebird]
-* link:#nuodb[NuoDB]
-* link:#maxdb[SAPDB/MaxDB]
-* link:#virtuoso[Virtuoso]
-* link:#pointbase[Pointbase]
-* link:#timesten[Oracle TimesTen]
-
 image:../images/nucleus_plugin.png[] 
 
-Note that if your RDBMS is not listed or currently supported you can easily write your own link:../extensions/extensions.html#rdbms_datastore_adapter[Datastore Adapter] for it
+Note that if your RDBMS is not listed below (or in the side menu) or currently supported you can easily write your own link:../extensions/extensions.html#rdbms_datastore_adapter[DatastoreAdapter] for it
 raise an issue in GitHub when you have it working and attach a patch to contribute it.
 Similarly if you are using an adapter that has some problem on your case you could use the same plugin mechanism to override the non-working feature.
 
