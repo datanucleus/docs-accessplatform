@@ -26,7 +26,6 @@ DataNucleus supports persistence to RDBMS datastores using the https://github.co
 It supports the vast majority of RDBMS products available today, and uses JDBC.
 RDBMS systems accept varying standards of SQL and so DataNucleus will support particular RDBMS/JDBC combinations only, though clearly we try to support as many as possible.
 You need to have the JDBC driver for your RDBMS in the CLASSPATH.
-There are tutorials available for use of DataNucleus with RDBMS link:../jdo/tutorial.html[for JDO] and link:../jpa/tutorial.html[for JPA]
 
 
 By default when you create a PersistenceManagerFactory or EntityManagerFactory to connect to a particular datastore DataNucleus will automatically 
@@ -66,21 +65,28 @@ Similarly if you are using an adapter that has some problem on your case you cou
 
 [[db2]]
 == DB2
-    
-To specify DB2 as your datastore, you will need something like the following specifying (where "mydb1" is the name of the database)
+
+To specify DB2 as your datastore, define the connection URL as 
 
 -----
 datanucleus.ConnectionURL=jdbc:db2://localhost:50002/mydb1
-datanucleus.ConnectionUserName='username'     (e.g db2inst1)
-datanucleus.ConnectionPassword='password'
 -----
 
-With DB2 Express-C v9.7 you need to have db2jcc.jar and db2jcc_license_cu.jar in the CLASSPATH.
+where "mydb1" is the name of the database. 
+
+With DB2 Express-C v9.7 you need to have `db2jcc.jar` and `db2jcc_license_cu.jar` in the CLASSPATH.
 
 
 [[mysql]]
 == MySQL
-    
+
+To specify MySQL/MariaDB as your datastore, you will need something like the following specifying (replacing 'db-name' with name of your database etc)
+
+-----
+datanucleus.ConnectionURL=jdbc:mysql://'host':'port'/'db-name'
+-----
+
+
 http://www.mysql.com[MySQL] and its more developed drop in replacement https://mariadb.org[MariaDB] are supported as an RDBMS datastore by DataNucleus with the following provisos
 
 * You can set the table (engine) type for any created tables via persistence property *datanucleus.rdbms.mysql.engineType* or by setting the 
@@ -99,37 +105,26 @@ BUT the mysql-connector-java JDBC driver has a bug (in versions up to and includ
 * You can specify "BLOB", "CLOB" JDBC types when using MySQL with DataNucleus but you must turn validation of columns OFF. 
 This is because these types are not supported by the MySQL JDBC driver and it returns them as LONGVARBINARY/LONGVARCHAR when querying the column type
 
-To specify MySQL as your datastore, you will need something like the following specifying (replacing 'db-name' with name of your database etc)
-
------
-datanucleus.ConnectionURL=jdbc:mysql://'host':'port'/'db-name'
-datanucleus.ConnectionUserName='user-name'
-datanucleus.ConnectionPassword='password'
------
-
 
 [[sqlserver]]
 == SQL Server
-    
-http://www.microsoft.com/sql[Microsoft SQLServer] is supported as an RDBMS datastore by DataNucleus with the following proviso
-
-* SQLServer 2000 does not keep accuracy on _datetime_ datatypes. This is an SQLServer 2000 issue. In order to keep the accuracy when storing _java.util.Date_ java types, use _int_ datatype.
 
 To specify SQLServer as your datastore, you will need something like the following specifying (replacing 'db-name' with name of your database etc)
     
 Microsoft SQLServer 2005 JDBC Driver (Recommended)
 -----
 datanucleus.ConnectionURL=jdbc:sqlserver://'host':'port';DatabaseName='db-name';SelectMethod=cursor
-datanucleus.ConnectionUserName='user-name'
-datanucleus.ConnectionPassword='password'
 -----
 
-Microsoft SQLServer 2000 JDBC Driver
+or using the older Microsoft SQLServer 2000 JDBC Driver
 -----
 datanucleus.ConnectionURL=jdbc:microsoft:sqlserver://'host':'port';DatabaseName='db-name';SelectMethod=cursor
-datanucleus.ConnectionUserName='user-name'
-datanucleus.ConnectionPassword='password'
 -----
+    
+http://www.microsoft.com/sql[Microsoft SQLServer] is supported as an RDBMS datastore by DataNucleus with the following proviso
+
+* SQLServer 2000 does not keep accuracy on _datetime_ datatypes. This is an SQLServer 2000 issue. In order to keep the accuracy when storing _java.util.Date_ java types, use _int_ datatype.
+
 
 
 [[oracle]]
@@ -140,8 +135,6 @@ you can also use 'oci' instead of 'thin' depending on your driver.
 
 -----
 datanucleus.ConnectionURL=jdbc:oracle:thin:@'host':'port':'db-name'
-datanucleus.ConnectionUserName='user-name'
-datanucleus.ConnectionPassword='password'
 -----
 
 
@@ -152,8 +145,6 @@ To specify http://www.sybase.com[Sybase] as your datastore, you will need someth
 
 -----
 datanucleus.ConnectionURL=jdbc:sybase:Tds:'host':'port'/'db-name'
-datanucleus.ConnectionUserName='user-name'
-datanucleus.ConnectionPassword='password'
 -----
 
 
@@ -165,28 +156,29 @@ you will need something like the following specifying (replacing 'db-name' with 
 
 -----
 datanucleus.ConnectionURL=jdbc:sqlanywhere:uid=DBA;pwd=sql;eng=demo
-datanucleus.ConnectionUserName='user-name'
-datanucleus.ConnectionPassword='password'
 -----
 
 
 [[hsqldb]]
 == HSQLDB
 
-http://hsqldb.org[HSQLDB] is supported as an RDBMS datastore by DataNucleus with the following proviso
+To specify HSQLDB (server) as your datastore, you will need something like the following specifying (replacing 'db-name' with name of your database etc)
+
+-----
+datanucleus.ConnectionURL=jdbc:hsqldb:hsql://'host':'port'/'db-name'
+-----
+
+or HSQLDB (in-memory) like this
+
+-----
+datanucleus.ConnectionURL=jdbc:hsqldb:mem:'db-name'
+-----
+
+http://hsqldb.org[HSQLDB] is supported as an RDBMS datastore by DataNucleus with the following provisos
 
 * Use of batched statements is disabled since HSQLDB has a bug where it throws exceptions "batch failed" (really informative). Still waiting for this to be fixed in HSQLDB
 * Use of JDOQL/JPQL subqueries cannot be used where you want to refer back to the parent query since HSQLDB up to and including version 1.8 don't support this.
 
-To specify HSQL (1.x) as your datastore, you will need something like the following specifying (replacing 'db-name' with name of your database etc)
-
------
-datanucleus.ConnectionURL=jdbc:hsqldb:hsql://'host':'port'/'db-name'
-datanucleus.ConnectionUserName='user-name'
-datanucleus.ConnectionPassword='password'
------
-
-Note that in HSQLDB v2.x the driver changes to _org.hsqldb.jdbc.JDBCDriver_
 
 
 [[h2]]
@@ -194,33 +186,25 @@ Note that in HSQLDB v2.x the driver changes to _org.hsqldb.jdbc.JDBCDriver_
 
 http://www.h2database.com[H2] is supported as an RDBMS datastore by DataNucleus.
 
-To specify H2 as your datastore, you will need something like the following specifying (replacing 'db-name' with name of your database etc)
+To specify H2 (embedded) as your datastore, you will need something like the following specifying (replacing 'db-name' with name of your database etc)
 
 -----
-datanucleus.ConnectionURL=jdbc:h2:'db-name'
-datanucleus.ConnectionUserName=sa
-datanucleus.ConnectionPassword=
+datanucleus.ConnectionURL=jdbc:h2:mem:'db-name'
 -----
 
 
 [[informix]]
 == Informix
 
-Informix is supported as an RDBMS datastore by DataNucleus.
-
 To specify Informix as your datastore, you will need something like the following specifying (replacing 'db-name' with name of your database etc)
 
 -----
 datanucleus.ConnectionURL=jdbc:informix-sqli://[{ip|host}:port][/dbname]:INFORMIXSERVER=servername[;name=value[;name=value]...]
-datanucleus.ConnectionUserName=informix
-datanucleus.ConnectionPassword=password
 -----
 
 For example
 -----
 datanucleus.ConnectionURL=jdbc:informix-sqli://192.168.254.129:9088:informixserver=demo_on;database=buf_log_db
-datanucleus.ConnectionUserName=informix
-datanucleus.ConnectionPassword=password
 -----
 
 Note that some database logging options in Informix do not allow changing autoCommit dinamically. You need to rebuild the database to support it. 
@@ -260,8 +244,6 @@ To specify http://www.postgresql.org[PostgreSQL] as your datastore, you will nee
 
 -----
 datanucleus.ConnectionURL=jdbc:postgresql://'host':'port'/'db-name'
-datanucleus.ConnectionUserName='user-name'
-datanucleus.ConnectionPassword='password'
 -----
 
 
@@ -274,22 +256,16 @@ For the PostGIS JDBC geometries you will need something like the following speci
 
 -----
 datanucleus.ConnectionURL=jdbc:postgresql://'host':'port'/'db-name'
-datanucleus.ConnectionUserName='user-name'
-datanucleus.ConnectionPassword='password'
 -----
 
 For Oracle's JGeometry you will need something like the following specifying (replacing 'db-name' with name of your database etc)
 -----
 datanucleus.ConnectionURL=jdbc:postgres_jgeom://'host':'port'/'db-name'
-datanucleus.ConnectionUserName='user-name'
-datanucleus.ConnectionPassword='password'
 -----
 
 For the JTS (Java Topology Suite) geometries you will need something like the following specifying (replacing 'db-name' with name of your database etc)
 -----
 datanucleus.ConnectionURL=jdbc:postgres_jts://'host':'port'/'db-name'
-datanucleus.ConnectionUserName='user-name'
-datanucleus.ConnectionPassword='password'
 -----
 
 
@@ -300,16 +276,12 @@ To specify http://db.apache.org/derby/[Apache Derby] as your datastore, you will
 
 -----
 datanucleus.ConnectionURL=jdbc:derby:'db-name';create=true
-datanucleus.ConnectionUserName='user-name'
-datanucleus.ConnectionPassword='password'
 -----
 
 Above settings are used together with the Apache Derby in embedded mode. The below settings are used in network mode, where the default port number is 1527.
 
 -----
 datanucleus.ConnectionURL=jdbc:derby://'hostname':'portnumber'/'db-name';create=true
-datanucleus.ConnectionUserName='user-name'
-datanucleus.ConnectionPassword='password'
 -----
 
 *ASCII*: Derby 10.1 does not have a function to convert a char into ASCII code. DataNucleus needs such function to converts chars to int values when performing queries converting chars to ints. 
@@ -337,6 +309,12 @@ LANGUAGE JAVA PARAMETER STYLE JAVA;
 [[firebird]]
 == Firebird
 
+To specify Firebird as your datastore, you will need something like the following specifying (replacing 'db-name' with filename of your database etc) 
+
+-----
+datanucleus.ConnectionURL=jdbc:firebirdsql://localhost/'db-name'
+-----
+
 http://www.firebirdsql.org[Firebird] is supported as an RDBMS datastore by DataNucleus with the proviso that
 
 * Auto-table creation is severely limited with Firebird. In Firebird, DDL statements are not auto-committed and are executed at the end of a transaction, after any DML statements. 
@@ -344,14 +322,6 @@ This makes "on the fly" table creation in the middle of a DML transaction not wo
 You must make sure that "autoStartMechanism" is NOT set to "SchemaTable" since this will use DML. 
 You must also make sure that nobody else is connected to the database at the same time.
 Don't ask us why such limitations are in a RDBMS, but then it was you that chose to use this ;-)
-
-To specify Firebird as your datastore, you will need something like the following specifying (replacing 'db-name' with filename of your database etc) 
-
------
-datanucleus.ConnectionURL=jdbc:firebirdsql://localhost/'db-name'
-datanucleus.ConnectionUserName='user-name'
-datanucleus.ConnectionPassword='password'
------
 
 
 [[nuodb]]
@@ -361,9 +331,6 @@ To specify NuoDB as your datastore, you will need something like the following s
 
 -----
 datanucleus.ConnectionURL=jdbc:com.nuodb://localhost/'db-name'
-datanucleus.ConnectionUserName='user-name'
-datanucleus.ConnectionPassword='password'
-datanucleus.Schema={my-schema-name}
 -----
 
 
@@ -374,25 +341,21 @@ To specify SAPDB/MaxDB as your datastore, you will need something like the follo
 
 -----
 datanucleus.ConnectionURL=jdbc:sapdb://localhost/'db-name'
-datanucleus.ConnectionUserName='user-name'
-datanucleus.ConnectionPassword='password'
 -----
 
 
 [[sqlite]]
 == SQLite
 
-http://www.sqlite.org/[SQLite] is supported as an RDBMS datastore by DataNucleus with the proviso that
-
-* When using sequences, you must set the persistence property *datanucleus.valuegeneration.transactionAttribute* to *EXISTING*
-
 To specify SQLite as your datastore, you will need something like the following specifying (replacing 'db-name' with filename of your database etc)
 
 -----
 datanucleus.ConnectionURL=jdbc:sqlite:'db-name'
-datanucleus.ConnectionUserName=
-datanucleus.ConnectionPassword=
 -----
+
+http://www.sqlite.org/[SQLite] is supported as an RDBMS datastore by DataNucleus with the proviso that
+
+* When using sequences, you must set the persistence property *datanucleus.valuegeneration.transactionAttribute* to *EXISTING*
 
 
 [[virtuoso]]
@@ -403,8 +366,6 @@ To specify http://virtuoso.openlinksw.com/dataspace/dav/wiki/Main/[Virtuoso] as 
 
 -----
 datanucleus.ConnectionURL=jdbc:virtuoso://127.0.0.1/{dbname}
-datanucleus.ConnectionUserName=
-datanucleus.ConnectionPassword=
 -----
 
 
@@ -416,9 +377,9 @@ something like the following specifying (replacing 'db-name' with filename of yo
 
 -----
 datanucleus.ConnectionURL=jdbc:pointbase://127.0.0.1/{dbname}
-datanucleus.ConnectionUserName=
-datanucleus.ConnectionPassword=
 -----
+
+
 
 
 == JDBC Driver parameters
@@ -428,6 +389,7 @@ If you need to pass additional parameters to the JDBC driver you can append thes
 -----
 datanucleus.ConnectionURL=jdbc:mysql://localhost?useUnicode=true&amp;characterEncoding=UTF-8
 -----
+
 
 
 [[statement_batching]]
