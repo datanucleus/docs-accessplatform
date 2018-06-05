@@ -13,11 +13,11 @@ What you could do though is make a particular Java type persistable using a diff
 
 == Interface
 
-To define your own column mapping you need to implement _org.datanucleus.store.rdbms.mapping.datastore.ColumnMapping_
-http://www.datanucleus.org/javadocs/store.rdbms/latest/org/datanucleus/store/rdbms/mapping/datastore/ColumnMapping.html[image:../images/javadoc.png[Javadoc]].
+To define your own column mapping you need to implement _org.datanucleus.store.rdbms.mapping.column.ColumnMapping_
+http://www.datanucleus.org/javadocs/store.rdbms/latest/org/datanucleus/store/rdbms/mapping/column/ColumnMapping.html[image:../images/javadoc.png[Javadoc]].
 
 So you can define how to convert the datastore column value to/from common Java types.
-Look at https://github.com/datanucleus/datanucleus-rdbms/tree/master/src/main/java/org/datanucleus/store/rdbms/mapping/datastore[datanucleus-rdbms]
+Look at https://github.com/datanucleus/datanucleus-rdbms/tree/master/src/main/java/org/datanucleus/store/rdbms/mapping/column[datanucleus-rdbms]
 for examples. Note that your XXXColumnMapping should have a single constructor taking in _JavaTypeMapping mapping, StoreManager storeMgr, Column col_.
 
 
@@ -30,9 +30,9 @@ To give an example of what the plugin specification looks like
 <?xml version="1.0"?>
 <plugin id="mydomain.myplugins" name="DataNucleus plug-ins" provider-name="My Company">
     <extension point="org.datanucleus.store.rdbms.column_mapping">
-        <mapping java-type="java.lang.Character" column-mapping-class="org.datanucleus.store.rdbms.mapping.datastore.CharColumnMapping" 
+        <mapping java-type="java.lang.Character" column-mapping-class="org.datanucleus.store.rdbms.mapping.column.CharColumnMapping" 
             jdbc-type="CHAR" sql-type="CHAR" default="true"/>
-        <mapping java-type="java.lang.Character" column-mapping-class="org.datanucleus.store.rdbms.mapping.datastore.IntegerColumnMapping" 
+        <mapping java-type="java.lang.Character" column-mapping-class="org.datanucleus.store.rdbms.mapping.column.IntegerColumnMapping" 
             jdbc-type="INTEGER" sql-type="INT" default="false"/>
     </extension>
 </plugin>
@@ -60,7 +60,7 @@ All that you need to do is add a `plugin.xml`
 <?xml version="1.0"?>
 <plugin id="mydomain.myplugins" name="DataNucleus plug-ins" provider-name="My Company">
     <extension point="org.datanucleus.store.rdbms.column_mapping">
-        <mapping java-type="java.lang.YYY" column-mapping-class="org.datanucleus.store.rdbms.mapping.XXXColumnMapping" 
+        <mapping java-type="java.lang.YYY" column-mapping-class="org.datanucleus.store.rdbms.mapping.column.XXXColumnMapping" 
             jdbc-type="XXX" sql-type="XXX" default="false"/>
     </extension>
 </plugin>
