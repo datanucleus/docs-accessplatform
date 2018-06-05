@@ -111,7 +111,7 @@ and use that. For example if their RDBMS is a new version and something has chan
 (supported) version, or where the auto-detection fails to identify the adapter since their RDBMS is not yet
 on the supported list.
 
-By default when you create a http://www.datanucleus.org/products/accessplatform/jdo/pmf.html[PMF] to connect to a particular datastore DataNucleus will 
+By default when you create a http://www.datanucleus.org/products/accessplatform/jdo/persistence.html#pmf[PMF] to connect to a particular datastore DataNucleus will 
 automatically detect the _datastore adapter_ to use and will use its own internal adapter for that type of datastore. 
 The default behaviour is overridden using the persistence property __org.datanucleus.rdbms.datastoreAdapterClassName__, which specifies the class name 
 of the datastore adapter class to use. This class must implement the DataNucleus interface _DatastoreAdapter_
