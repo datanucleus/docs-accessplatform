@@ -1469,10 +1469,10 @@ These are attributes within the *<extension>* tag (*/column/extension).
 |Description
 |Values
 
-|datastore-mapping-class
-|Specifies the datastore mapping class to be used for mapping this field. 
-This is only used where the user wants to override the default DataNucleus datastore mapping class and provide their own mapping class for this field based on the database data type. 
-This datastore mapping class must be available in the DataNucleus PersistenceManagerFactory CLASSPATH.
+|column-mapping-class
+|Specifies the (RDBMS) column mapping class to be used for mapping this field. 
+This is only used where the user wants to override the default DataNucleus column mapping class and provide their own mapping class for this field based on the database data type. 
+This column mapping class must be available in the DataNucleus PersistenceManagerFactory CLASSPATH.
 |Fully-qualified class name
 
 |enum-check-constraint

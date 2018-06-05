@@ -1,5 +1,5 @@
 [[rdbms_datastore_mapping]]
-= Extension: RDBMS Datastore Mapping
+= Extension: RDBMS Column Mapping
 :_basedir: ../
 :_imagesdir: images/
 
@@ -7,19 +7,18 @@ When persisting a class to an RDBMS datastore there is a _mapping_ process from 
 rdbms_java_types.html[JavaTypeMapping] so that it maps between the java type and the column(s) in the desired way. We can also configure the 
 mapping to the datastore type. So, for example, we define what JDBC types we can map a particular Java type to. 
 By "datastore type" we mean the JDBC type, such as BLOB, INT, VARCHAR etc. 
-DataNucleus provides datastore mappings for the vast majority of JDBC types and the handlings will almost always be adequate. 
+DataNucleus provides column mappings for the vast majority of JDBC types and the handlings will almost always be adequate. 
 What you could do though is make a particular Java type persistable using a different JDBC type if you wished.
 
 
 == Interface
 
-To define your own datastore mapping you need to implement _org.datanucleus.store.rdbms.mapping.datastore.DatastoreMapping_
-http://www.datanucleus.org/javadocs/store.rdbms/latest/org/datanucleus/store/rdbms/mapping/datastore/DatastoreMapping.html[image:../images/javadoc.png[Javadoc]].
+To define your own column mapping you need to implement _org.datanucleus.store.rdbms.mapping.datastore.ColumnMapping_
+http://www.datanucleus.org/javadocs/store.rdbms/latest/org/datanucleus/store/rdbms/mapping/datastore/ColumnMapping.html[image:../images/javadoc.png[Javadoc]].
 
 So you can define how to convert the datastore column value to/from common Java types.
 Look at https://github.com/datanucleus/datanucleus-rdbms/tree/master/src/main/java/org/datanucleus/store/rdbms/mapping/datastore[datanucleus-rdbms]
-for examples. Note that your XXXDatastoreMapping should have a single constructor taking in 
-_JavaTypeMapping mapping, StoreManager storeMgr, Column col_.
+for examples. Note that your XXXColumnMapping should have a single constructor taking in _JavaTypeMapping mapping, StoreManager storeMgr, Column col_.
 
 
 == Plugin Specification
@@ -30,10 +29,10 @@ To give an example of what the plugin specification looks like
 -----
 <?xml version="1.0"?>
 <plugin id="mydomain.myplugins" name="DataNucleus plug-ins" provider-name="My Company">
-    <extension point="org.datanucleus.store.rdbms.datastore_mapping">
-        <mapping java-type="java.lang.Character" rdbms-mapping-class="org.datanucleus.store.rdbms.mapping.datastore.CharRDBMSMapping" 
+    <extension point="org.datanucleus.store.rdbms.column_mapping">
+        <mapping java-type="java.lang.Character" column-mapping-class="org.datanucleus.store.rdbms.mapping.datastore.CharColumnMapping" 
             jdbc-type="CHAR" sql-type="CHAR" default="true"/>
-        <mapping java-type="java.lang.Character" rdbms-mapping-class="org.datanucleus.store.rdbms.mapping.datastore.IntegerRDBMSMapping" 
+        <mapping java-type="java.lang.Character" column-mapping-class="org.datanucleus.store.rdbms.mapping.datastore.IntegerColumnMapping" 
             jdbc-type="INTEGER" sql-type="INT" default="false"/>
     </extension>
 </plugin>
@@ -46,8 +45,8 @@ So in this definition we have defined that a field of type "Character" can be ma
 == Missing JDBC definitions
 
 While DataNucleus attempts to provide all useful JDBC type mappings out of the box, occasionally
-you may come across one that is not defined, even though we provide an RDBMSMapping class for that
-JDBC type. For example, if you got this error message
+you may come across one that is not defined, even though we provide a ColumnMapping class for that JDBC type. 
+For example, if you got this error message
 
 -----
     JDBC type XXX declared for field "org.datanucleus.test.MyClass.yyyField" of java type java.lang.YYY cant be mapped for this datastore.
@@ -60,13 +59,13 @@ All that you need to do is add a `plugin.xml`
 -----
 <?xml version="1.0"?>
 <plugin id="mydomain.myplugins" name="DataNucleus plug-ins" provider-name="My Company">
-    <extension point="org.datanucleus.store.rdbms.datastore_mapping">
-        <mapping java-type="java.lang.YYY" rdbms-mapping-class="org.datanucleus.store.rdbms.mapping.XXXRDBMSMapping" 
+    <extension point="org.datanucleus.store.rdbms.column_mapping">
+        <mapping java-type="java.lang.YYY" column-mapping-class="org.datanucleus.store.rdbms.mapping.XXXColumnMapping" 
             jdbc-type="XXX" sql-type="XXX" default="false"/>
     </extension>
 </plugin>
 -----
 
-together with `MANIFEST.MF` to your application, and it will be supported. Obviously if it is of
-a type that you think we ought to support out-of-the-box then raise an issue against the https://github.com/datanucleus/datanucleus-rdbms/issues[datanucleus-rdbms]
+together with `MANIFEST.MF` to your application, and it will be supported. 
+Obviously if it is of a type that you think we ought to support out-of-the-box then raise an issue against the https://github.com/datanucleus/datanucleus-rdbms/issues[datanucleus-rdbms]
 with your `plugin.xml` definition and mention the datastore it was needed for.
