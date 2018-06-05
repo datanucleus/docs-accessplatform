@@ -80,17 +80,17 @@ public class ColorMapping extends SingleFieldMultiMapping
         Color color = (Color) value;
         if (color == null)
         {
-            getDataStoreMapping(0).setObject(ps, exprIndex[0], null);
-            getDataStoreMapping(1).setObject(ps, exprIndex[1], null);
-            getDataStoreMapping(2).setObject(ps, exprIndex[2], null);
-            getDataStoreMapping(3).setObject(ps, exprIndex[3], null);
+            getColumnMapping(0).setObject(ps, exprIndex[0], null);
+            getColumnMapping(1).setObject(ps, exprIndex[1], null);
+            getColumnMapping(2).setObject(ps, exprIndex[2], null);
+            getColumnMapping(3).setObject(ps, exprIndex[3], null);
         }
         else
         {
-            getDataStoreMapping(0).setInt(ps, exprIndex[0], color.getRed());
-            getDataStoreMapping(1).setInt(ps, exprIndex[1], color.getGreen());
-            getDataStoreMapping(2).setInt(ps, exprIndex[2], color.getBlue());
-            getDataStoreMapping(3).setInt(ps, exprIndex[3], color.getAlpha());
+            getColumnMapping(0).setInt(ps, exprIndex[0], color.getRed());
+            getColumnMapping(1).setInt(ps, exprIndex[1], color.getGreen());
+            getColumnMapping(2).setInt(ps, exprIndex[2], color.getBlue());
+            getColumnMapping(3).setInt(ps, exprIndex[3], color.getAlpha());
         }
     }
 
@@ -109,10 +109,10 @@ public class ColorMapping extends SingleFieldMultiMapping
             // Do nothing
         }
 
-        int red = getDataStoreMapping(0).getInt(rs, exprIndex[0]); 
-        int green = getDataStoreMapping(1).getInt(rs, exprIndex[1]); 
-        int blue = getDataStoreMapping(2).getInt(rs, exprIndex[2]); 
-        int alpha = getDataStoreMapping(3).getInt(rs, exprIndex[3]);
+        int red = getColumnMapping(0).getInt(rs, exprIndex[0]); 
+        int green = getColumnMapping(1).getInt(rs, exprIndex[1]); 
+        int blue = getColumnMapping(2).getInt(rs, exprIndex[2]); 
+        int alpha = getColumnMapping(3).getInt(rs, exprIndex[3]);
         return new Color(red,green,blue,alpha);
     }
 }
