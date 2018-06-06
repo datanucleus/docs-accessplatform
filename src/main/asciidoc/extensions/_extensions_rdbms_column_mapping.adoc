@@ -4,7 +4,7 @@
 :_imagesdir: images/
 
 When persisting a class to an RDBMS datastore there is a _mapping_ process from class/field to table/column. The most common thing to configure is the 
-rdbms_java_types.html[JavaTypeMapping] so that it maps between the java type and the column(s) in the desired way. We can also configure the 
+link:extensions.html#rdbms_java_mapping[JavaTypeMapping] so that it maps between the java type and the column(s) in the desired way. We can also configure the 
 mapping to the datastore type. So, for example, we define what JDBC types we can map a particular Java type to. 
 By "datastore type" we mean the JDBC type, such as BLOB, INT, VARCHAR etc. 
 DataNucleus provides column mappings for the vast majority of JDBC types and the handlings will almost always be adequate. 

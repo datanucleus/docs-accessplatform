@@ -12,7 +12,7 @@ For XSD schemas, it needs only the schema location (URL in classpath), since the
 of XML elements and namespaces to the schemas types. For DTDs, it's a little less obvious since DTDs are not namespace aware, so
 the configuration must contain the URL location (location in classpath), DTD DOCTYPE (PUBLIC or SYSTEM), and the DTD identity. 
 
-An Entity Resolver has close relationship to the [MetaData Handler](metadata_handler.html) extension point, since
+An Entity Resolver has close relationship to the link:extensions.html#metadata_handler[MetaData Handler] extension point, since
 the MetaData Handler uses the Entity Resolvers to validate XML files. However, the Entity Resolvers configured via this plugin
 are only applicable to the _org.datanucleus.metadata.xml.PluginEntityResolver_ instances, so the MetaData Handler must
 use the _PluginEntityResolver_ Entity Resolver if it wants to use the schemas configured in this extension point. 
