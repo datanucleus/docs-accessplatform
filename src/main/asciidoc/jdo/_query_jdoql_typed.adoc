@@ -253,6 +253,9 @@ This equates to the single-string query
 SELECT FROM mydomain.Product WHERE this.value < (SELECT AVG(p.value) FROM mydomain.Product p)
 -----
 
+NOTE: When you are using a subquery and want to refer to the candidate (or field thereof) of the outer query in the subquery 
+then you would use `cand` in the above example (or a field of it as required).
+
 
 
 [[jdoql_typed_Candidates]]
