@@ -168,7 +168,7 @@ link:mapping.html#application_identity[application identity] when designing your
 == Step 2 : Define the 'persistence-unit'
 
 Writing your own classes to be persisted is the start point, but you now need to define which objects of these classes are actually persisted. 
-You do this via a file `META-INF/persistence.html` at the root of the CLASSPATH. Like this
+You do this via a file `META-INF/persistence.xml` at the root of the CLASSPATH. Like this
 
 [source,xml]
 -----
@@ -423,7 +423,7 @@ and so on. If you look at the `persistence.xml` of the downloadable sample proje
 You can access the DataNucleus Log file by specifying the link:../logging.html[logging] configuration properties, and any messages from DataNucleus will be output in the normal way.
 The DataNucleus log is a very powerful way of finding problems since it can list all SQL actually sent to the datastore as well as many other parts of the persistence process.
 
-Consult the link:persistence.xml[JDO Persistence Guide] for the many other properties available for configuring persistence.
+Consult the link:persistence.html[JDO Persistence Guide] for the many other properties available for configuring persistence.
 
 
 -----
