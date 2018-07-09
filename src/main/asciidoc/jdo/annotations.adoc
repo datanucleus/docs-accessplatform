@@ -2025,7 +2025,11 @@ This is for use when you have a composite PK so acts as a way of aligning the re
 
 |position
 |int
-|ORM : Position of this column in the owning table (0 = first)
+|ORM : Position of this column in the owning table (0 = first).
+Otherwise the column order is alphabetical.
+
+If the field is also part of a `@PrimaryKey`, then this position also is used for the relative position within the corresponding primary key index.
+
 |
 |===
 
