@@ -1368,6 +1368,13 @@ public class MyClass
 
 See the documentation for link:mapping.html#schema_constraints[Schema Constraints]
 
+[NOTE]
+====
+If the primary key is composite, then the order of the columns in the corresponding index (in the database) will be determined by the value of the `@Column#position` property.
+
+Alternatively, consider using the `@PrimaryKey` at the class level, specifying the `@PrimaryKey#columns` property.
+====
+
 
 [[Element]]
 === @Element
