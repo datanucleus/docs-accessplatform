@@ -4,8 +4,8 @@
 :_imagesdir: images/
 :jpa:
 
-DataNucleus requires that all JPA entities implement http://www.datanucleus.org/javadocs/core/5.0/org/datanucleus/enhancement/Persistable.html[Persistable] and
-http://www.datanucleus.org/javadocs/core/5.0/org/datanucleus/enhancement/Detachable.html[Detachable]. 
+DataNucleus requires that all JPA entities implement http://www.datanucleus.org/javadocs/core/latest/org/datanucleus/enhancement/Persistable.html[Persistable] and
+http://www.datanucleus.org/javadocs/core/latest/org/datanucleus/enhancement/Detachable.html[Detachable]. 
 Rather than requiring that a user add this themself, we provide an enhancer that will modify your compiled classes to implement all required methods.
 This is provided in _datanucleus-core.jar_.
 
@@ -403,8 +403,8 @@ public class MyClass
 -----
 
 This is bytecode enhanced for JPA to implement
-http://www.datanucleus.org/javadocs/core/5.0/org/datanucleus/enhancement/Persistable.html[Persistable] and
-http://www.datanucleus.org/javadocs/core/5.0/org/datanucleus/enhancement/Detachable.html[Detachable].
+http://www.datanucleus.org/javadocs/core/latest/org/datanucleus/enhancement/Persistable.html[Persistable] and
+http://www.datanucleus.org/javadocs/core/latest/org/datanucleus/enhancement/Detachable.html[Detachable].
 
 image:../images/enhancer_detachable.png[]
 
