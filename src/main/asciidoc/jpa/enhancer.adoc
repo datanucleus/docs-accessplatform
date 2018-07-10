@@ -434,6 +434,21 @@ The fact is that Hibernate itself also now has a mode whereby you can do bytecod
 So maybe it wasn't so evil after all ?
 
 
+=== Cloning of enhanced classes
+
+If you have a persistable class that implements `Cloneable` then it will have special treatment of the `clone` method applied.
+
+* If you provided a `clone` method in a persistable root class then this method will be renamed to `dnClone`, and a `clone` method will be added that calls the
+`dnClone` method to create the cloned object, and then unsets the `dnStateManager`/`dnFlags` fields.
+* If you did not provide a `clone` method in a persistable root class then a `clone` method will be added that calls `super.clone` to created the cloned object, 
+and then unsets the `dnStateManager`/`dnFlags` fields.
+
+The end result of this is that when you _clone_ an object of a persistable type, the end result will be an object that is not in a "managed" state. If the object 
+is detached upon cloning, then the cloned object will also be detached.
+
+
+
+
 === Decompilation
 
 Many people will wonder what actually happens to a class upon bytecode enhancement. 

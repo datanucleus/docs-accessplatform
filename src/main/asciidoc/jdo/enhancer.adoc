@@ -6,8 +6,8 @@
 
 
 DataNucleus requires that all classes that are persisted implement 
-http://www.datanucleus.org/javadocs/core/5.0/org/datanucleus/enhancement/Persistable.html[Persistable].
-Rather than requiring that a user add this themself, we provide an enhancer that will modify your compiled classes to implement all required methods.
+http://www.datanucleus.org/javadocs/core/latest/org/datanucleus/enhancement/Persistable.html[Persistable].
+Rather than requiring that a user add this themselves, we provide an _enhancer_ that will modify your compiled classes to implement all required methods.
 
 * The use of this interface means that you get *transparent persistence*, and your classes always remain _your_ classes; ORM tools that use a mix of 
 reflection and/or proxies are not totally transparent.
@@ -549,6 +549,20 @@ So as you can see, there are no valid reasons against byte-code enhancement, and
 objects is much quicker, hence your persistence layer operates faster without any need for iterative reflection-based checks.
 The fact is that Hibernate itself also now has a mode whereby you can do bytecode enhancement although not the default mode of Hibernate. 
 So maybe it wasn't so evil after all ?
+
+
+=== Cloning of enhanced classes
+
+If you have a persistable class that implements `Cloneable` then it will have special treatment of the `clone` method applied.
+
+* If you provided a `clone` method in a persistable root class then this method will be renamed to `dnClone`, and a `clone` method will be added that calls the
+`dnClone` method to create the cloned object, and then unsets the `dnStateManager`/`dnFlags` fields.
+* If you did not provide a `clone` method in a persistable root class then a `clone` method will be added that calls `super.clone` to created the cloned object, 
+and then unsets the `dnStateManager`/`dnFlags` fields.
+
+The end result of this is that when you _clone_ an object of a persistable type, the end result will be an object that is not in a "managed" state. If the object 
+is detached upon cloning, then the cloned object will also be detached.
+
 
 
 === Decompilation
