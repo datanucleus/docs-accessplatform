@@ -721,11 +721,11 @@ DataNucleus provides the following properties for configuring transaction handli
 |Parameter
 |Description + Values
 
-|datanucleus.transactionType
+|datanucleus.transaction.type
 |Type of transaction to use. If running under JavaSE the default is RESOURCE_LOCAL, and if running under JavaEE the default is JTA.
 {RESOURCE_LOCAL, JTA}
 
-|datanucleus.transactionIsolation
+|datanucleus.transaction.isolation
 |Select the default transaction isolation level for ALL EntityManagers. Some databases do not support all isolation levels, refer to your database documentation. 
 Please refer to the link:#transaction_isolation[transaction guide]
 {read-uncommitted, *read-committed*, repeatable-read, serializable}
