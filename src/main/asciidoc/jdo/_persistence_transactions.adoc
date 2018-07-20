@@ -85,16 +85,15 @@ An alternative is where you don't have a _UserTransaction_ started and just use 
 
 [source,java]
 -----
-UserTransaction ut = (UserTransaction)new InitialContext().lookup("java:comp/UserTransaction");
 PersistenceManager pm = pmf.getPersistenceManager();
 Transaction tx = pm.currentTransaction();
 try
 {
-    tx.begin(); // Starts the UserTransaction
+    tx.begin(); // Starts the UserTransaction behind the scenes
     
     {users code to persist objects}
     
-    tx.commit(); // Commits the UserTransaction
+    tx.commit(); // Commits the UserTransaction behind the scenes
 }
 finally
 {
