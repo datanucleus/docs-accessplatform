@@ -33,13 +33,13 @@ To use DataNucleus with JCA the first thing that you will require is the `datanu
 
 == DataNucleus Resource Adaptor and transactions
 
-A great advantage of DataNucleus implementing the ManagedConnection interface is that the JavaEE 
-container manages transactions for you (no need to call the begin/commit/rollback-methods).
-Currently, local transactions and distributed (XA) transactions are supported.
-Within a JavaEE environment, JDO transactions are nested in JavaEE transactions.
-All you have to do is to declare that a method needs transaction management. This is done in 
-the EJB meta data. Here you will see, how a SessionBean implementation could look like.
+A great advantage of DataNucleus implementing the ManagedConnection interface is that the JavaEE container manages transactions for you (no need to call the begin/commit/rollback-methods).
 
+NOTE: Currently local transactions and distributed (XA) transactions are supported.
+
+Within a JavaEE environment, JDO transactions are nested in JavaEE transactions.
+All you have to do is to declare that a method needs transaction management. 
+This is done in the EJB meta data. Here you will see, how a SessionBean implementation could look like.
 The EJB meta data is defined in a file called `ejb-jar.xml` and can be found in the META-INF 
 directory of the jar you deploy. Suppose you deploy a bean called DataNucleusBean, your 
 `ejb-jar.xml` should contain the following configuration elements:
@@ -55,6 +55,7 @@ directory of the jar you deploy. Suppose you deploy a bean called DataNucleusBea
 -----
 
 Imagine your bean defines a method called testDataNucleusTrans():
+
 [source,xml]
 -----
 <container-transaction>
@@ -86,21 +87,17 @@ public abstract class DataNucleusBean implements SessionBean
     { 
     }
 
-    // convenience methods to get
-    // a PersistenceManager
+    // convenience methods to get a PersistenceManager
 
-    /**
-     * static final for the JNDI name of the PersistenceManagerFactory
-     */
+    /** static final for the JNDI name of the PersistenceManagerFactory */
     private static final String PMF_JNDI_NAME = "java:/datanucleus1";
-    
+
     /**
      * Method to get the current InitialContext
      */
     private InitialContext getInitialContext() throws NamingException 
     {
-        InitialContext initialContext = new InitialContext();
-        // or other code to create the InitialContext eg. new InitialContext(myProperies);
+        InitialContext initialContext = new InitialContext(); // or other code to create the InitialContext eg. new InitialContext(myProperies);
         return initialContext;
     }
 
