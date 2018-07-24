@@ -218,7 +218,7 @@ You then deploy the RAR file on your WebLogic server.
 == JBoss 3.0/3.2
 
 To use DataNucleus on JBoss (Ver 3.2) the first thing that you will require is the `datanucleus-jdo-jca-{version}.rar` file. 
-You should put this in the _deploy ("${JBOSS}/server/default/deploy/")_ directory of your JBoss installation. 
+You should put this in the deploy directory (`${JBOSS}/server/default/deploy/`) of your JBoss installation. 
 
 You then create a file, also in the _deploy_ directory with name `datanucleus-ds.xml`. 
 To give a guide on what this file will typically include, see the following
@@ -366,7 +366,7 @@ Local means that a transaction will not have more than one resource managed by a
 Use XA transaction if DataNucleus is configured to use data sources deployed in application servers, or if other resources such as JMS connections 
 are used in the same transaction, otherwise use Local transaction.
 
-You need to configure the _ra.xml_ file with the appropriate transaction support, which is either _XATransaction_ or _LocalTransaction_. See the example:
+You need to configure the `ra.xml` file with the appropriate transaction support, which is either _XATransaction_ or _LocalTransaction_. See the example:
 
 [source,xml]
 -----
@@ -425,7 +425,8 @@ To use a data source, you have to configure the connection factory name in `ra.x
             <config-property-type>java.lang.String</config-property-type>
             <config-property-value>jndiName_for_datasource_2</config-property-value>
         </config-property>
-    ...
+    </resourceadapter>
+</connector>
 -----
 
 See also :

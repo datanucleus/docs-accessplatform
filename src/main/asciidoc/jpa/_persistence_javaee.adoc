@@ -22,28 +22,28 @@ _This guide was provided by Nicolas Seyvet._
 It is linked to from https://docs.jboss.org/author/display/AS72/JPA+Reference+Guide#JPAReferenceGuide-UsingDataNucleus[the JBoss docs].
 
 JBoss AS7 is a recent JavaEE server from JBoss. Despite searching in multiple locations, I could not find a comprehensive guide on how to switch from 
-the default JBoss Hibernate JPA provider to Datanucleus (3). If you try this guide, please PM the author (or add a comment) and let me know how it worked out. 
+the default JBoss Hibernate JPA provider to Datanucleus. If you try this guide, please PM the author (or add a comment) and let me know how it worked out. 
 Your feedback will be used to improve this guide. This guide is cross-referenced as part of the JBoss JPA Reference Guide.
 
-=== Download JBoss AS 7 and DataNucleus 3.2+
+=== JBossAS7 : Download JBoss AS7 and DataNucleus
 
 JBoss : At the time I am writing this "How To", the latest JBoss AS available from the main http://www.jboss.org/as7[JBoss community site] 
 is 7.1.1.Final aka Brontes. In this guide, the latest 7.x SNAPSHOT was used but the steps will work with any JBoss 7.x version.
 
-DataNucleus : Version 4.0.0 was used, from http://sourceforge.net/projects/datanucleus/files/datanucleus-accessplatform/[SourceForge]
+DataNucleus : Version 5.0 was used, from http://sourceforge.net/projects/datanucleus/files/datanucleus-accessplatform/[SourceForge] but should work with later versions.
 
 
-=== Install JBoss AS 7
+=== JBossAS7 : Install JBoss AS 7
 
 Install JBoss AS 7 by unzipping the downloaded JBoss zip file in the wanted folder to be used as the JBoss home root folder (example: /local/jboss).
 From this point, the path where JBoss is unzipped will be referred to as *$JBOSS_HOME*.
 
 Note: JBoss AS 7 configuration is controlled by either `standalone.xml` (_$JBOSS_HOME/standalone/configuration_) or `domain.xml` (_$JBOSS_HOME/domain/configuration_) 
-depending on the operation mode (standalone or domain) of the application server.  The domain mode is typically used for cases where the AS is deployed in a 
-cluster environment. 
+depending on the operation mode (standalone or domain) of the application server.  
+The domain mode is typically used for cases where the AS is deployed in a cluster environment. 
 In this tutorial, a single AS instance is used, as such, the standalone mode is selected and all  configuration changes will be applied to the `standalone.xml` file.
 
-==== Start JBoss
+==== JBossAS7 : Start JBoss
 
 To start the server, use:
 
@@ -80,13 +80,13 @@ On Windows:
 $JBOSS_HOME/bin$ add-user.bat
 -----
 
-==== Add a JDBC DataSource (Optional)
+==== JBossAS7 : Add a JDBC DataSource (Optional)
 
 This step is only necessary if an RDBMS solution is used as a data store, or if external drivers are required. 
 This tutorial will use MySQL as the RDBMS storage, and the required drivers and data source will be added.
 For more information, about data sources under JBoss AS 7, refer to https://community.jboss.org/wiki/DataSourceConfigurationInAS7[the JBoss docs]
 
-==== Add MySQL drivers
+==== JBossAS7 : Add MySQL drivers
 
 For MySQL, it is recommended to use Connector/J, which can be found http://dev.mysql.com/downloads/connector/j/[here]. 
 This tutorial uses version 5.1.20.
@@ -182,7 +182,7 @@ The above defines which drivers to use for the data sources MySQL-DS and MySQL-D
 More info is available as part of the JBoss documentation, refer to the section describing https://community.jboss.org/wiki/DataSourceConfigurationInAS7[how to setup a new data source].
 
 
-=== Add DataNucleus to JBoss
+=== JBossAS7 : Add DataNucleus to JBoss
 
 This step adds the DataNucleus libraries as a JBoss module.
 
@@ -212,7 +212,7 @@ This step adds the DataNucleus libraries as a JBoss module.
 At this point, all the JPA dependencies are resolved.
 
 
-=== A simple example using DataNucleus JPA and JBoss AS7
+=== JBossAS7 : A simple example
 
 Now you simply need to define `persistence.xml` and use JPA as you normally would.
 In order to use DataNucleus as a persistence provider, the `persistence.xml` file must contain the "jboss.as.jpa.providerModule" property.
@@ -259,7 +259,7 @@ The basic steps are:
 * Configure the web-app or the server to use DataNucleus.
 
 
-=== Webapp Configuration
+=== TomEE : Webapp Configuration
 
 Any web-app can specify the JPA provider it would like to use via the `persistence.xml` file, which can be at any of the following locations in a web-app
 
@@ -291,7 +291,7 @@ Note that you may have to set the persistence property *datanucleus.transaction.
 See the link:persistence.html#emf_properties[persistence properties] for details of those.
 
 
-=== Server Configuration
+=== TomEE : Server Configuration
 
 The default JPA provider can be changed at the server level to favour DataNucleus over OpenJPA/EclipseLink.
 Using the `<tomee-home>/conf/system.properties` file or any other valid means of setting java.lang.System.getProperties(), 
@@ -313,9 +313,11 @@ CATALINA_OPTS=-Djavax.persistence.provider=org.datanucleus.api.jpa.PersistencePr
 You must of course add the DataNucleus libraries to _<tomee-home>/lib/_ for this to work.
 
 
-=== DataNucleus libraries
+=== TomEE : DataNucleus libraries
 
 Jars needed for DataNucleus 5.1:
+
+NOTE: Check for the latest release of each of these jars and update the versions accordingly.
 
 -----
 # Add:
