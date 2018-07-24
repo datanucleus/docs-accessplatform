@@ -40,9 +40,9 @@ Within a JavaEE environment, JDO transactions are nested in JavaEE transactions.
 All you have to do is to declare that a method needs transaction management. This is done in 
 the EJB meta data. Here you will see, how a SessionBean implementation could look like.
 
-The EJB meta data is defined in a file called ejb-jar.xml and can be found in the META-INF 
+The EJB meta data is defined in a file called `ejb-jar.xml` and can be found in the META-INF 
 directory of the jar you deploy. Suppose you deploy a bean called DataNucleusBean, your 
-ejb-jar.xml should contain the following configuration elements:
+`ejb-jar.xml` should contain the following configuration elements:
 
 [source,xml]
 -----
@@ -53,6 +53,7 @@ ejb-jar.xml should contain the following configuration elements:
     ...
 <session>
 -----
+
 Imagine your bean defines a method called testDataNucleusTrans():
 [source,xml]
 -----
@@ -67,7 +68,7 @@ Imagine your bean defines a method called testDataNucleusTrans():
 -----
 
 You hereby define that transaction management is required for this method. 
-The container will automatically begin a transaction for this method. It will be commited if no error occurs or rolled back otherwise. 
+The container will automatically begin a transaction for this method. It will be committed if no error occurs or rolled back otherwise. 
 A potential SessionBean implementation containing methods to retrieve a PersistenceManager then could look like this:
 
 [source,java]
@@ -320,15 +321,11 @@ To give a guide on what this file will typically include, see the following
         <jndi-name>datanucleus</jndi-name>
         <rar-name>datanucleus-jca-version}.rar</rar-name> <!-- the name here must be the same as JCA adapter filename -->
         <connection-definition>javax.resource.cci.ConnectionFactory</connection-definition>
-        <config-property name="ConnectionDriverName" 
-            type="java.lang.String">com.ibm.db2.jcc.DB2Driver</config-property>
-        <config-property name="ConnectionURL"
-            type="java.lang.String">jdbc:derby:net://localhost:1527/"directory_of_your_db_files"</config-property>
-        <config-property name="UserName"
-            type="java.lang.String">app</config-property>
-        <config-property name="Password"
-            type="java.lang.String">app</config-property>
-        </tx-connection-factory>
+        <config-property name="ConnectionDriverName" type="java.lang.String">com.ibm.db2.jcc.DB2Driver</config-property>
+        <config-property name="ConnectionURL" type="java.lang.String">jdbc:derby:net://localhost:1527/"directory_of_your_db_files"</config-property>
+        <config-property name="UserName" type="java.lang.String">app</config-property>
+        <config-property name="Password" type="java.lang.String">app</config-property>
+    </tx-connection-factory>
 </connection-factories>
 -----
 
@@ -421,7 +418,7 @@ To use a data source, you have to configure the connection factory name in `ra.x
             <config-property-type>java.lang.String</config-property-type>
             <config-property-value>jndiName_for_datasource_1</config-property-value>
         </config-property>
-            <config-property>
+        <config-property>
             <config-property-name>ConnectionResourceType</config-property-name>
             <config-property-type>java.lang.String</config-property-type>
             <config-property-value>JTA</config-property-value>

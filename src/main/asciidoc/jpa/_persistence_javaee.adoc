@@ -132,33 +132,33 @@ Let's add our data source and drivers. Add the following in the *datasources* se
 -----
 <datasource jndi-name="java:/jdbc/simple" pool-name="MySQL-DS" enabled="true">
     <connection-url>jdbc:mysql://localhost:3306/simple</connection-url>
-      <driver>com.mysql</driver>
-      <transaction-isolation>TRANSACTION_READ_COMMITTED</transaction-isolation>
-      <pool>
+    <driver>com.mysql</driver>
+    <transaction-isolation>TRANSACTION_READ_COMMITTED</transaction-isolation>
+    <pool>
         <min-pool-size>10</min-pool-size>
         <max-pool-size>100</max-pool-size>
         <prefill>true</prefill>
-      </pool>
-      <security>
+    </pool>
+    <security>
         <user-name>[A valid DB user name]</user-name>
         <password>[A valid DB password]</password>
-      </security>
-      <statement>
+    </security>
+    <statement>
         <prepared-statement-cache-size>32</prepared-statement-cache-size>
         <share-prepared-statements>true</share-prepared-statements>
-      </statement>
+    </statement>
 </datasource>
 <datasource jta="false" jndi-name="java:/jdbc/simple-nonjta" pool-name="MySQL-DS-NonJTA" enabled="true">
     <connection-url>jdbc:mysql://localhost:3306/simple</connection-url>
-      <driver>com.mysql</driver>
-      <transaction-isolation>TRANSACTION_READ_COMMITTED</transaction-isolation>
-      <security>
+    <driver>com.mysql</driver>
+    <transaction-isolation>TRANSACTION_READ_COMMITTED</transaction-isolation>
+    <security>
         <user-name>[A valid DB user name]</user-name>
         <password>[A valid DB password]</password>
-      </security>
-      <statement>
+    </security>
+    <statement>
         <share-prepared-statements>false</share-prepared-statements>
-      </statement>
+    </statement>
 </datasource>
 -----
 
@@ -190,6 +190,7 @@ This step adds the DataNucleus libraries as a JBoss module.
 * Add the following jars from the lib directory of the _datanucleus-accessplatform-full-deps_ ZIP file _lib_ directory :
 `datanucleus-api-jpa-XXX.jar`, `datanucleus-core-XXX.jar`, `datanucleus-rdbms-XXX.jar`, `datanucleus-jpa-query-XXX.jar`
 * Add a `module.xml` file in the $JBOSS_HOME/modules/org/datanucleus/main directory like this
+
 [source,xml]
 -----
 <module xmlns="urn:jboss:module:1.1" name="org.datanucleus">
