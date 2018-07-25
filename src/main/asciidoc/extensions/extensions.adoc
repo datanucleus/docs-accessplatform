@@ -1,5 +1,5 @@
 [[extensions]]
-= DataNucleus Extensions Guide
+= DataNucleus ExtensionPoints Guide
 :_basedir: ../
 :_imagesdir: images/
 :numbered:
@@ -115,7 +115,7 @@ plug-in is stopped by an OSGi command.
 
 ### Extensions and Plugins
 
-A plugin owns an Extension. The behaviour is defined below :-
+A plugin owns an Extension, and an Extension implements an ExtensionPoint. The behaviour is defined below :-
 
 * __Lifecycle__ : Each extension is created by a segment of code during the runtime execution, and destroyed/released 
 whenever they are no longer needed. This has no influence with the plug-in lifecycle.
@@ -141,7 +141,7 @@ would allow you to instantiate using their own interfaces. This allows DataNucle
 
 
 
-NOTE: Each plugin extension has attributes. If you want to override an extension that is included in DataNucleus itself then you need to specify the priority attribute, 
+NOTE: Each extension point has attributes. If you want to override an extension that is included in DataNucleus itself then you need to specify the priority attribute, 
 setting it to an integer (the default plugin has priority=0, so set to higher than this to override it).
 
 NOTE: If you write a DataNucleus plugin and you either want it to be included in the DataNucleus distribution, or want it to be listed here then please contact us.
