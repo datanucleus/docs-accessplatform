@@ -28,7 +28,7 @@ The only field types where this is not always true is for java.lang.Object, some
 Where you have a secondary type that can be persisted in multiple possible ways you select which column type(s) by using the _jdbc-type_ for the field, or alternatively
 you find the name of the internal DataNucleus _TypeConverter_ and use that via the metadata extension "type-converter-name".
 
-image:../images/nucleus_plugin.png[]
+image:../images/nucleus_extensionpoint.png[]
 
 If you have support for any additional types and would either like to contribute them, or have them listed here, let us know.
 Supporting a new type is easy, typically involving a link:#attributeconverter[JDO AttributeConverter] if you can easily convert the type into a String or Long. 
@@ -216,7 +216,7 @@ BigInteger and BigDecimal are supported and persisted into a single numeric colu
 |===
 
 
-== Temporal Types (java.util, java.sql. java.time, Jodatime)
+== Temporal Types (java.util, java.sql, java.time, Jodatime)
 
 DataNucleus supports a very wide range of temporal types, with flexibility in how they are persisted.
 
@@ -268,7 +268,7 @@ DataNucleus supports a very wide range of temporal types, with flexibility in ho
 |icon:check[]
 |icon:times[]
 |icon:check[]
-|Persisted as String.
+|Persisted as *String*.
 
 |java.time.LocalDateTime
 |icon:check[]
@@ -1494,13 +1494,13 @@ Please refer to the link:../extensions/extensions.html#java_type[java_type exten
 [[typeconverter]]
 == TypeConverters (DataNucleus Internals)
 
-image:../images/nucleus_plugin.png[]
+image:../images/nucleus_extensionpoint.png[]
 
 By default DataNucleus will store the value using its own *internal* configuration/default for the java type and for the datastore. 
 The user can, however, change that internal handling by making use of a _TypeConverter_. You firstly need to define the _TypeConverter_ class (assuming you aren't going to use an 
 https://github.com/datanucleus/datanucleus-core/tree/master/src/main/java/org/datanucleus/store/types/converters[internal DataNucleus converter],
 and for this you should refer to the link:../extensions/extensions.html#type_converter[TypeConverter plugin-point].
-Once you have the converter defined, and registered in a _plugin.xml_ under a name you then mark the field/property to use it
+Once you have the converter defined, and registered in a `plugin.xml` under a name you then mark the field/property to use it
 
 [source,java]
 -----

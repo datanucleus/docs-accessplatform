@@ -1317,8 +1317,8 @@ Objects are placed in the L2 cache when you commit() the transaction of a Entity
 This means that you only have datastore-persisted objects in that cache. 
 Also, if an object is deleted during a transaction then at commit it will be removed from the L2 cache if it is present.
 
-link:../extensions/extensions.html#cache_level2[image:../images/nucleus_extension.png[]]
-The L2 cache is a DataNucleus plugin point allowing you to provide your own cache where you require it. Use the examples of the EHCache, Coherence caches etc as reference.
+link:../extensions/extensions.html#cache_level2[image:../images/nucleus_extensionpoint.png[]]
+The L2 cache is a DataNucleus extension point allowing you to provide your own cache where you require it. Use the examples of the EHCache, Coherence caches etc as reference.
 
             
 === Controlling the Level 2 Cache

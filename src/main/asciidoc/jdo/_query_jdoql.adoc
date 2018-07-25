@@ -200,7 +200,7 @@ containerField.contains(elemVar)
 
 and thereafter refer to _elemVar_ for the element in the collection to place restrictions on the element. Similarly you can use _elemVar_ in the result clause
 
-image:../images/nucleus_plugin.png[]
+image:../images/nucleus_extension.png[]
 
 *RDBMS* : By default when you navigate through a 1-1/N-1 relation in JDOQL DataNucleus will decide to join using either LEFT OUTER JOIN or INNER JOIN
 based on whether the relation is _nullable_. If it is nullable then LEFT OUTER JOIN will be used. 
@@ -223,13 +223,13 @@ NOTE: These methods are not available for use with all of the supported datastor
 RDBMS, in general, supports the vast majority, whilst MongoDB, Neo4j, Cassandra support a select few methods in-datastore.
 
 
-image:../images/nucleus_plugin.png[]
+image:../images/nucleus_extensionpoint.png[]
 Please note that you can easily add support for other methods for evaluation "in-memory" using this 
-link:../extensions/extensions.html#query_method_evaluators[DataNucleus plugin point]
+link:../extensions/extensions.html#query_method_evaluators[DataNucleus extension point]
 
-image:../images/nucleus_plugin.png[]
+image:../images/nucleus_extensionpoint.png[]
 Please note that you can easily add support for other methods with RDBMS datastore using this 
-link:../extensions/extensions.html#rdbms_sql_method[DataNucleus plugin point]
+link:../extensions/extensions.html#rdbms_sql_method[DataNucleus extension point]
 
 
 [[jdoql_methods_string]]
@@ -1088,7 +1088,7 @@ q.variables("mydomain.Product prod");
 
 
 
-image:../images/nucleus_plugin.png[]
+image:../images/nucleus_extension.png[]
 
 *RDBMS : In all situations we aim for DataNucleus JDOQL implementation to work out the right way of linking a variable into the query, 
 whether this is via a join (INNER, LEFT OUTER), or via a subquery. As you can imagine this can be complicated to work out the optimum for all situations
