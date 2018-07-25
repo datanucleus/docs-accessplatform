@@ -159,7 +159,7 @@ adapter (i.e. all instances of _PersistenceManagerFactory_). Additionally, it us
 more deployment descriptor files (in JBoss, for example, they are named `*-ds.xml`)
 to set up the instances. In these files you can override the default values from the `ra.xml`.
 
-Since it is bad practice (and inconvenient) to edit a library's archive (in this case the `datanucleus-jdo-jca-${version}.rar`) 
+Since it is bad practice (and inconvenient) to edit a library's archive (in this case the `datanucleus-jdo-jca-{version}.rar`) 
 for changing the configuration (it makes updates more complicated, for example), it is recommended, not to edit the `ra.xml` 
 within DataNucleus' rar file, but instead put all your configuration into your deployment descriptors. 
 This way, you have a clean separation of which files you maintain (your deployment descriptors)
