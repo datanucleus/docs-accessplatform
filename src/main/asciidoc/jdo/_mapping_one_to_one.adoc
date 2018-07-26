@@ -9,10 +9,10 @@ You can create the relationship in 2 ways depending on whether the 2 classes kno
 or whether only one of the classes knows about the other class (unidirectional). 
 These are described below.
 
-NOTE: For RDBMS a 1-1 relation is stored as a foreign-key column(s). For non-RDBMS it is stored as a String "column" storing the 'id' 
-(possibly with the class-name included in the string) of the related object.
+NOTE: For RDBMS a 1-1 relation is stored as a foreign-key column(s), or less likely as an entry in a join table. 
+For non-RDBMS it is stored as a String "column" storing the 'id' (possibly with the class-name included in the string) of the related object.
 
-NOTE: You cannot have a 1-1 relation to a long or int field! JDO is for use with object-oriented systems, not flat data.
+NOTE: You cannot have a 1-1 relation to a long/int field! JDO is for use with object-oriented systems, not flat data.
 
 
 [[one_one_uni]]
