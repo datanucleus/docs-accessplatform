@@ -7,16 +7,16 @@
 == Plugin Mechanism
 DataNucleus products are built using a plugin mechanism, allowing plugins to operate together.
 This plugin mechanism involves the use of a file `plugin.xml` situated at the root of the CLASSPATH, containing a definition of the
-extension points and extensions that the plugin utilises/provides. 
+ExtensionPoints and Extensions that the plugin utilises/provides. 
 The plugin mechanism originated in the Eclipse IDE, but has no dependencies on Eclipse.
-This plugin mechanism is useful also from a user viewpoint in that you, the user, could provide plugins that use these extension points and extend the capabilities of DataNucleus.
+This plugin mechanism is useful also from a user viewpoint in that you, the user, could provide plugins that use these ExtensionPoints and extend the capabilities of DataNucleus.
 Plugins are loaded by a plugin manager when DataNucleus is initialised at runtime, and this plugin manager uses a registry mechanism, inspecting jars in the CLASSPATH.
 
 A plugin loadable by DataNucleus requires 2 components.
 
 [[plugin_xml]]
 === plugin.xml
-A file `plugin.xml` should be placed at the root of the plugin, and should be something like this (refer to the specific extension point(s) being provided for precise content).
+A file `plugin.xml` should be placed at the root of the plugin, and should be something like this (refer to the specific ExtensionPoint(s) being provided for precise content).
 
 [source,xml]
 ------------
@@ -45,7 +45,7 @@ This provides basic information for DataNucleus, but also for the OSGi environme
 Each DataNucleus bundle uses a version schema that has the following grammar (OSGi 3.0 §3.2.4): _major.minor.micro.qualifier_
 Major, Minor and Macro are numeric values, and qualifier is a alphanumeric.
 
-Each bundle has the version value set in the /META-INF/MANIFEST.MF file, Bundle-Version entry.
+Each bundle has the version value set in the `/META-INF/MANIFEST.MF` file, Bundle-Version entry.
 -----
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
@@ -77,7 +77,7 @@ Require-Bundle: org.datanucleus
 -----
 See more on the OSGi 3.0 specification §3.13.1.
 
-If a bundle depends on a specific version of a bundle, you must declare it in the Require-Bundle entry, bundle-version parameter. For example
+If a bundle depends on a specific version of a bundle, you must declare it in the _Require-Bundle_ entry, bundle-version parameter. For example
 -----
 Require-Bundle: org.datanucleus;bundle-version=(1.2.0.b2, 2.0)
 -----
@@ -90,58 +90,55 @@ bundle version, and the dependencies are auto-generated from imports etc. We rec
 
 ### Plugins in a Non-managed environment
 
-Non-managed environment is a runtime environment where DataNucleus runs and plug-ins are not 
-managed by a container. In this environment the plug-in discovery and lifecycle is managed by DataNucleus.
-
-There is a 1 to N instance relationship from DataNucleus to a plug-in per PMF. More exactly, if only 
-one PMF exists, there is only one Plug-in instance for a Connection Pool Plug-in, and if "N" 
-PMF exist, there are "N" Plug-in instances for a Connection Pool Plug-in.
-
+A non-managed environment is a runtime environment where DataNucleus runs and plug-ins are not managed by a container. 
+In this environment the plug-in discovery and lifecycle is managed by DataNucleus.
 JavaSE and JavaEE runtimes are considered <i>non-managed</i> environments.
-In non managed environments there is no lifecycle itself of plug-ins. Extensions implemented by 
-plug-ins are instantiated on demand and terminated on PMF/EMF closing, PM/EM closing or in another 
-form depending in what the extension is used for.
+In non managed environments there is no lifecycle itself of plug-ins. 
+
+There is a 1 to N instance relationship from DataNucleus to a plug-in per PMF. 
+More exactly, if only one PMF exists, there is only one Plug-in instance for a Connection Pool Plug-in, and if "N" PMF exist, there are "N" Plug-in instances for a Connection Pool Plug-in.
+Extensions implemented by plugins are instantiated on demand and terminated on PMF/EMF closing, PM/EM closing or in another form depending on what the extension is used for.
+
 
 ### Plugins in a Managed environment
 
 Managed environment is a runtime environment where DataNucleus plug-ins are managed by a container. 
 The discovery, registry and lifecycle of plug-ins are controlled by the container. 
-There is no plug-in instance relationship from DataNucleus to a plug-in regarding PMF instances. In 
-managed environments, there is only one plug-in instance for one or "N" PMFs. Again, this is managed by the container.
+There is no plug-in instance relationship from DataNucleus to a plug-in regarding PMF instances. 
+In managed environments, there is only one plug-in instance for one or "N" PMFs. Again, this is managed by the container.
 
-DataNucleus supports OSGi containers as managed environment. In OSGi managed environments plug-in lifecycle is determined by 
-the OSGi specification. Once activated, a plug-in is only stopped when the OSGi container finishes its execution, or the 
-plug-in is stopped by an OSGi command.
+DataNucleus supports OSGi containers as managed environment. In OSGi managed environments plug-in lifecycle is determined by the OSGi specification. 
+Once activated, a plug-in is only stopped when the OSGi container finishes its execution, or the plug-in is stopped by an OSGi command.
+
 
 ### Extensions and Plugins
 
 A plugin owns an Extension, and an Extension implements an ExtensionPoint. The behaviour is defined below :-
 
-* __Lifecycle__ : Each extension is created by a segment of code during the runtime execution, and destroyed/released 
-whenever they are no longer needed. This has no influence with the plug-in lifecycle.
-* __Manageability__ : In non managed environments, the plug-ins are managed by DataNucleus and maintained with a composition 
-relation to the PMF instance. This allows a plug-in "instance" per PMF. If multiple PMFs are created multiple extensions for an 
-extension point are instantiated. In managed environments, more precisely in OSGi containers, the plug-ins are managed by the 
-OSGi framework. Each plug-in will mostly be a singleton inside the OSGi container.
+* __Lifecycle__ : Each extension is created by a segment of code during the runtime execution, and destroyed/released whenever they are no longer needed. 
+This has no influence with the plug-in lifecycle.
+* __Manageability__ : In non managed environments, the plug-ins are managed by DataNucleus and maintained with a composition relation to the PMF instance. 
+This allows a plug-in "instance" per PMF. If multiple PMFs are created multiple extensions for an ExtensionPoint are instantiated. 
+In managed environments, more precisely in OSGi containers, the plug-ins are managed by the OSGi framework. Each plug-in will mostly be a singleton inside the OSGi container.
 * __Registration__ : In non managed environments all plugins are registered using an instance of JDOClassLoaderResolver 
 (so using the current ClassLoader of the PMF and the current thread). This means that the /plugin.xml and /META-INF/MANIFEST.MF files 
 must be accessible to the classloader. In managed environment this is handled by the container.
 * __ClassLoading__ : The classloading in non managed environments is usually made of one  single ClassLoader, while in managed 
 environments each plug-in has it's own ClassLoader.
-* __Configuration__ : Some Extensions needs to retrieve a configuration that was set in the PMF. This means that Plug-ins should 
-not hold singleton / static configurations if they want to serve to multiple PMFs at the same time.
-* __Constructors/Methods__ : In order of having consistent and avoid changes to extension-point interfaces, the Extension 
-Constructors or Methods (either one) should have receive a PMFContext instance as argument. If by the time the Extension Point is designed 
-clearly there is usage for a PMFContext, then the Extension-Point does not need to take the PMFContext as argument, but keep in mind that 
+* __Configuration__ : Some Extensions needs to retrieve a configuration that was set in the PMF. 
+This means that Plug-ins should not hold singleton / static configurations if they want to serve to multiple PMFs at the same time.
+* __Constructors/Methods__ : In order of having consistent and avoid changes to ExtensionPoint interfaces, the Extension 
+Constructors or Methods (either one) should have receive a NucleusContext instance as argument. 
+If by the time the ExtensionPoint is designed clearly there is usage for a NucleusContext, then the ExtensionPoint does not need to take the NucleusContext as argument, but keep in mind that 
 a 3rd Extension may need one due to different reasons.
-* __Instantiation__ : Inside the DataNucleus Core, regardless if the runtime is OSGi managed or non managed, extension instances are 
-created per PMF. DataNucleus Extensions should always be created through a PluginManager, regardless if the managed environment 
-would allow you to instantiate using their own interfaces. This allows DataNucleus and its Plug-ins to run in non managed environments.
+* __Instantiation__ : Inside the DataNucleus Core, regardless if the runtime is OSGi managed or non managed, extension instances are created per PMF. 
+DataNucleus Extensions should always be created through a PluginManager, regardless if the managed environment would allow you to instantiate using their own interfaces. 
+This allows DataNucleus and its Plug-ins to run in non managed environments.
 
 
 
 
-NOTE: Each extension point has attributes. If you want to override an extension that is included in DataNucleus itself then you need to specify the priority attribute, 
+NOTE: Each ExtensionPoint has attributes. If you want to override an extension that is included in DataNucleus itself then you need to specify the priority attribute, 
 setting it to an integer (the default plugin has priority=0, so set to higher than this to override it).
 
 NOTE: If you write a DataNucleus plugin and you either want it to be included in the DataNucleus distribution, or want it to be listed here then please contact us.
