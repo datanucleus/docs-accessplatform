@@ -28,12 +28,12 @@ With Maven you need to have the following in your POM
     <dependency>
         <groupId>org.datanucleus</groupId>
         <artifactId>datanucleus-jdo-query</artifactId>
-        <version>[5.0.0-release, )</version>
+        <version>[5.0.5, )</version>
     </dependency>
     <dependency>
         <groupId>org.datanucleus</groupId>
         <artifactId>javax.jdo</artifactId>
-        <version>[3.2.0-m4, 3.9)</version>
+        <version>[3.2.0-m9, 3.9)</version>
     </dependency>
     ...
  </dependencies>
@@ -143,6 +143,17 @@ SELECT FROM mydomain.Product WHERE this.value < 40.0 && this.name.startsWith("Wa
 As you see, we create a parametrised query, and then make use of the *query class* to access the candidate, 
 and from that make use of its fields, and the various Java methods present for the types of those fields.
 Note that the API is _fluent_, meaning you can chain calls easily.
+
+
+== Query API - Methods
+
+In the above example you will have seen the use of some of the normal JDOQL methods. With the JDOQLTyped API these are available on the different types of expressions.
+For example, _cand.name_ is a `StringExpression` and consequently it has all of the normal String methods available, just like in JDOQL and just like in Java.
+Similarly if we had a class `Inventory` which had a Collection of `Product`, then we could use the method *contains* on the `CollectionExpression`.
+
+NOTE: The JDOQL methods _JDOHelper.getObjectId_ and _JDOHelper.getVersion_ are available on `PersistableExpression`, for the object that they would be invoked on.
+
+NOTE: The JDOQL methods _Math.{xxx}_ are available on `NumericExpression`, for the numeric that they would be invoked on.
 
 
 
