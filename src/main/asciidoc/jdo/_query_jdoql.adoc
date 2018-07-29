@@ -222,14 +222,11 @@ The tables below also mark whether a particular method is supported for evaluati
 NOTE: These methods are not available for use with all of the supported datastores to be executed in-datastore. 
 RDBMS, in general, supports the vast majority, whilst MongoDB, Neo4j, Cassandra support a select few methods in-datastore.
 
+NOTE: you can add "in-memory" evaluation support for other methods using this 
+link:../extensions/extensions.html#query_method_evaluators[image:../images/nucleus_extensionpoint.png[]]
 
-image:../images/nucleus_extensionpoint.png[]
-Please note that you can easily add support for other methods for evaluation "in-memory" using this 
-link:../extensions/extensions.html#query_method_evaluators[DataNucleus extension point]
-
-image:../images/nucleus_extensionpoint.png[]
-Please note that you can easily add support for other methods with RDBMS datastore using this 
-link:../extensions/extensions.html#rdbms_sql_method[DataNucleus extension point]
+NOTE: you can add "RDBMS datastore" support for other methods using this 
+link:../extensions/extensions.html#rdbms_sql_method[image:../images/nucleus_extensionpoint.png[]]
 
 
 [[jdoql_methods_string]]
