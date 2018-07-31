@@ -387,7 +387,7 @@ NOTE: You will need to load the enhanced version of the class into a different C
 
 === Persistable
 
-JPA allows implementations to bytecode-enhance persistable classes to implement some interface to provide them with change tracking etc.
+JPA allows implementations to bytecode-enhance entity classes to implement some interface to provide them with change tracking etc.
 DataNucleus provides its own byte-code enhancer (in the `datanucleus-core.jar`) to enhance users entity classes to implement this _Persistable_ interface.
 If we start off with the following class
 
@@ -436,15 +436,26 @@ So maybe it wasn't so evil after all ?
 
 === Cloning of enhanced classes
 
-If you have a persistable class that implements `Cloneable` then it will have special treatment of the `clone` method applied.
+If you have an entity that implements `Cloneable` then it will have special treatment of the `clone` method applied.
 
 * If you provided a `clone` method in a persistable root class then this method will be renamed to `dnClone`, and a `clone` method will be added that calls the
 `dnClone` method to create the cloned object, and then unsets the `dnStateManager`/`dnFlags` fields.
 * If you did not provide a `clone` method in a persistable root class then a `clone` method will be added that calls `super.clone` to created the cloned object, 
 and then unsets the `dnStateManager`/`dnFlags` fields.
 
-The end result of this is that when you _clone_ an object of a persistable type, the end result will be an object that is not in a "managed" state. If the object 
-is detached upon cloning, then the cloned object will also be detached.
+The end result of this is that when you _clone_ an object of an entity, the end result will be an object that is not in a "managed" state. 
+If the object is detached upon cloning, then the cloned object will also be detached.
+
+
+=== Serialisation of enhanced classes
+
+If you have an entity that is `Serializable` then it will have special treatment of the serialisation process applied.
+
+* The `dnStateManager` field will be unset.
+* The `dnDetachedState` field will be serialised.
+* If you overrode the `writeObject`/`readObject` and did not use `defaultWriteObject()`/`defaultReadObject()` then you will not deserialise the `dnDetachedState` field and hence
+will lose detached state information.
+
 
 
 

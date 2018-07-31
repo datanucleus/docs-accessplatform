@@ -564,6 +564,16 @@ The end result of this is that when you _clone_ an object of a persistable type,
 is detached upon cloning, then the cloned object will also be detached.
 
 
+=== Serialisation of enhanced classes
+
+If you have a persistable class that is `Serializable` then it will have special treatment of the serialisation process applied.
+
+* The `dnStateManager` field will be unset.
+* The `dnDetachedState` field will be serialised.
+* If you overrode the `writeObject`/`readObject` and did not use `defaultWriteObject()`/`defaultReadObject()` then you will not deserialise the `dnDetachedState` field and hence
+will lose detached state information.
+
+
 
 === Decompilation
 
