@@ -169,7 +169,7 @@ To set the CLASSPATH scanner to a custom version use the persistence property *d
 
 image:../images/nucleus_extension.png[]
 
-DataNucleus allows an extension to JDO to dynamically create persistence-units at runtime.
+DataNucleus allows an extension to the JDO API to dynamically create persistence-units at runtime.
 Use the following code sample as a guide. Obviously any classes defined in the persistence-unit need to have been enhanced.
 
 [source,java]
@@ -608,15 +608,15 @@ will leave it to the FK in the datastore to perform any actions, and otherwise d
 
 |datanucleus.identityStringTranslatorType
 |You can allow identities input to _pm.getObjectById(id)_ be translated into valid JDO ids if there is a suitable translator.
-See link:../extensions/extensions.html#identitystringtranslator[Identity String Translator Plugin]
+See link:../extensions/extensions.html#identitystringtranslator[Identity String Translator image:../images/nucleus_extensionpoint.png[]]
 
 |datanucleus.identityKeyTranslatorType
 |You can allow identities input to _pm.getObjectById(cls, key)_ be translated into valid JDO ids if there is a suitable key translator.
-See link:../extensions/extensions.html#identitykeytranslator[Identity Key Translator Plugin]
+See link:../extensions/extensions.html#identitykeytranslator[Identity Key Translator image:../images/nucleus_extensionpoint.png[]]
 
 |datanucleus.datastoreIdentityType
 |Which "datastore-identity" class plugin to use to represent datastore identities. 
-Refer to link:../extensions/extensions.html#store_datastoreidentity[Datastore Identity extensions] for details.
+Refer to link:../extensions/extensions.html#store_datastoreidentity[Datastore Identity image:../images/nucleus_extensionpoint.png[]] for details.
 {*datanucleus*, kodo, xcalia, {user-supplied plugin}}
 
 |datanucleus.executionContext.maxIdle
@@ -856,7 +856,7 @@ Some databases do not support all isolation levels, refer to your database docum
 |datanucleus.transaction.jta.transactionManagerLocator
 |Selects the locator to use when using JTA transactions so that DataNucleus can find the JTA TransactionManager.
 If this isn't specified and using JTA transactions DataNucleus will search all available locators which could have a performance impact.
-See link:../extensions/extensions.html#jta_locator[JTA Locator extension].
+See link:../extensions/extensions.html#jta_locator[JTA Locator image:../images/nucleus_extensionpoint.png[]].
 If specifying "custom_jndi" please also specify "datanucleus.transaction.jta.transactionManagerJNDI"
 {*autodetect*, jboss, jonas, jotm, oc4j, orion, resin, sap, sun, weblogic, websphere, custom_jndi, alias of a JTA transaction locator}
 
@@ -1569,8 +1569,9 @@ Objects are placed in the L2 cache when you commit() the transaction of a Persis
 This means that you only have datastore-persisted objects in that cache. 
 Also, if an object is deleted during a transaction then at commit it will be removed from the L2 cache if it is present.
 
-link:../extensions/extensions.html#cache_level2[image:../images/nucleus_extensionpoint.png[]]
-The L2 cache is a DataNucleus extension point allowing you to provide your own cache where you require it. Use the examples of the EHCache, Coherence caches etc as reference.
+
+NOTE: The L2 cache is a DataNucleus link:../extensions/extensions.html#cache_level2[image:../images/nucleus_extensionpoint.png[]] allowing you to provide your own cache where you require it. 
+Use the examples of the EHCache, Coherence caches etc as reference.
 
 
 === Controlling the Level 2 Cache
