@@ -2294,6 +2294,9 @@ Using these will reduce the portability of your application.
 |Class
 |Specifies multi-tenancy details for this class (DataNucleus extension).
 
+|xref:annotations.html#SoftDelete_Class[@SoftDelete]
+|Class
+|Specifies that this class will be "soft-deleted" upon deletion of objects (DataNucleus extension).
 |===
 
 
@@ -2346,6 +2349,37 @@ This DataNucleus-extension annotation is used specify multi-tenancy details for 
 -----
 @PersistenceCapable
 @MultiTenant(column="TENANT", columnLength=255)
+public class MyClass
+{
+    ...
+}
+-----
+
+
+
+[[SoftDelete_Class]]
+=== @SoftDelete
+
+This DataNucleus-extension annotation is used to define a class as being soft-deleted whenever objects of this type are removed.
+Specified on the *class*.
+
+[cols="1,1,3,1", options="header"]
+|===
+|Attribute
+|Type
+|Description
+|Default
+
+|column
+|String
+|Name of the soft-delete status column for this class.
+|DELETED
+|===
+
+[source,java]
+-----
+@PersistenceCapable
+@SoftDelete
 public class MyClass
 {
     ...
