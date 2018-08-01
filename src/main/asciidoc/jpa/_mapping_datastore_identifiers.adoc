@@ -56,7 +56,7 @@ Using the same example above, the rules in this _NamingFactory_ mean that, assum
 * _MyElement_ will be persisted into a table named `MYELEMENT`
 * _MyClass.elements1_ will be persisted into a join table called `MYCLASS_MYELEMENT`
 * `MYCLASS_ELEMENTS1` will have columns called `MYCLASS_MYCLASS_ID` (FK to owner table) and `ELEMENTS1_ELEMENT_ID` (FK to element table)
-* *MyClass.elements2* will be persisted into a column `ELEMENTS2_MYCLASS_ID` (FK to owner) table
+* _MyClass.elements2_ will be persisted into a column `ELEMENTS2_MYCLASS_ID` (FK to owner) table
 * Any discriminator column will be called `DTYPE`
 * Any index column in a List for field _MyClass.myField1_ will be called `MYFIELD1_ORDER`
 * Any adapter column added to a join table to form part of the primary key will be called `IDX`
@@ -76,7 +76,7 @@ Using the same example above, the rules in this _IdentifierFactory_ mean that, a
 * _MyElement_ will be persisted into a table named `MYELEMENT`
 * _MyClass.elements1_ will be persisted into a join table called `MYCLASS_MYELEMENT`
 * `MYCLASS_ELEMENTS1` will have columns called `MYCLASS_MYCLASS_ID` (FK to owner table) and `ELEMENTS1_ELEMENT_ID` (FK to element table)
-* *MyClass.elements2* will be persisted into a column `ELEMENTS2_MYCLASS_ID` (FK to owner) table
+* _MyClass.elements2_ will be persisted into a column `ELEMENTS2_MYCLASS_ID` (FK to owner) table
 * Any discriminator column will be called `DTYPE`
 * Any index column in a List for field _MyClass.myField1_ will be called `MYFIELD1_ORDER`
 * Any adapter column added to a join table to form part of the primary key will be called `IDX`

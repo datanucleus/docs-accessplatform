@@ -61,7 +61,7 @@ Using the example above, the rules in this _NamingFactory_ mean that, assuming t
 * _MyClass.elements1_ will be persisted into a join table called `MYCLASS_ELEMENTS1`
 * `MYCLASS_ELEMENTS1` will have columns called `MYCLASS_ID_OID` (FK to owner table) and `MYELEMENT_ID_EID` (FK to element table)
 * `MYCLASS_ELEMENTS1` will have column names like `STRING_ELE`, `STRING_KEY`, `STRING_VAL` for non-PC elements/keys/values of collections/maps
-* *MyClass.elements2* will be persisted into a column `ELEMENTS2_MYCLASS_ID_OWN` or `ELEMENTS2_MYCLASS_ID_OID` (FK to owner) table
+* _MyClass.elements2_ will be persisted into a column `ELEMENTS2_MYCLASS_ID_OWN` or `ELEMENTS2_MYCLASS_ID_OID` (FK to owner) table
 * Any discriminator column will be called `DISCRIMINATOR`
 * Any index column in a List will be called `IDX`
 * Any adapter column added to a join table to form part of the primary key will be called `IDX`
@@ -79,7 +79,7 @@ Using the same example above, the rules in this _NamingFactory_ mean that, assum
 * _MyElement_ will be persisted into a table named `MYELEMENT`
 * _MyClass.elements1_ will be persisted into a join table called `MYCLASS_MYELEMENT`
 * `MYCLASS_ELEMENTS1` will have columns called `MYCLASS_MYCLASS_ID` (FK to owner table) and `ELEMENTS1_ELEMENT_ID` (FK to element table)
-* *MyClass.elements2* will be persisted into a column `ELEMENTS2_MYCLASS_ID` (FK to owner) table
+* _MyClass.elements2_ will be persisted into a column `ELEMENTS2_MYCLASS_ID` (FK to owner) table
 * Any discriminator column will be called `DTYPE`
 * Any index column in a List for field _MyClass.myField1_ will be called `MYFIELD1_ORDER`
 * Any adapter column added to a join table to form part of the primary key will be called `IDX`
@@ -101,7 +101,7 @@ Using the same example above, the rules in this _RDBMS IdentifierFactory_ mean t
 * _MyClass.elements1_ will be persisted into a join table called `MYCLASS_ELEMENTS1`
 * `MYCLASS_ELEMENTS1` will have columns called `MYCLASS_ID_OID` (FK to owner table) and `MYELEMENT_ID_EID` (FK to element table)
 * `MYCLASS_ELEMENTS1` will have column names like `STRING_ELE`, `STRING_KEY`, `STRING_VAL` for non-PC elements/keys/values of collections/maps
-* *MyClass.elements2* will be persisted into a column `ELEMENTS2_MYCLASS_ID_OWN` or `ELEMENTS2_MYCLASS_ID_OID` (FK to owner) table
+* _MyClass.elements2_ will be persisted into a column `ELEMENTS2_MYCLASS_ID_OWN` or `ELEMENTS2_MYCLASS_ID_OID` (FK to owner) table
 * Any discriminator column will be called `DISCRIMINATOR`
 * Any index column in a List will be called `IDX`
 * Any adapter column added to a join table to form part of the primary key will be called `IDX`
@@ -122,7 +122,7 @@ Using the example above, the rules in this _RDBMS IdentifierFactory_ mean that, 
 * _MyClass.elements1_ will be persisted into a join table called `MYCLASS_ELEMENTS1`
 * `MYCLASS_ELEMENTS1` will have columns called `MYCLASS_ID_OID` (FK to owner table) and `MYELEMENT_ID_EID` (FK to element table)
 * `MYCLASS_ELEMENTS1` will have column names like `STRING_ELE`, `STRING_KEY`, `STRING_VAL` for non-PC elements/keys/values of collections/maps
-* *MyClass.elements2* will be persisted into a column `ELEMENTS2_MYCLASS_ID_OID` or `ELEMENTS2_ID_OID` (FK to owner) table
+* _MyClass.elements2_ will be persisted into a column `ELEMENTS2_MYCLASS_ID_OID` or `ELEMENTS2_ID_OID` (FK to owner) table
 * Any discriminator column will be called `DISCRIMINATOR`
 * Any index column in a List will be called `INTEGER_IDX`
 * Any adapter column added to a join table to form part of the primary key will be called `ADPT_PK_IDX`
@@ -142,7 +142,7 @@ Using the same example above, the rules in this _RDBMS IdentifierFactory_ mean t
 * _MyElement_ will be persisted into a table named `MYELEMENT`
 * _MyClass.elements1_ will be persisted into a join table called `MYCLASS_MYELEMENT`
 * `MYCLASS_ELEMENTS1` will have columns called `MYCLASS_MYCLASS_ID` (FK to owner table) and `ELEMENTS1_ELEMENT_ID` (FK to element table)
-* *MyClass.elements2* will be persisted into a column `ELEMENTS2_MYCLASS_ID` (FK to owner) table
+* _MyClass.elements2_ will be persisted into a column `ELEMENTS2_MYCLASS_ID` (FK to owner) table
 * Any discriminator column will be called `DTYPE`
 * Any index column in a List for field _MyClass.myField1_ will be called `MYFIELD1_ORDER`
 * Any adapter column added to a join table to form part of the primary key will be called `IDX`
