@@ -6,15 +6,15 @@
 
 In JPA there is a query API referred to as "criteria", that broadly mirrors the JPQL query syntax. 
 This is really an API allowing the construction of queries expression by expression, and optionally making it type-safe.
-It provides two ways of specifying a field/property. The first way is using Strings, and the second using a link:#metamodel[Static MetaModel]. 
-The advantage of the Static MetaModel is that it means that your queries are refactorable if you rename a field. 
+It provides two ways of specifying a field/property; the first way is using Strings, and the second using a link:#metamodel[Static MetaModel]. 
+The advantages of the Static MetaModel are that it means that your queries are refactorable if you rename a field, and also that you can dynamically generate the query. 
 Each example will be expressed in both ways where appropriate so you can see the difference.
 
 
 == Creating a Criteria query
 
-To use the JPA Criteria API, firstly you need to create a _CriteriaQuery_ object for the candidate in question, and set the candidate, its alias, 
-and the result to be of the candidate type
+To use the JPA Criteria API, firstly you need to create a `CriteriaQuery` object for the candidate in question, and set the candidate, its alias, 
+and the result to be of the candidate type. We make use of the `CriteriaBuilder` to do this
 
 [source,java]
 -----
@@ -32,10 +32,10 @@ So what we have there equates to
 SELECT p FROM mydomain.Person p
 -----
 
-For a complete list of all methods available on CriteriaBuilder, refer to
+For a complete list of all methods available on `CriteriaBuilder`, refer to
 http://www.datanucleus.org/javadocs/javax.persistence/2.2/javax/persistence/criteria/CriteriaBuilder.html[image:../images/javadoc.png[Javadoc]]
 
-For a complete list of all methods available on CriteriaQuery, refer to
+For a complete list of all methods available on `CriteriaQuery`, refer to
 http://www.datanucleus.org/javadocs/javax.persistence/2.2/javax/persistence/criteria/CriteriaQuery.html[image:../images/javadoc.png[Javadoc]]
 
 
@@ -68,10 +68,16 @@ which equates to
 SELECT p.name
 -----
 
-Note that here we accessed a field by its name (as a String). We could easily have accessed it via the link:#metamodel[Criteria MetaModel] too.
+Note that here we accessed a field by its name (as a String). We could easily have accessed it via the link:#metamodel[Static MetaModel] too, like this
+
+[source,java]
+-----
+Path nameField = candidateRoot.get(Person_.name);
+crit.select(nameField);
+-----
 
 
-== Criteria API : From clause joins
+== Criteria API : FROM clause joins
 
 The basic Criteria query above is fine, but you may want to define some explicit joins. To do this we need to use the Criteria API.
 
@@ -95,9 +101,9 @@ FROM mydomain.Person p JOIN p.address a
 -----
 
 
-== Criteria API : Filter
+== Criteria API : WHERE clause
 
-The basic Criteria query above is fine, but in the majority of cases we want to define a filter. To do this we need to use the Criteria API.
+Should we want to impose a WHERE clause filter, we use the `where` method on `CriteriaQuery`, using `CriteriaBuilder` to build the WHERE clause.
 
 [source,java]
 -----
@@ -108,6 +114,12 @@ crit.where(nameEquals);
 // MetaModel-based:
 Predicate nameEquals = cb.equal(candidateRoot.get(Person_.name), "First");
 crit.where(nameEquals);
+-----
+
+which equates to
+
+-----
+WHERE p.name = 'FIRST')
 -----
 
 You can also invoke methods, so a slight variation on this clause would be
@@ -144,6 +156,12 @@ Predicate ageEquals = cb.equal(candidateRoot.get(Person_.age), 18);
 crit.where(b.and(nameEquals, ageEquals));
 -----
 
+which equates to
+
+-----
+WHERE p.name = 'FIRST' AND p.age = 18
+-----
+
 
 [source,java]
 -----
@@ -158,12 +176,18 @@ Predicate ageEquals = cb.equal(candidateRoot.get(Person_.age), 18);
 crit.where(b.or(nameEquals, ageEquals));
 -----
 
+which equates to
+
+-----
+WHERE p.name = 'FIRST' OR p.age = 18
+-----
+
 
 
 
 == Criteria API : Ordering
 
-The basic Criteria query above is fine, but in many cases we want to define ordering. To do this we need to use the Criteria API.
+Should we want to impose an ORDER clause, we use the `orderBy` method on `CriteriaQuery`, using `CriteriaBuilder` to build the ORDERing clause.
 
 [source,java]
 -----
@@ -192,14 +216,18 @@ Order orderName = cb.desc(candidateRoot.get("name"));
 orderName.nullsFirst();
 -----
 
-which will put NULL values of that field before other values. Similarly there is a method `nullsLast`.
+which will put NULL values of that field before other values. This equates to
 
+-----
+ORDER BY p.name DESC NULLS FIRST
+-----
+
+Similarly there is a method `nullsLast` if you wanted nulls to be put at the end of the list
 
 
 == Criteria API : Parameters
 
-Another common thing we would want to do is specify input parameters.
-To do this we need to use the Criteria API. Let's take an example of a filter with parameters.
+Another common thing we would want to do is specify input parameters. We define these using the `CriteriaBuilder` API. Let's take an example of a WHERE clause with parameters.
 
 [source,java]
 -----
