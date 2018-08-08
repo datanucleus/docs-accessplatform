@@ -1560,7 +1560,7 @@ Oracle's caches support distributed caching, so you could, in principle, use Dat
 The weak, soft and javax.cache caches are available in the datanucleus-core plugin.
 The EHCache, OSCache, Coherence, Cacheonix, and Memcache caches are available in the http://github.com/datanucleus/datanucleus-cache[datanucleus-cache] plugin.
 
-In addition you can control the _mode_ of operation of the L2 cache. You do this using the persistence property *datanucleus.cache.level2.mode* (or *javax.persistence.sharedCache.mode*).
+In addition you can control the _mode_ of operation of the L2 cache. You do this using the persistence property *datanucleus.cache.level2.mode*.
 The default is _UNSPECIFIED_ which means that DataNucleus will cache all objects of entities unless the entity is explicitly marked as not cacheable. 
 The other options are _NONE_ (don't cache ever), _ALL_ (cache all entities regardless of annotations),
 _ENABLE_SELECTIVE_ (cache entities explicitly marked as cacheable), or _DISABLE_SELECTIVE_ (cache entities unless explicitly marked as not cacheable - i.e same as our default).

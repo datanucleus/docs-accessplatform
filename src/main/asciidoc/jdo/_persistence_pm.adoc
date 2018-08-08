@@ -637,51 +637,6 @@ NOTE: When performing management of relations there are some checks implemented 
 You can disable these checks using *datanucleus.manageRelationshipsChecks*, set to false.
 
 
-[[large_data_problems]]
-== Transactions with lots of data
-
-Occasionally you may need to persist large amounts of data in a single transaction. 
-Since all objects need to be present in Java memory at the same time, you can get _OutOfMemory_ errors, or your application can slow down as swapping occurs. 
-You can alleviate this by changing how you flush/commit the persistent changes.
-
-One way is to do it like this, where possible,
-
-[source,java]
------
-PersistenceManager pm = pmf.getPersistenceManager();
-Transaction tx = pm.currentTransaction();
-try
-{
-    tx.begin();
-    for (int i=0; i<100000; i++)
-    {
-        Wardrobe wardrobe = new Wardrobe();
-        wardrobe.setModel("3 doors");
-        pm.makePersistent(wardrobe);
-        if (i % 10000 == 0)
-        {
-            // Flush every 10000 objects
-            pm.flush();
-        }
-    }
-    tx.commit();
-}
-finally
-{
-    if (tx.isActive())
-    {
-        tx.rollback();
-    }
-    pm.close();
-}
------
-
-Another way, if one object is causing the persist of a huge number of related objects, is to just persist some objects without relations first, flush, and then
-form the relations. This then allows the above process to be utilised, manually flushing at intervals.
-
-You can additionally consider evicting objects from the Level 1 Cache, since they will, by default, be cached until commit.
-
-
 
 [[level1_cache]]
 == Level 1 Cache
