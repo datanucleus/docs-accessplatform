@@ -16,11 +16,11 @@ The various possible relationships are described below.
 * link:#one_many_fk_uni[Collection<Entity> - Unidirectional using foreign-key]
 * link:#one_many_join_bi[Collection<Entity> - Bidirectional using join table]
 * link:#one_many_fk_bi[Collection<Entity> - Bidirectional using foreign-key]
+* link:#one_many_shared_join[Collection<Entity> using shared join table] (DataNucleus Extension)
+* link:#one_many_shared_fk[Collection<Entity> using shared foreign key] (DataNucleus Extension)
 * link:#one_many_list[List<Entity>]
 * link:#one_many_nonpc_join[Collection<Simple> using join table]
 * link:#one_many_nonpc_converter[Collection<Simple> using AttributeConverter into single column]
-* link:#one_many_shared_join[Collection<Entity> using shared join table] (DataNucleus Extension)
-* link:#one_many_shared_fk[Collection<Entity> using shared foreign key] (DataNucleus Extension)
 * link:#one_many_map_join_simple_pc[Map<Simple, Entity> using join table]
 * link:#one_many_map_join_pc_pc[Map<Entity, Entity> using join table]
 * link:#one_many_map_join_simple_simple[Map<Simple, Simple> using join table]
@@ -381,145 +381,6 @@ TIP: Since each Address object can have at most one owner (due to the "Foreign K
 If you want to allow duplicate Collection entries, then use the "Join Table" variant above.
 
 
-[[one_many_list]]
-== Using a List
-
-In the case of the relation field being a List (i.e ordered), you define the relation just like you would for a Collection (above) but then define whether 
-you want the relation to be either _ordered_ or _indexed_. 
-
-In the case of _ordered_ you would add the following to the metadata of the field
-
-[source,java]
------
-@OrderBy("city")
------
-
-or using XML
-
-[source,xml]
------
-<order-by>city</order-by>
------
-
-This means that when the elements of the List are retrieved then they will be ordered according to the _city_ field of the element.
-
-
-If instead you want an _indexed_ list then the elements will have an index stored against them, hence preserving the order in which they were in the original List. This
-adds a surrogate column to either the table of the element (when using _foreign key_) or to the join table.
-
-[source,java]
------
-@OrderColumn("ORDERING")
------
-
-or using XML
-
-[source,xml]
------
-<order-column>ORDERING</order-column>
------
-
-
-
-
-[[one_many_nonpc_join]]
-== Collection<Simple> via JoinTable
-
-NOTE: Supported for RDBMS. Other datastores simply ignore the join table and store the collection in a column in the table of the object with the field.
-
-All of the examples above show a 1-N relationship between 2 entities.
-If you want the element to be primitive or Object types then follow this section. For example, when you have a Collection of Strings. 
-This will be persisted in the same way as the "Join Table" examples above. A join table is created to hold the collection elements. 
-Let's take our example. We have an *Account* that stores a Collection of addresses. 
-These addresses are simply Strings. We define the annotations like this
-
-[[source,java]]
------
-@Entity
-public class Account
-{
-    ...
-
-    @ElementCollection
-    @CollectionTable(name="ACCOUNT_ADDRESSES")
-    Collection<String> addresses;
-}
------
-
-or using XML metadata
-
-[source,xml]
------
-<entity class="mydomain.Account">
-    <attributes>
-        ...
-        <element-collection name="addresses">
-            <collection-table name="ACCOUNT_ADDRESSES"/>
-        </element-collection>
-    </attributes>
-</entity>
------
-
-In the datastore the following is created
-
-image:../images/relationship_1_N_primitive_collection_db.png[]
-
-The `ACCOUNT` table is as before, but this time we only have the "join table". Use `@Column` on the field/method to define the column details of the element in the join table.
-
-
-[[one_many_nonpc_converter]]
-== Collection<Simple> using AttributeConverter via column
-
-Just like in the above example, here we have a Collection of simple types. In this case we are wanting to store this Collection into a single column in the owning table. 
-We do this by using a JPA AttributeConverter.
-
-[source,java]
------
-public class Account
-{
-    ...
-
-    @ElementCollection
-    @Convert(CollectionStringToStringConverter.class)
-    @Column(name="ADDRESSES")
-    Collection<String> addresses;
-}
------
-
-and then define our converter. You can clearly define your conversion process how you want it. You could, for example, convert the
-Collection into comma-separated strings, or could use JSON, or XML, or some other format.
-
-[source,java]
------
-public class CollectionStringToStringConverter implements AttributeConverter<Collection<String>, String>
-{
-    public String convertToDatabaseColumn(Collection<String> attribute)
-    {
-        if (attribute == null)
-        {
-            return null;
-        }
-
-        StringBuilder str = new StringBuilder();
-        ... convert Collection to String
-        return str.toString();
-    }
-
-    public Collection<String> convertToEntityAttribute(String columnValue)
-    {
-        if (columnValue == null)
-        {
-            return null;
-        }
-
-        Collection<String> coll = new HashSet<String>();
-        ... convert String to Collection
-        return coll;
-    }
-}
------
-
-
 [[one_many_shared_join]]
 == Collection<Entity> via Shared JoinTable
 
@@ -704,6 +565,147 @@ This results in the following database schema
 
 image:../images/relationship_1_N_uni_fk_shared_db.png[]
 
+
+
+
+
+[[one_many_list]]
+== Using a List
+
+In the case of the relation field being a List (i.e ordered), you define the relation just like you would for a Collection (above) but then define whether 
+you want the relation to be either _ordered_ or _indexed_. 
+
+In the case of _ordered_ you would add the following to the metadata of the field
+
+[source,java]
+-----
+@OrderBy("city")
+-----
+
+or using XML
+
+[source,xml]
+-----
+<order-by>city</order-by>
+-----
+
+This means that when the elements of the List are retrieved then they will be ordered according to the _city_ field of the element.
+
+
+If instead you want an _indexed_ list then the elements will have an index stored against them, hence preserving the order in which they were in the original List. This
+adds a surrogate column to either the table of the element (when using _foreign key_) or to the join table.
+
+[source,java]
+-----
+@OrderColumn("ORDERING")
+-----
+
+or using XML
+
+[source,xml]
+-----
+<order-column>ORDERING</order-column>
+-----
+
+
+
+
+[[one_many_nonpc_join]]
+== Collection<Simple> via JoinTable
+
+NOTE: Supported for RDBMS. Other datastores simply ignore the join table and store the collection in a column in the table of the object with the field.
+
+All of the examples above show a 1-N relationship between 2 entities.
+If you want the element to be primitive or Object types then follow this section. For example, when you have a Collection of Strings. 
+This will be persisted in the same way as the "Join Table" examples above. A join table is created to hold the collection elements. 
+Let's take our example. We have an *Account* that stores a Collection of addresses. 
+These addresses are simply Strings. We define the annotations like this
+
+[[source,java]]
+-----
+@Entity
+public class Account
+{
+    ...
+
+    @ElementCollection
+    @CollectionTable(name="ACCOUNT_ADDRESSES")
+    Collection<String> addresses;
+}
+-----
+
+or using XML metadata
+
+[source,xml]
+-----
+<entity class="mydomain.Account">
+    <attributes>
+        ...
+        <element-collection name="addresses">
+            <collection-table name="ACCOUNT_ADDRESSES"/>
+        </element-collection>
+    </attributes>
+</entity>
+-----
+
+In the datastore the following is created
+
+image:../images/relationship_1_N_primitive_collection_db.png[]
+
+The `ACCOUNT` table is as before, but this time we only have the "join table". Use `@Column` on the field/method to define the column details of the element in the join table.
+
+
+[[one_many_nonpc_converter]]
+== Collection<Simple> using AttributeConverter via column
+
+Just like in the above example, here we have a Collection of simple types. In this case we are wanting to store this Collection into a single column in the owning table. 
+We do this by using a JPA AttributeConverter.
+
+[source,java]
+-----
+public class Account
+{
+    ...
+
+    @ElementCollection
+    @Convert(CollectionStringToStringConverter.class)
+    @Column(name="ADDRESSES")
+    Collection<String> addresses;
+}
+-----
+
+and then define our converter. You can clearly define your conversion process how you want it. You could, for example, convert the
+Collection into comma-separated strings, or could use JSON, or XML, or some other format.
+
+[source,java]
+-----
+public class CollectionStringToStringConverter implements AttributeConverter<Collection<String>, String>
+{
+    public String convertToDatabaseColumn(Collection<String> attribute)
+    {
+        if (attribute == null)
+        {
+            return null;
+        }
+
+        StringBuilder str = new StringBuilder();
+        ... convert Collection to String
+        return str.toString();
+    }
+
+    public Collection<String> convertToEntityAttribute(String columnValue)
+    {
+        if (columnValue == null)
+        {
+            return null;
+        }
+
+        Collection<String> coll = new HashSet<String>();
+        ... convert String to Collection
+        return coll;
+    }
+}
+-----
 
 
 
