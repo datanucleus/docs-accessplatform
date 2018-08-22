@@ -48,6 +48,20 @@ You can only retain the order in a 1-N Collection if you instantiate the Collect
 If the order of elements is important to you, use a List, or instantiate using something like a TreeSet where the order is handled.
 
 
+image:../images/nucleus_extension.png[]
+
+Collections that support a `Comparator` to order the elements of the set can specify it in metadata like this.
+
+[source,java]
+-----
+@OneToMany
+@Extension(key="comparator-name", value="mydomain.model.MyComparator")
+SortedSet<MyElementType> elements; 
+-----
+
+When instantiating the SortedSet field, it will create it with a comparator of the specified class (which must have a default constructor).
+
+
 
 [[one_many_join_uni]]
 == Collection<Entity> Unidirectional JoinTable
