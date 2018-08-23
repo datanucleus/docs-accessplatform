@@ -973,56 +973,6 @@ TIP: Since each Address object can have at most one key (due to the "Foreign Key
 
 
 
-[[one_many_map_join_pcsimple]]
-== Map<PC,Simple> using Join Table
-
-NOTE: Supported for RDBMS. Other datastores simply ignore the join table and store the relation in a column in the table of the object with the field.
-
-Here our value is a simple type (in this case a String) and the keys are _persistable_. Like this
-
-[source,java]
------
-public class Account
-{
-    Map<Address, String> addresses;
-
-    ...
-}
-
-public class Address {...}
------
-
-[source,java]
------
-public class Account
-{
-    @Join
-    Map<Address, String> addresses;
-}
------
-
-or using XML metadata
-
-[source,xml]
------
-<package name="com.mydomain">
-    <class name="Account" identity-type="datastore">
-        ...
-        <field name="addresses" persistence-modifier="persistent">
-            <map/>
-            <join/>
-        </field>
-    </class>
-
-    <class name="Address" identity-type="datastore">
-        ...
-    </class>
-</package>
------
-
-This operates exactly the same as "Map<Simple, PC>" except that the additional table is for the key instead of the value.
-
-
 [[one_many_map_join_simple_simple]]
 == Map<Simple, Simple> using Join Table
 
@@ -1132,6 +1082,57 @@ public class MapStringStringToStringConverter implements AttributeConverter<Map<
     }
 }
 -----
+
+
+[[one_many_map_join_pcsimple]]
+== Map<PC,Simple> using Join Table
+
+NOTE: Supported for RDBMS. Other datastores simply ignore the join table and store the relation in a column in the table of the object with the field.
+
+Here our value is a simple type (in this case a String) and the keys are _persistable_. Like this
+
+[source,java]
+-----
+public class Account
+{
+    Map<Address, String> addresses;
+
+    ...
+}
+
+public class Address {...}
+-----
+
+[source,java]
+-----
+public class Account
+{
+    @Join
+    Map<Address, String> addresses;
+}
+-----
+
+or using XML metadata
+
+[source,xml]
+-----
+<package name="com.mydomain">
+    <class name="Account" identity-type="datastore">
+        ...
+        <field name="addresses" persistence-modifier="persistent">
+            <map/>
+            <join/>
+        </field>
+    </class>
+
+    <class name="Address" identity-type="datastore">
+        ...
+    </class>
+</package>
+-----
+
+This operates exactly the same as "Map<Simple, PC>" except that the additional table is for the key instead of the value.
+
 
 
 [[one_many_map_fk_uni_value]]
