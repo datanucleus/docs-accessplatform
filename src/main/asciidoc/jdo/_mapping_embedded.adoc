@@ -348,7 +348,7 @@ foreign key is used to relate them. With JPA and DataNucleus you have a variatio
 the "N" side into the join table itself so that they don't have their own identity, and aren't stored in the table for that class.
 *This is supported in DataNucleus with the following provisos*
 
-* You can have inheritance in embedded keys/values but with all inherited fields stored in the same table with a discriminator 
+* You can have inheritance in embedded elements but with all inherited fields stored in the same table with a discriminator 
 (you must define the discriminator in the metadata of the embedded type).
 * When retrieving embedded elements, all fields are retrieved in one call. That is, fetch plans are not utilised. This is because the embedded element has 
 no identity so we have to retrieve all initially.
