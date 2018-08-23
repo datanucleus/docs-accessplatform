@@ -22,12 +22,12 @@ The various possible relationships are described below.
 * link:#one_many_nonpc_join[Collection<Simple> using join table]
 * link:#one_many_nonpc_converter[Collection<Simple> using AttributeConverter into single column]
 * link:#one_many_map_join_simple_pc[Map<Simple, Entity> using join table]
+* link:#one_many_map_fk_uni_key[Map<Simple,Entity> - Unidirectional using foreign-key (key stored in the value class)]
+* link:#one_many_map_fk_bi_key[Map<Simple,Entity> - Bidirectional using foreign-key (key stored in the value class)]
 * link:#one_many_map_join_pc_pc[Map<Entity, Entity> using join table]
 * link:#one_many_map_join_simple_simple[Map<Simple, Simple> using join table]
 * link:#one_many_map_converter_simple_simple[Map<Simple, Simple> using AttributeConverter into single column]
 * link:#one_many_map_join_pc_simple[Map<Entity, Simple> using join table]
-* link:#one_many_map_fk_uni_key[Map<Simple,Entity> - Unidirectional using foreign-key (key stored in the value class)]
-* link:#one_many_map_fk_bi_key[Map<Simple,Entity> - Bidirectional using foreign-key (key stored in the value class)]
 
 
 NOTE: RDBMS supports the full range of options on this page, whereas other datastores (ODF, Excel, HBase, MongoDB, etc) persist the Collection in a 
@@ -783,6 +783,160 @@ NOTE: The column `ADPT_PK_IDX` is added by DataNucleus _when_ the column type of
 If the column type of your key is acceptable for use as part of a primary key then you will not have this `ADPT_PK_IDX` column.
 
 
+[[one_many_map_fk_uni_key]]
+== Map<Simple,Entity> Unidirectional FK (key stored in value)
+
+In this case we have an object with a Map of objects and we're associating the objects using a foreign-key in the table of the value. 
+We're using a field (_alias_) in the Address class as the key of the map.
+
+[source,java]
+-----
+public class Account
+{
+    Map<String, Address> addresses;
+
+    ...
+}
+
+public class Address
+{
+    String alias;
+
+    ...
+}
+-----
+
+In this relationship, the *Account* class has a Map of *Address* objects, yet the *Address* knows nothing about the *Account*. 
+In this case we don't have a field in the Address to link back to the Account and so DataNucleus has to use columns in the datastore representation of 
+the *Address* class. So we define the annotations like this
+
+[source,java]
+-----
+@Entity
+public class Account
+{
+    @OneToMany
+    @MapKey(name="alias")
+    @JoinColumn(name="ACCOUNT_ID_OID")
+    Map<String, Address> addresses;
+
+    ...
+}
+
+@Entity
+public class Address
+{
+    String alias;
+
+    ...
+}
+-----
+
+or using XML metadata
+
+[source,xml]
+-----
+<entity-mappings>
+    <entity class="Account">
+        <table name="ACCOUNT"/>
+        <attributes>
+            ...
+            <one-to-many name="addresses">
+                <map-key name="alias"/>
+                <join-column name="ACCOUNT_ID_OID"/>
+            </one-to-many>
+        </attributes>
+    </entity>
+
+    <entity class="Address">
+        <table name="ADDRESS"/>
+        <attributes>
+            ...
+            <basic name="alias">
+                <column name="KEY" length="20"/>
+            </basic>
+        </attributes>
+    </entity>
+</entity-mappings>
+-----
+
+Again there will be 2 tables, one for *Address*, and one for *Account*. If you wish to specify the names of the columns used in the schema for the foreign key in the 
+*Address* table you should use the _join-column_ element within the field of the map.
+
+image:../images/relationship_1_N_map_key_in_value_db.png[]
+
+In terms of operation within your classes of assigning the objects in the relationship. You have to take your *Account* object and add the *Address* to the *Account* map field since the 
+*Address* knows nothing about the *Account*. Also be aware that each *Address* object can have only one owner, since it has a single foreign key to the *Account*.
+
+TIP: Since each Address object can have at most one key (due to the "Foreign Key") this mode of persistence will not allow duplicate values in the Map. If you want to allow duplicate Map values, then use the "Join Table" variant above.
+
+
+[[one_many_map_fk_bi_key]]
+== Map<Simple,Entity> Bidirectional FK (key stored in value)
+
+In this case we have an object with a Map of objects and we're associating the objects using a foreign-key in the table of the value.
+
+[source,java]
+-----
+public class Account
+{
+    long id;
+
+    Map<String, Address> addresses;
+
+    ...
+}
+
+public class Address
+{
+    long id;
+
+    String alias;
+
+    Account account;
+
+    ...
+}
+-----
+
+
+
+With these classes we want to store a foreign-key in the value table `ADDRESS`, and we want to use the "alias" field in the Address class as the key to the map. 
+If you define the Meta-Data for these classes as follows
+
+-----
+<entity-mappings>
+    <entity class="Account">
+        <table name="ACCOUNT"/>
+        <attributes>
+            ...
+            <one-to-many name="addresses" mapped-by="account">
+                <map-key name="alias"/>
+            </one-to-many>
+        </attributes>
+    </entity>
+
+    <entity class="Address">
+        <table name="ADDRESS"/>
+        <attributes>
+            ...
+            <basic name="alias">
+                <column name="KEY" length="20"/>
+            </basic>
+            <many-to-one name="account">
+                <join-column name="ACCOUNT_ID_OID"/>
+            </many-to-one>
+        </attributes>
+    </entity>
+</entity-mappings>
+-----
+
+This will create 2 tables in the datastore. One for *Account*, and one for *Address*. 
+The table for *Address* will contain the key field as well as an index to the *Account* record (notated by the _mapped-by_ tag).
+
+image:../images/relationship_1_N_map_key_in_value_db.png[]
+
+
 
 [[one_many_map_join_simple_simple]]
 == Map<Simple, Simple> via JoinTable
@@ -988,158 +1142,4 @@ This will create 3 tables in the datastore, one for *Account*, one for *Address*
 
 You can configure the names of the columns in the join table using the _joinColumns_ attributes of the various annotations.
 
-
-
-[[one_many_map_fk_uni_key]]
-== Map<Simple,Entity> Unidirectional FK (key stored in value)
-
-In this case we have an object with a Map of objects and we're associating the objects using a foreign-key in the table of the value. 
-We're using a field (_alias_) in the Address class as the key of the map.
-
-[source,java]
------
-public class Account
-{
-    Map<String, Address> addresses;
-
-    ...
-}
-
-public class Address
-{
-    String alias;
-
-    ...
-}
------
-
-In this relationship, the *Account* class has a Map of *Address* objects, yet the *Address* knows nothing about the *Account*. 
-In this case we don't have a field in the Address to link back to the Account and so DataNucleus has to use columns in the datastore representation of 
-the *Address* class. So we define the annotations like this
-
-[source,java]
------
-@Entity
-public class Account
-{
-    @OneToMany
-    @MapKey(name="alias")
-    @JoinColumn(name="ACCOUNT_ID_OID")
-    Map<String, Address> addresses;
-
-    ...
-}
-
-@Entity
-public class Address
-{
-    String alias;
-
-    ...
-}
------
-
-or using XML metadata
-
-[source,xml]
------
-<entity-mappings>
-    <entity class="Account">
-        <table name="ACCOUNT"/>
-        <attributes>
-            ...
-            <one-to-many name="addresses">
-                <map-key name="alias"/>
-                <join-column name="ACCOUNT_ID_OID"/>
-            </one-to-many>
-        </attributes>
-    </entity>
-
-    <entity class="Address">
-        <table name="ADDRESS"/>
-        <attributes>
-            ...
-            <basic name="alias">
-                <column name="KEY" length="20"/>
-            </basic>
-        </attributes>
-    </entity>
-</entity-mappings>
------
-
-Again there will be 2 tables, one for *Address*, and one for *Account*. If you wish to specify the names of the columns used in the schema for the foreign key in the 
-*Address* table you should use the _join-column_ element within the field of the map.
-
-image:../images/relationship_1_N_map_key_in_value_db.png[]
-
-In terms of operation within your classes of assigning the objects in the relationship. You have to take your *Account* object and add the *Address* to the *Account* map field since the 
-*Address* knows nothing about the *Account*. Also be aware that each *Address* object can have only one owner, since it has a single foreign key to the *Account*.
-
-TIP: Since each Address object can have at most one key (due to the "Foreign Key") this mode of persistence will not allow duplicate values in the Map. If you want to allow duplicate Map values, then use the "Join Table" variant above.
-
-
-[[one_many_map_fk_bi_key]]
-== Map<Simple,Entity> Bidirectional FK (key stored in value)
-
-In this case we have an object with a Map of objects and we're associating the objects using a foreign-key in the table of the value.
-
-[source,java]
------
-public class Account
-{
-    long id;
-
-    Map<String, Address> addresses;
-
-    ...
-}
-
-public class Address
-{
-    long id;
-
-    String alias;
-
-    Account account;
-
-    ...
-}
------
-
-
-
-With these classes we want to store a foreign-key in the value table `ADDRESS`, and we want to use the "alias" field in the Address class as the key to the map. 
-If you define the Meta-Data for these classes as follows
-
------
-<entity-mappings>
-    <entity class="Account">
-        <table name="ACCOUNT"/>
-        <attributes>
-            ...
-            <one-to-many name="addresses" mapped-by="account">
-                <map-key name="alias"/>
-            </one-to-many>
-        </attributes>
-    </entity>
-
-    <entity class="Address">
-        <table name="ADDRESS"/>
-        <attributes>
-            ...
-            <basic name="alias">
-                <column name="KEY" length="20"/>
-            </basic>
-            <many-to-one name="account">
-                <join-column name="ACCOUNT_ID_OID"/>
-            </many-to-one>
-        </attributes>
-    </entity>
-</entity-mappings>
------
-
-This will create 2 tables in the datastore. One for *Account*, and one for *Address*. 
-The table for *Address* will contain the key field as well as an index to the *Account* record (notated by the _mapped-by_ tag).
-
-image:../images/relationship_1_N_map_key_in_value_db.png[]
 

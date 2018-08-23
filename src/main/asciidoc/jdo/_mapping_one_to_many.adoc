@@ -24,11 +24,11 @@ The various possible relationships are described below.
 * link:#one_many_nonpc_converter[Collection<Simple> using AttributeConverter into single column]
 * link:#one_many_map_join_pc_pc[Map<PC, PC> using join table]
 * link:#one_many_map_join_simple_pc[Map<Simple, PC> using join table]
+* link:#one_many_map_fk_uni_key[Map<Simple,PC> - Unidirectional using foreign-key (key stored in the value class)]
+* link:#one_many_map_fk_bi_key[Map<Simple,PC> - Bidirectional using foreign-key (key stored in the value class)]
 * link:#one_many_map_join_simple_simple[Map<Simple, Simple> using join table]
 * link:#one_many_map_converter_simple_simple[Map<Simple, Simple> using AttributeConverter into single column]
 * link:#one_many_map_join_pc_simple[Map<PC, Simple> using join table]
-* link:#one_many_map_fk_uni_key[Map<Simple,PC> - Unidirectional using foreign-key (key stored in the value class)]
-* link:#one_many_map_fk_bi_key[Map<Simple,PC> - Bidirectional using foreign-key (key stored in the value class)]
 * link:#one_many_map_fk_uni_value[Map<PC,Simple> - Unidirectional using foreign-key (value stored in the key class)]
 
 NOTE: If you declare a field as a Collection, you can instantiate it as either Set-based or as List-based.
@@ -857,6 +857,126 @@ Please note that the column `ADPT_PK_IDX` is added by DataNucleus when the colum
 If the column type of your key is acceptable for use as part of a primary key then you will not have this `ADPT_PK_IDX` column.
 
 
+[[one_many_map_fk_uni_key]]
+== Map<Simple,PC> Unidirectional FK (key stored in value)
+
+In this case we have an object with a Map of objects and we're associating the objects using a foreign-key in the table of the value. 
+Here we use a field of the value as the key. The classes are like this
+
+[source,java]
+-----
+public class Account
+{
+    Map<String, Address> addresses;
+}
+
+public class Address
+{
+    String alias; // Use as key
+}
+-----
+
+In this relationship, the *Account* class has a Map of *Address* objects, yet the *Address* knows nothing about the *Account*. 
+We define the annotations like this
+
+[source,java]
+-----
+public class Account
+{
+    ...
+    @Key(mappedBy="alias")
+    Map<String, Address> addresses;
+}
+-----
+
+[source,xml]
+-----
+<package name="com.mydomain">
+    <class name="Account" identity-type="datastore">
+        ...
+        <field name="addresses" persistence-modifier="persistent">
+            <map/>
+            <key mapped-by="alias"/>
+            <value column="ACCOUNT_ID_OID"/>
+        </field>
+    </class>
+
+    <class name="Address" identity-type="datastore">
+        ...
+        <field name="alias" null-value="exception">
+            <column name="KEY" length="20" jdbc-type="VARCHAR"/>
+        </field>
+    </class>
+</package>
+-----
+
+There will be 2 tables, one for *Address*, and one for *Account*. Note that we now have no "join" annotation/element.
+
+image:../images/relationship_1_N_map_key_in_value_db.png[]
+
+If you wish to specify the names of the columns used in the schema for the foreign key in the `ADDRESS` table you should use the _value_ element within the field of the map.
+
+In terms of operation within your classes of assigning the objects in the relationship. You have to take your *Account* object and add the *Address* to the *Account* map field 
+since the *Address* knows nothing about the *Account*. Also be aware that each *Address* object can have only one owner, since it has a single foreign key to the *Account*. 
+If you wish to have an *Address* assigned to multiple *Accounts* then you should use the "Join Table" relationship above.
+
+
+
+
+[[one_many_map_fk_bi_key]]
+== Map<Simple,PC> Unidirectional FK (key stored in value)
+
+In this case we have an object with a Map of objects and we're associating the objects using a foreign-key in the table of the value.
+
+[source,java]
+-----
+public class Account
+{
+    Map<String, Address> addresses;
+}
+
+public class Address
+{
+    String alias; // Use as key
+
+    Account account;
+}
+-----
+
+The only difference to the variant above is the bidirectional link back to the Account from Address.
+
+So we define our metadata in a similar way
+
+[source,xml]
+-----
+<package name="com.mydomain">
+    <class name="Account" identity-type="datastore">
+        ...
+        <field name="addresses" persistence-modifier="persistent" mapped-by="account">
+            <map/>
+            <key mapped-by="alias"/>
+        </field>
+    </class>
+
+    <class name="Address" identity-type="datastore">
+        ...
+        <field name="account"/>
+        <field name="alias" null-value="exception">
+            <column name="KEY" length="20" jdbc-type="VARCHAR"/>
+        </field>
+    </class>
+</package>
+-----
+
+This will create 2 tables in the datastore. One for *Account*, and one for *Address*. 
+The `ADDRESS` table will contain the key field as well as an index to the *Account* record (notated by the _mapped-by_ tag).
+
+image:../images/relationship_1_N_map_key_in_value_db.png[]
+
+TIP: Since each Address object can have at most one key (due to the "Foreign Key") this mode of persistence will not allow duplicate values in the Map. If you want to allow duplicate Map values, then use the "Join Table" variant above.
+
+
+
 
 [[one_many_map_join_pcsimple]]
 == Map<PC,Simple> using Join Table
@@ -1017,125 +1137,6 @@ public class MapStringStringToStringConverter implements AttributeConverter<Map<
     }
 }
 -----
-
-
-[[one_many_map_fk_uni_key]]
-== Map<Simple,PC> Unidirectional FK (key stored in value)
-
-In this case we have an object with a Map of objects and we're associating the objects using a foreign-key in the table of the value. 
-Here we use a field of the value as the key. The classes are like this
-
-[source,java]
------
-public class Account
-{
-    Map<String, Address> addresses;
-}
-
-public class Address
-{
-    String alias; // Use as key
-}
------
-
-In this relationship, the *Account* class has a Map of *Address* objects, yet the *Address* knows nothing about the *Account*. 
-We define the annotations like this
-
-[source,java]
------
-public class Account
-{
-    ...
-    @Key(mappedBy="alias")
-    Map<String, Address> addresses;
-}
------
-
-[source,xml]
------
-<package name="com.mydomain">
-    <class name="Account" identity-type="datastore">
-        ...
-        <field name="addresses" persistence-modifier="persistent">
-            <map/>
-            <key mapped-by="alias"/>
-            <value column="ACCOUNT_ID_OID"/>
-        </field>
-    </class>
-
-    <class name="Address" identity-type="datastore">
-        ...
-        <field name="alias" null-value="exception">
-            <column name="KEY" length="20" jdbc-type="VARCHAR"/>
-        </field>
-    </class>
-</package>
------
-
-There will be 2 tables, one for *Address*, and one for *Account*. Note that we now have no "join" annotation/element.
-
-image:../images/relationship_1_N_map_key_in_value_db.png[]
-
-If you wish to specify the names of the columns used in the schema for the foreign key in the `ADDRESS` table you should use the _value_ element within the field of the map.
-
-In terms of operation within your classes of assigning the objects in the relationship. You have to take your *Account* object and add the *Address* to the *Account* map field 
-since the *Address* knows nothing about the *Account*. Also be aware that each *Address* object can have only one owner, since it has a single foreign key to the *Account*. 
-If you wish to have an *Address* assigned to multiple *Accounts* then you should use the "Join Table" relationship above.
-
-
-
-
-[[one_many_map_fk_bi_key]]
-== Map<Simple,PC> Unidirectional FK (key stored in value)
-
-In this case we have an object with a Map of objects and we're associating the objects using a foreign-key in the table of the value.
-
-[source,java]
------
-public class Account
-{
-    Map<String, Address> addresses;
-}
-
-public class Address
-{
-    String alias; // Use as key
-
-    Account account;
-}
------
-
-The only difference to the variant above is the bidirectional link back to the Account from Address.
-
-So we define our metadata in a similar way
-
-[source,xml]
------
-<package name="com.mydomain">
-    <class name="Account" identity-type="datastore">
-        ...
-        <field name="addresses" persistence-modifier="persistent" mapped-by="account">
-            <map/>
-            <key mapped-by="alias"/>
-        </field>
-    </class>
-
-    <class name="Address" identity-type="datastore">
-        ...
-        <field name="account"/>
-        <field name="alias" null-value="exception">
-            <column name="KEY" length="20" jdbc-type="VARCHAR"/>
-        </field>
-    </class>
-</package>
------
-
-This will create 2 tables in the datastore. One for *Account*, and one for *Address*. 
-The `ADDRESS` table will contain the key field as well as an index to the *Account* record (notated by the _mapped-by_ tag).
-
-image:../images/relationship_1_N_map_key_in_value_db.png[]
-
-TIP: Since each Address object can have at most one key (due to the "Foreign Key") this mode of persistence will not allow duplicate values in the Map. If you want to allow duplicate Map values, then use the "Join Table" variant above.
 
 
 [[one_many_map_fk_uni_value]]
