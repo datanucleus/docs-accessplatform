@@ -19,7 +19,6 @@ The various possible relationships are described below.
 * link:#one_many_fk_bi[Collection<PC> Bidirectional using Foreign-Key]
 * link:#one_many_shared_join[Collection<PC> using shared join table] (DataNucleus Extension)
 * link:#one_many_shared_fk[Collection<PC> using shared foreign key] (DataNucleus Extension)
-* link:#one_many_list[List<PC>]
 * link:#one_many_nonpc_join[Collection<Simple> using Join Table]
 * link:#one_many_nonpc_converter[Collection<Simple> using AttributeConverter into single column]
 * link:#one_many_map_join_pc_pc[Map<PC, PC> using join table]
@@ -50,8 +49,48 @@ for this reason we do not recommend usage of _JDOHelper.getObjectId(obj)_ in the
 
 == Ordering of elements
 
-You can only retain the order in a 1-N Collection if you instantiate the Collection as an implementation that supports retaining the order.
+You can only retain the order in a Collection if you instantiate the Collection as an implementation that supports retaining the order.
 If the order of elements is important to you, use a List, or instantiate using something like a TreeSet where the order is handled.
+
+
+In the case of the relation field being ordered, you define the relation just like you would for a Collection but then define whether 
+you want the relation to be either _ordered_ or _indexed_. 
+
+By default JDO operates with _indexed_ lists (i.e adds a surrogate column in the element or in the join table), and you simply add the following where required
+
+[source,java]
+-----
+@Order
+-----
+
+or using XML
+
+[source,xml]
+-----
+<order/>
+-----
+
+If you have defined the field type as a List then this is not required to be added unless you want to configure details of the order column.
+
+NOTE: If you want an order column to be stored in a field in the element class then make use of the _mappedBy_ of the `@Order`/`<order>`.
+
+
+DataNucleus also supports _ordered_ lists whereby the elements of the List are ordered according to some field (or fields) of the element.
+
+If you have an element with a field called "city" then this specification will use that field for ordering (and not add a surrogate ordering column.
+
+[source,java]
+-----
+@Order(extensions=@Extension(vendorName="datanucleus", key="list-ordering", value="city ASC"))
+-----
+
+[source,xml]
+-----
+<order>
+    <extension vendor-name="datanucleus" key="list-ordering" value="city ASC"/>
+</order>
+-----
+
 
 
 image:../images/nucleus_extension.png[]
@@ -547,50 +586,6 @@ This means we can now identify easily which element table entry represents which
 This results in the following database schema
 
 image:../images/relationship_1_N_uni_fk_shared_db.png[]
-
-
-
-[[one_many_list]]
-== Using a List
-
-In the case of the relation field being a List (i.e ordered), you define the relation just like you would for a Collection (above) but then define whether 
-you want the relation to be either _ordered_ or _indexed_. 
-
-By default JDO operates with _indexed_ lists (i.e adds a surrogate column in the element or in the join table), and you simply add the following where required
-
-[source,java]
------
-@Order
------
-
-or using XML
-
-[source,xml]
------
-<order/>
------
-
-If you have defined the field type as a List then this is not required to be added unless you want to configure details of the order column.
-
-NOTE: If you want an order column to be stored in a field in the element class then make use of the _mappedBy_ of the `@Order`/`<order>`.
-
-
-DataNucleus also supports _ordered_ lists whereby the elements of the List are ordered according to some field (or fields) of the element.
-
-If you have an element with a field called "city" then this specification will use that field for ordering (and not add a surrogate ordering column.
-
-[source,java]
------
-@Order(extensions=@Extension(vendorName="datanucleus", key="list-ordering", value="city ASC"))
------
-
-[source,xml]
------
-<order>
-    <extension vendor-name="datanucleus" key="list-ordering" value="city ASC"/>
-</order>
------
-
 
 
 

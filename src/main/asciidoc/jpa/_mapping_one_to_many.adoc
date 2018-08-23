@@ -18,7 +18,6 @@ The various possible relationships are described below.
 * link:#one_many_fk_bi[Collection<Entity> - Bidirectional using foreign-key]
 * link:#one_many_shared_join[Collection<Entity> using shared join table] (DataNucleus Extension)
 * link:#one_many_shared_fk[Collection<Entity> using shared foreign key] (DataNucleus Extension)
-* link:#one_many_list[List<Entity>]
 * link:#one_many_nonpc_join[Collection<Simple> using join table]
 * link:#one_many_nonpc_converter[Collection<Simple> using AttributeConverter into single column]
 * link:#one_many_map_join_simple_pc[Map<Simple, Entity> using join table]
@@ -42,10 +41,47 @@ Note also that the hashCode() should be consistent throughout the lifetime of a 
 By that we mean that it should *not* use some basis before persistence and then use some other basis (such as the object identity) after persistence in the equals/hashCode methods.
 
 
+[[one_many_ordering]]
 == Ordering of elements
 
-You can only retain the order in a 1-N Collection if you instantiate the Collection as an implementation that supports retaining the order.
+You can only retain the order in a Collection if you instantiate the Collection as an implementation that supports retaining the order.
 If the order of elements is important to you, use a List, or instantiate using something like a TreeSet where the order is handled.
+
+In the case of the relation field being ordered, you define the relation just like you would for a Collection but then define whether 
+you want the relation to be either _ordered_ or _indexed_. 
+
+In the case of _ordered_ you would add the following to the metadata of the field
+
+[source,java]
+-----
+@OrderBy("city")
+-----
+
+or using XML
+
+[source,xml]
+-----
+<order-by>city</order-by>
+-----
+
+This means that when the elements of the List/SortedSet/etc are retrieved then they will be ordered according to the _city_ field of the element.
+
+
+If instead you want an _indexed_ list then the elements will have an index stored against them, hence preserving the order in which they were in the original List. This
+adds a surrogate column to either the table of the element (when using _foreign key_) or to the join table.
+
+[source,java]
+-----
+@OrderColumn("ORDERING")
+-----
+
+or using XML
+
+[source,xml]
+-----
+<order-column>ORDERING</order-column>
+-----
+
 
 
 image:../images/nucleus_extension.png[]
@@ -60,6 +96,7 @@ SortedSet<MyElementType> elements;
 -----
 
 When instantiating the SortedSet field, it will create it with a comparator of the specified class (which must have a default constructor).
+
 
 
 
@@ -566,46 +603,6 @@ This results in the following database schema
 image:../images/relationship_1_N_uni_fk_shared_db.png[]
 
 
-
-
-
-[[one_many_list]]
-== Using a List
-
-In the case of the relation field being a List (i.e ordered), you define the relation just like you would for a Collection (above) but then define whether 
-you want the relation to be either _ordered_ or _indexed_. 
-
-In the case of _ordered_ you would add the following to the metadata of the field
-
-[source,java]
------
-@OrderBy("city")
------
-
-or using XML
-
-[source,xml]
------
-<order-by>city</order-by>
------
-
-This means that when the elements of the List are retrieved then they will be ordered according to the _city_ field of the element.
-
-
-If instead you want an _indexed_ list then the elements will have an index stored against them, hence preserving the order in which they were in the original List. This
-adds a surrogate column to either the table of the element (when using _foreign key_) or to the join table.
-
-[source,java]
------
-@OrderColumn("ORDERING")
------
-
-or using XML
-
-[source,xml]
------
-<order-column>ORDERING</order-column>
------
 
 
 
