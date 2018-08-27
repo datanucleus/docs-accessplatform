@@ -50,6 +50,7 @@ You have 2 ways to do this. Choose the one that is most appropriate to your situ
 if you have a particular user for each PM.
 * Define an implementation of the DataNucleus interface _CurrentUserProvider_, and specify it on PMF creation using the property *datanucleus.CurrentUserProvider*.
 This is defined as follows
+
 [source,java]
 -----
 public interface CurrentUserProvider
@@ -58,5 +59,6 @@ public interface CurrentUserProvider
     String currentUser();
 }
 -----
+
 So you could, for example, store the current user in a thread-local and return it via your implementation of this interface.
 
