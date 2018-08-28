@@ -242,7 +242,7 @@ You can also specify persistence properties to control the actual pooling. The c
 -----
 # Pooling of Connections
 datanucleus.connectionPool.maxPoolSize=5
-datanucleus.connectionPool.maxIdle=5
+datanucleus.connectionPool.idleTimeout=180
 datanucleus.connectionPool.leakThreshold=1
 datanucleus.connectionPool.maxLifetime=240
 -----
@@ -266,10 +266,10 @@ We could have used the built-in DBCP2 support which internally creates a DataSou
 however we can also do this manually if we so wish. Let's demonstrate how to do this with one of the most used pools http://commons.apache.org/dbcp[Apache Commons DBCP]
 
 With DBCP you need to generate a *javax.sql.DataSource*, which you will then pass to DataNucleus. You do this as follows
-                
+
 [source,java]
 -----
-// Load the JDBC driver
+// Load the JDBC driver. Not required for JDBC4+
 Class.forName(dbDriver);
 
 // Create the actual pool of connections 
