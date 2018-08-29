@@ -652,7 +652,7 @@ Not all RDBMS datastores support all of these options. While DataNucleus always 
 * *[4]* - _java.awt.image.BufferedImage_ is stored using JPG image format
 * *[5]* - Array types are queryable if not serialised, but stored to many rows
 * *[6]* - DATALINK JDBC type supported on DB2 only. Uses the SQL function DLURLCOMPLETEONLY to fetch from the datastore. You can override this using the select-function extension. 
-See the link:metadata_xml.html#field_select_function[MetaData reference].
+See the link:mapping.html#columnadapter#field_select_function[Column Adapter guide].
 * *[7]* - UNIQUEIDENTIFIER JDBC type supported on MSSQL only.
 * *[8]* - Oracle treats an empty string as the same as NULL. To workaround this limitation DataNucleus replaces the empty string with the character \u0001.
 * *[9]* - XMLTYPE JDBC type supported on Oracle only.
