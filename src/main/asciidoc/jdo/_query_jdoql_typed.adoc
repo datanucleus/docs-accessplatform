@@ -118,10 +118,10 @@ All examples below use _field_ mode but just add _()_ after the field to see the
 *Note that we currently only support generation of Q classes for persistable classes that are in their own source file, so no support for inline static persistable classes is available currently*
 
 
-== Query API - Filtering and Ordering
+== Query API - Filtering
 
 Let's provide a sample usage of this query API. 
-We want to construct a query for all products with a value below a certain level, and where the name starts with "Wal", and then order the results by the product name. 
+We want to construct a query for all products with a value below a certain level, and where the name starts with "Wal". 
 So a typical query in a JDO-enabled application
 
 [source,java]
@@ -130,19 +130,38 @@ pm = pmf.getPersistenceManager();
 
 JDOQLTypedQuery<Product> tq = pm.newJDOQLTypedQuery(Product.class);
 QProduct cand = QProduct.candidate();
-List<Product> results = tq.filter(cand.value.lt(40.00).and(cand.name.startsWith("Wal"))).orderBy(cand.name.asc())
-        .executeList();
+List<Product> results = tq.filter(cand.value.lt(40.00).and(cand.name.startsWith("Wal")))
+    .executeList();
 -----
 
 This equates to the single-string query
 
 -----
-SELECT FROM mydomain.Product WHERE this.value < 40.0 && this.name.startsWith("Wal") ORDER BY this.name ASCENDING
+SELECT FROM mydomain.Product WHERE this.value < 40.0 && this.name.startsWith("Wal")
 -----
 
 As you see, we create a parametrised query, and then make use of the *query class* to access the candidate, 
 and from that make use of its fields, and the various Java methods present for the types of those fields.
 Note that the API is _fluent_, meaning you can chain calls easily.
+
+
+== Query API - Ordering
+
+We want to order the results of the previous query by the product name, putting nulls first. 
+
+[source,java]
+-----
+tq.orderBy(cand.name.asc().nullsFirst());
+-----
+
+This query now equates to the single-string query
+
+-----
+SELECT FROM mydomain.Product WHERE this.value < 40.0 && this.name.startsWith("Wal") ORDER BY this.name ASCENDING NULLS FIRST
+-----
+
+If you don't want to specify null positioning, simply omit the `nullsFirst()` call. Similarly to put nulls last then call `nullsLast()`.
+
 
 
 == Query API - Methods
