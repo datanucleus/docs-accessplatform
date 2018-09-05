@@ -97,6 +97,7 @@ that you could disable to get the persistence you require and omit what is not r
 Otherwise all datastore operations will default to being performed immediately. 
 If you are handling a very large number of objects in the transaction you would benefit by either disabling "optimistic" transactions, or
 alternatively setting the persistence property *datanucleus.flush.mode* to _AUTO_, or alternatively, do a manual flush every "n" objects, like this
+
 [source,java]
 -----
 for (int i=0;i<1000000;i++)
@@ -108,6 +109,7 @@ for (int i=0;i<1000000;i++)
     ...
 }
 -----
+
 * Commit the transaction
 ** All dirty objects are flushed.
 ** DataNucleus verifies if newly persisted objects are memory reachable on commit, if they are not, they are removed from the database. 
@@ -197,6 +199,7 @@ Reading fields of unmanaged objects (outside the scope of a _PersistenceManager_
 The objective here is not give you an absolute response on the subject, but point out the benefits and drawbacks for the many possible solutions.
 
 * Use _makeTransient_ to get _transient_ versions of the objects. Note that to recurse you need to call the _makeTransient_ method which has a boolean argument "useFetchPlan".
+
 [source,java]
 -----
 Object pc = null;
@@ -218,7 +221,9 @@ finally
 //read the persistent object here
 System.out.prinln(pc.getName());
 -----
+
 * With persistence property *datanucleus.RetainValues* set to _true_.
+
 [source,java]
 -----
 Object pc = null;
@@ -240,7 +245,9 @@ finally
 //read the persistent object here
 System.out.prinln(pc.getName());
 -----
+
 * Use _detachCopy_ method to return detached instances.
+
 [source,java]
 -----
 Object copy = null;
@@ -262,7 +269,9 @@ finally
 //read or change the detached object here
 System.out.prinln(copy.getName());
 -----
+
 * Use _detachAllOnCommit_.
+
 [source,java]
 -----
 Object pc = null;
@@ -293,7 +302,7 @@ With _RetainValues=true_ and _makeTransient_ no object copies are made and the o
 Both methods are equivalent in performance, however the _makeTransient_ method will set the values of the object during the 
 instant the _makeTransient_ method is invoked, and the _RetainValues=true_ will set values of the object during commit.
 
-The bottom line is to not use detachment if instances will only be used to read values.
+WARN: The bottom line is to not use detachment if instances will only be used to read values.
 
 
 == Queries usage
