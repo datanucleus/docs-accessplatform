@@ -1003,7 +1003,7 @@ When using Neo4j, HBase, MongoDB and Cassandra any query filter/ordering etc are
 
 
 [[jpql_inmemory]]
-== JPQL In-Memory queries
+=== Query Execution In-Memory
 
 image:../images/nucleus_extension.png[]
 
@@ -1070,7 +1070,7 @@ List<Product> results = query.getResultList();
 
 
 [[jpql_save_as_named]]
-== Saving a Query as a Named Query
+=== Saving a Query as a Named Query
 
 You can save a query as a named query like this
 
@@ -1097,17 +1097,6 @@ With both methods you can thereafter access the query via
 [source,java]
 -----
 Query q = em.createNamedQuery("MyQuery");
------
-
-
-== JPQL Strictness
-
-By default DataNucleus allows some extensions in syntax over strict JPQL (as defined by the JPA spec). To allow only strict JPQL you can do as follows
-
-[source,java]
------
-Query query = em.createQuery(...);
-query.setHint("datanucleus.jpql.strict", "true");
 -----
 
 
@@ -1218,10 +1207,21 @@ Query query = em.createQuery("UPDATE Person p SET p.salary = (SELECT MAX(p2.sala
 -----
 
 
-[[jpql_bnf]]
-== JPQL BNF Notation
+== JPQL Syntax Strictness
 
-The BNF defining the JPQL query language is shown below.
+By default DataNucleus allows some extensions in syntax over strict JPQL (as defined by the JPA spec). To allow only strict JPQL you can do as follows
+
+[source,java]
+-----
+Query query = em.createQuery(...);
+query.setHint("datanucleus.jpql.strict", "true");
+-----
+
+
+[[jpql_bnf]]
+== JPQL Syntax BNF Notation
+
+The BNF defining the JPQL query language syntax is shown below.
 
 [source]
 -----
