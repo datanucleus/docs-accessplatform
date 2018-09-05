@@ -99,6 +99,7 @@ If you think of a typical transaction, the following describes the process
 Otherwise all datastore operations will default to being performed immediately. 
 If you are handling a very large number of objects in the transaction you would benefit by either disabling "optimistic" transactions, or
 alternatively setting the persistence property *datanucleus.flush.mode* to _AUTO_, or alternatively, do a manual flush every "n" objects, like this
+
 [source,java]
 -----
 for (int i=0;i<1000000;i++)
@@ -110,6 +111,7 @@ for (int i=0;i<1000000;i++)
     ...
 }
 -----
+
 * Commit the transaction
 ** All dirty objects are flushed.
 ** Objects enlisted in the transaction are put in the Level 2 cache. You can disable the level 2 cache with the persistence property *datanucleus.cache.level2.type* set to _none_
@@ -200,6 +202,7 @@ The objective here is not give you an absolute response on the subject, but poin
 
 * Use *datanucleus.RetainValues*=true. This is the default for JPA operation and will ensure that after commit the fields of the object retain their values (rather than being nulled).
 * Use _detach_ method.
+
 [source,java]
 -----
 Object copy = null;
@@ -221,7 +224,9 @@ finally
 //read or change the detached object here
 System.out.prinln(copy.getName());
 -----                    
+
 * Use *datanucleus.detachAllOnCommit*=true. Dependent on the persistence context you may automatically have this set.
+
 [source,java]
 -----
 Object obj = null;
@@ -242,7 +247,7 @@ finally
 System.out.prinln(obj.getName());
 -----
 
-The bottom line is to not use detachment if instances will only be used to read values.
+TIP: The bottom line is to not use detachment if instances will only be used to read values.
 
 
 == Fetch Control

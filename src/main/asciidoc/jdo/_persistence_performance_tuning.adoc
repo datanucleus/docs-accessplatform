@@ -302,7 +302,7 @@ With _RetainValues=true_ and _makeTransient_ no object copies are made and the o
 Both methods are equivalent in performance, however the _makeTransient_ method will set the values of the object during the 
 instant the _makeTransient_ method is invoked, and the _RetainValues=true_ will set values of the object during commit.
 
-WARN: The bottom line is to not use detachment if instances will only be used to read values.
+TIP: The bottom line is to not use detachment if instances will only be used to read values.
 
 
 == Queries usage
