@@ -1125,9 +1125,9 @@ NOTE: If you always fully-qualify the candidate, variable and parameter types th
 For particular use in the _result_ clause, you can make use of a *IF ELSE* expression where you want to return different things based on some condition(s). 
 Like this
 
-[source,java]
+[source]
 -----
-SELECT p.personNum, IF (p.age < 18) 'Youth' ELSE IF (p.age >= 18 && p.age < 65) 'Adult' ELSE 'Old' FROM mydomain.Person p");
+SELECT p.personNum, IF (p.age < 18) 'Youth' ELSE IF (p.age >= 18 && p.age < 65) 'Adult' ELSE 'Old' FROM mydomain.Person p
 -----
 
 So in this case the second result value will be a String, either "Youth", "Adult" or "Old" depending on the age of the person.
