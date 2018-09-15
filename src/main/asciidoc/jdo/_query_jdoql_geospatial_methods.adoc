@@ -184,22 +184,6 @@ An entry in the "Result" column indicates, whether the function may be used in t
 |icon:check[]
 |icon:check[]
 
-|toText()
-|Returns the well-known textual representation.
-|OGC SF
-|icon:check[]
-|icon:check[]
-|icon:check[]
-|icon:check[]
-
-|Spatial.asBinary(Geometry)
-|Returns the well-known binary representation.
-|OGC SF
-|icon:times[]
-|icon:check[]
-|icon:check[]
-|icon:check[]
-
 |getSRID()
 |Returns the Spatial Reference System ID for this Geometry.
 |OGC SF
@@ -236,6 +220,22 @@ An entry in the "Result" column indicates, whether the function may be used in t
 |Returns the rectangle bounding Geometry as a Polygon.
 |OGC SF
 |icon:check[]
+|icon:check[]
+|icon:check[]
+|icon:check[]
+
+|toText()
+|Returns the well-known textual representation.
+|OGC SF
+|icon:check[]
+|icon:check[]
+|icon:check[]
+|icon:check[]
+
+|toBinary()
+|Returns the well-known binary representation.
+|OGC SF
+|icon:times[]
 |icon:check[]
 |icon:check[]
 |icon:check[]
@@ -396,20 +396,20 @@ An entry in the "Result" column indicates, whether the function may be used in t
 |icon:times[] [1]
 |icon:check[]
 
-|Spatial.pointOnSurface(Surface), pointOnSurface(MultiSurface)
-|Returns a Point guaranteed to lie on the surface.
-|OGC SF
-|icon:check[]
-|icon:check[]
-|icon:times[] [1]
-|icon:check[]
-
 |getArea()
 |Returns the area of Surface/MultiSurface.
 |OGC SF
 |icon:check[]
 |icon:check[]
 |icon:check[]
+|icon:check[]
+
+|Spatial.pointOnSurface(Surface)
+|Returns a Point guaranteed to lie on the surface.
+|OGC SF
+|icon:check[]
+|icon:check[]
+|icon:times[] [1]
 |icon:check[]
 |===
 
