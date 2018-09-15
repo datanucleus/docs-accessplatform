@@ -8,11 +8,11 @@ image:../images/nucleus_extension.png[]
 
 When querying spatial data you can make use of a set of spatial methods on the various Java geometry types. 
 The list contains all of the methods detailed in Section 3.2 of the http://www.opengeospatial.org/standards/sfa[OGC Simple Features specification].
-Additionally DataNucleus provides some commonly required methods like bounding box test and datastore specific methods. 
+Additionally DataNucleus provides some commonly required methods like bounding box test and datastore-specific methods. 
 The following tables list all available methods as well as information about which RDBMS implement them. 
-An entry in the "Result" column indicates, whether the funcion may be used in the result part of a JDOQL query.
+An entry in the "Result" column indicates, whether the function may be used in the result part of a JDOQL query.
 
-== Methods for Constructing a Geometry Value given its Well-known Text Representation (OGC SF 3.2.6)
+== Static Methods for Constructing a Geometry Value given its Well-known Representation (OGC SF 3.2.6, 3.2.7)
 
 [cols="7,10,1,1,1,1,1", options="header"]
 |===
@@ -33,7 +33,7 @@ An entry in the "Result" column indicates, whether the funcion may be used in th
 |icon:check[]
 
 |Spatial.pointFromText(String, Integer)
-|Construct a Point.
+|Construct a Point given its well-known textual representation.
 |OGC SF
 |icon:times[]
 |icon:check[]
@@ -41,7 +41,7 @@ An entry in the "Result" column indicates, whether the funcion may be used in th
 |icon:check[]
 
 |Spatial.lineFromText(String, Integer)
-|Construct a LineString.
+|Construct a LineString given its well-known textual representation.
 |OGC SF
 |icon:times[]
 |icon:check[]
@@ -49,7 +49,7 @@ An entry in the "Result" column indicates, whether the funcion may be used in th
 |icon:check[]
 
 |Spatial.polyFromText(String, Integer)
-|Construct a Polygon.
+|Construct a Polygon given its well-known textual representation.
 |OGC SF
 |icon:times[]
 |icon:check[]
@@ -57,7 +57,7 @@ An entry in the "Result" column indicates, whether the funcion may be used in th
 |icon:check[]
 
 |Spatial.mPointFromText(String, Integer)
-|Construct a MultiPoint.
+|Construct a MultiPoint given its well-known textual representation.
 |OGC SF
 |icon:times[]
 |icon:check[]
@@ -65,7 +65,7 @@ An entry in the "Result" column indicates, whether the funcion may be used in th
 |icon:check[]
 
 |Spatial.mLineFromText(String, Integer)
-|Construct a MultiLineString.
+|Construct a MultiLineString given its well-known textual representation.
 |OGC SF
 |icon:times[]
 |icon:check[]
@@ -73,7 +73,7 @@ An entry in the "Result" column indicates, whether the funcion may be used in th
 |icon:check[]
 
 |Spatial.mPolyFromText(String, Integer)
-|Construct a MultiPolygon.
+|Construct a MultiPolygon given its well-known textual representation.
 |OGC SF
 |icon:times[]
 |icon:check[]
@@ -81,28 +81,12 @@ An entry in the "Result" column indicates, whether the funcion may be used in th
 |icon:check[]
 
 |Spatial.geomCollFromText(String, Integer)
-|Construct a GeometryCollection.
+|Construct a GeometryCollection given its well-known textual representation.
 |OGC SF
 |icon:times[]
 |icon:check[]
 |icon:check[]
 |icon:check[]
-|===
-
-[1] These methods can't be used in the return part because it's not possible to determine the return type from the parameters.
-
-
-== Methods for Constructing a Geometry Value given its Well-known Binary Representation (OGC SF 3.2.7)
-
-[cols="7,10,1,1,1,1,1", options="header"]
-|===
-|Method
-|Description
-|Spec
-|Result [1]
-|PostGIS
-|MySQL
-|Oracle Spatial
 
 |Spatial.geomFromWKB(String, Integer)
 |Construct a Geometry value given its well-known binary representation.
@@ -113,7 +97,7 @@ An entry in the "Result" column indicates, whether the funcion may be used in th
 |icon:check[]
 
 |Spatial.pointFromWKB(String, Integer)
-|Construct a Point.
+|Construct a Point given its well-known binary representation.
 |OGC SF
 |icon:times[]
 |icon:check[]
@@ -121,7 +105,7 @@ An entry in the "Result" column indicates, whether the funcion may be used in th
 |icon:check[]
 
 |Spatial.lineFromWKB(String, Integer)
-|Construct a LineString.
+|Construct a LineString given its well-known binary representation.
 |OGC SF
 |icon:times[]
 |icon:check[]
@@ -129,7 +113,7 @@ An entry in the "Result" column indicates, whether the funcion may be used in th
 |icon:check[]
 
 |Spatial.polyFromWKB(String, Integer)
-|Construct a Polygon.
+|Construct a Polygon given its well-known binary representation.
 |OGC SF
 |icon:times[]
 |icon:check[]
@@ -137,7 +121,7 @@ An entry in the "Result" column indicates, whether the funcion may be used in th
 |icon:check[]
 
 |Spatial.mPointFromWKB(String, Integer)
-|Construct a MultiPoint.
+|Construct a MultiPoint given its well-known binary representation.
 |OGC SF
 |icon:times[]
 |icon:check[]
@@ -145,7 +129,7 @@ An entry in the "Result" column indicates, whether the funcion may be used in th
 |icon:check[]
 
 |Spatial.mLineFromWKB(String, Integer)
-|Construct a MultiLineString.
+|Construct a MultiLineString given its well-known binary representation.
 |OGC SF
 |icon:times[]
 |icon:check[]
@@ -153,7 +137,7 @@ An entry in the "Result" column indicates, whether the funcion may be used in th
 |icon:check[]
 
 |Spatial.mPolyFromWKB(String, Integer)
-|Construct a MultiPolygon.
+|Construct a MultiPolygon given its well-known binary representation.
 |OGC SF
 |icon:times[]
 |icon:check[]
@@ -161,7 +145,7 @@ An entry in the "Result" column indicates, whether the funcion may be used in th
 |icon:check[]
 
 |Spatial.geomCollFromWKB(String, Integer)
-|Construct a GeometryCollection.
+|Construct a GeometryCollection given its well-known binary representation.
 |OGC SF
 |icon:times[]
 |icon:check[]
@@ -184,7 +168,7 @@ An entry in the "Result" column indicates, whether the funcion may be used in th
 |MySQL
 |Oracle Spatial
 
-|Spatial.dimension(Geometry)
+|getDimension()
 |Returns the dimension of the Geometry.
 |OGC SF
 |icon:check[]
@@ -192,7 +176,7 @@ An entry in the "Result" column indicates, whether the funcion may be used in th
 |icon:check[]
 |icon:check[]
 
-|Spatial.geometryType(Geometry)
+|getGeometryType()
 |Returns the name of the instantiable subtype of Geometry.
 |OGC SF
 |icon:check[]
@@ -200,7 +184,7 @@ An entry in the "Result" column indicates, whether the funcion may be used in th
 |icon:check[]
 |icon:check[]
 
-|Spatial.asText(Geometry)
+|toText()
 |Returns the well-known textual representation.
 |OGC SF
 |icon:check[]
@@ -216,7 +200,7 @@ An entry in the "Result" column indicates, whether the funcion may be used in th
 |icon:check[]
 |icon:check[]
 
-|Spatial.srid(Geometry)
+|getSRID()
 |Returns the Spatial Reference System ID for this Geometry.
 |OGC SF
 |icon:check[]
@@ -224,7 +208,7 @@ An entry in the "Result" column indicates, whether the funcion may be used in th
 |icon:check[]
 |icon:check[]
 
-|Spatial.isEmpty(Geometry)
+|isEmpty()
 |TRUE if this Geometry corresponds to the empty set.
 |OGC SF
 |icon:exclamation[] [1]
@@ -232,7 +216,7 @@ An entry in the "Result" column indicates, whether the funcion may be used in th
 |icon:check[]
 |icon:check[]
 
-|Spatial.isSimple(Geometry)
+|isSimple()
 |TRUE if this Geometry is simple, as defined in the Geometry Model.
 |OGC SF
 |icon:exclamation[] [1]
@@ -240,7 +224,7 @@ An entry in the "Result" column indicates, whether the funcion may be used in th
 |icon:check[]
 |icon:check[]
 
-|Spatial.boundary(Geometry)
+|getBoundary()
 |Returns a Geometry that is the combinatorial boundary of the Geometry.
 |OGC SF
 |icon:check[]
@@ -248,7 +232,7 @@ An entry in the "Result" column indicates, whether the funcion may be used in th
 |icon:check[]
 |icon:check[]
 
-|Spatial.envelope(Geometry)
+|getEnvelope()
 |Returns the rectangle bounding Geometry as a Polygon.
 |OGC SF
 |icon:check[]
@@ -272,7 +256,7 @@ An entry in the "Result" column indicates, whether the funcion may be used in th
 |MySQL
 |Oracle Spatial
 
-|Spatial.x(Point)
+|getX()
 |Returns the x-coordinate of the Point as a Double.
 |OGC SF
 |icon:check[]
@@ -280,7 +264,7 @@ An entry in the "Result" column indicates, whether the funcion may be used in th
 |icon:check[]
 |icon:check[]
 
-|Spatial.y(Point)
+|getY()
 |Returns the y-coordinate of the Point as a Double.
 |OGC SF
 |icon:check[]
@@ -302,7 +286,7 @@ An entry in the "Result" column indicates, whether the funcion may be used in th
 |MySQL
 |Oracle Spatial
 
-|Spatial.startPoint(Curve))
+|getStartPoint())
 |Returns the first point of the Curve.
 |OGC SF
 |icon:check[]
@@ -310,7 +294,7 @@ An entry in the "Result" column indicates, whether the funcion may be used in th
 |icon:check[]
 |icon:check[]
 
-|Spatial.endPoint(Curve))
+|getEndPoint())
 |Returns the last point of the Curve.
 |OGC SF
 |icon:check[]
@@ -318,7 +302,7 @@ An entry in the "Result" column indicates, whether the funcion may be used in th
 |icon:check[]
 |icon:check[]
 
-|Spatial.isRing(Curve)
+|isRing()
 |Returns TRUE if Curve is closed and simple. .
 |OGC SF
 |icon:exclamation[] [1]
@@ -342,16 +326,16 @@ An entry in the "Result" column indicates, whether the funcion may be used in th
 |MySQL
 |Oracle Spatial
 
-|Spatial.isClosed(Curve), Spatial.isClosed(MultiCurve)
-|Returns TRUE if Curve is closed, i.e., if StartPoint(Curve) = EndPoint(Curve).
+|isClosed()
+|Returns TRUE if Curve/MultiCurve is closed, i.e., if StartPoint(Curve) = EndPoint(Curve).
 |OGC SF
 |icon:exclamation[] [1]
 |icon:check[]
 |icon:check[]
 |icon:check[]
 
-|Spatial.length(Curve), Spatial.length(MultiCurve)
-|Returns the length of the Curve.
+|getLength(Curve)
+|Returns the length of the Curve/MultiCurve.
 |OGC SF
 |icon:check[]
 |icon:check[]
@@ -374,7 +358,7 @@ An entry in the "Result" column indicates, whether the funcion may be used in th
 |MySQL
 |Oracle Spatial
 
-|Spatial.numPoints(LineString)
+|getNumPoints()
 |Returns the number of points in the LineString.
 |OGC SF
 |icon:check[]
@@ -382,7 +366,7 @@ An entry in the "Result" column indicates, whether the funcion may be used in th
 |icon:check[]
 |icon:check[]
 
-|Spatial.pointN(LineString, Integer)
+|getPointN(Integer)
 |Returns Point n.
 |OGC SF
 |icon:check[]
@@ -404,8 +388,8 @@ An entry in the "Result" column indicates, whether the funcion may be used in th
 |MySQL
 |Oracle Spatial
 
-|Spatial.centroid(Surface), centroid(MultiSurface)
-|Returns the centroid of Surface, which may lie outside of it.
+|getCentroid()
+|Returns the centroid of Surface/MultiSurface, which may lie outside of it.
 |OGC SF
 |icon:check[]
 |icon:check[]
@@ -420,8 +404,8 @@ An entry in the "Result" column indicates, whether the funcion may be used in th
 |icon:times[] [1]
 |icon:check[]
 
-|Spatial.area(Surface), area(MultiSurface)
-|Returns the area of Surface.
+|getArea()
+|Returns the area of Surface/MultiSurface.
 |OGC SF
 |icon:check[]
 |icon:check[]
@@ -444,7 +428,7 @@ An entry in the "Result" column indicates, whether the funcion may be used in th
 |MySQL
 |Oracle Spatial
 
-|Spatial.exteriorRing(Polygon)
+|getExteriorRing()
 |Returns the exterior ring of Polygon.
 |OGC SF
 |icon:check[]
@@ -452,7 +436,7 @@ An entry in the "Result" column indicates, whether the funcion may be used in th
 |icon:check[]
 |icon:check[]
 
-|Spatial.numInteriorRing(Polygon)
+|getNumInteriorRing()
 |Returns the number of interior rings.
 |OGC SF
 |icon:check[]
@@ -460,7 +444,7 @@ An entry in the "Result" column indicates, whether the funcion may be used in th
 |icon:check[]
 |icon:check[]
 
-|Spatial.interiorRingN(Polygon, Integer)
+|getInteriorRingN(Integer)
 |Returns the nth interior ring.
 |OGC SF
 |icon:check[]
@@ -482,7 +466,7 @@ An entry in the "Result" column indicates, whether the funcion may be used in th
 |MySQL
 |Oracle Spatial
 
-|Spatial.numGeometries(GeomCollection)
+|getNumGeometries()
 |Returns the number of geometries in the collection.
 |OGC SF
 |icon:check[]
@@ -490,7 +474,7 @@ An entry in the "Result" column indicates, whether the funcion may be used in th
 |icon:check[]
 |icon:check[]
 
-|Spatial.geometryN(GeomCollection, Integer)
+|getGeometryN(Integer)
 |Returns the nth geometry in the collection.
 |OGC SF
 |icon:check[]
@@ -512,7 +496,7 @@ An entry in the "Result" column indicates, whether the funcion may be used in th
 |MySQL
 |Oracle Spatial
 
-|Spatial.equals(Geometry, Geometry)
+|equals(Geometry)
 |TRUE if the two geometries are spatially equal.
 |OGC SF
 |icon:exclamation[]
@@ -520,7 +504,7 @@ An entry in the "Result" column indicates, whether the funcion may be used in th
 |icon:exclamation[] [2]
 |icon:check[]
 
-|Spatial.disjoint(Geometry, Geometry)
+|disjoint(Geometry)
 |TRUE if the two geometries are spatially disjoint.
 |OGC SF
 |icon:exclamation[]
@@ -528,7 +512,7 @@ An entry in the "Result" column indicates, whether the funcion may be used in th
 |icon:exclamation[] [2]
 |icon:check[]
 
-|Spatial.touches(Geometry, Geometry)
+|touches(Geometry)
 |TRUE if the first Geometry spatially touches the other Geometry.
 |OGC SF
 |icon:exclamation[]
@@ -536,7 +520,7 @@ An entry in the "Result" column indicates, whether the funcion may be used in th
 |icon:exclamation[] [2]
 |icon:check[]
 
-|Spatial.within(Geometry, Geometry)
+|within(Geometry)
 |TRUE if first Geometry is completely contained in second Geometry.
 |OGC SF
 |icon:exclamation[]
@@ -544,7 +528,7 @@ An entry in the "Result" column indicates, whether the funcion may be used in th
 |icon:exclamation[] [2]
 |icon:check[]
 
-|Spatial.overlaps(Geometry, Geometry)
+|overlaps(Geometry)
 |TRUE if first Geometries is spatially overlapping the other Geometry.
 |OGC SF
 |icon:exclamation[]
@@ -552,7 +536,7 @@ An entry in the "Result" column indicates, whether the funcion may be used in th
 |icon:exclamation[] [2]
 |icon:check[]
 
-|Spatial.crosses(Geometry, Geometry)
+|crosses(Geometry)
 |TRUE if first Geometry crosses the other Geometry.
 |OGC SF
 |icon:exclamation[]
@@ -560,7 +544,7 @@ An entry in the "Result" column indicates, whether the funcion may be used in th
 |icon:check[]
 |icon:check[]
 
-|Spatial.intersects(Geometry, Geometry)
+|intersects(Geometry)
 |TRUE if first Geometry spatially intersects the other Geometry.
 |OGC SF
 |icon:exclamation[]
@@ -568,7 +552,7 @@ An entry in the "Result" column indicates, whether the funcion may be used in th
 |icon:exclamation[] [2]
 |icon:check[]
 
-|Spatial.contains(Geometry, Geometry)
+|contains(Geometry)
 |TRUE if second Geometry is completely contained in first Geometry.
 |OGC SF
 |icon:exclamation[]
@@ -576,7 +560,7 @@ An entry in the "Result" column indicates, whether the funcion may be used in th
 |icon:exclamation[] [2]
 |icon:check[]
 
-|Spatial.relate(Geometry, Geometry, String)
+|relate(Geometry, String)
 |TRUE if the spatial relationship specified by the patternMatrix holds.
 |OGC SF
 |icon:exclamation[]
@@ -602,7 +586,7 @@ An entry in the "Result" column indicates, whether the funcion may be used in th
 |MySQL
 |Oracle Spatial
 
-|Spatial.distance(Geometry, Geometry)
+|distance(Geometry)
 |Returns the distance between the two geometries.
 |OGC SF
 |icon:check[]
@@ -626,7 +610,7 @@ An entry in the "Result" column indicates, whether the funcion may be used in th
 |MySQL
 |Oracle Spatial
 
-|Spatial.intersection(Geometry, Geometry)
+|intersection(Geometry)
 |Returns a Geometry that is the set intersection of the two geometries.
 |OGC SF
 |icon:check[]
@@ -634,7 +618,7 @@ An entry in the "Result" column indicates, whether the funcion may be used in th
 |icon:times[] [1]
 |icon:check[]
 
-|Spatial.difference(Geometry, Geometry)
+|difference(Geometry)
 |Returns a Geometry that is the closure of the set difference of the two geometries.
 |OGC SF
 |icon:check[]
@@ -642,7 +626,7 @@ An entry in the "Result" column indicates, whether the funcion may be used in th
 |icon:times[] [1]
 |icon:check[]
 
-|Spatial.union(Geometry, Geometry)
+|union(Geometry)
 |Returns a Geometry that is the set union of the two geometries.
 |OGC SF
 |icon:check[]
@@ -650,7 +634,7 @@ An entry in the "Result" column indicates, whether the funcion may be used in th
 |icon:times[] [1]
 |icon:check[]
 
-|Spatial.symDifference(Geometry, Geometry)
+|symDifference(Geometry)
 |Returns a Geometry that is the closure of the set symmetric difference of the two geometries.
 |OGC SF
 |icon:check[]
@@ -658,7 +642,7 @@ An entry in the "Result" column indicates, whether the funcion may be used in th
 |icon:times[] [1]
 |icon:check[]
 
-|Spatial.buffer(Geometry, Double)
+|buffer(Double)
 |Returns as Geometry defined by buffering a distance around the Geometry.
 |OGC SF
 |icon:check[]
@@ -666,7 +650,7 @@ An entry in the "Result" column indicates, whether the funcion may be used in th
 |icon:times[] [1]
 |icon:check[]
 
-|Spatial.convexHull(Geometry)
+|convexHull()
 |Returns a Geometry that is the convex hull of the Geometry.
 |OGC SF
 |icon:check[]
