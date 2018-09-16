@@ -14,11 +14,10 @@ An entry in the "Result" column indicates, whether the function may be used in t
 
 == Static Methods for Constructing a Geometry Value given its Well-known Representation (OGC SF 3.2.6, 3.2.7)
 
-[cols="7,10,1,1,1,1,1", options="header"]
+[cols="7,10,1,1,1,1", options="header"]
 |===
 |Method
 |Description
-|Spec
 |Result [1]
 |PostGIS
 |MySQL
@@ -26,7 +25,6 @@ An entry in the "Result" column indicates, whether the function may be used in t
 
 |Spatial.geomFromText(String, Integer)
 |Construct a Geometry value given its well-known textual representation.
-|OGC SF
 |icon:times[]
 |icon:check[]
 |icon:check[]
@@ -34,7 +32,6 @@ An entry in the "Result" column indicates, whether the function may be used in t
 
 |Spatial.pointFromText(String, Integer)
 |Construct a Point given its well-known textual representation.
-|OGC SF
 |icon:times[]
 |icon:check[]
 |icon:check[]
@@ -42,7 +39,6 @@ An entry in the "Result" column indicates, whether the function may be used in t
 
 |Spatial.lineFromText(String, Integer)
 |Construct a LineString given its well-known textual representation.
-|OGC SF
 |icon:times[]
 |icon:check[]
 |icon:check[]
@@ -50,7 +46,6 @@ An entry in the "Result" column indicates, whether the function may be used in t
 
 |Spatial.polyFromText(String, Integer)
 |Construct a Polygon given its well-known textual representation.
-|OGC SF
 |icon:times[]
 |icon:check[]
 |icon:check[]
@@ -58,7 +53,6 @@ An entry in the "Result" column indicates, whether the function may be used in t
 
 |Spatial.mPointFromText(String, Integer)
 |Construct a MultiPoint given its well-known textual representation.
-|OGC SF
 |icon:times[]
 |icon:check[]
 |icon:check[]
@@ -66,7 +60,6 @@ An entry in the "Result" column indicates, whether the function may be used in t
 
 |Spatial.mLineFromText(String, Integer)
 |Construct a MultiLineString given its well-known textual representation.
-|OGC SF
 |icon:times[]
 |icon:check[]
 |icon:check[]
@@ -74,7 +67,6 @@ An entry in the "Result" column indicates, whether the function may be used in t
 
 |Spatial.mPolyFromText(String, Integer)
 |Construct a MultiPolygon given its well-known textual representation.
-|OGC SF
 |icon:times[]
 |icon:check[]
 |icon:check[]
@@ -82,7 +74,6 @@ An entry in the "Result" column indicates, whether the function may be used in t
 
 |Spatial.geomCollFromText(String, Integer)
 |Construct a GeometryCollection given its well-known textual representation.
-|OGC SF
 |icon:times[]
 |icon:check[]
 |icon:check[]
@@ -90,7 +81,6 @@ An entry in the "Result" column indicates, whether the function may be used in t
 
 |Spatial.geomFromWKB(String, Integer)
 |Construct a Geometry value given its well-known binary representation.
-|OGC SF
 |icon:times[]
 |icon:check[]
 |icon:check[]
@@ -98,7 +88,6 @@ An entry in the "Result" column indicates, whether the function may be used in t
 
 |Spatial.pointFromWKB(String, Integer)
 |Construct a Point given its well-known binary representation.
-|OGC SF
 |icon:times[]
 |icon:check[]
 |icon:check[]
@@ -106,7 +95,6 @@ An entry in the "Result" column indicates, whether the function may be used in t
 
 |Spatial.lineFromWKB(String, Integer)
 |Construct a LineString given its well-known binary representation.
-|OGC SF
 |icon:times[]
 |icon:check[]
 |icon:check[]
@@ -114,7 +102,6 @@ An entry in the "Result" column indicates, whether the function may be used in t
 
 |Spatial.polyFromWKB(String, Integer)
 |Construct a Polygon given its well-known binary representation.
-|OGC SF
 |icon:times[]
 |icon:check[]
 |icon:check[]
@@ -122,7 +109,6 @@ An entry in the "Result" column indicates, whether the function may be used in t
 
 |Spatial.mPointFromWKB(String, Integer)
 |Construct a MultiPoint given its well-known binary representation.
-|OGC SF
 |icon:times[]
 |icon:check[]
 |icon:check[]
@@ -130,7 +116,6 @@ An entry in the "Result" column indicates, whether the function may be used in t
 
 |Spatial.mLineFromWKB(String, Integer)
 |Construct a MultiLineString given its well-known binary representation.
-|OGC SF
 |icon:times[]
 |icon:check[]
 |icon:check[]
@@ -138,7 +123,6 @@ An entry in the "Result" column indicates, whether the function may be used in t
 
 |Spatial.mPolyFromWKB(String, Integer)
 |Construct a MultiPolygon given its well-known binary representation.
-|OGC SF
 |icon:times[]
 |icon:check[]
 |icon:check[]
@@ -146,7 +130,6 @@ An entry in the "Result" column indicates, whether the function may be used in t
 
 |Spatial.geomCollFromWKB(String, Integer)
 |Construct a GeometryCollection given its well-known binary representation.
-|OGC SF
 |icon:times[]
 |icon:check[]
 |icon:check[]
@@ -158,11 +141,10 @@ An entry in the "Result" column indicates, whether the function may be used in t
 
 == Methods on Type Geometry (OGC SF 3.2.10)
 
-[cols="7,10,1,1,1,1,1", options="header"]
+[cols="7,10,1,1,1,1", options="header"]
 |===
 |Method
 |Description
-|Spec
 |Result
 |PostGIS
 |MySQL
@@ -170,7 +152,6 @@ An entry in the "Result" column indicates, whether the function may be used in t
 
 |getDimension()
 |Returns the dimension of the Geometry.
-|OGC SF
 |icon:check[]
 |icon:check[]
 |icon:check[]
@@ -178,7 +159,6 @@ An entry in the "Result" column indicates, whether the function may be used in t
 
 |getGeometryType()
 |Returns the name of the instantiable subtype of Geometry.
-|OGC SF
 |icon:check[]
 |icon:check[]
 |icon:check[]
@@ -186,7 +166,6 @@ An entry in the "Result" column indicates, whether the function may be used in t
 
 |getSRID()
 |Returns the Spatial Reference System ID for this Geometry.
-|OGC SF
 |icon:check[]
 |icon:check[]
 |icon:check[]
@@ -194,7 +173,6 @@ An entry in the "Result" column indicates, whether the function may be used in t
 
 |isEmpty()
 |TRUE if this Geometry corresponds to the empty set.
-|OGC SF
 |icon:exclamation[] [1]
 |icon:check[]
 |icon:check[]
@@ -202,7 +180,6 @@ An entry in the "Result" column indicates, whether the function may be used in t
 
 |isSimple()
 |TRUE if this Geometry is simple, as defined in the Geometry Model.
-|OGC SF
 |icon:exclamation[] [1]
 |icon:check[]
 |icon:check[]
@@ -210,7 +187,6 @@ An entry in the "Result" column indicates, whether the function may be used in t
 
 |getBoundary()
 |Returns a Geometry that is the combinatorial boundary of the Geometry.
-|OGC SF
 |icon:check[]
 |icon:check[]
 |icon:check[]
@@ -218,7 +194,6 @@ An entry in the "Result" column indicates, whether the function may be used in t
 
 |getEnvelope()
 |Returns the rectangle bounding Geometry as a Polygon.
-|OGC SF
 |icon:check[]
 |icon:check[]
 |icon:check[]
@@ -226,7 +201,6 @@ An entry in the "Result" column indicates, whether the function may be used in t
 
 |toText()
 |Returns the well-known textual representation.
-|OGC SF
 |icon:check[]
 |icon:check[]
 |icon:check[]
@@ -234,7 +208,6 @@ An entry in the "Result" column indicates, whether the function may be used in t
 
 |toBinary()
 |Returns the well-known binary representation.
-|OGC SF
 |icon:times[]
 |icon:check[]
 |icon:check[]
@@ -246,11 +219,10 @@ An entry in the "Result" column indicates, whether the function may be used in t
 
 == Methods on Type Point (OGC SF 3.2.11)
 
-[cols="7,10,1,1,1,1,1", options="header"]
+[cols="7,10,1,1,1,1", options="header"]
 |===
 |Method
 |Description
-|Spec
 |Result [1]
 |PostGIS
 |MySQL
@@ -258,7 +230,6 @@ An entry in the "Result" column indicates, whether the function may be used in t
 
 |getX()
 |Returns the x-coordinate of the Point as a Double.
-|OGC SF
 |icon:check[]
 |icon:check[]
 |icon:check[]
@@ -266,7 +237,6 @@ An entry in the "Result" column indicates, whether the function may be used in t
 
 |getY()
 |Returns the y-coordinate of the Point as a Double.
-|OGC SF
 |icon:check[]
 |icon:check[]
 |icon:check[]
@@ -276,11 +246,10 @@ An entry in the "Result" column indicates, whether the function may be used in t
 
 == Methods on Type Curve (OGC SF 3.2.12)
 
-[cols="7,10,1,1,1,1,1", options="header"]
+[cols="7,10,1,1,1,1", options="header"]
 |===
 |Method
 |Description
-|Spec
 |Result
 |PostGIS
 |MySQL
@@ -288,7 +257,6 @@ An entry in the "Result" column indicates, whether the function may be used in t
 
 |getStartPoint())
 |Returns the first point of the Curve.
-|OGC SF
 |icon:check[]
 |icon:check[]
 |icon:check[]
@@ -296,15 +264,13 @@ An entry in the "Result" column indicates, whether the function may be used in t
 
 |getEndPoint())
 |Returns the last point of the Curve.
-|OGC SF
 |icon:check[]
 |icon:check[]
 |icon:check[]
 |icon:check[]
 
 |isRing()
-|Returns TRUE if Curve is closed and simple. .
-|OGC SF
+|Returns TRUE if Curve is closed and simple.
 |icon:exclamation[] [1]
 |icon:check[]
 |icon:check[]
@@ -316,11 +282,10 @@ An entry in the "Result" column indicates, whether the function may be used in t
 
 == Methods on Type Curve / MultiCurve (OGC SF 3.2.12, 3.2.17)
 
-[cols="7,10,1,1,1,1,1", options="header"]
+[cols="7,10,1,1,1,1", options="header"]
 |===
 |Method
 |Description
-|Spec
 |Result
 |PostGIS
 |MySQL
@@ -328,7 +293,6 @@ An entry in the "Result" column indicates, whether the function may be used in t
 
 |isClosed()
 |Returns TRUE if Curve/MultiCurve is closed, i.e., if StartPoint(Curve) = EndPoint(Curve).
-|OGC SF
 |icon:exclamation[] [1]
 |icon:check[]
 |icon:check[]
@@ -336,7 +300,6 @@ An entry in the "Result" column indicates, whether the function may be used in t
 
 |getLength()
 |Returns the length of the Curve/MultiCurve.
-|OGC SF
 |icon:check[]
 |icon:check[]
 |icon:check[]
@@ -348,11 +311,10 @@ An entry in the "Result" column indicates, whether the function may be used in t
 
 == Methods on Type LineString (OGC SF 3.2.13)
 
-[cols="7,10,1,1,1,1,1", options="header"]
+[cols="7,10,1,1,1,1", options="header"]
 |===
 |Method
 |Description
-|Spec
 |Result [1]
 |PostGIS
 |MySQL
@@ -360,7 +322,6 @@ An entry in the "Result" column indicates, whether the function may be used in t
 
 |getNumPoints()
 |Returns the number of points in the LineString.
-|OGC SF
 |icon:check[]
 |icon:check[]
 |icon:check[]
@@ -368,7 +329,6 @@ An entry in the "Result" column indicates, whether the function may be used in t
 
 |getPointN(Integer)
 |Returns Point n.
-|OGC SF
 |icon:check[]
 |icon:check[]
 |icon:check[]
@@ -378,11 +338,10 @@ An entry in the "Result" column indicates, whether the function may be used in t
 
 == Methods on Type Surface / MultiSurface (OGC SF 3.2.14, 3.2.18)
 
-[cols="7,10,1,1,1,1,1", options="header"]
+[cols="7,10,1,1,1,1", options="header"]
 |===
 |Method
 |Description
-|Spec
 |Result
 |PostGIS
 |MySQL
@@ -390,7 +349,6 @@ An entry in the "Result" column indicates, whether the function may be used in t
 
 |getCentroid()
 |Returns the centroid of Surface/MultiSurface, which may lie outside of it.
-|OGC SF
 |icon:check[]
 |icon:check[]
 |icon:times[] [1]
@@ -398,7 +356,6 @@ An entry in the "Result" column indicates, whether the function may be used in t
 
 |getArea()
 |Returns the area of Surface/MultiSurface.
-|OGC SF
 |icon:check[]
 |icon:check[]
 |icon:check[]
@@ -406,7 +363,6 @@ An entry in the "Result" column indicates, whether the function may be used in t
 
 |getPointOnSurface()
 |Returns a Point guaranteed to lie on the surface.
-|OGC SF
 |icon:check[]
 |icon:check[]
 |icon:times[] [1]
@@ -419,11 +375,10 @@ An entry in the "Result" column indicates, whether the function may be used in t
 
 == Methods on Type Polygon (OGC SF 3.2.15)
 
-[cols="7,10,1,1,1,1,1", options="header"]
+[cols="7,10,1,1,1,1", options="header"]
 |===
 |Method
 |Description
-|Spec
 |Result
 |PostGIS
 |MySQL
@@ -431,7 +386,6 @@ An entry in the "Result" column indicates, whether the function may be used in t
 
 |getExteriorRing()
 |Returns the exterior ring of Polygon.
-|OGC SF
 |icon:check[]
 |icon:check[]
 |icon:check[]
@@ -439,7 +393,6 @@ An entry in the "Result" column indicates, whether the function may be used in t
 
 |getNumInteriorRing()
 |Returns the number of interior rings.
-|OGC SF
 |icon:check[]
 |icon:check[]
 |icon:check[]
@@ -447,7 +400,6 @@ An entry in the "Result" column indicates, whether the function may be used in t
 
 |getInteriorRingN(Integer)
 |Returns the nth interior ring.
-|OGC SF
 |icon:check[]
 |icon:check[]
 |icon:check[]
@@ -457,11 +409,10 @@ An entry in the "Result" column indicates, whether the function may be used in t
 
 == Methods on Type GeomCollection (OGC SF 3.2.16)
 
-[cols="7,10,1,1,1,1,1", options="header"]
+[cols="7,10,1,1,1,1", options="header"]
 |===
 |Method
 |Description
-|Spec
 |Result
 |PostGIS
 |MySQL
@@ -469,7 +420,6 @@ An entry in the "Result" column indicates, whether the function may be used in t
 
 |getNumGeometries()
 |Returns the number of geometries in the collection.
-|OGC SF
 |icon:check[]
 |icon:check[]
 |icon:check[]
@@ -477,7 +427,6 @@ An entry in the "Result" column indicates, whether the function may be used in t
 
 |getGeometryN(Integer)
 |Returns the nth geometry in the collection.
-|OGC SF
 |icon:check[]
 |icon:check[]
 |icon:check[]
@@ -487,11 +436,10 @@ An entry in the "Result" column indicates, whether the function may be used in t
 
 == Methods that test Spatial Relationships (OGC SF 3.2.19)
 
-[cols="7,10,1,1,1,1,1", options="header"]
+[cols="7,10,1,1,1,1", options="header"]
 |===
 |Method
 |Description
-|Spec
 |Result [1]
 |PostGIS
 |MySQL
@@ -499,7 +447,6 @@ An entry in the "Result" column indicates, whether the function may be used in t
 
 |equals(Geometry)
 |TRUE if the two geometries are spatially equal.
-|OGC SF
 |icon:exclamation[]
 |icon:check[]
 |icon:exclamation[] [2]
@@ -507,7 +454,6 @@ An entry in the "Result" column indicates, whether the function may be used in t
 
 |disjoint(Geometry)
 |TRUE if the two geometries are spatially disjoint.
-|OGC SF
 |icon:exclamation[]
 |icon:check[]
 |icon:exclamation[] [2]
@@ -515,7 +461,6 @@ An entry in the "Result" column indicates, whether the function may be used in t
 
 |touches(Geometry)
 |TRUE if the first Geometry spatially touches the other Geometry.
-|OGC SF
 |icon:exclamation[]
 |icon:check[]
 |icon:exclamation[] [2]
@@ -523,7 +468,6 @@ An entry in the "Result" column indicates, whether the function may be used in t
 
 |within(Geometry)
 |TRUE if first Geometry is completely contained in second Geometry.
-|OGC SF
 |icon:exclamation[]
 |icon:check[]
 |icon:exclamation[] [2]
@@ -531,7 +475,6 @@ An entry in the "Result" column indicates, whether the function may be used in t
 
 |overlaps(Geometry)
 |TRUE if first Geometries is spatially overlapping the other Geometry.
-|OGC SF
 |icon:exclamation[]
 |icon:check[]
 |icon:exclamation[] [2]
@@ -539,7 +482,6 @@ An entry in the "Result" column indicates, whether the function may be used in t
 
 |crosses(Geometry)
 |TRUE if first Geometry crosses the other Geometry.
-|OGC SF
 |icon:exclamation[]
 |icon:check[]
 |icon:check[]
@@ -547,7 +489,6 @@ An entry in the "Result" column indicates, whether the function may be used in t
 
 |intersects(Geometry)
 |TRUE if first Geometry spatially intersects the other Geometry.
-|OGC SF
 |icon:exclamation[]
 |icon:check[]
 |icon:exclamation[] [2]
@@ -555,7 +496,6 @@ An entry in the "Result" column indicates, whether the function may be used in t
 
 |contains(Geometry)
 |TRUE if second Geometry is completely contained in first Geometry.
-|OGC SF
 |icon:exclamation[]
 |icon:check[]
 |icon:exclamation[] [2]
@@ -563,7 +503,6 @@ An entry in the "Result" column indicates, whether the function may be used in t
 
 |relate(Geometry, String)
 |TRUE if the spatial relationship specified by the patternMatrix holds.
-|OGC SF
 |icon:exclamation[]
 |icon:check[]
 |icon:check[]
@@ -577,11 +516,10 @@ An entry in the "Result" column indicates, whether the function may be used in t
 
 == Methods on Distance Relationships (OGC SF 3.2.20)
 
-[cols="7,10,1,1,1,1,1", options="header"]
+[cols="7,10,1,1,1,1", options="header"]
 |===
 |Method
 |Description
-|Spec
 |Result
 |PostGIS
 |MySQL
@@ -589,7 +527,6 @@ An entry in the "Result" column indicates, whether the function may be used in t
 
 |distance(Geometry)
 |Returns the distance between the two geometries.
-|OGC SF
 |icon:check[]
 |icon:check[]
 |icon:check[] [1]
@@ -601,11 +538,10 @@ An entry in the "Result" column indicates, whether the function may be used in t
 
 == Methods that implement Spatial Operators (OGC SF 3.2.21)
 
-[cols="7,10,1,1,1,1,1", options="header"]
+[cols="7,10,1,1,1,1", options="header"]
 |===
 |Method
 |Description
-|Spec
 |Result
 |PostGIS
 |MySQL
@@ -613,7 +549,6 @@ An entry in the "Result" column indicates, whether the function may be used in t
 
 |intersection(Geometry)
 |Returns a Geometry that is the set intersection of the two geometries.
-|OGC SF
 |icon:check[]
 |icon:check[]
 |icon:times[] [1]
@@ -621,7 +556,6 @@ An entry in the "Result" column indicates, whether the function may be used in t
 
 |difference(Geometry)
 |Returns a Geometry that is the closure of the set difference of the two geometries.
-|OGC SF
 |icon:check[]
 |icon:check[]
 |icon:times[] [1]
@@ -629,7 +563,6 @@ An entry in the "Result" column indicates, whether the function may be used in t
 
 |union(Geometry)
 |Returns a Geometry that is the set union of the two geometries.
-|OGC SF
 |icon:check[]
 |icon:check[]
 |icon:times[] [1]
@@ -637,7 +570,6 @@ An entry in the "Result" column indicates, whether the function may be used in t
 
 |symDifference(Geometry)
 |Returns a Geometry that is the closure of the set symmetric difference of the two geometries.
-|OGC SF
 |icon:check[]
 |icon:check[]
 |icon:times[] [1]
@@ -645,7 +577,6 @@ An entry in the "Result" column indicates, whether the function may be used in t
 
 |buffer(Double)
 |Returns as Geometry defined by buffering a distance around the Geometry.
-|OGC SF
 |icon:check[]
 |icon:check[]
 |icon:times[] [1]
@@ -653,7 +584,6 @@ An entry in the "Result" column indicates, whether the function may be used in t
 
 |convexHull()
 |Returns a Geometry that is the convex hull of the Geometry.
-|OGC SF
 |icon:check[]
 |icon:check[]
 |icon:times[] [1]
@@ -663,7 +593,7 @@ An entry in the "Result" column indicates, whether the function may be used in t
 [1] These methods are currently not implemented in MySQL. They may appear in future releases.
 
 
-== Test whether the bounding box of one geometry intersects the bounding box of another
+== Supplementary Static Methods
 
 These functions are only supported on certain RDBMS.
 
@@ -682,126 +612,164 @@ These functions are only supported on certain RDBMS.
 |icon:check[]
 |icon:check[]
 |icon:check[]
-|===
-
-[1] Oracle does not allow boolean expressions in the SELECT-list.
-
-
-== PostGIS Static Spatial Operators
-
-These methods are only supported on PostGIS.
-
-[cols="7,10,1", options="header"]
-|===
-|Method
-|Description
-|Result
 
 |PostGIS.bboxOverlapsLeft(Geometry, Geometry)
 |The PostGIS _&amp;<_ operator returns TRUE if the bounding box of the first Geometry overlaps or is to the left of second Geometry's bounding box
 |icon:check[]
+|icon:check[]
+|icon:times[]
+|icon:times[]
 
 |PostGIS.bboxOverlapsRight(Geometry, Geometry)
 |The PostGIS _&amp;<_ operator returns TRUE if the bounding box of the first Geometry overlaps or is to the right of second Geometry's bounding box
 |icon:check[]
+|icon:check[]
+|icon:times[]
+|icon:times[]
 
 |PostGIS.bboxLeft(Geometry, Geometry)
 |The PostGIS _<<_ operator returns TRUE if the bounding box of the first Geometry overlaps or is strictly to the left of second Geometry's bounding box
 |icon:check[]
+|icon:check[]
+|icon:times[]
+|icon:times[]
 
 |PostGIS.bboxRight(Geometry, Geometry)
 |The PostGIS _<<_ operator returns TRUE if the bounding box of the first Geometry overlaps or is strictly to the right of second Geometry's bounding box
 |icon:check[]
+|icon:check[]
+|icon:times[]
+|icon:times[]
 
 |PostGIS.bboxOverlapsBelow(Geometry, Geometry)
 |The PostGIS _&amp;<@_ operator returns TRUE if the bounding box of the first Geometry overlaps or is below second Geometry's bounding box
 |icon:check[]
+|icon:check[]
+|icon:times[]
+|icon:times[]
 
 |PostGIS.bboxOverlapsAbove(Geometry, Geometry)
 |The PostGIS _{vbar}&amp;<_ operator returns TRUE if the bounding box of the first Geometry overlaps or is above second Geometry's bounding box
 |icon:check[]
+|icon:check[]
+|icon:times[]
+|icon:times[]
 
 |PostGIS.bboxBelow(Geometry, Geometry)
 |The PostGIS _<<{vbar}_ operator returns TRUE if the bounding box of the first Geometry is strictly below second Geometry's bounding box
 |icon:check[]
+|icon:check[]
+|icon:times[]
+|icon:times[]
 
 |PostGIS.bboxAbove(Geometry, Geometry)
 |The PostGIS _{vbar}<<_ operator returns TRUE if the bounding box of the first Geometry is strictly above second Geometry's bounding box
 |icon:check[]
+|icon:check[]
+|icon:times[]
+|icon:times[]
 
 |PostGIS.sameAs(Geometry, Geometry)
 |The PostGIS _~=_ operator returns TRUE if the two geometries are vertex-by-vertex equal.
 |icon:check[]
+|icon:check[]
+|icon:times[]
+|icon:times[]
 
 |PostGIS.bboxWithin(Geometry, Geometry)
 |The PostGIS _@_ operator returns TRUE if the bounding box of the first Geometry overlaps or is completely contained by second Geometry's bounding box
 |icon:check[]
+|icon:check[]
+|icon:times[]
+|icon:times[]
 
 |PostGIS.bboxContains(Geometry, Geometry)
 |The PostGIS _~_ operator returns TRUE if the bounding box of the first Geometry completely contains second Geometry's bounding box
 |icon:check[]
-|===
-
-
-== MySQL specific Static Methods for Testing Spatial Relationships between Minimal Bounding Boxes
-
-
-[cols="7,10,1", options="header"]
-|===
-|Method
-|Description
-|Result
+|icon:check[]
+|icon:times[]
+|icon:times[]
 
 |MySQL.mbrEqual(Geometry, Geometry)
-|
+|Returns 1 or 0 to indicate whether the minimum bounding rectangles of the two geometries g1 and g2 are the same. 
 |icon:check[]
+|icon:times[]
+|icon:check[]
+|icon:times[]
 
 |MySQL.mbrDisjoint(Geometry, Geometry)
-|
+|Returns 1 or 0 to indicate whether the minimum bounding rectangles of the two geometries g1 and g2 are disjoint (do not intersect).
 |icon:check[]
+|icon:times[]
+|icon:check[]
+|icon:times[]
 
 |MySQL.mbrIntersects(Geometry, Geometry)
-|
+|Returns 1 or 0 to indicate whether the minimum bounding rectangles of the two geometries g1 and g2 intersect. 
 |icon:check[]
+|icon:times[]
+|icon:check[]
+|icon:times[]
 
 |MySQL.mbrTouches(Geometry, Geometry)
-|
+|Two geometries spatially touch if their interiors do not intersect, but the boundary of one of the geometries intersects either the boundary or the interior of the other.
 |icon:check[]
+|icon:times[]
+|icon:check[]
+|icon:times[]
 
 |MySQL.mbrWithin(Geometry, Geometry)
-|
+|Returns 1 or 0 to indicate whether the minimum bounding rectangle of g1 is within the minimum bounding rectangle of g2.
 |icon:check[]
+|icon:times[]
+|icon:check[]
+|icon:times[]
 
 |MySQL.mbrContains(Geometry, Geometry)
-|
+|Returns 1 or 0 to indicate whether the minimum bounding rectangle of g1 contains the minimum bounding rectangle of g2.
 |icon:check[]
+|icon:times[]
+|icon:check[]
+|icon:times[]
 
 |MySQL.mbrOverlaps(Geometry, Geometry)
-|
+|Two geometries spatially overlap if they intersect and their intersection results in a geometry of the same dimension but not equal to either of the given geometries. 
 |icon:check[]
-|===
-
-
-== Oracle specific Static Methods for Constructing SDO_GEOMETRY types
-
-
-[cols="7,10", options="header"]
-|===
-|Method
-|Description
+|icon:times[]
+|icon:check[]
+|icon:times[]
 
 |Oracle.sdo_geometry(Integer gtype, Integer srid, SDO_POINT point, SDO_ELEM_INFO_ARRAY elem_info, SDO_ORDINATE_ARRAY ordinates)
 |Creates a SDO_GEOMETRY geometry from the passed geometry type, srid, point, element infos and ordinates.
+|icon:check[]
+|icon:times[]
+|icon:times[]
+|icon:check[]
 
 |Oracle.sdo_point_type(Double x, Double y, Double z)
 |Creates a SDO_POINT geometry from the passed ordinates.
+|icon:check[]
+|icon:times[]
+|icon:times[]
+|icon:check[]
 
 |Oracle.sdo_elem_info_array(String numbers)
 |Creates a SDO_ELEM_INFO_ARRAY from the passed comma-separeted integers.
+|icon:check[]
+|icon:times[]
+|icon:times[]
+|icon:check[]
 
 |Oracle.sdo_ordinate_array(String ordinates)
 |Creates a SDO_ORDINATE_ARRAY from the passed comma-separeted doubles.
+|icon:check[]
+|icon:times[]
+|icon:times[]
+|icon:check[]
 |===
+
+[1] Oracle does not allow boolean expressions in the SELECT-list.
+
 
 
 == Examples
