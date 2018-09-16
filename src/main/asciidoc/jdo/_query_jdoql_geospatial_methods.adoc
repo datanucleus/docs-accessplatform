@@ -404,16 +404,17 @@ An entry in the "Result" column indicates, whether the function may be used in t
 |icon:check[]
 |icon:check[]
 
-|Spatial.pointOnSurface(Surface)
+|getPointOnSurface()
 |Returns a Point guaranteed to lie on the surface.
 |OGC SF
 |icon:check[]
 |icon:check[]
 |icon:times[] [1]
-|icon:check[]
+|icon:check[] [2]
 |===
 
 [1] MySQL does not implement these methods.
+[2] Oracle takes an argument to this method (see https://docs.oracle.com/database/121/SPATL/sdo_geom-sdo_pointonsurface.htm#SPATL1124[Oracle docs])
 
 
 == Methods on Type Polygon (OGC SF 3.2.15)
