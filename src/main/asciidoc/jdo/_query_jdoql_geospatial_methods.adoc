@@ -314,7 +314,7 @@ An entry in the "Result" column indicates, whether the function may be used in t
 [1] Oracle does not allow boolean expressions in the SELECT-list.
 
 
-== Methods on Type Curve and Type MultiCurve (OGC SF 3.2.12, 3.2.17)
+== Methods on Type Curve / MultiCurve (OGC SF 3.2.12, 3.2.17)
 
 [cols="7,10,1,1,1,1,1", options="header"]
 |===
@@ -376,7 +376,7 @@ An entry in the "Result" column indicates, whether the function may be used in t
 |===
 
 
-== Methods on Type Surface and Type MultiSurface (OGC SF 3.2.14, 3.2.18)
+== Methods on Type Surface / MultiSurface (OGC SF 3.2.14, 3.2.18)
 
 [cols="7,10,1,1,1,1,1", options="header"]
 |===
@@ -687,7 +687,7 @@ These functions are only supported on certain RDBMS.
 [1] Oracle does not allow boolean expressions in the SELECT-list.
 
 
-== PostGIS Spatial Operators
+== PostGIS Static Spatial Operators
 
 These methods are only supported on PostGIS.
 
@@ -743,7 +743,7 @@ These methods are only supported on PostGIS.
 |===
 
 
-== MySQL specific Methods for Testing Spatial Relationships between Minimal Bounding Boxes
+== MySQL specific Static Methods for Testing Spatial Relationships between Minimal Bounding Boxes
 
 
 [cols="7,10,1", options="header"]
@@ -782,7 +782,7 @@ These methods are only supported on PostGIS.
 |===
 
 
-== Oracle specific Methods for Constructing SDO_GEOMETRY types
+== Oracle specific Static Methods for Constructing SDO_GEOMETRY types
 
 
 [cols="7,10", options="header"]
@@ -834,6 +834,7 @@ public class SampleLineString
     ....
 }
 -----
+
 [source,xml]
 -----
 <jdo>

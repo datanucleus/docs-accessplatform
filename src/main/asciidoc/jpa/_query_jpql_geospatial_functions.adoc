@@ -13,7 +13,7 @@ The following tables list all available functions as well as information about w
 An entry in the "Result" column indicates, whether the funcion may be used in the result part of a JPQL query.
 
 
-== Functions for Constructing a Geometry Value given its Well-known Text Representation (OGC SF 3.2.6)
+== Functions for Constructing a Geometry Value given its Well-known Representation (OGC SF 3.2.6, 3.2.7)
 
 [cols="7,10,2,1,1,1,1", options="header"]
 |===
@@ -26,7 +26,7 @@ An entry in the "Result" column indicates, whether the funcion may be used in th
 |Oracle Spatial
 
 |Spatial.geomFromText(String, Integer)
-|Construct a Geometry value given its well-known textual representation.
+|Construct a Geometry given its well-known textual representation.
 |OGC SF
 |icon:times[]
 |icon:check[]
@@ -34,7 +34,7 @@ An entry in the "Result" column indicates, whether the funcion may be used in th
 |icon:check[]
 
 |Spatial.pointFromText(String, Integer)
-|Construct a Point.
+|Construct a Point given its well-known textual representation.
 |OGC SF
 |icon:times[]
 |icon:check[]
@@ -42,7 +42,7 @@ An entry in the "Result" column indicates, whether the funcion may be used in th
 |icon:check[]
 
 |Spatial.lineFromText(String, Integer)
-|Construct a LineString.
+|Construct a LineString given its well-known textual representation.
 |OGC SF
 |icon:times[]
 |icon:check[]
@@ -50,7 +50,7 @@ An entry in the "Result" column indicates, whether the funcion may be used in th
 |icon:check[]
 
 |Spatial.polyFromText(String, Integer)
-|Construct a Polygon.
+|Construct a Polygon given its well-known textual representation.
 |OGC SF
 |icon:times[]
 |icon:check[]
@@ -58,7 +58,7 @@ An entry in the "Result" column indicates, whether the funcion may be used in th
 |icon:check[]
 
 |Spatial.mPointFromText(String, Integer)
-|Construct a MultiPoint.
+|Construct a MultiPoint given its well-known textual representation.
 |OGC SF
 |icon:times[]
 |icon:check[]
@@ -66,7 +66,7 @@ An entry in the "Result" column indicates, whether the funcion may be used in th
 |icon:check[]
 
 |Spatial.mLineFromText(String, Integer)
-|Construct a MultiLineString.
+|Construct a MultiLineString given its well-known textual representation.
 |OGC SF
 |icon:times[]
 |icon:check[]
@@ -74,7 +74,7 @@ An entry in the "Result" column indicates, whether the funcion may be used in th
 |icon:check[]
 
 |Spatial.mPolyFromText(String, Integer)
-|Construct a MultiPolygon.
+|Construct a MultiPolygon given its well-known textual representation.
 |OGC SF
 |icon:times[]
 |icon:check[]
@@ -82,30 +82,15 @@ An entry in the "Result" column indicates, whether the funcion may be used in th
 |icon:check[]
 
 |Spatial.geomCollFromText(String, Integer)
-|Construct a GeometryCollection.
+|Construct a GeometryCollection given its well-known textual representation.
 |OGC SF
 |icon:times[]
 |icon:check[]
 |icon:check[]
 |icon:check[]
-|===
-
-[1] These functions can't be used in the return part because it's not possible to determine the return type from the parameters.
-
-== Functions for Constructing a Geometry Value given its Well-known Binary Representation (OGC SF 3.2.7)
-
-[cols="7,10,2,1,1,1,1", options="header"]
-|===
-|Method
-|Description
-|Specification
-|Result [1]
-|PostGIS
-|MySQL
-|Oracle Spatial
 
 |Spatial.geomFromWKB(String, Integer)
-|Construct a Geometry value given its well-known binary representation.
+|Construct a Geometry given its well-known binary representation.
 |OGC SF
 |icon:times[]
 |icon:check[]
@@ -113,7 +98,7 @@ An entry in the "Result" column indicates, whether the funcion may be used in th
 |icon:check[]
 
 |Spatial.pointFromWKB(String, Integer)
-|Construct a Point.
+|Construct a Point given its well-known binary representation.
 |OGC SF
 |icon:times[]
 |icon:check[]
@@ -121,7 +106,7 @@ An entry in the "Result" column indicates, whether the funcion may be used in th
 |icon:check[]
 
 |Spatial.lineFromWKB(String, Integer)
-|Construct a LineString.
+|Construct a LineString given its well-known binary representation.
 |OGC SF
 |icon:times[]
 |icon:check[]
@@ -129,7 +114,7 @@ An entry in the "Result" column indicates, whether the funcion may be used in th
 |icon:check[]
 
 |Spatial.polyFromWKB(String, Integer)
-|Construct a Polygon.
+|Construct a Polygon given its well-known binary representation.
 |OGC SF
 |icon:times[]
 |icon:check[]
@@ -137,7 +122,7 @@ An entry in the "Result" column indicates, whether the funcion may be used in th
 |icon:check[]
 
 |Spatial.mPointFromWKB(String, Integer)
-|Construct a MultiPoint.
+|Construct a MultiPoint given its well-known binary representation.
 |OGC SF
 |icon:times[]
 |icon:check[]
@@ -145,7 +130,7 @@ An entry in the "Result" column indicates, whether the funcion may be used in th
 |icon:check[]
 
 |Spatial.mLineFromWKB(String, Integer)
-|Construct a MultiLineString.
+|Construct a MultiLineString given its well-known binary representation.
 |OGC SF
 |icon:times[]
 |icon:check[]
@@ -153,7 +138,7 @@ An entry in the "Result" column indicates, whether the funcion may be used in th
 |icon:check[]
 
 |Spatial.mPolyFromWKB(String, Integer)
-|Construct a MultiPolygon.
+|Construct a MultiPolygon given its well-known binary representation.
 |OGC SF
 |icon:times[]
 |icon:check[]
@@ -161,7 +146,7 @@ An entry in the "Result" column indicates, whether the funcion may be used in th
 |icon:check[]
 
 |Spatial.geomCollFromWKB(String, Integer)
-|Construct a GeometryCollection.
+|Construct a GeometryCollection given its well-known binary representation.
 |OGC SF
 |icon:times[]
 |icon:check[]
@@ -330,7 +315,7 @@ An entry in the "Result" column indicates, whether the funcion may be used in th
 [1] Oracle does not allow boolean expressions in the SELECT-list.
 
 
-== Functions on Type Curve and Type MultiCurve (OGC SF 3.2.12, 3.2.17)
+== Functions on Type Curve / MultiCurve (OGC SF 3.2.12, 3.2.17)
 
 [cols="7,10,2,1,1,1,1", options="header"]
 |===
@@ -392,7 +377,7 @@ An entry in the "Result" column indicates, whether the funcion may be used in th
 |===
 
 
-== Functions on Type Surface and Type MultiSurface (OGC SF 3.2.14, 3.2.18)
+== Functions on Type Surface / MultiSurface (OGC SF 3.2.14, 3.2.18)
 
 [cols="7,10,2,1,1,1,1", options="header"]
 |===
