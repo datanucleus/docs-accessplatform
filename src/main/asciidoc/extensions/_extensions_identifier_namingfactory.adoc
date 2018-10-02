@@ -3,14 +3,12 @@
 :_basedir: ../
 :_imagesdir: images/
 
-DataNucleus is developed as a plugin-driven framework and one of the components that is pluggable is the naming of datastore table/column identifiers. 
-DataNucleus provides its own internal identifier factories, but also allows you to plugin your own factory. Identifiers are required to define 
-the name of components in the datastore, such as table/columns/indexes.
+Mapping a persistable class to the datastore requires specification of naming of datastore table/column (as well as constraint) identifiers. 
+If the user doesn't define names for such identifiers then defaults have to be provided. This is where we have a _NamingFactory_.
+DataNucleus provides its own internal naming factories (for JDO, and for JPA), but also allows you to plugin your own naming factory. 
 
-DataNucleus provides the mechanism to generate datastore identifiers (table/column names) when none 
-are defined by the users metadata/annotations. In addition to the default JDO factory there is also 
-an identifier factory that generates identifiers consistent with the JPA specification.
 __Note that currently RDBMS doesn't use this extension and instead uses the xref:extensions.adoc#rdbms_identifier_factory.html[RDBMS Identifier Factory] extension__.
+
 You can extend DataNucleus's capabilities using the plugin extension *org.datanucleus.identifier_namingfactory*.
 
 [cols="2,1,1,1", options="header"]
@@ -212,7 +210,7 @@ Note that you also require a MANIFEST.MF file as xref:extensions.adoc#MANIFEST[d
 
 == Plugin Usage
 
-The only thing remaining is to use your new _NamingFactory_ plugin. You do this by having your plugin
-in the CLASSPATH at runtime, and setting the PMF property __datanucleus.identifier.namingFactory__ to _myfactory_
+The only thing remaining is to use your new _NamingFactory_ plugin. 
+You do this by having your plugin in the CLASSPATH at runtime, and setting the PMF property __datanucleus.identifier.namingFactory__ to _myfactory_ 
 (the name you specified in the `plugin.xml` file).
 

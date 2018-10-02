@@ -3,36 +3,16 @@
 :_basedir: ../
 :_imagesdir: images/
 
-
-DataNucleus is developed as a plugin-driven framework and one of the components that is pluggable is the class-loading resolution. 
-DataNucleus provides its own internal class-loader resolver that matches the requirements of the JDO specification, but also allows you to plugin 
-your own class loading policy. This class loader resolver is used for runtime operation. The plugin mechanism always operates 
-using an instance of ClassLoaderResolverImpl since we need a class loading process to discover the plugins in the first place.
-
-DataNucleus has to resolve classes at runtime. The JDO specification defines a strict process for 
-resolving classes using specific class loaders. DataNucleus provides a plugin for this JDO process.
+DataNucleus allows specification of a class-loader resolver at runtime. 
+It provides its own "built-in" resolver (_org.datanucleus.ClassLoaderResolverImpl_) that matches the requirements of the JDO spec (and following what the JPA spec needs), 
+but this capability is extensible.
 You can extend DataNucleus's capabilities using the plugin extension *org.datanucleus.classloader_resolver*.
 
-[cols="2,1,2,1", options="header"]
-|===
-|Plugin extension-point
-|Key
-|Description
-|Location
+== Built-in Implementation
 
-|org.datanucleus.classloader_resolver
-|jdo
-|ClassLoaderResolver using JDO definition
-|datanucleus-core
-|===
-
-
-== JDO Implementation
-
-At runtime, DataNucleus will need to load the classes being persisted. To do this it needs to 
-utilise a particular class loading mechanism. The JDO specification defines how class-loading is 
-to operate in a JDO implementation and this is what DataNucleus uses by default. In brief the 
-JDO class-loading mechanism utilises 3 class loaders
+At runtime, DataNucleus will need to load the classes being persisted. To do this it needs to utilise a particular class loading mechanism. 
+The JDO specification defines how class-loading is to operate in a JDO implementation and this is what DataNucleus uses by default. 
+In brief the JDO class-loading mechanism utilises 3 class loaders
 
 * When creating the PersistenceManagerFactory you can specify a class loader. This is used first if specified
 * The second class loader to try is the class loader for the current thread.
@@ -170,10 +150,9 @@ public interface ClassLoaderResolver
 }
 -----
 
-Be aware that you can extend _org.datanucleus.ClassLoaderResolverImpl_ if you just want to change 
-some behaviour of the default loader process. Your class loader resolver should provide a 
-constructor taking an argument of type _ClassLoader_ which will be the loader that the 
-PersistenceManager is using at initialisation (your class can opt to not use this, but must provide the constructor)
+Be aware that you can extend _org.datanucleus.ClassLoaderResolverImpl_ if you just want to change some behaviour of the default loader process. 
+Your class loader resolver should provide a constructor taking an argument of type _ClassLoader_ which will be the loader that the 
+PM/EM is using at initialisation (your class can opt to not use this, but must provide the constructor)
 
 
 == Implementation

@@ -3,11 +3,9 @@
 :_basedir: ../
 :_imagesdir: images/
 
-DataNucleus is developed as a plugin-driven framework and one of the components that is 
-pluggable is the support for JDOQL/JPQL operations in the "new" query mechanism. 
-DataNucleus provides support for all major operations typically handling them internally
-but occasionally handing off to an SQL function where one is more appropriate. However
-the codebase is structured so that you could add on support for your own easily enough
+Whilst processing JDOQL/JPQL queries, DataNucleus internally uses "operations" between particular java types.
+DataNucleus provides support for all major operations typically handling them internally but occasionally handing off to an SQL function where one is more appropriate. 
+However the codebase is structured so that you could add on support for your own easily enough
 
 The following sections describe how to create your own SQL Operation plugin for DataNucleus.
 

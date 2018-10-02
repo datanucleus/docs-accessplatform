@@ -3,16 +3,13 @@
 :_basedir: ../
 :_imagesdir: images/
 
-DataNucleus is developed as a plugin-driven framework and one of the components that is pluggable is 
-the class used to represent datastore-identity (for JDO). DataNucleus provides a default 
-implementation for use and this generates identifiers (returned by _JDOHelper.getObjectId(obj)_) 
-of the form "3286[OID]mydomain.MyClass". Having this component configurable means that you can
-override the output of the toString() to be more suitable for any use of these identities. Please 
-be aware that the JDO2 specification (5.4.3) has strict rules for datastore identity classes.
+When a class is defined to use "datastore" (surrogate) identity, it will internally use a particular class to represent that identity.
+DataNucleus provides its own built-in default (_org.datanucleus.identity.DatastoreIdImpl_) that generates ids using the String form like "3286[OID]mydomain.MyClass", but this feature is extensible
+Having this component configurable means that you can override the output of the toString() to be more suitable for any use of these identities. 
+Please be aware that the JDO specification (5.4.3) has strict rules for datastore identity classes.
 
-DataNucleus allows identities to be either datastore or application identity. When using datastore 
-identity it needs to have a class to represent an identity. DataNucleus provides its own default 
-datastore identity class. You can extend DataNucleus's capabilities using the plugin extension *org.datanucleus.store_datastoreidentity*.
+You can extend DataNucleus's capabilities using the plugin extension *org.datanucleus.store_datastoreidentity*.
+It provides the following internally
 
 [cols="2,1,1,1", options="header"]
 |===
@@ -265,4 +262,4 @@ Note that you also require a `MANIFEST.MF` file as xref:extensions.adoc#MANIFEST
 
 The name "myoid" should be specified when you create the PersistenceManagerFactory using 
 the persistence property name "org.datanucleus.datastoreIdentityType". Thats all. 
-You now have a DataNucleus "datastore identity" plugin.
+You now have a DataNucleus "datastore identity" extension.

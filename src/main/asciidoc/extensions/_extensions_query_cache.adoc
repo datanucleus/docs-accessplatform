@@ -3,45 +3,10 @@
 :_basedir: ../
 :_imagesdir: images/
 
-DataNucleus is developed as a plugin-driven framework and one of the components that is pluggable is the caching of query compilations. 
-DataNucleus provides some inbuilt cache options, but also allows you to provide your own.
+When a query is created in DataNucleus it will typically be compiled, and this compilation can be cached to save re-compilation of the same query later on.
+DataNucleus provides some inbuilt cache options (soft/weak/strong references, javax.cache, EHCache etc) but also allows you to provide your own.
 
-DataNucleus is able to support third party Query Compilation Cache products. 
 You can extend DataNucleus's capabilities using the plugin extension *org.datanucleus.cache_query*.
-
-
-[cols="2,1,1,1", options="header"]
-|===
-|Plugin extension-point
-|Key
-|Description
-|Location
-
-|org.datanucleus.cache_query
-|weak
-|Weak Query Cache (default)
-|datanucleus-core
-
-|org.datanucleus.cache_query
-|soft
-|Soft Query Cache
-|datanucleus-core
-
-|org.datanucleus.cache_query
-|strong
-|Strong Query Cache
-|datanucleus-core
-
-|org.datanucleus.cache_query
-|javax.cache
-|javax.cache Query Cache
-|datanucleus-core
-
-|org.datanucleus.cache_query
-|cacheonix
-|Cacheonix Query Cache
-|datanucleus-cache
-|===
 
 The following sections describe how to create your own Query cache plugin for DataNucleus.
 
@@ -107,5 +72,6 @@ Note that you also require a `MANIFEST.MF` file as xref:extensions.adoc#MANIFEST
 
 == Plugin Usage
 
-The only thing remaining is to use your Query Compilation Cache plugin. To do this you specify the persistence property _datanucleus.cache.query.type_ as __MyCache__ (the "name" in `plugin.xml`).
+The only thing remaining is to use your Query Compilation Cache plugin. 
+To do this you specify the persistence property *datanucleus.cache.query.type* as __MyCache__ (the "name" in `plugin.xml`).
 

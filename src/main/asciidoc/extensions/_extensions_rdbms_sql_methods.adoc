@@ -3,9 +3,8 @@
 :_basedir: ../
 :_imagesdir: images/
 
-DataNucleus is developed as a plugin-driven framework and one of the components that is pluggable is the support for JDOQL/JPQL methods in the RDBMS query mechanism. 
-DataNucleus provides support for the majority of SQL methods that you are ever likely to need but is structured so that you could add on support for your own easily enough
-
+DataNucleus supports specific JDOQL methods / JPQL functions for RDBMS datastores. This support is extensible.
+DataNucleus provides support for the majority of SQL methods that you are ever likely to need but is structured so that you could add on support for your own easily enough.
 The following sections describe how to create your own SQL Method plugin for DataNucleus.
 
 == Interface
@@ -93,6 +92,5 @@ So we now have our custom SQL method and we just need to make this into a DataNu
 _If implementing support for a method that is static (e.g JDOHelper.getObjectId()) omit the "class" argument from the plugin.xml entry, and put the method as "JDOHelper.getObjectId"_
 Note that you also require a `MANIFEST.MF` file as xref:extensions.adoc#MANIFEST[described above].
 
-So we defined calls to a method _length_ for the type _java.lang.String_
-for the datastore "h2" to use our evaluator. Simple! Whenever this method is encountered
-in a query from then on for the H2 database it will use our method evaluator.
+So we defined calls to a method _length_ for the type _java.lang.String_ for the datastore "h2" to use our evaluator. Simple! 
+Whenever this method is encountered in a query from then on for the H2 database it will use our method evaluator.

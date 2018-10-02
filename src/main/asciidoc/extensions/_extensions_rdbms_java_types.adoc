@@ -10,18 +10,15 @@ as a second-class object you need to define a mapping. DataNucleus defines mappi
 the required JDO/JPA types but you want to persist some of your own types as second-class objects.
 This extension is not required for other datastores, just RDBMS.
 
-A _type mapping_ defines the way to convert between an object of the Java type and its datastore representation 
-(namely a column or columns in a datastore table). There are 2 types of Java types that can be mapped. These are 
-__mutable__ (something that can be updated, such as java.util.Date) and __immutable__ (something that is fixed from 
-the point of construction, such as java.awt.Color).
-
-__This guide relates to current DataNucleus GitHub. Please consult the DataNucleus source code if you are using an earlier version since things may be different in other versions__.
+A _type mapping_ defines the way to convert between an object of the Java type and its datastore representation (namely a column or columns in a datastore table). 
+There are 2 types of Java types that can be mapped. 
+These are __mutable__ (something that can be updated, such as java.util.Date) and __immutable__ (something that is fixed from the point of construction, such as java.awt.Color).
 
 
 == Java type to single column mapping
 
-In DataNucleus version 4.0+ creating a Mapping class is now optional and as long as you have defined a
-TypeConverter then this will be mapped automatically using _TypeConverterMapping_. For 99.9% of types it should not be necessary to define a JavaTypeMapping as well.
+Creating a Mapping class is optional and as long as you have defined a TypeConverter then this will be mapped automatically using _TypeConverterMapping_. 
+For 99.9% of types it should not be necessary to define a JavaTypeMapping as well.
 If you really want to add a mapping then just create an implementation of JavaTypeMapping, extending SingleFieldMapping (find an example in GitHub and copy it).
 
 

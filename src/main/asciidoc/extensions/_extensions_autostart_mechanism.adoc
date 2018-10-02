@@ -4,12 +4,9 @@
 :_imagesdir: images/
 
 
-To assist in the process of knowledge about persistable classes at startup (mainly for JDO) DataNucleus provides an "auto-start" mechanism. 
-DataNucleus provides 3 "auto-start" mechanisms, but also allows you to plugin your own variant.
-
-DataNucleus can discover the classes that it is managing at runtime, or you can use an "autostart" mechanism
-to inform DataNucleus of what classes it will be managing. DataNucleus provides a selection of plugins for autostart mechanism.
-You can extend DataNucleus's capabilities using the plugin extension *org.datanucleus.autostart*.
+DataNucleus can discover the classes that it is managing at runtime, or you can define them in `persistence.xml`, 
+or you can use an "auto-start" mechanism to inform DataNucleus of what classes it will be managing. 
+DataNucleus provides 3 "auto-start" mechanisms, but also allows you to plugin your own variant using the plugin extension *org.datanucleus.autostart*.
 
 
 [cols="2,1,1,1", options="header"]
@@ -37,7 +34,7 @@ You can extend DataNucleus's capabilities using the plugin extension *org.datanu
 
 == Interface
 
-Any auto-start mechanism plugin will need to implement <i>org.datanucleus.store.AutoStartMechanism</i>.
+Any auto-start mechanism plugin will need to implement _org.datanucleus.store.AutoStartMechanism_.
 http://www.datanucleus.org/javadocs/core/latest/org/datanucleus/store/autostart/AutoStartMechanism.html[image:../images/javadoc.png[Javadoc]]
 So you need to implement the following interface
 

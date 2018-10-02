@@ -4,12 +4,10 @@
 :_imagesdir: images/
 
 
-DataNucleus is developed as a plugin-driven framework and one of the components that is pluggable is the reading of annotations. 
-DataNucleus provides a support for JDO and JPA annotations, but is structured so that you can easily add your own annotations and have them
-usable within your DataNucleus usage.
+Certain annotations are used to detect whether a class is involved in the persistence process; this is extensible.
+DataNucleus provides support for JDO and JPA annotations, but is structured so that you can easily add your own annotations and have them usable within your DataNucleus usage.
 
-DataNucleus supports Java annotations. More than this, it actually provides a pluggable framework whereby you can plug in your own annotations support. 
-The JDO API plugin provides support for JDO annotations, and the JPA API plugin provides support for JPA annotations. 
+The `datanucleus-api-jdo` plugin provides support for JDO annotations, and the `datanucleus-api-jpa` plugin provides support for JPA annotations. 
 You can extend DataNucleus's capabilities using the plugin extension *org.datanucleus.annotations*.
 
 [cols="2,1,1,1", options="header"]

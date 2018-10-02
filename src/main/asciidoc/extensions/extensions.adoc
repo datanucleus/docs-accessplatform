@@ -92,11 +92,11 @@ bundle version, and the dependencies are auto-generated from imports etc. We rec
 
 A non-managed environment is a runtime environment where DataNucleus runs and plug-ins are not managed by a container. 
 In this environment the plug-in discovery and lifecycle is managed by DataNucleus.
-JavaSE and JavaEE runtimes are considered <i>non-managed</i> environments.
+JavaSE and JavaEE runtimes are considered _non-managed_ environments.
 In non managed environments there is no lifecycle itself of plug-ins. 
 
-There is a 1 to N instance relationship from DataNucleus to a plug-in per PMF. 
-More exactly, if only one PMF exists, there is only one Plug-in instance for a Connection Pool Plug-in, and if "N" PMF exist, there are "N" Plug-in instances for a Connection Pool Plug-in.
+There is a 1 to N instance relationship from DataNucleus to a plug-in per PMF/EMF. 
+More exactly, if only one PMF/EMF exists, there is only one Plug-in instance for a Connection Pool Plug-in, and if "N" PMF/EMF exist, there are "N" Plug-in instances for a Connection Pool Plug-in.
 Extensions implemented by plugins are instantiated on demand and terminated on PMF/EMF closing, PM/EM closing or in another form depending on what the extension is used for.
 
 
@@ -104,8 +104,8 @@ Extensions implemented by plugins are instantiated on demand and terminated on P
 
 Managed environment is a runtime environment where DataNucleus plug-ins are managed by a container. 
 The discovery, registry and lifecycle of plug-ins are controlled by the container. 
-There is no plug-in instance relationship from DataNucleus to a plug-in regarding PMF instances. 
-In managed environments, there is only one plug-in instance for one or "N" PMFs. Again, this is managed by the container.
+There is no plug-in instance relationship from DataNucleus to a plug-in regarding PMF/EMF instances. 
+In managed environments, there is only one plug-in instance for one or "N" PMF/EMFs. Again, this is managed by the container.
 
 DataNucleus supports OSGi containers as managed environment. In OSGi managed environments plug-in lifecycle is determined by the OSGi specification. 
 Once activated, a plug-in is only stopped when the OSGi container finishes its execution, or the plug-in is stopped by an OSGi command.
@@ -117,21 +117,21 @@ A plugin owns an Extension, and an Extension implements an ExtensionPoint. The b
 
 * __Lifecycle__ : Each extension is created by a segment of code during the runtime execution, and destroyed/released whenever they are no longer needed. 
 This has no influence with the plug-in lifecycle.
-* __Manageability__ : In non managed environments, the plug-ins are managed by DataNucleus and maintained with a composition relation to the PMF instance. 
-This allows a plug-in "instance" per PMF. If multiple PMFs are created multiple extensions for an ExtensionPoint are instantiated. 
+* __Manageability__ : In non managed environments, the plug-ins are managed by DataNucleus and maintained with a composition relation to the PMF/EMF instance. 
+This allows a plug-in "instance" per PMF/EMF. If multiple PMF/EMFs are created multiple extensions for an ExtensionPoint are instantiated. 
 In managed environments, more precisely in OSGi containers, the plug-ins are managed by the OSGi framework. Each plug-in will mostly be a singleton inside the OSGi container.
 * __Registration__ : In non managed environments all plugins are registered using an instance of JDOClassLoaderResolver 
-(so using the current ClassLoader of the PMF and the current thread). This means that the /plugin.xml and /META-INF/MANIFEST.MF files 
+(so using the current ClassLoader of the PMF/EMF and the current thread). This means that the `/plugin.xml` and `/META-INF/MANIFEST.MF` files 
 must be accessible to the classloader. In managed environment this is handled by the container.
 * __ClassLoading__ : The classloading in non managed environments is usually made of one  single ClassLoader, while in managed 
 environments each plug-in has it's own ClassLoader.
-* __Configuration__ : Some Extensions needs to retrieve a configuration that was set in the PMF. 
+* __Configuration__ : Some Extensions needs to retrieve a configuration that was set in the PMF/EMF. 
 This means that Plug-ins should not hold singleton / static configurations if they want to serve to multiple PMFs at the same time.
 * __Constructors/Methods__ : In order of having consistent and avoid changes to ExtensionPoint interfaces, the Extension 
 Constructors or Methods (either one) should have receive a NucleusContext instance as argument. 
 If by the time the ExtensionPoint is designed clearly there is usage for a NucleusContext, then the ExtensionPoint does not need to take the NucleusContext as argument, but keep in mind that 
 a 3rd Extension may need one due to different reasons.
-* __Instantiation__ : Inside the DataNucleus Core, regardless if the runtime is OSGi managed or non managed, extension instances are created per PMF. 
+* __Instantiation__ : Inside the DataNucleus Core, regardless if the runtime is OSGi managed or non managed, extension instances are created per PMF/EMF. 
 DataNucleus Extensions should always be created through a PluginManager, regardless if the managed environment would allow you to instantiate using their own interfaces. 
 This allows DataNucleus and its Plug-ins to run in non managed environments.
 

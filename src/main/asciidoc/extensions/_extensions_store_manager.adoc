@@ -4,84 +4,8 @@
 :_imagesdir: images/
 
 DataNucleus provides support for persisting objects to particular datastores. It provides this capability via a "Store Manager". 
-It provides a Store Manager plugin for many datastores (see below). You can extend DataNucleus's capabilities using the plugin extension 
-*org.datanucleus.store_manager*.
-
-[cols="2,1,1,2,2", options="header"]
-.Store Managers
-|===
-|Plugin extension-point
-|Key
-|URL-key
-|Description
-|Location
-
-|org.datanucleus.store_manager
-|rdbms
-|jdbc
-|Store Manager for RDBMS datastores
-|datanucleus-rdbms
-
-|org.datanucleus.store_manager
-|cassandra
-|cassandra
-|Store Manager for Cassandra datastore
-|datanucleus-cassandra
-
-|org.datanucleus.store_manager
-|ldap
-|ldap
-|Store Manager for LDAP datastores
-|datanucleus-ldap
-
-|org.datanucleus.store_manager
-|excel
-|excel
-|Store Manager for Excel spreadsheets
-|datanucleus-excel
-
-|org.datanucleus.store_manager
-|odf
-|odf
-|Store Manager for ODF spreadsheets
-|datanucleus-odf
-
-|org.datanucleus.store_manager
-|xml
-|xml
-|Store Manager for XML datastores
-|datanucleus-xml
-
-|org.datanucleus.store_manager
-|json
-|json
-|Store Manager for JSON datastores
-|datanucleus-json
-
-|org.datanucleus.store_manager
-|amazons3
-|amazons3
-|Store Manager for Amazon S3 datastore
-|datanucleus-json
-
-|org.datanucleus.store_manager
-|googlestorage
-|googlestorage
-|Store Manager for Google Storage datastore
-|datanucleus-json
-
-|org.datanucleus.store_manager
-|hbase
-|hbase
-|Store Manager for HBase datastores
-|datanucleus-hbase
-
-|org.datanucleus.store_manager
-|mongodb
-|mongodb
-|Store Manager for MongoDB datastores
-|datanucleus-mongodb
-|===
+It provides a Store Manager plugin for many datastores. 
+You can extend DataNucleus's capabilities to support other datastores using the plugin extension *org.datanucleus.store_manager*.
 
 
 == Interface
