@@ -38,8 +38,8 @@ public interface IdentityKeyTranslator
 
 == Plugin Specification
 
-When we have defined our "IdentityKeyTranslator" we just need to make it into a DataNucleus  plugin. To do this you simply add a file 
-`plugin.xml` to your JAR at the root. This file should look like this
+When we have defined our "IdentityKeyTranslator" we just need to make it into a DataNucleus  plugin. 
+To do this you simply add a file `plugin.xml` to your JAR at the root. This file should look like this
 
 [source,xml]
 -----
@@ -56,5 +56,5 @@ Note that you also require a `MANIFEST.MF` file as xref:extensions.adoc#MANIFEST
 == Plugin Usage
 
 The only thing remaining is to use your new _IdentityStringTranslator_ plugin. You do this by having your plugin in the CLASSPATH at runtime, 
-and setting the persistence property __datanucleus.identityKeyTranslatorType__ to _mytranslator_ (the name you specified in the plugin.xml file).
+and setting the persistence property *datanucleus.identityKeyTranslatorType* to _mytranslator_ (the name you specified in the `plugin.xml` file).
 

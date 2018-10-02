@@ -260,6 +260,5 @@ you simply add a file `plugin.xml` to your JAR at the root. This file should loo
 
 Note that you also require a `MANIFEST.MF` file as xref:extensions.adoc#MANIFEST[described above].
 
-The name "myoid" should be specified when you create the PersistenceManagerFactory using 
-the persistence property name "org.datanucleus.datastoreIdentityType". Thats all. 
+You should now create the PMF/EMF using the persistence property *datanucleus.datastoreIdentityType* set to _myoid_. Thats all. 
 You now have a DataNucleus "datastore identity" extension.
