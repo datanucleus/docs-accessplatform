@@ -42,8 +42,8 @@ Bundle-Vendor: My Company
 
 This provides basic information for DataNucleus, but also for the OSGi environment, should it ever be required.
 
-Each DataNucleus bundle uses a version schema that has the following grammar (OSGi 3.0 §3.2.4): _major.minor.micro.qualifier_
-Major, Minor and Macro are numeric values, and qualifier is a alphanumeric.
+Each DataNucleus bundle uses a version schema that has the following versioning scheme (OSGi 3.0 §3.2.4): _major.minor.revision.qualifier_
+major, minor and revision are numeric values, and qualifier is an alphanumeric.
 
 Each bundle has the version value set in the `/META-INF/MANIFEST.MF` file, Bundle-Version entry.
 -----
@@ -59,7 +59,7 @@ The most common version compatibility policies are (OSGI 3.0 §3.6.2):
 
 * major - An incompatible update
 * minor - A backward compatible update
-* micro - A change that does not affect the interface: for example, a bug fix
+* revision - A change that does not affect the interface: for example, a bug fix
 
 
 When your bundle depends on another bundle, you must declare it in the MANIFEST file, via the Require-Bundle entry.
@@ -93,10 +93,10 @@ bundle version, and the dependencies are auto-generated from imports etc. We rec
 A non-managed environment is a runtime environment where DataNucleus runs and plug-ins are not managed by a container. 
 In this environment the plug-in discovery and lifecycle is managed by DataNucleus.
 JavaSE and JavaEE runtimes are considered _non-managed_ environments.
-In non managed environments there is no lifecycle itself of plug-ins. 
+In non managed environments there is no lifecycle itself for plug-ins. 
 
 There is a 1 to N instance relationship from DataNucleus to a plug-in per PMF/EMF. 
-More exactly, if only one PMF/EMF exists, there is only one Plug-in instance for a Connection Pool Plug-in, and if "N" PMF/EMF exist, there are "N" Plug-in instances for a Connection Pool Plug-in.
+More exactly, if only one PMF/EMF exists, there is only one Plug-in instance for a Connection Pool Plug-in, and if "N" PMF/EMF exist, there are "N" Plug-in instances for a ConnectionPool Plug-in.
 Extensions implemented by plugins are instantiated on demand and terminated on PMF/EMF closing, PM/EM closing or in another form depending on what the extension is used for.
 
 
