@@ -122,7 +122,7 @@ which equates to
 WHERE p.name = 'FIRST')
 -----
 
-You can also invoke methods, so a slight variation on this clause would be
+You can also invoke functions, so a slight variation on this clause would be
 
 [source,java]
 -----
@@ -275,8 +275,7 @@ crit.select(candidate);
 Subquery<Double> subCrit = crit.subquery(Double.class);
 Root<Employee> subCandidate = subCrit.from(Employee.class);
 subCandidate.alias("e2");
-Path e2SalaryField = subCandidate.get("salary");
-Subquery<Double> avgSalary = subCrit.select(cb.avg(e2SalaryField));
+Subquery<Double> avgSalary = subCrit.select(cb.avg(subCandidate.get("salary")));
 
 // Add WHERE clause to outer query, linking to subquery
 Path eSalaryField = candidate.get("salary");
