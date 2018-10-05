@@ -263,6 +263,27 @@ SELECT FROM mydomain.Inventory WHERE this.products.contains(var) && var.name.sta
 -----
 
 
+== Query API - If-Then-Else
+
+Let's make use of an IF-THEN-ELSE expression to return the products based on whether they are "domestic" or "international" (in our case its just based on the "id")
+
+[source,java]
+-----
+JDOQLTypedQuery<Product> tq = pm.newJDOQLTypedQuery(Product.class);
+QProduct cand = QProduct.candidate();
+IfThenElseExpression<String> ifElseExpr = tq.ifThenElse(String.class, cand.id.lt(1000), "Domestic", "International");
+tq.result(false, ifElseExpr);
+List<String> results = tq.executeResultList();
+-----
+
+This equates to the single-string query
+
+[source,java]
+-----
+SELECT IF (this.id < 1000) "Domestic" ELSE "International" FROM mydomain.Product
+-----
+
+
 == Query API - Subqueries
 
 Let's try to find all Products that have a value below the average of all Products. This means we need to use a subquery
