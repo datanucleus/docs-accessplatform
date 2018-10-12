@@ -507,6 +507,13 @@ An entry in the "Result" column indicates, whether the function may be used in t
 |icon:check[]
 |icon:check[]
 |icon:check[]
+
+|bboxTest(Geometry)
+|Returns TRUE if if the bounding box of this Geometry overlaps the passed Geometry's bounding box
+|icon:exclamation[] [1]
+|icon:check[]
+|icon:check[]
+|icon:check[]
 |===
 
 [1] Oracle does not allow boolean expressions in the SELECT-list.
@@ -605,13 +612,6 @@ These functions are only supported on certain RDBMS.
 |PostGIS
 |MySQL
 |Oracle Spatial
-
-|Spatial.bboxTest(Geometry, Geometry)
-|Returns TRUE if if the bounding box of the first Geometry overlaps second Geometry's bounding box
-|icon:exclamation[] [1]
-|icon:check[]
-|icon:check[]
-|icon:check[]
 
 |PostGIS.bboxOverlapsLeft(Geometry, Geometry)
 |The PostGIS _&amp;<_ operator returns TRUE if the bounding box of the first Geometry overlaps or is to the left of second Geometry's bounding box
