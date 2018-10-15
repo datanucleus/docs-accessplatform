@@ -323,3 +323,40 @@ List<Product> results = tq.filter(cand.value.lt(40.00)).setCandidates(myCandidat
 
 This will process the query link:query.html#jdoql_inmemory[in-memory].
 
+
+[[jdoql_typed_geospatial]]
+== Query API - Geospatial
+image:../images/nucleus_extension.png[]
+
+NOTE: You need to be using the DataNucleus `javax.jdo.jar` to be able to use this extension.
+
+When you have fields/properties that use geospatial types, clearly DataNucleus provides excellent support for their persistence, and
+you can invoke methods on those fields using string-based JDOQL. DataNucleus also allows use of methods using JDOQLTypedQuery for these types.
+
+Firstly, a geospatial field will be mapped on to one of _GeometryExpression_, _LineStringExpression_, _PointExpression_, _PolygonExpression_, _LinearRingExpression_,
+_MultiLineStringExpression_, _MultiPointExpression_, or _MultiPolygonExpression_. 
+These types have http://www.datanucleus.org/javadocs/javax.jdo/3.2/javax/jdo/query/geospatial/package-summary.html[a range of methods available on them].
+
+An example,
+
+[source,java]
+-----
+JDOQLTypedQuery<Property> tq = pm.newJDOQLTypedQuery(Property.class);
+QProperty cand = QProperty.candidate();
+
+tq.filter(cand.location.ne((Point)null).and(cand.location.getX().lt(tq.numericParameter("theX"))));
+tq.setParameter("theX", 100.0);
+
+List list = tq.executeList();
+-----
+
+
+=== Geospatial Static Methods
+
+You can also invoke static geospatial methods in JDOQLTypedQuery. You do this via use of the _GeospatialHelper_.
+
+[source,java]
+-----
+GeospatialHelper geoHelper = tq.getGeospatialHelper();
+...
+-----
