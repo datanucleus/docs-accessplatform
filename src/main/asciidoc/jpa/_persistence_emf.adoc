@@ -66,10 +66,10 @@ Please refer to the docs for your JavaEE server for more details.
 [[persistenceunit]]
 == Persistence Unit
 
-When designing an application you can usually nicely separate your entities into independent groupings that can be treated separately, 
-perhaps within a different DAO object, if using DAOs. JPA introduces the idea of a _persistence-unit_. A _persistence-unit_ provides a 
-convenient way of specifying a set of metadata files, and classes, and jars that contain all classes to be persisted in a grouping. 
-The persistence-unit is named, and the name is used for identifying it. Consequently this name can then be used when defining what classes are to be enhanced, for example.
+As shown above, we create an EMF for a _persistence-unit_. 
+A _persistence-unit_ is simply a way of having independent groupings of entities, mapping info and/or jars that will be managed together.
+The _persistence-unit_ is named, and the name is used for identifying it (as used above in creating the EMF). 
+This name can also then be used when defining what classes are to be enhanced, for example.
 
 To define a _persistence-unit_ you first need to add a file `persistence.xml` to the `META-INF/` directory of your application jar. 
 This file will be used to define your _persistence-unit(s)_. Let's show an example
@@ -116,7 +116,7 @@ In this example we have defined 2 _persistence-unit(s)_.
 The first has the name "OnlineStore" and contains 5 classes (annotated). 
 The second has the name "Accounting" and contains a metadata file called `orm.xml` in a particular package (which will define the classes being part of that unit). 
 This means that once we have defined this we can reference these _persistence-unit_s in our persistence operations. 
-You can find the XSD for `persistence.xml` http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd[here].
+You can find the XSD for `persistence.xml` http://xmlns.jcp.org/xml/ns/persistence/persistence_2_2.xsd[here].
 
 There are several sub-elements of this `persistence.xml` file worth describing
 
