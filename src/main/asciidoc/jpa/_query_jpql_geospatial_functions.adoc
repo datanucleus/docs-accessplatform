@@ -128,14 +128,14 @@ An entry in the "Result" column indicates, whether the funcion may be used in th
 |MySQL
 |Oracle Spatial
 
-|Spatial.startPoint(Curve))
+|Spatial.startPoint(Curve)
 |Returns the first point of the Curve.
 |icon:check[]
 |icon:check[]
 |icon:check[]
 |icon:check[]
 
-|Spatial.endPoint(Curve))
+|Spatial.endPoint(Curve)
 |Returns the last point of the Curve.
 |icon:check[]
 |icon:check[]
@@ -164,14 +164,14 @@ An entry in the "Result" column indicates, whether the funcion may be used in th
 |MySQL
 |Oracle Spatial
 
-|Spatial.isClosed(Curve), Spatial.isClosed(MultiCurve)
+|Spatial.isClosed(Curve)
 |Returns TRUE if Curve is closed, i.e., if StartPoint(Curve) = EndPoint(Curve).
 |icon:exclamation[] [1]
 |icon:check[]
 |icon:check[]
 |icon:check[]
 
-|Spatial.length(Curve), Spatial.length(MultiCurve)
+|Spatial.length(Curve)
 |Returns the length of the Curve.
 |icon:check[]
 |icon:check[]
@@ -220,21 +220,21 @@ An entry in the "Result" column indicates, whether the funcion may be used in th
 |MySQL
 |Oracle Spatial
 
-|Spatial.centroid(Surface), centroid(MultiSurface)
+|Spatial.centroid(Surface)
 |Returns the centroid of Surface, which may lie outside of it.
 |icon:check[]
 |icon:check[]
 |icon:times[] [1]
 |icon:check[]
 
-|Spatial.pointOnSurface(Surface), pointOnSurface(MultiSurface)
+|Spatial.pointOnSurface(Surface)
 |Returns a Point guaranteed to lie on the surface.
 |icon:check[]
 |icon:check[]
 |icon:times[] [1]
 |icon:check[]
 
-|Spatial.area(Surface), area(MultiSurface)
+|Spatial.area(Surface)
 |Returns the area of Surface.
 |icon:check[]
 |icon:check[]
@@ -525,63 +525,63 @@ An entry in the "Result" column indicates, whether the funcion may be used in th
 |icon:check[]
 |icon:check[]
 
-|Spatial.geomCollFromText(String, Integer)
+|Spatial.geomCollFromText(Object, Integer)
 |Construct a GeometryCollection given its well-known textual representation.
 |icon:times[]
 |icon:check[]
 |icon:check[]
 |icon:check[]
 
-|Spatial.geomFromWKB(String, Integer)
+|Spatial.geomFromWKB(Object, Integer)
 |Construct a Geometry given its well-known binary representation.
 |icon:times[]
 |icon:check[]
 |icon:check[]
 |icon:check[]
 
-|Spatial.pointFromWKB(String, Integer)
+|Spatial.pointFromWKB(Object, Integer)
 |Construct a Point given its well-known binary representation.
 |icon:times[]
 |icon:check[]
 |icon:check[]
 |icon:check[]
 
-|Spatial.lineFromWKB(String, Integer)
+|Spatial.lineFromWKB(Object, Integer)
 |Construct a LineString given its well-known binary representation.
 |icon:times[]
 |icon:check[]
 |icon:check[]
 |icon:check[]
 
-|Spatial.polyFromWKB(String, Integer)
+|Spatial.polyFromWKB(Object, Integer)
 |Construct a Polygon given its well-known binary representation.
 |icon:times[]
 |icon:check[]
 |icon:check[]
 |icon:check[]
 
-|Spatial.mPointFromWKB(String, Integer)
+|Spatial.mPointFromWKB(Object, Integer)
 |Construct a MultiPoint given its well-known binary representation.
 |icon:times[]
 |icon:check[]
 |icon:check[]
 |icon:check[]
 
-|Spatial.mLineFromWKB(String, Integer)
+|Spatial.mLineFromWKB(Object, Integer)
 |Construct a MultiLineString given its well-known binary representation.
 |icon:times[]
 |icon:check[]
 |icon:check[]
 |icon:check[]
 
-|Spatial.mPolyFromWKB(String, Integer)
+|Spatial.mPolyFromWKB(Object, Integer)
 |Construct a MultiPolygon given its well-known binary representation.
 |icon:times[]
 |icon:check[]
 |icon:check[]
 |icon:check[]
 
-|Spatial.geomCollFromWKB(String, Integer)
+|Spatial.geomCollFromWKB(Object, Integer)
 |Construct a GeometryCollection given its well-known binary representation.
 |icon:times[]
 |icon:check[]
