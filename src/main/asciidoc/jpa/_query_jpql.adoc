@@ -776,7 +776,9 @@ Clearly there are better ways of handling dates than this so it serves simply as
 SELECT FUNCTION('date_part', myDate, 'YYYY-MM-DD') FROM ...
 -----
 
-In addition, DataNucleus JPA provides support for a number of link:query.html#jpql_geospatial_functions[Geospatial functions].
+
+
+include::_query_jpql_geospatial_functions.adoc[leveloffset=+2]
 
 
 
@@ -1391,6 +1393,3 @@ coalesce_expression::= COALESCE(scalar_expression {, scalar_expression}+)
 nullif_expression::= NULLIF(scalar_expression, scalar_expression)
 -----
 
-
-
-include::_query_jpql_geospatial_functions.adoc[leveloffset=+1]

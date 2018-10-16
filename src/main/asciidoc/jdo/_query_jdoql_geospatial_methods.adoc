@@ -1,8 +1,59 @@
-[[jdoql_geospatial_methods]]
+[[jdoql_methods_geospatial]]
 = Geospatial Methods
 :_basedir: ../
 :_imagesdir: images/
 
+
+In terms of geospatial types that are part of the JRE
+
+[cols="3,3,8,1,1", options="header"]
+|===
+|Class
+|Method
+|Description
+|Standard
+|In-Memory
+
+|java.awt.Point
+|getX()
+|Returns the X coordinate. *Only on RDBMS*
+|icon:times[]
+|icon:check[]
+
+|java.awt.Point
+|getY()
+|Returns the Y coordinate. *Only on RDBMS*
+|icon:times[]
+|icon:check[]
+
+|java.awt.Rectangle
+|getX()
+|Returns the X coordinate. *Only on RDBMS*
+|icon:times[]
+|icon:check[]
+
+|java.awt.Rectangle
+|getY()
+|Returns the Y coordinate. *Only on RDBMS*
+|icon:times[]
+|icon:check[]
+
+|java.awt.Rectangle
+|getWidth()
+|Returns the width. *Only on RDBMS*
+|icon:times[]
+|icon:check[]
+
+|java.awt.Rectangle
+|getHeight()
+|Returns the height. *Only on RDBMS*
+|icon:times[]
+|icon:check[]
+|===
+
+
+
+In terms of geospatial types that are provided by more specialised libraries, such as JTS, the following applies.
 
 image:../images/nucleus_extension.png[]
 
@@ -11,133 +62,6 @@ The list contains all of the methods detailed in Section 3.2 of the http://www.o
 Additionally DataNucleus provides some commonly required methods like bounding box test and datastore-specific methods. 
 The following tables list all available methods as well as information about which RDBMS implement them. 
 An entry in the "Result" column indicates, whether the function may be used in the result part of a JDOQL query.
-
-== Static Methods for Constructing a Geometry Value given its Well-known Representation (OGC SF 3.2.6, 3.2.7)
-
-[cols="7,10,1,1,1,1", options="header"]
-|===
-|Method
-|Description
-|Result [1]
-|PostGIS
-|MySQL
-|Oracle Spatial
-
-|Spatial.geomFromText(String, Integer)
-|Construct a Geometry value given its well-known textual representation.
-|icon:times[]
-|icon:check[]
-|icon:check[]
-|icon:check[]
-
-|Spatial.pointFromText(String, Integer)
-|Construct a Point given its well-known textual representation.
-|icon:times[]
-|icon:check[]
-|icon:check[]
-|icon:check[]
-
-|Spatial.lineFromText(String, Integer)
-|Construct a LineString given its well-known textual representation.
-|icon:times[]
-|icon:check[]
-|icon:check[]
-|icon:check[]
-
-|Spatial.polyFromText(String, Integer)
-|Construct a Polygon given its well-known textual representation.
-|icon:times[]
-|icon:check[]
-|icon:check[]
-|icon:check[]
-
-|Spatial.mPointFromText(String, Integer)
-|Construct a MultiPoint given its well-known textual representation.
-|icon:times[]
-|icon:check[]
-|icon:check[]
-|icon:check[]
-
-|Spatial.mLineFromText(String, Integer)
-|Construct a MultiLineString given its well-known textual representation.
-|icon:times[]
-|icon:check[]
-|icon:check[]
-|icon:check[]
-
-|Spatial.mPolyFromText(String, Integer)
-|Construct a MultiPolygon given its well-known textual representation.
-|icon:times[]
-|icon:check[]
-|icon:check[]
-|icon:check[]
-
-|Spatial.geomCollFromText(String, Integer)
-|Construct a GeometryCollection given its well-known textual representation.
-|icon:times[]
-|icon:check[]
-|icon:check[]
-|icon:check[]
-
-|Spatial.geomFromWKB(String, Integer)
-|Construct a Geometry value given its well-known binary representation.
-|icon:times[]
-|icon:check[]
-|icon:check[]
-|icon:check[]
-
-|Spatial.pointFromWKB(String, Integer)
-|Construct a Point given its well-known binary representation.
-|icon:times[]
-|icon:check[]
-|icon:check[]
-|icon:check[]
-
-|Spatial.lineFromWKB(String, Integer)
-|Construct a LineString given its well-known binary representation.
-|icon:times[]
-|icon:check[]
-|icon:check[]
-|icon:check[]
-
-|Spatial.polyFromWKB(String, Integer)
-|Construct a Polygon given its well-known binary representation.
-|icon:times[]
-|icon:check[]
-|icon:check[]
-|icon:check[]
-
-|Spatial.mPointFromWKB(String, Integer)
-|Construct a MultiPoint given its well-known binary representation.
-|icon:times[]
-|icon:check[]
-|icon:check[]
-|icon:check[]
-
-|Spatial.mLineFromWKB(String, Integer)
-|Construct a MultiLineString given its well-known binary representation.
-|icon:times[]
-|icon:check[]
-|icon:check[]
-|icon:check[]
-
-|Spatial.mPolyFromWKB(String, Integer)
-|Construct a MultiPolygon given its well-known binary representation.
-|icon:times[]
-|icon:check[]
-|icon:check[]
-|icon:check[]
-
-|Spatial.geomCollFromWKB(String, Integer)
-|Construct a GeometryCollection given its well-known binary representation.
-|icon:times[]
-|icon:check[]
-|icon:check[]
-|icon:check[]
-|===
-
-[1] These methods can't be used in the return part because it's not possible to determine the return type from the parameters.
-
 
 == Methods on Type Geometry (OGC SF 3.2.10)
 
@@ -598,6 +522,134 @@ An entry in the "Result" column indicates, whether the function may be used in t
 |===
 
 [1] These methods are currently not implemented in MySQL. They may appear in future releases.
+
+
+== Static Methods for Constructing a Geometry Value given its Well-known Representation (OGC SF 3.2.6, 3.2.7)
+
+[cols="7,10,1,1,1,1", options="header"]
+|===
+|Method
+|Description
+|Result [1]
+|PostGIS
+|MySQL
+|Oracle Spatial
+
+|Spatial.geomFromText(String, Integer)
+|Construct a Geometry value given its well-known textual representation.
+|icon:times[]
+|icon:check[]
+|icon:check[]
+|icon:check[]
+
+|Spatial.pointFromText(String, Integer)
+|Construct a Point given its well-known textual representation.
+|icon:times[]
+|icon:check[]
+|icon:check[]
+|icon:check[]
+
+|Spatial.lineFromText(String, Integer)
+|Construct a LineString given its well-known textual representation.
+|icon:times[]
+|icon:check[]
+|icon:check[]
+|icon:check[]
+
+|Spatial.polyFromText(String, Integer)
+|Construct a Polygon given its well-known textual representation.
+|icon:times[]
+|icon:check[]
+|icon:check[]
+|icon:check[]
+
+|Spatial.mPointFromText(String, Integer)
+|Construct a MultiPoint given its well-known textual representation.
+|icon:times[]
+|icon:check[]
+|icon:check[]
+|icon:check[]
+
+|Spatial.mLineFromText(String, Integer)
+|Construct a MultiLineString given its well-known textual representation.
+|icon:times[]
+|icon:check[]
+|icon:check[]
+|icon:check[]
+
+|Spatial.mPolyFromText(String, Integer)
+|Construct a MultiPolygon given its well-known textual representation.
+|icon:times[]
+|icon:check[]
+|icon:check[]
+|icon:check[]
+
+|Spatial.geomCollFromText(String, Integer)
+|Construct a GeometryCollection given its well-known textual representation.
+|icon:times[]
+|icon:check[]
+|icon:check[]
+|icon:check[]
+
+|Spatial.geomFromWKB(String, Integer)
+|Construct a Geometry value given its well-known binary representation.
+|icon:times[]
+|icon:check[]
+|icon:check[]
+|icon:check[]
+
+|Spatial.pointFromWKB(String, Integer)
+|Construct a Point given its well-known binary representation.
+|icon:times[]
+|icon:check[]
+|icon:check[]
+|icon:check[]
+
+|Spatial.lineFromWKB(String, Integer)
+|Construct a LineString given its well-known binary representation.
+|icon:times[]
+|icon:check[]
+|icon:check[]
+|icon:check[]
+
+|Spatial.polyFromWKB(String, Integer)
+|Construct a Polygon given its well-known binary representation.
+|icon:times[]
+|icon:check[]
+|icon:check[]
+|icon:check[]
+
+|Spatial.mPointFromWKB(String, Integer)
+|Construct a MultiPoint given its well-known binary representation.
+|icon:times[]
+|icon:check[]
+|icon:check[]
+|icon:check[]
+
+|Spatial.mLineFromWKB(String, Integer)
+|Construct a MultiLineString given its well-known binary representation.
+|icon:times[]
+|icon:check[]
+|icon:check[]
+|icon:check[]
+
+|Spatial.mPolyFromWKB(String, Integer)
+|Construct a MultiPolygon given its well-known binary representation.
+|icon:times[]
+|icon:check[]
+|icon:check[]
+|icon:check[]
+
+|Spatial.geomCollFromWKB(String, Integer)
+|Construct a GeometryCollection given its well-known binary representation.
+|icon:times[]
+|icon:check[]
+|icon:check[]
+|icon:check[]
+|===
+
+[1] These methods can't be used in the return part because it's not possible to determine the return type from the parameters.
+
 
 
 == Supplementary Static Methods

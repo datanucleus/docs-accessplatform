@@ -874,55 +874,7 @@ class Product
 |===
 
 
-[[jdoql_methods_geospatial]]
-=== GeoSpatial Methods
-
-[cols="3,3,8,1,1", options="header"]
-|===
-|Class
-|Method
-|Description
-|Standard
-|In-Memory
-
-|java.awt.Point
-|getX()
-|Returns the X coordinate. *Only on RDBMS*
-|icon:times[]
-|icon:check[]
-
-|java.awt.Point
-|getY()
-|Returns the Y coordinate. *Only on RDBMS*
-|icon:times[]
-|icon:check[]
-
-|java.awt.Rectangle
-|getX()
-|Returns the X coordinate. *Only on RDBMS*
-|icon:times[]
-|icon:check[]
-
-|java.awt.Rectangle
-|getY()
-|Returns the Y coordinate. *Only on RDBMS*
-|icon:times[]
-|icon:check[]
-
-|java.awt.Rectangle
-|getWidth()
-|Returns the width. *Only on RDBMS*
-|icon:times[]
-|icon:check[]
-
-|java.awt.Rectangle
-|getHeight()
-|Returns the height. *Only on RDBMS*
-|icon:times[]
-|icon:check[]
-|===
-
-In addition, DataNucleus JDO provides support for a number of specialised link:query.html#jdoql_geospatial_methods[Geospatial methods].
+include::_query_jdoql_geospatial_methods.adoc[leveloffset=+2]
 
 
 
@@ -1656,5 +1608,3 @@ INNER JOIN `B` `B0` ON `A0`.ID = `B`.ELEMENT
 WHERE `B0`.NAME = 'Jones'
 -----
 
-
-include::_query_jdoql_geospatial_methods.adoc[leveloffset=+1]
