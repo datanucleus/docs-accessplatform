@@ -62,7 +62,7 @@ You can change this location on the _Java Compiler -> Annotation Processing_ pag
 Please refer to this https://github.com/frgomes/poc-scala-datanucleus[proof of concept project] which demonstrates use of DataNucleus JDO (including Typed queries) with Scala.
 
 
-
+[[jdoql_typed_classes]]
 == Query Classes
 
 The above preparation will mean that whenever you compile, the DataNucleus annotation processor (in `datanucleus-jdo-query.jar`) will generate a *query class* 
@@ -118,6 +118,7 @@ All examples below use _field_ mode but just add _()_ after the field to see the
 *Note that we currently only support generation of Q classes for persistable classes that are in their own source file, so no support for inline static persistable classes is available currently*
 
 
+[[jdoql_typed_filter]]
 == Query API - Filtering
 
 Let's provide a sample usage of this query API. 
@@ -145,6 +146,7 @@ and from that make use of its fields, and the various Java methods present for t
 Note that the API is _fluent_, meaning you can chain calls easily.
 
 
+[[jdoql_typed_order]]
 == Query API - Ordering
 
 We want to order the results of the previous query by the product name, putting nulls first. 
@@ -164,6 +166,7 @@ If you don't want to specify null positioning, simply omit the `nullsFirst()` ca
 
 
 
+[[jdoql_typed_methods]]
 == Query API - Methods
 
 In the above example you will have seen the use of some of the normal JDOQL methods. With the JDOQLTyped API these are available on the different types of expressions.
@@ -175,7 +178,7 @@ NOTE: The JDOQL methods _JDOHelper.getObjectId_ and _JDOHelper.getVersion_ are a
 NOTE: The JDOQL methods _Math.{xxx}_ are available on `NumericExpression`, for the numeric that they would be invoked on.
 
 
-[[jdoql_typed_geospatial]]
+[[jdoql_typed_methods_geospatial]]
 === GeoSpatial Object Methods
 image:../images/nucleus_extension.png[]
 
@@ -209,6 +212,7 @@ SELECT FROM mydomain.Property WHERE this.location.getX() < :theX
 -----
 
 
+[[jdoql_typed_methods_geospatial_static]]
 === GeoSpatial Static Methods
 image:../images/nucleus_extension.png[]
 
@@ -226,6 +230,7 @@ and this expression is then available to be used in the _JDOQLTypedQuery_.
 
 
 
+[[jdoql_typed_result]]
 == Query API - Results
 
 Let's take the query in the above example and return the name and value of the Products only
@@ -260,6 +265,7 @@ SELECT max(this.value), min(this.value) FROM mydomain.Product
 -----
 
 
+[[jdoql_typed_parameters]]
 == Query API - Parameters
 
 It is important to note that JDOQLTypedQuery only accepts *named* parameters. 
@@ -292,6 +298,7 @@ If you invoke the query with multiple possible values of the parameter then this
 
 
 
+[[jdoql_typed_variables]]
 == Query API - Variables
 
 Let's try to find all Inventory objects containing a Product with a particular name.
@@ -313,6 +320,7 @@ SELECT FROM mydomain.Inventory WHERE this.products.contains(var) && var.name.sta
 -----
 
 
+[[jdoql_typed_ifthenelse]]
 == Query API - If-Then-Else
 
 Let's make use of an IF-THEN-ELSE expression to return the products based on whether they are "domestic" or "international" (in our case its just based on the "id")
@@ -334,6 +342,7 @@ SELECT IF (this.id < 1000) "Domestic" ELSE "International" FROM mydomain.Product
 -----
 
 
+[[jdoql_typed_subquery]]
 == Query API - Subqueries
 
 Let's try to find all Products that have a value below the average of all Products. This means we need to use a subquery
@@ -359,7 +368,7 @@ then you would use `cand` in the above example (or a field of it as required).
 
 
 
-[[jdoql_typed_Candidates]]
+[[jdoql_typed_candidates]]
 == Query API - Candidates
 
 If you don't want to query instances in the datastore but instead query a collection of candidate instances, you can do this by setting the candidates, like this
