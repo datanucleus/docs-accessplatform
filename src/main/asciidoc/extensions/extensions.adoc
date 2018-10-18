@@ -42,7 +42,7 @@ Bundle-Vendor: My Company
 
 This provides basic information for DataNucleus, but also for the OSGi environment, should it ever be required.
 
-Each DataNucleus bundle uses a version schema that has the following versioning scheme (OSGi 3.0 §3.2.4): _major.minor.revision.qualifier_
+Each DataNucleus bundle uses a version schema that has the following versioning scheme: _major.minor.revision.qualifier_
 major, minor and revision are numeric values, and qualifier is an alphanumeric.
 
 Each bundle has the version value set in the `/META-INF/MANIFEST.MF` file, Bundle-Version entry.
@@ -55,7 +55,7 @@ Bundle-Vendor: DataNucleus
 Bundle-Version: 1.2.0.b2
 -----
 
-The most common version compatibility policies are (OSGI 3.0 §3.6.2):
+The most common version compatibility policies are:
 
 * major - An incompatible update
 * minor - A backward compatible update
@@ -75,13 +75,13 @@ Bundle-Version: 1.2.0.b2
 Bundle-Localization: plugin
 Require-Bundle: org.datanucleus
 -----
-See more on the OSGi 3.0 specification §3.13.1.
+See more in the OSGi 3.0 specification §3.13.1.
 
 If a bundle depends on a specific version of a bundle, you must declare it in the _Require-Bundle_ entry, bundle-version parameter. For example
 -----
 Require-Bundle: org.datanucleus;bundle-version=(1.2.0.b2, 2.0)
 -----
-See more on the OSGi 3.0 specification §3.2.5 and §3.13.1 chapters.
+See more in the OSGi 3.0 specification §3.2.5 and §3.13.1 chapters.
 
 All DataNucleus plugins use the Maven _bundle_ plugin to auto-generate the `MANIFEST.MF` file. This means that the version in the `pom.xml` is taken for the
 bundle version, and the dependencies are auto-generated from imports etc. We recommend that you use this same method for your own plugins.
@@ -107,7 +107,7 @@ The discovery, registry and lifecycle of plug-ins are controlled by the containe
 There is no plug-in instance relationship from DataNucleus to a plug-in regarding PMF/EMF instances. 
 In managed environments, there is only one plug-in instance for one or "N" PMF/EMFs. Again, this is managed by the container.
 
-DataNucleus supports OSGi containers as managed environment. In OSGi managed environments plug-in lifecycle is determined by the OSGi specification. 
+DataNucleus supports OSGi containers as a managed environment. In OSGi managed environments the plug-in lifecycle is determined by the OSGi specification. 
 Once activated, a plug-in is only stopped when the OSGi container finishes its execution, or the plug-in is stopped by an OSGi command.
 
 
@@ -119,7 +119,7 @@ A plugin owns an Extension, and an Extension implements an ExtensionPoint. The b
 This has no influence with the plug-in lifecycle.
 * __Manageability__ : In non managed environments, the plug-ins are managed by DataNucleus and maintained with a composition relation to the PMF/EMF instance. 
 This allows a plug-in "instance" per PMF/EMF. If multiple PMF/EMFs are created multiple extensions for an ExtensionPoint are instantiated. 
-In managed environments, more precisely in OSGi containers, the plug-ins are managed by the OSGi framework. Each plug-in will mostly be a singleton inside the OSGi container.
+In OSGi managed environments, the plug-ins are managed by the OSGi framework, and each plug-in will mostly be a singleton inside the OSGi container.
 * __Registration__ : In non managed environments all plugins are registered using an instance of JDOClassLoaderResolver 
 (so using the current ClassLoader of the PMF/EMF and the current thread). This means that the `/plugin.xml` and `/META-INF/MANIFEST.MF` files 
 must be accessible to the classloader. In managed environment this is handled by the container.
@@ -131,7 +131,7 @@ This means that Plug-ins should not hold singleton / static configurations if th
 Constructors or Methods (either one) should have receive a NucleusContext instance as argument. 
 If by the time the ExtensionPoint is designed clearly there is usage for a NucleusContext, then the ExtensionPoint does not need to take the NucleusContext as argument, but keep in mind that 
 a 3rd Extension may need one due to different reasons.
-* __Instantiation__ : Inside the DataNucleus Core, regardless if the runtime is OSGi managed or non managed, extension instances are created per PMF/EMF. 
+* __Instantiation__ : Inside dataNucleus-core, regardless if the runtime is OSGi managed or non managed, extension instances are created per PMF/EMF. 
 DataNucleus Extensions should always be created through a PluginManager, regardless if the managed environment would allow you to instantiate using their own interfaces. 
 This allows DataNucleus and its Plug-ins to run in non managed environments.
 
