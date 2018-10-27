@@ -60,7 +60,9 @@ In the case of using container-managed JavaEE, you would instead obtain the _Ent
 EntityManager em;
 -----
 
-You then perform all operations that you need using this _EntityManager_ and finally you must *close* it. Forgetting to close it will lead to memory/resource leaks.
+You then perform all operations that you need using this _EntityManager_.
+
+If you manually created the _EntityManager_ using _createEntityManager()_ then you must also *close* it; forgetting to close it will lead to memory/resource leaks.
 
 [source,java]
 -----
