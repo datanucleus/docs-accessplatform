@@ -40,6 +40,26 @@ In the above example we have 2 fields in the class that will have columns in the
 The field _createTimestamp_ and _createUser_ will be persisted at INSERT with the Timestamp and current user for the insert. 
 The field _updateTimestamp_ and _updateUser_ will be persisted whenever any update is made to the object in the datastore, with the Timestamp and current user for the update.
 
+If you instead wanted to define this in XML then do it like this
+
+[source,xml]
+-----
+<class name="Hotel">
+    <field name="createTimestamp">
+        <extension vendor-name="datanucleus" key="create-timestamp" value="true"/>
+    </field>
+    <field name="createUser">
+        <extension vendor-name="datanucleus" key="create-user" value="true"/>
+    </field>
+    <field name="updateTimestamp">
+        <extension vendor-name="datanucleus" key="update-timestamp" value="true"/>
+    </field>
+    <field name="updateUser">
+        <extension vendor-name="datanucleus" key="update-user" value="true"/>
+    </field>
+</class>
+-----
+
 
 == Defining the Current User
 
