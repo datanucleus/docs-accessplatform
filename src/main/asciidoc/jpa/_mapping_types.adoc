@@ -959,21 +959,21 @@ you use them inside the &lt;package&gt;-tag the values are in effect for all (ge
     <package>mydomain.samples.jtsgeometry</package>
 
     <entity class="mydomain.samples.jtsgeometry.SampleGeometry">
-        <extension vendor-name="datanucleus" key="spatial-dimension" value="2"/>
-        <extension vendor-name="datanucleus" key="spatial-srid" value="4326"/>
+        <extension key="spatial-dimension" value="2"/>
+        <extension key="spatial-srid" value="4326"/>
         <attributes>
             <id name="id"/>
             <basic name="name"/>
             <basic name="geom">
-                <extension vendor-name="datanucleus" key="mapping" value="no-userdata"/> [2]
+                <extension key="mapping" value="no-userdata"/> [2]
             </basic>
         </attributes>
     </entity>
 
     <entity class="mydomain.samples.jtsgeometry.SampleGeometryCollectionM">
-        <extension vendor-name="datanucleus" key="spatial-dimension" value="2"/>
-        <extension vendor-name="datanucleus" key="spatial-srid" value="4326"/>
-        <extension vendor-name="datanucleus" key="postgis-hasMeasure" value="true"/> [3]
+        <extension key="spatial-dimension" value="2"/>
+        <extension key="spatial-srid" value="4326"/>
+        <extension key="postgis-hasMeasure" value="true"/> [3]
         <attributes>
             <id name="id"/>
             <basic name="name"/>
@@ -982,8 +982,8 @@ you use them inside the &lt;package&gt;-tag the values are in effect for all (ge
     </entity>
 
     <entity class="mydomain.samples.jtsgeometry.SampleGeometryCollection3D">
-        <extension vendor-name="datanucleus" key="spatial-dimension" value="3"/>
-        <extension vendor-name="datanucleus" key="spatial-srid" value="-1"/>
+        <extension key="spatial-dimension" value="3"/>
+        <extension key="spatial-srid" value="-1"/>
         <attributes>
             <id name="id"/>
             <basic name="name"/>

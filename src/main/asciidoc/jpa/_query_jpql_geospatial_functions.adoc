@@ -810,13 +810,13 @@ public class SampleLineString
     <package>mydomain.samples.pggeometry</package>
 
     <entity class="mydomain.samples.pggeometry.SampleLineString">
-        <extension vendor-name="datanucleus" key="spatial-dimension" value="2"/>
-        <extension vendor-name="datanucleus" key="spatial-srid" value="4326"/>
+        <extension key="spatial-dimension" value="2"/>
+        <extension key="spatial-srid" value="4326"/>
         <attributes>
             <id name="id"/>
             <basic name="name"/>
             <basic name="geom">
-                <extension vendor-name="datanucleus" key="mapping" value="no-userdata"/>
+                <extension key="mapping" value="no-userdata"/>
             </basic>
         </attributes>
     </entity>

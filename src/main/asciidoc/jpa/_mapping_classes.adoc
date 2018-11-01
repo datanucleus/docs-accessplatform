@@ -194,9 +194,12 @@ Alternatively, using `orm.xml`
 -----
 <entity class="mydomain.test.Hotel">
     <extension key="softdelete" value="true"/>
+    <extension key="softdelete-column-name" value="DELETE_FLAG"/>
     ...
 </entity>
 -----
+
+
 
 Whenever any objects of type `Hotel` are deleted, like this
 
