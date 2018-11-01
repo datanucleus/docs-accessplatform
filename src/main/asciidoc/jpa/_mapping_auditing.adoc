@@ -43,6 +43,27 @@ In the above example we have 2 fields in the class that will have columns in the
 The field _createTimestamp_ and _createUser_ will be persisted at INSERT with the Timestamp and current user for the insert. 
 The field _updateTimestamp_ and _updateUser_ will be persisted whenever any update is made to the object in the datastore, with the Timestamp and current user for the update.
 
+If you instead wanted to define this in `orm.xml` then do it like this
+
+[source,xml]
+-----
+<entity class="mydomain.test.Hotel">
+    <attributes>
+        <basic name="createTimestamp">
+            <extension key="create-timestamp" value="true"/>
+        </basic>
+        <basic name="createUser">
+            <extension key="create-user" value="true"/>
+        </basic>
+        <basic name="updateTimestamp">
+            <extension key="update-timestamp" value="true"/>
+        </basic>
+        <basic name="updateUser">
+            <extension key="update-user" value="true"/>
+        </basic>
+    </attributes>
+</entity>
+-----
 
 == Defining the Current User
 

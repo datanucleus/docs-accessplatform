@@ -187,6 +187,16 @@ public class Hotel
 
 You could optionally specify the _column_ attribute of the `@SoftDelete` annotation to define the column name where this flag is stored.
 
+Alternatively, using `orm.xml`
+
+
+[source,xml]
+-----
+<entity class="mydomain.test.Hotel">
+    <extension key="softdelete" value="true"/>
+    ...
+</entity>
+-----
 
 Whenever any objects of type `Hotel` are deleted, like this
 

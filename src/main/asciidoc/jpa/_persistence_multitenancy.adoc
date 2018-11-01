@@ -28,11 +28,11 @@ You can control this by specifying extension metadata for each persistable class
 
 [source,xml]
 -----
-<class name="MyClass">
-     <extension vendor-name="datanucleus" key="multitenancy-column-name" value="TENANT"/>
-     <extension vendor-name="datanucleus" key="multitenancy-column-length" value="24"/>
+<entity class="mydomain.MyClass">
+     <extension key="multitenancy-column-name" value="TENANT"/>
+     <extension key="multitenancy-column-length" value="24"/>
      ...
-</class>
+</entity>
 -----
 
 or using annotations
@@ -54,17 +54,17 @@ If you have enabled multi-tenancy as above but want to disable multitenancy on a
 
 [source,xml]
 -----
-<class name="MyClass">
-     <extension vendor-name="datanucleus" key="multitenancy-disable" value="true"/>
+<entity class="mydomain.MyClass">
+     <extension key="multitenancy-disable" value="true"/>
      ...
-</class>
+</entity>
 -----
 
 or using annotations
 
 [source,java]
 -----
-@PersistenceCapable
+@Entity
 @MultiTenant(disable=true)
 public class MyClass
 {
