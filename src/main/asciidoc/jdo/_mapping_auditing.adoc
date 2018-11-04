@@ -64,11 +64,11 @@ If you instead wanted to define this in XML then do it like this
 == Defining the Current User
 
 The timestamp can be automatically generated for population here, but clearly the _current user_ is not available as a standard, and so we have to provide a mechanism for setting it.
-You have 2 ways to do this. Choose the one that is most appropriate to your situation
+You have 2 ways to do this; choose the one that is most appropriate to your situation
 
 * Specify the persistence property *datanucleus.CurrentUser* on the PMF to be the current user to use. Optionally you can also specify the same persistence property on each PM
 if you have a particular user for each PM.
-* Define an implementation of the DataNucleus interface _CurrentUserProvider_, and specify it on PMF creation using the property *datanucleus.CurrentUserProvider*.
+* Define an implementation of the DataNucleus interface _org.datanucleus.store.schema.CurrentUserProvider_, and specify it on PMF creation using the property *datanucleus.CurrentUserProvider*.
 This is defined as follows
 
 [source,java]
