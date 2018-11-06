@@ -265,6 +265,15 @@ SELECT max(this.value), min(this.value) FROM mydomain.Product
 -----
 
 
+If you wanted to assign an alias to a result component you do it like this
+
+[source,java]
+-----
+tq.result(false, cand.name.as("THENAME"), cand.value.as("THEVALUE"));
+-----
+
+
+
 [[jdoql_typed_parameters]]
 == Query API - Parameters
 
