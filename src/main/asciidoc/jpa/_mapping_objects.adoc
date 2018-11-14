@@ -52,7 +52,7 @@ public class ParkingSpace
     String location;
 
     @OneToOne
-    @Extension(key="implementation-classes", value="mydomain.samples.vehicles.Car,mydomain.samples.vehicles.Motorbike")
+    @Extension(key="implementation-classes", value="mydomain.vehicles.Car,mydomain.vehicles.Motorbike")
     Object occupier;
 }
 -----
@@ -75,7 +75,7 @@ public class ParkingSpace
     String location;
 
     @OneToOne
-    @Extension(key="implementation-classes", value="mydomain.samples.vehicles.Car,mydomain.samples.vehicles.Motorbike")
+    @Extension(key="implementation-classes", value="mydomain.vehicles.Car,mydomain.vehicles.Motorbike")
     @Extension(key="mapping-strategy", value="identity")
     Object occupier;
 }
@@ -85,7 +85,7 @@ and the datastore schema becomes
 
 image:../images/objects_identity_1_1_db.png[]
 
-and the column "OCCUPIER" will contain strings such as _com.mydomain.samples.object.Car:1_ allowing retrieval of the related implementation object.
+and the column "OCCUPIER" will contain strings such as _mydomain.vehicles.object.Car:1_ allowing retrieval of the related implementation object.
 
 
 [[objects_one_many]]

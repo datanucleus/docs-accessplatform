@@ -46,7 +46,7 @@ or using XML metadata
 
 [source,xml]
 -----
-<entity class="mydomain.test.Hotel">
+<entity class="mydomain.Hotel">
     ...
 </entity>
 -----
@@ -71,7 +71,7 @@ or using XML metadata
 
 [source,xml]
 -----
-<mapped-superclass class="mydomain.test.Building">
+<mapped-superclass class="mydomain.Building">
     ...
 </mapped-superclass>
 -----
@@ -99,7 +99,7 @@ or using XML metadata
 
 [source,xml]
 -----
-<embeddable class="mydomain.test.ConstructionDetails">
+<embeddable class="mydomain.ConstructionDetails">
     ...
 </embeddable>
 -----
@@ -192,7 +192,7 @@ Alternatively, using `orm.xml`
 
 [source,xml]
 -----
-<entity class="mydomain.test.Hotel">
+<entity class="mydomain.Hotel">
     <extension key="softdelete" value="true"/>
     <extension key="softdelete-column-name" value="DELETE_FLAG"/>
     ...

@@ -33,7 +33,7 @@ will be present as field(s) of the class itself. To specify that a class is to u
 
 [source,xml]
 -----
-<entity class="org.mydomain.MyClass">
+<entity class="mydomain.MyClass">
     <attributes>
         <id name="myPrimaryKeyField"/>
     </attributes>
@@ -56,8 +56,8 @@ When we have *multiple identity fields* we also require an *id-class*, using XML
 
 [source,xml]
 -----
-<entity class="org.mydomain.MyClass">
-    <id-class class="org.mydomain.MyIdClass"/>
+<entity class="mydomain.MyClass">
+    <id-class class="mydomain.MyIdClass"/>
     <attributes>
         <id name="myPrimaryKeyField1"/>
         <id name="myPrimaryKeyField2"/>
@@ -331,7 +331,7 @@ To specify that a class is to use *datastore identity* with JPA, you define the 
 
 [source,xml]
 -----
-<entity class="org.mydomain.MyClass">
+<entity class="mydomain.MyClass">
     <datastore-id/>
     ...
 </entity>
@@ -411,7 +411,7 @@ To specify that a class is to use *nondurable identity* with DataNucleus you wou
 
 [source,xml]
 -----
-<entity class="org.mydomain.MyClass">
+<entity class="mydomain.MyClass">
     <nondurable-id/>
     ...
 </entity>

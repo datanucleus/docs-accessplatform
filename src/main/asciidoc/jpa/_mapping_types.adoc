@@ -553,7 +553,7 @@ Collections that support a `Comparator` to order the elements of the set can spe
 [source,java]
 -----
 @OneToMany
-@Extension(key="comparator-name", value="mydomain.model.MyComparator")
+@Extension(key="comparator-name", value="mydomain.MyComparator")
 SortedSet<MyElementType> elements; 
 -----
 
@@ -956,9 +956,9 @@ you use them inside the &lt;package&gt;-tag the values are in effect for all (ge
 [source,xml]
 -----
 <entity-mappings>
-    <package>mydomain.samples.jtsgeometry</package>
+    <package>mydomain.jtsgeometry</package>
 
-    <entity class="mydomain.samples.jtsgeometry.SampleGeometry">
+    <entity class="mydomain.jtsgeometry.SampleGeometry">
         <extension key="spatial-dimension" value="2"/>
         <extension key="spatial-srid" value="4326"/>
         <attributes>
@@ -970,7 +970,7 @@ you use them inside the &lt;package&gt;-tag the values are in effect for all (ge
         </attributes>
     </entity>
 
-    <entity class="mydomain.samples.jtsgeometry.SampleGeometryCollectionM">
+    <entity class="mydomain.jtsgeometry.SampleGeometryCollectionM">
         <extension key="spatial-dimension" value="2"/>
         <extension key="spatial-srid" value="4326"/>
         <extension key="postgis-hasMeasure" value="true"/> [3]
@@ -981,7 +981,7 @@ you use them inside the &lt;package&gt;-tag the values are in effect for all (ge
         </attributes>
     </entity>
 
-    <entity class="mydomain.samples.jtsgeometry.SampleGeometryCollection3D">
+    <entity class="mydomain.jtsgeometry.SampleGeometryCollection3D">
         <extension key="spatial-dimension" value="3"/>
         <extension key="spatial-srid" value="-1"/>
         <attributes>
@@ -1371,7 +1371,7 @@ or using XML metadata
 [source,xml]
 -----
 <basic name="url">
-    <convert converter="mydomain.package.URLStringConverter"/>
+    <convert converter="mydomain.URLStringConverter"/>
 </basic>
 -----
 
@@ -1426,7 +1426,7 @@ If using XML metadata
 [source,xml]
 -----
 <one-to-many name="myMap">
-    <map-key-convert converter="mydomain.package.URLStringConverter"/>
+    <map-key-convert converter="mydomain.URLStringConverter"/>
 </one-to-many>
 -----
 
