@@ -107,6 +107,13 @@ or using annotations
 public class Person ...
 -----
 
+
+NOTE: If the candidate entity has a table using a discriminator, the generated SQL for RDBMS will include a restriction of the possible discriminator values to the candidate and any applicable
+subclasses. If you want to override this and NOT have a discriminator restriction imposed in the SQL then you provide the query hint *dont-restrict-discriminator* set to _true_.
+
+
+
+
 The FROM clause also allows a user to add some explicit joins to related entities, and assign aliases to the joined entities. 
 These are then usable in the filter/ordering/result etc. If you don't add any joins DataNucleus will add joins where they are 
 implicit from the filter expression for example. The FROM clause is of the following structure
