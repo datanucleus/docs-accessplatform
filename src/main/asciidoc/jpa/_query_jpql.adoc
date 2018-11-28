@@ -109,7 +109,7 @@ public class Person ...
 
 
 NOTE: If the candidate entity has a table using a discriminator, the generated SQL for RDBMS will include a restriction of the possible discriminator values to the candidate and any applicable
-subclasses. If you want to override this and NOT have a discriminator restriction imposed in the SQL then you provide the query hint *dont-restrict-discriminator* set to _true_.
+subclasses. If you want to override this and NOT have a discriminator restriction imposed in the SQL then you provide the query hint *datanucleus.dontRestrictDiscriminator* set to _true_.
 
 
 

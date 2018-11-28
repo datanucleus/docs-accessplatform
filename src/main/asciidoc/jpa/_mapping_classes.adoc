@@ -212,7 +212,7 @@ the _myHotel_ object will be updated to set the _soft-delete_ flag to _true_.
 
 Any call to _em.find_ or query will not return the object since it is effectively deleted (though still present in the datastore).
 
-If you want to view the object, you can specify the query hint *include-soft-deletes* as _true_ and the soft-deleted records will be visible.
+If you want to view the object, you can specify the query hint *datanucleus.includeSoftDeletes* as _true_ and the soft-deleted records will be visible.
 
 *This feature is still undergoing development, so not all aspects are feature complete*.
 
