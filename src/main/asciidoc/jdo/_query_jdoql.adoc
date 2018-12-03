@@ -80,7 +80,7 @@ You can restrict to just instances of the candidate by specifying to exclude sub
 NOTE: The "candidate" has an implicit "alias" in JDOQL, which is _this_ (just like in Java). So in the rest of the query you can refer to a field of the candidate as _this.{fieldName}_
 
 NOTE: If the candidate has a table using a discriminator, the generated SQL for RDBMS will include a restriction of the possible discriminator values to the candidate and any applicable
-subclasses. If you want to override this and NOT have a discriminator restriction imposed in the SQL then you provide the query extension *datanucleus.dontRestrictDiscriminator* set to _true_.
+subclasses. If you want to override this and NOT have a discriminator restriction imposed in the SQL then you provide the query extension *datanucleus.query.dontRestrictDiscriminator* set to _true_.
 
 
 === Candidate Persistent Interface
