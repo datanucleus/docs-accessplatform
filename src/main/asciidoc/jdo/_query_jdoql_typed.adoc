@@ -14,8 +14,8 @@ compares a prototype of this JDOQLTypedQuery API against JPA Criteria.
 
 To set up your environment to use this JDOQLTypedQuery API you need to enable annotation processing, place some DataNucleus jars in your build path, 
 and specify a `@PersistenceCapable` annotation on your classes to be used in queries (you can still provide the remaining information in XML metadata if you wish to).
-This annotation processor will (just before compile of your persistable classes), create a query metamodel "Q" class for each persistable class. This is similar
-step to what QueryDSL requires, or indeed the JPA Criteria static metamodel.
+This annotation processor will (just before compile of your persistable classes), create a query metamodel "Q" class for each persistable class. 
+This is similar step to what QueryDSL requires, or indeed the JPA Criteria static metamodel.
 
 
 === Using Maven
@@ -28,7 +28,7 @@ With Maven you need to have the following in your POM
     <dependency>
         <groupId>org.datanucleus</groupId>
         <artifactId>datanucleus-jdo-query</artifactId>
-        <version>[5.0.5, )</version>
+        <version>[5.0.9, )</version>
     </dependency>
     <dependency>
         <groupId>org.datanucleus</groupId>
@@ -116,6 +116,20 @@ You enable use of _property_ mode by adding the compiler argument *-AqueryMode=P
 All examples below use _field_ mode but just add _()_ after the field to see the equivalent in _property_ mode
 
 *Note that we currently only support generation of Q classes for persistable classes that are in their own source file, so no support for inline static persistable classes is available currently*
+
+=== Limitations
+
+There are some corner cases where the use of expressions and this API may require casting to allow the full range of operations for JDOQL. Some examples
+
+* If you have a List field and call `ListExpression.get(position)` this returns an `Expression` rather than a specific `NumericExpression`, `StringExpression`, or whatever subtype. 
+You would need to cast the result to do subsequent calls.
+* If you have a Map field and call `MapExpression.get(key)` this returns an `Expression` rather than a specific `NumericExpression`, `StringExpression`, or whatever subtype. 
+You would need to cast the result to do subsequent calls.
+* If you have a Collection parameter and call `CollectionParameter.contains(fieldExpression)` then you may need to cast the `fieldExpression` to `Expression` 
+since the `CollectionParameter` will not have adequate java generic information for the compiler to do it automatically
+* If you have a Map parameter and call `MapParameter.contains(fieldExpression)` then you may need to cast the `fieldExpression` to `Expression` 
+since the `MapParameter` will not have adequate java generic information for the compiler to do it automatically
+
 
 
 [[jdoql_typed_filter]]
