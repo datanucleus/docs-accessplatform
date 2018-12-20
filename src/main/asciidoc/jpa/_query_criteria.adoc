@@ -318,18 +318,6 @@ crit.where(nameIn);
 -----
 
 
-== Criteria API : Result as Tuple
-
-You sometimes need to define a result for a query.
-You can define a result class just like with normal JPQL, but a special case is where you don't have a particular result class and want to 
-use the _built-in_ JPA standard *Tuple* class.
-
-[source,java]
------
-CriteriaQuery<Tuple> crit = cb.createTupleQuery();
------
-
-
 
 == Criteria API : CASE expressions
 
@@ -347,6 +335,18 @@ so this generates the equivalent of this JPQL
 
 -----
 CASE WHEN (p.age < 5) THEN 'Infant' WHEN (p.age >= 5 AND p.age <= 18) THEN 'Child' ELSE 'Adult'
+-----
+
+
+== Criteria API : Result as Tuple
+
+You sometimes need to define a result for a query.
+You can define a result class just like with normal JPQL, but a special case is where you don't have a particular result class and want to 
+use the _built-in_ JPA standard *Tuple* class.
+
+[source,java]
+-----
+CriteriaQuery<Tuple> crit = cb.createTupleQuery();
 -----
 
 
