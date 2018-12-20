@@ -330,6 +330,27 @@ CriteriaQuery<Tuple> crit = cb.createTupleQuery();
 -----
 
 
+
+== Criteria API : CASE expressions
+
+You can make use of CASE expressions with Criteria, like this
+
+[source,java]
+-----
+Path<Integer> ageVar = candidate.get(Person_.age);
+Predicate infantAge = cb.lessThan(ageVar, 5);
+Predicate schoolAge = cb.greaterThanOrEqualTo(ageVar, 5).and(cb.lessThanOrEqualTo(ageVar, 18));
+cb.selectCase().when(infantAge, "Infant").when(schoolAge, "Child").when(otherwise("Adult");
+-----
+
+so this generates the equivalent of this JPQL
+
+-----
+CASE WHEN (p.age < 5) THEN 'Infant' WHEN (p.age >= 5 AND p.age <= 18) THEN 'Child') ELSE 'Adult'
+-----
+
+
+
 == Executing a Criteria query
 
 Ok, so we've seen how to generate a Criteria query. So how can we execute it ?
