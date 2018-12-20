@@ -346,7 +346,7 @@ cb.selectCase().when(infantAge, "Infant").when(schoolAge, "Child").otherwise("Ad
 so this generates the equivalent of this JPQL
 
 -----
-CASE WHEN (p.age < 5) THEN 'Infant' WHEN (p.age >= 5 AND p.age <= 18) THEN 'Child') ELSE 'Adult'
+CASE WHEN (p.age < 5) THEN 'Infant' WHEN (p.age >= 5 AND p.age <= 18) THEN 'Child' ELSE 'Adult'
 -----
 
 
