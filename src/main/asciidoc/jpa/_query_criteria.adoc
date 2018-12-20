@@ -340,7 +340,7 @@ You can make use of CASE expressions with Criteria, like this
 Path<Integer> ageVar = candidate.get(Person_.age);
 Predicate infantAge = cb.lessThan(ageVar, 5);
 Predicate schoolAge = cb.greaterThanOrEqualTo(ageVar, 5).and(cb.lessThanOrEqualTo(ageVar, 18));
-cb.selectCase().when(infantAge, "Infant").when(schoolAge, "Child").when(otherwise("Adult");
+cb.selectCase().when(infantAge, "Infant").when(schoolAge, "Child").otherwise("Adult");
 -----
 
 so this generates the equivalent of this JPQL
