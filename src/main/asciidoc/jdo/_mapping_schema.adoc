@@ -1106,10 +1106,10 @@ or alternatively using annotations
 
 [source,java]
 -----
-@Index(name="MY_BOOKING_INDEX" extensions={@Extension(vendorName="datanucleus", key="index-column-ordering", value="ASC,DESC")})
+@Index(name="MY_OTHER_BOOKING_IDX" extensions={@Extension(vendorName="datanucleus", key="index-column-ordering", value="ASC,DESC")})
 -----
 
-which will create an index with `CREATE UNIQUE INDEX MY_OTHER_BOOKING_IDX ON BOOKING ("NAME" ASC,"NUMBER" DESC)
+which will create an index with `CREATE UNIQUE INDEX MY_OTHER_BOOKING_IDX ON BOOKING ("NAME" ASC,"NUMBER" DESC)`
 
 
 
@@ -1138,7 +1138,7 @@ or alternatively using annotations
 @Index(name="MY_BOOKING_INDEX" extensions={@Extension(vendorName="datanucleus", key="index-type", value="HASH")})
 -----
 
-which will create an index with `CREATE UNIQUE HASH INDEX MY_BOOKING_IDX ON BOOKING (BOOKING)
+which will create an index with `CREATE UNIQUE HASH INDEX MY_BOOKING_IDX ON BOOKING (BOOKING)`
 
 
 
