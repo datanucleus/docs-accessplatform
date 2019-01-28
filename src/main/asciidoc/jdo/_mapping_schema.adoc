@@ -1093,7 +1093,7 @@ You can control this as follows
 [source,xml]
 -----
 <class name="Booking">
-    <index name="MY_OTHER_BOOKING_IDX" unique="true">
+    <index name="MY_BOOKING_IDX" unique="true">
         <column name="NAME"/>
         <column name="NUMBER"/>
         <extension vendor-name="datanucleus" key="index-column-ordering" value="ASC,DESC"/>
@@ -1106,10 +1106,10 @@ or alternatively using annotations
 
 [source,java]
 -----
-@Index(name="MY_OTHER_BOOKING_IDX" extensions={@Extension(vendorName="datanucleus", key="index-column-ordering", value="ASC,DESC")})
+@Index(name="MY_BOOKING_IDX" extensions={@Extension(vendorName="datanucleus", key="index-column-ordering", value="ASC,DESC")})
 -----
 
-which will create an index with `CREATE UNIQUE INDEX MY_OTHER_BOOKING_IDX ON BOOKING ("NAME" ASC,"NUMBER" DESC)`
+which will create an index with `CREATE UNIQUE INDEX MY_BOOKING_IDX ON BOOKING ("NAME" ASC,"NUMBER" DESC)`
 
 
 
@@ -1135,7 +1135,7 @@ or alternatively using annotations
 
 [source,java]
 -----
-@Index(name="MY_BOOKING_INDEX" extensions={@Extension(vendorName="datanucleus", key="index-type", value="HASH")})
+@Index(name="MY_BOOKING_IDX" extensions={@Extension(vendorName="datanucleus", key="index-type", value="HASH")})
 -----
 
 which will create an index with `CREATE UNIQUE HASH INDEX MY_BOOKING_IDX ON BOOKING (BOOKING)`
@@ -1146,12 +1146,13 @@ which will create an index with `CREATE UNIQUE HASH INDEX MY_BOOKING_IDX ON BOOK
 
 image:../images/nucleus_extension.png[]
 
-A final extension is where you just want to dump an amount of SQL onto the end of the `CREATE INDEX` statement.
+A final extension is where you just want to dump an amount of SQL onto the end of the `CREATE INDEX` statement (totally RDBMS dependent).
+We would advise against using this method due to its dependency on the RDBMS
 
 [source,xml]
 -----
 <class name="Booking">
-    <index name="MY_BOOKING_INDEX">
+    <index name="MY_BOOKING_IDX">
         <extension vendor-name="datanucleus" key="extended-setting" value=" USING HASH"/>
     </index>
     ...
@@ -1162,7 +1163,7 @@ or alternatively using annotations
 
 [source,java]
 -----
-@Index(name="MY_BOOKING_INDEX" extensions={@Extension(vendorName="datanucleus", key="extended-setting", value=" USING HASH")})
+@Index(name="MY_BOOKING_IDX" extensions={@Extension(vendorName="datanucleus", key="extended-setting", value=" USING HASH")})
 -----
 
 See also :-
