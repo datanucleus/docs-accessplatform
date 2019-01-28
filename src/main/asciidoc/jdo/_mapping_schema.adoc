@@ -1083,12 +1083,70 @@ So we are thinking more from a database perspective. Here we define our indexes 
 
 This creates an index for the specified column (where the datastore supports columns i.e RDBMS).
 
+=== Specifying ordering of index columns
+
+image:../images/nucleus_extension.png[]
+
+The default (JDO supported) index specifies ascending index columns. Most RDBMS these days support specifying the ordering of index columns.
+You can control this as follows
+
+[source,xml]
+-----
+<class name="Booking">
+    <index name="MY_OTHER_BOOKING_IDX" unique="true">
+        <column name="NAME"/>
+        <column name="NUMBER"/>
+        <extension vendor-name="datanucleus" key="index-column-ordering" value="ASC,DESC"/>
+    </index>
+    ...
+</class>
+-----
+
+or alternatively using annotations
+
+[source,java]
+-----
+@Index(name="MY_BOOKING_INDEX" extensions={@Extension(vendorName="datanucleus", key="index-column-ordering", value="ASC,DESC")})
+-----
+
+which will create an index with `CREATE UNIQUE INDEX MY_OTHER_BOOKING_IDX ON BOOKING ("NAME" ASC,"NUMBER" DESC)
+
+
+
+=== Specifying index type
+
+image:../images/nucleus_extension.png[]
+
+Some RDBMS allow you to specify the _type_ of an index, such as HASH etc.
+You can control this as follows
+
+[source,xml]
+-----
+<class name="Booking">
+    <index name="MY_BOOKING_IDX" unique="true">
+        <column name="BOOKING"/>
+        <extension key="index-type" value="HASH"/>
+    </index>
+    ...
+</class>
+-----
+
+or alternatively using annotations
+
+[source,java]
+-----
+@Index(name="MY_BOOKING_INDEX" extensions={@Extension(vendorName="datanucleus", key="index-type", value="HASH")})
+-----
+
+which will create an index with `CREATE UNIQUE HASH INDEX MY_BOOKING_IDX ON BOOKING (BOOKING)
+
+
+
 === Enhanced index creation
 
 image:../images/nucleus_extension.png[]
 
-Should you have need to tailor the index creation, for example to generate a particular type of index (where the datastore supports it), 
-you can specify extended settings that is appended to the end of any _CREATE INDEX_ statement.
+A final extension is where you just want to dump an amount of SQL onto the end of the `CREATE INDEX` statement.
 
 [source,xml]
 -----
@@ -1104,7 +1162,7 @@ or alternatively using annotations
 
 [source,java]
 -----
-@Index(name-"MY_BOOKING_INDEX" extensions={@Extension(vendorName="datanucleus", key="extended-setting", value=" USING HASH")})
+@Index(name="MY_BOOKING_INDEX" extensions={@Extension(vendorName="datanucleus", key="extended-setting", value=" USING HASH")})
 -----
 
 See also :-
