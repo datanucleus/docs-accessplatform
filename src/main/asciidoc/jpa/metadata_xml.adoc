@@ -52,6 +52,8 @@ If using any of the DataNucleus extensions, then the XSD is http://www.datanucle
 *** query
 ** link:#named-native-query[named-native-query]
 *** query
+** link:#named-stored-procedure-query[named-stored-procedure-query]
+*** query
 ** link:#sql-result-set-mapping[sql-result-set-mapping]
 *** link:#entity-result[entity-result]
 **** link:#field-result[field-result]
@@ -113,6 +115,8 @@ If using any of the DataNucleus extensions, then the XSD is http://www.datanucle
 *** link:#named-query[named-query]
 **** query
 *** link:#named-native-query[named-native-query]
+**** query
+*** link:#named-stored-procedure-query[named-stored-procedure-query]
 **** query
 *** link:#sql-result-set-mapping[sql-result-set-mapping]
 **** link:#entity-result[entity-result]
@@ -412,6 +416,28 @@ the text of the query. It has the following attributes
 
 |name
 |Name of the query
+|
+|===
+
+
+
+[[named-stored-procedure-query]]
+== Metadata for named-stored-procedure-query tag
+
+The *<named-stored-procedure-query>* element (under <entity-mappings> or under <entity>) defines a Stored Procedure query that will be accessible at runtime via the name. 
+The element itself will contain the text of the query. It has the following attributes
+
+[cols="1,3,1", options="header"]
+|===
+|Attribute
+|Description
+|Values
+
+|name
+|Name of the query
+|
+|procedure-name
+|Name of the stored proc
 |
 |===
 
