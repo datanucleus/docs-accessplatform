@@ -112,6 +112,9 @@ NOTE: If the candidate entity has a table using a discriminator, the generated S
 subclasses. If you want to override this and NOT have a discriminator restriction imposed in the SQL then you provide the query hint *datanucleus.query.dontRestrictDiscriminator* set to _true_.
 
 
+NOTE: When using a candidate that has inherited subclasses that are also entities then the query can also return instances of these subclasses. 
+You can set the query "hint" *datanucleus.query.excludeSubclasses* to _false_ to only get instances of the candidate entity.
+
 
 
 The FROM clause also allows a user to add some explicit joins to related entities, and assign aliases to the joined entities. 
