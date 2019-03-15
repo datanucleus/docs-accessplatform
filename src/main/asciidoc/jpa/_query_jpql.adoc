@@ -915,7 +915,23 @@ So with this query we get results 0 to 19 inclusive.
 [[jpql_result]]
 == Query Result
 
-Whilst the majority of the time you will want to return instances of a candidate class, JPQL also allows you to return customised results. Consider the following example
+The query result (SELECT) clause allows a user to select particular fields, objects etc.
+The syntax of the query result clause is as follows:
+
+[source]
+-----
+select_clause ::= SELECT [DISTINCT] select_item {, select_item}*
+select_item ::= select_expression [[AS] result_variable]
+select_expression ::= single_valued_path_expression | scalar_expression | aggregate_expression |
+    identification_variable | OBJECT(identification_variable) | constructor_expression
+constructor_expression ::= NEW constructor_name ( constructor_item {, constructor_item}* )
+constructor_item ::= single_valued_path_expression | scalar_expression | aggregate_expression |
+    identification_variable
+-----
+
+
+Whilst the majority of the time you will want to return instances of a candidate class, JPQL also allows you to return customised results. 
+Consider the following example
 
 [source,java]
 -----
