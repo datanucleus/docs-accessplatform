@@ -892,6 +892,58 @@ public class MyClass
 -----
 
 
+=== Specifying index type
+
+image:../images/nucleus_extension.png[]
+
+Some RDBMS allow you to specify the _type_ of an index, such as HASH etc.
+You can control this as follows
+
+[source,java]
+-----
+@Index(name="MY_BOOKING_IDX")
+@Extension(key="index-type", value="HASH")})
+-----
+
+which will create an index with `CREATE UNIQUE HASH INDEX MY_BOOKING_IDX ON BOOKING (BOOKING)`
+
+
+
+=== Enhanced index creation
+
+image:../images/nucleus_extension.png[]
+
+A final extension is where you just want to dump an amount of SQL onto the end of the `CREATE INDEX` statement (totally RDBMS dependent).
+We would advise against using this method due to its dependency on the RDBMS
+
+[source,java]
+-----
+@Index(name="MY_BOOKING_IDX")
+@Extension(key="extended-setting", value=" USING HASH")})
+-----
+
+See also :-
+
+* link:metadata_xml.html#index[MetaData reference for <index> element]
+* link:annotations.html#Index[Annotations reference for @Index]
+* link:annotations.html#Index_Class[Annotations reference for @Index (class level)]
+
+
+=== Cassandra : index USING
+
+image:../images/nucleus_extension.png[]
+
+Cassandra allows creation of indexes with an optional USING keyword. You can specify this via the following extension
+
+[source,java]
+-----
+@Index(name="MY_BOOKING_IDX")
+@Extension(key="cassandra.createIndex.using", value="'org.apache.cassandra.index.sasi.SASIIndex'")})
+-----
+
+and the `USING` clause will be appended to any `CREATE INDEX` issued during schema generation.
+
+
 [[unique]]
 == Unique Constraints
 

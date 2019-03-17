@@ -1029,7 +1029,7 @@ public class Person
 [[index]]
 == Index Constraints
 
-NOTE: Applicable to RDBMS, NeoDatis, MongoDB.
+NOTE: Applicable to RDBMS, NeoDatis, MongoDB, Cassandra.
 
 Many datastores provide the ability to have indexes defined to give performance benefits.
 With RDBMS the indexes are specified on the table and the indexes to the rows are stored separately.
@@ -1172,6 +1172,31 @@ See also :-
 * link:annotations.html#Index[Annotations reference for @Index]
 * link:annotations.html#Index_Class[Annotations reference for @Index (class level)]
 
+
+=== Cassandra : index USING
+
+image:../images/nucleus_extension.png[]
+
+Cassandra allows creation of indexes with an optional USING keyword. You can specify this via the following extension
+
+[source,xml]
+-----
+<class name="Booking">
+    <index name="MY_BOOKING_IDX">
+        <extension vendor-name="datanucleus" key="cassandra.createIndex.using" value="'org.apache.cassandra.index.sasi.SASIIndex'"/>
+    </index>
+    ...
+</class>
+-----
+
+or alternatively using annotations
+
+[source,java]
+-----
+@Index(name="MY_BOOKING_IDX" extensions={@Extension(vendorName="datanucleus", key="cassandra.createIndex.using", value="'org.apache.cassandra.index.sasi.SASIIndex'")})
+-----
+
+and the `USING` clause will be appended to any `CREATE INDEX` issued during schema generation.
 
 
 [[unique]]
