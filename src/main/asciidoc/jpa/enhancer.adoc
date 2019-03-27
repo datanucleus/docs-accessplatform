@@ -60,7 +60,7 @@ How to use the DataNucleus Enhancer depends on what environment you are using. B
 * Post-compilation
 ** xref:enhancer.html#maven[Using Maven via the DataNucleus Maven plugin]
 ** xref:enhancer.html#ant[Using Ant]
-** xref:enhancer.html#manual[Manual invocation at the command line]
+** xref:enhancer.html#commandline[Command Line invocation]
 ** link:tools.html#eclipse[Using the Eclipse DataNucleus plugin]
 * At runtime
 ** xref:enhancer.html#runtime[Runtime Enhancement]
@@ -253,10 +253,10 @@ So you could define something _like_ the following, setting up the parameter *en
 -----
 
 
-[[manual]]
-== Manually
+[[commandline]]
+== Command Line
 
-If you are building your application manually and want to enhance your classes you follow the instructions in this section. 
+If you are building your application via the command line and want to enhance your classes you follow the instructions in this section. 
 You invoke the enhancer as follows
 
 -----
@@ -388,7 +388,9 @@ NOTE: You will need to load the enhanced version of the class into a different C
 === Persistable
 
 JPA allows implementations to bytecode-enhance entity classes to implement some interface to provide them with change tracking etc.
-DataNucleus provides its own byte-code enhancer (in the `datanucleus-core.jar`) to enhance users entity classes to implement this _Persistable_ interface.
+DataNucleus provides its own byte-code enhancer (in the `datanucleus-core.jar`) to enhance users entity classes to implement this 
+_org.datanucleus.enhancement.Persistable_ interface.
+
 If we start off with the following class
 
 [source,java]
@@ -402,7 +404,7 @@ public class MyClass
 }
 -----
 
-This is bytecode enhanced for JPA to implement
+This is bytecode enhanced for JPA, implementing the interfaces
 http://www.datanucleus.org/javadocs/core/latest/org/datanucleus/enhancement/Persistable.html[Persistable] and
 http://www.datanucleus.org/javadocs/core/latest/org/datanucleus/enhancement/Detachable.html[Detachable].
 
@@ -418,7 +420,7 @@ in the object when it is detached, and available to be merged later on.
 
 === Byte-Code Enhancement Myths
 
-Some groups (e.g Hibernate) in the past perpetuated arguments against "byte-code enhancement" saying that it was somehow 'evil'. The most common were :-
+Some groups (e.g Hibernate) for years perpetuated arguments against "byte-code enhancement" saying that it was somehow 'evil'. The most common were :-
 
 * _Slows down the code-test cycle_. This is erroneous since you only need to enhance just before test and the provided tools for Ant, Eclipse and Maven all 
 do the enhancement job automatically and rapidly.

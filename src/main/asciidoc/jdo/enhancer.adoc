@@ -57,7 +57,7 @@ How to use the DataNucleus Enhancer depends on what environment you are using. B
 * Post-compilation
 ** link:#maven[Using Maven via the DataNucleus Maven plugin]
 ** link:#ant[Using Ant]
-** link:#manual[Manual invocation at the command line]
+** link:#commandline[Command Line invocation]
 ** link:tools.html#eclipse[Using the Eclipse DataNucleus plugin]
 * At runtime
 ** link:#runtime[Runtime Enhancement]
@@ -358,10 +358,10 @@ You can disable the enhancement execution upon the existence of a property with 
 -----
 
 
-[[manual]]
-== Manually
+[[commandline]]
+== Command Line
 
-If you are building your application manually and want to enhance your classes you follow the instructions in this section. 
+If you are building your application using the command line and want to enhance your classes you follow the instructions in this section. 
 You invoke the enhancer as follows
 
 -----
@@ -499,7 +499,8 @@ See https://github.com/datanucleus/samples-jdo/tree/master/dynamic_api_usage[thi
 === Persistable
 
 JDO allows implementations to bytecode-enhance persistable classes to implement some interface to provide them with change tracking etc.
-DataNucleus provides its own byte-code enhancer (in the `datanucleus-core.jar`) to enhance users entity classes to implement this _Persistable_ interface.
+DataNucleus provides its own byte-code enhancer (in the `datanucleus-core.jar`) to enhance users entity classes to implement this 
+_org.datanucleus.enhancement.Persistable_ interface.
 If we start off with the following class
 
 
@@ -514,10 +515,10 @@ public class MyClass
 }
 -----
 
-This is bytecode enhanced for JDO to implement
+This is then bytecode enhanced for JDO, implementing the interfaces 
 http://www.datanucleus.org/javadocs/core/latest/org/datanucleus/enhancement/Persistable.html[Persistable], and optionally
 http://www.datanucleus.org/javadocs/core/latest/org/datanucleus/enhancement/Detachable.html[Detachable].
-If we simply make the class _Persistable_ then it will look something like this
+If we simply make the class _Persistable_ (i.e not detachable) then it will look something like this
 
 image:../images/enhancer_persistable.png[]
 
@@ -535,7 +536,7 @@ Please see the JDO spec for more details.
 
 === Byte-Code Enhancement Myths
 
-Some groups (e.g Hibernate) perpetuated arguments against "byte-code enhancement" saying that it was somehow 'evil'. The most common were :-
+Some groups (e.g Hibernate) for years perpetuated arguments against "byte-code enhancement" saying that it was somehow 'evil'. The most common were :-
 
 * _Slows down the code-test cycle_. This is erroneous since you only need to enhance just before test and the provided tools for Ant, Eclipse and Maven all do the enhancement job automatically and rapidly.
 * _Is less "lazy" than the proxy approach since you have to load the object as soon as you get a pointer to it_. 
