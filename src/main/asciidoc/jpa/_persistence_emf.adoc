@@ -128,7 +128,8 @@ also since any schema generation and/or sequence handling will need to use that 
 the entities that are specified. DISABLE_SELECTIVE means cache all unless specified. UNSPECIFIED leaves it to DataNucleus.
 * *validation-mode* - Defines the validation mode for Bean Validation. AUTO, CALLBACK or NONE.
 * *jar-file* - name of a JAR file to scan for annotated classes to include in this persistence-unit.
-* *mapping-file* - name of an XML "mapping" file containing persistence information to be included in this persistence-unit.
+* *mapping-file* - name of an XML "mapping" file containing persistence information to be included in this persistence-unit. NOTE that the JPA spec defines a default file
+called `META-INF/orm.xml` that does not need to be specified. 
 * *class* - name of an annotated class to include in this persistence-unit
 * *properties* - properties defining the persistence factory to be used. Please refer to link:persistence.html#emf_properties[EMF Properties] for details
 
