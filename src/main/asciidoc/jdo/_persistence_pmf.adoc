@@ -1513,6 +1513,13 @@ no check will be made as to whether it exists in the datastore (since Cassandra 
 
 |datanucleus.cassandra.socket.connectTimeoutMillis
 |Socket connect timeout for the Cassandra cluster.
+
+|datanucleus.cassandra.loadBalancingPolicy
+|Sets the load balancing policy to use. *Applicable for Cassandra only.*
+{round-robin, token-aware}
+
+|datanucleus.cassandra.loadBalancingPolicy.tokenAwareLocalDC
+|Sets the local DC to use for the load balancing policy. *Applicable for Cassandra only.*
 |===
 
 

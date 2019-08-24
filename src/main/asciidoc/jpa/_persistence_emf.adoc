@@ -1233,6 +1233,13 @@ the datastore (since Cassandra does an UPSERT) and that the user takes responsib
 
 |datanucleus.cassandra.socket.connectTimeoutMillis
 |Socket connect timeout for the Cassandra cluster. *Applicable for Cassandra only.*
+
+|datanucleus.cassandra.loadBalancingPolicy
+|Sets the load balancing policy to use. *Applicable for Cassandra only.*
+{round-robin, token-aware}
+
+|datanucleus.cassandra.loadBalancingPolicy.tokenAwareLocalDC
+|Sets the local DC to use for the load balancing policy. *Applicable for Cassandra only.*
 |===
 
 
