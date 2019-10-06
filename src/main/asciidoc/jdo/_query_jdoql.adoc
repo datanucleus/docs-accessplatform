@@ -289,6 +289,8 @@ link:../extensions/extensions.html#rdbms_sql_method[image:../images/nucleus_exte
 
 |matches(String pattern)
 |Returns whether string matches the passed expression. The pattern argument follows the rules of java.lang.String.matches method.
+Only the following regular expression patterns are required to be supported and are portable: global “(?i)” for case-insensitive matches; and “.”
+and “.*” for wild card matches. The pattern passed to matches must be a literal or parameter.
 |icon:check[]
 |icon:check[]
 
