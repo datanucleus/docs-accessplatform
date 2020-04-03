@@ -180,9 +180,9 @@ import org.datanucleus.api.jdo.JDOPersistenceManagerFactory;
 PersistenceUnitMetaData pumd = new PersistenceUnitMetaData("dynamic-unit", "RESOURCE_LOCAL", null);
 pumd.addClassName("mydomain.test.A");
 pumd.setExcludeUnlistedClasses();
-pumd.addProperty("javax.jdo.ConnectionURL", "jdbc:hsqldb:mem:nucleus");
-pumd.addProperty("javax.jdo.ConnectionUserName", "sa");
-pumd.addProperty("javax.jdo.ConnectionPassword", "");
+pumd.addProperty("javax.jdo.option.ConnectionURL", "jdbc:hsqldb:mem:nucleus");
+pumd.addProperty("javax.jdo.option.ConnectionUserName", "sa");
+pumd.addProperty("javax.jdo.option.ConnectionPassword", "");
 pumd.addProperty("datanucleus.schema.autoCreateAll", "true");
 
 PersistenceManagerFactory pmf = new JDOPersistenceManagerFactory(pumd, null);
