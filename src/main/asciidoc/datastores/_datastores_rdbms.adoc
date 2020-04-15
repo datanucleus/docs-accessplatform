@@ -62,8 +62,15 @@ To specify MySQL/MariaDB as your datastore, you will need something like the fol
 datanucleus.ConnectionURL=jdbc:mysql://'host':'port'/'db-name'
 -----
 
+or
 
-http://www.mysql.com[MySQL] and its more developed drop in replacement https://mariadb.org[MariaDB] are supported as an RDBMS datastore by DataNucleus with the following provisos
+-----
+datanucleus.ConnectionURL=jdbc:mariadb://'host':'port'/'db-name'
+-----
+
+respectively.
+
+http://www.mysql.com[MySQL] and its more-developed drop-in-replacement https://mariadb.org[MariaDB] are supported as an RDBMS datastore by DataNucleus with the following provisos
 
 * You can set the table (engine) type for any created tables via persistence property *datanucleus.rdbms.mysql.engineType* or by setting the 
 extension metadata on a class with key _mysql-engine-type_. The default is INNODB
