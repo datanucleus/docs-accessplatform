@@ -37,7 +37,8 @@ Start under the link:mapping.html[JPA Mapping Guide]
 * Use of JPA requires an link:persistence.html#emf[EntityManagerFactory] to access the datastore.
 * The persistence itself is controlled by an link:persistence.html#em[EntityManager] and each object to be persisted will
 have different link:persistence.html#lifecycle[lifecycle states] that you need to have an understanding of.
-* You retrieve objects either by their identity, or using a link:query.html[query]. With JPA you can use JPQL or SQL query languages
+* You retrieve objects either by their link:persistence.html#_finding_an_object_by_its_identity[identity], or using a link:query.html[query]. 
+With JPA you can use link:query.html#jpql[JPQL], link:query.html#sql[Native (SQL)], or link:query.html#criteria[Criteria] query languages
 * You will need `javax.persistence` as well as `datanucleus-api-jpa`, `datanucleus-core` and the `datanucleus-XXX` jar for whichever datastore you are using.
 
 
