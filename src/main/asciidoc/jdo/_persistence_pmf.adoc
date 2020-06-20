@@ -901,14 +901,14 @@ or whether to just build a list of deletes, inserts and updates and do them in b
 
 |datanucleus.connectionPoolingType
 |This property allows you to utilise a 3rd party software package for enabling connection pooling.
-When using RDBMS you can select from DBCP2, C3P0, Proxool, BoneCP, etc. You must have the 3rd party jars in the CLASSPATH to use these options.
+When using RDBMS you can select from DBCP2, C3P0, HikariCP, BoneCP, etc. You must have the 3rd party jars in the CLASSPATH to use these options.
 Please refer to the link:persistence.html#connection_pooling[Connection Pooling guide] for details.
-{None, *dbcp2-builtin*, DBCP2, C3P0, Proxool, BoneCP, HikariCP, Tomcat, {others}}
+{None, *dbcp2-builtin*, DBCP2, C3P0, BoneCP, HikariCP, Tomcat, {others}}
 
 |datanucleus.connectionPoolingType.nontx
 |This property allows you to utilise a 3rd party software package for enabling connection pooling *for nontransactional connections* using a DataNucleus plugin.
 If you don't specify this value but do define the above value then that is taken by default. Refer to the above property for more details.
-{None, *dbcp2-builtin*, DBCP2, C3P0, Proxool, BoneCP, HikariCP, Tomcat, {others}}
+{None, *dbcp2-builtin*, DBCP2, C3P0, BoneCP, HikariCP, Tomcat, {others}}
 
 |datanucleus.connection.nontx.releaseAfterUse
 |Applies only to non-transactional connections and refers to whether to re-use (pool) the connection internally for later use. 

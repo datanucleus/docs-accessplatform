@@ -102,7 +102,6 @@ manage the connections to the datastore. We currently provide support for the fo
 
 * RDBMS : link:#connection_pooling_rdbms_dbcp2[Apache DBCP v2], we allow use of externally-defined DBCP2, but also provide a builtin DBCP v2.1.1
 * RDBMS : link:#connection_pooling_rdbms_c3p0[C3P0]
-* RDBMS : link:#connection_pooling_rdbms_proxool[Proxool]
 * RDBMS : link:#connection_pooling_rdbms_bonecp[BoneCP]
 * RDBMS : link:#connection_pooling_rdbms_hikaricp[HikariCP]
 * RDBMS : link:#connection_pooling_rdbms_tomcat[Tomcat]
@@ -181,23 +180,6 @@ datanucleus.connectionPool.maxStatements=20
 -----
 
 
-[[connection_pooling_rdbms_proxool]]
-=== RDBMS : Proxool
-
-DataNucleus allows you to utilise a connection pool using Proxool to efficiently manage the connections to the datastore.
-http://proxool.sourceforge.net/[Proxool] is a third-party library providing connection pooling. 
-This is accessed by specifying the persistence property *datanucleus.connectionPoolingType* to _Proxool_ in your `persistence.xml`.
-
-So the _EMF_ will use connection pooling using Proxool. To do this you will need the `proxool` and `commons-logging` JARs to be in the CLASSPATH.
-
-You can also specify persistence properties to control the actual pooling. The currently supported properties for Proxool are shown below
-
------
-datanucleus.connectionPool.maxConnections=10
-datanucleus.connectionPool.testSQL=SELECT 1
------
-
-
 [[connection_pooling_rdbms_bonecp]]
 === RDBMS : BoneCP
 
@@ -253,7 +235,7 @@ You can also specify persistence properties to control the actual pooling, like 
 [[connection_pooling_rdbms_manual]]
 === RDBMS : Manually create a DataSource ConnectionFactory
 
-We could have used the built-in DBCP2 support which internally creates a DataSource ConnectionFactory, alternatively the support for external DBCP, C3P0, Proxool, BoneCP etc, 
+We could have used the built-in DBCP2 support which internally creates a DataSource ConnectionFactory, alternatively the support for external DBCP, C3P0, HikariCP, BoneCP etc, 
 however we can also do this manually if we so wish. Let's demonstrate how to do this with one of the most used pools http://commons.apache.org/dbcp[Apache Commons DBCP]
 
 With DBCP you need to generate a *javax.sql.DataSource*, which you will then pass to DataNucleus. You do this as follows

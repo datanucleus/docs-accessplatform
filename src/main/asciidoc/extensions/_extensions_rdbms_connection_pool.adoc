@@ -5,7 +5,7 @@
 
 
 DataNucleus is developed as a plugin-driven framework and one of the components that is pluggable is the pooling of connections to RDBMS datastores. 
-DataNucleus provides a large selection of connection pools (DBCP, C3P0, Proxool, BoneCP) but is structured so that you can easily add your 
+DataNucleus provides a large selection of connection pools (DBCP, C3P0, HikariCP, BoneCP) but is structured so that you can easily add your 
 own variant and have it usable within your DataNucleus usage.
 
 
@@ -39,11 +39,6 @@ using the plugin extension *org.datanucleus.store.rdbms.connectionpool*.
 |org.datanucleus.store.rdbms.connectionpool
 |dbcp
 |RDBMS connection pool, using Apache DBCP
-|datanucleus-rdbms
-
-|org.datanucleus.store.rdbms.connectionpool
-|proxool
-|RDBMS connection pool, using Proxool
 |datanucleus-rdbms
 
 |org.datanucleus.store.rdbms.connectionpool
