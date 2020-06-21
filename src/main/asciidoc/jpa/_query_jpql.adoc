@@ -1242,7 +1242,7 @@ By default DataNucleus allows some extensions in syntax over strict JPQL (as def
 [source,java]
 -----
 Query query = em.createQuery(...);
-query.setHint("datanucleus.jpql.strict", "true");
+query.setHint("datanucleus.query.jpql.strict", "true");
 -----
 
 
