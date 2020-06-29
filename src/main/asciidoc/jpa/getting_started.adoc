@@ -56,8 +56,8 @@ DataNucleus has a modular architecture and you will need to make use of multiple
 There are various additional JARs that can be used, providing support for additional (non-standard) types, or features (such as third-party caching products).
 
 NOTE: DataNucleus jars make use of a plugin mechanism, whereby they have a file `plugin.xml` that defines capabilities of each jar. 
-Attempting to "merge" the DataNucleus jars can result in problems, and people are advised to not do this, or if they really want to then use something like
-http://one-jar.sourceforge.net/[one-jar].
+Attempting to "merge" the DataNucleus jars (without merging `plugin.xml` and  `MANIFEST.MF`) can result in problems and people are advised to not do this, 
+or if they really want to then use something like http://one-jar.sourceforge.net/[one-jar].
 
 
 include::tutorial.adoc[leveloffset=+1]
