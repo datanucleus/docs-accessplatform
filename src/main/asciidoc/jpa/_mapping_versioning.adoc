@@ -9,7 +9,11 @@ EntityManager since retrieval using the current EntityManager - for use by link:
 [[version_member]]
 == Version Field/Property
 
-The standard JPA mechanism for versioning of objects is to mark a field of the class to store the version. The field must be Integer/Long based.
+The standard JPA mechanism for versioning of objects is to mark a field of the class to store the version. 
+
+NOTE: The field must be of one of the following types : int, _java.lang.Integer_, long, _java.lang.Long_, short, _java.lang.Short_, _java.sql.Timestamp_.
+
+
 With JPA you can specify the details of this *version field* as follows
 
 [source,java]
