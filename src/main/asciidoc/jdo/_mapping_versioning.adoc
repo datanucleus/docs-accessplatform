@@ -11,7 +11,7 @@ JDO defines several "strategies" for generating the version of an object. The st
 
 * *none* stores a number like the version-number but will not perform any optimistic checks.
 * *version-number* stores a number (starting at 1) representing the version of the object.
-* *date-time* stores a Timestamp representing the time at which the object was last updated. _Note that not all RDBMS store milliseconds in a Timestamp!_
+* *date-time* stores a temporal representing the time at which the object was last updated. _Note that not all RDBMS store milliseconds in a Timestamp!_
 * *state-image* stores a Long value being the hash code of all fields of the object. *DataNucleus doesnt currently support this option*
 
 
@@ -53,7 +53,7 @@ The specification above will create a table with an additional column called `VE
 image:../images/nucleus_extension.png[]
 
 DataNucleus provides a valuable extension to JDO whereby you can have a field of your class store the version of the object. 
-This equates to JPA's default versioning process whereby you have to have a field present. To do this lets take a class
+This equates to JPA's default versioning process whereby you have to have a field present. To do this, lets take a class
 
 [source,java]
 -----
@@ -99,6 +99,6 @@ public class MyClass
 and so now objects of our class will have access to the version via the "myVersion" field.
 
 
-NOTE: The field must be of one of the following types : int, _java.lang.Integer_, long, _java.lang.Long_, short, _java.lang.Short_,  
+NOTE: The field must be of one of the following types : int, long, short, _java.lang.Integer_, _java.lang.Long_, _java.lang.Short_,  
 _java.sql.Timestamp_, _java.sql.Date_, _java.sql.Time_, _java.util.Date_, _java.util.Calendar_, _java.time.Instant_.
 
