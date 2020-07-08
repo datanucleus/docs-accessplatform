@@ -65,6 +65,12 @@ If you instead wanted to define this in `orm.xml` then do it like this
 </entity>
 -----
 
+
+NOTE: The field marked as @CreateTimestamp or @UpdateTimestamp needs to be of type _java.sql.Timestamp_ or _java.time.Instant_.
+
+
+
+
 == Defining the Current User
 
 The timestamp can be automatically generated for population here, but clearly the _current user_ is not available as a standard, and so we have to provide a mechanism for setting it.
