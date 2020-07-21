@@ -54,7 +54,7 @@ With DB2 Express-C v9.7 you need to have `db2jcc.jar` and `db2jcc_license_cu.jar
 
 
 [[mysql]]
-== MySQL
+== MySQL/MariaDB
 
 To specify MySQL/MariaDB as your datastore, you will need something like the following specifying (replacing 'db-name' with name of your database etc)
 
@@ -87,6 +87,7 @@ BUT the mysql-connector-java JDBC driver has a bug (in versions up to and includ
 * MySQL throws away the milliseconds on a Date and so cannot be used reliably for Optimistic locking using strategy "date-time" (use "version" instead)
 * You can specify "BLOB", "CLOB" JDBC types when using MySQL with DataNucleus but you must turn validation of columns OFF. 
 This is because these types are not supported by the MySQL JDBC driver and it returns them as LONGVARBINARY/LONGVARCHAR when querying the column type
+* You can store milliseconds with DATE-TIME types from MySQL v5.7/MariaDB v5.3, but need to specify the column "length" to be the number of seconds decimal places.
 
 
 [[sqlserver]]
