@@ -85,3 +85,13 @@ public interface CurrentUserProvider
 
 So you could, for example, store the current user in a thread-local and return it via your implementation of this interface.
 
+
+== Full Traceability Auditing
+
+DataNucleus doesn't currently provide a full traceability auditing capability, whereby you can track all changes to every relevant field. 
+This would involve having a mirror table for each persistable class and, for each insert/update of an object, would require 2 SQL statements to be issued.
+The obvious consequence would be to slow down the persistence process.
+
+Should your organisation require this, we could work with you to provide it. Please contact us if interested.
+
+
