@@ -1312,14 +1312,14 @@ public class Element
 -----
 
 
-Clearly there are many combinations of where generics and TypeVariables can be used, so let us know if your generics usage isn't supported.
+Clearly there are many combinations of where generics and _TypeVariables_ can be used, so let us know if your generics usage isn't supported.
 
 
 
 [[attributeconverter]]
 == JDO Attribute Converters
 
-JDO3.2 introduces an API for conversion of an attribute of a PersistenceCapable object to its datastore value.
+JDO3.2 introduces an API for conversion of an attribute of a _PersistenceCapable_ object to its datastore value.
 You can define a "converter" that will convert to the datastore value and back from it, implementing this interface.
 
 [source,java]
@@ -1364,7 +1364,7 @@ public class URLStringConverter implements AttributeConverter<URL, String>
 }
 -----
 
-and now in our PersistenceCapable class we mark any URL field as being converted using this converter
+and now in our _PersistenceCapable_ class we mark any URL field as being converted using this converter
 
 [source,java]
 -----
@@ -1388,7 +1388,7 @@ or using XML metadata
 <field name="url" converter="mydomain.package.URLStringConverter"/>
 -----
 
-A further use of AttributeConverter is where you want to apply type conversion to the key/value of a Map field, or to the element of a Collection field. 
+A further use of `AttributeConverter` is where you want to apply type conversion to the key/value of a Map field, or to the element of a Collection field. 
 The Collection element case is simple, you just specify the `@Convert` against the field and it will be applied to the element.
 If you want to apply type conversion to a key/value of a map do this.
 
@@ -1444,7 +1444,7 @@ public class MyClass
 }
 -----
 
-We now define a simple _AttributeConverter_ to allow us to persist fields of this type in String form in the datastore, like this
+We now define a simple `AttributeConverter` to allow us to persist fields of this type in String form in the datastore, like this
 
 [source,java]
 -----
