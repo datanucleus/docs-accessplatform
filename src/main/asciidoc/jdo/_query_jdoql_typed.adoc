@@ -103,7 +103,7 @@ public class QProduct extends org.datanucleus.api.jdo.query.PersistableExpressio
 }
 -----
 
-Note that it has the name _*Q*{className}_.
+The generated class has the name of form _*Q*{className}_.
 Also the generated class, by default, has a public field for each persistable field/property and is of a type _XXXExpression_. 
 These expressions allow us to give Java like syntax when defining your queries (see below). 
 So you access your persistable members in a query as *candidate.name* for example.
@@ -115,7 +115,9 @@ case above it has to initialise all in the constructor, so at static initialisat
 You enable use of _property_ mode by adding the compiler argument *-AqueryMode=PROPERTY*. 
 All examples below use _field_ mode but just add _()_ after the field to see the equivalent in _property_ mode
 
-*Note that we currently only support generation of Q classes for persistable classes that are in their own source file, so no support for inline static persistable classes is available currently*
+NOTE: that we currently only support generation of Q classes for persistable classes that are in their own source file, 
+so no support for inline static persistable classes is available currently
+
 
 === Limitations
 
