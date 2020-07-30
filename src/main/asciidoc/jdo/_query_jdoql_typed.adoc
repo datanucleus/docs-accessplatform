@@ -115,8 +115,11 @@ case above it has to initialise all in the constructor, so at static initialisat
 You enable use of _property_ mode by adding the compiler argument *-AqueryMode=PROPERTY*. 
 All examples below use _field_ mode but just add _()_ after the field to see the equivalent in _property_ mode
 
-NOTE: that we currently only support generation of Q classes for persistable classes that are in their own source file, 
+NOTE: DataNucleus currently only supports generation of Q classes for persistable classes that are in their own source file, 
 so no support for inline static persistable classes is available currently
+
+NOTE: The JDOQL Typed query mechanism only works for classes that are annotated, and not for classes that use XML metadata. 
+This is due to the fact that it makes use of a Java _annotation processor_.
 
 
 === Limitations
