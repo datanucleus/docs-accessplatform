@@ -16,8 +16,9 @@ or you could even define it using link:metadata_api.html[a dynamic API]. This is
 TIP: We advise trying to keep schema information out of annotations, so that you avoid tying compiled code to a specific datastore. That way you
 retain datastore-independence. This may not be a concern for your project however.
 
-NOTE: Whilst the JDO spec provides for you to specify your mapping information using JDO metadata (annotations, or JDO/ORM XML Metadata, or via the Metadata API), 
-it also allows you the option of using JPA metadata (annotations, `orm.xml`). This is provided as a way of easily migrating across to JDO from JPA, for example. 
+NOTE: Whilst the JDO spec provides for you to specify your mapping information using JDO metadata (link:annotations.html[JDO annotations], 
+or link:metadata_xml.html[JDO/ORM XML Metadata], or via the link:metadata_api.html[Metadata API]), 
+it also allows you the option of using JPA metadata (JPA annotations, `orm.xml`). This is provided as a way of easily migrating across to JDO from JPA, for example. 
 Consult the link:../jpa/mapping.html[DataNucleus JPA mappings docs] for details.
 
 
@@ -25,14 +26,14 @@ In terms of the relative priority of annotations, JDO XML and ORM XML metadata, 
 
 image:../images/jdo_metadata.png[]
 
-So you can provide the metadata via link:annotations.html[annotations] solely, 
-or via link:annotations.html[annotations] plus link:metadata_xml.html[ORM XML Metadata overrides], 
+So you can provide the metadata via link:annotations.html[JDO annotations] solely, 
+or via link:annotations.html[JDO annotations] plus link:metadata_xml.html[ORM XML Metadata overrides], 
 or via link:metadata_xml.html[JDO XML Metadata] solely, 
 or via link:metadata_xml.html[JDO XML Metadata] plus link:metadata_xml.html[ORM XML Metadata overrides], 
 or finally via a link:metadata_api.html[Metadata API]. 
 
-If you are using XML overrides for ORM, this definition will be merged in to the base definition (annotations or JDO XML Metadata).
-Note that you can utilise annotations for one class, and then JDO XML Metadata for another class should you so wish.
+If you are using XML overrides for ORM, this definition will be merged in to the base definition (JDO annotations or JDO XML Metadata).
+Note that you can utilise JDO annotations for one class, and then JDO XML Metadata for another class should you so wish.
 
 One further alternative is if you have annotations in your classes, you provide JDO XML Metadata (`package.jdo`), and also 
 ORM XML Metadata (`package-{mapping}.orm`). In this case the annotations are the base representation, applying overrides from JDO XML Metadata, and then overrides from the ORM XML Metadata.

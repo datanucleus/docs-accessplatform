@@ -6,14 +6,14 @@
 All JDO-enabled persistable classes need to have an "identity" to be able to identify an object for retrieval and relationships. 
 There are three types of identity defineable using JDO. These are
 
+* link:#nondurable_identity[Nondurable Identity] : the persistable type has no identity as such, so the only way to lookup objects of this type would be
+via query for values of specific fields. This is useful for storing things like log messages etc.
 * link:#datastore_identity[Datastore Identity] : a surrogate column is added to the persistence of the persistable type, and objects of this type are identified by
 the class plus the value in this surrogate column.
 * link:#application_identity[Application Identity] : a field, or several fields of the persistable type are assigned as being (part of) the primary key.
-* link:#nondurable_identity[Nondurable Identity] : the persistable type has no identity as such, so the only way to lookup objects of this type would be
-via query for values of specific fields. This is useful for storing things like log messages etc.
-
 A further complication is where you use _application identity_ but one of the fields forming the primary key is a relation field. 
 This is known as link:#compound_identity[Compound Identity].
+
 
 NOTE: When you have an inheritance hierarchy, you should specify the identity type in the _base instantiable_ class for the inheritance tree. 
 This is then used for all persistent classes in the tree. 
@@ -23,6 +23,36 @@ class is the first persistable class which has the identity.
 
 NOTE: The JDO _identity_ is not the same as the type of the field(s) marked as the primary key. The _identity_ will always have an identity class name. If you specify the object-id class
 then it will be this, otherwise will use a built-in type.
+
+
+[[nondurable_identity]]
+== Nondurable Identity
+
+NOTE: Applicable to RDBMS, ODF, Excel, OOXML, HBase, Neo4j, MongoDB.
+
+With *nondurable identity* your objects will not have a unique identity in the datastore. 
+This type of identity is typically for log files, history files etc where you aren't going to access the object by key, but instead by a different parameter. 
+In the datastore the table will typically not have a primary key. To specify that a class is to use *nondurable identity* with JDO you would define metadata like this
+
+[source,java]
+-----
+@PersistenceCapable(identityType=IdentityType.NONDURABLE)
+public class MyClass
+{
+    ...
+}
+-----
+
+or using XML metadata
+
+[source,xml]
+-----
+<class name="MyClass" identity-type="nondurable">
+...
+</class>
+-----
+
+What this means for something like RDBMS is that the table (or view) of the class will not have a primary-key.
 
 
 [[datastore_identity]]
@@ -465,36 +495,6 @@ Object obj = pm.getObjectById(MyClass.class, mykey);
 
 If you are using your own PK class then the _mykey_ value is the toString() form of the identity of your PK class.
 
-
-
-[[nondurable_identity]]
-== Nondurable Identity
-
-NOTE: Applicable to RDBMS, ODF, Excel, OOXML, HBase, Neo4j, MongoDB.
-
-With *nondurable identity* your objects will not have a unique identity in the datastore. 
-This type of identity is typically for log files, history files etc where you aren't going to access the object by key, but instead by a different parameter. 
-In the datastore the table will typically not have a primary key. To specify that a class is to use *nondurable identity* with JDO you would define metadata like this
-
-[source,java]
------
-@PersistenceCapable(identityType=IdentityType.NONDURABLE)
-public class MyClass
-{
-    ...
-}
------
-
-or using XML metadata
-
-[source,xml]
------
-<class name="MyClass" identity-type="nondurable">
-...
-</class>
------
-
-What this means for something like RDBMS is that the table (or view) of the class will not have a primary-key.
 
 
 [[compound_identity]]

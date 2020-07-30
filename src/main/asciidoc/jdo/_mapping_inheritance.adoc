@@ -137,7 +137,7 @@ or with annotations
 -----
 @PersistenceCapable
 @Inheritance(strategy=InheritanceStrategy.NEW_TABLE)
-public class AbstractProduct {...}
+public abstract class AbstractProduct {...}
 
 @PersistenceCapable
 @Inheritance(strategy=InheritanceStrategy.NEW_TABLE)
@@ -196,7 +196,7 @@ or with annotations
 -----
 @PersistenceCapable
 @Inheritance(strategy=InheritanceStrategy.SUBCLASS_TABLE)
-public class AbstractProduct {...}
+public abstract class AbstractProduct {...}
 -----
 
 This subtle change of use the *inheritance* element has the effect of using the `PRODUCT` table for both the *Product* and *AbstractProduct* classes, containing the fields of both classes.
@@ -255,7 +255,7 @@ or with annotations
 -----
 @PersistenceCapable
 @Inheritance(strategy=InheritanceStrategy.NEW_TABLE)
-public class AbstractProduct {...}
+public abstract class AbstractProduct {...}
 
 @PersistenceCapable
 @Inheritance(strategy=InheritanceStrategy.SUPERCLASS_TABLE)
@@ -363,7 +363,7 @@ or with annotations
 -----
 @PersistenceCapable
 @Inheritance(strategy=InheritanceStrategy.COMPLETE_TABLE)
-public class AbstractProduct {...}
+public abstract class AbstractProduct {...}
 -----
 
 So the key thing is the specification of inheritance strategy at the root only. This then implies a datastore schema as follows
