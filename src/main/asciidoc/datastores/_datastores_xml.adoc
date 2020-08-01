@@ -93,10 +93,34 @@ public class Person
     @XmlElementWrapper(name="phone-numbers")
     @XmlElement(name="phone-number")
     @Element(types=String.class)
-    private Map phoneNumbers = new HashMap();
+    private Map<String, String> phoneNumbers = new HashMap();
    
     ...
 -----
 
-Here's the same example using JPA Annotations (with DataNucleus @Extension annotation)
-TODO Add this
+Here's the same example using JPA Annotations
+
+[source,java]
+-----
+@Entity
+@Table(name="person", schema="/myproduct/people")
+public class Person
+{
+    @XmlAttribute
+    private long personNum;
+
+    @Id
+    private String firstName;
+
+    private String lastName;
+
+    private Person bestFiend;
+
+    @XmlElementWrapper(name="phone-numbers")
+    @XmlElement(name="phone-number")
+    @ElementCollection
+    private Map<String, String> phoneNumbers = new HashMap();
+   
+    ...
+-----
+
