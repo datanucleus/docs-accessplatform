@@ -7,7 +7,8 @@
 DataNucleus can be configured to log significant amounts of information regarding its process.
 This information can be very useful in tracking the persistence process, and particularly if you have problems. DataNucleus will log as follows :-
 
-* *Log4J* - if you have Log4J in the CLASSPATH, http://jakarta.apache.org/log4j[Apache Log4J] will be used
+* *Log4J v1* - if you have Log4J v1 in the CLASSPATH, http://jakarta.apache.org/log4j[Apache Log4J v1] will be used
+* *Log4J v2* - if you have Log4J v2 in the CLASSPATH, https://logging.apache.org/log4j/2.x/[Apache Log4J v2] will be used
 * *java.util.logging* - if you don't have Log4J in the CLASSPATH, then _java.util.logging_ will be used
 
 DataNucleus logs messages to various categories (in Log4J and java.util.logging these correspond to a "Logger"), allowing you to filter the logged messages 
