@@ -903,6 +903,19 @@ Query q = pm.newQuery("SELECT FROM mydomain.Person WHERE firstName == 'John'");
 -----
 
 
+image:../images/nucleus_extension.png[]
+
+DataNucleus also provides an extension to support array literals for RDBMS. You would do as follows in your JDOQL
+
+[source,java]
+-----
+Query q = pm.newQuery("SELECT FROM mydomain.Person WHERE {'John', 'Fred', 'Graham'}.contains(firstName)");
+-----
+
+namely using curly brackets to represent the array with its literal elements.
+
+
+
 === RDBMS : Parameters .v. Literals
 
 When considering whether to embody a literal into a JDOQL query, you should consider using a parameter instead. 
