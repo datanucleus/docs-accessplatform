@@ -315,11 +315,11 @@ Make sure you close all query results after you have finished with them. Failure
 When fetching objects you have control over what gets fetched. This can have an impact if you are then detaching those objects. With JDO the default "maximum fetch depth" is 1.
 
 
-== Logging
+== Logging anchor:performance_logging
 
 I/O consumes a huge slice of the total processing time. Therefore it is recommended to reduce or disable logging in production. 
 To disable the logging set the DataNucleus category to OFF in the Log4j configuration. 
-See link:../logging.html[Logging] for more information.
+See link:persistence.xml#logging.html[Logging] for more information.
 
 -----
 log4j.category.DataNucleus=OFF
