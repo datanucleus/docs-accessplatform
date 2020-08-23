@@ -115,7 +115,7 @@ By default when you create a http://www.datanucleus.org/products/accessplatform/
 automatically detect the _datastore adapter_ to use and will use its own internal adapter for that type of datastore. 
 The default behaviour is overridden using the persistence property *datanucleus.rdbms.datastoreAdapterClassName*, which specifies the class name 
 of the datastore adapter class to use. This class must implement the DataNucleus interface _DatastoreAdapter_
-http://www.datanucleus.org/javadocs/store.rdbms/latest/org/datanucleus/store/rdbms/adapter/DatastoreAdapter.html[image:../images/javadoc.png[Javadoc]].
+image:../images/javadoc.png[Javadoc, link=http://www.datanucleus.org/javadocs/store.rdbms/latest/org/datanucleus/store/rdbms/adapter/DatastoreAdapter.html].
 
 So you need to implement _DatastoreAdapter_. You have 2 ways to go here. You can either start from scratch
 (when writing a brand new adapter), or you can take the existing DataNucleus adapter for a particular RDBMS and change (or extend)

@@ -162,7 +162,7 @@ As a result you should not use the _org.datanucleus.identity.OID_ class in your 
 
 image:../images/nucleus_extensionpoint.png[]
 
-DataNucleus allows you the luxury of being able to link:../extensions/extensions.html#datastoreidentity[provide your own datastore identity class] 
+DataNucleus allows you the luxury of being able to link:../extensions/extensions.html#store_datastoreidentity[provide your own datastore identity class] 
 so you can have whatever formatting you want for identities.
 
 
@@ -274,7 +274,7 @@ Any others are DataNucleus extensions and, as always, link:../datastores/datasto
 *Single PrimaryKey field*
 
 The simplest way of using *application identity* is where you have a single PK field, and in this case you use *SingleFieldIdentity* 
-http://www.datanucleus.org/javadocs/javax.jdo/3.2/javax/jdo/identity/SingleFieldIdentity.html[image:../images/javadoc.png[]] mechanism. 
+image:../images/javadoc.png[Javadoc, link=http://www.datanucleus.org/javadocs/javax.jdo/3.2/javax/jdo/identity/SingleFieldIdentity.html] mechanism. 
 This provides a PrimaryKey and you don't need to specify the _objectid-class_. Let's take an example
 
 [source,java]

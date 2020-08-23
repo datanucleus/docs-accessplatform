@@ -42,7 +42,7 @@ public class Account
 
 == Opening/Closing a PersistenceManager
 
-You obtain a _PersistenceManager_ http://www.datanucleus.org/javadocs/javax.jdo/3.2/javax/jdo/PersistenceManager.html[image:../images/javadoc.png[Javadoc]]
+You obtain a _PersistenceManager_ image:../images/javadoc.png[Javadoc, link=http://www.datanucleus.org/javadocs/javax.jdo/3.2/javax/jdo/PersistenceManager.html]
 as follows
 
 [source,java]
@@ -660,7 +660,7 @@ This provides rapid access to the objects in use in the users application and is
 particular identity at any one time for that _PersistenceManager_. When the _PersistenceManager_ is closed the L1 cache is cleared.
 
 
-NOTE: The L1 cache is a DataNucleus link:../extensions/extensions.html#cache_level1[image:../images/nucleus_extensionpoint.png[]] allowing you to provide your own cache where you require it.
+NOTE: The L1 cache is a DataNucleus image:../images/nucleus_extensionpoint.png[link=../extensions/extensions.html#cache_level1] allowing you to provide your own cache where you require it.
 
 
 == PersistenceManagerProxy
@@ -690,7 +690,7 @@ Particularly when specifying the identity of an object, sequences are a very use
 DataNucleus supports the link:mapping.html#value_generation[automatic assignment of sequence values for object identities]. 
 However such sequences may also have use when a user wishes to assign such identity values themselves, or for other roles within an application. 
 JDO defines an interface for sequences for use in an application - known as *Sequence*.
-http://www.datanucleus.org/javadocs/javax.jdo/3.2/javax/jdo/datastore/Sequence.html[image:../images/javadoc.png[Javadoc]].
+image:../images/javadoc.png[Javadoc, link=http://www.datanucleus.org/javadocs/javax.jdo/3.2/javax/jdo/datastore/Sequence.html].
 There are 2 forms of "sequence" available through this interface - the ones that DataNucleus provides utilising datastore capabilities, 
 and ones that a user provides using something known as a "factory class".
 

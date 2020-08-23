@@ -611,7 +611,7 @@ StoreSchemaHandler schemaHandler = storeMgr.getSchemaHandler();
 -----
 
 So now we have the _StoreSchemaHandler_ what can we do with it? Well start with the javadoc for the implementation that is used for RDBMS
-http://www.datanucleus.org/javadocs/store.rdbms/latest/org/datanucleus/store/rdbms/schema/RDBMSSchemaHandler.html[image:../images/javadoc.png[Javadoc]]
+image:../images/javadoc.png[Javadoc, link=http://www.datanucleus.org/javadocs/store.rdbms/latest/org/datanucleus/store/rdbms/schema/RDBMSSchemaHandler.html]
 
 
 === RDBMS : Datastore Types Information
@@ -627,7 +627,7 @@ RDBMSTypesInfo typesInfo = schemaHandler.getSchemaData(conn, "types");
 -----
 
 As you can see from the javadocs for _RDBMSTypesInfo_
-http://www.datanucleus.org/javadocs/store.rdbms/latest/org/datanucleus/store/rdbms/schema/RDBMSTypesInfo.html[image:../images/javadoc.png[Javadoc]]
+image:../images/javadoc.png[Javadoc, link=http://www.datanucleus.org/javadocs/store.rdbms/latest/org/datanucleus/store/rdbms/schema/RDBMSTypesInfo.html]
 we can access the JDBC types information via the "children". They are keyed by the JDBC type number of the JDBC type (see java.sql.Types). So we can just iterate it
 
 [source,java]
@@ -662,7 +662,7 @@ RDBMSTableInfo tableInfo = schemaHandler.getSchemaData(conn, "columns",
 -----
     
 As you can see from the javadocs for _RDBMSTableInfo_
-http://www.datanucleus.org/javadocs/store.rdbms/latest/org/datanucleus/store/rdbms/schema/RDBMSTableInfo.html[image:../images/javadoc.png[Javadoc]]
+image:../images/javadoc.png[Javadoc, link=http://www.datanucleus.org/javadocs/store.rdbms/latest/org/datanucleus/store/rdbms/schema/RDBMSTableInfo.html]
 we can access the columns information via the "children".
 
 [source,java]
@@ -690,7 +690,7 @@ RDBMSTableIndexInfo tableInfo = schemaHandler.getSchemaData(conn, "indices",
 -----
 
 As you can see from the javadocs for _RDBMSTableIndexInfo_
-http://www.datanucleus.org/javadocs/store.rdbms/latest/org/datanucleus/store/rdbms/schema/RDBMSTableIndexInfo.htm[image:../images/javadoc.png[Javadoc]]
+image:../images/javadoc.png[Javadoc, link=http://www.datanucleus.org/javadocs/store.rdbms/latest/org/datanucleus/store/rdbms/schema/RDBMSTableIndexInfo.html]
 we can access the index information via the "children".
 
 [source,java]
@@ -719,7 +719,7 @@ RDBMSTableFKInfo tableInfo = schemaHandler.getSchemaData(conn, "foreign-keys",
 -----
 
 As you can see from the javadocs for _RDBMSTableFKInfo_
-http://www.datanucleus.org/javadocs/store.rdbms/latest/org/datanucleus/store/rdbms/schema/RDBMSTableFKInfo.html[image:../images/javadoc.png[Javadoc]]
+image:../images/javadoc.png[Javadoc, link=http://www.datanucleus.org/javadocs/store.rdbms/latest/org/datanucleus/store/rdbms/schema/RDBMSTableFKInfo.html]
 we can access the foreign-key information via the "children".
 
 [source,java]
@@ -748,7 +748,7 @@ RDBMSTablePKInfo tableInfo = schemaHandler.getSchemaData(conn, "primary-keys",
 -----
 
 As you can see from the javadocs for _RDBMSTablePKInfo_
-http://www.datanucleus.org/javadocs/store.rdbms/latest/org/datanucleus/store/rdbms/schema/RDBMSTablePKInfo.html[image:../images/javadoc.png[Javadoc]]
+image:../images/javadoc.png[Javadoc, link=http://www.datanucleus.org/javadocs/store.rdbms/latest/org/datanucleus/store/rdbms/schema/RDBMSTablePKInfo.html]
 we can access the foreign-key information via the "children".
 
 [source,java]

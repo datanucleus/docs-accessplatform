@@ -4,7 +4,7 @@
 :_imagesdir: images/
 
 Any JDO-enabled application will require at least one _PersistenceManagerFactory_ (PMF)
-http://www.datanucleus.org/javadocs/javax.jdo/3.2/javax/jdo/PersistenceManagerFactory.html[image:../images/javadoc.png[]]. 
+image:../images/javadoc.png[Javadoc, link=http://www.datanucleus.org/javadocs/javax.jdo/3.2/javax/jdo/PersistenceManagerFactory.html]. 
 Typically applications create one per datastore being utilised. 
 A _PersistenceManagerFactory_ provides access to _PersistenceManager(s)_ which allow objects to be persisted, and retrieved.
 The _PersistenceManagerFactory_ can be configured to provide particular behaviour.
@@ -608,15 +608,15 @@ will leave it to the FK in the datastore to perform any actions, and otherwise d
 
 |datanucleus.identityStringTranslatorType
 |You can allow identities input to _pm.getObjectById(id)_ be translated into valid JDO ids if there is a suitable translator.
-See link:../extensions/extensions.html#identitystringtranslator[Identity String Translator image:../images/nucleus_extensionpoint.png[]]
+See link:../extensions/extensions.html#identitystringtranslator[Identity String Translator] image:../images/nucleus_extensionpoint.png[]
 
 |datanucleus.identityKeyTranslatorType
 |You can allow identities input to _pm.getObjectById(cls, key)_ be translated into valid JDO ids if there is a suitable key translator.
-See link:../extensions/extensions.html#identitykeytranslator[Identity Key Translator image:../images/nucleus_extensionpoint.png[]]
+See link:../extensions/extensions.html#identitykeytranslator[Identity Key Translator] image:../images/nucleus_extensionpoint.png[]
 
 |datanucleus.datastoreIdentityType
 |Which "datastore-identity" class plugin to use to represent datastore identities. 
-Refer to link:../extensions/extensions.html#store_datastoreidentity[Datastore Identity image:../images/nucleus_extensionpoint.png[]] for details.
+Refer to link:../extensions/extensions.html#store_datastoreidentity[Datastore Identity] image:../images/nucleus_extensionpoint.png[]
 {*datanucleus*, kodo, xcalia, {user-supplied plugin}}
 
 |datanucleus.executionContext.maxIdle
@@ -856,7 +856,7 @@ Some databases do not support all isolation levels, refer to your database docum
 |datanucleus.transaction.jta.transactionManagerLocator
 |Selects the locator to use when using JTA transactions so that DataNucleus can find the JTA TransactionManager.
 If this isn't specified and using JTA transactions DataNucleus will search all available locators which could have a performance impact.
-See link:../extensions/extensions.html#jta_locator[JTA Locator image:../images/nucleus_extensionpoint.png[]].
+See link:../extensions/extensions.html#jta_locator[JTA Locator] image:../images/nucleus_extensionpoint.png[].
 If specifying "custom_jndi" please also specify "datanucleus.transaction.jta.transactionManagerJNDI"
 {*autodetect*, jboss, jonas, jotm, oc4j, orion, resin, sap, sun, weblogic, websphere, custom_jndi, alias of a JTA transaction locator}
 
@@ -1579,7 +1579,7 @@ This means that you only have datastore-persisted objects in that cache.
 Also, if an object is deleted during a transaction then at commit it will be removed from the L2 cache if it is present.
 
 
-NOTE: The L2 cache is a DataNucleus link:../extensions/extensions.html#cache_level2[image:../images/nucleus_extensionpoint.png[]] allowing you to provide your own cache where you require it. 
+NOTE: The L2 cache is a DataNucleus image:../images/nucleus_extensionpoint.png[link=../extensions/extensions.html#cache_level2] allowing you to provide your own cache where you require it. 
 Use the examples of the EHCache, Coherence caches etc as reference.
 
 
@@ -1595,7 +1595,7 @@ PersistenceManagerFactory pmf = JDOHelper.getPersistenceManagerFactory(props);
 DataStoreCache cache = pmf.getDataStoreCache();
 -----
 
-The _DataStoreCache_ interface http://www.datanucleus.org/javadocs/javax.jdo/3.2/javax/jdo/datastore/DataStoreCache.html[image:../images/javadoc.png[Javadoc]]
+The _DataStoreCache_ interface image:../images/javadoc.png[Javadoc, link=http://www.datanucleus.org/javadocs/javax.jdo/3.2/javax/jdo/datastore/DataStoreCache.html]
 provides methods to control the retention of objects in the cache. You have 3 groups of methods
 
 * *evict* - used to remove objects from the L2 Cache

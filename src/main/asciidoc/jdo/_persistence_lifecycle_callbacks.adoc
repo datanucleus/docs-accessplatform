@@ -49,8 +49,8 @@ These methods will be called just before storage in the data store (_jdoPreStore
 just after being loaded from the datastore (_jdoPostLoad_) and just before being deleted (_jdoPreDelete_).
 
 JDO also has 2 additional callbacks to complement _InstanceCallbacks_. These are 
-_AttachCallback_ http://www.datanucleus.org/javadocs/javax.jdo/3.2/javax/jdo/listener/AttachCallback.html[image:../images/javadoc.png[Javadoc]]
-and _DetachCallback_ http://www.datanucleus.org/javadocs/javax.jdo/3.2/javax/jdo/listener/AttachCallback.html[image:../images/javadoc.png[Javadoc]].
+_AttachCallback_ image:../images/javadoc.png[Javadoc, link=http://www.datanucleus.org/javadocs/javax.jdo/3.2/javax/jdo/listener/AttachCallback.html]
+and _DetachCallback_ image:../images/javadoc.png[Javadoc, link=http://www.datanucleus.org/javadocs/javax.jdo/3.2/javax/jdo/listener/AttachCallback.html].
 If you want to intercept attach/detach events your class can implement these interfaces. You will then need to implement the following methods
 
 [source,java]

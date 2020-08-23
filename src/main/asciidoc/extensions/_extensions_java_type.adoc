@@ -30,7 +30,7 @@ The reason for this is that DataNucleus needs to be aware when the type has chan
 and how you would define support for intercepting these mutating operations lets use _java.util.Date_. We need to write a _wrapper_ class. 
 This has to be castable to the same type as the Java type it is representing (so inherited from it).
 So we extend "java.util.Date", and we need to implement the interface _org.datanucleus.store.types.SCO_ 
-http://www.datanucleus.org/javadocs/core/latest/org/datanucleus/store/types/SCO.html[image:../images/javadoc.png[]].
+image:../images/javadoc.png[Javadoc, link=http://www.datanucleus.org/javadocs/core/latest/org/datanucleus/store/types/SCO.html].
 
 
 [source,java]
