@@ -11,33 +11,33 @@ In this section you can find the specifics for particular supported datastores o
 
 [cols="2,7a"]
 |===
-|image:../images/datastore/datastore_rdbms.png[RDBMS]
+|*Relational*
 |link:#rdbms[RDBMS] : tried and tested since the 1970s, relational databases form an integral component of many systems. 
 They incorporate optimised querying mechanisms, yet also can suffer from object-relational impedance mismatch in some situations. 
 They also require an extra level of configuration to map from objects across to relational tables/columns.
 
-|image:../images/datastore/datastore_mapbased.png[Map-Based]
+|*Map-Based*
 |* link:#hbase[HBase] : HBase is a map-based datastore originated within Hadoop, following the model of BigTable.
 * link:#cassandra[Cassandra] : Cassandra is a distributed robust clustered datastore.
 
-|image:../images/datastore/datastore_graphbased.png[Graph-Based]
+|*Graph-Based*
 |link:#neo4j[Neo4J] : plugin providing persistence to the Neo4j graph store
 
-|image:../images/datastore/datastore_document.png[Documents]
+|*Documents*
 |* link:#odf[Open Document Format (ODF)] : ODF is an international standard document format, and its spreadsheets provide a widely used form for publishing of data, making it available to other groups.
 * link:#excel[Excel (XLS)] : Excel spreadsheets provide a widely used format allowing publishing of data, making it available to other groups (XLS format).
 * link:#ooxml[Excel (OOXML)] : Excel spreadsheets provide a widely used format allowing publishing of data, making it available to other groups (OOXML format).
 * link:#xml[XML] : XML defines a document format and, as such, is a key data transfer medium.
 
-|image:../images/datastore/datastore_webbased.png[Web-Based]
+|*Web-Based*
 |* link:#json[JSON] : another format of document for exchange, in this case with particular reference to web contexts.
 * link:#amazons3[Amazon S3] : Amazon Simple Storage Service.
 * link:#googlestorage[Google Storage] : Google Storage.
 
-|image:../images/datastore/datastore_docbased.png[Doc-Based]
+|*Doc-Based*
 |link:#mongodb[MongoDB] : plugin providing persistence to the MongoDB NoSQL datastore
 
-|image:../images/datastore/datastore_others.png[Others]
+|*Others*
 |* link:#ldap[LDAP] : an internet standard datastore for indexed data that is not changing significantly.
 * _NeoDatis_ : an open source object datastore. Fast persistence of large object graphs, without the necessity of any object-relational mapping (no longer supported, use DataNucleus 5.0).
 |===
