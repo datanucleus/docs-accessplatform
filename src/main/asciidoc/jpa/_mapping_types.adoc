@@ -950,8 +950,7 @@ Oracle provides its own geometry type for use in Oracle databases.
 image:../images/nucleus_extension.png[]
 
 `datanucleus-geospatial` has defined some metadata extensions that can be used to give additional information about the geometry types in use. 
-The position of these tags in the meta-data determines their scope. If you use them inside a &lt;field&gt;-tag the values are only used for that field specifically, if 
-you use them inside the &lt;package&gt;-tag the values are in effect for all (geometry) fields of all classes inside that package, etc. 
+You use them inside a field and the values are only used for that field specifically, or for an entity as a whole. 
 
 [source,xml]
 -----
