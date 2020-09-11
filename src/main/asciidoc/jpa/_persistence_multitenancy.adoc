@@ -74,8 +74,8 @@ public class MyClass
 
 Note that the *Tenant ID* can be set in one of three ways.
 
-* Per EntityManagerFactory : just set the persistence property _datanucleus.tenantId_ when you start up the EMF, and all access for this EMF will use this Tenant ID
-* Per EntityManager : set the persistence property _datanucleus.tenantId_ when you start up the EMF as the default Tenant ID, 
+* Per EntityManagerFactory : just set the persistence property *datanucleus.tenantId* when you start up the EMF, and all access for this EMF will use this Tenant ID
+* Per EntityManager : set the persistence property *datanucleus.tenantId* when you start up the EMF as the default Tenant ID, 
 and set a property on any EntityManager that you want a different Tenant ID specifying for. Like this
 [source,java]
 -----
@@ -93,7 +93,7 @@ em2.setProperty("datanucleus.tenantId", "Chris");
 ... // All operations will apply to tenant "Chris"
 em2.close();
 -----
-* Per datastore access : When creating the EMF set the persistence property _datanucleus.tenantProvider_ and set it to an instance of _org.datanucleus.store.schema.MultiTenancyProvider_
+* Per datastore access : When creating the EMF set the persistence property *datanucleus.tenantProvider* and set it to an instance of _org.datanucleus.store.schema.MultiTenancyProvider_
 image:../images/javadoc.png[Javadoc, link=http://www.datanucleus.org/javadocs/core/latest/org/datanucleus/store/schema/MultiTenancyProvider.html]
 [source,java]
 -----
