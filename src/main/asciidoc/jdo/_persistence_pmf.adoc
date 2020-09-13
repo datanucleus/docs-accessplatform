@@ -273,23 +273,23 @@ NOTE: The "ConnectionURL" value for the different supported datastores is define
 |Description + Values
 
 |javax.jdo.PersistenceManagerFactoryClass
-|The name of the PMF implementation. _org.datanucleus.api.jdo.JDOPersistenceManagerFactory_ *Only required if you have more than one JDO implementation in the CLASSPATH*
+|The name of the PMF implementation. This is only required if you have more than one JDO implementation in the CLASSPATH, and otherwise defaults to _org.datanucleus.api.jdo.JDOPersistenceManagerFactory_.
 
 |javax.jdo.option.ConnectionFactory
 |Instance of a connection factory for *transactional* connections. This is an alternative to specifying the ConnectionURL.
-*Only for RDBMS*, and it must be an instance of javax.sql.DataSource. See link:persistence.html#datastore_connection[here]
+*Only for RDBMS*, and it must be an instance of `javax.sql.DataSource`. See link:persistence.html#datastore_connection[here]
 
 |javax.jdo.option.ConnectionFactory2
 |Instance of a connection factory for *nontransactional* connections. This is an alternative to specifying the ConnectionURL.
-*Only for RDBMS*, and it must be an instance of javax.sql.DataSource. See link:persistence.html#datastore_connection[here]
+*Only for RDBMS*, and it must be an instance of `javax.sql.DataSource`. See link:persistence.html#datastore_connection[here]
 
 |javax.jdo.option.ConnectionFactoryName
 |The JNDI name for a connection factory for *transactional* connections. 
-*Only for RDBMS*, and it must be a JNDI name that points to a javax.sql.DataSource object. See link:persistence.html#datastore_connection[here]
+*Only for RDBMS*, and it must be a JNDI name that points to a `javax.sql.DataSource` object. See link:persistence.html#datastore_connection[here]
 
 |javax.jdo.option.ConnectionFactory2Name
 |The JNDI name for a connection factory for *nontransactional* connections. 
-*Only for RDBMS*, and it must be a JNDI name that points to a javax.sql.DataSource object. See link:persistence.html#datastore_connection[here]
+*Only for RDBMS*, and it must be a JNDI name that points to a `javax.sql.DataSource` object. See link:persistence.html#datastore_connection[here]
 
 |javax.jdo.option.ConnectionURL
 |URL specifying the datastore to use for persistence.
@@ -360,7 +360,7 @@ datastore server is running in the same timezone as the JVM under which DataNucl
 |javax.jdo.option.TransactionIsolationLevel
 |Select the default transaction isolation level for ALL PM factories. 
 Some databases do not support all isolation levels, refer to your database documentation. Please refer to the link:persistence.html#transaction_isolation[transaction guide]
-{read-uncommitted, *read-committed*, repeatable-read, serializable}
+{none, read-uncommitted, *read-committed*, repeatable-read, serializable}
 
 |javax.jdo.option.NontransactionalRead
 |Whether to allow nontransactional reads
@@ -851,7 +851,7 @@ DataNucleus provides the following properties for configuring transaction handli
 |datanucleus.transaction.isolation
 |Select the default transaction isolation level for ALL PM factories. 
 Some databases do not support all isolation levels, refer to your database documentation. Please refer to the link:persistence.html#transaction_isolation[transaction guide].
-{read-uncommitted, *read-committed*, repeatable-read, serializable}
+{none, read-uncommitted, *read-committed*, repeatable-read, serializable}
 
 |datanucleus.transaction.jta.transactionManagerLocator
 |Selects the locator to use when using JTA transactions so that DataNucleus can find the JTA TransactionManager.
@@ -1106,9 +1106,9 @@ DataNucleus provides the following properties for configuring value generation h
 {*NEW*, EXISTING}
 
 |datanucleus.valuegeneration.transactionIsolation
-|Select the default transaction isolation level for identity generation. Must have _datanucleus.valuegeneration.transactionAttribute_ set to _New_
+|Select the default transaction isolation level for identity generation. Must have *datanucleus.valuegeneration.transactionAttribute* set to _New_
 Some databases do not support all isolation levels, refer to your database documentation and the link:persistence.html#transaction_isolation[transaction guide]
-{read-uncommitted, *read-committed*, repeatable-read, serializable}
+{none, read-uncommitted, *read-committed*, repeatable-read, serializable}
 
 |datanucleus.valuegeneration.sequence.allocationSize
 |Sets the default allocation size for any "sequence" value strategy. You can configure each member strategy individually but they fall back to this value if not set.
