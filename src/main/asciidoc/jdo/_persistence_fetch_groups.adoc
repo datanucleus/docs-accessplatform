@@ -145,15 +145,23 @@ _PersistenceManager.getExtent()_, _PersistenceManager.detachCopy_ and much more 
 == Dynamic Fetch Groups
 
 The mechanism above provides static fetch groups defined in XML or annotations. That is great when you know in advance what fields you want to fetch. 
-In some situations you may want to define your fields to fetch at run time. It operates as follows
+In some situations you may want to define your fields to fetch at run time. 
+
+You can define a `FetchGroup` on the PMF, or on the PM. 
+For example, on the PMF as follows
 
 [source,java]
 -----
 import org.datanucleus.FetchGroup;
 
-// Create a FetchGroup on the PMF called "TestGroup" for MyClass
+// Create a FetchGroup called "TestGroup" for MyClass, and add the class' members
 FetchGroup grp = myPMF.getFetchGroup(MyClass.class, "TestGroup");
 grp.addMember("field1").addMember("field2");
+
+// Make the group active on the PMF
+myPMF.addFetchGroups(grp);
+
+...
 
 // Add this group to the fetch plan (using its name)
 fp.addGroup("TestGroup");
@@ -161,6 +169,23 @@ fp.addGroup("TestGroup");
 
 So we use the DataNucleus PMF as a way of creating a FetchGroup, and then register that FetchGroup with the PMF for use by all PMs. 
 We then enable our FetchGroup for use in the FetchPlan by using its group name (as we do for a static group). 
+
+Alternatively, on the PM
+
+[source,java]
+-----
+import org.datanucleus.FetchGroup;
+
+// Create a FetchGroup called "TestGroup" for MyClass, and add the class' members (immediately active when on the PM)
+FetchGroup grp = myPM.getFetchGroup(MyClass.class, "TestGroup");
+grp.addMember("field1").addMember("field2");
+
+...
+
+// Add this group to the fetch plan (using its name)
+fp.addGroup("TestGroup");
+-----
+
 The FetchGroup allows you to add/remove the fields necessary so you have full API control over the fields to be fetched.
 
 
