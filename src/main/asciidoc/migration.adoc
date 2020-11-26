@@ -229,7 +229,7 @@ data, then extract the internal TypeConverter for DN 5.0.0.M1 and use that in yo
 
 Migrating will require the following changes.
 
-* JDK : The JDK must be 1.8 or above now.
+* Java : The JRE must be Java8+ now.
 * Use _javax.persistence_ v2.1.2+ if having problems with signatures of JPA EntityGraph "addAttributeNodes" method, since this fixes a bug in JPA2.1 (that should be fixed in JPA 2.2 one day).
 
 
@@ -386,7 +386,7 @@ Migrating will require the following changes
 
 * Persistence property *datanucleus.identifier.case* value _PreserveCase_ is now *MixedCase*
 * User mapping extensions are now not needed if there is a TypeConverter that does the conversion. Also the helper mapping classes ObjectAsStringMapping etc are now removed.
-* DataNucleus now uses ASM v5 so should, in principle, be JDK1.8-ready (as well as backwards compatible). Report any problems in the normal way
+* DataNucleus now uses ASM v5 so should, in principle, be Java8-ready (as well as backwards compatible). Report any problems in the normal way
 * ODF/Excel : The previously permitted extension of specifying the column "name" to be the position of that column is now no longer supported; 
 specify the column 'position' attribute if wanting to specify the position.
 
@@ -606,8 +606,8 @@ Migrating will require no changes.
 
 Migrating will require the following changes.
 
-* The enhancer (v3.1) is now upgraded and requires ASM v4.0+. You can continue to use the v3.0 enhancer with ASM v3.x but that will not work completely with JDK1.7
-* The RDBMS plugin now requires JDK1.6+ to run. Use v3.0 if you are still using JDK1.5
+* The enhancer (v3.1) is now upgraded and requires ASM v4.0+. You can continue to use the v3.0 enhancer with ASM v3.x but that will not work completely with Java7
+* The RDBMS plugin now requires JDK1.6+ to run. Use v3.0 if you are still using Java5
 
 
 === Migration from 3.1.0.M2 to 3.1.0.M3
@@ -755,7 +755,7 @@ Migrating will require the following changes.
 Migrating will require the following changes.
 
 * *datanucleus-connectionpool* is no longer provided/needed, and is included within *datanucleus-rdbms*. 
-In addition, if using JDK1.6 you can use a builtin DBCP connection pool. You still need to include the relevant connection pool (e.g DBCP) in your CLASSPATH if using JDK1.5
+In addition, if using Java6 you can use a builtin DBCP connection pool. You still need to include the relevant connection pool (e.g DBCP) in your CLASSPATH if using Java5
 * If you experience different behaviour with delete of objects with Excel or ODF, this is because they now support cascade-delete
 * Major changes have been made to the use of the L2 cache (so that fields are used from there rather than from the datastore wherever possible) 
 and also to Managed Relations. Please report any problems
@@ -836,7 +836,7 @@ Migrating will require the following changes.
 
 * JPQL "CASE" statements are now supported
 * JPA2 static metamodel is now supported, and so can be used with criteria queries alongside the string-based field specification method
-* Runtime enhancement is now turned off by default even when you use JDK1.6+ and have the enhancer/core jars in the CLASSPATH. Specify the compiler argument *processor*
+* Runtime enhancement is now turned off by default even when you use Java6+ and have the enhancer/core jars in the CLASSPATH. Specify the compiler argument *processor*
 to enable it (see link:jdo/enhancer.html[the docs])
 
 
