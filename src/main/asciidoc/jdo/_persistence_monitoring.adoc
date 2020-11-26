@@ -31,7 +31,7 @@ ManagerStatistics stats = dnPM.getExecutionContext().getStatistics();
                 
 The MBeans used by DataNucleus can be accessed via JMX at runtime. More about JMX http://www.oracle.com/technetwork/java/javase/tech/javamanagement-140525.html[here].
 
-An MBean server is bundled with the JRE since v1.5, and you can easily activate DataNucleus MBeans registration by creating your PMF 
+An MBean server is bundled with the JRE since Java5, and you can easily activate DataNucleus MBeans registration by creating your PMF 
 with the persistence property *datanucleus.jmxType* as _default_
 
 Additionally, setting a few system properties are necessary for configuring the Sun JMX implementation. The minimum properties required are the following:

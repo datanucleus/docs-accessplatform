@@ -159,7 +159,7 @@ left it to a user to define the discriminator, but now adds it for them. See per
 using class-name. We now swap to entity-name, but allow a persistence property *datanucleus.metadata.useDiscriminatorClassNameByDefault* that you
 can set to _true_ to get old behaviour.
 * DatastoreAdapter method _getRangeByLimitEndOfStatementClause_ now has an extra argument added, for people who are overriding an adapter
-* The builtin DBCP connection pool has been removed and replaced by a builtin DBCP2 connection pool. DBCP2 is recommended over DBCP for all JRE's 1.7+ so
+* The builtin DBCP connection pool has been removed and replaced by a builtin DBCP2 connection pool. DBCP2 is recommended over DBCP for all JRE's Java7+ so
 this switch was long overdue.
 * SchemaTool was changed to have options "createDatabase"/"deleteDatabase" instead of "createSchema"/"deleteSchema", and to accept the catalog as input.
 To be consistent the persistence property _datanucleus.schema.autoCreateSchema_ is now renamed to *datanucleus.schema.autoCreateDatabase*.
