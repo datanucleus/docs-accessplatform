@@ -41,7 +41,7 @@ So datastore connections, in general, are held for much smaller periods of time.
 This is complicated slightly by use of the persistence property *datanucleus.IgnoreCache*. 
 When this is set to _false_, the connection, once obtained, is not released until the call to commit()/rollback().
 
-NOTE: For Neo4j/MongoDB a single connection is used for the duration of the EM for all transactional and nontransactional operations.
+NOTE: For Neo4j/MongoDB a single connection is used for the duration of the PM for all transactional and nontransactional operations.
 
 
 == Nontransactional Context
@@ -50,7 +50,7 @@ When performing non-transactional operations, the default behaviour is to obtain
 With RDBMS you have the option of retaining this connection ready for the next operation to save the time needed to obtain it; this is enabled by setting the
 persistence property *datanucleus.connection.nontx.releaseAfterUse* to _false_.
 
-NOTE: For Neo4j/MongoDB a single connection is used for the duration of the EM for all transactional and nontransactional operations.
+NOTE: For Neo4j/MongoDB a single connection is used for the duration of the PM for all transactional and nontransactional operations.
 
 
 == User Connection
