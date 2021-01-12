@@ -95,12 +95,12 @@ If you don't return the connection and try to perform an _EntityManager_ operati
 [[connection_pooling]]
 == Connection Pooling
 
-When you create an _EntityManagerFactory_ using the connection URL, driver name and the
-username/password to use, this doesn't necessarily pool the connections.
-For some of the supported datastores DataNucleus allows you to utilise a connection pool to efficiently
-manage the connections to the datastore. We currently provide support for the following
+When you create an _EntityManagerFactory_ using the connection URL, driver name and the username/password to use, this doesn't necessarily pool the connections
+(so they would be efficiently opened/closed when needed to utilise datastore resources in an optimum way).
+For some of the supported datastores DataNucleus allows you to utilise a connection pool to efficiently manage the connections to the datastore. 
+We currently provide support for the following
 
-* RDBMS : link:#connection_pooling_rdbms_dbcp2[Apache DBCP v2], we allow use of externally-defined DBCP2, but also provide a builtin DBCP v2.1.1
+* RDBMS : link:#connection_pooling_rdbms_dbcp2[Apache DBCP v2], we allow use of externally-defined DBCP2, but also provide a builtin DBCP v2.x
 * RDBMS : link:#connection_pooling_rdbms_c3p0[C3P0]
 * RDBMS : link:#connection_pooling_rdbms_bonecp[BoneCP]
 * RDBMS : link:#connection_pooling_rdbms_hikaricp[HikariCP]
