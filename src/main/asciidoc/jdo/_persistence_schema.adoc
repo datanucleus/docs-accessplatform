@@ -39,6 +39,21 @@ which will be generated using this mode of operation.
 * *datanucleus.generateSchema.scripts.drop.source* - set this to an SQL script of your own that will drop some tables (prior to any schema generation from the persistable objects)
 * *datanucleus.generateSchema.scripts.load* - set this to an SQL script of your own that will insert any data that you require to be available when your PMF is initialised
 
+For example, if you want to generate "create" and "drop" (DDL) scripts you can set
+---
+datanucleus.generateSchema.scripts.mode=drop-and-create
+datanucleus.generateSchema.scripts.create.target=my_create_script.ddl
+datanucleus.generateSchema.scripts.drop.target=my_drop_script.ddl
+---
+
+For example, if you want to generate (drop existing, then create) the schema USING your own (DDL) scripts, you can set
+---
+datanucleus.generateSchema.database.mode=drop-and-create
+datanucleus.generateSchema.scripts.create.source=my_create_script.ddl
+datanucleus.generateSchema.scripts.drop.source=my_drop_script.ddl
+---
+
+
 
 [[schema-autogeneration]]
 == Schema Auto-Generation at runtime
