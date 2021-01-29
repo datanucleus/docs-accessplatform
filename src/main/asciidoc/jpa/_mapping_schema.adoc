@@ -141,7 +141,8 @@ Since the bank transfer reference is optional we want that column to be nullable
 Alternatively, you can specify these using annotations should you so wish.
 
 So we make use of the _nullable_ attribute. The table, when created by DataNucleus, will then provide the nullability that we require. 
-Unfortunately with JPA there is no way to specify a default value for a field when it hasn't been set (unlike JDO where you can do that).
+
+*Unfortunately with JPA there is no way to specify a default value for a field when it hasn't been set (unlike JDO where you can do that).*
 
 See also :-
 
