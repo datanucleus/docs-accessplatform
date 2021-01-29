@@ -129,7 +129,7 @@ Since the bank transfer reference is optional we want that column to be nullable
             <column name="TRANSFER_REF" nullable="true"/>
         </basic>
         <basic name="currency">
-            <column name="CURRENCY" default-value="GBP"/>
+            <column name="CURRENCY"/>
         </basic>
         <basic name="amount">
             <column name="AMOUNT"/>
@@ -178,7 +178,7 @@ Like this
             <column name="TRANSFER_REF" nullable="true" length="255"/>
         </basic>
         <basic name="currency">
-            <column name="CURRENCY" default-value="GBP" length="3" jdbc-type="CHAR"/>
+            <column name="CURRENCY" length="3" jdbc-type="CHAR"/>
         </basic>
         <basic name="amount">
             <column name="AMOUNT" precision="10" scale="2"/>
