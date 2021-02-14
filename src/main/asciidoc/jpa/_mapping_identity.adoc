@@ -20,16 +20,17 @@ NOTE: *When you have an inheritance hierarchy, you should specify the identity t
 classes in the tree.* This means that you can have `@MappedSuperclass` without any identity fields/properties as superclass, and then the base instantiable class is the first persistable
 class which has the identity field(s).
 
+NOTE: Your "identity" will be used for any joins to related objects, so consider carefully what field(s) you want to use in this respect.
+
 
 [[application_identity]]
 == Application Identity
 
 NOTE: Applicable to all datastores.
 
-With *application identity* you are taking control of the specification of id's to DataNucleus. Application identity can require a primary key class 
-_(when you have multiple identity fields)_, and each persistable class may define a different class for its primary 
-key, and different persistent capable classes can use the same primary key class, as appropriate. With *application identity* the field(s) of the primary key 
-will be present as field(s) of the class itself. To specify that a class is to use *application identity*, you add the following to the MetaData for the class.
+With *application identity* you are taking control of the specification of identity and define which field(s) in your class will define that identity. 
+With *application identity* the field(s) of the primary key will be present as field(s) of the class itself. 
+To specify that a class is to use *application identity*, you add the following to the MetaData for the class.
 
 [source,xml]
 -----
@@ -52,7 +53,9 @@ public class MyClass
 }
 -----
 
-When we have *multiple identity fields* we also require an *id-class*, using XML
+*Application identity* requires a primary key class when you have multiple identity fields. Each persistable class may define a different class for its primary 
+key, and different persistable classes can use the same primary key class, as appropriate. 
+To provide an example, when we have *multiple identity fields* we also require an *id-class*, so using XML
 
 [source,xml]
 -----
@@ -90,10 +93,11 @@ See also:-
 * link:metadata_xml.html#id[MetaData reference for <id> element]
 * link:annotations.html#Id[Annotations reference for @Id]
 
+
 === Application Identity : Generating identities
 
-By choosing *application identity* you are controlling the process of identity generation for this class. 
-This does not mean that you have a lot of work to do for this. 
+For any field that is part of the "identity" you are responsible for defining how its value is set. 
+Such field(s) can be set by the user, or can be generated.
 JPA defines link:#value_generation[many ways of generating these identities] and DataNucleus supports all of these and provides some more of its own besides.
 
 
@@ -111,6 +115,7 @@ You access an object from its object class name and identity "value" as follows
 MyClass myObj = em.find(MyClass.class, mykey);
 -----
 
+If your class has a single identity field and no "IdClass" then the _mykey_ is simply the value of that field.
 If you have defined your own "IdClass" then the _mykey_ is the toString() form of the identity of your PK class.
 
 
