@@ -29,7 +29,6 @@ NOTE: Your "identity" will be used for any joins to related objects, so consider
 NOTE: Applicable to all datastores.
 
 With *application identity* you are taking control of the specification of identity and define which field(s) in your class will define that identity. 
-With *application identity* the field(s) of the primary key will be present as field(s) of the class itself. 
 To specify that a class is to use *application identity*, you add the following to the MetaData for the class.
 
 [source,xml]
@@ -85,6 +84,7 @@ public class MyClass
 }
 -----
 
+With *application identity* the field(s) of the primary key (specified by `@IdClass` or `<id-class>`) will be present as field(s) of the class itself. 
 The definition of the `@IdClass` is described further below.
 
 
