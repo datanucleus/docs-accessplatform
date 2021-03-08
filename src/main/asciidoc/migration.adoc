@@ -25,6 +25,16 @@ Migrating will require the following changes.
 
 
 
+=== Migration from 5.2.2 to 5.2.3
+
+Migrating will require the following changes.
+
+* PostgreSQL handling of JDBC "CLOB" type has changed to reflect the fact that PostgreSQL simply uses a "large string" column. The default column mapping is 
+now changed to use a LongVarcharColumnMapping from ClobColumnMapping. Use the column extension "column-mapping-class" set to 
+_"org.datanucleus.store.rdbms.mapping.column.ClobColumnMapping"_ if you want old handling.
+
+
+
 === Migration from 5.1.10 to 5.2.0.M1
 
 Migrating will require the following changes.
