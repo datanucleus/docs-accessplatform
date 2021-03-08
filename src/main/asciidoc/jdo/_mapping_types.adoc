@@ -1547,3 +1547,29 @@ String myStringField;
 The `?` is replaced by the column name. So the stored datastore value will be converted to UPPERCASE before being set in the Java object retrieved.
 
 You could use these _column adapters_ to do things like encrypt/decrypt the value of a field when storing to/retrieving from the database, for example.
+
+
+[[rdbms_mapping_overrides]]
+== RDBMS Override of mapping
+
+If you are using an RDBMS datastore a java type is mapped to type mapping, which is mapped to 1...N column mapping(s). 
+You can override the *java type mapping* as well as the *column_mapping_class* for each column.
+
+To override the mapping class used for a field/property add
+
+[[source,xml]]
+-----
+<field name="myField">
+    <extension vendor-name="datanucleus" key="mapping-class" value="org.datanucleus.store.rdbms.mapping.java.IntegerMapping"/>
+</field>
+-----
+
+To override the column mapping class used for a column add
+
+[[source,xml]
+-----
+<column name="MYCOL">
+    <extension vendor-name="datanucleus" key="column-mapping-class" value="org.datanucleus.store.rdbms.mapping.column.ClobColumnMapping"/>
+</column>
+-----
+
