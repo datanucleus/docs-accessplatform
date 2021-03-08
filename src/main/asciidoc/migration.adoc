@@ -29,9 +29,12 @@ Migrating will require the following changes.
 
 Migrating will require the following changes.
 
-* PostgreSQL handling of JDBC "CLOB" type has changed to reflect the fact that PostgreSQL simply uses a "large string" column. The default column mapping is 
+* PostgreSQL handling of JDBC "CLOB" type has changed to reflect the fact that PostgreSQL simply uses a "large string" (text) column. The default column mapping is 
 now changed to use a LongVarcharColumnMapping from ClobColumnMapping. Use the column extension "column-mapping-class" set to 
 _"org.datanucleus.store.rdbms.mapping.column.ClobColumnMapping"_ if you want old handling.
+* PostgreSQL handling of JDBC "BLOB" type has changed to reflect the fact that PostgreSQL simply uses a "large binary" (bytea) column. The default column mapping is 
+now changed to use a LongVarBinaryColumnMapping from BlobColumnMapping. Use the column extension "column-mapping-class" set to 
+_"org.datanucleus.store.rdbms.mapping.column.BlobColumnMapping"_ if you want old handling.
 
 
 
