@@ -786,8 +786,16 @@ Will process the schema for all classes that have metadata loaded at startup (i.
 |Name of the script file to write to if doing a "drop" with the target as "scripts"
 {*datanucleus-schema-drop.ddl*, {filename}}
 
+|datanucleus.generateSchema.create.order
+|Order of creating the schema, whether scripts or metadata
+{scripts, scripts-then-metadata, *metadata*, metadata-then-scripts}
+
 |datanucleus.generateSchema.scripts.create.source
 |Name of a script file to run to create tables. Can be absolute filename, or URL string
+
+|datanucleus.generateSchema.drop.order
+|Order of dropping the schema, whether scripts or metadata
+{scripts, scripts-then-metadata, *metadata*, metadata-then-scripts}
 
 |datanucleus.generateSchema.scripts.drop.source
 |Name of a script file to run to drop tables. Can be absolute filename, or URL string
