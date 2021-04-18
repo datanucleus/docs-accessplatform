@@ -48,7 +48,7 @@ when using _javax.persistence.schema-generation.scripts.action_
 
 Some examples.
 
-To create a database using the JPA entities, and load data
+Example 1, to create a database using the JPA entities (metadata), and then load data
 
 -----
 javax.persistence.schema-generation.database.action=create
@@ -56,12 +56,21 @@ javax.persistence.sql-load-script-source=/usr/local/MyStartUp.sql
 -----
 
 
-To create DDL for the JPA entities
+Example 2, to create DDL scripts for the JPA entities
 
 -----
 javax.persistence.schema-generation.scripts.action=create
 javax.persistence.schema-generation.scripts.create.target=/usr/local/CreateTables.ddl
 -----
+
+
+Example 3, if you want to create the schema using your own (DDL) script, you can set
+
+---
+javax.persistence.schema-generation.database.action=create
+javax.persistence.schema-generation.create-source=script
+javax.persistence.schema-generation.create-script-source=META-INF/my_create_script.ddl
+---
 
 
 
