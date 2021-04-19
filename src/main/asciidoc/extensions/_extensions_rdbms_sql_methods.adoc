@@ -21,11 +21,12 @@ public interface SQLMethod
 {
     /**
      * Return the expression for this SQL function.
+     * @param stmt The SQL Statement
      * @param expr The expression that it is invoked on
      * @param args Arguments passed in
      * @return The SQL expression using the SQL function
      */
-    public SQLExpression getExpression(SQLExpression expr, List args);
+    public SQLExpression getExpression(SQLStatement stmt, SQLExpression expr, List<SQLExpression> args);
 }
 -----
 
@@ -53,7 +54,7 @@ import org.datanucleus.store.rdbms.sql.expression.StringExpression;
 
 public class MyStringLengthMethod extends AbstractSQLMethod
 {
-    public SQLExpression getExpression(SQLExpression expr, List args)
+    public SQLExpression getExpression(SQLStatement stmt, SQLExpression expr, List args)
     {
         if (expr instanceof StringExpression)
         {
