@@ -1558,7 +1558,7 @@ You can override the *java type mapping* as well as the *column_mapping_class* f
 
 To override the mapping class used for a field/property add
 
-[[source,xml]]
+[source,xml]
 -----
 <field name="myField">
     <extension vendor-name="datanucleus" key="mapping-class" value="org.datanucleus.store.rdbms.mapping.java.IntegerMapping"/>
@@ -1567,7 +1567,7 @@ To override the mapping class used for a field/property add
 
 To override the column mapping class used for a column add
 
-[[source,xml]
+[source,xml]
 -----
 <column name="MYCOL">
     <extension vendor-name="datanucleus" key="column-mapping-class" value="org.datanucleus.store.rdbms.mapping.column.ClobColumnMapping"/>
