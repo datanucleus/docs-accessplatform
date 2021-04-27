@@ -20,6 +20,7 @@ The sections below shows the currently supported SCO java types in DataNucleus. 
 ** *proxy* : whether the field is represented by a "proxy" that intercepts any operations to detect whether it has changed internally.
 ** *primary-key* : whether the field can be used as part of the primary-key
 
+NOTE: *First-Class Types* (relation fields) are not present in the default fetch group.
 
 NOTE: With DataNucleus, all types that we have a way of persisting (i.e listed below) are default persistent (meaning that you don't need to annotate them in any way to persist them). 
 The only field types where this is not always true is for java.lang.Object, some Serializable types, array of persistables, and java.io.File so always safer to mark those as persistent.
