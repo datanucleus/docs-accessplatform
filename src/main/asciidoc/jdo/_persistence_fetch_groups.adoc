@@ -37,6 +37,8 @@ By default the _default fetch group_ comprises all fields of the following types
 * java.math.BigDecimal, java.math.BigInteger
 * java.util.Date
 
+NOTE: Relation fields are not present, by default, in the default fetch group.
+
 If you wish to change the *Default Fetch Group* for a class you can update the Meta-Data for the class as follows
 
 [source,java]
@@ -54,8 +56,6 @@ or using XML metadata
     <field name="fieldX" default-fetch-group="true"/>
 </class>
 -----
-
-NOTE: Relation fields are not present, by default, in the default fetch group.
 
 
 When a _PersistenceManager_ is created it starts with a FetchPlan of the "default" fetch group. That is, if we call
