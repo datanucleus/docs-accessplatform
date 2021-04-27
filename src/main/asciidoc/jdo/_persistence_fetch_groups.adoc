@@ -29,13 +29,15 @@ FetchPlan fp = pm.getFetchPlan();
 == Default Fetch Group
 
 JDO provides an initial fetch group, comprising the fields that will be retrieved when an object is retrieved if the user does nothing to define the required behaviour. 
-By default the _default fetch group_ comprises all fields of the following types :-
+By default the _default fetch group_ comprises all fields of the following types (as per JDO spec) :-
 
 * primitives : boolean, byte, char, double, float, int, long, short
 * Object wrappers of primitives : Boolean, Byte, Character, Double, Float, Integer, Long, Short
 * java.lang.String, java.lang.Number, java.lang.Enum
 * java.math.BigDecimal, java.math.BigInteger
 * java.util.Date
+
+DataNucleus adds in many other types to the _default fetch group_ as per link:mapping.html#field_types[the mapping guide].
 
 NOTE: Relation fields are not present, by default, in the default fetch group.
 
