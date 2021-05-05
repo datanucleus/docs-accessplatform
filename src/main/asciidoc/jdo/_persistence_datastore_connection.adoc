@@ -6,14 +6,14 @@
 
 DataNucleus utilises datastore connections as follows
 
-* PMF : single connection at any one time for datastore-based value generation. Obtained just for the operation, then released
-* PMF : single connection at any one time for schema-generation. Obtained just for the operation, then released
-* PM  : single connection at any one time. When in a transaction the connection is held from the point of retrieval until the transaction commits or rolls back; 
-the exact point at which the connection is obtained is defined more fully below.
-When used for non-transactional operations the connection is obtained just for the specific operation (unless configured to retain it).
+* PMF : single connection at any one time for datastore-based value generation; obtained just for the operation, then released.
+Single connection at any one time for schema-generation; obtained just for the operation, then released.
+* PM  : single connection at any one time for transactional operation, held from the point of retrieval until the transaction commits or rolls back.
+Single connection at any time for non-transactional operations, the connection is obtained just for the specific operation (unless configured to retain it).
 
-Datastore connections are obtained from up to 2 connection factories. The primary connection factory is used for persistence operations, and optionally for value generation operations.
-The secondary connection factory is used for schema generation, and optionally for value generation operations. 
+Datastore connections are obtained from up to 2 connection factories. 
+The primary connection factory is used for persistence operations (and optionally for value generation operations).
+The secondary connection factory is used for schema generation, and for value generation operations (unless specified to use primary). 
 
 WARNING: If you are performing any schema generation at runtime then you must define a secondary connection factory.
 
@@ -46,7 +46,9 @@ NOTE: For Neo4j/MongoDB a single connection is used for the duration of the PM f
 
 == Nontransactional Context
 
-When performing non-transactional operations, the default behaviour is to obtain a connection when needed, and release it after use. 
+When performing non-transactional operations, the default behaviour is to obtain a connection when needed, and release it after use. This can be a problem
+if you, for example, fire off a query which starts pulling in objects, but it then needs to fire off a secondary query - configure the connection to not release
+in this situation.
 With RDBMS you have the option of retaining this connection ready for the next operation to save the time needed to obtain it; this is enabled by setting the
 persistence property *datanucleus.connection.nontx.releaseAfterUse* to _false_.
 
