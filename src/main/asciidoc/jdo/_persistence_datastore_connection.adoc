@@ -55,6 +55,14 @@ persistence property *datanucleus.connection.nontx.releaseAfterUse* to _false_.
 NOTE: For Neo4j/MongoDB a single connection is used for the duration of the PM for all transactional and nontransactional operations.
 
 
+== Single Connection Mode
+
+By default the connection used for transactional and non-transactional operations will be different, potentially from a different connection factory.
+If you set persistence property *datanucleus.connection.singleConnectionPerExecutionContext* to _true_ then the connection for both transactional and
+non-transactional will come from the primary factory only. In addition, any connection from a transaction will not be released after commit of the
+transaction, and will be used thereafter for any non-transactional operations, as well as further transactions within the same PM context.
+
+
 == User Connection
 
 JDO defines a mechanism for users to access the native connection to the datastore, so that they can perform other operations as necessary. 
