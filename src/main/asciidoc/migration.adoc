@@ -3,10 +3,31 @@
 :_basedir: 
 :_imagesdir: images/
 
-This version of DataNucleus AccessPlatform builds on the v5.1 release, adding future flexibility.
+This version of DataNucleus AccessPlatform builds on the v5.x release, adding future flexibility.
 All releases are checked regularly against the JDO/JPA TCKs, meaning that DataNucleus is always stable in terms of functionality.
 Occasionally, due to unknown bugs, or due to new functionality being introduced we need to change some aspects of DataNucleus. 
 As a result sometimes users will have to make some changes to move between versions of DataNucleus. We aim to keep this to a minimum.
+
+[[six_zero]]
+== Migration to v6.0
+
+Migration to 6.0 involves the following steps
+
+=== Migration from 5.2.x to 6.0.0.M1
+
+Migrating will require the following changes.
+
+* Rename _datanucleus.generateSchema.database.mode_ to *datanucleus.schema.generateDatabase.mode*
+* Rename _datanucleus.generateSchema.scripts.create.source_ to *datanucleus.schema.generateDatabase.createScript*
+* Rename _datanucleus.generateSchema.scripts.drop.source_ to *datanucleus.schema.generateDatabase.dropScript*
+* Rename _datanucleus.generateSchema.create.order_ to *datanucleus.schema.generateDatabase.create.order*
+* Rename _datanucleus.generateSchema.drop.order_ to *datanucleus.schema.generateDatabase.drop.order*
+* Rename _datanucleus.generateSchema.scripts.mode_ to *datanucleus.schema.generateScripts.mode*
+* Rename _datanucleus.generateSchema.scripts.create.target_ to *datanucleus.schema.generateScripts.create*
+* Rename _datanucleus.generateSchema.scripts.drop.target_ to *datanucleus.schema.generateScripts.drop*
+* Rename _datanucleus.generateSchema.scripts.load_ to *datanucleus.schema.loadScript*
+
+
 
 [[five_two]]
 == Migration to v5.2
