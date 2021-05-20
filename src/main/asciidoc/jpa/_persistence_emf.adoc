@@ -680,27 +680,27 @@ Please refer to the link:#schema[Schema Guide] for more details.
 |What happens when a datastore is read-only and an object is attempted to be persisted.
 {*exception*, ignore}
 
-|datanucleus.generateSchema.database.mode
+|datanucleus.schema.generateDatabase.mode
 |Whether to perform any schema generation to the database at startup. Will process the schema for all classes that have metadata loaded at startup (i.e the classes specified in a persistence-unit).
 {create, drop, drop-and-create, *none*}
 
-|datanucleus.generateSchema.scripts.mode
+|datanucleus.schema.generateScripts.mode
 |Whether to perform any schema generation into scripts at startup.
 Will process the schema for all classes that have metadata loaded at startup (i.e the classes specified in a persistence-unit).
 {create, drop, drop-and-create, *none*}
 
-|datanucleus.generateSchema.scripts.create.target
+|datanucleus.schema.generateScripts.create
 |Name of the script file to write to if doing a "create" with the target as "scripts"
 {*datanucleus-schema-create.ddl*, {filename}}
 
-|datanucleus.generateSchema.scripts.drop.target
+|datanucleus.schema.generateScripts.drop
 |Name of the script file to write to if doing a "drop" with the target as "scripts"
 {*datanucleus-schema-drop.ddl*, {filename}}
 
-|datanucleus.generateSchema.scripts.create.source
+|datanucleus.schema.generateDatabase.createScript
 |Name of a script file to run to create tables. Can be absolute filename, or URL string
 
-|datanucleus.generateSchema.scripts.drop.source
+|datanucleus.schema.generateDatabase.dropScript
 |Name of a script file to run to drop tables. Can be absolute filename, or URL string
 
 |datanucleus.generateSchema.scripts.load

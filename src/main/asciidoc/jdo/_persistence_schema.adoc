@@ -29,42 +29,42 @@ DataNucleus JDO allows you to generate the schema for your _persistence-unit_ wh
 You can create, drop or drop then create the schema either directly in the datastore, or in scripts (DDL) as required.
 See the associated persistence properties (most of these only apply to RDBMS).
 
-* *datanucleus.generateSchema.database.mode* which can be set to _create_, _drop_, _drop-and-create_ or _none_ to control the generation of the schema in the database.
-* *datanucleus.generateSchema.scripts.mode* which can be set to _create_, _drop_, _drop-and-create_ or _none_ to control the generation of the schema as scripts (DDL). 
-See also _datanucleus.generateSchema.scripts.create.target_ and _datanucleus.generateSchema.scripts.drop.target_ 
+* *datanucleus.schema.generateDatabase.mode* which can be set to _create_, _drop_, _drop-and-create_ or _none_ to control the generation of the schema in the database.
+* *datanucleus.schema.generateScripts.mode* which can be set to _create_, _drop_, _drop-and-create_ or _none_ to control the generation of the schema as scripts (DDL). 
+See also _datanucleus.schema.generateScripts.create_ and _datanucleus.schema.generateScripts.drop_ 
 which will be generated using this mode of operation.
-* *datanucleus.generateSchema.scripts.create.target* - this should be set to the name of a DDL script file that will be generated when using _datanucleus.generateSchema.scripts.mode_
-* *datanucleus.generateSchema.scripts.drop.target* - this should be set to the name of a DDL script file that will be generated when using _datanucleus.generateSchema.scripts.mode_
+* *datanucleus.schema.generateScripts.create* - this should be set to the name of a DDL script file that will be generated when using _datanucleus.schema.generateScripts.mode_
+* *datanucleus.schema.generateScripts.drop* - this should be set to the name of a DDL script file that will be generated when using _datanucleus.schema.generateScripts.mode_
 * *datanucleus.generateSchema.scripts.load* - set this to an SQL script of your own that will insert any data that you require to be available when your PMF is initialised
-* *datanucleus.generateSchema.create.order* - Whether to CREATE the schema from scripts, scripts then metadata, metadata, or metadata then scripts
-* *datanucleus.generateSchema.scripts.create.source* - set this to an SQL script of your own that will create some tables (prior to any schema generation from the persistable objects)
-* *datanucleus.generateSchema.drop.order* - Whether to DROP the schema from scripts, scripts then metadata, metadata, or metadata then scripts
-* *datanucleus.generateSchema.scripts.drop.source* - set this to an SQL script of your own that will drop some tables (prior to any schema generation from the persistable objects)
+* *datanucleus.schema.generateDatabase.create.order* - Whether to CREATE the schema from scripts, scripts then metadata, metadata, or metadata then scripts
+* *datanucleus.schema.generateDatabase.createScript* - set this to an SQL script of your own that will create some tables (prior to any schema generation from the persistable objects)
+* *datanucleus.schema.generateDatabase.drop.order* - Whether to DROP the schema from scripts, scripts then metadata, metadata, or metadata then scripts
+* *datanucleus.schema.generateDatabase.dropScript* - set this to an SQL script of your own that will drop some tables (prior to any schema generation from the persistable objects)
 
 Example 1, if you want to generate "create" and "drop" (DDL) scripts you can set
 
 -----
-datanucleus.generateSchema.scripts.mode=drop-and-create
-datanucleus.generateSchema.scripts.create.target=my_create_script.ddl
-datanucleus.generateSchema.scripts.drop.target=my_drop_script.ddl
+datanucleus.schema.generateScripts.mode=drop-and-create
+datanucleus.schema.generateScripts.create=my_create_script.ddl
+datanucleus.schema.generateScripts.drop=my_drop_script.ddl
 -----
 
 
 Example 2, if you want to generate (drop existing, then create) the schema USING your own (DDL) scripts, you can set
 
 -----
-datanucleus.generateSchema.database.mode=drop-and-create
-datanucleus.generateSchema.scripts.create.source=my_create_script.ddl
-datanucleus.generateSchema.scripts.drop.source=my_drop_script.ddl
+datanucleus.schema.generateDatabase.mode=drop-and-create
+datanucleus.schema.generateDatabase.createScript=my_create_script.ddl
+datanucleus.schema.generateDatabase.dropScript=my_drop_script.ddl
 -----
 
 
 Example 3, if you want to create the schema using your own (DDL) script, you can set
 
 -----
-datanucleus.generateSchema.database.mode=create
-datanucleus.generateSchema.create.order=script
-datanucleus.generateSchema.scripts.create.source=my_create_script.ddl
+datanucleus.schema.generateDatabase.mode=create
+datanucleus.schema.generateDatabase.create.order=script
+datanucleus.schema.generateDatabase.createScript=my_create_script.ddl
 -----
 
 
