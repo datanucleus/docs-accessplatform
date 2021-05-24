@@ -94,7 +94,7 @@ plugin in your `pom.xml` file. Some properties that you may need to change are b
 
 |api
 |JDO
-|API to enhance to (JDO, JPA). *Mandatory : Set this to JPA*
+|API to enhance to (JDO, JPA, Jakarta). *Mandatory : Set this to JPA*
 
 |verbose
 |false
@@ -154,7 +154,7 @@ Or alternatively, you could add the following to your POM
         <plugin>
             <groupId>org.datanucleus</groupId>
             <artifactId>datanucleus-maven-plugin</artifactId>
-            <version>5.2.1</version>
+            <version>6.0.0-m1</version>
             <configuration>
                 <api>JPA</api>
                 <persistenceUnitName>MyUnit</persistenceUnitName>
@@ -198,7 +198,7 @@ In the DataNucleus Enhancer Ant task, the following parameters are available
 |
 
 |api
-|Defines the API to be used when enhancing
+|Defines the API to be used when enhancing (JDO, JPA, Jakarta)
 |Set this to *JPA*
 
 |persistenceUnit
@@ -264,7 +264,7 @@ java -cp classpath  org.datanucleus.enhancer.DataNucleusEnhancer [options]
     where options can be
         -pu {persistence-unit-name} : Name of a "persistence-unit" to enhance the classes for
         -d {target-dir-name} : Write the enhanced classes to the specified directory
-        -api {api-name} : Name of the API we are enhancing for (JDO, JPA). Set this to JPA
+        -api {api-name} : Name of the API we are enhancing for (JDO, JPA, Jakarta). Set this to JPA
         -checkonly : Just check the classes for enhancement status
         -v : verbose output
         -q : quiet mode (no output, overrides verbose flag too)
@@ -307,7 +307,7 @@ You pass in the persistence-unit name as the final argument(s) in the list, and 
 The enhancer responds as follows
 
 -----
-DataNucleus Enhancer (version 5.0.2) for API "JPA"
+DataNucleus Enhancer (version 6.0.0-m1) for API "JPA"
 
 DataNucleus Enhancer : Classpath
 >>  /home/andy/work/myproject//target/classes
