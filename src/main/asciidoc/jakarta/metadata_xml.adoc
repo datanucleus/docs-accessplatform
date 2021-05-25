@@ -12,23 +12,24 @@ http://xmlns.jcp.org/xml/ns/persistence/orm_2_2.xsd[XSD] specification
 [source,xml]
 -----
 <?xml version="1.0" encoding="UTF-8" ?>
-<entity-mappings xmlns="http://xmlns.jcp.org/xml/ns/persistence/orm"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence/orm
-        http://xmlns.jcp.org/xml/ns/persistence/orm_2_2.xsd" version="2.2">
+<entity-mappings xmlns="https://jakarta.ee/xml/ns/persistence/orm"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="https://jakarta.ee/xml/ns/persistence/orm
+          https://jakarta.ee/xml/ns/persistence/orm/orm_3_0.xsd" version="3.0">
     ...
 </entity-mappings>
 -----
 
-If using any of the DataNucleus extensions, then the XSD is http://www.datanucleus.org/xsd/jpa/orm_2_2.xsd[defined here], in which case you would define your header as :-
+If using any of the DataNucleus extensions, then the XSD is http://www.datanucleus.org/xsd/jakarta/orm_3_0.xsd[defined here], in which case you would define your header as :-
 
 [source,xml]
 -----
 <?xml version="1.0" encoding="UTF-8" ?>
-<entity-mappings xmlns="http://www.datanucleus.org/xsd/jpa/orm"
+
+<entity-mappings xmlns="http://www.datanucleus.org/xsd/jakarta/orm"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://www.datanucleus.org/xsd/jpa/orm
-        http://www.datanucleus.org/xsd/jpa/orm_2_2.xsd" version="2.2">
+    xsi:schemaLocation="http://www.datanucleus.org/xsd/jakarta/orm
+        http://www.datanucleus.org/xsd/jakarta/orm_3.0.xsd" version="3.0">
     ...
 </entity-mappings>
 -----

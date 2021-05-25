@@ -12,7 +12,7 @@ image::images/datanucleus_overview.png[align="center"]
 *DataNucleus v6.0 is aiming at Java11+. It is in early development. If you want to get involved, now would be the time to register your interest.*
 
 There are two standard API's for persistence in Java - link:jdo/persistence.html[Java Data Objects (JDO)] and link:jpa/persistence.html[Java Persistence API (JPA)]. 
-The JPA standard is now developed further as the link:jakarta/persistence.html[Jakarta Persistence API (Jakarta)]
+The JPA standard is now developed further as the link:jakarta/persistence.html[Jakarta Persistence API (Jakarta)].
 DataNucleus v{version} supports all 3, fully, and also provides support for a link:rest/rest.html[REST API].
 
 * *APIs Supported* : link:jdo/persistence.html[JDO 3.2], link:jpa/persistence.html[JPA 2.2+], link:jakarta/persistence.html[Jakarta 3.0+], link:rest/rest.html[REST]
@@ -115,7 +115,8 @@ Read more over at http://db.apache.org/jdo/jdo_v_jpa.html[Apache JDO].
 With all APIs supported by DataNucleus the development process is as follows.
 
 * Develop your classes that are going to be involved in the persistence process as you would do normally. DataNucleus imposes little to no constraints on what you do in this respect.
-* Define the persistence *mapping* for your classes, using either JDO annotations, JDO XML metadata, JPA annotations or JPA XML metadata, or a mixture of these.
+* Define the persistence *mapping* for your classes, using either JDO annotations, JDO XML metadata, JPA annotations, JPA XML metadata, 
+Jakarta annotations or Jakarta XML metadataor a mixture of these.
 * Set up your compile process to have a _post-compile_ step that will invoke the DataNucleus enhancer to *bytecode enhance* your classes for use in persistence.
 * Develop your *persistence* and *query* code itself, that uses your persistable classes, and their involvement in the persistence process.
 * Run your application!

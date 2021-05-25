@@ -77,10 +77,10 @@ This file will be used to define your _persistence-unit(s)_. Let's show an examp
 [source,xml]
 -----
 <?xml version="1.0" encoding="UTF-8" ?>
-<persistence xmlns="http://xmlns.jcp.org/xml/ns/persistence"
+<persistence xmlns="https://jakarta.ee/xml/ns/persistence"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence
-        http://xmlns.jcp.org/xml/ns/persistence/persistence_2_2.xsd" version="2.2">
+    xsi:schemaLocation="https://jakarta.ee/xml/ns/persistence
+        https://jakarta.ee/xml/ns/persistence/persistence_3_0.xsd" version="3.0">
 
     <!-- Online Store -->
     <persistence-unit name="OnlineStore">
@@ -116,7 +116,7 @@ In this example we have defined 2 _persistence-unit(s)_.
 The first has the name "OnlineStore" and contains 5 classes (annotated). 
 The second has the name "Accounting" and contains a metadata file called `orm.xml` in a particular package (which will define the classes being part of that unit). 
 This means that once we have defined this we can reference these _persistence-unit(s)_ in our persistence operations. 
-You can find the XSD for `persistence.xml` http://xmlns.jcp.org/xml/ns/persistence/persistence_2_2.xsd[here].
+You can find the XSD for `persistence.xml` https://jakarta.ee/xml/ns/persistence/persistence_3_0.xsd[here].
 
 There are several sub-elements of this `persistence.xml` file worth describing
 
@@ -587,7 +587,7 @@ Turn this off for performance.
 
 |datanucleus.primaryClassLoader
 |Sets a primary classloader for situations where a primary classloader is not accessible. This ClassLoader is used when the class is not found in the default ClassLoader search path. 
-As example, when the database driver is loaded by a different ClassLoader not in the ClassLoader search path for PA specifications.
+As example, when the database driver is loaded by a different ClassLoader not in the ClassLoader search path for Jakarta specifications.
 
 |datanucleus.plugin.pluginRegistryClassName
 |Name of a class that acts as registry for plug-ins. This defaults to _org.datanucleus.plugin.NonManagedPluginRegistry_ (for when not using OSGi).
