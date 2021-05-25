@@ -10,7 +10,7 @@ to define the name of components in the datastore, such as table/columns.
 
 DataNucleus provides the mechanism to generate datastore identifiers (table/column names) when none 
 are defined by the users metadata/annotations. In addition to the default JDO factory there is also 
-an identifier factory that generates identifiers consistent with the JPA1 specification.
+an identifier factory that generates identifiers consistent with the JPA / Jakarta specifications.
 You can extend DataNucleus's capabilities using the plugin extension *org.datanucleus.store.rdbms.identifierfactory*.
 
 [cols="2,1,2,1", options="header"]
@@ -38,6 +38,11 @@ You can extend DataNucleus's capabilities using the plugin extension *org.datanu
 |org.datanucleus.store.rdbms.identifierfactory
 |jpa
 |Identifier Factory providing JPA-compliant namings
+|datanucleus-core
+
+|org.datanucleus.store.rdbms.identifierfactory
+|jakarta
+|Identifier Factory providing Jakarta-compliant namings
 |datanucleus-core
 |===
 

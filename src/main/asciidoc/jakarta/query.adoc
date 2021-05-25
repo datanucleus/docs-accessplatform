@@ -1,5 +1,5 @@
 [[query]]
-= JPA Query Guide (v{version})
+= Jakarta Query Guide (v{version})
 :_basedir: ../
 :_imagesdir: images/
 :jakarta:
@@ -7,7 +7,7 @@
 
 Once you have persisted objects you need to query them. 
 For example if you have a web application representing an online store, the user asks to see all products of a particular type, ordered by the price. 
-This requires you to query the datastore for these products. JPA specifies support for 
+This requires you to query the datastore for these products. Jakarta Persistence specifies support for 
 
 * link:#jpql[JPQL] : a string-based query language between SQL and OO.
 * link:#criteria[Criteria] : following JPQL syntax but providing an API supporting refactoring of classes and the queries they are used in.
@@ -20,9 +20,9 @@ On the other hand the data-tier could be written by a datastore developer who is
 This is the power of an implementation like DataNucleus in that it provides the flexibility for different people to develop the data-tier utilising their own skills 
 to the full without having to learn totally new concepts.
 
-There are 2 categories of queries with JPA :-
+There are 2 categories of queries with Jakarta Persistence :-
 
-* *Programmatic Query* where the query is defined using the JPA Query API.
+* *Programmatic Query* where the query is defined using the Jakarta Query API.
 * *Named Query* where the query is defined in MetaData and referred to by its name at runtime(for link:#jpql_named[JPQL], link:#native_named[Native Query]
 and link:#stored_procedures_named[Stored Procedures]).
 

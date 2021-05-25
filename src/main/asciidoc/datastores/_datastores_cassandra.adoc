@@ -29,7 +29,7 @@ Things to bear in mind with Cassandra usage :-
 * Creation of a PMF/EMF will create a `com.datastax.driver.core.Cluster`. This will be closed then the PMF/EMF is closed.
 * Any PM/EM will use a single `com.datastax.driver.core.Session`, by default, shared amongst all PM/EMs.
 * If you specify the persistence property *datanucleus.cassandra.sessionPerManager* to _true_ then each PM/EM will have its own `com.datastax.driver.core.Session` object.
-* Cassandra doesn't use transactions, so any JDO/JPA transaction operation is a no-op (i.e will be ignored).
+* Cassandra doesn't use transactions, so any JDO/JPA/Jakarta transaction operation is a no-op (i.e will be ignored).
 * This uses Cassandra 3.x (and CQL v3.x), not the older Thrift.
 * Specify persistence property *datanucleus.cassandra.metrics* to enable/disable metrics
 * Specify persistence property *datanucleus.cassandra.compression* to enable/disable compression

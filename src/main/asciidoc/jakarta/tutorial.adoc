@@ -1,20 +1,20 @@
-[[jpa_tutorial]]
-= JPA Tutorial (v{version})
+[[jakarta_tutorial]]
+= Jakarta Tutorial (v{version})
 :_basedir: ../
 :_imagesdir: images/
 :jakarta:
 
 
 image:../images/download.png[Download, link=https://sourceforge.net/projects/datanucleus/files/datanucleus-samples/]
-image:../images/source_code.png[Source Code, link=https://github.com/datanucleus/samples-jpa/tree/master/tutorial]
+image:../images/source_code.png[Source Code, link=https://github.com/datanucleus/samples-jakarta/tree/master/tutorial]
 
 == Background
 
-An application can be JPA-enabled via many routes depending on the development process of the project in question. 
+An application can be Jakarta-enabled via many routes depending on the development process of the project in question. 
 For example the project could use Eclipse as the IDE for developing classes.
 In that case the project would typically use the Dali Eclipse plugin coupled with the DataNucleus Eclipse plugin. 
 Alternatively the project could use Ant, link:tools.html#maven[Maven] or some other build tool. 
-In this case this tutorial should be used as a guiding way for using DataNucleus in the application. The JPA process is quite straightforward.
+In this case this tutorial should be used as a guiding way for using DataNucleus in the application. The Jakarta Persistence process is quite straightforward.
 
 * xref:tutorial.html#step0[Step 0] : Download DataNucleus AccessPlatform
 * xref:tutorial.html#step1[Step 1] : Define their persistence definition using Meta-Data.
@@ -47,7 +47,7 @@ For our tutorial, say we have the following classes representing a store of prod
 
 [source,java]
 -----
-package org.datanucleus.samples.jpa.tutorial;
+package org.datanucleus.samples.jakarta.tutorial;
 
 public class Inventory
 {
@@ -65,7 +65,7 @@ public class Inventory
 
 [source,java]
 -----
-package org.datanucleus.samples.jpa.tutorial;
+package org.datanucleus.samples.jakarta.tutorial;
 
 public class Product
 {
@@ -85,7 +85,7 @@ public class Product
 
 [source,java]
 -----
-package org.datanucleus.samples.jpa.tutorial;
+package org.datanucleus.samples.jakarta.tutorial;
 
 public class Book extends Product
 {
@@ -93,8 +93,7 @@ public class Book extends Product
     String isbn=null;
     String publisher=null;
 
-    public Book(String name, String desc, double price, String author, 
-                String isbn, String publisher)
+    public Book(String name, String desc, double price, String author, String isbn, String publisher)
     {
         super(name,desc,price);
         this.author = author;
@@ -115,7 +114,7 @@ So this is what we do now. Note that we could define persistence using XML metad
 
 [source,java]
 -----
-package org.datanucleus.samples.jpa.tutorial;
+package org.datanucleus.samples.jakarta.tutorial;
 
 @Entity
 public class Inventory
@@ -131,7 +130,7 @@ public class Inventory
 
 [source,java]
 -----
-package org.datanucleus.samples.jpa.tutorial;
+package org.datanucleus.samples.jakarta.tutorial;
 
 @Entity
 @Inheritance(strategy=InheritanceType.JOINED)
@@ -147,7 +146,7 @@ public class Product
 
 [source,java]
 -----
-package org.datanucleus.samples.jpa.tutorial;
+package org.datanucleus.samples.jakarta.tutorial;
 
 @Entity
 public class Book extends Product
@@ -176,11 +175,11 @@ You do this via a file `META-INF/persistence.xml` at the root of the CLASSPATH. 
     xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence
         http://xmlns.jcp.org/xml/ns/persistence/persistence_2_2.xsd" version="2.2">
 
-    <!-- JPA tutorial "unit" -->
+    <!-- Jakarta tutorial "unit" -->
     <persistence-unit name="Tutorial">
-        <class>org.datanucleus.samples.jpa.tutorial.Inventory</class>
-        <class>org.datanucleus.samples.jpa.tutorial.Product</class>
-        <class>org.datanucleus.samples.jpa.tutorial.Book</class>
+        <class>org.datanucleus.samples.jakarta.tutorial.Inventory</class>
+        <class>org.datanucleus.samples.jakarta.tutorial.Product</class>
+        <class>org.datanucleus.samples.jakarta.tutorial.Book</class>
         <exclude-unlisted-classes/>
         <properties>
             <!-- For adding runtime properties. See later -->
@@ -197,25 +196,25 @@ DataNucleus relies on the classes that you want to persist be enhanced to implem
 You could write your classes manually to do this but this would be laborious. 
 Alternatively you can use a post-processing step to compilation that "enhances" your compiled classes, adding on the necessary extra methods to make them _Persistable_. 
 There are several ways to do this, most notably at post-compile, or at runtime. We use the post-compile step in this tutorial. 
-*DataNucleus JPA* provides its own byte-code enhancer for instrumenting/enhancing your classes (in `datanucleus-core.jar`) and this is included in the 
+*DataNucleus Jakarta* provides its own byte-code enhancer for instrumenting/enhancing your classes (in `datanucleus-core.jar`) and this is included in the 
 DataNucleus AccessPlatform zip file prerequisite.
 
 To understand on how to invoke the enhancer you need to visualise where the various source and metadata files are stored
 
 -----
-src/main/java/org/datanucleus/samples/jpa/tutorial/Book.java
-src/main/java/org/datanucleus/samples/jpa/tutorial/Inventory.java
-src/main/java/org/datanucleus/samples/jpa/tutorial/Product.java
+src/main/java/org/datanucleus/samples/jakarta/tutorial/Book.java
+src/main/java/org/datanucleus/samples/jakarta/tutorial/Inventory.java
+src/main/java/org/datanucleus/samples/jakarta/tutorial/Product.java
 src/main/resources/META-INF/persistence.xml
 
-target/classes/org/datanucleus/samples/jpa/tutorial/Book.class
-target/classes/org/datanucleus/samples/jpa/tutorial/Inventory.class
-target/classes/org/datanucleus/samples/jpa/tutorial/Product.class
+target/classes/org/datanucleus/samples/jakarta/tutorial/Book.class
+target/classes/org/datanucleus/samples/jakarta/tutorial/Inventory.class
+target/classes/org/datanucleus/samples/jakarta/tutorial/Product.class
 
 # when using Ant
 lib/jakarta.persistence.jar
 lib/datanucleus-core.jar
-lib/datanucleus-api-jpa.jar
+lib/datanucleus-api-jakarta.jar
 -----
 
 The first thing to do is compile your domain/model classes. You can do this in any way you wish, but the download provides an Ant task, and a Maven project to do this for you.
@@ -238,12 +237,12 @@ ant enhance
 mvn datanucleus:enhance
 
 # Manually on Linux/Unix :
-java -cp target/classes:lib/datanucleus-core.jar:lib/datanucleus-api-jpa.jar:lib/jakarta.persistence.jar
-     org.datanucleus.enhancer.DataNucleusEnhancer -api JPA -pu Tutorial
+java -cp target/classes:lib/datanucleus-core.jar:lib/datanucleus-api-jakarta.jar:lib/jakarta.persistence.jar
+     org.datanucleus.enhancer.DataNucleusEnhancer -api Jakarta -pu Tutorial
 
 # Manually on Windows :
-java -cp target\classes;lib\datanucleus-core.jar;lib\datanucleus-api-jpa.jar;lib\jakarta.persistence.jar
-     org.datanucleus.enhancer.DataNucleusEnhancer -api JPA -pu Tutorial
+java -cp target\classes;lib\datanucleus-core.jar;lib\datanucleus-api-jakarta.jar;lib\jakarta.persistence.jar
+     org.datanucleus.enhancer.DataNucleusEnhancer -api Jakarta -pu Tutorial
 -----
 
 This command enhances all classes defined in the persistence-unit "Tutorial".
@@ -256,7 +255,7 @@ The output of this step are a set of class files that represent persistable clas
 == Step 4 : Write the code to persist objects of your classes
 
 Writing your own classes to be persisted is the start point, but you now need to define which objects of these classes are actually persisted, and when. 
-Interaction with the persistence framework of JPA is performed via an EntityManager. This provides methods for persisting of 
+Interaction with the persistence framework of Jakarta is performed via an EntityManager. This provides methods for persisting of 
 objects, removal of objects, querying for persisted objects, etc. This section gives examples of typical scenarios encountered in an application.
 
 The initial step is to obtain access to an EntityManager, which you do as follows
@@ -355,7 +354,7 @@ finally
 }
 ----
 
-Clearly you can perform a large range of operations on objects. We can't hope to show all of these here. Any good JPA book will provide many examples.
+Clearly you can perform a large range of operations on objects. We can't hope to show all of these here. Any good JPA/Jakarta book will provide many examples.
 
 
 [[step5]]
@@ -366,8 +365,8 @@ To run your JPA-enabled application will require a few things to be available in
 * The `persistence.xml` file (stored under META-INF/)
 * Any ORM MetaData files for your persistable classes
 * Any Datastore driver classes (e.g JDBC driver for RDBMS, Datastax driver for Cassandra, etc) needed for accessing your datastore
-* The `jakarta.persistence.jar` (defining the JPA API interface)
-* The `datanucleus-core.jar`, `datanucleus-api-jpa.jar` and `datanucleus-{datastore}.jar` (for the datastore you are using, e.g `datanucleus-rdbms.jar` when using RDBMS)
+* The `jakarta.persistence.jar` (defining the Jakarta API interface)
+* The `datanucleus-core.jar`, `datanucleus-api-jakarta.jar` and `datanucleus-{datastore}.jar` (for the datastore you are using, e.g `datanucleus-rdbms.jar` when using RDBMS)
 
 After that it is simply a question of starting your application and all should be taken care of. 
 
@@ -411,7 +410,7 @@ and so on. If you look at the `persistence.xml` of the downloadable sample proje
 You can access the DataNucleus Log file by specifying the link:../logging.html[logging] configuration properties, and any messages from DataNucleus will be output in the normal way. 
 The DataNucleus log is a very powerful way of finding problems since it can list all SQL etc actually sent to the datastore as well as many other parts of the persistence process.
 
-Consult the link:persistence.html[JPA Persistence Guide] for the many other properties available for configuring persistence.
+Consult the link:persistence.html[Jakarta Persistence Guide] for the many other properties available for configuring persistence.
 
 
 -----
@@ -424,19 +423,19 @@ mvn exec:java
 
 
 # Manually on Linux/Unix :
-java -cp lib/jakarta.persistence.jar:lib/datanucleus-core.jar:lib/datanucleus-rdbms.jar:lib/datanucleus-api-jpa.jar:lib/{datastore-driver}.jar:target/classes/:. 
-     org.datanucleus.samples.jpa.tutorial.Main
+java -cp lib/jakarta.persistence.jar:lib/datanucleus-core.jar:lib/datanucleus-rdbms.jar:lib/datanucleus-api-jakarta.jar:lib/{datastore-driver}.jar:target/classes/:. 
+     org.datanucleus.samples.jakarta.tutorial.Main
 
 
 # Manually on Windows :
-java -cp lib\jakarta.persistence.jar;lib\datanucleus-core.jar;lib\datanucleus-rdbms.jar;lib\datanucleus-api-jpa.jar;lib\{datastore-driver}.jar;target\classes\;.
-     org.datanucleus.samples.jpa.tutorial.Main
+java -cp lib\jakarta.persistence.jar;lib\datanucleus-core.jar;lib\datanucleus-rdbms.jar;lib\datanucleus-api-jakarta.jar;lib\{datastore-driver}.jar;target\classes\;.
+     org.datanucleus.samples.jakarta.tutorial.Main
 
 
 # Output :
 
-DataNucleus Tutorial with JPA
-======================
+DataNucleus Tutorial with Jakarta
+=================================
 Persisting products
 Product and Book have been persisted
 
@@ -463,10 +462,10 @@ So we define a file `_META-INF/orm.xml_` at the root of the CLASSPATH. Like this
 -----
 <?xml version="1.0" encoding="UTF-8" ?>
 <entity-mappings>
-    <description>DataNucleus JPA tutorial</description>
-    <package>org.datanucleus.samples.jpa.tutorial</package>
-    <entity class="org.datanucleus.samples.jpa.tutorial.Product" name="Product">
-        <table name="JPA_PRODUCTS"/>
+    <description>DataNucleus Jakarta tutorial</description>
+    <package>org.datanucleus.samples.jakarta.tutorial</package>
+    <entity class="org.datanucleus.samples.jakarta.tutorial.Product" name="Product">
+        <table name="JKA_PRODUCTS"/>
         <attributes>
             <id name="id">
                 <generated-value strategy="TABLE"/>
@@ -480,8 +479,8 @@ So we define a file `_META-INF/orm.xml_` at the root of the CLASSPATH. Like this
         </attributes>
     </entity>
 
-    <entity class="org.datanucleus.samples.jpa.tutorial.Book" name="Book">
-        <table name="JPA_BOOKS"/>
+    <entity class="org.datanucleus.samples.jakarta.tutorial.Book" name="Book">
+        <table name="JKA_BOOKS"/>
         <attributes>
             <basic name="isbn">
                 <column name="ISBN" length="20"></column>
@@ -495,14 +494,14 @@ So we define a file `_META-INF/orm.xml_` at the root of the CLASSPATH. Like this
         </attributes>
     </entity>
 
-    <entity class="org.datanucleus.samples.jpa.tutorial.Inventory" name="Inventory">
-        <table name="JPA_INVENTORY"/>
+    <entity class="org.datanucleus.samples.jakarta.tutorial.Inventory" name="Inventory">
+        <table name="JKA_INVENTORY"/>
         <attributes>
             <id name="name">
                 <column name="NAME" length="40"></column>
             </id>
             <one-to-many name="products">
-                <join-table name="JPA_INVENTORY_PRODUCTS">
+                <join-table name="JKA_INVENTORY_PRODUCTS">
                     <join-column name="INVENTORY_ID_OID"/>
                     <inverse-join-column name="PRODUCT_ID_EID"/>
                 </join-table>

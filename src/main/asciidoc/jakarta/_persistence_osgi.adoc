@@ -88,8 +88,8 @@ public class DataNucleusOsgiLocalContainerEntityManagerFactoryBean extends
     LocalContainerEntityManagerFactoryBean implements BundleContextAware
 {
 
-    public static final String DEFAULT_JPA_API_BUNDLE_SYMBOLIC_NAME = "org.datanucleus.api.jpa";
-    public static final String DEFAULT_PERSISTENCE_PROVIDER_CLASS_NAME = "org.datanucleus.api.jpa.PersistenceProviderImpl";
+    public static final String DEFAULT_JKA_API_BUNDLE_SYMBOLIC_NAME = "org.datanucleus.api.jakarta";
+    public static final String DEFAULT_PERSISTENCE_PROVIDER_CLASS_NAME = "org.datanucleus.api.jakarta.PersistenceProviderImpl";
 
     public static final String DEFAULT_OSGI_PLUGIN_REGISTRAR_CLASS_NAME = "org.datanucleus.plugin.OSGiPluginRegistry";
     public static final String DEFAULT_OSGI_PLUGIN_REGISTRAR_PROPERTY_NAME = "datanucleus.plugin.pluginRegistryClassName";
@@ -97,7 +97,7 @@ public class DataNucleusOsgiLocalContainerEntityManagerFactoryBean extends
     protected BundleContext bundleContext;
     protected ClassLoader classLoader;
 
-    protected String jpaApiBundleSymbolicName = DEFAULT_JPA_API_BUNDLE_SYMBOLIC_NAME;
+    protected String jkaApiBundleSymbolicName = DEFAULT_JKA_API_BUNDLE_SYMBOLIC_NAME;
     protected String persistenceProviderClassName = DEFAULT_PERSISTENCE_PROVIDER_CLASS_NAME;
     protected String osgiPluginRegistrarClassName = DEFAULT_OSGI_PLUGIN_REGISTRAR_CLASS_NAME;
     protected String osgiPluginRegistrarPropertyName = DEFAULT_OSGI_PLUGIN_REGISTRAR_PROPERTY_NAME;
@@ -124,9 +124,9 @@ public class DataNucleusOsgiLocalContainerEntityManagerFactoryBean extends
                     name = info.getPersistenceProviderClassName();
                 }
 
-                if (StringUtils.isEmpty(getJpaApiBundleSymbolicName())) 
+                if (StringUtils.isEmpty(getJkaApiBundleSymbolicName())) 
                 {
-                    throw new IllegalStateException("no DataNucleus JPA API bundle symbolic name given");
+                    throw new IllegalStateException("no DataNucleus Jakarta API bundle symbolic name given");
                 }
 
                 // set the bean class loader to use it so that Spring can find the persistence provider class
@@ -173,12 +173,12 @@ public class DataNucleusOsgiLocalContainerEntityManagerFactoryBean extends
         return classloader;
     }
 
-    public String getJpaApiBundleSymbolicName() {
-        return jpaApiBundleSymbolicName;
+    public String getJkaApiBundleSymbolicName() {
+        return jkaApiBundleSymbolicName;
     }
 
-    public void setJpaApiBundleSymbolicName(String jpaApiBundleSymbolicName) {
-        this.jpaApiBundleSymbolicName = jpaApiBundleSymbolicName;
+    public void setJkaApiBundleSymbolicName(String jkaApiBundleSymbolicName) {
+        this.jkaApiBundleSymbolicName = jkaApiBundleSymbolicName;
     }
 
     public String getPersistenceProviderClassName() {

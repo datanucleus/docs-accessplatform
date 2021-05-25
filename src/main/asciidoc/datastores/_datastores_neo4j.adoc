@@ -33,7 +33,7 @@ Should this plugin be updated to connect to a Neo4J server then this will change
 * Querying can be performed using JDOQL or JPQL. Some components of a filter are handled in the datastore, and the remainder in-memory. 
 Currently any expression of a field (in the same 'table'), or a literal are handled in-datastore, as are the operators &amp;&amp;, ||, >, >=, <, <=, ==, and !=. Also
 the majority of ordering and result clauses are evaluatable in the datastore, as well as query result range restrictions.
-* When an object is persisted it becomes a Node in Neo4j. You define the names of the properties of that node by specifying the "column" name using JDO/JPA metadata
+* When an object is persisted it becomes a Node in Neo4j. You define the names of the properties of that node by specifying the "column" name using JDO/JPA/Jakarta metadata
 * Any 1-1, 1-N, M-N, N-1 relation is persisted as a Relationship object in Neo4j and any positioning of  elements in a List or array is preserved via a property on the Relationship.
 * If you wanted to specify some neo4j.properties file for use of your embedded database then specify the persistence property *datanucleus.ConnectionPropertiesFile* set to the filename.
 

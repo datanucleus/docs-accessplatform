@@ -5,7 +5,7 @@
 
 Mapping a persistable class to the datastore requires specification of naming of datastore table/column (as well as constraint) identifiers. 
 If the user doesn't define names for such identifiers then defaults have to be provided. This is where we have a _NamingFactory_.
-DataNucleus provides its own internal naming factories (for JDO, and for JPA), but also allows you to plugin your own naming factory. 
+DataNucleus provides its own internal naming factories (for JDO, for JPA, and for Jakarta), but also allows you to plugin your own naming factory. 
 
 __Note that currently RDBMS doesn't use this extension and instead uses the xref:extensions.adoc#rdbms_identifier_factory.html[RDBMS Identifier Factory] extension__.
 
@@ -26,6 +26,11 @@ You can extend DataNucleus's capabilities using the plugin extension *org.datanu
 |org.datanucleus.identifier_namingfactory
 |jpa
 |NamingFactory providing JPA-compliant namings
+|datanucleus-core
+
+|org.datanucleus.identifier_namingfactory
+|jakarta
+|NamingFactory providing Jakarta-compliant namings
 |datanucleus-core
 |===
 

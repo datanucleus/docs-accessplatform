@@ -5,9 +5,10 @@
 
 
 Certain annotations are used to detect whether a class is involved in the persistence process; this is extensible.
-DataNucleus provides support for JDO and JPA annotations, but is structured so that you can easily add your own annotations and have them usable within your DataNucleus usage.
+DataNucleus provides support for JDO, JPA and Jakarta annotations, but is structured so that you can easily add your own annotations and have them usable within your DataNucleus usage.
 
-The `datanucleus-api-jdo` plugin provides support for JDO annotations, and the `datanucleus-api-jpa` plugin provides support for JPA annotations. 
+The `datanucleus-api-jdo` plugin provides support for JDO annotations, the `datanucleus-api-jpa` plugin provides support for JPA annotations, and the
+`datanucleus-api-jakarta` plugin provides support for Jakarta annotations. 
 You can extend DataNucleus's capabilities using the plugin extension *org.datanucleus.annotations*.
 
 [cols="2,1,1,1", options="header"]
@@ -41,6 +42,21 @@ You can extend DataNucleus's capabilities using the plugin extension *org.datanu
 |@Embeddable
 |JPA annotation reader
 |datanucleus-api-jpa
+
+|org.datanucleus.annotations
+|@Entity
+|Jakarta annotation reader
+|datanucleus-api-jakarta
+
+|org.datanucleus.annotations
+|@MappedSuperclass
+|Jakarta annotation reader
+|datanucleus-api-jakarta
+
+|org.datanucleus.annotations
+|@Embeddable
+|Jakarta annotation reader
+|datanucleus-api-jakarta
 |===
 
 
