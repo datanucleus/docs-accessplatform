@@ -1,0 +1,125 @@
+[[entity_graphs]]
+= Entity Graphs
+:_basedir: ../
+:_imagesdir: images/
+
+
+When an object is retrieved from the datastore by Jakarta Persistence typically not all fields are retrieved immediately. 
+This is because for efficiency purposes only particular field types are retrieved in the initial access of the object, 
+and then any other objects are retrieved when accessed (lazy loading).
+The group of fields that are loaded is called an *entity graph*.
+There are 3 types of "entity graphs" to consider
+
+* link:#entity_graphs_default[Default Entity Graph] : implicitly defined in all Jakarta Persistence specs, specifying the _fetch_ setting for each field/property (LAZY/EAGER).
+* link:#entity_graphs_named[Named Entity Graphs] : allows the user to define _Named Entity Graphs_ in metadata, via annotations or XML
+* link:#entity_graphs_unnamed[Unnamed Entity Graphs] : allows the user to define Entity Graphs via the Jakarta API at runtime
+
+
+[[entity_graphs_default]]
+== Default Entity Graph
+    
+Jakarta Persistence provides an initial entity graph, comprising the fields that will be retrieved when an object is retrieved if the user does nothing to define 
+the required behaviour. You define this "default" by setting the _fetch_ attribute in metadata for each field/property.
+
+
+[[entity_graphs_named]]
+== Named Entity Graphs
+    
+You can predefine *Named Entity Graphs* in metadata which can then be used at runtime when retrieving objects from the datastore (via find/query).
+For example, if we have the following class
+    
+[source,java]
+-----
+class MyClass
+{
+    String name;
+    Set coll;
+    MyOtherClass other;
+}
+-----
+    
+and we want to have the option of the _other_ field loaded whenever we load objects of this class, we define our annotations as
+
+[source,java]
+-----
+@Entity
+@NamedEntityGraph(name="includeOther", attributeNodes={@NamedAttributeNode("other")})
+public class MyClass
+{
+    ...
+}
+-----
+
+So we have defined an EntityGraph called "includeOther" that just includes the field with name _other_. 
+We can retrieve this and then use it in our persistence code, as follows
+    
+[source,java]
+-----
+EntityGraph includeOtherGraph = em.getEntityGraph("includeOther");
+
+Properties props = new Properties();
+props.put("jakarta.persistence.loadgraph", includeOtherGraph);
+MyClass myObj = em.find(MyClass.class, id, props);
+-----
+
+Here we have made use of the _EntityManager.find_ method and provided the property *jakarta.persistence.loadgraph* to be our EntityGraph. 
+This means that it will fetch all fields in the _default_ EntityGraph, *plus* all fields in the _includeOther_ EntityGraph. 
+If we had provided the property *jakarta.persistence.fetchgraph* set to our EntityGraph it would have fetched just the fields defined in that EntityGraph.
+
+
+Note that you can also make use of EntityGraphs when using the link:query.html[Jakarta Query API], specifying the same properties above but as query _hints_.
+
+
+[[entity_graphs_unnamed]]
+== Unnamed Entity Graphs
+    
+You can define *Entity Graphs* at runtime, programmatically. For example, if we have the following class
+
+[source,java]
+-----
+class MyClass
+{
+    String name;
+    HashSet coll;
+    MyOtherClass other;
+}
+-----
+
+and we want to have the option of the _other_ field loaded whenever we load objects of this class, we do the following
+    
+[source,java]
+-----
+EntityGraph includeOtherGraph = em.createEntityGraph(MyClass.class);
+includeOtherGraph.addAttributeNodes("other");
+-----
+
+So we have defined an EntityGraph that just includes the field with name _other_. 
+We can then use this at runtime in our persistence code, as follows                
+
+[source,java]
+-----
+Properties props = new Properties();
+props.put("jakarta.persistence.loadgraph", includeOtherGraph);
+MyClass myObj = em.find(MyClass.class, id, props);
+-----
+    
+Here we have made use of the _EntityManager.find_ method and provided the property *jakarta.persistence.loadgraph* to be our EntityGraph. 
+This means that it will fetch all fields in the _default_ EntityGraph, *plus* all fields in this EntityGraph. 
+If we had provided the property *jakarta.persistence.fetchgraph* set to our EntityGraph it would have fetched just the fields defined in that EntityGraph.
+    
+    
+Note that you can also make use of EntityGraphs when using the link:query.html[Jakarta Query API], specifying the same properties above but as query _hints_, like this
+    
+[source,java]
+-----
+EntityGraph<MyClass> eg = em.createEntityGraph(MyClass.class);
+eg.addAttributeNodes("id");
+eg.addAttributeNodes("name");
+eg.addAttributeNodes("other");
+Subgraph<MyOtherClass> myOtherClassGraph = eg.addSubgraph("other", MyOtherClass.class);
+myOtherClass.addAttributeNodes("name");
+
+Query q = em.createQuery("SELECT m FROM MyClass m");
+q.setHint("jakarta.persistence.fetchgraph", eg);
+List<MyClass> results = q.getResultList();
+-----

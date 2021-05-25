@@ -1,0 +1,1201 @@
+[[schema]]
+= Datastore Schema
+:_basedir: ../
+:_imagesdir: images/
+
+We have shown link:#classes[earlier] how you define a classes basic persistence, notating which fields are persisted. 
+The next step is to define how it maps to the datastore. Fields of a class are mapped to _columns_ of a _table_ (note that with some datastores it is not called
+a 'table' or 'column', but the concept is similar and we use 'table' and 'column' here to represent the mapping). 
+If you don't specify the table and column names, then DataNucleus will generate table and column names for you, according to the Jakarta Persistence specs rules.
+
+TIP: You should specify your table and column names if you have an existing schema. Failure to do so will mean that DataNucleus uses its own names and these 
+will almost certainly not match what you have in the datastore.
+
+There are several aspects to cover here
+
+* link:#schema_names[Table and column names] - mapping classes/fields to table/columns
+* link:#schema_nulls_defaults[Column nullability and default value] - what values can be stored in a column 
+* link:#schema_column_types[Column Types] - supported column types
+* link:#schema_column_position[Position of a column in a table] - allowing ordering of columns in the schema
+* link:#index[Index Constraints] - used to mark fields that are referenced often as indexes so that when they are used the performance is optimised.
+* link:#unique[Unique Constraints] - placed on fields that should have a unique value. That is, only one object will have a particular value.
+* link:#fk[Foreign-Key Constraints] - used to interrelate objects, and allow the datastore to keep the integrity of the data in the datastore.
+* link:#pk[Primary-Key Constraints] - allow the PK to be set, and also to have a name.
+* link:#schema_rdbms_views[RDBMS Views] - mapping a class to an RDBMS View instead of a Table
+
+
+[[schema_names]]
+== Tables and Column names
+
+The main thing that developers want to do when they set up the persistence of their data is to control the names of the 
+tables and columns used for storing the classes and fields. This is an essential step when mapping to an existing schema,
+because it is necessary to map the classes onto the existing database entities. Let's take an example
+
+[source,java]
+-----
+public class Hotel
+{
+    private String name;
+    private String address;
+    private String telephoneNumber;
+    private int numberOfRooms;
+    ...
+}
+-----      
+
+In our case we want to map this class to a table `ESTABLISHMENT`, and has columns `NAME`, `DIRECTION`, `PHONE` and `NUMBER_OF_ROOMS` (amongst other things). 
+So we define our Meta-Data like this
+
+[source,xml]
+-----
+<entity class="Hotel">
+    <table name="ESTABLISHMENT"/>
+    <attributes>
+        <basic name="name">
+            <column name="NAME"/>
+        </basic>
+        <basic name="address">
+            <column name="DIRECTION"/>
+        </basic>
+        <basic name="telephoneNumber">
+            <column name="PHONE"/>
+        </basic>
+        <basic name="numberOfRooms">
+            <column name="NUMBER_OF_ROOMS"/>
+        </basic>
+    </attributes>
+</entity>
+-----
+
+Alternatively, if you really want to embody schema info in your class, you can use annotations
+
+[source,java]
+-----
+@Table(name="ESTABLISHMENT")
+public class Hotel
+{
+    @Column(name="NAME")
+    private String name;
+    @Column(name="DIRECTION")
+    private String address;
+    @Column(name="PHONE")
+    private String telephoneNumber;
+    @Column(name="NUMBER_OF_ROOMS")
+    private int numberOfRooms;
+
+    ...
+}
+-----
+
+So we have defined the table and the column names.
+It should be mentioned that if you don't specify the table and column names then DataNucleus will generate names for the datastore identifiers consistent 
+with the Jakarta Persistence specification.
+The table name will be based on the class name, and the column names will be based on the field names and the role of the field (if part of a relationship).
+
+See also :-
+
+* link:#datastore_identifiers[Identifier Guide] - defining the identifiers to use for table/column names
+* link:metadata_xml.html#column[MetaData reference for <column> element]
+
+
+[[schema_nulls_defaults]]
+== Column nullability and default values
+
+So we've seen how to specify the basic structure of a table, naming the table and its columns, and how to control the types of the columns. 
+We can extend this further to control whether the columns are allowed to contain nulls. Let's take a related class for our hotel. 
+Here we have a class to model the payments made to the hotel.
+
+[source,java]
+-----
+public class Payment
+{
+    Customer customer;
+    String bankTransferReference;
+    String currency;
+    double amount;
+}
+-----
+
+In this class we can model payments from a customer of an amount. Where the customer pays by bank transfer we can save the reference number. 
+Since the bank transfer reference is optional we want that column to be nullable. So let's specify the MetaData for the class.
+
+[source,xml]
+-----
+<entity class="Payment">
+    <attributes>
+        <one-to-one name="customer">
+            <primary-key-join-column name="CUSTOMER_ID"/>
+        </one-to-one>
+        <basic name="bankTransferReference">
+            <column name="TRANSFER_REF" nullable="true"/>
+        </basic>
+        <basic name="currency">
+            <column name="CURRENCY"/>
+        </basic>
+        <basic name="amount">
+            <column name="AMOUNT"/>
+        </basic>
+    </attributes>
+</entity>
+-----
+
+Alternatively, you can specify these using annotations should you so wish.
+
+So we make use of the _nullable_ attribute. The table, when created by DataNucleus, will then provide the nullability that we require. 
+
+*Unfortunately with Jakarta Persistence there is no way to specify a default value for a field when it hasn't been set (unlike JDO where you can do that).*
+
+See also :-
+
+* link:metadata_xml.html#column[MetaData reference for <column> element]
+
+
+
+[[schema_column_types]]
+== Column types
+
+DataNucleus will provide a default type for any columns that it creates, but it will allow users to override this default. 
+The default that DataNucleus chooses is always based on the Java type for the field being mapped. 
+For example a Java field of type "int" will be mapped to a column type of INTEGER in RDBMS datastores. Similarly String will be mapped to VARCHAR. 
+
+Jakarta Persistence provides 2 ways of influencing the column DDL generated.
+
+* You can specify the _columnDefinition_ of `@Column`/`<column>` but you have to provide the complete DDL for that column (without the column name), and hence
+can lose database independence by using this route. e.g "VARCHAR(255)"
+* Use `@Column`/`<column>` attributes and specify the _length_/_precision_/_scale_ of the column, as well as whether it is unique etc. It will make use of the Java type
+to come up with a default datastore type for the column. Sadly Jakarta Persistence doesn't allow specification of the precise datastore type 
+(except for BLOB/CLOB/TIME/TIMESTAMP cases). DataNucleus provides an extension to overcome this gap in the Jakarta Persistence spec. 
+Here we make use of a DataNucleus extension annotation `@JdbcType` or _jdbc-type_ extension attribute for `<column>`.
+Note that we could alternatively have made use of the DataNucleus extension annotation `@SqlType` or _sql-type_ extension attribute for `<column>` to specify a low-level SQL type.
+Like this
+
+[source,xml]
+-----
+<entity name="Payment">
+    <attributes>
+        <one-to-one name="customer">
+            <primary-key-join-column name="CUSTOMER_ID"/>
+        </one-to-one>
+        <basic name="bankTransferReference">
+            <column name="TRANSFER_REF" nullable="true" length="255"/>
+        </basic>
+        <basic name="currency">
+            <column name="CURRENCY" length="3" jdbc-type="CHAR"/>
+        </basic>
+        <basic name="amount">
+            <column name="AMOUNT" precision="10" scale="2"/>
+        </basic>
+    </attributes>
+</entity>
+-----
+You could alternatively specify these using annotations should you so wish. 
+So we have defined TRANSFER_REF to use VARCHAR(255) column type, CURRENCY to use (VAR)CHAR(3) column type, and AMOUNT to use DECIMAL(10,2) column type.
+
+
+
+See also :-
+
+* link:#field_types[Types Guide] - defining mapping of Java types
+* link:#schema_rdbms_types[RDBMS Types Guide] - defining mapping of Java types to JDBC/SQL types
+* link:metadata_xml.html#column[MetaData reference for <column> element]
+
+
+[[schema_rdbms_types]]
+=== RDBMS Column Types
+
+NOTE: Applicable to RDBMS.
+
+As we saw in the link:#field_types[Types Guide] DataNucleus supports the persistence of a large range of Java field types. With RDBMS datastores, we have the notion 
+of tables/columns in the datastore and so each Java type is mapped across to a column or a set of columns in a table. It is important to understand this mapping 
+when mapping to an existing schema for example. 
+In RDBMS datastores a java type is stored using JDBC types. DataNucleus supports the use of the vast majority of the available JDBC types.
+
+When persisting a Java type in general it is persisted into a single column. 
+For example a String will be persisted into a VARCHAR column by default. Some types (e.g Color) have more information to store than we can conveniently persist into 
+a single column and so use multiple columns. Other types (e.g Collection) store their information in other ways, such as foreign keys.
+
+image:../images/rdbms_types.png[]
+
+This table shows the Java types we saw earlier and whether they can be queried using JPQL queries, and what JDBC types can be used to store them in your RDBMS datastore. 
+Not all RDBMS datastores support all of these options. While DataNucleus always tries to provide a complete list sometimes this is impossible due to limitations in the underlying JDBC driver
+
+[cols="4,1,1,6", options="header"]
+|===
+|Java Type
+|Number of Columns
+|Queryable
+|JDBC Type(s)
+
+|boolean
+|1
+|icon:check[]
+|*BIT*, CHAR ('Y','N'), BOOLEAN, TINYINT, SMALLINT, NUMERIC
+
+|byte
+|1
+|icon:check[]
+|*TINYINT*, SMALLINT, NUMERIC
+
+|char
+|1
+|icon:check[]
+|*CHAR*, INTEGER, NUMERIC
+
+|double
+|1
+|icon:check[]
+|*DOUBLE*, DECIMAL, FLOAT
+
+|float
+|1
+|icon:check[]
+|*FLOAT*, REAL, DOUBLE, DECIMAL
+
+|int
+|1
+|icon:check[]
+|*INTEGER*, BIGINT, NUMERIC
+
+|long
+|1
+|icon:check[]
+|*BIGINT*, NUMERIC, DOUBLE, DECIMAL, INTEGER
+
+|short
+|1
+|icon:check[]
+|*SMALLINT*, INTEGER, NUMERIC
+
+|boolean[]
+|1
+|icon:check[] [5]
+|LONGVARBINARY, BLOB
+
+|byte[]
+|1
+|icon:check[] [5]
+|LONGVARBINARY, BLOB
+
+|char[]
+|1
+|icon:check[] [5]
+|LONGVARBINARY, BLOB
+
+|double[]
+|1
+|icon:check[] [5]
+|LONGVARBINARY, BLOB
+
+|float[]
+|1
+|icon:check[] [5]
+|LONGVARBINARY, BLOB
+
+|int[]
+|1
+|icon:check[] [5]
+|LONGVARBINARY, BLOB
+
+|long[]
+|1
+|icon:check[] [5]
+|LONGVARBINARY, BLOB
+
+|short[]
+|1
+|icon:check[] [5]
+|LONGVARBINARY, BLOB
+
+|java.lang.Boolean
+|1
+|icon:check[]
+|*BIT*, CHAR('Y','N'), BOOLEAN, TINYINT, SMALLINT
+
+|java.lang.Byte
+|1
+|icon:check[]
+|*TINYINT*, SMALLINT, NUMERIC
+
+|java.lang.Character
+|1
+|icon:check[]
+|*CHAR*, INTEGER, NUMERIC
+
+|java.lang.Double
+|1
+|icon:check[]
+|*DOUBLE*, DECIMAL, FLOAT
+
+|java.lang.Float
+|1
+|icon:check[]
+|*FLOAT*, REAL, DOUBLE, DECIMAL
+
+|java.lang.Integer
+|1
+|icon:check[]
+|*INTEGER*, BIGINT, NUMERIC
+
+|java.lang.Long
+|1
+|icon:check[]
+|*BIGINT*, NUMERIC, DOUBLE, DECIMAL, INTEGER
+
+|java.lang.Short
+|1
+|icon:check[]
+|*SMALLINT*, INTEGER, NUMERIC
+
+|java.lang.Boolean[]
+|1
+|icon:check[] [5]
+|LONGVARBINARY, BLOB
+
+|java.lang.Byte[]
+|1
+|icon:check[] [5]
+|LONGVARBINARY, BLOB
+
+|java.lang.Character[]
+|1
+|icon:check[] [5]
+|LONGVARBINARY, BLOB
+
+|java.lang.Double[]
+|1
+|icon:check[] [5]
+|LONGVARBINARY, BLOB
+
+|java.lang.Float[]
+|1
+|icon:check[] [5]
+|LONGVARBINARY, BLOB
+
+|java.lang.Integer[]
+|1
+|icon:check[] [5]
+|LONGVARBINARY, BLOB
+
+|java.lang.Long[]
+|1
+|icon:check[] [5]
+|LONGVARBINARY, BLOB
+
+|java.lang.Short[]
+|1
+|icon:check[] [5]
+|LONGVARBINARY, BLOB
+
+|java.lang.Number
+|1
+|icon:check[]
+|
+
+|java.lang.Object
+|1
+|
+|LONGVARBINARY, BLOB
+
+|java.lang.String [8]
+|1
+|icon:check[]
+|*VARCHAR*, CHAR, LONGVARCHAR, CLOB, BLOB, DATALINK [6], UNIQUEIDENTIFIER [7], XMLTYPE [9]
+
+|java.lang.StringBuffer [8]
+|1
+|icon:check[]
+|*VARCHAR*, CHAR, LONGVARCHAR, CLOB, BLOB, DATALINK [6], UNIQUEIDENTIFIER [7], XMLTYPE [9]
+
+|java.lang.String[]
+|1
+|icon:check[] [5]
+|LONGVARBINARY, BLOB
+
+|java.lang.Enum
+|1
+|icon:check[]
+|LONGVARBINARY, BLOB, VARCHAR, INTEGER
+
+|java.lang.Enum[]
+|1
+|icon:check[] [5]
+|LONGVARBINARY, BLOB
+
+|java.math.BigDecimal
+|1
+|icon:check[]
+|*DECIMAL*, NUMERIC
+
+|java.math.BigInteger
+|1
+|icon:check[]
+|*NUMERIC*, DECIMAL
+
+|java.math.BigDecimal[]
+|1
+|icon:check[] [5]
+|LONGVARBINARY, BLOB
+
+|java.math.BigInteger[]
+|1
+|icon:check[] [5]
+|LONGVARBINARY, BLOB
+
+|java.sql.Date
+|1
+|icon:check[]
+|*DATE*, TIMESTAMP
+
+|java.sql.Time
+|1
+|icon:check[]
+|*TIME*, TIMESTAMP
+
+|java.sql.Timestamp
+|1
+|icon:check[]
+|*TIMESTAMP*
+
+|java.util.ArrayList
+|0
+|icon:check[]
+|
+
+|java.util.BitSet
+|0
+|icon:times[]
+|LONGVARBINARY, BLOB
+
+|java.util.Calendar [3]
+|1 or 2
+|icon:times[]
+|INTEGER, VARCHAR, CHAR
+
+|java.util.Collection
+|0
+|icon:check[]
+|
+
+|java.util.Currency
+|1
+|icon:check[]
+|*VARCHAR*, CHAR
+
+|java.util.Date
+|1
+|icon:check[]
+|*TIMESTAMP*, DATE, CHAR, BIGINT
+
+|java.util.Date[]
+|1
+|icon:check[] [5]
+|LONGVARBINARY, BLOB
+
+|java.util.GregorianCalendar [2]
+|1 or 2
+|icon:times[]
+|INTEGER, VARCHAR, CHAR
+
+|java.util.HashMap
+|0
+|icon:check[]
+|
+
+|java.util.HashSet
+|0
+|icon:check[]
+|
+
+|java.util.Hashtable
+|0
+|icon:check[]
+|
+
+|java.util.LinkedHashMap
+|0
+|icon:check[]
+|
+
+|java.util.LinkedHashSet
+|0
+|icon:check[]
+|
+
+|java.util.LinkedList
+|0
+|icon:check[]
+|
+
+|java.util.List
+|0
+|icon:check[]
+|
+
+|java.util.Locale [8]
+|1
+|icon:check[]
+|*VARCHAR*, CHAR, LONGVARCHAR, CLOB, BLOB, DATALINK [6], UNIQUEIDENTIFIER [7], XMLTYPE [9]
+
+|java.util.Locale[]
+|1
+|icon:check[] [5]
+|LONGVARBINARY, BLOB
+
+|java.util.Map
+|0
+|icon:check[]
+|
+
+|java.util.Properties
+|0
+|icon:check[]
+|
+
+|java.util.PriorityQueue
+|0
+|icon:check[]
+|
+
+|java.util.Queue
+|0
+|icon:check[]
+|
+
+|java.util.Set
+|0
+|icon:check[]
+|
+
+|java.util.SortedMap
+|0
+|icon:check[]
+|
+
+|java.util.SortedSet
+|0
+|icon:check[]
+|
+
+|java.util.Stack
+|0
+|icon:check[]
+|
+
+|java.util.TimeZone [8]
+|1
+|icon:check[]
+|*VARCHAR*, CHAR, LONGVARCHAR, CLOB, BLOB, DATALINK [6], UNIQUEIDENTIFIER [7], XMLTYPE [9]
+
+|java.util.TreeMap
+|0
+|icon:check[]
+|
+
+|java.util.TreeSet
+|0
+|icon:check[]
+|
+
+|java.util.UUID [8]
+|1
+|icon:check[]
+|*VARCHAR*, CHAR, LONGVARCHAR, CLOB, BLOB, DATALINK [6], UNIQUEIDENTIFIER [7], XMLTYPE [9]
+
+|java.util.Vector
+|0
+|icon:check[]
+|
+
+|java.awt.Color [1]
+|4
+|icon:times[]
+|INTEGER
+
+|java.awt.Point [2]
+|2
+|icon:times[]
+|INTEGER
+
+|java.awt.image.BufferedImage [4]
+|1
+|icon:times[]
+|LONGVARBINARY, BLOB
+
+|java.net.URI [8]
+|1
+|icon:check[]
+|*VARCHAR*, CHAR, LONGVARCHAR, CLOB, BLOB, DATALINK [6], UNIQUEIDENTIFIER [7], XMLTYPE [9]
+
+|java.net.URL [8]
+|1
+|icon:check[]
+|*VARCHAR*, CHAR, LONGVARCHAR, CLOB, BLOB, DATALINK [6], UNIQUEIDENTIFIER [7], XMLTYPE [9]
+
+|java.io.Serializable
+|1
+|icon:times[]
+|LONGVARBINARY, BLOB
+
+|Entity
+|1
+|icon:check[]
+|[embedded]
+
+|Entity[]
+|1
+|icon:check[] [5]
+|
+|===
+
+
+* *[1]* - _java.awt.Color_ - stored in 4 columns (red, green, blue, alpha). ColorSpace is not persisted.
+* *[2]* - _java.awt.Point_ - stored in 2 columns (x and y).
+* *[3]* - _java.util.Calendar_ - stored in 2 columns (milliseconds and timezone).
+* *[4]* - _java.awt.image.BufferedImage_ is stored using JPG image format
+* *[5]* - Array types are queryable if not serialised, but stored to many rows
+* *[6]* - DATALINK JDBC type supported on DB2 only. Uses the SQL function DLURLCOMPLETEONLY to fetch from the datastore. You can override this using the select-function extension. 
+See the link:mapping.html#columnadapter#field_select_function[Column Adapter guide].
+* *[7]* - UNIQUEIDENTIFIER JDBC type supported on MSSQL only.
+* *[8]* - Oracle treats an empty string as the same as NULL. To workaround this limitation DataNucleus replaces the empty string with the character \u0001.
+* *[9]* - XMLTYPE JDBC type supported on Oracle only.
+
+image:../images/nucleus_extensionpoint.png[Javadoc, link=../extensions/extensions.html#rdbms_datastore_types]
+If you need to extend the provided DataNucleus capabilities in terms of its datastore types support you can utilise an extension point.
+
+DataNucleus provides support for the majority of the JDBC types with RDBMS. The support is shown below.
+
+[cols="2,1,3", options="header"]
+|===
+|JDBC Type
+|Supported
+|Restrictions
+
+|ARRAY
+|icon:check[]
+|Only for PostgreSQL array type
+
+|BIGINT
+|icon:check[]
+|
+
+|BINARY
+|icon:check[]
+|Only for geospatial types on MySQL
+
+|BIT
+|icon:check[]
+|
+
+|BLOB
+|icon:check[]
+|
+
+|BOOLEAN
+|icon:check[]
+|
+
+|CHAR
+|icon:check[]
+|
+
+|CLOB
+|icon:check[]
+|
+
+|DATALINK
+|icon:check[]
+|Only on DB2
+
+|DATE
+|icon:check[]
+|
+
+|DECIMAL
+|icon:check[]
+|
+
+|DISTINCT
+|icon:times[]
+|
+
+|DOUBLE
+|icon:check[]
+|
+
+|FLOAT
+|icon:check[]
+|
+
+|INTEGER
+|icon:check[]
+|
+
+|JAVA_OBJECT
+|icon:times[]
+|
+
+|LONGVARBINARY
+|icon:check[]
+|
+
+|LONGVARCHAR
+|icon:check[]
+|
+
+|NCHAR
+|icon:check[]
+|
+
+|NULL
+|icon:times[]
+|
+
+|NUMERIC
+|icon:check[]
+|
+
+|NVARCHAR
+|icon:check[]
+|
+
+|OTHER
+|icon:check[]
+|
+
+|REAL
+|icon:check[]
+|
+
+|REF
+|icon:times[]
+|
+
+|SMALLINT
+|icon:check[]
+|
+
+|STRUCT
+|icon:check[]
+|Only for geospatial types on Oracle
+
+|TIME
+|icon:check[]
+|
+
+|TIMESTAMP
+|icon:check[]
+|
+
+|TINYINT
+|icon:check[]
+|
+
+|VARBINARY
+|icon:check[]
+|
+
+|VARCHAR
+|icon:check[]
+|
+|===
+
+
+[[schema_column_position]]
+== Field/Column Positioning in a Table
+
+image:../images/nucleus_extension.png[]
+
+With some datastores it is desirable to be able to specify the relative position of a column in the table schema. 
+The default (for DataNucleus) is just to put them in ascending alphabetical order.
+Jakarta Persistence doesn't allow configuration of this, but DataNucleus provides the following vendor extension.
+
+Using XML metadata this would be
+
+[source,xml]
+-----
+<entity name="mydomain.Person">
+    <attributes>
+        <id name="personNum">
+            <column position="0"/>
+        </id>
+        <basic name="firstName">
+            <column position="1"/>
+        </basic>
+        <basic name="lastName">
+            <column position="2"/>
+        </basic>
+    </attributes>
+</entity>
+-----
+
+or using (DataNucleus) annotations
+
+[source,java]
+-----
+import org.datanucleus.api.jakarta.annotations.ColumnPosition;
+
+@Entity
+public class Person
+{
+    @Id
+    @ColumnPosition(0)
+    long personNum;
+
+    @ColumnPosition(1)
+    String firstName;
+
+    @ColumnPosition(2)
+    String lastName;
+}
+-----
+
+
+
+[[index]]
+== Index Constraints
+
+NOTE: Applicable to RDBMS, NeoDatis, MongoDB
+
+Many datastores provide the ability to have indexes defined to give performance benefits.
+With RDBMS the indexes are specified on the table and the indexes to the rows are stored separately. 
+In the same way an ODBMS typically allows indexes to be specified on the fields of the class, and these are managed by the datastore. 
+Jakarta Persistence allows you to define the indexes on a table-by-table basis by metadata as in the following example (note that you cannot specify 
+indexes on a field basis like in JDO)
+
+[source,java]
+-----
+import jakarta.persistence.Index;
+
+@Entity
+@Table(indexes={@Index(name="SOME_VAL_IDX", columnList="SOME_VALUE")})
+public class MyClass
+{
+    @Column(name="SOME_VALUE")
+    long someValue;
+
+    ...
+}
+-----
+
+image:../images/nucleus_extension.png[]
+
+The Jakarta Persistence `@Index` annotation is only applicable at a class level. DataNucleus provides its own `@Index` annotation that you
+can specify on a field/method to signify that the column(s) for this field/method will be indexed. Like this
+
+[source,java]
+-----
+@Entity
+public class MyClass
+{
+    @org.datanucleus.api.jakarta.annotations.Index(name="VAL_IDX")
+    long someValue;
+
+    ...
+}
+-----
+
+
+=== Specifying index type
+
+image:../images/nucleus_extension.png[]
+
+Some RDBMS allow you to specify the _type_ of an index, such as HASH etc.
+You can control this as follows
+
+[source,java]
+-----
+@Index(name="MY_BOOKING_IDX")
+@Extension(key="index-type", value="HASH")})
+-----
+
+which will create an index with `CREATE UNIQUE HASH INDEX MY_BOOKING_IDX ON BOOKING (BOOKING)`
+
+
+
+=== Enhanced index creation
+
+image:../images/nucleus_extension.png[]
+
+A final extension is where you just want to dump an amount of SQL onto the end of the `CREATE INDEX` statement (totally RDBMS dependent).
+We would advise against using this method due to its dependency on the RDBMS
+
+[source,java]
+-----
+@Index(name="MY_BOOKING_IDX")
+@Extension(key="extended-setting", value=" USING HASH")})
+-----
+
+See also :-
+
+* link:metadata_xml.html#index[MetaData reference for <index> element]
+* link:annotations.html#Index[Annotations reference for @Index]
+* link:annotations.html#Index_Class[Annotations reference for @Index (class level)]
+
+
+=== Cassandra : index USING
+
+image:../images/nucleus_extension.png[]
+
+Cassandra allows creation of indexes with an optional USING keyword. You can specify this via the following extension
+
+[source,java]
+-----
+@Index(name="MY_BOOKING_IDX")
+@Extension(key="cassandra.createIndex.using", value="'org.apache.cassandra.index.sasi.SASIIndex'")})
+-----
+
+and the `USING` clause will be appended to any `CREATE INDEX` issued during schema generation.
+
+
+[[unique]]
+== Unique Constraints
+
+NOTE: Applicable to RDBMS, NeoDatis, MongoDB
+
+Some datastores provide the ability to have unique constraints defined on tables to give extra control over data integrity. 
+Jakarta Persistence provides a mechanism for defining such unique constraints. Let's take an example class, and show how to specify this
+
+[source,java]
+-----
+public class Person
+{
+    String forename;
+    String surname;
+    String nickname;
+    ...
+}
+-----
+
+and here we want to impose uniqueness on the "nickname" field, so there is only one Person known as "DataNucleus Guru" for example !
+
+[source,xml]
+-----
+<entity class="Person">
+    <table name="PEOPLE"/>
+    <attributes>
+        ...
+        <basic name="nickname">
+            <column name="SURNAME" unique="true"/>
+        </basic>
+        ...
+    </attributes>
+</entity>
+-----
+
+The second use of unique constraints is where we want to impose uniqueness across composite columns.
+So we reuse the class above, and this time we want to impose a constraint that there is only one Person with a particular "forename+surname".
+
+[source,xml]
+-----
+<entity class="Person">
+    <table name="PEOPLE">
+        <unique-constraint>
+            <column-name>FORENAME</column-name>
+            <column-name>SURNAME</column-name>
+        </unique-constraint>
+    </table>
+    <attributes>
+        ...
+        <basic name="forename">
+            <column name="FORENAME"/>
+        </basic>
+        <basic name="surname">
+            <column name="SURNAME"/>
+        </basic>
+        ...
+    </attributes>
+</entity>
+-----
+
+In the same way we can also impose unique constraints on `<join-table>` and `<secondary-table>`
+
+See also :-
+
+* link:metadata_xml.html#column[MetaData reference for <column> element]
+* link:metadata_xml.html#unique-constraint[MetaData reference for <unique-constraint> element]
+* link:annotations.html#Column[Annotations reference for @Column]
+* link:annotations.html#UniqueConstraint[Annotations reference for @UniqueConstraint]
+
+
+[[fk]]
+== Foreign Key Constraints
+
+NOTE: Applicable to RDBMS
+
+When objects have relationships with one object containing, for example, a Collection of another object, it is common to store a foreign key 
+in the datastore representation to link the two associated tables. Moreover, it is common to define behaviour about what happens to the dependent 
+object when the owning object is deleted. Should the deletion of the owner cause the deletion of the dependent object maybe ? 
+Jakarta Persistence supports defining the foreign key for relation fields as per the following example
+
+[source,java]
+-----
+public class MyClass
+{
+    ...
+
+    @OneToOne
+    @JoinColumn(name="OTHER_ID", foreignKey=@ForeignKey(name="OTHER_FK", 
+        foreignKeyDefinition="FOREIGN KEY (OTHER_ID) REFERENCES MY_OTHER_TBL (MY_OTHER_ID) ]"))
+    MyOtherClass other;
+
+}
+-----
+
+Note that when you don't specify any foreign key the Jakarta Persistence provider is free to add the foreign keys that it considers are necessary.                
+
+
+In the case of a 1-N/M-N relation using a join table the equivalent example would be
+
+[source,java]
+-----
+public class Account
+{
+    ...
+
+    @OneToMany
+    @JoinTable(foreignKey=@ForeignKey(name="ACCOUNT_FK"), inverseForeignKey=@ForeignKey(name="ADDRESS_FK"))
+    Collection<Address> addresses;
+}
+
+public class Address
+{
+    ...
+}
+-----
+
+or alternatively using XML
+
+[source,xml]
+-----
+<entity-mappings>
+    <entity class="Account">
+        <attributes>
+            ...
+            <one-to-many name="addresses">
+                <join-table>
+                    <foreign-key name="ACCOUNT_FK"/>
+                    <inverse-foreign-key name="ADDRESS_FK"/>
+                </join-table>
+            </one-to-many>
+        </attributes>
+    </entity>
+
+    <entity class="Address">
+        <attributes>
+            ...
+        </attributes>
+    </entity>
+</entity-mappings>
+-----
+
+
+
+[[pk]]
+== Primary Key Constraints
+
+NOTE: Applicable to RDBMS
+
+In RDBMS datastores, it is accepted as good practice to have a primary key on all tables. You specify in other parts of the MetaData 
+which fields are part of the primary key (if using application identity). 
+Unfortunately Jakarta Persistence doesn't allow specification of the name of the primary key constraint, nor of whether join tables are given a primary key constraint at all.
+
+
+
+
+[[schema_rdbms_views]]
+== RDBMS : Views
+
+NOTE: Applicable to RDBMS.
+
+image:../images/nucleus_extension.png[]
+
+The standard situation with an RDBMS datastore is to map classes to *Tables*. 
+The majority of RDBMS also provide support for *Views*, providing the equivalent of a read-only SELECT across various tables. 
+DataNucleus also provides support for querying such Views. This provides more flexibility to the user where they have data and need to display it in their application. 
+Support for Views is described below.
+
+When you want to access data according to a View, you are required to provide a class that will accept
+the values from the View when queried, and Meta-Data for the class that defines the View and how it maps onto the provided class. Let's take an example. 
+We have a View `SALEABLE_PRODUCT` in our database as follows, defined based on data in a `PRODUCT` table.
+
+[source,sql]
+-----
+CREATE VIEW SALEABLE_PRODUCT (ID, NAME, PRICE, CURRENCY) AS
+    SELECT ID, NAME, CURRENT_PRICE AS PRICE, CURRENCY FROM PRODUCT
+    WHERE PRODUCT.STATUS_ID = 1
+-----
+
+So we define a class to receive the values from this *View*, and define how it is mapped to the view.
+
+[source,java]
+-----
+package mydomain.views;
+
+@Entity
+@Table("SALEABLE_PRODUCT")
+@Extension(vendorName="datanucleus", key="view-definition", value="CREATE VIEW SALEABLE_PRODUCT
+(
+    {this.id},
+    {this.name},
+    {this.price},
+    {this.currency}
+) AS
+SELECT ID, NAME, CURRENT_PRICE AS PRICE, CURRENCY FROM PRODUCT
+WHERE PRODUCT.STATUS_ID = 1")
+public class SaleableProduct
+{
+    @Id
+    String id;
+
+    String name;
+    double price;
+    String currency;
+
+    public String getId()
+    {
+        return id;
+    }
+
+    public String getName()
+    {
+        return name;
+    }
+
+    public double getPrice()
+    {
+        return price;
+    }
+
+    public String getCurrency()
+    {
+        return currency;
+    }
+}
+-----
+
+Please note the following
+
+* We've specified the "table", which in this case is the view name - otherwise DataNucleus would create a name for the view based on the class name.
+* We've defined a DataNucleus extension _view-definition_ that defines the view for this class. If the view doesn't already exist it doesn't matter since 
+DataNucleus (when used with _autoCreateSchema_) will execute this construction definition.
+* The _view-definition_ can contain macros utilising the names of the fields in the class, and hence borrowing their column names (if we had defined column names for the fields of the class).
+* You can also utilise other classes in the macros, and include them via a DataNucleus MetaData extension _view-imports_ (not shown here)
+* If your *View* already exists you are still required to provide a _view-definition_ even though DataNucleus will not be utilising it, 
+since it also uses this attribute as the flag for whether it is a *View* or a *Table* - just make sure that you specify the "table" also in the MetaData.
+* If you have a relation to the class represented by a *View*, you cannot expect it to create an FK in the *View*. The *View* will map on to exactly
+the members defined in the class it represents. i.e cannot have a 1-N FK uni relation to the class with the *View*.
+
+We can now utilise this class within normal DataNucleus Jakarta querying operation.
+
+[source,java]
+-----
+Query<MyViewClass> q = em.createQuery("SELECT p FROM SaleableProduct p", SaleableProduct.class);
+List<MyViewClass> results = q.getResultList();
+-----
+
+Hopefully that has given enough detail on how to create and access views from with a DataNucleus-enabled application.
+
+
+
+include::_mapping_secondary_tables.adoc[leveloffset=+1]
+include::_mapping_datastore_identifiers.adoc[leveloffset=+1]

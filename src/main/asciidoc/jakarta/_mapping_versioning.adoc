@@ -1,0 +1,88 @@
+[[versioning]]
+= Versioning
+:_basedir: ../
+:_imagesdir: images/
+
+Jakarta Persistence allows objects of classes to be versioned. The version is typically used as a way of detecting if the object has been updated by another thread or 
+EntityManager since retrieval using the current EntityManager - for use by link:persistence.html#locking_optimistic[Optimistic Locking].
+
+[[version_member]]
+== Version Field/Property
+
+The standard Jakarta Persistence mechanism for versioning of objects is to mark a field of the class to store the version. 
+
+NOTE: The field must be of one of the following types : int, long, short, _java.lang.Integer_, _java.lang.Long_, _java.lang.Short_, 
+_java.sql.Timestamp_, _java.sql.Date_, _java.sql.Time_, _java.util.Date_, _java.util.Calendar_, _java.time.Instant_.
+
+
+With Jakarta Persistence you can specify the details of this *version field* as follows
+
+[source,java]
+-----
+@Entity
+public class User
+{
+    ...
+
+    @Version
+    int version;
+
+    ...
+}
+-----
+
+or using XML metadata
+
+[source,xml]
+-----
+<entity name="mydomain.User">
+    <attributes>
+        ...
+        <version name="version"/>
+        ...
+    </attributes>
+</entity>
+-----
+
+The specification above will use the "version" field for storing the version of the object. DataNucleus will use a "version-number" strategy for populating the value.
+
+
+[[surrogate_version]]
+== Surrogate Version for Class
+
+image:../images/nucleus_extension.png[]
+
+While the above mechanism should always be used for portability, DataNucleus also supports a surrogate version for objects of a class. 
+With this you don't have a particular field that stores the version and instead DataNucleus persists the version in the datastore with the
+field values in its own "column". You do this as follows.
+
+[source,java]
+-----
+import org.datanucleus.api.jakarta.annotations.SurrogateVersion;
+
+@Entity
+@SurrogateVersion
+public class User
+{
+    ...
+}
+-----
+
+or using XML metadata
+
+[source,xml]
+-----
+<entity name="mydomain.User">
+    <surrogate-version column="version"/>
+    ...
+</entity>
+-----
+
+To access the "surrogate" version, you can make use of the following method
+
+[source,java]
+-----
+import org.datanucleus.api.jakarta.NucleusJakartaHelper;
+
+Object version = NucleusJakartaHelper.getSurrogateVersionForEntity(obj);
+-----

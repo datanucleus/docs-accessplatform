@@ -1,0 +1,37 @@
+[[query]]
+= JPA Query Guide (v{version})
+:_basedir: ../
+:_imagesdir: images/
+:jakarta:
+
+
+Once you have persisted objects you need to query them. 
+For example if you have a web application representing an online store, the user asks to see all products of a particular type, ordered by the price. 
+This requires you to query the datastore for these products. JPA specifies support for 
+
+* link:#jpql[JPQL] : a string-based query language between SQL and OO.
+* link:#criteria[Criteria] : following JPQL syntax but providing an API supporting refactoring of classes and the queries they are used in.
+* link:#native[Native] : equates to SQL when using RDBMS, and CQL when using Cassandra.
+* link:#stored_procedures[Stored Procedures] : in-datastore invocation of stored procedures for RDBMS datastores.
+
+Which query language is used is down to the developer. 
+The data-tier of an application could be written by a primarily Java developer, who would typically think in an object-oriented way and so would likely prefer *JPQL*. 
+On the other hand the data-tier could be written by a datastore developer who is more familiar with SQL concepts and so could easily make more use of *SQL*.
+This is the power of an implementation like DataNucleus in that it provides the flexibility for different people to develop the data-tier utilising their own skills 
+to the full without having to learn totally new concepts.
+
+There are 2 categories of queries with JPA :-
+
+* *Programmatic Query* where the query is defined using the JPA Query API.
+* *Named Query* where the query is defined in MetaData and referred to by its name at runtime(for link:#jpql_named[JPQL], link:#native_named[Native Query]
+and link:#stored_procedures_named[Stored Procedures]).
+
+
+include::_query_api.adoc[leveloffset=+1]
+
+include::_query_jpql.adoc[leveloffset=+1]
+include::_query_criteria.adoc[leveloffset=+1]
+include::_query_native.adoc[leveloffset=+1]
+include::_query_stored_procedures.adoc[leveloffset=+1]
+
+include::_query_cache.adoc[leveloffset=+1]

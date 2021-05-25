@@ -1,0 +1,382 @@
+[[transactions]]
+= Transactions
+:_basedir: ../
+:_imagesdir: images/
+
+
+Persistence operations performed by the _EntityManager_ are typically managed in a _transaction_, allowing operations to be grouped together.
+A Transaction forms a unit of work. The Transaction manages what happens within that unit of work, and when an error occurs the Transaction can roll back any changes performed. 
+Transactions can be managed by the users application, or can be managed by a framework (such as Spring), or can be managed by a JavaEE container. 
+These are described below.
+
+* link:#transaction_local[Local transactions] : managed using the Jakarta Transaction API
+* link:#transaction_jta[JTA transactions] : managed using the JTA UserTransaction API
+* link:#transaction_container[Container-managed transactions] : managed by a JavaEE environment
+* link:#transaction_spring[Spring-managed transactions] : managed by SpringFramework
+* link:#transaction_nontransactional[No transactions] : "auto-commit" mode
+* link:#transaction_isolation[Controlling transaction isolation level]
+* link:#transaction_readonly[Read-Only transactions]
+* link:#transaction_flushing[Flushing a Transaction]
+* link:#transaction_savepoint[RDBMS : Savepoints]
+
+
+[[transaction_local]]
+== Locally-Managed Transactions
+
+If using DataNucleus Jakarta in a JavaSE environment the normal type of transaction is _RESOURCE_LOCAL_.
+With this type of transaction the user manages the transactions themselves, starting, committing or rolling back the transaction. 
+With these transactions with Jakarta Persistence you obtain an _EntityTransaction_ 
+image:../images/javadoc.png[Javadoc, link=http://www.datanucleus.org/javadocs/jakarta.persistence/2.2/javax/persistence/EntityTransaction.html] from the _EntityManager_,
+and manage it like this
+
+[source,java]
+-----
+EntityManager em = emf.createEntityManager();
+EntityTransaction tx = em.getTransaction();
+try
+{
+    tx.begin();
+    
+    {users code to persist objects}
+    
+    tx.commit();
+}
+finally
+{
+    if (tx.isActive())
+    {
+        tx.rollback();
+    }
+}
+em.close();
+-----
+
+In this case you will have defined your link:#persistenceunit[persistence-unit] to be like this
+
+[source,xml]
+-----
+<persistence-unit name="MyUnit" transaction-type="RESOURCE_LOCAL">
+    <properties>
+        <property key="jakarta.persistence.jdbc.url" value="jdbc:mysql:..."/>
+        ...
+    </properties>
+    ...
+</persistence-unit>
+-----
+
+or
+
+[source,xml]
+-----
+<persistence-unit name="MyUnit" transaction-type="RESOURCE_LOCAL">
+    <non-jta-data-source>java:comp/env/myDS</properties>
+    ...
+</persistence-unit>
+-----
+
+The basic idea with *Locally-Managed transactions* is that you are managing the transaction start and end.
+
+
+[[transaction_jta]]
+== JTA Transactions
+
+NOTE: Strict Jakarta Persistence does not support use of JTA transactions in a JavaSE environment. DataNucleus does however allow JTA transactions in a JavaSE environment.
+
+The other type of transaction with Jakarta Persistence is using JTA. With this type, where you have a JTA data source from which you have a _UserTransaction_. 
+This _UserTransaction_ can have resources "joined" to it. In the case of Jakarta Persistence, you have two scenarios. 
+The first scenario is where you have the _UserTransaction_ created before you create your _EntityManager_. 
+The create of the _EntityManager_ will automatically join it to the current _UserTransaction_, like this
+
+[source,java]
+-----
+UserTransaction ut = (UserTransaction)new InitialContext().lookup("java:comp/UserTransaction");
+ut.setTransactionTimeout(300);
+
+EntityManager em = emf.createEntityManager();
+try
+{
+    ut.begin();
+
+    .. perform persistence/query operations
+
+    ut.commit();
+}
+finally
+{
+    em.close();
+}
+-----
+
+so we control the transaction using the _UserTransaction_.
+
+The second scenario is where the _UserTransaction_ is started after you have the _EntityManager_. 
+In this case we need to join our _EntityManager_ to the newly created _UserTransaction_, like this
+
+[source,java]
+-----
+EntityManager em = emf.createEntityManager();
+try
+{
+    .. perform persistence, query operations
+
+    UserTransaction ut = (UserTransaction)new InitialContext().lookup("java:comp/UserTransaction");
+    ut.setTransactionTimeout(300);
+    ut.begin();
+
+    // Join the EntityManager operations to this UserTransaction
+    em.joinTransaction();
+
+    // Commit the persistence/query operations performed above
+    ut.commit();
+}
+finally
+{
+    em.close();
+}
+-----
+
+In the JTA case you will have defined your link:#persistenceunit[persistence-unit] to be like this
+
+[source,xml]
+-----
+<persistence-unit name="MyUnit" transaction-type="JTA">
+    <jta-data-source>java:comp/env/myDS</properties>
+    ...
+</persistence-unit>
+-----
+
+=== JTA TransactionManager
+
+Note that the JavaEE spec does not define a standard way of finding the JTA TransactionManager, and so all JavaEE containers have their own ways of handling this.
+DataNucleus provides a way of scanning the various methods to find that appropriate for the JavaEE container in use, but you can explicitly
+set the method of finding the _TransactionManager_, by use of the persistence properties *datanucleus.transaction.jta.transactionManagerLocator* and, 
+if using this property set to _custom_jndi_ then also *datanucleus.transaction.jta.transactionManagerJNDI* set to the JNDI location that stores the _TransactionManager_ instance.
+
+
+[[transaction_container]]
+== Container-Managed Transactions
+
+When using a JavaEE container you are giving over control of the transactions to the container. 
+Here you have *Container-Managed Transactions*. In terms of your code, you would do like 
+the above examples *except* that you would OMIT the _tx.begin(), tx.commit(), 
+tx.rollback()_ since the JavaEE container will be doing this for you.
+
+
+[[transaction_spring]]
+== Spring-Managed Transactions
+
+When you use a framework like http://www.springframework.org[Spring] 
+you would not need to specify the _tx.begin(), tx.commit(), tx.rollback()_ since that would be done for you.
+
+
+[[transaction_nontransactional]]
+== No Transactions
+
+DataNucleus allows the ability to operate without transactions. 
+With Jakarta Persistence this is enabled by default (see the 2 properties *datanucleus.transaction.nontx.read*, *datanucleus.transaction.nontx.write* set to _true_, the default). 
+This means that you can read objects and make updates outside of transactions. This is effectively an "auto-commit" mode.
+
+[source,java]
+-----
+EntityManager em = emf.createEntityManager();
+    
+{users code to persist objects}
+
+em.close();
+-----
+
+When using non-transactional operations, you need to pay attention to the persistence property *datanucleus.transaction.nontx.atomic*. 
+If this is true then any persist/delete/update will be committed to the datastore immediately. 
+If this is false then any persist/delete/update will be queued up until the next transaction (or _em.close()_) and committed with that.
+
+NOTE: Some other Jakarta providers do not provide this flexibility of non-transactional handling, and indeed, if you try to do updates when outside a transaction these
+changes are not committed even at _em.close_ with those Jakarta providers. Fortunately you're using DataNucleus and it doesn't have that problem.
+
+
+
+
+[[transaction_isolation]]
+== Transaction Isolation
+
+image:../images/nucleus_extension.png[]
+
+DataNucleus also allows specification of the transaction isolation level, applied at the connection level, and providing a level of isolation
+of this process from other processed using the same database. 
+The isolation is specified via the persistence property *datanucleus.transaction.isolation*. It accepts the standard JDBC values of
+
+* *read-uncommitted* (1) : dirty reads, non-repeatable reads and phantom reads can occur
+* *read-committed* (2) : dirty reads are prevented; non-repeatable reads and phantom reads can occur. *This is the default*
+* *repeatable-read* (4) : dirty reads and non-repeatable reads are prevented; phantom reads can occur
+* *serializable* (8) : dirty reads, non-repeatable reads and phantom reads are prevented
+
+If the datastore doesn't support a particular isolation level then it will silently be changed to one that is supported. 
+As an alternative you can also specify it on a per-transaction basis as follows
+
+[source,java]
+-----
+org.datanucleus.api.jakarta.JakartaEntityTransaction tx = (org.datanucleus.api.jakarta.JakartaEntityTransaction)em.getTransaction();
+tx.setOption("transaction.isolation", "read-committed");
+-----
+
+Alternatively with numeric input (using numbers in parentheses above).
+
+[source,java]
+-----
+org.datanucleus.api.jakarta.JakartaEntityTransaction tx = (org.datanucleus.api.jakarta.JakartaEntityTransaction)em.getTransaction();
+tx.setOption("transaction.isolation", 2);
+-----
+
+
+
+[[transaction_readonly]]
+== Read-Only Transactions
+
+Obviously transactions are intended for committing changes. 
+If you come across a situation where you don't want to commit anything under any circumstances you can mark the transaction as "read-only" by calling
+
+[source,java]
+-----
+EntityManager em = emf.createEntityManager();
+Transaction tx = em.getTransaction();
+try
+{
+    tx.begin();
+    tx.setRollbackOnly();
+
+    {users code to persist objects}
+    
+    tx.rollback();
+}
+finally
+{
+    if (tx.isActive())
+    {
+        tx.rollback();
+    }
+}
+em.close();
+-----
+
+Any call to _commit_ on the transaction will throw an exception forcing the user to roll it back.
+
+
+[[transaction_flushing]]
+== Flushing
+
+During a transaction, depending on the configuration, operations don't necessarily go to the datastore immediately, often waiting until _commit_. 
+In some situations you need persists/updates/deletes to be in the datastore so that subsequent operations can be performed that rely on those being handled first. 
+In this case you can *flush* all outstanding changes to the datastore using
+
+[source,java]
+-----
+em.flush();
+-----
+
+You can control the _flush mode_ for an EntityManager using
+
+[source,java]
+-----
+em.setFlushMode(FlushModeType.COMMIT);
+-----
+which will only flush changes at commit. This means that when a query is performed it will not see any local changes.
+
+The default is FlushModeType.AUTO which will flush just before any query, so that the results of all queries are consistent with local changes.
+
+
+
+
+image:../images/nucleus_extension.png[]
+
+A convenient vendor extension is to find which objects are waiting to be flushed at any time, like this
+
+[source,java]
+-----
+List<ObjectProvider> objs = em.unwrap(ExecutionContext.class).getObjectsToBeFlushed();
+-----
+
+
+
+[[large_data_problems]]
+== Transactions with lots of data
+
+Occasionally you may need to persist large amounts of data in a single transaction. 
+Since all objects need to be present in Java memory at the same time, you can get _OutOfMemory_ errors, or your application can slow down as swapping occurs. 
+You can alleviate this by changing how you flush/commit the persistent changes.
+
+One way is to do it like this, where possible,
+
+[source,java]
+-----
+EntityManager em = emf.createEntityManager();
+EntityTransaction tx = em.getTransaction();
+try
+{
+    tx.begin();
+    for (int i=0; i<100000; i++)
+    {
+        Wardrobe wardrobe = new Wardrobe();
+        wardrobe.setModel("3 doors");
+        em.persist(wardrobe);
+        if (i % 10000 == 0)
+        {
+            // Flush every 10000 objects
+            em.flush();
+        }
+    }
+    tx.commit();
+}
+finally
+{
+    if (tx.isActive())
+    {
+        tx.rollback();
+    }
+    em.close();
+}
+-----
+
+Another way, if one object is causing the persist of a huge number of related objects, is to just persist some objects without relations first, flush, and then
+form the relations. This then allows the above process to be utilised, manually flushing at intervals.
+
+You can additionally consider evicting objects from the Level 1 Cache, since they will, by default, be cached until commit.
+
+
+
+[[transaction_savepoint]]
+== Transaction Savepoints
+
+image:../images/nucleus_extension.png[]
+
+NOTE: Applicable to RDBMS
+
+JDBC provides the ability to specify a point in a transaction and rollback to that point if required, assuming the JDBC driver supports it.
+DataNucleus provides this as a vendor extension, as follows
+
+[source,java]
+-----
+import org.datanucleus.api.jakarta.JakartaEntityTransaction;
+
+EntityManager em = emf.createEntityManager();
+JakartaEntityTransaction tx = (JakartaEntityTransaction)em.getTransaction();
+try
+{
+    tx.begin();
+
+    {users code to persist objects}
+    tx.setSavepoint("Point1");
+
+    {more user code to persist objects}
+    tx.rollbackToSavepoint("Point1");
+
+    tx.releaseSavepoint("Point1");
+    tx.rollback();
+}
+finally
+{
+    if (tx.isActive())
+    {
+        tx.rollback();
+    }
+}
+em.close();
+-----

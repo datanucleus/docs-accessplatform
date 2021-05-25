@@ -1,0 +1,341 @@
+[[performance_tuning]]
+= Performance Tuning
+:_basedir: ../
+:_imagesdir: images/
+
+
+DataNucleus, by default, provides certain functionality. 
+In particular circumstances some of this functionality may not be appropriate and it may be desirable to turn on or off particular features to gain more performance for the application in question. 
+This section contains a few common tips
+
+
+== Enhancement
+
+You should perform enhancement *before* runtime. That is, do not use _java agent_ since it will enhance classes at runtime, when you want responsiveness from your application.
+
+
+== Schema
+
+Jakarta Persistence provides properties for generating the schema at startup, and DataNucleus also provides some of its own 
+(*datanucleus.schema.autoCreateAll*, *datanucleus.schema.autoCreateTables*, *datanucleus.schema.autoCreateColumns*, and *datanucleus.schema.autoCreateConstraints*).
+This can cause performance issues at startup. We recommend setting these to _false_ at runtime, and instead using 
+link:persistence.html#schematool[SchemaTool] to *generate any required database schema before running DataNucleus (for RDBMS, HBase, etc)*.
+
+
+Where you have an inheritance tree it is best to add a *discriminator* to the base class so that it's simple for DataNucleus to determine the class name for a particular row.
+For RDBMS : this results in cleaner/simpler SQL which is faster to execute, otherwise it would be necessary to do a UNION of all possible tables. 
+For other datastores, a discriminator stores the key information necessary to instantiate the resultant class on retrieval so ought to be more efficient also.
+
+
+DataNucleus provides 3 persistence properties (*datanucleus.schema.validateTables*, *datanucleus.schema.validateConstraints*, *datanucleus.schema.validateColumns*) 
+that enforce strict validation of the datastore tables against the Meta-Data defined tables. 
+This can cause performance issues at startup. 
+In general this should be run only at schema generation, and should be turned off for production usage. 
+Set all of these properties to _false_. In addition there is a property *datanucleus.rdbms.CheckExistTablesOrViews* which checks whether the tables/views that the 
+classes map onto are present in the datastore. This should be set to _false_ if you require fast start-up. 
+Finally, the property *datanucleus.rdbms.initializeColumnInfo* determines whether the default values for columns are loaded from the database. 
+This property should be set to _NONE_ to avoid loading database metadata.
+
+To sum up, the optimal settings with schema creation and validation disabled are:
+
+-----
+#schema creation
+datanucleus.schema.autoCreateAll=false
+datanucleus.schema.autoCreateTables=false
+datanucleus.schema.autoCreateColumns=false
+datanucleus.schema.autoCreateConstraints=false
+      
+#schema validation
+datanucleus.schema.validateTables=false
+datanucleus.schema.validateConstraints=false
+datanucleus.schema.validateColumns=false
+datanucleus.rdbms.CheckExistTablesOrViews=false
+datanucleus.rdbms.initializeColumnInfo=None
+-----
+
+
+
+== EntityManagerFactory usage
+
+Creation of link:persistence.html#emf[EntityManagerFactory] objects can be expensive and should be kept to a minimum. 
+Depending on the structure of your application, use a single factory per datastore wherever possible. 
+Clearly if your application spans multiple servers then this may be impractical, but should be borne in mind.
+
+You can improve startup speed by not specifying all classes in the _persistence-unit_ so that they are discovered at runtime. 
+Obviously this may impact on persistence operations later if classes are not known about.
+
+Some RDBMS (such as Oracle) have trouble returning information across multiple catalogs/schemas and so, when DataNucleus starts up and tries to obtain information about the existing tables, 
+it can take some time. This is easily remedied by specifying the catalog/schema name to be used - either for the EMF as a whole 
+(using the persistence properties *datanucleus.Catalog*, *datanucleus.Schema*, or using the settings in `persistence.xml`), or for the package/class using attributes in the MetaData. 
+This subsequently reduces the amount of information that the RDBMS needs to search through and so can give significant speed ups when you have many catalogs/schemas being managed by the RDBMS.
+
+TIP: If you want to ensure that the schema existence checks are done for all persistence-unit classes at startup you should set the persistence property
+*datanucleus.persistenceUnitLoadClasses* to _true_. This processes all classes up front, meaning that all operations from there on will run faster without interruptions
+while it checks the database for existence of a table of a class.
+
+
+
+== EntityManager usage
+
+Clearly the structure of your application will have a major influence on how you utilise an link:persistence.html#em[EntityManager].
+A pattern that gives a clean definition of process is to use a different persistence manager for each request to the data access layer. 
+This reduces the risk of conflicts where one thread performs an operation and this impacts on the successful completion of an operation being performed by another thread. 
+Creation of EM's is not an expensive process and use of multiple threads writing to the same manager should be avoided.
+
+*Make sure that you always close the EntityManager after use*. It releases all resources connected to it, and failure to do so will result in memory leaks. 
+Also note that when closing the EntityManager if you have the persistence property *datanucleus.detachOnClose* set to _true_ 
+(when in an *extended* PersistenceContext) this will detach all objects in the Level1 cache. 
+Disable this if you don't need these objects to be detached, since it can be expensive when there are many objects.
+
+
+== Persistence Process
+
+To optimise the persistence process for performance you need to analyse what operations are performed and when, to see if there are some features 
+that you could disable to get the persistence you require and omit what is not required. 
+If you think of a typical transaction, the following describes the process
+
+* Start the transaction
+* Perform persistence operations. If you are using "optimistic" transactions then all datastore operations will be delayed until commit. 
+Otherwise all datastore operations will default to being performed immediately. 
+If you are handling a very large number of objects in the transaction you would benefit by either disabling "optimistic" transactions, or
+alternatively setting the persistence property *datanucleus.flush.mode* to _AUTO_, or alternatively, do a manual flush every "n" objects, like this
+
+[source,java]
+-----
+for (int i=0;i<1000000;i++)
+{
+    if ((i%10000)/10000 == 0 && i != 0)
+    {
+        pm.flush();
+    }
+    ...
+}
+-----
+
+* Commit the transaction
+** All dirty objects are flushed.
+** Objects enlisted in the transaction are put in the Level 2 cache. You can disable the level 2 cache with the persistence property *datanucleus.cache.level2.type* set to _none_
+** Objects enlisted in the transaction are detached if you have the persistence property *datanucleus.detachAllOnCommit* set to _true_ (when using a transactional PersistenceContext). 
+Disable this if you don't need these objects to be detached at this point
+
+
+== Database Connection Pooling
+
+DataNucleus, by default, will allocate connections when they are required. It then will close the connection. 
+
+In addition, when it needs to perform something via JDBC (RDBMS datastores) it will allocate a PreparedStatement, and then discard the statement after use. 
+This can be inefficient relative to a database connection and statement pooling facility such as Apache DBCP.
+With Apache DBCP a Connection is allocated when required and then when it is closed the Connection isn't actually closed but just saved in a pool for the next request that comes in for a Connection. 
+This saves the time taken to establish a Connection and hence can give performance speed ups the order of maybe 30% or more. 
+You can read about how to enable connection pooling with DataNucleus in the link:persistence.html#connection_pooling[Connection Pooling Guide].
+
+As an addendum to the above, you could also turn on caching of PreparedStatements. 
+This can also give a performance boost, depending on your persistence code, the JDBC driver and the SQL being issued.
+Look at the persistence property *datanucleus.connectionPool.maxStatements*.
+
+
+
+== Retrieval of object by identity
+
+If you are retrieving an object by its identity and know that it will be present in the Level2 cache, for example, you can set the persistence property 
+*datanucleus.findObject.validateWhenCached* to _false_ and this will skip a separate call to the datastore to validate that the object exists in the datastore.
+
+
+== Value Generators
+
+DataNucleus provides a series of value generators for generation of identity values. 
+These can have an impact on the performance depending on the choice of generator, and also on the configuration of the generator.
+
+
+* The _max_ strategy should not really be used for production since it makes a separate DB call for each insertion of an object. 
+Something like the _TABLE_ strategy should be used instead. 
+Better still would be to choose _AUTO_ and let DataNucleus decide for you.
+* The _SEQUENCE_ strategy allows configuration of the datastore sequence. 
+The default can be non-optimum. As a guide, you can try setting *key-cache-size* to 10
+
+The *AUTO* identity generator value is the recommended choice since this will allow DataNucleus to decide which identity generator is best for the datastore in use.
+
+
+
+== Collection/Map caching
+
+image:../images/nucleus_extension.png[]
+
+DataNucleus has 2 ways of handling calls to SCO Collections/Maps. The original method was to pass all calls through to the datastore. 
+The second method (which is now the default) is to cache the collection/map elements/keys/values. 
+This second method will read the elements/keys/values once only and thereafter use the internally cached values. 
+This second method gives significant performance gains relative to the original method. 
+You can configure the handling of collections/maps as follows :-
+
+* *Globally for the EMF* - this is controlled by setting the persistence property *datanucleus.cache.collections*. 
+Set it to _true_ for caching the collections (default), and _false_ to pass through to the datastore.
+* *For the specific Collection/Map* - this overrides the global setting and is controlled by adding a MetaData _<collection>_ or _<map>_ extension *cache*.
+Set it to _true_ to cache the collection data, and _false_ to pass through to the datastore.
+
+
+The second method also allows a finer degree of control. This allows the use of lazy loading of data, hence elements will only be loaded if they are needed. 
+You can configure this as follows :-
+
+* *Globally for the EMF* - this is controlled by setting the property *datanucleus.cache.collections.lazy*. 
+Set it to true to use lazy loading, and set it to false to load the elements when the collection/map is initialised.
+* *For the specific Collection/Map* - this overrides the global EMF setting and is controlled by adding a MetaData _<collection>_ or _<map>_ extension *cache-lazy-loading*. 
+Set it to _true_ to use lazy loading, and _false_ to load once at initialisation.
+
+
+== NonTransactional Reads (Reading persistent objects outside a transaction)
+
+Performing non-transactional reads has advantages and disadvantages in performance and data freshness in cache. 
+The objects read are held cached by the EntityManager. 
+The second time an application requests the same objects from the EntityManager they are retrieved from cache. 
+The time spent reading the object from cache is minimum, but the objects may become stale and not represent the database status. 
+If fresh values need to be loaded from the database, then the user application should first call _refresh_ on the object.
+
+Another disadvantage of performing non-transactional reads is that each operation realized opens 
+a new database connection, but it can be minimized with the use of connection pools, and also on
+some of the datastore the (nontransactional) connection is retained.
+
+
+== Accessing fields of persistent objects when not managed by a EntityManager
+
+Reading fields of unmanaged objects (outside the scope of an _EntityManager_) is a trivial task, but performed in a certain manner can determine the application performance.
+The objective here is not give you an absolute response on the subject, but point out the benefits and drawbacks for the many possible solutions.
+
+* Use *datanucleus.RetainValues*=true. This is the default for Jakarta Persistence operation and will ensure that after commit the fields of the object retain their values 
+(rather than being nulled).
+* Use _detach_ method.
+
+[source,java]
+-----
+Object copy = null;
+try
+{
+    EntityManager em = emf.createEntityManager();
+    em.getTransaction().begin();
+
+    //retrieve in some way the object, query, find, etc
+    Object obj = em.find(MyClass.class, id);
+    copy = em.detach(obj);
+
+    em.getTransaction().commit();
+}
+finally
+{
+    em.close();
+}
+//read or change the detached object here
+System.out.prinln(copy.getName());
+-----                    
+
+* Use *datanucleus.detachAllOnCommit*=true. Dependent on the persistence context you may automatically have this set.
+
+[source,java]
+-----
+Object obj = null;
+try
+{
+    EntityManager pm = emf.createEntityManager();
+    em.getTransaction().begin();
+
+    //retrieve in some way the object, query, find, etc
+    obj = em.find(MyClass.class, id);
+    em.getTransaction().commit(); // Object "obj" is now detached
+}
+finally
+{
+    em.close();
+}
+//read or change the detached object here
+System.out.prinln(obj.getName());
+-----
+
+TIP: The bottom line is to not use detachment if instances will only be used to read values.
+
+
+== Fetch Control
+
+When fetching objects you have control over what gets fetched. 
+This can have an impact if you are then detaching those objects. With Jakarta Persistence the maximum fetch depth is -1 (unlimited).
+So with Jakarta Persistence you ought to set it to the extent that you want to detach, or better still make use of link:persistence.html#entity_graphs[Jakarta Entity Graphs] 
+to control the specific fields to detach.
+
+
+[[performance_logging]]
+== Logging
+
+I/O consumes a huge slice of the total processing time. Therefore it is recommended to reduce or disable logging in production. 
+To disable the logging set the DataNucleus category to OFF in the Log4j configuration. 
+See link:persistence.html#logging[Logging] for more information.
+
+-----
+log4j.category.DataNucleus=OFF
+-----
+
+
+== General Comments
+
+In most applications, the performance of the persistence layer is very unlikely to be a bottleneck.
+More likely the design of the datastore itself, and in particular its indices are more likely to have the most impact, or alternatively network latency. 
+That said, it is the DataNucleus projects' committed aim to provide the best performance possible, though we also want to provide functionality, 
+so there is a compromise with respect to resource.
+
+A benchmark is defined as "a series of persistence operations performing particular things e.g persist _n_ objects, or retrieve _n_ objects". 
+If those operations are representative of your application then the benchmark is valid to you. 
+
+To find (or create) a benchmark appropriate to your project you need to determine the typical persistence operations that your application will perform. 
+Are you interested in persisting 100 objects at once, or 1 million, for example? 
+Then when you have a benchmark appropriate for that operation, compare the persistence solutions.
+
+The performance tuning guide above gives a good oversight of tuning capabilities, and also refer to the following http://datanucleus.wordpress.com/2011/03/performance-benchmarking.html[blog entry]
+for our take on performance of DataNucleus AccessPlatform. 
+And then the later http://datanucleus.wordpress.com/2013/02/performance-effect-of-various-features.html[blog entry about how to tune for bulk operations]
+
+
+[[performance_nosql]]
+=== Object-NoSQL Database Mappers: a benchmark study on the performance overhead (Dec 2016)
+
+https://jisajournal.springeropen.com/articles/10.1186/s13174-016-0052-x[This paper] makes an attempt to compare several mappers for MongoDB, comparing with native MongoDB usage. 
+Key points to make are
+
+* The study persists a flat class, with no relations. Hardly representative of a real world usage.
+* The study doesn't even touch on feature set available in each mapper, so the fact that DataNucleus has a very wide range of mapping capabilities for MongoDB is ignored.
+* All mappers come out as slower than native MongoDB (surprise!). The whole point of using a mapper is that you don't want to spend the time learning a new API, 
+so are prepared for some overhead.
+* All timings quoted in their report are in the "microseconds" range!! as are differences between the methods so very few real world applications would be impacted by the differences shown.
+If anybody is choosing a persistence mechanism for pure speed, they should *always* go with the native API; right tool for the job.
+* DataNucleus was configured to turn OFF query compilation caching, and L2 caching !!! whereas not all other mappers provide a way to not cache such things, hence they 
+have tied one arm behind its back, and then commented that time taken to compile queries is impacting on performance!
+* Enhancement was done at RUNTIME!! so would impact on performance results. Not sure how many times we need to say this in reference to benchmarking but clearly the message
+hasn't got through, or to quote the report "_this may indicate fundamental flaws in the study’s measurement methodology_".
+* This uses v5.0.0.M5. Not sure why each benchmark we come across wants to use some milestone (used for DataNucleus) rather than a full release (what they did for all other mappers).
+There have been changes to core performance since early 5.0
+
+
+
+[[performance_geecon]]
+=== GeeCon JPA provider comparison (Jun 2012)
+
+There is an interesting http://vimeo.com/44789644[presentation on JPA provider performance] that was presented at GeeCon 2012 by Patrycja Wegrzynowicz. 
+This presentation takes the time to look at what operations the persistence provider is performing, and does more than just 
+"persist large number of flat objects into a single table", and so gives you something more interesting to analyse. 
+DataNucleus comes out pretty well in many situations. You can also see the PDF http://s3-eu-west-1.amazonaws.com/presentations2012/50_presentation.pdf[here].
+
+
+[[performance_polepos]]
+=== PolePosition (Dec 2008)
+
+The http://www.polepos.org[PolePosition] benchmark is a project on SourceForge to provide a benchmark of the write, read and delete of 
+different data structures using the various persistence tools on the market. 
+JPOX (DataNucleus predecessor) was run against this benchmark just before being renamed as DataNucleus and the following conclusions about the benchmark were made.
+
+* It is essential that tests for such as Hibernate and DataNucleus performance comparable things. 
+Some of the original tests had the "delete" simply doing a "DELETE FROM TBL" for Hibernate yet doing an Extent followed by delete each object individually for a JDO implementation. 
+This is an unfair comparison and in the source tree in JPOX SVN this is corrected. 
+This fix was pointed out to the PolePos SourceForge project but is not, as yet, fixed
+* It is essential that schema is generated before the test, otherwise the test is no longer a benchmark of just a persistence operation. 
+The source tree in JPOX SVN assumes the schema exists. 
+This fix was pointed out to the PolePos SourceForge project but is not, as yet, fixed
+* Each persistence implementation should have its own tuning options, and be able to add things like discriminators since that is what would happen in a real application. 
+The source tree in JPOX SVN does this for JPOX running. Similarly a JDO implementation would tune the entity graphs being used - 
+this is not present in the SourceForge project but is in JPOX SVN.
+* DataNucleus performance is considered to be significantly improved over JPOX particularly due to batched inserts, and due to a rewritten query implementation that does enhanced fetching.
+

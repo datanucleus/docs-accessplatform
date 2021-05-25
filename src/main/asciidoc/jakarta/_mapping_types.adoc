@@ -1,0 +1,1541 @@
+[[field_types]]
+= Field Types
+:_basedir: ../
+:_imagesdir: images/
+
+
+When persisting a class, a persistence solution needs to know how to persist the types of each field in the class. 
+Clearly a persistence solution can only support a finite number of Java types; it cannot know how to persist every possible type creatable. 
+The Jakarta Persistence specification define lists of types that are required to be supported by all implementations of those specifications. 
+This support can be conveniently split into two parts
+
+
+* *Primary Types* : An object that can be _referred to_ (object reference, providing a relation) and that has an "identity" is termed a *primary type*. 
+DataNucleus supports the following Java types as primary : 
+any _Entity_ that has its own identity, _interface_ where it represents an _Entity_, or *java.lang.Object* where it represents an _Entity_.
+* *Secondary Types* : An object that does not have an "identity" is termed a *secondary type*. This is something like a String or Date field in a class, 
+or alternatively a Collection (that contains other objects), or an embedded _Entity_. The sections below shows the currently supported secondary java types in DataNucleus. 
+The tables in these sections show 
+** *EAGER* : whether the field is retrieved by default when retrieving the object itself.
+** *Proxy* : whether the field is represented by a "proxy" that intercepts any operations to detect whether it has changed internally (such as Collection, Map).
+** *PK* : whether the field can be used as part of the primary-key
+
+
+NOTE: The Jakarta Persistence spec places restrictions on what you can and can't do with a `@MappedSuperclass` type. DataNucleus largely treats it like any entity, so can be used
+for querying, or relations.
+
+NOTE: The Jakarta Persistence spec has a _required list of types_ that a provider should support is very basic. DataNucleus provides all of those and many many more, see below.
+
+NOTE: With DataNucleus, *all* types that we have a way of persisting (i.e listed below) are default persistent (meaning that you don't need to annotate them in any way to persist them). 
+The only field types where this is not always true is for java.lang.Object, some Serializable types, array of persistables, and java.io.File so always safer to mark those as persistent.
+
+
+If you have support for any additional types and would either like to contribute them, or have them listed here, let us know.
+Supporting a new type is easy, typically involving a link:#attributeconverter[Jakarta AttributeConverter] if you can easily convert the type into a String or Long. 
+
+NOTE: You can add support for a Java type using the 
+link:../extensions/extensions.html#java_type[the Java Types] image:../images/nucleus_extensionpoint.png[].
+
+NOTE: You can also define more specific support for it with RDBMS datastores using the 
+link:../extensions/extensions.html#rdbms_java_mapping[the RDBMS Java Types] image:../images/nucleus_extensionpoint.png[].
+
+
+Handling of second-class types uses wrappers and bytecode enhancement with DataNucleus. This contrasts to what Hibernate uses (proxies), and what Hibernate imposes on you. 
+
+NOTE: When your field type is a type that is mutable it will be replaced by a "wrapper" when the owning object is managed. 
+By default this wrapper type will be based on the _instantiated_ type.
+You can change this to use the _declared_ type by setting the persistence property *datanucleus.type.wrapper.basis* to _declared_.
+
+
+== Primitive and java.lang Types
+
+All primitive types and wrappers are supported and will be persisted into a single database "column".
+Arrays of these are also supported, and can either be serialised into a single column, or persisted into a join table (dependent on datastore).
+
+[cols="4,1,1,1,6", options="header"]
+|===
+|Java Type
+|EAGER?
+|Proxy?
+|PK?
+|Comments
+
+|boolean
+|icon:check[]
+|icon:times[]
+|icon:check[]
+|Persisted as *BOOLEAN*, Integer (i.e 1,0), String (i.e 'Y','N').
+
+|byte
+|icon:check[]
+|icon:times[]
+|icon:check[]
+|
+
+|char
+|icon:check[]
+|icon:times[]
+|icon:check[]
+|
+
+|double
+|icon:check[]
+|icon:times[]
+|icon:times[]
+|
+
+|float
+|icon:check[]
+|icon:times[]
+|icon:times[]
+|
+
+|int
+|icon:check[]
+|icon:times[]
+|icon:check[]
+|
+
+|long
+|icon:check[]
+|icon:times[]
+|icon:check[]
+|
+
+|short
+|icon:check[]
+|icon:times[]
+|icon:check[]
+|
+
+|java.lang.Boolean
+|icon:check[]
+|icon:times[]
+|icon:check[]
+|Persisted as *BOOLEAN*, Integer (i.e 1,0), String (i.e 'Y','N').
+
+|java.lang.Byte
+|icon:check[]
+|icon:times[]
+|icon:check[]
+|
+
+|java.lang.Character
+|icon:check[]
+|icon:times[]
+|icon:check[]
+|
+
+|java.lang.Double
+|icon:check[]
+|icon:times[]
+|icon:times[]
+|
+
+|java.lang.Float
+|icon:check[]
+|icon:times[]
+|icon:times[]
+|
+
+|java.lang.Integer
+|icon:check[]
+|icon:times[]
+|icon:check[]
+|
+
+|java.lang.Long
+|icon:check[]
+|icon:times[]
+|icon:check[]
+|
+
+|java.lang.Short
+|icon:check[]
+|icon:times[]
+|icon:check[]
+|
+
+|java.lang.Number
+|icon:check[]
+|icon:times[]
+|icon:times[]
+|Persisted in a column capable of storing a BigDecimal, and will store to the precision of the object to be persisted. On reading back 
+the object will be returned typically as a BigDecimal since there is no mechanism for determing the type of the object that was stored.
+
+|java.lang.String
+|icon:check[]
+|icon:times[]
+|icon:check[]
+|
+
+|java.lang.StringBuffer
+|icon:check[]
+|icon:times[]
+|icon:check[]
+|Persisted as String. The dirty check mechanism for this type is limited to immutable mode, which means if you change a StringBuffer object field, 
+you must reassign it to the owner object field to make sure changes are propagated to the database.
+
+|java.lang.StringBuilder
+|icon:check[]
+|icon:times[]
+|icon:check[]
+|Persisted as String. The dirty check mechanism for this type is limited to immutable mode, which means if you change a StringBuffer object field, 
+you must reassign it to the owner object field to make sure changes are propagated to the database.
+
+|java.lang.Class
+|icon:check[]
+|icon:times[]
+|icon:times[]
+|Persisted as String.
+|===
+
+== java.math types
+
+BigInteger and BigDecimal are supported and persisted into a single numeric column by default.
+
+[cols="4,1,1,1,6", options="header"]
+|===
+|Java Type
+|EAGER?
+|Proxy?
+|PK?
+|Comments
+
+|java.math.BigDecimal
+|icon:check[]
+|icon:times[]
+|icon:times[]
+|Persisted as *DOUBLE* or String. String can be used to retain precision.
+
+|java.math.BigInteger
+|icon:check[]
+|icon:times[]
+|icon:check[]
+|Persisted as *INTEGER* or String. String can be used to retain precision.
+|===
+
+
+== Temporal Types (java.util, java.sql. java.time, Jodatime)
+
+DataNucleus supports a very wide range of temporal types, with flexibility in how they are persisted.
+
+[cols="4,1,1,1,6", options="header"]
+|===
+|Java Type
+|EAGER?
+|Proxy?
+|PK?
+|Comments
+
+|java.sql.Date
+|icon:check[]
+|icon:check[]
+|icon:check[]
+|Persisted as *DATE*, String, DATETIME or Long.
+
+|java.sql.Time
+|icon:check[]
+|icon:check[]
+|icon:check[]
+|Persisted as *TIME*, String, DATETIME or Long.
+
+|java.sql.Timestamp
+|icon:check[]
+|icon:check[]
+|icon:check[]
+|Persisted as *TIMESTAMP*, String or Long.
+
+|java.util.Calendar
+|icon:check[]
+|icon:check[]
+|icon:times[]
+|Persisted as *TIMESTAMP (inc Timezone)*, DATETIME, String, or as (Long, String) storing millis + timezone respectively
+
+|java.util.GregorianCalendar
+|icon:check[]
+|icon:check[]
+|icon:times[]
+|Persisted as *TIMESTAMP (inc Timezone)*, DATETIME, String, or as (Long, String) storing millis + timezone respectively
+
+|java.util.Date
+|icon:check[]
+|icon:check[]
+|icon:check[]
+|Persisted as *DATETIME*, String or Long.
+
+|java.util.TimeZone
+|icon:check[]
+|icon:times[]
+|icon:check[]
+|Persisted as String.
+
+|java.time.LocalDateTime
+|icon:check[]
+|icon:times[]
+|icon:times[]
+|Persisted as *DATETIME*, String, or Timestamp.
+
+|java.time.LocalTime
+|icon:check[]
+|icon:times[]
+|icon:times[]
+|Persisted as *TIME*, String, or Long.
+
+|java.time.LocalDate
+|icon:check[]
+|icon:times[]
+|icon:times[]
+|Persisted as *DATE*, String, or DATETIME.
+
+|java.time.OffsetDateTime
+|icon:check[]
+|icon:times[]
+|icon:times[]
+|Persisted as *Timestamp*, String, or DATETIME.
+
+|java.time.OffsetTime
+|icon:check[]
+|icon:times[]
+|icon:times[]
+|Persisted as *TIME*, String, or Long.
+
+|java.time.MonthDay
+|icon:check[]
+|icon:times[]
+|icon:times[]
+|Persisted as *String*, DATE, or as (Integer,Integer) with the latter being month+day respectively.
+
+|java.time.YearMonth
+|icon:check[]
+|icon:times[]
+|icon:times[]
+|Persisted as *String*, DATE, or as (Integer,Integer) with the latter being year+month respectively.
+
+|java.time.Year
+|icon:check[]
+|icon:times[]
+|icon:times[]
+|Persisted as *Integer*, or String.
+
+|java.time.Period
+|icon:check[]
+|icon:times[]
+|icon:times[]
+|Persisted as *String*.
+
+|java.time.Instant
+|icon:check[]
+|icon:times[]
+|icon:times[]
+|Persisted as *TIMESTAMP*, String, Long, or DATETIME.
+
+|java.time.Duration
+|icon:check[]
+|icon:times[]
+|icon:times[]
+|Persisted as *String*, Double (secs.nanos), or Long (secs).
+
+|java.time.ZoneId
+|icon:check[]
+|icon:times[]
+|icon:times[]
+|Persisted as *String*.
+
+|java.time.ZoneOffset
+|icon:check[]
+|icon:times[]
+|icon:times[]
+|Persisted as *String*.
+
+|java.time.ZonedDateTime
+|icon:check[]
+|icon:times[]
+|icon:times[]
+|Persisted as *Timestamp*, or String.
+
+|org.joda.time.DateTime
+|icon:check[]
+|icon:times[]
+|icon:times[]
+|Requires *datanucleus-jodatime* plugin. Persisted as *TIMESTAMP* or String.
+
+|org.joda.time.LocalTime
+|icon:check[]
+|icon:times[]
+|icon:times[]
+|Requires *datanucleus-jodatime* plugin. Persisted as *TIME* or String.
+
+|org.joda.time.LocalDate
+|icon:check[]
+|icon:times[]
+|icon:times[]
+|Requires *datanucleus-jodatime* plugin. Persisted as *DATE* or String.
+
+|org.joda.time.LocalDateTime
+|icon:check[]
+|icon:times[]
+|icon:times[]
+|Requires *datanucleus-jodatime* plugin. Persisted as *TIMESTAMP*, or String.
+
+|org.joda.time.Duration
+|icon:check[]
+|icon:times[]
+|icon:times[]
+|Requires *datanucleus-jodatime* plugin. Persisted as *String* or Long.
+
+|org.joda.time.Interval
+|icon:check[]
+|icon:times[]
+|icon:times[]
+|Requires *datanucleus-jodatime* plugin. Persisted as *String* or (TIMESTAMP, TIMESTAMP).
+
+|org.joda.time.Period
+|icon:check[]
+|icon:times[]
+|icon:times[]
+|Requires *datanucleus-jodatime* plugin. Persisted as *String*.
+|===
+
+== Collection/Map types
+
+DataNucleus supports a very wide range of collection, list and map types.
+It also supports the declared type to be not just interfaces (`Collection`, `Set`, `List`, `Map`) but also common implementations (unlike many
+other Jakarta providers which only support the interface types).
+
+[cols="4,1,1,1,6", options="header"]
+|===
+|Java Type
+|EAGER?
+|Proxy?
+|PK?
+|Comments
+
+|java.util.Collection
+|icon:times[]
+|icon:check[]
+|icon:times[]
+|See link:mapping.html#one_many_relations[the 1-N Mapping Guide]
+
+|java.util.List
+|icon:times[]
+|icon:check[]
+|icon:times[]
+|See link:mapping.html#one_many_relations[the 1-N Mapping Guide]
+
+|java.util.Map
+|icon:times[]
+|icon:check[]
+|icon:times[]
+|See link:mapping.html#one_many_relations[the 1-N Mapping Guide]
+
+|java.util.Queue
+|icon:times[]
+|icon:check[]
+|icon:times[]
+|The comparator is specifiable via the metadata extension _comparator-name_ (see below). See link:mapping.html#one_many_relations[the 1-N Mapping Guide]
+
+|java.util.Set
+|icon:times[]
+|icon:check[]
+|icon:times[]
+|See link:mapping.html#one_many_relations[the 1-N Collections Guide]
+
+|java.util.SortedMap
+|icon:times[]
+|icon:check[]
+|icon:times[]
+|The comparator is specifiable via the metadata extension _comparator-name_ (see below). See link:mapping.html#one_many_relations[the 1-N Mapping Guide]
+
+|java.util.SortedSet
+|icon:times[]
+|icon:check[]
+|icon:times[]
+|The comparator is specifiable via the metadata extension _comparator-name_ (see below). See link:mapping.html#one_many_relations[the 1-N Collections Guide]
+
+|java.util.ArrayList
+|icon:times[]
+|icon:check[]
+|icon:times[]
+|See link:mapping.html#one_many_relations[the 1-N Mapping Guide]
+
+|java.util.BitSet
+|icon:times[]
+|icon:check[]
+|icon:times[]
+|Persisted as collection by default, but will be stored as String when the datastore doesn't provide for collection storage
+
+|java.util.HashMap
+|icon:times[]
+|icon:check[]
+|icon:times[]
+|See link:mapping.html#one_many_relations[the 1-N Mapping Guide]
+
+|java.util.HashSet
+|icon:times[]
+|icon:check[]
+|icon:times[]
+|See link:mapping.html#one_many_relations[the 1-N Mapping Guide]
+
+|java.util.Hashtable
+|icon:times[]
+|icon:check[]
+|icon:times[]
+|See link:mapping.html#one_many_relations[the 1-N Maps Guide]
+
+|java.util.LinkedHashMap
+|icon:times[]
+|icon:check[]
+|icon:times[]
+|Persisted as a Map currently. No List-ordering is supported. See link:mapping.html#one_many_map[the 1-N Maps Guide]
+
+|java.util.LinkedHashSet
+|icon:times[]
+|icon:check[]
+|icon:times[]
+|Persisted as a Set currently. No List-ordering is supported. See link:mapping.html#one_many_relations[the 1-N Collections Guide]
+
+|java.util.LinkedList
+|icon:times[]
+|icon:check[]
+|icon:times[]
+|See link:mapping.html#one_many_relations[the 1-N Mapping Guide]
+
+|java.util.Properties
+|icon:times[]
+|icon:check[]
+|icon:times[]
+|See link:mapping.html#one_many_relations[the 1-N Mapping Guide]
+
+|java.util.PriorityQueue
+|icon:times[]
+|icon:check[]
+|icon:times[]
+|The comparator is specifiable via the metadata extension _comparator-name_ (see below). See link:mapping.html#one_many_relations[the 1-N Mapping Guide]
+
+|java.util.Stack
+|icon:times[]
+|icon:check[]
+|icon:times[]
+|See link:mapping.html#one_many_relations[the 1-N Mapping Guide]
+
+|java.util.TreeMap
+|icon:times[]
+|icon:check[]
+|icon:times[]
+|The comparator is specifiable via the metadata extension _comparator-name_ (see below). See link:mapping.html#one_many_map[the 1-N Mapping Guide]
+
+|java.util.TreeSet
+|icon:times[]
+|icon:check[]
+|icon:times[]
+|The comparator is specifiable via the metadata extension _comparator-name_ (see below). See link:mapping.html#one_many_relations[the 1-N Mapping Guide]
+
+|java.util.Vector
+|icon:times[]
+|icon:check[]
+|icon:times[]
+|See link:mapping.html#one_many_relations[the 1-N Mapping Guide]
+
+|com.google.common.collect.Multiset
+|icon:times[]
+|icon:check[]
+|icon:times[]
+|Requires *datanucleus-guava* plugin. See link:mapping.html#one_many_relations[the 1-N Collections Guide]
+|===
+
+=== Collection Comparators
+
+image:../images/nucleus_extension.png[]
+
+Collections that support a `Comparator` to order the elements of the set can specify it in metadata like this.
+
+[source,java]
+-----
+@OneToMany
+@Extension(key="comparator-name", value="mydomain.MyComparator")
+SortedSet<MyElementType> elements; 
+-----
+
+When instantiating the SortedSet field, it will create it with a comparator of the specified class (which must have a default constructor).
+
+- - -
+
+
+== Enums
+
+By default an Enum is persisted as either a String form (the name), or as an integer form (the ordinal). 
+You control which form by specifying the `@Enumerated` annotation (or equivalent XML). 
+
+[cols="4,1,1,1,6", options="header"]
+|===
+|Java Type
+|EAGER?
+|Proxy?
+|PK?
+|Comments
+
+|java.lang.Enum
+|icon:check[]
+|icon:times[]
+|icon:check[]
+|Persisted as String (name) or int (ordinal). Specified via `@Enumerated` annotation or equivalent XML.
+|===
+
+
+=== Enum custom values
+
+image:../images/nucleus_extension.png[]
+
+A DataNucleus extension to this is where you have an Enum that defines its own "value"s for the different enum options.
+
+NOTE: Applicable to RDBMS, MongoDB, Cassandra, Neo4j, HBase, Excel, ODF and JSON currently.
+
+[source,java]
+-----
+public enum MyColour 
+{
+    RED((short)1), GREEN((short)3), BLUE((short)5), YELLOW((short)8);
+
+    private short value;
+
+    private MyColour(short value)
+    {
+        this.value = value;
+    }
+
+    public short getValue() 
+    {
+        return value;
+    }
+}
+-----
+
+With the default persistence it would persist as String-based, so persisting "RED" "GREEN" "BLUE" etc. 
+With `@Enumerated` as ORDINAL it would persist 0, 1, 2, 3 being the ordinal values.
+If you define the metadata as
+
+[source,java]
+-----
+@Extension(key="enum-value-getter", value="getValue")
+MyColour colour;
+-----
+
+this will now persist 1, 3, 5, 8, being the "value" of each of the enum options. You can use this method to persist "int", "short", or "String" types.
+
+
+=== Enum CHECK constraints
+
+image:../images/nucleus_extension.png[]
+
+NOTE: Supported for RDBMS datastores.
+
+If you want to constraint the column where the Enum is stored to only have the values for that enum you can put a CHECK constraint on the column contents in the datastore.
+You specify it like this
+
+[source,java]
+-----
+@Extension(vendorName="datanucleus", key="enum-check-constraint", value="true")
+MyColour colour;
+-----
+
+This results in a column defined like
+
+[source,sql]
+-----
+MY_COL VARCHAR(10) CHECK (MY_COL IN ('RED', 'GREEN', 'BLUE', 'YELLOW')),
+-----
+
+NOTE: This is the recommended way of constraining enum values in the datastore since it uses ANSI SQL, and it is a better more portable solution than using such as PostgreSQL enum type.
+
+- - -
+
+
+== Geospatial Types
+
+DataNucleus has extensive support for Geospatial types. 
+The `datanucleus-geospatial` plugin allows using geospatial and traditional types simultaneously in persistent objects making DataNucleus a single 
+interface to read and manipulate any business data. This plugin supports types from all of the most used geospatial libraries, see below.
+The implementation of many of these spatial types follows the http://www.opengeospatial.org/standards/sfa[OGC Simple Feature specification], 
+but adds further types where the datastores support them.
+
+Some extra notes for implementation of JTS, JGeometry and PostGIS types support :-
+
+NOTE: MySQL doesn't support 3-dimensional geometries. Trying to persist them anyway results in undefined behaviour, 
+there may be an exception thrown or the z-ordinate might just get stripped.
+
+NOTE: Oracle supports additional data types like circles and curves that are not defined in the OGC SF specification. 
+Any attempt to read or persist one of those data types, if you're not using Oracle, will result in failure!
+
+NOTE: PostGIS added support for curves in version 1.2.0, but at the moment the JDBC driver doesn't support them yet. 
+Any attempt to read curves geometries will result in failure, for every mapping scenario!
+
+NOTE: Both PostGIS and Oracle have a system to add user data to specific points of a geometry. In PostGIS these types are called measure types 
+and the z-coordinate of every 2d-point can be used to store arbitrary (numeric) data of double precision associated with that point. 
+In Oracle this user data is called LRS. datanucleus-geospatial tries to handle these types as gracefully as possible. 
+But the recommendation is to not use them, unless you have a mapping scenario that is known to support them.
+
+NOTE: PostGIS supports two additional types called box2d and box3d, that are not defined in OGC SF. There are only mappings available for these types 
+for PostGIS, any attempt to read or persist one of those data types in another mapping scenario will result in failure!
+
+NOTE: We do not currently support persisting to the PostGIS "geography" type, only the (most used) "geometry" type.
+
+
+
+=== java.awt Java types
+
+The JRE contains very limited support for some geometric types, largely under the _java.awt_ package.
+
+[cols="4,1,1,1,6", options="header"]
+|===
+|Java Type
+|EAGER?
+|Proxy?
+|PK?
+|Comments
+
+|java.awt.Point
+|icon:check[]
+|icon:check[]
+|icon:times[]
+|Requires *datanucleus-geospatial* plugin. Persisted as (int, int) on RDBMS, or as String elsewhere.
+
+|java.awt.Rectangle
+|icon:check[]
+|icon:check[]
+|icon:times[]
+|Requires *datanucleus-geospatial* plugin. Persisted as (int, int, int, int) on RDBMS, or as String elsewhere.
+
+|java.awt.Polygon
+|icon:check[]
+|icon:check[]
+|icon:times[]
+|Requires *datanucleus-geospatial* plugin. Persisted as (int[], int[], int) on RDBMS, or as String elsewhere.
+
+|java.awt.geom.Line2D
+|icon:check[]
+|icon:check[]
+|icon:times[]
+|Requires *datanucleus-geospatial* plugin. Persisted as (double, double, double, double) or (float, float, float, float) on RDBMS, or as String elsewhere.
+
+|java.awt.geom.Point2D
+|icon:check[]
+|icon:check[]
+|icon:times[]
+|Requires *datanucleus-geospatial* plugin. Persisted as (double, double) or (float, float) on RDBMS, or as String elsewhere.
+
+|java.awt.geom.Rectangle2D
+|icon:check[]
+|icon:check[]
+|icon:times[]
+|Requires *datanucleus-geospatial* plugin. Persisted as (double, double, double, double) or (float, float, float, float) on RDBMS, or as String elsewhere.
+
+|java.awt.geom.Arc2D
+|icon:check[]
+|icon:check[]
+|icon:times[]
+|Requires *datanucleus-geospatial* plugin. Persisted as (double, double, double, double, double, double, int) or (float, float, float, float, float, float, int) on RDBMS, or as String elsewhere.
+
+|java.awt.geom.CubicCurve2D
+|icon:check[]
+|icon:check[]
+|icon:times[]
+|Requires *datanucleus-geospatial* plugin. Persisted as (double, double, double, double, double, double, doubel, double) or (float, float, float, float, float, float, float, float) on RDBMS, or as String elsewhere.
+
+|java.awt.geom.Ellipse2D
+|icon:check[]
+|icon:check[]
+|icon:times[]
+|Requires *datanucleus-geospatial* plugin Persisted as (double, double, double, double) or (float, float, float, float) on RDBMS, or as String elsewhere.
+
+|java.awt.geom.QuadCurve2D
+|icon:check[]
+|icon:check[]
+|icon:times[]
+|Requires *datanucleus-geospatial* plugin. Persisted as (double, double, double, double, double, double) or (float, float, float, float, float, float) on RDBMS, or as String elsewhere.
+
+|java.awt.geom.RoundRectangle2D
+|icon:check[]
+|icon:check[]
+|icon:times[]
+|Requires *datanucleus-geospatial* plugin. Persisted as (double, double, double, double, double, double) or (float, float, float, float, float, float) on RDBMS, or as String elsewhere.
+|===
+
+
+
+=== JTS Topology Suite Java types
+
+The https://github.com/locationtech/jts[JTS Topology Suite] is a Java library for creating and manipulating vector geometry.
+
+[cols="4,1,1,1,6", options="header"]
+|===
+|Java Type
+|DFG?
+|Proxy?
+|PK?
+|Comments
+
+|com.vividsolutions.jts.geom.Geometry
+|icon:check[]
+|icon:times[]
+|icon:times[]
+|Requires *datanucleus-geospatial* plugin. Dirty check limited to immutable mode (must reassign field to owner if you change it). Only on Oracle(SDO_GEOMETRY), MySQL(geometry), PostGIS(geometry).
+
+|com.vividsolutions.jts.geom.GeometryCollection
+|icon:check[]
+|icon:times[]
+|icon:times[]
+|Requires *datanucleus-geospatial* plugin. Dirty check limited to immutable mode (must reassign field to owner if you change it). Only on Oracle(SDO_GEOMETRY), MySQL(geometry), PostGIS(geometry).
+
+|com.vividsolutions.jts.geom.LinearRing
+|icon:check[]
+|icon:times[]
+|icon:times[]
+|Requires *datanucleus-geospatial* plugin. Dirty check limited to immutable mode (must reassign field to owner if you change it). Only on Oracle(SDO_GEOMETRY), MySQL(geometry), PostGIS(geometry).
+
+|com.vividsolutions.jts.geom.LineString
+|icon:check[]
+|icon:times[]
+|icon:times[]
+|Requires *datanucleus-geospatial* plugin. Dirty check limited to immutable mode (must reassign field to owner if you change it). Only on Oracle(SDO_GEOMETRY), MySQL(geometry), PostGIS(geometry).
+
+|com.vividsolutions.jts.geom.MultiLineString
+|icon:check[]
+|icon:times[]
+|icon:times[]
+|Requires *datanucleus-geospatial* plugin. Dirty check limited to immutable mode (must reassign field to owner if you change it). Only on Oracle(SDO_GEOMETRY), MySQL(geometry), PostGIS(geometry).
+
+|com.vividsolutions.jts.geom.MultiPoint
+|icon:check[]
+|icon:times[]
+|icon:times[]
+|Requires *datanucleus-geospatial* plugin. Dirty check limited to immutable mode (must reassign field to owner if you change it). Only on Oracle(SDO_GEOMETRY), MySQL(geometry), PostGIS(geometry).
+
+|com.vividsolutions.jts.geom.MultiPolygon
+|icon:check[]
+|icon:times[]
+|icon:times[]
+|Requires *datanucleus-geospatial* plugin. Dirty check limited to immutable mode (must reassign field to owner if you change it). Only on Oracle(SDO_GEOMETRY), MySQL(geometry), PostGIS(geometry).
+
+|com.vividsolutions.jts.geom.Point
+|icon:check[]
+|icon:times[]
+|icon:times[]
+|Requires *datanucleus-geospatial* plugin. Dirty check limited to immutable mode (must reassign field to owner if you change it). Only on Oracle(SDO_GEOMETRY), MySQL(geometry), PostGIS(geometry).
+
+|com.vividsolutions.jts.geom.Polygon
+|icon:check[]
+|icon:times[]
+|icon:times[]
+|Requires *datanucleus-geospatial* plugin. Dirty check limited to immutable mode (must reassign field to owner if you change it). Only on Oracle(SDO_GEOMETRY), MySQL(geometry), PostGIS(geometry).
+|===
+
+
+=== PostGIS Java types
+
+https://postgis.net/docs/[PostGIS] provides a series of geometric types for use in Java applications
+
+
+[cols="4,1,1,1,6", options="header"]
+|===
+|Java Type
+|DFG?
+|Proxy?
+|PK?
+|Comments
+
+|org.postgis.Geometry
+|icon:check[]
+|icon:times[]
+|icon:times[]
+|Requires *datanucleus-geospatial* plugin. Dirty check limited to immutable mode (must reassign field to owner if you change it). Only on MySQL(geometry), PostGIS(geometry).
+
+|org.postgis.GeometryCollection
+|icon:check[]
+|icon:times[]
+|icon:times[]
+|Requires *datanucleus-geospatial* plugin. Dirty check limited to immutable mode (must reassign field to owner if you change it). Only on MySQL(geometry), PostGIS(geometry).
+
+|org.postgis.LinearRing
+|icon:check[]
+|icon:times[]
+|icon:times[]
+|Requires *datanucleus-geospatial* plugin.
+Dirty check limited to immutable mode (must reassign field to owner if you change it). Only on MySQL(geometry), PostGIS(geometry).
+
+|org.postgis.LineString
+|icon:check[]
+|icon:times[]
+|icon:times[]
+|Requires *datanucleus-geospatial* plugin.
+Dirty check limited to immutable mode (must reassign field to owner if you change it). Only on MySQL(geometry), PostGIS(geometry).
+
+|org.postgis.MultiLineString
+|icon:check[]
+|icon:times[]
+|icon:times[]
+|Requires *datanucleus-geospatial* plugin.
+Dirty check limited to immutable mode (must reassign field to owner if you change it). Only on MySQL(geometry), PostGIS(geometry).
+
+|org.postgis.MultiPoint
+|icon:check[]
+|icon:times[]
+|icon:times[]
+|Requires *datanucleus-geospatial* plugin.
+Dirty check limited to immutable mode (must reassign field to owner if you change it). Only on MySQL(geometry), PostGIS(geometry).
+
+|org.postgis.MultiPolygon
+|icon:check[]
+|icon:times[]
+|icon:times[]
+|Requires *datanucleus-geospatial* plugin.
+Dirty check limited to immutable mode (must reassign field to owner if you change it). Only on MySQL(geometry), PostGIS(geometry).
+
+|org.postgis.Point
+|icon:check[]
+|icon:times[]
+|icon:times[]
+|Requires *datanucleus-geospatial* plugin.
+Dirty check limited to immutable mode (must reassign field to owner if you change it). Only on MySQL(geometry), PostGIS(geometry).
+
+|org.postgis.Polygon
+|icon:check[]
+|icon:times[]
+|icon:times[]
+|Requires *datanucleus-geospatial* plugin.
+Dirty check limited to immutable mode (must reassign field to owner if you change it). Only on MySQL(geometry), PostGIS(geometry).
+
+|org.postgis.PGbox2d
+|icon:check[]
+|icon:times[]
+|icon:times[]
+|Requires *datanucleus-geospatial* plugin.
+Dirty check limited to immutable mode (must reassign field to owner if you change it). Only on PostGIS(geometry).
+
+|org.postgis.PGbox3d
+|icon:check[]
+|icon:times[]
+|icon:times[]
+|Requires *datanucleus-geospatial* plugin.
+Dirty check limited to immutable mode (must reassign field to owner if you change it). Only on PostGIS(geometry).
+|===
+
+
+
+=== Oracle JGeometry Java type
+
+Oracle provides its own geometry type for use in Oracle databases.
+
+
+[cols="4,1,1,1,6", options="header"]
+|===
+|Java Type
+|DFG?
+|Proxy?
+|PK?
+|Comments
+
+|oracle.spatial.geometry.JGeometry
+|icon:check[]
+|icon:times[]
+|icon:times[]
+|Requires *datanucleus-geospatial* plugin. Dirty check limited to immutable mode (must reassign field to owner if you change it). Only on Oracle(SDO_GEOMETRY), MySQL(geometry)
+|===
+
+
+
+
+=== Geospatial metadata extensions
+
+image:../images/nucleus_extension.png[]
+
+`datanucleus-geospatial` has defined some metadata extensions that can be used to give additional information about the geometry types in use. 
+You use them inside a field and the values are only used for that field specifically, or for an entity as a whole. 
+
+[source,xml]
+-----
+<entity-mappings>
+    <package>mydomain.jtsgeometry</package>
+
+    <entity class="mydomain.jtsgeometry.SampleGeometry">
+        <extension key="spatial-dimension" value="2"/>
+        <extension key="spatial-srid" value="4326"/>
+        <attributes>
+            <id name="id"/>
+            <basic name="name"/>
+            <basic name="geom">
+                <extension key="mapping" value="no-userdata"/> [2]
+            </basic>
+        </attributes>
+    </entity>
+
+    <entity class="mydomain.jtsgeometry.SampleGeometryCollectionM">
+        <extension key="spatial-dimension" value="2"/>
+        <extension key="spatial-srid" value="4326"/>
+        <extension key="postgis-hasMeasure" value="true"/> [3]
+        <attributes>
+            <id name="id"/>
+            <basic name="name"/>
+            <basic name="geom"/>
+        </attributes>
+    </entity>
+
+    <entity class="mydomain.jtsgeometry.SampleGeometryCollection3D">
+        <extension key="spatial-dimension" value="3"/>
+        <extension key="spatial-srid" value="-1"/>
+        <attributes>
+            <id name="id"/>
+            <basic name="name"/>
+            <basic name="geom"/>
+        </attributes>
+    </entity>
+</entity-mappings>
+-----
+
+* *[1]* - The srid &amp; dimension values are used in various places. One of them is schema creation, when using PostGIS, another is when you query the SpatialHelper.
+* *[2]* - Every JTS geometry object can have a user data object attached to it. The default behaviour is to serialize that object and store it in a separate column in the database. 
+If for some reason this isn't desired, the *mapping* extension can be used with value &quot;no-userdata&quot; and *datanucleus-geospatial* will ignore the user data objects.
+* *[3]* - If you want to use measure types in PostGIS you have to define that using the *postgis-hasMeasure* extension.
+
+
+- - -
+
+
+== Other Types
+
+Many other types are supported.
+
+[cols="4,1,1,1,6", options="header"]
+|===
+|Java Type
+|EAGER?
+|Proxy?
+|PK?
+|Comments
+
+|java.lang.Object
+|icon:times[]
+|icon:times[]
+|icon:times[]
+|Either persisted link:mapping.html#serialised[serialised], or represents link:mapping.html#objects[multiple possible types]
+
+|java.util.Currency
+|icon:check[]
+|icon:times[]
+|icon:check[]
+|Persisted as String.
+
+|java.util.Locale
+|icon:check[]
+|icon:times[]
+|icon:check[]
+|Persisted as String.
+
+|java.util.UUID
+|icon:check[]
+|icon:times[]
+|icon:check[]
+|Persisted as String, or alternatively as native _uuid_ on PostgreSQL/H2/HSQLDB when specifying sql-type="uuid".
+
+|java.util.Optional<type>;
+|icon:check[]
+|icon:times[]
+|icon:times[]
+|Persisted as the type of the generic type that optional represents.
+
+|java.awt.Color
+|icon:check[]
+|icon:times[]
+|icon:times[]
+|Persisted as String or as (Integer,Integer,Integer,Integer) storing red,green,blue,alpha respectively.
+
+|java.awt.image.BufferedImage
+|icon:times[]
+|icon:times[]
+|icon:times[]
+|Persisted as link:mapping.html#serialised[serialised].
+
+|java.net.URI
+|icon:check[]
+|icon:times[]
+|icon:check[]
+|Persisted as String.
+
+|java.net.URL
+|icon:check[]
+|icon:times[]
+|icon:check[]
+|Persisted as String.
+
+|java.io.Serializable
+|icon:times[]
+|icon:times[]
+|icon:times[]
+|Persisted as link:mapping.html#serialised[serialised].
+
+|java.io.File
+|icon:times[]
+|icon:times[]
+|icon:times[]
+|Only for RDBMS, persisted to LONGVARBINARY, and retrieved as streamable so as not to adversely affect memory utilisation, hence suitable for large files.
+|===
+
+
+[[types_arrays]]
+== Arrays
+
+The vast majority of the secondary types can also be persisted as arrays of that type as well.
+Here we list a few of the combinations definitely supported as arrays, but others likely will work fine
+
+[cols="4,1,1,1,6", options="header"]
+|===
+|Java Type
+|EAGER?
+|Proxy?
+|PK?
+|Comments
+
+|boolean[]
+|icon:times[]
+|icon:times[]
+|icon:times[]
+|See link:mapping.html#arrays[the Arrays Guide]
+
+|byte[]
+|icon:times[]
+|icon:times[]
+|icon:times[]
+|See link:mapping.html#arrays[the Arrays Guide]
+
+|char[]
+|icon:times[]
+|icon:times[]
+|icon:times[]
+|See link:mapping.html#arrays[the Arrays Guide]
+
+|double[]
+|icon:times[]
+|icon:times[]
+|icon:times[]
+|See link:mapping.html#arrays[the Arrays Guide]
+
+|float[]
+|icon:times[]
+|icon:times[]
+|icon:times[]
+|See link:mapping.html#arrays[the Arrays Guide]
+
+|int[]
+|icon:times[]
+|icon:times[]
+|icon:times[]
+|See link:mapping.html#arrays[the Arrays Guide]
+
+|long[]
+|icon:times[]
+|icon:times[]
+|icon:times[]
+|See link:mapping.html#arrays[the Arrays Guide]
+
+|short[]
+|icon:times[]
+|icon:times[]
+|icon:times[]
+|See link:mapping.html#arrays[the Arrays Guide]
+
+|java.lang.Boolean[]
+|icon:times[]
+|icon:times[]
+|icon:times[]
+|See link:mapping.html#arrays[the Arrays Guide]
+
+|java.lang.Byte[]
+|icon:times[]
+|icon:times[]
+|icon:times[]
+|See link:mapping.html#arrays[the Arrays Guide]
+
+|java.lang.Character[]
+|icon:times[]
+|icon:times[]
+|icon:times[]
+|See link:mapping.html#arrays[the Arrays Guide]
+
+|java.lang.Double[]
+|icon:times[]
+|icon:times[]
+|icon:times[]
+|See link:mapping.html#arrays[the Arrays Guide]
+
+|java.lang.Float[]
+|icon:times[]
+|icon:times[]
+|icon:times[]
+|See link:mapping.html#arrays[the Arrays Guide]
+
+|java.lang.Integer[]
+|icon:times[]
+|icon:times[]
+|icon:times[]
+|See link:mapping.html#arrays[the Arrays Guide]
+
+|java.lang.Long[]
+|icon:times[]
+|icon:times[]
+|icon:times[]
+|See link:mapping.html#arrays[the Arrays Guide]
+
+|java.lang.Short[]
+|icon:times[]
+|icon:times[]
+|icon:times[]
+|See link:mapping.html#arrays[the Arrays Guide]
+
+|java.lang.String[]
+|icon:times[]
+|icon:times[]
+|icon:times[]
+|See link:mapping.html#arrays[the Arrays Guide]
+
+|java.util.Date[]
+|icon:times[]
+|icon:times[]
+|icon:times[]
+|See link:mapping.html#arrays[the Arrays Guide]
+
+|java.math.BigDecimal[]
+|icon:times[]
+|icon:times[]
+|icon:times[]
+|See link:mapping.html#arrays[the Arrays Guide]
+
+|java.math.BigInteger[]
+|icon:times[]
+|icon:times[]
+|icon:times[]
+|See link:mapping.html#arrays[the Arrays Guide]
+
+|java.lang.Enum[]
+|icon:times[]
+|icon:times[]
+|icon:times[]
+|See link:mapping.html#arrays[the Arrays Guide]
+
+|java.util.Locale[]
+|icon:times[]
+|icon:times[]
+|icon:times[]
+|See link:mapping.html#arrays[the Arrays Guide]
+
+|Entity[]
+|icon:times[]
+|icon:times[]
+|icon:times[]
+|See link:mapping.html#arrays[the Arrays Guide]
+|===
+
+== Generic Type Variables
+
+Jakarta Persistence does not explicitly require support for generic type variables. DataNucleus provides support for many situations with generic type variables.
+
+
+The first example that is supported is where you have an abstract base class with a generic `TypeVariable` and then you specify the type in the (concrete) subclass(es).
+
+[source,java]
+-----
+@MappedSuperclass
+public abstract class Base<T>
+{
+    private T id;
+}
+
+@Entity
+public class Sub1 extends Base<Long>
+{
+    ...
+}
+
+@Entity
+public class Sub2 extends Base<Integer>
+{
+    ...
+}
+-----
+
+Similarly you use `TypeVariables` to form relations, like this
+
+[source,java]
+-----
+@MappedSuperclass
+public abstract class Ownable<T extends Serializable> implements Serializable
+{
+    @ManyToOne(optional = false)
+    private T owner;
+}
+
+@Entity
+public class Document extends Ownable<Person>
+{
+    ...
+}
+-----
+
+
+Similarly, if you use a type argument in a generic declaration for a field, like this
+
+[source,java]
+-----
+public class Owner
+{
+    private List<? extends Element> elements;
+}
+
+public class Element
+{
+    ...
+}
+-----
+
+Clearly there are many combinations of where generics and `TypeVariables` can be used, so let us know if your generics usage isn't supported.
+
+
+
+
+[[attributeconverter]]
+== Jakarta Attribute Converters
+
+Jakarta Persistence provides an API for conversion of an attribute of an Entity to its datastore value.
+You can define a "converter" that will convert to the datastore value and back from it, implementing this interface.
+
+[source,java]
+-----
+public interface AttributeConverter<X,Y>
+{
+    public Y convertToDatabaseColumn (X attributeObject);
+
+    public X convertToEntityAttribute (Y dbData);
+}
+-----
+
+so if we have a simple converter to allow us to persist fields of type URL in a String form in the datastore, like this
+
+[source,java]
+-----
+public class URLStringConverter implements AttributeConverter<URL, String>
+{
+    public URL convertToEntityAttribute(String str)
+    {
+        if (str == null)
+        {
+            return null;
+        }
+
+        URL url = null;
+        try
+        {
+            url = new java.net.URL(str.trim());
+        }
+        catch (MalformedURLException mue)
+        {
+            throw new IllegalStateException("Error converting the URL", mue);
+        }
+        return url;
+    }
+
+    public String convertToDatabaseColumn(URL url)
+    {
+        return url != null ? url.toString() : null;
+    }
+}
+-----
+
+and now in our Entity class we mark any URL field as being converted using this converter
+
+[source,java]
+-----
+@Entity
+public class MyClass
+{
+    @Id
+    long id;
+
+    @Basic
+    @Convert(converter=URLStringConverter.class)
+    URL url;
+
+    ...
+}
+-----
+
+or using XML metadata
+
+[source,xml]
+-----
+<basic name="url">
+    <convert converter="mydomain.URLStringConverter"/>
+</basic>
+-----
+
+
+Note that in strict Jakarta Persistence you have to mark all converters with the `@Converter` annotation.
+In DataNucleus if you specify the converter class name in the `@Convert` then we know its a converter so don't really see why we need a user to annotate the converter too.
+We only require annotation as `@Converter` if you want the converter to always be applied to fields of a particular type. 
+i.e if you want all URL fields to be persisted using the above converter (without needing to put `@Convert` on each field of that type) then you would add the annotation
+
+[source,java]
+-----
+@Converter(autoApply=true)
+public class URLStringConverter implements AttributeConverter<URL, String>
+{
+    ...
+}
+-----
+
+Note that if you have some java type with a `@Converter` registered to _autoApply_, you can turn it off on a field-by-field basis with
+
+[source,java]
+-----
+    @Convert(disableConversion=true)
+    URL url;
+-----
+
+or using XML metadata
+
+[source,xml]
+-----
+<basic name="url">
+    <convert disable-conversion="true"/>
+</basic>
+-----
+
+A further use of AttributeConverter is where you want to apply type conversion to the key/value of a Map field, or to the element of a Collection field. 
+The Collection element case is simple, you just specify the `@Convert` against the field and it will be applied to the element.
+If you want to apply type conversion to a key/value of a map do this.
+
+[source,java]
+-----
+    @OneToMany
+    @Convert(attributeName="key", converter=URLStringConverter.class)
+    Map<URL, OtherEntity> myMap;
+-----
+
+So we specify the _attributeName_ to be *key*, and to use it on the value we would set it to *value*.
+
+
+If using XML metadata
+
+[source,xml]
+-----
+<one-to-many name="myMap">
+    <map-key-convert converter="mydomain.URLStringConverter"/>
+</one-to-many>
+-----
+
+
+
+
+NOTE: You CANNOT use an `AttributeConverter` for an _Entity_ type. This is because an _Entity_ type requires special treatment, such as attaching a StateManager etc. 
+
+
+NOTE: The `AttributeConverter` objects shown here are *stateless*. 
+DataNucleus allows for stateful `AttributeConverter` objects, with the state being CDI injectable, but you must be in a CDI environment for this to work.
+To provide CDI support for Jakarta Persistence, you should specify the persistence property *jakarta.persistence.bean.manager* to be a CDI `BeanManager` object.
+
+
+
+
+[[container_extensions]]
+== Types extending Collection/Map
+
+Say you have your own type that extends Collection/Map. By default DataNucleus will not know how to persist this. 
+You could declare the type in your class as Collection/Map, but often you want to refer to your own type.
+If you have your type and want to just persist it into a single column then you should do as follows
+
+[source,java]
+-----
+public class MyCollectionType extends Collection
+{
+    ...
+}
+
+@Entity
+public class MyClass
+{
+    MyCollectionType myField;
+
+    ...
+}
+-----
+
+We now define a simple converter to allow us to persist fields of this type in String form in the datastore, like this
+
+[source,java]
+-----
+public class MyCollectionTypeStringConverter implements AttributeConverter<MyCollectionType, String>
+{
+    public MyCollectionType convertToEntityAttribute(String str)
+    {
+        if (str == null)
+        {
+            return null;
+        }
+
+        ...
+        return myType;
+    }
+
+    public String convertToDatastoreColumn(MyCollectionType myType)
+    {
+        return myType != null ? myType.toString() : null;
+    }
+}
+-----
+
+and now in our entity class we mark the _myField_ as being converted using this converter
+
+[source,java]
+-----
+@Entity
+public class MyClass
+{
+    @Convert(converter=MyCollectionTypeStringConverter.class)
+    MyCollectionType myField;
+
+    ...
+}
+-----
+
+NOTE: If you want your extension of Collection/Map to be managed as a second class type then you will need to provide a _wrapper_ class for it.
+Please refer to the link:../extensions/extensions.html#java_type[java_type] image:../images/nucleus_extensionpoint.png[].
+
+
+
+[[columnadapter]]
+== Column Adapters
+
+NOTE: Supported for RDBMS.
+
+By default, when inserting/updating into a column into an RDBMS datastore, the SQL will have a `?` and the value replaced into it.
+We allow the use of adapter "functions" so that the inserted value can be modified during the insert/update. Like this
+
+[source,java]
+-----
+@Extension(key="insert-function", value="TRIM(?)")
+@Extension(key="update-function", value="TRIM(?)")
+String myStringField;
+-----
+
+So when this field of this class is persisted the SQL generated will include `TRIM(?)` rather than `?`, and any leading/trailing whitespace will be removed.
+
+Similarly on retrieval, we also allow the equivalent.
+
+[source,java]
+-----
+@Extension(key="select-function", value="UPPER(?)")
+String myStringField;
+-----
+
+The `?` is replaced by the column name. So the stored datastore value will be converted to UPPERCASE before being set in the Java object retrieved.
+
+You could use these _column adapters_ to do things like encrypt/decrypt the value of a field when storing to/retrieving from the database, for example.
+

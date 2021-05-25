@@ -1,0 +1,209 @@
+[[osgi]]
+= OSGi Environments
+:_basedir: ../
+:_imagesdir: images/
+
+
+DataNucleus jars are OSGi bundles, and as such, can be deployed in an OSGi environment.
+Being an OSGi environment care must be taken with respect to class-loading. 
+In particular the persistence property *datanucleus.primaryClassLoader* will need setting.
+
+An important thing to note : any dependent jar that is required by DataNucleus needs to be OSGi enabled.
+By this we mean the jar needs to have the MANIFEST.MF file including _ExportPackage_ for the packages required by DataNucleus. 
+Failure to have this will result in _ClassNotFoundException_ when trying to load its classes.
+
+The `jakarta.persistence` jar that is included in the DataNucleus distribution is OSGi-enabled.
+
+When using DataNucleus in an OSGi environment you can set the persistence property
+*datanucleus.plugin.pluginRegistryClassName* to _org.datanucleus.plugin.OSGiPluginRegistry_.
+
+
+== Jakarta and OSGi
+    
+In a non OSGi world the persitence provider implementation is loaded using the service provider pattern. 
+The full qualified name of the implementation is stored in a file under _META-INF/services/jakarta.persistence.spi.PersistenceProvider_ 
+(inside the jar of the implementation) and each time the persistence provider is required it gets loaded with a _Class.forName_ 
+using the name of the implementing class found inside the _META-INF/services/jakarta.persistence.spi.PersistenceProvider_. 
+In the OSGi world that doesn't work. 
+The bundle that needs to load the persistence provider implementation cannot load `META-INF/services/jakarta.persistence.spi.PersistenceProvider`. 
+A work around is to copy that file inside each bundle that requires access to the peristence provider. 
+Another work around is to export the persistence provider as OSGi service. This is what the DataNucleus Jakarta API jar does.
+
+
+Further reading available on http://jazoon.com/Portals/0/Content/slides/we_a7_1630-1650_ward.pdf[this link]
+    
+
+== Sample using OSGi and Jakarta
+    
+Please make use of the https://github.com/datanucleus/samples-jpa/tree/master/osgi_basic[OSGi sample]. 
+This provides a simple example that you can build and load into such as Apache Karaf to demonstrate JPA persistence. 
+Here we attempt to highlight the key aspects specific to OSGi in this sample.
+
+Model classes are written in the exact same way as you would for any application.
+
+Creation of the EMF is specified in a persistence-unit as normal *except that* we need to provide two overriding properties
+
+[source,java]
+------
+Map<Object, Object> overrideProps = new HashMap();
+overrideProps.put("datanucleus.primaryClassLoader", this.getClass().getClassLoader());
+overrideProps.put("datanucleus.plugin.pluginRegistryClassName", "org.datanucleus.plugin.OSGiPluginRegistry");
+
+EntityManagerFactory emf = Persistence.createEntityManagerFactory("PU", overrideProps);
+------
+    
+so we have provided a class loader for the OSGi context of the application, and also specified that we want to use the _OSGiPluginRegistry_.
+    
+All persistence and query operations using EntityManager etc thereafter are identical to what you would use in a normal JavaSE/JavaEE application.
+
+The `pom.xml` also defines the imports/exports for our OSGi application bundle, so look at this if wanting guidance on what these could look like when using Maven and the "felix bundle" plugin.
+    
+If you read the file `README.txt` you can see basic instructions on how to deploy this application into a fresh download of Apache Karaf, and run it. 
+It makes uses of Spring DM to start the JPA "application".
+
+
+== LocalContainerEntityManagerFactoryBean class for use in Virgo 3.0 OSGi environment
+
+When using DataNucleus 3.x in a Virgo 3.0.x OSGi environment, which is essentially Eclipse Equinox + Spring dm Server with Spring 3.0.5.RELEASE included, 
+the following class is working for me to use in your Spring configuration. 
+You can use this class as a drop-in replacement for Spring's _org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean_. 
+It was inspired by the code-ish sample at link:../jdo/_persistence_osgi.html#springdm[HOWTO Use Datanucleus with OSGi and Spring DM].
+
+[source,java]
+-----
+import java.util.HashMap;
+import java.util.Map;
+
+import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.PersistenceException;
+import jakarta.persistence.spi.PersistenceUnitInfo;
+
+import org.datanucleus.util.StringUtils;
+import org.osgi.framework.Bundle;
+import org.osgi.framework.BundleContext;
+import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
+import org.springframework.osgi.context.BundleContextAware;
+
+public class DataNucleusOsgiLocalContainerEntityManagerFactoryBean extends
+    LocalContainerEntityManagerFactoryBean implements BundleContextAware
+{
+
+    public static final String DEFAULT_JPA_API_BUNDLE_SYMBOLIC_NAME = "org.datanucleus.api.jpa";
+    public static final String DEFAULT_PERSISTENCE_PROVIDER_CLASS_NAME = "org.datanucleus.api.jpa.PersistenceProviderImpl";
+
+    public static final String DEFAULT_OSGI_PLUGIN_REGISTRAR_CLASS_NAME = "org.datanucleus.plugin.OSGiPluginRegistry";
+    public static final String DEFAULT_OSGI_PLUGIN_REGISTRAR_PROPERTY_NAME = "datanucleus.plugin.pluginRegistryClassName";
+
+    protected BundleContext bundleContext;
+    protected ClassLoader classLoader;
+
+    protected String jpaApiBundleSymbolicName = DEFAULT_JPA_API_BUNDLE_SYMBOLIC_NAME;
+    protected String persistenceProviderClassName = DEFAULT_PERSISTENCE_PROVIDER_CLASS_NAME;
+    protected String osgiPluginRegistrarClassName = DEFAULT_OSGI_PLUGIN_REGISTRAR_CLASS_NAME;
+    protected String osgiPluginRegistrarPropertyName = DEFAULT_OSGI_PLUGIN_REGISTRAR_PROPERTY_NAME;
+
+    @Override
+    public void setBundleContext(BundleContext bundleContext) {
+	this.bundleContext = bundleContext;
+    }
+
+    @Override
+    protected EntityManagerFactory createNativeEntityManagerFactory() throws PersistenceException 
+    {
+        ClassLoader original = getBeanClassLoader(); // save for later
+        try 
+        {
+            if (bundleContext != null) 
+            {
+                // default
+                String name = getPersistenceProviderClassName();
+                PersistenceUnitInfo info = getPersistenceUnitInfo();
+                if (info != null && !StringUtils.isEmpty(info.getPersistenceProviderClassName())) 
+                {
+                    // use class name of PU
+                    name = info.getPersistenceProviderClassName();
+                }
+
+                if (StringUtils.isEmpty(getJpaApiBundleSymbolicName())) 
+                {
+                    throw new IllegalStateException("no DataNucleus JPA API bundle symbolic name given");
+                }
+
+                // set the bean class loader to use it so that Spring can find the persistence provider class
+                setBeanClassLoader(getBundleClassLoader(getJpaApiBundleSymbolicName(), name));
+
+                // since we're in an OSGi environment by virtue of the use of this class, ensure a plugin registration mechanism is being used
+                if (info == null || (info.getProperties() != null && !info.getProperties().containsKey(getOsgiPluginRegistrarPropertyName()))) 
+                {
+                    Map<String, Object> map = getJpaPropertyMap();
+                    map = map == null ? new HashMap<String, Object>() : map;
+                    if (map.get(getOsgiPluginRegistrarPropertyName()) == null) {
+                        map.put(getOsgiPluginRegistrarPropertyName(), getOsgiPluginRegistrarClassName());
+                    }
+                }
+            }
+
+            // now let Springy do its thingy
+            return super.createNativeEntityManagerFactory();
+        } 
+        finally 
+        {
+            setBeanClassLoader(original); // revert bean classloader
+        }
+    }
+
+    protected ClassLoader getBundleClassLoader(String bundleSymbolicName,String classNameToLoad) 
+    {
+        ClassLoader classloader = null;
+        Bundle[] bundles = bundleContext.getBundles();
+        for (int x = 0; x < bundles.length; x++) 
+        {
+            if (bundleSymbolicName.equals(bundles[x].getSymbolicName())) {
+                try 
+                {
+                    classloader = bundles[x].loadClass(classNameToLoad).getClassLoader();
+                }
+                catch (ClassNotFoundException e) 
+                {
+                    e.printStackTrace();
+                }
+                break;
+            }
+        }
+        return classloader;
+    }
+
+    public String getJpaApiBundleSymbolicName() {
+        return jpaApiBundleSymbolicName;
+    }
+
+    public void setJpaApiBundleSymbolicName(String jpaApiBundleSymbolicName) {
+        this.jpaApiBundleSymbolicName = jpaApiBundleSymbolicName;
+    }
+
+    public String getPersistenceProviderClassName() {
+        return persistenceProviderClassName;
+    }
+
+    public void setPersistenceProviderClassName(String persistenceProviderClassName) {
+        this.persistenceProviderClassName = persistenceProviderClassName;
+    }
+
+    public String getOsgiPluginRegistrarClassName() {
+        return osgiPluginRegistrarClassName;
+    }
+
+    public void setOsgiPluginRegistrarClassName(String osgiPluginRegistrarClassName) {
+        this.osgiPluginRegistrarClassName = osgiPluginRegistrarClassName;
+    }
+
+    public String getOsgiPluginRegistrarPropertyName() {
+        return osgiPluginRegistrarPropertyName;
+    }
+
+    public void setOsgiPluginRegistrarPropertyName(String osgiPluginRegistrarPropertyName) {
+        this.osgiPluginRegistrarPropertyName = osgiPluginRegistrarPropertyName;
+    }
+}
+-----
+

@@ -1,0 +1,42 @@
+[[bean_validation]]
+= Bean Validation
+:_basedir: ../
+:_imagesdir: images/
+
+
+NOTE: Support for BeanValidation includes all versions of that API (1.0, 1.1, 2.0).
+
+The http://beanvalidation.org/[Bean Validation API (JSR0303/JSR0349/JSR0380)] can be hooked up with Jakarta Persistence so that you have validation of an objects values 
+prior to persistence, update and deletion. To do this
+
+* Put the *javax.validation* `validation-api` jar in your CLASSPATH, along with the Bean Validation implementation jar of your choice (e.g Apache BVal)
+* Set the persistence property *jakarta.persistence.validation.mode* to one of _auto_ (default), _none_, or _callback_
+* Optionally set the persistence property(s) *jakarta.persistence.validation.group.pre-persist*, *jakarta.persistence.validation.group.pre-update*,
+*jakarta.persistence.validation.group.pre-remove* to fine tune the behaviour (the default is to run validation on pre-persist and pre-update if you don't specify these).
+* Use Jakarta Persistence as you normally would for persisting objects
+
+To give a simple example of what you can do with the Bean Validation API
+
+[source,java]
+-----
+@Entity
+public class Person 
+{
+    @Id
+    @NotNull
+    private Long id;
+
+    @NotNull
+    @Size(min = 3, max = 80)
+    private String name;
+
+    ...
+}
+-----
+
+So we are validating that instances of the _Person_ class will have an "id" that is not null and that the "name" field is not null and between 3 and 80 characters. 
+If it doesn't validate then at persist/update an exception will be thrown.
+You can add bean validation annotations to classes marked as `@Entity`, `@MappedSuperclass` or `@Embeddable`.
+
+A further use of the Bean Validation annotations `@Size(max=...)` and `@NotNull` is that if you specify these then you have no need to specify the equivalent Jakarta attributes 
+since they equate to the same thing. This is enabled via the persistence property *datanucleus.metadata.javaxValidationShortcuts*.

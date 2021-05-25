@@ -1,0 +1,184 @@
+[[many_one_relations]]
+= N-1 Relations
+:_basedir: ../
+:_imagesdir: images/
+
+You have a N-to-1 relationship when an object of a class has an associated object of another class (only one 
+associated object) and several of this type of object can be linked to the same associated object. From the
+other end of the relationship it is effectively a 1-N, but from the point of view of the object in question,
+it is N-1. You can create the relationship in 2 ways depending on whether the 2 classes know about each other
+(bidirectional), or whether only the "N" side knows about the other class (unidirectional). 
+These are described below.
+
+NOTE: For RDBMS a N-1 relation is stored as a foreign-key column(s). For non-RDBMS it is stored as a String "column" storing the 'id' (possibly with the class-name 
+included in the string) of the related object.
+
+NOTE: You cannot have an N-1 relation to a long or int field! Jakarta Persistence is for use with object-oriented systems, not flat data.
+
+
+[[many_one_uni_fk]]
+== Unidirectional ForeignKey
+
+For this case you could have 2 classes, *User* and *Account*, as below.
+
+[source,java]
+-----
+public class Account
+{
+    User user;
+
+    ...
+}
+
+public class User
+{
+    ...
+}
+-----
+
+so the *Account* class ("N" side) knows about the *User* class ("1" side), but not vice-versa. A particular user could be related to several accounts. 
+If you define the annotations for these classes as follows
+
+[source,java]
+-----
+@Entity
+public class Account
+{
+    ...
+
+    @ManyToOne
+    User user;
+}
+-----
+
+or using XML metadata
+
+[source,xml]
+-----
+<entity-mappings>
+    <entity class="User">
+        <table name="USER"/>
+        <attributes>
+            <id name="id">
+                <column name="USER_ID"/>
+            </id>
+            ...
+        </attributes>
+    </entity>
+
+    <entity class="Account">
+        <table name="ACCOUNT"/>
+        <attributes>
+            <id name="id">
+                <column name="ACCOUNT_ID"/>
+            </id>
+            ...
+            <many-to-one name="user"/>
+        </attributes>
+    </entity>
+</entity-mappings>
+-----
+
+This will create 2 tables in the database, `USER` (for class *User*), and `ACCOUNT` (for class *Account*), 
+and a foreign-key in the `ACCOUNT` table, just like for the case of a link:mapping.html#one_one_uni[One-to-One relation].
+
+NOTE: in the case of non-RDBMS datastores there is simply a "column" in the `ACCOUNT` "table", storing the "id" of the related object
+
+
+[[many_one_uni_join]]
+== Unidirectional JoinTable
+
+NOTE: Supported for RDBMS. Other datastores simply ignore the join table and store the relation in a column in the table of the object with the field.
+
+For this case we have the same 2 classes, *User* and *Account*, as before.
+
+[source,java]
+-----
+public class Account
+{
+    User user;
+
+    ...
+}
+
+public class User
+{
+    ...
+}
+-----
+
+so the *Account* class ("N" side) knows about the *User* class ("1" side), but not vice-versa, and are using a join table. 
+A particular user could be related to several accounts. If you define the annotations for these classes as follows
+
+[source,java]
+-----
+@Entity
+public class Account
+{
+    @ManyToOne
+    @JoinTable(name="ACCOUNT_USER")
+    User user;
+
+    ....
+}
+-----
+
+or using XML metadata
+
+[source,xml]
+-----
+<entity-mappings>
+    <entity class="User">
+        <table name="USER"/>
+        <attributes>
+            <id name="id">
+                <column name="USER_ID"/>
+            </id>
+            ...
+        </attributes>
+    </entity>
+
+    <entity class="Account">
+        <table name="ACCOUNT"/>
+        <attributes>
+            <id name="id">
+                <column name="ACCOUNT_ID"/>
+            </id>
+            ...
+            <many-to-one name="user">
+                <join-table name="ACCOUNT_USER"/>
+            </many-to-one>
+        </attributes>
+    </entity>
+</entity-mappings>
+-----
+
+alternatively using annotations
+
+This will create 3 tables in the database, `USER` (for class *User*), `ACCOUNT` (for class *Account*), and a join table `ACCOUNT_USER`, as shown below.
+
+image:../images/relationship_N_1_uni_db.png[]
+
+NOTE: For non-RDBMS datastores there is no join-table, simply a "column" in the `ACCOUNT` "table", storing the "id" of the related object
+
+
+[[many_one_bi_fk]]
+== Bidirectional ForeignKey
+
+This relationship is described in the guide for link:mapping.html#one_many_relations[1-N relationships]. 
+This link:mapping.html#one_many_fk_bi[relation] uses a Foreign Key in the "N" object to hold the relationship. 
+
+NOTE: For non-RDBMS datastores each side will have a "column" (or equivalent) in the "table" of the N side storing the "id" of the related (owning) object.
+
+
+[[many_one_bi_join]]
+== Bidirectional JoinTable
+
+This relationship is described in the guide for link:mapping.html#one_many_relations[1-N relationships]. 
+This link:mapping.html#one_many_join_bi[relation] uses a Join Table to link to the "N" object, with this table holding the relationship. 
+
+NOTE: For non-RDBMS datastores there is no join table, and each side will have a "column" (or equivalent) in the "table", storing the "id" of the related object(s).
+
+
+
+

@@ -1,0 +1,109 @@
+[[lifecycle_callbacks]]
+= Lifecycle Callbacks
+:_basedir: ../
+:_imagesdir: images/
+
+Jakarta Persistence defines a mechanism whereby an Entity can be marked as a listener for lifecycle events. 
+Alternatively a separate entity listener class can be defined to receive these events. 
+Thereafter when entities of the particular class go through lifecycle changes events are passed to the provided methods. 
+Let's look at the two different mechanisms
+
+
+== Entity Callbacks
+
+An Entity itself can have several methods defined to receive events when any instances of that
+class pass through lifecycles changes. Let's take an example
+
+[source,java]
+-----
+@Entity
+public class Account
+{
+    @Id
+    Long accountId;
+
+    Integer balance;
+    boolean preferred;
+
+    public Integer getBalance() { ... }
+
+    @PrePersist
+    protected void validateCreate()
+    {
+        if (getBalance() < MIN_REQUIRED_BALANCE)
+        {
+            throw new AccountException("Insufficient balance to open an account");
+        }
+    }
+
+    @PostLoad
+    protected void adjustPreferredStatus()
+    {
+        preferred = (getBalance() >= AccountManager.getPreferredStatusLevel());
+    }
+}
+-----
+
+So in this example just before any "Account" object is persisted the _validateCreate_ method will be called. 
+In the same way, just after the fields of any "Account" object are loaded the _adjustPreferredStatus_ method is called. 
+Very simple.
+
+You can register callbacks for the following lifecycle events
+
+* PrePersist
+* PostPersist
+* PreRemove
+* PostRemove
+* PreUpdate
+* PostUpdate
+* PostLoad
+
+The only other rule is that any method marked to be a callback method has to take no arguments as input, and have void return.
+
+
+== Entity Listener
+
+As an alternative to having the actual callback methods in the Entity class itself you can define a separate class as an _EntityListener_. 
+So lets take the example shown before and do it for an EntityListener.
+
+[source,java]
+-----
+@Entity
+@EntityListeners(mydomain.MyEntityListener.class)
+public class Account
+{
+    @Id
+    Long accountId;
+
+    Integer balance;
+    boolean preferred;
+
+    public Integer getBalance() { ... }
+}
+-----
+
+[source,java]
+-----
+package mydomain;
+
+public class MyEntityListener
+{
+    @PostPersist
+    public void newAccountAlert(Account acct)
+    {
+         ... do something when we get a new Account
+    }
+}
+-----
+
+So we define our "Account" entity as normal but mark it with an _EntityListener_, and then in the _EntityListener_ we define the callbacks we require. 
+As before we can define any of the 7 callbacks as we require. 
+The only difference is that the callback method has to take an argument of type "Object" that it will be called for, and have void return.
+
+NOTE: The Entity Listeners objects shown here are *stateless*.
+
+
+NOTE: DataNucleus allows for stateful event listener objects, with the state being CDI injectable, but you must be in a CDI environment for this to work.
+To provide CDI support for Jakarta, you should specify the persistence property *jakarta.persistence.bean.manager* to be a CDI `BeanManager` object.
+
+

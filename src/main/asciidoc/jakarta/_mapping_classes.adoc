@@ -1,0 +1,228 @@
+[[classes]]
+= Classes
+:_basedir: ../
+:_imagesdir: images/
+
+We have the following types of classes in DataNucleus Jakarta.
+
+* link:#entity[Entity] - persistable class with full control over its persistence.
+* link:#mapped_superclass[MappedSuperclass] - persistable class that will not be persisted into its own table simply providing some fields to be persisted. 
+Consequently an inheritance tree cannot just have a mapped superclass on its own.
+* link:#embeddable[Embeddable] - persistable class that is only persistable embedded into an entity class.
+* link:#persistence_aware[PersistenceAware] - a class that is not itself persisted, but that needs to access internals of persistable classes. 
+image:../images/nucleus_extension.png[]
+
+
+DataNucleus Jakarta imposes very little on classes used within the persistence process so, to a very large degree, you should design your classes as you would normally do
+and not design them to fit DataNucleus Jakarta. 
+In fact, while Jakarta Persistence imposes that you must have a default constructor, the DataNucleus enhancer automatically adds one if not provided so you don't even need to provide that.
+
+
+NOTE: In strict Jakarta Persistence all persistable classes need to have a _default constructor_. 
+With DataNucleus Jakarta this is not necessary, since all classes are enhanced before persistence and the enhancer adds on a default constructor if one is not defined.
+
+NOTE: If defining a method _toString_ in a Jakarta entity class, be aware that use of a persistable field will cause the load of that field if the object is managed and 
+is not yet loaded.
+
+NOTE: If a Jakarta entity class is an element of a Java collection in another entity, you are advised to define _hashCode_ and _equals_ methods for reliable handling 
+by Java collections.
+
+
+
+[[entity]]
+== Entity Class
+
+Let's take a sample class (_Hotel_) as an example. We can define a class as persistable using either annotations in the class, or XML metadata.
+Using annotations
+
+[source,java]
+-----
+@Entity
+public class Hotel
+{
+    ...
+}
+-----
+
+or using XML metadata
+
+[source,xml]
+-----
+<entity class="mydomain.Hotel">
+    ...
+</entity>
+-----
+
+
+[[mapped_superclass]]
+== MappedSuperclass
+
+Say we have an abstract base class _Building_ with concrete subclass _Hotel_ (as above). We want to persist some fields of _Building_, but it is abstract so
+will not have any objects of that type. So we make the class a _MappedSuperclass_, like this
+
+[source,java]
+-----
+@MappedSuperclass
+public abstract class Building
+{
+    ...
+}
+-----
+
+or using XML metadata
+
+[source,xml]
+-----
+<mapped-superclass class="mydomain.Building">
+    ...
+</mapped-superclass>
+-----
+
+This is of particular relevance when considering xref:mapping.html#inheritance_mappedsuperclass[inheritance].
+
+
+
+[[embeddable]]
+== Embeddable Class
+
+Here we have a class _ConstructionDetails_ that we never need to persist individually, and it will only ever be persisted as part of an owner object (in this case _Building_).
+Since information from objects of this class will be persisted, we need to mark the class as _Embeddable_, like this
+
+[source,java]
+-----
+@Embeddable
+public class ConstructionDetails
+{
+    ...
+}
+-----
+
+or using XML metadata
+
+[source,xml]
+-----
+<embeddable class="mydomain.ConstructionDetails">
+    ...
+</embeddable>
+-----
+
+and hereafter we can persist fields of type _ConstructionDetails_, as per link:#embedded[the Embedded Object guide].
+
+
+
+[[persistence_aware]]
+== Persistence Aware Class
+
+image:../images/nucleus_extension.png[]
+
+With Jakarta Persistence you cannot access _public_ fields of classes. DataNucleus allows an extension to permit this, but such classes need special enhancement. 
+To allow this you need to annotate the class that will access these public fields (assuming it isn't an Entity) with the DataNucleus extension annotation `@PersistenceAware`, 
+as follows
+
+[source,java]
+-----
+import org.datanucleus.api.jakarta.annotations.PersistenceAware;
+
+@PersistenceAware
+public class MyClassThatAccessesPublicFields
+{
+    ...
+}
+-----
+
+See also :-
+
+* link:annotations.html#PersistenceAware[Annotations reference for @PersistenceAware]
+
+
+[[read_only]]
+== Read-Only Class
+
+image:../images/nucleus_extension.png[]
+
+You can, if you wish, make a class _read-only_. This is a DataNucleus extension and you set it as follows
+
+[source,java]
+-----
+import org.datanucleus.api.jakarta.annotations.ReadOnly;
+
+@Entity
+@ReadOnly
+public class MyClass
+{
+    ...
+}
+-----
+
+In practical terms this means that at runtime, if you try to persist an object of this type then an exception will be thrown. You can read objects of this type from the datastore
+just as you would for any persistable class
+
+See also :-
+
+* link:annotations.html#ReadOnly_Class[Annotations reference for @ReadOnly]
+
+
+[[softdelete]]
+== SoftDelete
+
+image:../images/nucleus_extension.png[]
+
+NOTE: Applicable to RDBMS, MongoDB, HBase, Cassandra, Neo4j
+
+With standard Jakarta Persistence when you delete an object from persistence it is deleted from the datastore.
+DataNucleus provides a useful ability to _soft delete_ objects from persistence. 
+In simple terms, any persistable types marked for soft deletion handling will have an extra column added to their datastore table to represent whether the record is soft-deleted. 
+If it is soft deleted then it will not be visible at runtime thereafter, but will be present in the datastore.
+
+You mark a persistable type for soft deletion handling like this
+
+[source,java]
+-----
+import org.datanucleus.api.jakarta.annotations.SoftDelete;
+
+@Entity
+@SoftDelete
+public class Hotel
+{
+    ...
+}
+-----
+
+You could optionally specify the _column_ attribute of the `@SoftDelete` annotation to define the column name where this flag is stored.
+
+Alternatively, using `orm.xml`
+
+
+[source,xml]
+-----
+<entity class="mydomain.Hotel">
+    <extension key="softdelete" value="true"/>
+    <extension key="softdelete-column-name" value="DELETE_FLAG"/>
+    ...
+</entity>
+-----
+
+
+
+Whenever any objects of type `Hotel` are deleted, like this
+
+[source,java]
+-----
+em.remove(myHotel);
+-----
+
+the _myHotel_ object will be updated to set the _soft-delete_ flag to _true_. 
+
+Any call to _em.find_ or query will not return the object since it is effectively deleted (though still present in the datastore).
+
+If you want to view the object, you can specify the query hint *datanucleus.query.includeSoftDeletes* as _true_ and the soft-deleted records will be visible.
+
+*This feature is still undergoing development, so not all aspects are feature complete*.
+
+
+
+See also :-
+
+* link:annotations.html#SoftDelete_Class[Annotations reference for @SoftDelete]
+
+

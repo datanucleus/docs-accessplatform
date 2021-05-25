@@ -1,0 +1,272 @@
+[[one_one_relations]]
+= 1-1 Relations
+:_basedir: ../
+:_imagesdir: images/
+
+You have a 1-to-1 relationship when an object of a class has an associated object of another class (only 
+one associated object). It could also be between an object of a class and another object of the same class 
+(obviously). You can create the relationship in 2 ways depending on whether the 2 classes know about each 
+other (bidirectional), or whether only one of the classes knows about the other class (unidirectional). 
+These are described below.
+
+NOTE: For RDBMS a 1-1 relation is stored as a foreign-key column(s), or less likely as an entry in a join table. 
+For non-RDBMS it is stored as a String "column" storing the 'id' (possibly with the class-name included in the string) of the related object.
+
+NOTE: You cannot have a 1-1 relation to a long/int field! Jakarta Persistence is for use with object-oriented systems, not flat data.
+
+
+[[one_one_uni]]
+== Unidirectional ForeignKey
+
+For this case you could have 2 classes, *User* and *Account*, as below.
+
+[source,java]
+-----
+public class Account
+{
+    User user;
+}
+
+public class User
+{
+    ...
+}
+-----
+
+so the *Account* class knows about the *User* class, but not vice-versa. If you define the annotations for these classes as follows
+
+[source,java]
+-----
+@Entity
+public class Account
+{
+    ...
+
+    @OneToOne
+    @JoinColumn(name="USER_ID")
+    User user;
+}
+
+@Entity
+public class User
+{
+    ...
+}
+-----
+
+or using XML metadata
+
+[source,xml]
+-----
+<entity-mappings>
+    <entity class="User">
+        <table name="USER"/>
+        <attributes>
+            <id name="id">
+                <column name="USER_ID"/>
+            </id>
+            ...
+    </entity>
+
+    <entity class="Account">
+        <table name="ACCOUNT"/>
+        <attributes>
+            <id name="id">
+                <column name="ACCOUNT_ID"/>
+            </id>
+            ...
+            <one-to-one name="user">
+                <join-column name="USER_ID"/>
+            </one-to-one>
+        </attributes>
+    </entity>
+</entity-mappings>
+-----
+
+
+This will create 2 tables in the database, `USER` (for class *User*), and `ACCOUNT` (for class *Account*, with a column `USER_ID`), as shown below.
+
+image:../images/relationship_1_1_uni_db.png[]
+
+
+NOTE: *Account* has the object reference to *User* (and so is the "owner" of the relation) and so its table holds the foreign-key
+
+NOTE: If you call _EntityManager.remove()_ on the end of a 1-1 unidirectional relation without the relation and that object is related to another object, 
+an exception will typically be thrown (assuming the datastore supports foreign keys). To delete this record you should remove the other objects association first.
+
+
+[[one_one_uni_join]]
+== Unidirectional JoinTable
+
+NOTE: Supported for RDBMS. Other datastores simply ignore the join table and store the relation in a column in the table of the object with the field.
+
+For this case we have the same 2 classes, *User* and *Account*, as before.
+
+[source,java]
+-----
+public class Account
+{
+    User user;
+
+    ...
+}
+
+public class User
+{
+    ...
+}
+-----
+
+so the *Account* class knows about the *User* class, but not vice-versa, and are using a join table. 
+A particular user could be related to several accounts. If you define the annotations for these classes as follows
+
+[source,java]
+-----
+@Entity
+public class Account
+{
+    @OneToOne
+    @JoinTable(name="ACCOUNT_USER")
+    User user;
+
+    ....
+}
+-----
+
+or using XML metadata
+
+[source,xml]
+-----
+<entity-mappings>
+    <entity class="User">
+        <table name="USER"/>
+        <attributes>
+            <id name="id">
+                <column name="USER_ID"/>
+            </id>
+            ...
+        </attributes>
+    </entity>
+
+    <entity class="Account">
+        <table name="ACCOUNT"/>
+        <attributes>
+            <id name="id">
+                <column name="ACCOUNT_ID"/>
+            </id>
+            ...
+            <one-to-one name="user">
+                <join-table name="ACCOUNT_USER"/>
+            </one-to-one>
+        </attributes>
+    </entity>
+</entity-mappings>
+-----
+
+This will create 3 tables in the database, `USER` (for class *User*), `ACCOUNT` (for class *Account*), and a join table `ACCOUNT_USER`, as shown below.
+
+image:../images/relationship_N_1_uni_db.png[]
+
+NOTE: in the case of non-RDBMS datastores there is no join-table, simply a "column" in the `ACCOUNT` "table", storing the "id" of the related object
+
+
+
+
+[[one_one_bi]]
+== Bidirectional ForeignKey
+
+For this case you could have 2 classes, *User* and *Account* again, but this time as below. Here the *Account* class knows about the *User* class, and also vice-versa.
+
+[source,java]
+-----
+public class Account
+{
+    User user;
+
+    ...
+}
+
+public class User
+{
+    Account account;
+
+    ...
+}
+-----
+
+
+We create the 1-1 relationship with a single foreign-key. To do this you define the annotations as
+
+[source,java]
+-----
+@Entity
+public class Account
+{
+    ...
+
+    @OneToOne
+    @JoinColumn(name="USER_ID")
+    User user;
+}
+
+@Entity
+public class User
+{
+    ...
+
+    @OneToOne(mappedBy="user")
+    Account account;
+
+    ...
+}
+-----
+
+or using XML metadata
+
+[source,xml]
+-----
+<entity-mappings>
+    <entity class="User">
+        <table name="USER"/>
+        <attributes>
+            <id name="id">
+                <column name="USER_ID"/>
+            </id>
+            ...
+            <one-to-one name="account" mapped-by="user"/>
+        </attributes>
+    </entity>
+
+    <entity class="Account">
+        <table name="ACCOUNT"/>
+        <attributes>
+            <id name="id">
+                <column name="ACCOUNT_ID"/>
+            </id>
+            ...
+            <one-to-one name="user">
+                <join-column name="USER_ID"/>
+            </one-to-one>
+        </attributes>
+    </entity>
+</entity-mappings>
+-----
+
+The difference is that we added _mapped-by_ to the field of *User* making it bidirectional (and putting the FK at the other side for RDBMS)
+
+This will create 2 tables in the database, `USER` (for class *User*), and `ACCOUNT` (for class *Account*). For RDBMS it includes a `USER_ID`
+column in the `ACCOUNT` table, like this
+
+image:../images/relationship_1_1_bi_db_singlefk.png[]
+
+For other types of datastore it will have a _USER_ID_ column in the `ACCOUNT` table and a `ACCOUNT` column in the `USER` table.
+
+NOTE: When forming the relation please make sure that *you set the relation at BOTH sides* since DataNucleus would have no way of knowing which end is correct if you only set one end.
+
+
+[[one_one_bi_join]]
+== Bidirectional JoinTable
+
+NOTE: DataNucleus does not support a 1-1 BIDIRECTIONAL relation using a join table. It is not a use-case that is very common and is not part of the Jakarta Persistence spec. 
+You could look at doing that as a unidirectional relation.
+
