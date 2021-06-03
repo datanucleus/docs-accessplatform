@@ -46,7 +46,7 @@ Query Result caching is, by default, turned *OFF*, since we have to select what 
 You can turn caching on/off (default = off) by using the persistence property *datanucleus.query.results.cached* set to (true|false), 
 and likely better on a query-by-query basis by specifying the query extension *datanucleus.query.results.cached* as (true|false).
 
-This cache type is by default set to _soft_, meaning that the datastore query results are cached using soft references. 
+The query results cache type is by default set to _soft_, meaning that the datastore query results will be cached using soft references. 
 This is set using the persistence property *datanucleus.cache.queryResults.type*. 
 You can also set it to _strong_ meaning that strong references are used, or _weak_ meaning that weak references are used. 
 
@@ -71,7 +71,7 @@ cache.evict(query);
 -----
 
 which evicts the results of the specific query. 
-The JDOQueryCache image:../images/javadoc.png[Javadoc, link=http://www.datanucleus.org/javadocs/api.jdo/latest/org/datanucleus/jdo/JDOQueryCache.html] 
+The JDOQueryCache image:../images/javadoc.png[Javadoc, link=http://www.datanucleus.org/javadocs/api.jdo/latest/org/datanucleus/api/jdo/JDOQueryCache.html] 
 has more options available should you need them - see its API.
 
 
