@@ -1362,7 +1362,7 @@ If your query has only a single row in the results then you will get an object o
 The _Result Class_ has to meet certain requirements. These are
 
 * Can be one of Integer, Long, Short, Float, Double, Character, Byte, Boolean, String, java.math.BigInteger, java.math.BigDecimal, 
-java.util.Date, java.sql.Date, java.sql.Time, java.sql.Timestamp, or Object[]
+java.util.Date, java.sql.Date, java.sql.Time, java.sql.Timestamp, java.time.LocalDate, java.time.LocalTime, java.time.LocalDateTime, or Object[]
 * Can be a user defined class, that has either a constructor taking arguments of the same type as those returned by the query (in the same order), 
 or has a public put(Object, Object) method, or public setXXX() methods, or public fields.
 

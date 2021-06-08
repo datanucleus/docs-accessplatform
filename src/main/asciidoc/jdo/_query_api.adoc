@@ -285,6 +285,21 @@ List<ResultClass> results = q.executeResultList(ResultClass.class);
 ResultClass result = q.executeResultUnique(ResultClass.class);
 -----
 
+[[resultclass]]
+== Result Class
+
+By default a JDO query of whatever language will return a result matching the result clause. You can override this if you wish by specifying a result class. 
+If your query has only a single row in the results then you will get an object of your result class back, otherwise you get a List of result class objects.
+The _Result Class_ has to meet certain requirements. These are
+
+* Can be one of Integer, Long, Short, Float, Double, Character, Byte, Boolean, String, java.math.BigInteger, java.math.BigDecimal, 
+java.util.Date, java.sql.Date, java.sql.Time, java.sql.Timestamp, java.time.LocalDate, java.time.LocalTime, java.time.LocalDateTime, or Object[]
+* Can be a user-defined class, that has either a constructor taking arguments of the same type as those returned by the query (in the same order), 
+or has a public put(Object, Object) method, or public setXXX() methods, or public fields.
+
+Please look at the specific help for the query language you are using for details of a user-defined result class.
+
+
 
 [[flushBeforeExecution]]
 === Extension : Flush before query execution
