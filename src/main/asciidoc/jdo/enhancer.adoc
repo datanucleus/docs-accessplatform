@@ -98,6 +98,10 @@ For example, you could set this to ${project.build.testOutputDirectory} when enh
 |
 |Config file location for Log4J (if using it)
 
+|log4j2Configuration
+|
+|Config file location for Log4J v2 (if using it)
+
 |jdkLogConfiguration
 |
 |Config file location for java.util.logging (if using it)
@@ -395,6 +399,8 @@ java -cp classpath  org.datanucleus.enhancer.DataNucleusEnhancer [options] [mapp
         log4j.jar (optional)
         javax.persistence.jar (optional - if using JPA metadata)
         datanucleus-api-jpa.jar (optional - if using JPA metadata)
+        jakarta.persistence.jar (optional - if using Jakarta metadata)
+        datanucleus-api-jakarta.jar (optional - if using Jakarta metadata)
         your classes
         your meta-data files
 -----
