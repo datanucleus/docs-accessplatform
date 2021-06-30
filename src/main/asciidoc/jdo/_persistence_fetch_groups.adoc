@@ -85,7 +85,7 @@ As mentioned above, JDO allows specification of users own fetch groups. These ar
 class MyClass
 {
     String name;
-    HashSet coll;
+    Set<Address> addresses;
     MyOtherClass other;
 }
 -----
@@ -111,11 +111,12 @@ or using XML metadata
         <field name="name">
             <column length="100" jdbc-type="VARCHAR"/>
         </field>
-        <field name="coll" persistence-modifier="persistent">
+        <field name="addresses" persistence-modifier="persistent">
             <collection element-type="mydomain.Address"/>
             <join/>
         </field>
         <field name="other" persistence-modifier="persistent"/>
+
         <fetch-group name="otherfield">
             <field name="other"/>
         </fetch-group>
