@@ -10,14 +10,22 @@ DataNucleus supports persistence to MongoDB datastores using the https://github.
 Simply specify your "connectionURL" as follows
 
 -----
-datanucleus.ConnectionURL=mongodb:[{server}][/{dbName}] [,{server2}[,server3}]]
+datanucleus.ConnectionURL=mongodb://[username:password@]host1[:port1][,host2[:port2],...[,hostN[:portN]]][/[dbName][?options]]
 -----
 
 For example, to connect to a local server, with database called "myMongoDB"
 
 -----
-datanucleus.ConnectionURL=mongodb:/myMongoDB
+datanucleus.ConnectionURL=mongodb://localhost/myMongoDB
 -----
+
+Changes were made to follow in accordance to the URL structure provided by mongodb, more information here
+
+-----
+https://docs.mongodb.com/manual/reference/connection-string/
+-----
+
+Currently does not support _mongodb+srv://_ URL structure.
 
 If you just specify the URL as _mongodb_ then you have a local MongoDB datastore called "DataNucleus", otherwise it tries to connect to the datastore _{dbName}_ at _{server}_. 
 The multiple _{server}_ option allows you to run against MongoDB http://www.mongodb.org/display/DOCS/Replica+Sets[replica sets]. 
@@ -25,6 +33,7 @@ You need to have the _org.mongodb_ `mongodb-driver.jar` in the CLASSPATH.
 
 Things to bear in mind with MongoDB usage :-
 
+* Defaults to a DB name for authentication of "admin" if nothing specified and username supplied.
 * Creation of a PMF/EMF will create a `com.mongodb.MongoClient`. This will be closed then the PMF/EMF is closed.
 * Creation of a PM/EM and performing an operation will obtain a `com.mongodb.DB` object from the `com.mongodb.MongoClient`.
 This is pooled by the MongoClient so is managed by MongoDB. Closing the PM/EM will stop using that `com.mongodb.DB`.
