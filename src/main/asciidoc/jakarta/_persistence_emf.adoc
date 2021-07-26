@@ -1197,9 +1197,9 @@ the same value in those fields so it doesn't matter which field is written there
 {true, *false*}
 
 |datanucleus.rdbms.statementLogging
-|How to log SQL statements. The default is to log the statement and replace any parameters with the value provided in angle brackets. Alternatively you can log the statement with any
-parameters replaced by just the values (no brackets). The final option is to log the raw JDBC statement (with ? for parameters). *Applicable for RDBMS only*
-{*values-in-brackets*, values, jdbc}
+|How to log SQL statements. The default is to log the raw JDBC statement (with ? for parameters). Alternatively you can log the statement with any
+parameters replaced by just the values (no brackets). The final option is to log the statement and replace any parameters with the value provided in angle brackets. *Applicable for RDBMS only*
+{*JDBC*, PARAMS_INLINE, PARAMS_IN_BRACKETS}
 
 |datanucleus.rdbms.fetchUnloadedAutomatically
 |If enabled will, upon a request to load a field, check for any unloaded fields that are non-relation fields or 1-1/N-1 fields and will load them in the same SQL call.
