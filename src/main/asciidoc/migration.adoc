@@ -13,6 +13,15 @@ As a result sometimes users will have to make some changes to move between versi
 
 Migration to 6.0 involves the following steps
 
+=== Migration from 6.0.0.M2 to 6.0.0.M3
+
+Migrating will require the following changes.
+
+* Cassandra plugin now supports Cassandra v4. Use DN 5.2 if using Cassandra v3
+* DateStringConverter had to be changed for Java 11. If using it, create your own converter that understands the old format.
+* CalendarStringConverter had to be changed for Java 11. If using it, create your own converter that understands the old format.
+
+
 === Migration from 6.0.0.M1 to 6.0.0.M2
 
 Migrating will require the following changes.
