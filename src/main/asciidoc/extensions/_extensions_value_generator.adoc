@@ -103,8 +103,6 @@ So you need to implement the following interface
 -----
 public interface ValueGenerator
 {
-    String getName ();
-
     void allocate (int additional);
 
     Object next ();
@@ -117,8 +115,8 @@ public interface ValueGenerator
 
 == Implementation
 
-DataNucleus provides an abstract base class _org.datanucleus.store.valuegenerator.AbstractValueGenerator_ to extend if you don't require 
-datastore access. If you do require (RDBMS) datastore access for your ValueGenerator then you can extend _org.datanucleus.store.rdbms.valuegenerator.AbstractRDBMSValueGenerator_
+DataNucleus provides an abstract base class _org.datanucleus.store.valuegenerator.AbstractGenerator_ to extend if you don't require datastore access. 
+If you do require datastore access for your ValueGenerator then you can extend _org.datanucleus.store.valuegenerator.AbstractConnectedGenerator_
 Let's give an example, here we want a generator that provides a form of UUID identity. We define our class as
 
 [source,java]
@@ -126,9 +124,9 @@ Let's give an example, here we want a generator that provides a form of UUID ide
 package mydomain;
 
 import org.datanucleus.store.valuegenerator.ValueGenerationBlock;
-import org.datanucleus.store.valuegenerator.AbstractValueGenerator;
+import org.datanucleus.store.valuegenerator.AbstractGenerator;
 
-public class MyUUIDValueGenerator extends AbstractValueGenerator
+public class MyUUIDValueGenerator extends AbstractGenerator
 {
     public MyUUIDValueGenerator(String name, Properties props)
     {
