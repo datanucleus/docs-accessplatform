@@ -29,6 +29,7 @@ You can control this by specifying extension metadata for each persistable class
 [source,xml]
 -----
 <class name="MyClass">
+     <extension vendor-name="datanucleus" key="multitenant" value="true"/>
      <extension vendor-name="datanucleus" key="multitenancy-column-name" value="TENANT"/>
      <extension vendor-name="datanucleus" key="multitenancy-column-length" value="24"/>
      ...
@@ -50,27 +51,8 @@ public class MyClass
 In all subsequent use of DataNucleus, any "insert" to the primary "table"(s) will also include the TENANT column value. 
 Additionally any query will apply a WHERE clause restricting to a particular value of TENANT column.
 
-If you have enabled multi-tenancy as above but want to disable multitenancy on a class, just specify the following metadata on the class in question
-
-[source,xml]
------
-<class name="MyClass">
-     <extension vendor-name="datanucleus" key="multitenancy-disable" value="true"/>
-     ...
-</class>
------
-
-or using annotations
-
-[source,java]
------
-@PersistenceCapable
-@MultiTenant(disable=true)
-public class MyClass
-{
-    ...
-}
------
+WARN: In all DataNucleus prior to v6.0.0-m3 you enabled multitenancy globally and had to disable on a class-by-class basis. This is now changed so that you *explicitly*
+define which classes need a multitenancy discriminator.
 
 Note that the *Tenant ID* can be set in one of three ways.
 
