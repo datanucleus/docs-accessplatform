@@ -20,6 +20,7 @@ Migrating will require the following changes.
 * Cassandra plugin now supports Cassandra v4. Use DN 5.2 if using Cassandra v3
 * DateStringConverter had to be changed for Java 11. If using it, create your own converter that understands the old format.
 * CalendarStringConverter had to be changed for Java 11. If using it, create your own converter that understands the old format.
+* Multitenancy is now changed to be explicit class-specified, rather than global.
 
 
 === Migration from 6.0.0.M1 to 6.0.0.M2
