@@ -44,7 +44,7 @@ public class MyClass
 }
 -----
 
-By default this will add a column *TENANT_ID* to each primary table, of String-based type.
+By default (without the specification of column name/length) this will add a column *TENANT_ID* to each primary table, of String-based (255) type.
 
 NOTE: In all DataNucleus prior to v6.0.0-m3 you enabled multitenancy globally (so the discriminator was always added, and you had to disable on a class-by-class basis).
 This is now changed so that you *explicitly* define which classes need a multitenancy discriminator.
