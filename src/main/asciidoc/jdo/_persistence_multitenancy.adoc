@@ -23,38 +23,7 @@ If you specify the persistence property *datanucleus.tenantId* as an identifier 
 will know that it needs to provide a tenancy discriminator to all primary tables of persisted classes. 
 This discriminator is then used to separate the data of the different user-groups.
 
-By default this will add a column *TENANT_ID* to each primary table, of String-based type.
-You can control this by specifying extension metadata for each persistable class
-
-[source,xml]
------
-<class name="MyClass">
-     <extension vendor-name="datanucleus" key="multitenant" value="true"/>
-     <extension vendor-name="datanucleus" key="multitenancy-column-name" value="TENANT"/>
-     <extension vendor-name="datanucleus" key="multitenancy-column-length" value="24"/>
-     ...
-</class>
------
-
-or using annotations
-
-[source,java]
------
-@PersistenceCapable
-@MultiTenant(column="TENANT", columnLength=24)
-public class MyClass
-{
-    ...
-}
------
-
-In all subsequent use of DataNucleus, any "insert" to the primary "table"(s) will also include the TENANT column value. 
-Additionally any query will apply a WHERE clause restricting to a particular value of TENANT column.
-
-WARN: In all DataNucleus prior to v6.0.0-m3 you enabled multitenancy globally and had to disable on a class-by-class basis. This is now changed so that you *explicitly*
-define which classes need a multitenancy discriminator.
-
-Note that the *Tenant ID* can be set in one of three ways.
+The *Tenant ID* can be set in one of three ways.
 
 * Per PersistenceManagerFactory : just set the persistence property *datanucleus.tenantId* when you start up the PMF, and all access for this PMF will use this Tenant ID
 * Per PersistenceManager : set the persistence property *datanucleus.tenantId* when you start up the PMF as the default Tenant ID, 

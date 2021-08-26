@@ -1,0 +1,49 @@
+[[multitenancy]]
+= Multitenancy
+:_basedir: ../
+:_imagesdir: images/
+
+
+On occasion you need to share a data model with other user-groups or other applications and where the model is persisted to the same structure of datastore. 
+There are three ways of handling this with DataNucleus.
+
+* *Separate Database per Tenant* - have a different database per user-group/application.
+In this case you will have a separate PMF for each database, and manage use of the appropriate PMF yourself.
+* *Separate Schema per Tenant* - as the first option, except use different schemas.
+In this case you will have a separate PMF for each database schema, and manage use of the appropriate PMF yourself.
+* *Same Database/Schema but with a Discriminator in affected Table(s)*.
+In this case you will have a single PMF, and DataNucleus will manage selecting appropriate data for the tenant in question. This is described below.
+
+
+== Multitenancy via Discriminator in Table
+
+NOTE: Applicable to RDBMS, HBase, MongoDB, Neo4j, Cassandra
+
+To define that a class is to be "multi-tenant" and hence have a discriminator column added you need to do as follows.
+
+[source,xml]
+-----
+<class name="MyClass">
+     <extension vendor-name="datanucleus" key="multitenant" value="true"/>
+     <extension vendor-name="datanucleus" key="multitenancy-column-name" value="TENANT"/>
+     <extension vendor-name="datanucleus" key="multitenancy-column-length" value="24"/>
+     ...
+</class>
+-----
+
+or using annotations
+
+[source,java]
+-----
+@PersistenceCapable
+@MultiTenant(column="TENANT", columnLength=24)
+public class MyClass
+{
+    ...
+}
+-----
+
+By default this will add a column *TENANT_ID* to each primary table, of String-based type.
+
+NOTE: In all DataNucleus prior to v6.0.0-m3 you enabled multitenancy globally (so the discriminator was always added, and you had to disable on a class-by-class basis).
+This is now changed so that you *explicitly* define which classes need a multitenancy discriminator.
