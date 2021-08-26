@@ -56,3 +56,14 @@ public interface MultiTenancyProvider
 Now the programmer can set a different Tenant ID for each datastore access, maybe based on some session variable for example?.
 
 
+
+=== Read access to data from multiple tenants
+
+NOTE: Applicable to RDBMS
+
+An additional flexibility for reading data from the datastore, you may want read access to the data of particular tenants.
+To allow this you can set the persistence property *datanucleus.TenantReadIds* to a comma separated list of the tenant ids to read from.
+This can only be set on the EMF.
+Any data written with this EMF will still use the _tenantId_ defined earlier.
+
+
