@@ -158,21 +158,19 @@ DataNucleus provides a useful ability to _soft delete_ objects from persistence.
 In simple terms, any persistable types marked for soft deletion handling will have an extra column added to their datastore table to represent whether the record is soft-deleted. 
 If it is soft deleted then it will not be visible at runtime thereafter, but will be present in the datastore.
 
-You mark a persistable type for soft deletion handling like this
+You mark a persistable type for soft deletion handling like this, optionally specifying the column details
 
 [source,java]
 -----
 import org.datanucleus.api.jdo.annotations.SoftDelete;
 
 @PersistenceCapable
-@SoftDelete
+@SoftDelete(columns={@Column(name="DELETE_FLAG")})
 public class Hotel
 {
     ...
 }
 -----
-
-You could optionally specify the _column_ attribute of the `@SoftDelete` annotation to define the column name where this flag is stored.
 
 If you instead wanted to define this in XML then do it like this
 

@@ -2345,9 +2345,14 @@ This DataNucleus-extension annotation is used specify multi-tenancy details for 
 |Name of the multi-tenancy column for this class.
 |TENANT_ID
 
-|columnLength
-|int
-|Length of the multi-tenancy column.
+|indexed
+|String
+|Whether the multi-tenancy column should be indexed.
+|
+
+|columns
+|xref:annotations.html#Column[Column]
+|Details of the multitenancy column for this class (one column used only).
 |
 |===
 
@@ -2379,6 +2384,16 @@ Specified on the *class*.
 |String
 |Name of the soft-delete status column for this class.
 |DELETED
+
+|indexed
+|String
+|Whether the soft-delete status column should be indexed.
+|
+
+|columns
+|xref:annotations.html#Column[Column]
+|Details of the soft-delete status column for this class (one column used only).
+|
 |===
 
 [source,java]
