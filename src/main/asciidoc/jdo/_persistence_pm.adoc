@@ -496,7 +496,7 @@ This will persist the _Account_ object and since it refers to the _Person_ objec
 
 image:../images/nucleus_extension.png[]
 
-DataNucleus allows you to disable cascading of persist/update operations by using the `@Extension` metadata. So if we change our class like this
+DataNucleus allows you to disable cascading of persist (insert/update) operations by using the `@Extension` metadata. So if we change our class like this
 
 [source,java]
 -----
@@ -507,7 +507,6 @@ public class Account
     long id;
 
     @Extension(vendorName="datanucleus", key="cascade-persist", value="false")
-    @Extension(vendorName="datanucleus", key="cascade-update", value="false")
     Person person;
 }
 -----
@@ -519,7 +518,7 @@ now when we do this
 em.persist(acct1);
 -----
 
-it will not persist the related _Person_ object (but will likely throw an exception due to it being present).
+it will not persist the related _Person_ object.
 
 
 == Managing Relationships
