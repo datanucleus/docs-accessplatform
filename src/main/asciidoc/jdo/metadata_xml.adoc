@@ -697,13 +697,13 @@ These are attributes within the *<extension>* tag (jdo/package/class/field/exten
 |Values
 
 |cascade-persist
-|JDO defines that when an object is persisted then all fields will also be persisted using "persistence-by-reachability". 
+|JDO defines that when an object is persisted (insert/update) then all fields will also be persisted using "persistence-by-reachability". 
 This extension allows you to turn off the persistence of a field relation.
 |*true*, false
 
-|cascade-update
-|JDO defines that when an object is updated then all fields containing persistable objects will also be updated using "persistence-by-reachability". 
-This extension allows you to turn off the update of a field relation.
+|cascade-attach
+|JDO defines that when an object is attached then all fields containing persistable objects will also be attached using "persistence-by-reachability". 
+This extension allows you to turn off the attach of a field relation.
 |*true*, false
 
 |cascade-refresh
@@ -962,13 +962,13 @@ These are attributes within the *<extension>* tag (jdo/package/class/property/ex
 |Values
 
 |cascade-persist
-|JDO defines that when an object is persisted then all fields will also be persisted using "persistence-by-reachability". 
+|JDO defines that when an object is persisted (insert/update) then all fields will also be persisted using "persistence-by-reachability". 
 This extension allows you to turn off the persistence of a field relation.
 |*true*, false
 
-|cascade-update
-|JDO defines that when an object is updated then all fields containing persistable objects will also be updated using "persistence-by-reachability". 
-This extension allows you to turn off the update of a field relation.
+|cascade-attach
+|JDO defines that when an object is attached then all fields containing persistable objects will also be attached using "persistence-by-reachability". 
+This extension allows you to turn off the attach of a field relation.
 |*true*, false
 
 |cascade-refresh
