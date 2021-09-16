@@ -8,14 +8,23 @@ image:../images/nucleus_extension.png[]
 
 
 Many applications make use of multiple datastores. It is a common requirement to be able to replicate parts of one datastore in another datastore.
-Obviously, depending on the datastore, you could make use of the datastores own capabilities for replication. 
+There are 3 possible ways of replicating the datastore.
+
+
+== Use the capabilities of the datastore
+
+Depending on the datastore itself, and what features it possesses, this is the most efficient method.
+This particularly applies where you are replicating between 2 RDBMS, for example.
+Consult the docs for your datastore for details of how to do this.
+
+
+== DataNucleus-API
+
 DataNucleus provides its own extension to JDO to allow replication from one datastore to another. 
 This extension doesn't restrict you to using 2 datastores of the same type. 
 You could replicate from RDBMS to XML for example, or from MySQL to HSQLDB.
 
 *You need to make sure you have the persistence property _datanucleus.attachSameDatastore_ set to _false_ if using replication*
-
-NOTE: the case of replication between two RDBMS of the same type is usually way more efficiently replicated using the capabilities of the datastore itself
 
 The following sample code will replicate all objects of type _Product_ and _Employee_ from PMF1 to PMF2. 
 These PMFs are created in the normal way so, as mentioned above, PMF1 could be for a MySQL datastore, and PMF2 for XML.
@@ -32,7 +41,7 @@ replicator.replicate(new Class[]{Product.class, Employee.class});
 -----
 
 
-== Example without using the JDOReplicationManager helper
+== Using the JDO API and 2 PMFs
 
 If we just wanted to use pure JDO, we would handle replication like this. Let's take an example
 
