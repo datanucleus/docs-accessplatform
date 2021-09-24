@@ -40,18 +40,18 @@ package org.mydomain;
 import java.io.ObjectStreamException;
 import javax.jdo.JDOHelper;
 import javax.jdo.spi.PersistenceCapable;
-import org.datanucleus.state.ObjectProvider;
+import org.datanucleus.state.DNStateManager;
 
 public class MyDateWrapper extends java.util.Date implements SCO
 {
-    private transient ObjectProvider ownerOP;
+    private transient DNStateManager ownerSM;
     private transient String fieldName;
     
-    public MyDateWrapper(ObjectProvider op, String fieldName)
+    public MyDateWrapper(DNStateManager sm, String fieldName)
     {
         super();
 
-        this.ownerOP = op;
+        this.ownerSM = sm;
         this.fieldName = fieldName;
     }
 
@@ -134,7 +134,7 @@ public class MyDateWrapper extends java.util.Date implements SCO
 
     public Object getOwner()
     {
-        return (ownerOP != null ? ownerOP.getObject() : null);
+        return (ownerSM != null ? ownerSM.getObject() : null);
     }
 
     public String getFieldName()

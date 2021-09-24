@@ -291,7 +291,7 @@ A convenient vendor extension is to find which objects are waiting to be flushed
 
 [source,java]
 -----
-List<ObjectProvider> objs = em.unwrap(ExecutionContext.class).getObjectsToBeFlushed();
+List<DNStateManager> objs = em.unwrap(ExecutionContext.class).getObjectsToBeFlushed();
 -----
 
 

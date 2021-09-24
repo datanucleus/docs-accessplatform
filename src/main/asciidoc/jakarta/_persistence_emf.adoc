@@ -563,8 +563,8 @@ See link:../extensions/extensions.html#store_datastoreidentity[Datastore Identit
 |Defines the action if an EM is closed and there is an active transaction present.
 {rollback, *exception*}
 
-|datanucleus.objectProvider.className
-|Class name for the ObjectProvider to use when managing object state. The default for RDBMS is ReferentialStateManagerImpl, and is StateManagerImpl for all other datastores.
+|datanucleus.stateManager.className
+|Class name for the StateManager to use when managing object state. The default for RDBMS is ReferentialStateManagerImpl, and is StateManagerImpl for all other datastores.
 
 |datanucleus.manageRelationships
 |This allows the user control over whether DataNucleus will try to manage bidirectional relations, correcting the input objects so that all relations are consistent.

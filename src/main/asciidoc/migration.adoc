@@ -17,6 +17,7 @@ Migration to 6.0 involves the following steps
 
 Migrating will require the following changes.
 
+* org.datanucleus.state.ObjectProvider is now renamed to org.datanucleus.state.DNStateManager
 * Cassandra plugin now supports Cassandra v4. Use DN 5.2 if using Cassandra v3
 * DateStringConverter had to be changed for Java 11. If using it, create your own converter that understands the old format.
 * CalendarStringConverter had to be changed for Java 11. If using it, create your own converter that understands the old format.

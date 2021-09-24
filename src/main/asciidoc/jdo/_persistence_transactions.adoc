@@ -279,7 +279,7 @@ A convenient vendor extension is to find which objects are waiting to be flushed
 
 [source,java]
 -----
-List<ObjectProvider> objs = ((JDOPersistenceManager)pm).getExecutionContext().getObjectsToBeFlushed();
+List<DNStateManager> objs = ((JDOPersistenceManager)pm).getExecutionContext().getObjectsToBeFlushed();
 -----
 
 
