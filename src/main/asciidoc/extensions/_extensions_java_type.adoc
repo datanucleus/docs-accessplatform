@@ -17,6 +17,7 @@ The attributes that you can set for each Java type are
 * *wrapper-type-backed* - class name of a SCO wrapper (with backing store)
 * *converter-name* - name of a TypeConverter to use as the _default_ way of persisting this type when it isn't directly persistable as-is. 
 Please refer to xref:extensions.html#type_converter[Type Converter extension point] for details of how to define your own type converter
+* *container-handler* - name of a ContainerHandler.  Required for SCO Container types in DN. SCO Containers can contain other FCOs or SCOs objects e.g.: collections, maps and arrays. 
 * *priority* - Set this to a large number if you are overriding the default handling for a type that is supported out of the box
 
 All of these are optional, and you should define what is required for your type.
