@@ -8,10 +8,11 @@ Typically applications create one per datastore being utilised.
 An _EntityManagerFactory_ provides access to _EntityManager(s)_ which allow objects to be persisted, and retrieved. 
 The _EntityManagerFactory_ can be configured to provide particular behaviour.
 
-CAUTION: An _EntityManagerFactory_ is designed to be thread-safe. An _EntityManager_ is not
+CAUTION: An _EntityManagerFactory_ is designed to be thread-safe. An _EntityManager_ is not.
 
 TIP: An _EntityManagerFactory_ is expensive to create so you should create one per datastore for your application and retain it for as long as it is needed.
-Always close your _EntityManagerFactory_ after you have finished with it.
+
+TIP: Always close your _EntityManagerFactory_ / _EntityManager_ objects after you have finished with them.
 
 
 

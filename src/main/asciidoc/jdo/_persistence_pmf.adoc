@@ -12,7 +12,8 @@ The _PersistenceManagerFactory_ can be configured to provide particular behaviou
 CAUTION: A _PersistenceManagerFactory_ is designed to be thread-safe. A _PersistenceManager_ is not.
 
 TIP: A _PersistenceyManagerFactory_ is expensive to create so you should create one per datastore for your application and retain it for as long as it is needed.
-Always close your _PersistenceManagerFactory_ after you have finished with it.
+
+TIP: Always close your _PersistenceManagerFactory_ / _PersistenceManager_ objects after you have finished with them.
 
 
 There are many ways of creating a _PersistenceManagerFactory_, some of which are shown below
