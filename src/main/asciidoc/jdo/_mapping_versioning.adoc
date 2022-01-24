@@ -98,6 +98,19 @@ public class MyClass
 
 and so now objects of our class will have access to the version via the "myVersion" field.
 
+A further improvement is possible when using the DataNucleus _javax.jdo_ jar v3.2.0-release or later, where you can do this
+
+[source,java]
+-----
+@PersistenceCapable
+public class MyClass
+{
+    @Version(strategy=VersionStrategy.VERSION_NUMBER, column="VERSION")
+    protected long myVersion;
+    ...
+}
+-----
+
 
 NOTE: The field must be of one of the following types : int, long, short, _java.lang.Integer_, _java.lang.Long_, _java.lang.Short_,  
 _java.sql.Timestamp_, _java.sql.Date_, _java.sql.Time_, _java.util.Date_, _java.util.Calendar_, _java.time.Instant_.
