@@ -23,18 +23,18 @@ and tries to perform something while that first operation is still in use.
 This happens because the JDO spec requires an implementation to use a single datastore connection at any one time. 
 When this situation crops up the user ought to use multiple _PersistenceManagers_.
 
-Another important aspect is use of queries for Optimistic transactions, or for non-transactional contexts. 
+Another important aspect is use of queries for optimistic locked transactions, or for non-transactional contexts. 
 In these situations it isn't possible to keep the datastore connection open indefinitely and so when the Query is executed the ResultSet 
-is then read into core making the queried objects available thereafter.
+is then read into memory making the queried objects available thereafter.
 
 
 == Transactional Context
 
-For pessimistic/datastore transactions a connection will be obtained from the datastore when the first persistence operation is initiated. 
+For pessimistic/datastore locked transactions a connection will be obtained from the datastore when the first persistence operation is initiated. 
 This datastore connection will be held *for the duration of the transaction* until such time as either _commit()_ or _rollback()_ are called.
 
 
-For optimistic transactions the connection is only obtained when flush()/commit() is called. 
+For optimistic locked transactions the connection is only obtained when flush()/commit() is called. 
 When flush() is called, or the transaction committed a datastore connection is finally obtained and it is held open until commit/rollback completes. 
 When a datastore operation is required, the connection is typically released after performing that operation. 
 So datastore connections, in general, are held for much smaller periods of time. 
