@@ -68,6 +68,8 @@ If you instead wanted to define this in `orm.xml` then do it like this
 
 NOTE: Any field marked as `@CreateTimestamp` / `@UpdateTimestamp` needs to be of type _java.sql.Timestamp_ or _java.time.Instant_.
 
+NOTE: You can only annotate a single field/property per class with each of these annotations (e.g a single `@CreateUser`)
+
 
 
 
