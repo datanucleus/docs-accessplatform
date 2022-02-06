@@ -284,6 +284,14 @@ public class Directory
 So when we fetch a Directory, it will fetch 2 levels of the _children_ field, hence fetching the children and the grandchildren.
 
 
+== Fetch a Foreign-Key but not instantiate the object
+
+For RDBMS only, if you have a class which has a _foreign key_ to a related object in its table and when fetching the object of that type you want to
+retrieve the _foreign key_ only and neither join to the related table nor instantiate the related object you can include the relation field
+in the FetchPlan, and set *recursion-depth* to *0*. This will fetch the _foreign-key_ in the single SQL statement, save the value of the FK and then, 
+if the field is ever accessed, it will instantiate the related object accordingly.
+
+
 
 == Fetch Size
 
