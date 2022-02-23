@@ -16,7 +16,7 @@ NOTE: You cannot have a 1-1 relation to a long/int field! JDO is for use with ob
 
 
 [[one_one_uni]]
-== Unidirectional ForeignKey
+== Unidirectional (ForeignKey)
 
 For this case you could have 2 classes, *User* and *Account*, as below.
 
@@ -88,7 +88,7 @@ TIP: If you invoke an operation that will retrieve the one-to-one field, and you
 
 
 [[one_one_uni_join]]
-== Unidirectional with JoinTable
+== Unidirectional (JoinTable)
 
 NOTE: Supported for RDBMS. Other datastores simply ignore the join table and store the relation in a column in the table of the object with the field.
 
@@ -156,7 +156,7 @@ NOTE: In the case of non-RDBMS datastores there is no join-table, simply a "colu
 
 
 [[one_one_bi]]
-== Bidirectional ForeignKey
+== Bidirectional (ForeignKey)
 
 For this case you could have 2 classes, *User* and *Account* again, but this time as below. Here the *Account* class knows about the *User* class, and also vice-versa.
 
@@ -234,7 +234,7 @@ TIP: If you invoke an operation that will retrieve the one-to-one field (of the 
 
 
 [[one_one_bi_join]]
-== Bidirectional JoinTable
+== Bidirectional (JoinTable)
 
 NOTE: DataNucleus does not support a BIDIRECTIONAL 1-1 relation using a join table. It is not a use-case that is very common and is not part of the JDO spec. 
 You could look at a unidirectional relation with join table, or model it using a foreign key.

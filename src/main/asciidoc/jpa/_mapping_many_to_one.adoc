@@ -17,7 +17,7 @@ NOTE: You cannot have an N-1 relation to a long or int field! JPA is for use wit
 
 
 [[many_one_uni_fk]]
-== Unidirectional ForeignKey
+== Unidirectional (ForeignKey)
 
 For this case you could have 2 classes, *User* and *Account*, as below.
 
@@ -86,7 +86,7 @@ NOTE: in the case of non-RDBMS datastores there is simply a "column" in the `ACC
 
 
 [[many_one_uni_join]]
-== Unidirectional JoinTable
+== Unidirectional (JoinTable)
 
 NOTE: Supported for RDBMS. Other datastores simply ignore the join table and store the relation in a column in the table of the object with the field.
 
@@ -163,7 +163,7 @@ NOTE: For non-RDBMS datastores there is no join-table, simply a "column" in the 
 
 
 [[many_one_bi_fk]]
-== Bidirectional ForeignKey
+== Bidirectional (ForeignKey)
 
 This relationship is described in the guide for link:mapping.html#one_many_relations[1-N relationships]. 
 This link:mapping.html#one_many_fk_bi[relation] uses a Foreign Key in the "N" object to hold the relationship. 
@@ -172,7 +172,7 @@ NOTE: For non-RDBMS datastores each side will have a "column" (or equivalent) in
 
 
 [[many_one_bi_join]]
-== Bidirectional JoinTable
+== Bidirectional (JoinTable)
 
 This relationship is described in the guide for link:mapping.html#one_many_relations[1-N relationships]. 
 This link:mapping.html#one_many_join_bi[relation] uses a Join Table to link to the "N" object, with this table holding the relationship. 

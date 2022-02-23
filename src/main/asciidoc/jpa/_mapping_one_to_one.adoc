@@ -16,7 +16,7 @@ NOTE: You cannot have a 1-1 relation to a long/int field! JPA is for use with ob
 
 
 [[one_one_uni]]
-== Unidirectional ForeignKey
+== Unidirectional (ForeignKey)
 
 For this case you could have 2 classes, *User* and *Account*, as below.
 
@@ -96,7 +96,7 @@ an exception will typically be thrown (assuming the datastore supports foreign k
 
 
 [[one_one_uni_join]]
-== Unidirectional JoinTable
+== Unidirectional (JoinTable)
 
 NOTE: Supported for RDBMS. Other datastores simply ignore the join table and store the relation in a column in the table of the object with the field.
 
@@ -173,7 +173,7 @@ NOTE: in the case of non-RDBMS datastores there is no join-table, simply a "colu
 
 
 [[one_one_bi]]
-== Bidirectional ForeignKey
+== Bidirectional (ForeignKey)
 
 For this case you could have 2 classes, *User* and *Account* again, but this time as below. Here the *Account* class knows about the *User* class, and also vice-versa.
 
@@ -265,7 +265,7 @@ NOTE: When forming the relation please make sure that *you set the relation at B
 
 
 [[one_one_bi_join]]
-== Bidirectional JoinTable
+== Bidirectional (JoinTable)
 
 NOTE: DataNucleus does not support a 1-1 BIDIRECTIONAL relation using a join table. It is not a use-case that is very common and is not part of the JPA spec. 
 You could look at doing that as a unidirectional relation.

@@ -109,7 +109,7 @@ When instantiating the SortedSet field, it will create it with a comparator of t
 
 
 [[one_many_join_uni]]
-== Collection<PC> Unidirectional JoinTable
+== Collection<PC> Unidirectional (JoinTable)
 
 NOTE: Supported for RDBMS. Other datastores simply ignore the join table and store the relation in a column in the table of the object with the field.
 
@@ -197,7 +197,7 @@ specifying the column name for the order column (within `<field>`).
 
 
 [[one_many_fk_uni]]
-== Collection<PC> Unidirectional FK
+== Collection<PC> Unidirectional (ForeignKey)
 
 We have the same classes *Account* and *Address* as above for the join table case, but this time we will store the "relation" as a _foreign key_ in the *Address* class. 
 So we define the annotations like this
@@ -258,7 +258,7 @@ If you want to allow duplicate Collection entries, then use the "Join Table" var
 
 
 [[one_many_join_bi]]
-== Collection<PC> Bidirectional JoinTable
+== Collection<PC> Bidirectional (JoinTable)
 
 NOTE: Supported for RDBMS. Other datastores simply ignore the join table and store the relation in a column in the table of the object with the field.
 
@@ -347,7 +347,7 @@ specifying the column name for the order column (within `<field>`).
 
 
 [[one_many_fk_bi]]
-== Collection<PC> Bidirectional FK
+== Collection<PC> Bidirectional (ForeignKey)
 
 We have the same classes *Account* and *Address* as above for the join table case, but this time we will store the "relation" as a _foreign key_ in the *Address* class. 
 If you define the annotations for these classes as follows
@@ -412,7 +412,7 @@ If you want to allow duplicate Collection entries, then use the "Join Table" var
 
 
 [[one_many_shared_join]]
-== Collection<PC> via Shared JoinTable
+== Collection<PC> (Shared JoinTable)
 
 NOTE: Supported for RDBMS.
 
@@ -505,7 +505,7 @@ image:../images/relationship_1_N_uni_join_shared_db.png[]
 
 
 [[one_many_shared_fk]]
-== Collection<PC> via Shared FK
+== Collection<PC> (Shared ForeignKey)
 
 NOTE: Supported for RDBMS.
 
@@ -590,7 +590,7 @@ image:../images/relationship_1_N_uni_fk_shared_db.png[]
 
 
 [[one_many_nonpc_join]]
-== Collection<Simple> via JoinTable
+== Collection<Simple> (JoinTable)
 
 NOTE: Supported for RDBMS. Other datastores simply ignore the join table and store the collection in a column in the owning objects table.
 
@@ -642,7 +642,7 @@ column name for the order column (within `<field>`).
 
 
 [[one_many_nonpc_converter]]
-== Collection<Simple> using AttributeConverter via column
+== Collection<Simple> using AttributeConverter (Column)
 
 Just like in the above example, here we have a Collection of simple types. In this case we are wanting to store this Collection into a single column in the owning table. 
 We do this by using a JDO AttributeConverter.
@@ -699,7 +699,7 @@ public class CollectionStringToStringConverter implements AttributeConverter<Col
 
 
 [[one_many_map_join_pc_pc]]
-== Map<PC,PC> using Join Table
+== Map<PC,PC> (JoinTable)
 
 NOTE: Supported for RDBMS. Other datastores simply ignore the join table and store the relation in a column in the table of the object with the field.
 
@@ -794,7 +794,7 @@ Which changes the names of the join table to `ACCOUNT_ADDRESS` from `ACCOUNT_ADD
 
 
 [[one_many_map_join_simple_pc]]
-== Map<Simple,PC> using Join Table
+== Map<Simple,PC> (JoinTable)
 
 NOTE: Supported for RDBMS. Other datastores simply ignore the join table and store the relation in a column in the table of the object with the field.
 
@@ -853,7 +853,7 @@ If the column type of your key is acceptable for use as part of a primary key th
 
 
 [[one_many_map_fk_uni_key]]
-== Map<Simple,PC> Unidirectional FK (key stored in value)
+== Map<Simple,PC> Unidirectional (FK key stored in value)
 
 In this case we have an object with a Map of objects and we're associating the objects using a foreign-key in the table of the value. 
 Here we use a field of the value as the key. The classes are like this
@@ -919,7 +919,7 @@ If you wish to have an *Address* assigned to multiple *Accounts* then you should
 
 
 [[one_many_map_fk_bi_key]]
-== Map<Simple,PC> Bidirectional FK (key stored in value)
+== Map<Simple,PC> Bidirectional (FK key stored in value)
 
 In this case we have an object with a Map of objects and we're associating the objects using a foreign-key in the table of the value.
 
@@ -974,7 +974,7 @@ TIP: Since each Address object can have at most one key (due to the "Foreign Key
 
 
 [[one_many_map_join_simple_simple]]
-== Map<Simple, Simple> using Join Table
+== Map<Simple, Simple> (JoinTable)
 
 NOTE: Supported for RDBMS. Other datastores simply ignore the join table and store the map in a column in the table of the object with the field.
 
@@ -1032,7 +1032,7 @@ If the column type of your key is acceptable for use as part of a primary key th
 
 
 [[one_many_map_converter_simple_simple]]
-== Map<Simple, Simple> using AttributeConverter via column
+== Map<Simple, Simple> using AttributeConverter (Column)
 
 Just like in the above example, here we have a Map of simple types. In this case we are wanting to store this Map into a single column in the owning table. 
 We do this by using a JDO AttributeConverter.
@@ -1085,7 +1085,7 @@ public class MapStringStringToStringConverter implements AttributeConverter<Map<
 
 
 [[one_many_map_join_pcsimple]]
-== Map<PC,Simple> using Join Table
+== Map<PC,Simple> (JoinTable)
 
 NOTE: Supported for RDBMS. Other datastores simply ignore the join table and store the relation in a column in the table of the object with the field.
 
@@ -1136,7 +1136,7 @@ This operates exactly the same as "Map<Simple, PC>" except that the additional t
 
 
 [[one_many_map_fk_uni_value]]
-== Map<PC,Simple> Unidirectional FK (value stored in key)
+== Map<PC,Simple> Unidirectional (FK value stored in key)
 
 In this case we have an object with a Map of objects and we're associating the objects using a foreign-key in the table of the key. 
 We're using a field (_businessAddress_) in the Address class as the value of the map.
