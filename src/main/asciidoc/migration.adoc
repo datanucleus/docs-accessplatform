@@ -13,6 +13,15 @@ As a result sometimes users will have to make some changes to move between versi
 
 Migration to 6.0 involves the following steps
 
+=== Migration from 6.0.0.M3 to 6.0.0.M4
+
+Migrating will require the following changes.
+
+* Persistence property _datanucleus.rdbms.fetchUnloadedAutomatically_ is now removed and replaced by *datanucleus.rdbms.autoFetchUnloadedBasicFields* and *datanucleus.rdbms.autoFetchUnloadedFKs*.
+* Persistence property _datanucleus.jmxType_ has had its value "default" changed to "platform".
+
+
+
 === Migration from 6.0.0.M2 to 6.0.0.M3
 
 Migrating will require the following changes.

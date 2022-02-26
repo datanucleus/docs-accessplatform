@@ -1483,8 +1483,14 @@ retrieved from there.
 parameters replaced by just the values (no brackets). The final option is to log the statement and replace any parameters with the value provided in angle brackets. *Applicable for RDBMS only*
 {*JDBC*, PARAMS_INLINE, PARAMS_IN_BRACKETS}
 
-|datanucleus.rdbms.fetchUnloadedAutomatically
-|If enabled will, upon a request to load a field, check for any unloaded fields that are non-relation fields or 1-1/N-1 fields and will load them in the same SQL call.
+|datanucleus.rdbms.autoFetchUnloadedBasicFields
+|If enabled will, upon a request to load a field, check for any unloaded BASIC (non-relation) fields and will load them in the same SQL call.
+Be careful using this if you have some BLOB/CLOB fields that you don't want to load like this
+{true, *false*}
+
+|datanucleus.rdbms.autoFetchUnloadedFKs
+|If enabled will, upon a request to load a field, check for any unloaded 1-1/N-1 fields with a FK at this side and will load them in the same SQL call avoiding
+a join to a related table. The value will then be stored in the owning StateManager for when that field is ever accessed, making the load more efficient.
 {true, *false*}
 
 |datanucleus.cloud.storage.bucket
