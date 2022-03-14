@@ -20,6 +20,7 @@ image:../images/datastore/informix.png[]
 image:../images/datastore/sqlite.png[]
 image:../images/datastore/firebird.png[]
 image:../images/datastore/nuodb.png[]
+image:../images/datastore/spanner.png[]
 
 
 DataNucleus supports persistence to RDBMS datastores using the https://github.com/datanucleus/datanucleus-rdbms[datanucleus-rdbms] plugin. 
@@ -367,6 +368,37 @@ something like the following specifying (replacing 'db-name' with filename of yo
 datanucleus.ConnectionURL=jdbc:pointbase://127.0.0.1/{dbname}
 -----
 
+[[spanner]]
+== Cloud Spanner
+https://cloud.google.com/spanner/[Spanner] is a distributed RDBMS provided as a managed service by the Google Cloud Platform.
+This Spanner adapter is *not* officially supported by Google. 
+
+Datanucleus uses the https://github.com/googleapis/java-spanner-jdbc[Spanner JDBC library] to establish connection to Spanner.
+
+=== Limitations and Remarks:
+
+* Spanner data types Struct, Array and JSON have not been supported yet
+* Interleaved tables cannot be created by Datanucleus schema tool. It is possible to create via SQL and Datanucleus recognizes them as foreign key relations.
+* Creating Spanner schema via Datanucleus is slow since it does not batch schema creation. 
+It is best to create schema by using native methods and then use Datanucleus to validate it. You may use the `START BATCH DDL` and `RUN BATCH` https://cloud.google.com/spanner/docs/jdbc-session-mgmt-commands#batch_statements[commands] to speed up schema creation.
+* Spanner JDBC has its own session pooling so there is no need for additional pooling.
+* Some internal Datanucleus tables like the _SEQUENCE_TABLE_ cannot be created by the schema tool. The reason is that Datanucleus checks the existence of those tables by using
+_INFORMATION_SCHEMA_ calls and Spanner does https://cloud.google.com/spanner/docs/information-schema[not] allow such calls in a read-write transaction. The solution is simple; 
+create these tables in advance and set `datanucleus.rdbms.omitValueGenerationGetColumns=true` to skip checking their existence.
+* Spanner only supports serializable transaction isolation
+* Spanner performs authentication and authorization based on the GCP identities instead of username and password. Many platforms assume the existence of username and password. To tell JDBC driver to ignore any default username/password, 
+add `lenient=true` https://github.com/googleapis/java-spanner-jdbc#connection-url-properties[JDBC URL parameter].
+
+
+A minimal set of example parameters to establish connection to Spanner are as follows:
+----
+javax.jdo.option.ConnectionURL=jdbc:cloudspanner:/projects/PROJECT_ID/instances/INSTANCE_ID/databases/DATABASE_ID?lenient=true
+javax.jdo.option.ConnectionDriverName=com.google.cloud.spanner.jdbc.JdbcDriver
+javax.jdo.option.mapping=cloudspanner
+datanucleus.rdbms.omitValueGenerationGetColumns=true
+datanucleus.connectionPoolingType=None
+javax.jdo.option.TransactionIsolationLevel=serializable
+----
 
 
 
