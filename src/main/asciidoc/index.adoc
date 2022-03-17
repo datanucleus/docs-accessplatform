@@ -13,10 +13,10 @@ image::images/datanucleus_overview.png[align="center"]
 
 There are two standard API's for persistence in Java - link:jdo/persistence.html[Java Data Objects (JDO)] and link:jpa/persistence.html[Java Persistence API (JPA)]. 
 The JPA standard is now developed further as the link:jakarta/persistence.html[Jakarta Persistence API (Jakarta)].
-DataNucleus v{version} supports all 3, fully, and also provides support for a link:rest/rest.html[REST API].
+DataNucleus v{version} supports all of these, fully, and also provides support for a link:rest/rest.html[REST API].
 
-* *APIs Supported* : link:jdo/persistence.html[JDO 3.2], link:jpa/persistence.html[JPA 2.2+], link:jakarta/persistence.html[Jakarta 3.0+], link:rest/rest.html[REST]
-* *Mapping Supported* : link:jdo/mapping.html[JDO], link:jpa/mapping.html[JPA], link:jakarta/mapping.html[Jakarta]
+* *APIs Supported* : link:jdo/persistence.html[JDO 3.2], link:jakarta/persistence.html[Jakarta 3.0+], link:jpa/persistence.html[JPA 2.2+], link:rest/rest.html[REST]
+* *Mapping Supported* : link:jdo/mapping.html[JDO], link:jakarta/mapping.html[Jakarta], link:jpa/mapping.html[JPA]
 * *Datastores Supported* : link:datastores/datastores.html#rdbms[RDBMS], link:datastores/datastores.html#excel[Excel],
 link:datastores/datastores.html#ooxml[OOXML], link:datastores/datastores.html#odf[ODF], link:datastores/datastores.html#xml[XML],
 link:datastores/datastores.html#hbase[HBase], link:datastores/datastores.html#mongodb[MongoDB], link:datastores/datastores.html#cassandra[Cassandra],
@@ -41,15 +41,6 @@ Documentation for all aspects of DataNucleus v{version} support for the JDO, JPA
 * link:jdo/query.html[JDO Query Guide] icon:file-pdf[link="./jdo/query.pdf"]
 * link:jdo/tools.html[JDO Tools Guide] icon:file-pdf[link="./jdo/tools.pdf"]
 
-|*JPA Guides*
-
-* link:jpa/getting_started.html[JPA Getting Started Guide] icon:file-pdf[link="./jpa/getting_started.pdf"]
-* link:jpa/mapping.html[JPA Mapping Guide] icon:file-pdf[link="./jpa/mapping.pdf"]
-* link:jpa/enhancer.html[JPA Enhancer Guide] icon:file-pdf[link="./jpa/enhancer.pdf"]
-* link:jpa/persistence.html[JPA Persistence Guide] icon:file-pdf[link="./jpa/persistence.pdf"]
-* link:jpa/query.html[JPA Query Guide] icon:file-pdf[link="./jpa/query.pdf"]
-* link:jpa/tools.html[JPA Tools Guide] icon:file-pdf[link="./jpa/tools.pdf"]
-
 |*Jakarta Guides*
 
 * link:jakarta/getting_started.html[Jakarta Getting Started Guide] icon:file-pdf[link="./jakarta/getting_started.pdf"]
@@ -58,6 +49,15 @@ Documentation for all aspects of DataNucleus v{version} support for the JDO, JPA
 * link:jakarta/persistence.html[Jakarta Persistence Guide] icon:file-pdf[link="./jakarta/persistence.pdf"]
 * link:jakarta/query.html[Jakarta Query Guide] icon:file-pdf[link="./jakarta/query.pdf"]
 * link:jakarta/tools.html[Jakarta Tools Guide] icon:file-pdf[link="./jakarta/tools.pdf"]
+
+|*JPA Guides*
+
+* link:jpa/getting_started.html[JPA Getting Started Guide] icon:file-pdf[link="./jpa/getting_started.pdf"]
+* link:jpa/mapping.html[JPA Mapping Guide] icon:file-pdf[link="./jpa/mapping.pdf"]
+* link:jpa/enhancer.html[JPA Enhancer Guide] icon:file-pdf[link="./jpa/enhancer.pdf"]
+* link:jpa/persistence.html[JPA Persistence Guide] icon:file-pdf[link="./jpa/persistence.pdf"]
+* link:jpa/query.html[JPA Query Guide] icon:file-pdf[link="./jpa/query.pdf"]
+* link:jpa/tools.html[JPA Tools Guide] icon:file-pdf[link="./jpa/tools.pdf"]
 
 |===
 
@@ -70,20 +70,20 @@ Documentation for all aspects of DataNucleus v{version} support for the JDO, JPA
 * link:jdo/metadata_xml.html[JDO XML MetaData Reference] icon:file-pdf[link="./jdo/metadata_xml.pdf"]
 * link:jdo/metadata_api.html[JDO MetaData API Reference] icon:file-pdf[link="./jdo/metadata_api.pdf"]
 
-|*JPA References*
-
-* link:jpa/annotations.html[JPA Annotations Reference] icon:file-pdf[link="./jpa/annotations.pdf"]
-* link:jpa/metadata_xml.html[JPA XML MetaData Reference] icon:file-pdf[link="./jpa/metadata_xml.pdf"]
-
 |*Jakarta References*
 
 * link:jakarta/annotations.html[Jakarta Annotations Reference] icon:file-pdf[link="./jakarta/annotations.pdf"]
 * link:jakarta/metadata_xml.html[Jakarta XML MetaData Reference] icon:file-pdf[link="./jakarta/metadata_xml.pdf"]
 
+|*JPA References*
+
+* link:jpa/annotations.html[JPA Annotations Reference] icon:file-pdf[link="./jpa/annotations.pdf"]
+* link:jpa/metadata_xml.html[JPA XML MetaData Reference] icon:file-pdf[link="./jpa/metadata_xml.pdf"]
+
 |===
 
 
-In addition to the JDO, JPA and Jakarta Persistence API support, we also provide a link:rest/rest.html[REST API Guide] icon:file-pdf[link="./rest/rest.pdf"] 
+In addition to the JDO, Jakarta Persistence and JPA API support, we also provide a link:rest/rest.html[REST API Guide] icon:file-pdf[link="./rest/rest.pdf"] 
 which approaches persistence from a different viewpoint.
 
 The various aspects specific to datastores are covered in a link:datastores/datastores.html[Datastores Guide] icon:file-pdf[link="./datastores/datastores.pdf"] 
@@ -93,19 +93,19 @@ The various aspects specific to datastores are covered in a link:datastores/data
 
 When choosing the persistence API to use in your application you should bear the following factors in mind.
 
-* *Target datastore* : JDO is designed for all datastores, whereas JPA/Jakarta are just designed around RDBMS and explicitly uses RDBMS/SQL terminology. 
+* *Target datastore* : JDO is designed for all datastores, whereas Jakarta/JPA are just designed around RDBMS and explicitly uses RDBMS/SQL terminology. 
 If using RDBMS then you have the choice. If using, for example, a NoSQL store then JDO makes much more sense, though we have made efforts to make 
-DataNucleus JPA/Jakarta adaptable to non-RDBMS features
+DataNucleus Jakarta/JPA adaptable to non-RDBMS features
 * *Datastore interoperability* : are you likely to change your datastore type at some point in the future ? If so you likely ought to use JDO due to its design
 * *Persistence API* : all supported persistence APIs are very similar. JDO provides more options and control though for basic persistence and retrieval, and there are 
 differences only in the methods
 * *ORM* : JDO has a more complete ORM definition, as shown on http://db.apache.org/jdo/jdo_v_jpa_orm.html[Apache JDO ORM Guide]
 * *Query API* : do you need a flexible query language that is object-oriented and extensible ? JDOQL provides this and the implementation in DataNucleus allows extensions. 
-JPQL is more closely aligned with RDBMS concepts and SQL. If you just want SQL then you can use any of JDO, JPA, Jakarta since all provide this
-* *Fetch Control* : do you need full control of what is fetched, and when ? JDO provides Fetch Groups, whereas JPA/Jakarta provide Entity Graphs (a subset of Fetch Groups). 
+JPQL is more closely aligned with RDBMS concepts and SQL. If you just want SQL then you can use any of JDO, Jakarta/JPA since all provide this
+* *Fetch Control* : do you need full control of what is fetched, and when ? JDO provides Fetch Groups, whereas Jakarta/JPA provide Entity Graphs (a subset of Fetch Groups). 
 Use JDO if full fetch groups is an important factor for your design, otherwise any
 * *Developer Experience* : do your developers know a particular API already ? As mentioned the persistence API's themselves are very similar, though the metadata definition is different. 
-Remember that you can use JPA/Jakarta metadata with the JDO persistence API, and vice-versa. You are more likely to find developers with JPA/Jakarta experience.
+Remember that you can use Jakarta/JPA metadata with the JDO persistence API, and vice-versa. You are more likely to find developers with Jakarta/JPA experience.
 
 Read more over at http://db.apache.org/jdo/jdo_v_jpa.html[Apache JDO].
 
@@ -115,8 +115,8 @@ Read more over at http://db.apache.org/jdo/jdo_v_jpa.html[Apache JDO].
 With all APIs supported by DataNucleus the development process is as follows.
 
 * Develop your classes that are going to be involved in the persistence process as you would do normally. DataNucleus imposes little to no constraints on what you do in this respect.
-* Define the persistence *mapping* for your classes, using either JDO annotations, JDO XML metadata, JPA annotations, JPA XML metadata, 
-Jakarta annotations, Jakarta XML metadata, or a mixture of these.
+* Define the persistence *mapping* for your classes, using either JDO annotations, JDO XML metadata, Jakarta annotations, Jakarta XML metadata, 
+JPA annotations, JPA XML metadata, or a mixture of these.
 * Set up your compile process to have a _post-compile_ step that will invoke the DataNucleus enhancer to *bytecode enhance* your classes for use in persistence.
 * Develop your *persistence* and *query* code itself, that uses your persistable classes, and their involvement in the persistence process.
 * Run your application!
