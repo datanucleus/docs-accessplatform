@@ -136,30 +136,6 @@
                     </ul>
                 </li>
                 <li class="dropdown">
-                  <% if is_jpa? then %>
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" style="background-color:#2385c6">JPA API <span class="caret"></span></a>
-                  <% else %>
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">JPA API <span class="caret"></span></a>
-                  <% end %>
-                    <ul class="dropdown-menu">
-                        <li><a href="<%= (attr :_basedir) %>jpa/getting_started.html">Getting Started</a></li>
-                        <li><a href="<%= (attr :_basedir) %>jpa/mapping.html">Mapping</a></li>
-                        <li><a href="<%= (attr :_basedir) %>jpa/enhancer.html">Enhancer</a></li>
-                        <li><a href="<%= (attr :_basedir) %>jpa/persistence.html">Persistence</a></li>
-                        <li><a href="<%= (attr :_basedir) %>jpa/query.html">Queries</a></li>
-                        <li><a href="<%= (attr :_basedir) %>jpa/tools.html">Tools</a></li>
-                        <li role="separator" class="divider"></li>
-                        <li class="dropdown-header">Reference Documents</li>
-                        <li><a href="<%= (attr :_basedir) %>jpa/annotations.html">Annotations Reference</a></li>
-                        <li><a href="<%= (attr :_basedir) %>jpa/metadata_xml.html">ORM.XML Reference</a></li>
-                        <li><a href="http://www.datanucleus.org/javadocs/javax.persistence/2.2/">JPA 2.2 Javadocs</a></li>
-                        <li role="separator" class="divider"></li>
-                        <li><a href="<%= (attr :_basedir) %>jpa/tutorial.html">JPA Tutorial</a></li>
-                        <li><a href="https://github.com/datanucleus/samples-jpa">JPA Samples</a></li>
-                        <li><a href="https://github.com/datanucleus/datanucleus-api-jpa/blob/master/JPA-SPEC-2.2.pdf"><i>JPA 2.2 spec</i></a></li>
-                    </ul>
-                </li>
-                <li class="dropdown">
                   <% if is_jakarta? then %>
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" style="background-color:#2385c6">Jakarta API <span class="caret"></span></a>
                   <% else %>
@@ -181,6 +157,30 @@
                         <li><a href="<%= (attr :_basedir) %>jakarta/tutorial.html">Jakarta Tutorial</a></li>
                         <li><a href="https://github.com/datanucleus/samples-jakarta">Jakarta Samples</a></li>
                         <li><a href="https://github.com/datanucleus/datanucleus-api-jakarta/blob/master/Jakarta-SPEC-3.0.pdf"><i>Jakarta 3.0 spec</i></a></li>
+                    </ul>
+                </li>
+                <li class="dropdown">
+                  <% if is_jpa? then %>
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" style="background-color:#2385c6">JPA API <span class="caret"></span></a>
+                  <% else %>
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">JPA API <span class="caret"></span></a>
+                  <% end %>
+                    <ul class="dropdown-menu">
+                        <li><a href="<%= (attr :_basedir) %>jpa/getting_started.html">Getting Started</a></li>
+                        <li><a href="<%= (attr :_basedir) %>jpa/mapping.html">Mapping</a></li>
+                        <li><a href="<%= (attr :_basedir) %>jpa/enhancer.html">Enhancer</a></li>
+                        <li><a href="<%= (attr :_basedir) %>jpa/persistence.html">Persistence</a></li>
+                        <li><a href="<%= (attr :_basedir) %>jpa/query.html">Queries</a></li>
+                        <li><a href="<%= (attr :_basedir) %>jpa/tools.html">Tools</a></li>
+                        <li role="separator" class="divider"></li>
+                        <li class="dropdown-header">Reference Documents</li>
+                        <li><a href="<%= (attr :_basedir) %>jpa/annotations.html">Annotations Reference</a></li>
+                        <li><a href="<%= (attr :_basedir) %>jpa/metadata_xml.html">ORM.XML Reference</a></li>
+                        <li><a href="http://www.datanucleus.org/javadocs/javax.persistence/2.2/">JPA 2.2 Javadocs</a></li>
+                        <li role="separator" class="divider"></li>
+                        <li><a href="<%= (attr :_basedir) %>jpa/tutorial.html">JPA Tutorial</a></li>
+                        <li><a href="https://github.com/datanucleus/samples-jpa">JPA Samples</a></li>
+                        <li><a href="https://github.com/datanucleus/datanucleus-api-jpa/blob/master/JPA-SPEC-2.2.pdf"><i>JPA 2.2 spec</i></a></li>
                     </ul>
                 </li>
                 <li><a href="<%= (attr :_basedir) %>rest/rest.html">REST API</a></li>
