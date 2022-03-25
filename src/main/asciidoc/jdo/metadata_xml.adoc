@@ -13,26 +13,26 @@ This page defines the format of the XML Metadata and can be used for either the 
 
 
 
-Here is an example header for `package.jdo` files with http://xmlns.jcp.org/xml/ns/jdo/jdo_3_0.xsd[JDO XSD] specification
+Here is an example header for `package.jdo` files with https://db.apache.org/jdo/xmlns/jdo_3_2.xsd[JDO XSD] specification
 
 [source,xml]
 -----
 <?xml version="1.0" encoding="UTF-8" ?>
-<jdo xmlns="http://xmlns.jcp.org/xml/ns/jdo/jdo"
+<jdo xmlns="https://db.apache.org/jdo/xmlns"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/jdo/jdo http://xmlns.jcp.org/xml/ns/jdo/jdo_3_1.xsd" version="3.1">
+    xsi:schemaLocation="https://db.apache.org/jdo/xmlns https://db.apache.org/jdo/xmlns/jdo_3_2.xsd" version="3.2">
     ...
 </jdo>
 -----
 
-Here is an example header for *package.orm* files with http://xmlns.jcp.org/xml/ns/jdo/orm_3_0.xsd[ORM XSD] specification
+Here is an example header for *package.orm* files with https://db.apache.org/jdo/xmlns/orm_3_2.xsd[ORM XSD] specification
 
 [source,xml]
 -----
 <?xml version="1.0" encoding="UTF-8" ?>
-<orm xmlns="http://xmlns.jcp.org/xml/ns/jdo/orm"
+<orm xmlns="https://db.apache.org/jdo/xmlns"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/jdo/orm http://xmlns.jcp.org/xml/ns/jdo/orm_3_0.xsd" version="3.0">
+    xsi:schemaLocation="https://db.apache.org/jdo/xmlns https://db.apache.org/jdo/xmlns/orm_3_2.xsd" version="3.2">
     ...
 </orm>
 -----
