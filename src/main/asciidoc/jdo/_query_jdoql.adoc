@@ -1471,7 +1471,7 @@ In the ordering you can also define where NULL values of the ordered field/prope
 fieldName [ASC|DESC] [NULLS FIRST|NULLS LAST]
 -----
 
-Note that this is only supported for a few RDBMS (H2, HSQLDB, PostgreSQL, DB2, Oracle, Derby, Firebird, SQLServer v11+).
+NOTE: This is only supported where the RDBMS supports it (H2, HSQLDB, PostgreSQL, DB2, Oracle, Derby, Firebird, SQLServer v11+, SQLite v3.30+).
 
 
 With the string-based API the _ordering_ would be part of the query (_ORDER BY {ordering}_). With the Declarative API you would specify the ordering like this
