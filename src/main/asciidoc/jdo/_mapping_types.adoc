@@ -193,6 +193,29 @@ you must reassign it to the owner object field to make sure changes are propagat
 |===
 
 
+=== CHECK constraints
+
+image:../images/nucleus_extension.png[]
+
+NOTE: Supported for RDBMS datastores.
+
+If you want to constraint the column where a standard numeric/character field is stored to only have particular values you can put a CHECK constraint on the column contents in the datastore.
+You specify it like this
+
+[source,java]
+-----
+@Extension(vendorName="datanucleus", key="check-constraint-values", value="1,2,4")
+int groupNumber;
+-----
+
+This results in a column defined like
+
+[source,sql]
+-----
+GRP_NUMBER INTEGER CHECK (MY_COL IN (1, 2, 4)),
+-----
+
+
 
 == java.math types
 
@@ -649,29 +672,6 @@ MY_COL VARCHAR(10) CHECK (MY_COL IN ('RED', 'GREEN', 'BLUE', 'YELLOW')),
 -----
 
 NOTE: This is the recommended way of constraining enum values in the datastore since it uses ANSI SQL, and it is a better more portable solution than using such as PostgreSQL enum type.
-
-
-=== Simple CHECK constraints
-
-image:../images/nucleus_extension.png[]
-
-NOTE: Supported for RDBMS datastores.
-
-If you want to constraint the column where a standard numeric/character field is stored to only have particular values you can put a CHECK constraint on the column contents in the datastore.
-You specify it like this
-
-[source,java]
------
-@Extension(vendorName="datanucleus", key="check-constraint-values", value="1,2,4")
-int groupNumber;
------
-
-This results in a column defined like
-
-[source,sql]
------
-GRP_NUMBER INTEGER CHECK (MY_COL IN (1, 2, 4)),
------
 
 
 - - -
