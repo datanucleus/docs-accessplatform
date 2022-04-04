@@ -86,11 +86,11 @@ plugin in your `pom.xml` file. Some properties that you may need to change are b
 
 |log4jConfiguration
 |
-|Config file location for Log4J (if using it)
+|Config file location for Log4J. Alternatively put _log4j.properties_ at the root of the CLASSPATH.
 
 |log4j2Configuration
 |
-|Config file location for Log4J v2 (if using it)
+|Config file location for Log4J v2. Alternatively put _log4j2.xml_ at the root of the CLASSPATH.
 
 |jdkLogConfiguration
 |
@@ -162,7 +162,6 @@ Or alternatively, you could add the following to your POM
             <configuration>
                 <api>JPA</api>
                 <persistenceUnitName>MyUnit</persistenceUnitName>
-                <log4jConfiguration>${basedir}/log4j.properties</log4jConfiguration>
                 <verbose>true</verbose>
             </configuration>
             <executions>

@@ -279,7 +279,11 @@ To use the DataNucleus Maven plugin you will may need to set properties for the 
 
 |log4jConfiguration
 |
-|Config file location for Log4J (if using it)
+|Config file location for Log4J.Alternatively put _log4j.properties_ at the root of the CLASSPATH.
+
+|log4j2Configuration
+|
+|Config file location for Log4J v2. Alternatively put _log4j2.xml_ at the root of the CLASSPATH.
 
 |jdkLogConfiguration
 |
@@ -318,7 +322,7 @@ So to give an example, I add the following to my `pom.xml`
         <plugin>
             <groupId>org.datanucleus</groupId>
             <artifactId>datanucleus-maven-plugin</artifactId>
-            <version>5.0.2</version>
+            <version>6.0.0-m1</version>
             <configuration>
                 <props>${basedir}/datanucleus.properties</props>
                 <log4jConfiguration>${basedir}/log4j.properties</log4jConfiguration>
@@ -433,7 +437,11 @@ properties file, or when providing the _persistence-unit_)
 |icon:times[]
 
 |log4j.configuration
-|Log4J configuration file, for SchemaTool's Log
+|Log4J v1 configuration file, for SchemaTool's Log
+|icon:times[]
+
+|log4j.configurationFile
+|Log4J v2 configuration file, for SchemaTool's Log
 |icon:times[]
 |===
 
@@ -474,6 +482,7 @@ java [-cp classpath] [system_props] org.datanucleus.store.schema.SchemaTool [mod
         -Ddatanucleus.ConnectionUserName=db_username
         -Ddatanucleus.ConnectionPassword=db_password
         -Dlog4j.configuration=file:{log4j.properties} (optional)
+        -Dlog4j.configurationFile=file:{log4j2.xml} (optional)
     where modes can be
         -createDatabase : create the specified database (if supported)
         -deleteDatabase : delete the specified database (if supported)

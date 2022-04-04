@@ -96,11 +96,11 @@ For example, you could set this to ${project.build.testOutputDirectory} when enh
 
 |log4jConfiguration
 |
-|Config file location for Log4J (if using it)
+|Config file location for Log4J. Alternatively put _log4j.properties_ at the root of the CLASSPATH.
 
 |log4j2Configuration
 |
-|Config file location for Log4J v2 (if using it)
+|Config file location for Log4J v2. Alternatively put _log4j.properties_ at the root of the CLASSPATH.
 
 |jdkLogConfiguration
 |
@@ -174,9 +174,8 @@ Or alternatively, you could add the following to your POM so that enhancement is
         <plugin>
             <groupId>org.datanucleus</groupId>
             <artifactId>datanucleus-maven-plugin</artifactId>
-            <version>5.2.1</version>
+            <version>6.0.0-m1</version>
             <configuration>
-                <log4jConfiguration>${basedir}/log4j.properties</log4jConfiguration>
                 <verbose>true</verbose>
             </configuration>
             <executions>
@@ -203,9 +202,8 @@ If you wanted to enhance test classes as well, then use two executions
         <plugin>
             <groupId>org.datanucleus</groupId>
             <artifactId>datanucleus-maven-plugin</artifactId>
-            <version>5.2.1</version>
+            <version>6.0.0-m1</version>
             <configuration>
-                <log4jConfiguration>${basedir}/log4j.properties</log4jConfiguration>
                 <verbose>true</verbose>
             </configuration>
             <executions>

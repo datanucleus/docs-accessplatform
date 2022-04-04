@@ -267,7 +267,11 @@ for the plugin (in your `pom.xml`). For example
 
 |log4jConfiguration
 |
-|Config file location for Log4J (if using it)
+|Config file location for Log4J (if using it). Note that you can just put a _log4j.properties_ at the root of the CLASSPATH instead of specifying this.
+
+|log4j2Configuration
+|
+|Config file location for Log4J v2 (if using it). Note that you can just put a _log4j2.xml_ at the root of the CLASSPATH instead of specifying this.
 
 |jdkLogConfiguration
 |
@@ -315,7 +319,7 @@ So to give an example, I add the following to my `pom.xml`
 -----
 
 So with these properties when I run SchemaTool it uses properties from the file `datanucleus.properties` at the root of the Maven project. 
-I am also specifying a log4j configuration file defining the logging for the SchemaTool process. 
+I am also specifying a log4j (v1) configuration file defining the logging for the SchemaTool process. 
 I then can invoke any of the Maven goals
 
 -----
@@ -404,7 +408,11 @@ properties file, or when providing the _persistence-unit_)
 |icon:check[]
 
 |log4j.configuration
-|Log4J configuration file, for SchemaTool's Log
+|Log4J (v1) configuration file, for SchemaTool's Log
+|icon:times[]
+
+|log4j.configurationFile
+|Log4J (v2) configuration file, for SchemaTool's Log
 |icon:times[]
 |===
 
@@ -425,6 +433,7 @@ java [-cp classpath] [system_props] org.datanucleus.store.schema.SchemaTool [mod
         -Ddatanucleus.ConnectionUserName=db_username
         -Ddatanucleus.ConnectionPassword=db_password
         -Dlog4j.configuration=file:{log4j.properties} (optional)
+        -Dlog4j.configurationFile=file:{log4j2.xml} (optional)
     where modes can be
         -createDatabase : create the specified database (if supported)
         -deleteDatabase : delete the specified database (if supported)

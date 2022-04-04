@@ -267,7 +267,11 @@ for the plugin (in your `pom.xml`). For example
 
 |log4jConfiguration
 |
-|Config file location for Log4J (if using it)
+|Config file location for Log4J v1. Alternatively put _log4j.properties_ at the root of the CLASSPATH.
+
+|log4j2Configuration
+|
+|Config file location for Log4J v2. Alternatively put _log4j2.xml_ at the root of the CLASSPATH.
 
 |jdkLogConfiguration
 |
@@ -301,7 +305,7 @@ So to give an example, I add the following to my `pom.xml`
         <plugin>
             <groupId>org.datanucleus</groupId>
             <artifactId>datanucleus-maven-plugin</artifactId>
-            <version>5.0.1</version>
+            <version>6.0.0-m1</version>
             <configuration>
                 <api>JPA</api>
                 <persistenceUnitName>MyUnit</persistenceUnitName>
@@ -404,7 +408,11 @@ properties file, or when providing the _persistence-unit_)
 |icon:check[]
 
 |log4j.configuration
-|Log4J configuration file, for SchemaTool's Log
+|Log4J v1 configuration file, for SchemaTool's Log
+|icon:times[]
+
+|log4j.configurationFile
+|Log4J v2 configuration file, for SchemaTool's Log
 |icon:times[]
 |===
 
