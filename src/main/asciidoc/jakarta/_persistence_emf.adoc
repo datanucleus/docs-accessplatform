@@ -534,6 +534,11 @@ warning will be logged and the original EMF returned.
 |Whether to use the "instantiated" type of a field, or the "declared" type of a field to determine which wrapper to use when the field is SCO mutable.
 {*instantiated*, declared}
 
+|datanucleus.type.treatJavaUtilDateAsMutable
+|Whether to treat java.util.Date and subtypes as mutable (and hence wrapped by a proxy). If you dont intend on calling _setTime()_ on the object then
+setting this to false will give an efficiency benefit.
+{*true*, false}
+
 |datanucleus.deletionPolicy
 |Allows the user to decide the policy when deleting objects. The default is "JDO2" which firstly checks if the field is dependent and if so deletes dependents, and then for others will null any
 foreign keys out. The problem with this option is that it takes no account of whether the user has also defined foreign-key metadata, so we provide a "DataNucleus" mode that does the 

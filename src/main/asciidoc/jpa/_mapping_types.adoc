@@ -421,6 +421,12 @@ DataNucleus supports a very wide range of temporal types, with flexibility in ho
 |Requires *datanucleus-jodatime* plugin. Persisted as *String*.
 |===
 
+NOTE: By default the legacy Java temporal types (java.util.Date, java.sql.Date, java.sql.Time, java.sql.Timestamp) are treated as mutable even though most of their
+mutator methods are deprecated. If you never call the setTime() method on fields of these types you can get an efficiency benefit by setting persistence property
+*datanucleus.type.treatJavaUtilDateAsMutable* to _false_ and they will not be wrapped by a proxy when handed back to you.
+
+
+
 == Collection/Map types
 
 DataNucleus supports a very wide range of collection, list and map types.
