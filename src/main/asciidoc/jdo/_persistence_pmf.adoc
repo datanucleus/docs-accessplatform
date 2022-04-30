@@ -669,6 +669,11 @@ Refer to link:../extensions/extensions.html#store_datastoreidentity[Datastore Id
 |Whether to use the "instantiated" type of a field, or the "declared" type of a field to determine which wrapper to use when the field is SCO mutable.
 {*instantiated*, declared}
 
+|datanucleus.type.treatJavaUtilDateAsMutable
+|Whether to treat java.util.Date and subtypes as mutable (and hence wrapped by a proxy). If you dont intend on calling _setTime()_ on the object then
+setting this to false will give an efficiency benefit.
+{*true*, false}
+
 |datanucleus.useImplementationCreator
 |Whether to allow use of the implementation-creator (feature of JDO to dynamically create implementations of persistent interfaces). 
 {*true*, false}
