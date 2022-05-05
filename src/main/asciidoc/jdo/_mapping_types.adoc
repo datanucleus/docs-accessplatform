@@ -258,19 +258,19 @@ DataNucleus supports a very wide range of temporal types, with flexibility in ho
 
 |java.sql.Date
 |icon:check[]
-|icon:check[] &dagger;
+|icon:check[] (1)
 |icon:check[]
 |Persisted as *DATE*, String, DATETIME or Long.
 
 |java.sql.Time
 |icon:check[]
-|icon:check[] &dagger;
+|icon:check[] (1)
 |icon:check[]
 |Persisted as *TIME*, String, DATETIME or Long.
 
 |java.sql.Timestamp
 |icon:check[]
-|icon:check[] &dagger;
+|icon:check[] (1)
 |icon:check[]
 |Persisted as *TIMESTAMP*, String or Long.
 
@@ -288,7 +288,7 @@ DataNucleus supports a very wide range of temporal types, with flexibility in ho
 
 |java.util.Date
 |icon:check[]
-|icon:check[] &dagger;
+|icon:check[] (1)
 |icon:check[]
 |Persisted as *DATETIME*, String or Long.
 
@@ -425,7 +425,7 @@ DataNucleus supports a very wide range of temporal types, with flexibility in ho
 |Requires *datanucleus-jodatime* plugin. Persisted as *String*.
 |===
 
-NOTE: &dagger; By default the legacy Java temporal types (java.util.Date, java.sql.Date, java.sql.Time, java.sql.Timestamp) are treated as mutable even though most of their
+NOTE: (1) By default the legacy Java temporal types (java.util.Date, java.sql.Date, java.sql.Time, java.sql.Timestamp) are treated as mutable even though most of their
 mutator methods are deprecated. If you never call the setTime() method on fields of these types you can get an efficiency benefit by setting persistence property
 *datanucleus.type.treatJavaUtilDateAsMutable* to _false_ and they will not be wrapped by a proxy when handed back to you.
 
