@@ -83,7 +83,7 @@ NOTE: If you call _PM.deletePersistent()_ on the end of a 1-1 unidirectional rel
 (assuming the datastore supports foreign keys). To delete this record you should remove the other objects association first.
 
 TIP: If you invoke an operation that will retrieve the one-to-one field, and you only want it to retrieve the foreign key value for later use 
-(and *not* join to the related table) you can add the metadata extension _fetch-fk-only_ (set to "true") to the field/property.
+(and *not* join to the related table) you specify the _recursion-depth_ as 0 for the field/property.
 
 
 
