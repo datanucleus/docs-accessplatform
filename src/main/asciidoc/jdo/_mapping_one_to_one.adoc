@@ -230,7 +230,7 @@ With non-RDBMS datastores both tables will have a column containing the "id" of 
 NOTE: When forming the relation please make sure that *you set the relation at BOTH sides* since DataNucleus would have no way of knowing which end is correct if you only set one end.
 
 TIP: If you invoke an operation that will retrieve the one-to-one field (of the non-owner side), and you only want it to retrieve the foreign key value for later use 
-(and *not* join to the related table) you can add the metadata extension _fetch-fk-only_ (set to "true") to the field/property.
+(and *not* join to the related table) you can specify the _recursion-depth_ to 0 for the field/property.
 
 
 [[one_one_bi_join]]
