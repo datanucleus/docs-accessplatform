@@ -41,24 +41,24 @@ At runtime you will need the DataNucleus artifacts present also, so this becomes
         <dependency>
             <groupId>org.datanucleus</groupId>
             <artifactId>javax.persistence</artifactId>
-            <version>2.2.0-release</version>
+            <version>2.2.4</version>
         </dependency>
         <dependency>
             <groupId>org.datanucleus</groupId>
             <artifactId>datanucleus-core</artifactId>
-            <version>[5.1.0-release, )</version>
+            <version>[6.0.0-m1, )</version>
             <scope>runtime</scope>
         </dependency>
         <dependency>
             <groupId>org.datanucleus</groupId>
             <artifactId>datanucleus-api-jpa</artifactId>
-            <version>[5.1.0-release, )</version>
+            <version>[6.0.0-m1, )</version>
             <scope>runtime</scope>
         </dependency>
         <dependency>
             <groupId>org.datanucleus</groupId>
             <artifactId>datanucleus-rdbms</artifactId>
-            <version>[5.1.0-release, )</version>
+            <version>[6.0.0-m1, )</version>
             <scope>runtime</scope>
         </dependency>
     </dependencies>
@@ -80,7 +80,7 @@ Please note that you can alternatively use the convenience artifact for JPA+RDBM
         <dependency>
             <groupId>org.datanucleus</groupId>
             <artifactId>datanucleus-accessplatform-jpa-rdbms</artifactId>
-            <version>5.1.0-release</version>
+            <version>6.0.0-release</version>
             <type>pom</type>
         </dependency>
     </dependencies>
@@ -104,7 +104,7 @@ If you want to use the DataNucleus Maven plugin for enhancement or SchemaTool ad
             <plugin>
                 <groupId>org.datanucleus</groupId>
                 <artifactId>datanucleus-maven-plugin</artifactId>
-                <version>6.0.0-m1</version>
+                <version>6.0.0-release</version>
                 <configuration>
                     <api>JPA</api>
                     <persistenceUnitName>MyUnit</persistenceUnitName>
