@@ -233,6 +233,7 @@ datanucleus.ConnectionURL=jdbc:postgresql://'host':'port'/'db-name'
 
 * BLOB jdbc type is treated as LONGVARBINARY (with "bytea"). It is not treated as a PostgreSQL "large object"
 * CLOB jdbc type is treated as LONGVARCHAR (with "text").
+* The default datastore identifier internal to PostgreSQL is lowercase, so you may need to specify _datanucleus.identifier.case=LowerCase_
 
 
 
