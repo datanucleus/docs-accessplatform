@@ -1241,23 +1241,19 @@ DataNucleus provides the following properties for configuring auto-start mechani
 
 |datanucleus.autoStartMechanism
 |How to initialise DataNucleus at startup. This allows DataNucleus to read in from some source the classes that it was persisting for this data store the previous time. 
-_XML_ stores the information in an XML file for this purpose.
 _SchemaTable_ (only for RDBMS) stores a table in the RDBMS for this purpose. 
 _Classes_ looks at the property _datanucleus.autoStartClassNames_ for a list of classes.
 _MetaData_ looks at the property _datanucleus.autoStartMetaDataFiles_ for a list of metadata files
 The other option (default) is _None_ (start from scratch each time). 
 Please refer to the link:persistence.html#autostart[Auto-Start Mechanism Guide] for more details.
 *Alternatively just use `persistence.xml` to specify the classes and/or mapping files to load at startup.* Note also that "Auto-Start" is for RUNTIME use only (not during SchemaTool).
-{*None*, XML, Classes, MetaData, SchemaTable}
+{*None*, Classes, MetaData, SchemaTable}
 
 |datanucleus.autoStartMechanismMode
 |The mode of operation of the auto start mode. Currently there are 3 values. "Quiet" means that at startup if any errors are encountered, they are fixed quietly. 
 "Ignored" means that at startup if any errors are encountered they are just ignored. 
 "Checked" means that at startup if any errors are encountered they are thrown as exceptions.
 {Checked, Ignored, *Quiet*}
-
-|datanucleus.autoStartMechanismXmlFile
-|Filename used for the XML file for AutoStart when using "XML" Auto-Start Mechanism
 
 |datanucleus.autoStartClassNames
 |This property specifies a list of classes (comma-separated) that are loaded at startup when using the "Classes" Auto-Start Mechanism.

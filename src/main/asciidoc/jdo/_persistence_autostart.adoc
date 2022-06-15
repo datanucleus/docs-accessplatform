@@ -22,7 +22,7 @@ unit, and hence the MetaData for the defined classes and mapping files. *This is
 * Put a `package.jdo` at the root of the CLASSPATH, containing all classes, and when the first class is encountered it searches for its metadata, 
 encounters and parses the root `package.jdo`, and consequently loads the metadata for all classes mentioned in that file.
 * Use a DataNucleus extension known as *Auto-Start Mechanism*. This is set with the persistence property *datanucleus.autoStartMechanism*. 
-This can be set to _None_, _XML_, _Classes_, _MetaData_. In addition we have _SchemaTable_ for RDBMS datastores. These are described below.
+This can be set to _None_, _Classes_, _MetaData_. In addition we have _SchemaTable_ for RDBMS datastores. These are described below.
 
 
 
@@ -30,35 +30,6 @@ This can be set to _None_, _XML_, _Classes_, _MetaData_. In addition we have _Sc
 
 With this property set to "None" DataNucleus will have no knowledge about classes that are to be persisted into that datastore 
 and so will add the classes when the user utilises them in calls to the various _PersistenceManager_ methods.
-
-
-
-== AutoStartMechanism : XML
-
-With _XML_, DataNucleus stores the information for starting up DataNucleus in an XML file. 
-This is, by default, located in `datanucleusAutoStart.xml` in the current working directory. The file name can be configured using the 
-persistence property *datanucleus.autoStartMechanismXmlFile*.
-The file is read at startup and DataNucleus loads the classes using this information.
-
-If the user changes their persistence definition a problem can occur when starting up DataNucleus. 
-DataNucleus loads up its existing data from the XML configuration file and finds that a table/class required by the this file data no longer exists. 
-There are 3 options for what DataNucleus will do in this situation. 
-The property *datanucleus.autoStartMechanismMode* defines the behaviour of DataNucleus for this situation. 
-
-* *Checked* will mean that DataNucleus will throw an exception and the user will be expected to manually fix their database mismatch (perhaps by removing the existing tables).
-* *Quiet* (the default) will simply remove the entry from the XML file and continue without exception.
-* *Ignored* will simply continue without doing anything.
-
-
-See the DTD at https://github.com/datanucleus/datanucleus-core/blob/master/src/main/resources/org/datanucleus/store/autostart/datanucleus_autostart_1_0.dtd[this link].
-A sample file would look something like
-
-[source,xml]
------
-<datanucleus_autostart>
-    <class name="mydomain.MyClass" table="MY_TABLE_1" type="FCO" version="3.1.1"/>
-</datanucleus_autostart>
------
 
 
 == AutoStartMechanism : Classes
