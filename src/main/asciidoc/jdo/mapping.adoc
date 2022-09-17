@@ -21,6 +21,9 @@ or link:metadata_xml.html[JDO/ORM XML Metadata], or via the link:metadata_api.ht
 it also allows you the option of using JPA metadata (JPA annotations, `orm.xml`). This is provided as a way of easily migrating across to JDO from JPA, for example. 
 Consult the link:../jpa/mapping.html[DataNucleus JPA mappings docs] for details.
 
+NOTE: You cannot use a Java (14+) "record" with JDO, since it does not meet the requirements for persistence, but you can use it as a DTO type object that is
+populated from a query.
+
 
 In terms of the relative priority of annotations, JDO XML and ORM XML metadata, the following figure highlights the process
 

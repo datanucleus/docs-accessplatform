@@ -19,6 +19,9 @@ NOTE: Whilst the JPA spec only allows you to specify your mapping information us
 the option of using JDO metadata (annotations, and/or XML metadata). This is provided as a way of easily migrating across to JPA from JDO, for example. 
 Consult the link:../jdo/mapping.html[DataNucleus JDO mappings docs] for details.
 
+NOTE: You cannot use a Java (14+) "record" with JPA, since it does not meet the requirements for persistence, but you can use it as a DTO type object that is
+populated from a query.
+
 
 include::_mapping_classes.adoc[leveloffset=+1]
 include::_mapping_inheritance.adoc[leveloffset=+1]
