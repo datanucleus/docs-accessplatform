@@ -1,0 +1,98 @@
+[[lock_manager]]
+= Lock Manager
+:_basedir: ../
+:_imagesdir: images/
+
+DataNucleus supports locking of objects at database level.
+Objects can be locked based on their object ID or based on the StateManager object directly.
+The implementation of how this locking is done is handled by the LockManager.
+
+The LockManager also implements methods used for versioning with optimistic locking.
+
+If you for some reason want to modify the default LockManager behaviour you can do so by creating your own LockManager implementation using the plugin extension *org.datanucleus.lockmanager*.
+
+The following sections describe how to create your own LockManager plugin for DataNucleus.
+
+== Interface
+
+To make your own LockManager you need to implement this.
+image:../images/javadoc.png[Javadoc, link=http://www.datanucleus.org/javadocs/core/latest/org/datanucleus/state/LockManager.html].
+
+[source,java]
+-----
+package org.datanucleus.state;
+public interface LockManager
+{
+    void lock(DNStateManager sm, LockMode lockMode);
+
+    void unlock(DNStateManager sm);
+
+    LockMode getLockMode(DNStateManager sm);
+
+    void lock(Object id, LockMode lockMode);
+
+    LockMode getLockMode(Object id);
+
+    void clear();
+
+    void close();
+
+    void performOptimisticVersionCheck(DNStateManager sm, VersionStrategy versionStrategy, Object versionDatastore);
+
+    Object getNextVersion(VersionMetaData vermd, Object currentVersion);
+}
+
+-----
+
+
+== Implementation
+
+Let's suppose your want to implement your own LockManager _MyLockManager_.
+Note that you can also choose to extend the default LockManager and only override what you need.
+The default LockManager is in org.datanucleus.state.LockManagerImpl.
+
+[source,java]
+-----
+package mydomain;
+
+import org.datanucleus.NucleusContext;
+import org.datanucleus.state.LockManager;
+
+public class MyLockManager implements LockManager
+{
+    /**
+     * Constructor.
+     * @param ec Execution Context
+     */
+    public MyTestLockManager(ExecutionContext ec)
+    {
+        ...
+    }
+
+    ... (implement the interface)
+}
+-----
+
+
+== Plugin Specification
+
+Once you have this implementation you then need to make the class available as a DataNucleus plugin.
+You do this by putting a file `plugin.xml` in your JAR at the root of the CLASSPATH, like this
+
+[source,xml]
+-----
+<?xml version="1.0"?>
+<plugin id="mydomain" name="DataNucleus plug-ins" provider-name="My Company">
+    <extension point="org.datanucleus.lockmanager">
+        <lockmanager name="MyLockManagerName" class-name="mydomain.MyLockManager"/>
+    </extension>
+</plugin>
+-----
+
+Note that you also require a `MANIFEST.MF` file as xref:extensions.adoc#MANIFEST[described above].
+
+
+== Plugin Usage
+
+The only thing remaining is to use your LockManager plugin.
+To do this you specify the persistence property *datanucleus.lockmanager.type* as __MyLockManagerName__ (the "name" in `plugin.xml`).
